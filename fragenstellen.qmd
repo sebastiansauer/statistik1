@@ -42,6 +42,7 @@ Abb. @fig-ueberblick-fragen zeigt den Standort dieses Kapitels im Lernpfad und g
 ```{mermaid}
 %%| fig-cap: Überblick über den Inhalt und Verlauf des Buches
 %%| label: fig-ueberblick-fragen
+%%| out-width: "100%"
 
 flowchart LR
   subgraph M[Modellieren]
@@ -166,7 +167,7 @@ Eine *Abweichung* (auch *Residium*) genannt, zeigt die Differenz von Mittelwert 
 Wenn wir allgemein von einer Person $i$ sprechen,
 die Körpergröße mit $x$ bezeichnen und den Mittelwert der Körpergröße als $\bar{x}$ ("x quer"),
 dann können wir knapp und präzise das Residuum $r$ so definieren:
-$r = x_i - \bar{x}$
+$r_i = x_i - \bar{x}$.
 
 
 
@@ -206,6 +207,29 @@ Häufig sind Forschungsfragen so aufgebaut:
 >   Hat X einen Einfluss auf Y?
 
 
+
+
+
+
+Eine Forschungsfrage weist häufig folgende Struktur auf, s. @fig-fo-struktur.
+
+
+
+```{mermaid}
+%%| fig-cap: Struktur eine Forschungsfrage
+%%| label: fig-fo-struktur
+%%| out-width: "100%"
+
+graph LR
+    Input --> X[hier passiert irgendwas]
+    subgraph "Schwarze Kiste"
+      X
+    end
+    X --> Output
+```
+
+
+
 :::{#exm-fofrage1}
 
 ### Forschungsfrage 1
@@ -234,26 +258,39 @@ Ihre Forschungsfrage lautet:
 
 :::
 
+:::{#exm-braindrain}
 
-Eine Forschungsfrage weist häufig folgende Struktur auf, s. @fig-fo-struktur.
+## Aus der Forschung: Smartphone-Brain-Drain
 
+@ward_brain_2017 untersuchten die Forschungsfrage, ob die bloße Gegenwart eines Handies (z.B. wenn es vor Ihnen auf dem Tisch dazu führt, dass man abgelenkt wird und daher schlechtere kognitive Leistungen zeigt.
 
+Leider schreiben die Autoren Ihre Hypothese nicht glasklar, aber implizit ist obige Hypothese herauszulesen:
 
-```{mermaid}
-%%| fig-cap: Struktur eine Forschungsfrage
-%%| label: fig-fo-struktur
-%%| out-width: "100%"
+>   First, smartphones may redirect the orientation of conscious attention away from the focal task and toward thoughts or behaviors associated with one’s phone. Prior research provides ample evidence that ... that this digital distraction adversely affects both performance ... and enjoyment.
 
-graph LR
-    Input --> X[hier passiert irgendwas]
-    subgraph "Schwarze Kiste"
-      X
-    end
-    X --> Output
-```
+Später formulieren Sie Ihre Hypothese noch genauer:
 
+>   In two experiments, we test the hypothesis that the mere presence of one’s own smartphone reduces available cognitive capacity.
+
+Die Ergebnisse unterstützen Ihre Hypothese, s. @fig-braindrain. 
+Im Diagramm ist ersichtlich, dass die kognitive Leistung (Y-Achse) sowohl in der Kapazität des Arbeitsgedächtnisses (links) als auch in der fluiden Intelligenz (rechts) am geringsten ist, wenn das Handy auf dem Schreibtisch (Desk) liegt. Am besten ist die kognitive Leistung, wenn das Handy nicht im Raum ist.
 
 
+
+
+![Handy in Sichtweite verringert die kognitiven Ressourcen](img/braindrain1.jpg){#fig-braindrain}
+
+:::
+
+
+
+
+
+
+
+:::{.callout-caution}
+Es ist ein häufiger Fehler, in der Forschungsfrage zu formulieren "X führt zu Y", aber in der Analyse keine Methode zu verwenden, die geeignet ist, kausale Zusammenhänge aufzudecken. Es reicht nicht, dass man z.B. einen (negativen) Zusammenhang zwischen der Häufigkeit von Smartphone-Nutzung und Konzentrationsfähigkeit findet [@schwaiger_impact_2022], um zu sagen: "Daddeln macht dumm!". Es könnte ja z.B. auch umgekehrt sein. Platt gesagt: "Dummheit führt zu Daddeln". Weitere Erklärungen sind möglich. Vorsicht also mit (vor)schnellen Aussagen zu kausalen Abhängigkeiten.
+:::
 
 
 ## Was sind Daten?
@@ -401,6 +438,15 @@ divers, Frau, Mann.
 
 :::
 
+:::{.callout-tip}
+Gerade haben Sie etwas Computer-Syntax gesehen, genauer gesagt, Befehle aus der Programmiersprache *R*. 
+Bisher haben wir diese Befehle nicht kennengelernt. 
+Sie verstehen Sie vermutlich (nicht ganz).
+Ignorieren Sie diese Befehle einfach erstmal. 
+:::
+
+
+
 
 ### Tidy-Data
 
@@ -433,7 +479,7 @@ Das Tidy-Format wird auch als "langes" Format bezeichnet.
 
 @fig-long-wide-anim zeigt einen Datensatz in der "langen" Form, also tidy, und den gleichen Datensatz, umformatiert in der "breiten" Form, nicht-tidy.
 
-![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ist tidy.](img/long-wide-anim.png){#fig-long-wide-anim width="50%"}
+![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ist tidy.](img/tidyr-pivoting.gif){#fig-long-wide-anim width="50%"}
 
 
 
@@ -557,8 +603,8 @@ skalenniveaus
 
 
 
-Was soll das bedeuten, Rechenoperationen?
-M
+Was soll das bedeuten, "Rechenoperationen"?
+
 
 Schauen wir uns für jedes Skalenniveau ein "Rechenbeispiel" an.
 
@@ -663,6 +709,12 @@ tibble(Preis = c(1e4, 1e5),
 
 
 
+In [diesem Video](https://www.youtube.com/watch?v=_mN3kFe56ng) gibt es noch ausführlichere Erklärung zum Thema Skalenniveaus.
+
+
+
+{{< video https://youtu.be/_mN3kFe56ng >}}
+
 
 
 Außerdem können quantitative Variablen untergliedert werden in:
@@ -670,6 +722,11 @@ Außerdem können quantitative Variablen untergliedert werden in:
 - *stetige* Variablen, das sind Variablen, bei denen man zwischen zwei Ausprägungen immer noch eine weitere quetschen kann. So gibt es eine Wert für die Köpergröße zwischen 1.60m und 1.61. Und einen Wert zwischen 1.601m und 1.602m, etc.
 - diskrete Variablen, das sind metrische Variablen, die nur bestimmte Ausprägungen haben, häufig sind das die natürlichen Zahlen: $1,2,...$. Ein Beispiel wäre die Anzahl der Kinder in einer Familie.
 
+
+
+:::{.callout-tip}
+Fragen nach Skalenniveaus gehören zu den Lieblingsprüfungsfragen in diesem Themenbereich. Sie sind gut beraten, sich gerade mit dieser Frage intensiver zu beschäftigen. Auch in thematisch angrenzenden Fächern wird immer wieder die Frage nach dem Skalennvieau aufgeworfen. Das zeigt natürlich auch die hohe Relevanz des Themas.
+:::
 
 
 ## Modelle
@@ -707,6 +764,9 @@ Geben Sie ihm ein Modell: Sagen Sie ihm, wie lang die Studis typischerweise lern
 
 
 ::: {.column width="45%"}
+
+### Vorher
+
 ```{r}
 #| echo: false
 set.seed(42)
@@ -731,6 +791,7 @@ zeiten_mw <- mean(zeiten)
 
 
 ::: {.column width="45%"}
+### Nachher
 
 ::: {.centered}
 **`r zeiten_mw`** 

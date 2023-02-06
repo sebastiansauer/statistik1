@@ -1,4 +1,4 @@
-# Fragen stellen
+# Rahmen
 
 
 
@@ -27,6 +27,10 @@ theme_set(theme_minimal())
 .centered {
   text-align-last: center;
 }
+
+.xlarge {
+  font-size: 300%;
+}
 ```
 
 
@@ -44,16 +48,29 @@ Abb. @fig-ueberblick-fragen zeigt den Standort dieses Kapitels im Lernpfad und g
 %%| label: fig-ueberblick-fragen
 %%| out-width: "100%"
 
+
 flowchart LR
-  subgraph M[Modellieren]
-    direction TB
-    M1[Punktmodelle] --> Vis[Verbildlichen]
-    Vis --> U[Ungewissheit]
-    U --> G[Geradenmodelle]
+  subgraph R[<font size=5>**Rahmen**]
+    direction LR
+    subgraph V[Vorbereiten]
+      direction TB
+      E[Einlesen] --> Um[Umformen]
+    end
+    subgraph M[Modellieren]
+      direction TB
+      M1[Punktmodelle] --> Vis[Verbildlichen]
+      Vis --> U[Ungewissheit]
+      U --> G[Geradenmodelle]
+    end
+    subgraph N[Nachbereiten]
+      direction TB
+      D[Antworten diskutieren]
+    end
+  V --> M
+  M --> N
   end
-  A[<font size=4>FRAGEN STELLEN] --> Auf[Aufbereiten]
-  Auf --> M
-  M --> D[Antworten diskutieren]
+  
+
 ```
 
 
@@ -83,9 +100,52 @@ hier ist eine.
 
 
 ## Statistik
-Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entnehmen und beschreibt die Ungewissheit unserer Schlüsse @kaplan_statistical_2009, @poldrack_statistical_2023.
+Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entnehmen und beschreibt die Ungewissheit unserer Schlüsse @kaplan_statistical_2009, @poldrack_statistical_2023.$\square$
 
 :::
+
+:::{.callout-note}
+In diesem Buch werden die Begriffe *Statistik*, *Datenanalyse* und *Data Science* synonym verwendet.$\square$
+:::
+
+
+Hm. Vielleicht fragen wir mal ChatGPT, was es unter Statistik versteht:
+
+
+
+
+
+> 👨 Was ist Statistik? Bitte definiere verständlich.
+
+> 🤖 Statistik ist eine Wissenschaft, die sich mit der Sammlung, Analyse, Interpretation, Präsentation und Übertragung von Daten beschäftigt. Ziel ist es, Muster und Trends in den Daten zu erkennen und verlässliche Schlussfolgerungen über eine größere Gruppe (z.B. Bevölkerung) auf der Basis einer Stichprobe (Teilmenge) zu treffen. Die Statistik hilft uns bei der Beantwortung von Fragen, indem sie uns dabei hilft, die Unsicherheit in den Daten zu messen und zu verstehen^[Release 2023-Jan].
+
+
+Gute Antwort, oder?
+
+:::{#exr-nutzen-statistik}
+
+### Nutzen von Statistik
+
+🏋️‍♀️ Fragen Sie ChatGPT, was der Nutzen von Statistik ist. Diskutieren Sie die Antwort.
+
+
+<!-- Statistik ist gut für: -->
+
+<!-- Entscheidungsfindung: Durch die Analyse von Daten können wir bessere Entscheidungen treffen, indem wir Muster und Trends erkennen. -->
+
+<!-- Prognostizieren: Statistik kann verwendet werden, um zukünftige Ereignisse vorherzusagen, indem auf der Grundlage von Daten aus der Vergangenheit Schätzungen erstellt werden. -->
+
+<!-- Testen von Hypothesen: Statistik ermöglicht es uns, Hypothesen zu testen, um zu überprüfen, ob sie wahr oder falsch sind. -->
+
+<!-- Risikoabschätzung: Statistik kann verwendet werden, um das Risiko von Ereignissen oder Trends zu bewerten und entsprechende Maßnahmen zu ergreifen. -->
+
+<!-- Planung und Überwachung von Studien: Statistik ist ein wichtiger Bestandteil bei der Planung und Überwachung von Studien, um sicherzustellen, dass die Daten valide und zuverlässig sind. -->
+
+<!-- Kommunikation von Daten: Statistik hilft uns, Daten zu visualisieren und zu präsentieren, um sie leichter verständlich und nachvollziehbar zu machen. -->
+
+:::
+
+
 
 
 Ein zentrales Vorgehen bei statistischen Analysen ist es, 
@@ -297,11 +357,12 @@ Es ist ein häufiger Fehler, in der Forschungsfrage zu formulieren "X führt zu 
 
 :::{#def-daten}
 
-### Daten
+### Hallo, Daten
 
 Daten kann man als eine geordnete Folge von Zeichen definieren.
 
 :::
+
 
 
 Daten kommen häufig in Tabellenform vor; 
@@ -325,7 +386,42 @@ d
 Die erste Spalte `id` ist nur eine laufende Nummer.
 Sie dient dazu, die einzelnen Beobachtungen (hier Studentis) 
 identifizieren zu können und birgt ansonsten keine Information.
-Beispiele für ID-Variabeln sind z.B. Matrikulationsnummer, Personalausweisnummern oder Bestellnumern.
+Beispiele für ID-Variablen sind z.B. Matrikulationsnummer, Personalausweisnummern oder Bestellnumern.
+
+
+
+
+### Je mehr, desto besser (?)
+
+
+Was Daten betrifft, könnte man behaupten: "Viel hilft viel" oder "Je mehr, desto besser".
+Natürlich unter sonst gleichen Umständen^[Ceteris paribus, auf Latein, hört sich gleich viel schlauer an]. Viel Datenmüll ist natürlich nicht besser als ein paar knappe, wasserdichte Fakten!
+
+
+:::{#exm-samplesize}
+
+Um Ihre eigene Lehraktivität zu organisieren, wollen Sie sich ein Bild machen, 
+wie viel Ihre Nebensitzer im Hörsaal so lernen.
+Sie blicken nach links und fragen "wie viel lernst du so?".
+Sie blicken nach recht und wiederholen die Frage gerichtet an den rechtsnebensitzenden Kommilitonen.
+Dann addieren Sie die zwei Zahlen (unter der Annahme, dass Sie zwei Zahlen bekommen haben),
+und teilen durch zwei, um den Mittelwert zu erhalten.
+
+Ein kritischer Geist könnte anmerken, dass Sie besser die Untersuchung nicht gemacht hätten (auch wenn Sie, vielleicht ohne zu wollen, eine statistische Untersuchung angestellt haben).
+Denn bei so wenig befragten Personen ist die Ungenauigkeit Ihrer Schätzung der typischen Lernzeit bei Studentis einfach zu hoch.
+
+:::
+
+@fig-sample-estimate veranschaulicht, dass man einen Mittelwert genauer schätzen kann,
+wenn man auf eine größere Stichprobe zurückgreift.
+
+![Schätzgenauigkeit als Funktion der Stichprobengröße](img/Estimate.gif){#fig-sample-estimate}
+
+Bildquelle: Karsten Lübke
+
+
+
+
 
 
 
@@ -365,6 +461,16 @@ Eine Erklärung, was die Namen einer Datentabelle bedeuten,
 nennt man *Code Book* or *Data Dictionary*.
 
 :::
+
+
+:::{.callout-note}
+## Wie man mit Statistik lügt: Das File-Drawer-Problem
+
+Sie haben ein tolles Experiment durchgeführt, viel Arbeit, viel Stress, endlich geschafft, puh. Von den 20 Variablen (als AV, s. @sec-arten-variablen), die Sie untersucht haben, zeigt nur 1 einen interessanten Effekt, leider. 1 von 20, das hört sich nicht so toll an. Wäre es da nicht "elegant", die 19 Variablen ohne schönen Effekt einfach in der Schublade liegen zu lassen bis zum Sankt-Nimmerleins-Tag? Dann könnten Sie stattdessen als Ergebnis nur die eine Variable mit schönen Ergebnis präsentieren, ganz ohne widersprechende Befunde. 
+
+Dieser Versuchung nicht zu erliegen, kann schwer sein. Es ist aber gefährlich, missliebige Ergebnisse zu verschweigen: Die anderen Menschen bekommen dann ein falsches Bild der Ergebnislage; man spricht von [Publikationsbias](https://de.wikipedia.org/wiki/Publikationsbias). Wer Ergebnisse verschweig, verzerrt die insgesamte Befundlage.
+:::
+
 
 
 
@@ -492,7 +598,7 @@ Dabei wiederholen sich immer wieder die gleichen Fehler bzw. suboptimalen Vorgeh
 :::
 
 
-### Arten von Variablen
+### Arten von Variablen  {#sec-arten-variablen}
 
 
 #### Nach Position in der Forschungsfrage
@@ -811,6 +917,8 @@ zeiten_mw <- mean(zeiten)
 Der Nutzen von Modellen ist,
 dass sie komplexe Sachverhalte vereinfachen und damit oft überhaupt erst einer Untersuchung zugänglich.
 In der Datenanalyse bzw. Statistik^[die beiden Begriffe werden hier weitgehend synonym gebraucht] fassen Sie oft viele Daten prägnant zusammen, z.B. zu einer einzelnen Kennzahl.
+Das Verrückte an Modellen ist, dass man Informationen wegwirft, um eine (andere, hoffentlich nützlichere) Information zu bekommen [@stigler_seven_2016]. Weniger ist mehr?!
+
 
 
 
@@ -834,6 +942,11 @@ Aus diesem Grund kann man sagen, dass Datenanalyse (und damit auch Statistik als
 
 Laut [dem Entgeltatlas der Bundesagentur für Arbeit](https://web.arbeitsagentur.de/entgeltatlas/beruf/129987) liegt ein typisches Gehalt von Data Scientisten bei knapp 6000 € pro Monat (in der Altersgruppe von 25 bis 54)^[Abrufdatum: 1.2.23]. 
 Laut dem [Gehaltsreporter](https://gehaltsreporter.de/gehaelter-von-a-bis-z/it/data-scientist/) liegt das Einstiegsgehalt dieser Berufsgruppe bei knapp 50.000€ pro Jahr.
+
+
+
+
+
 
 ## Fazit
 
@@ -859,7 +972,13 @@ Die Aufgabe von Statistik ist es, durch Zusammenfassen von Daten Modelle zu bild
 
 *nicht prüfungsrelevant*
 
-1. Fassen Sie den Artikel von @broman_data_2018 zusammen.
+Fassen Sie den Artikel von @broman_data_2018 zusammen.
+
+
+Inspiration von einer Praktikerin der Datenanalyse: Caitlin Hudon verrät [in diesem Video](https://www.youtube.com/watch?v=O5lP6XcopdQ&list=PL9HYL-VRX0oQchs7dqFICoxMgnvFO10tC&index=15&t=1s), welche Fehler Sie sie in in den acht Jahren ihrer Berufserfahrung gemacht hat und was sie daraus gelernt hat.
+
+{{< video https://www.youtube.com/watch?v=O5lP6XcopdQ&list=PL9HYL-VRX0oQchs7dqFICoxMgnvFO10tC&index=15&t=1s >}}
+
 
 
 ## Literatur

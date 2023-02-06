@@ -1,32 +1,14 @@
-# Aufbereiten
+# Daten umformen
 
 
-
-
-
-```{r libs}
-#| include: false
-library(tibble)
-library(tidyverse)
-# library(grid)
-# library(gridExtra)
-```
 
 ```{r}
-#| include: false
-theme_set(theme_minimal())
-```
-
-
-
-```{css, echo = FALSE}
-.justify {
-  text-align: justify !important
-}
-
-.centered {
-  text-align-last: center;
-}
+#| echo: false
+#| message: false
+library(ggpubr)
+library(png)
+library(grid)
+library(patchwork)
 ```
 
 
@@ -35,24 +17,38 @@ theme_set(theme_minimal())
 
 ### Standort im Lernpfad
 
-Abb. @fig-ueberblick-aufbereiten zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
+Abb. @fig-ueberblick-umformen zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
 
 
 
 ```{mermaid}
 %%| fig-cap: Überblick über den Inhalt und Verlauf des Buches
-%%| label: fig-ueberblick-aufbereiten
+%%| label: fig-ueberblick-umformen
+%%| out-width: "100%"
+
 
 flowchart LR
-  subgraph M[Modellieren]
-    direction TB
-    M1[Punktmodelle] --> Vis[Verbildlichen]
-    Vis --> U[Ungewissheit]
-    U --> G[Geradenmodelle]
+  subgraph R[Rahmen]
+    direction LR
+    subgraph V[Vorbereiten]
+      direction TB
+      E[Einlesen] --> Um[<font size=5>**Umformen**]
+    end
+    subgraph M[Modellieren]
+      direction TB
+      M1[Punktmodelle] --> Vis[Verbildlichen]
+      Vis --> U[Ungewissheit]
+      U --> G[Geradenmodelle]
+    end
+    subgraph N[Nachbereiten]
+      direction TB
+      D[Antworten diskutieren]
+    end
+  V --> M
+  M --> N
   end
-  A[Fragen stellen] --> Auf[<font size=4>Aufbereiten]
-  Auf --> M
-  M --> D[Antworten diskutieren]
+  
+
 ```
 
 
@@ -65,24 +61,560 @@ ggplot2::theme_set(theme_minimal())
 ### Lernziele
 
 
-- Sie können ...
+- Sie können die grundlegenden Verben des Datenjudo anwenden
 
 
-
-### Benötigte R-Paket
-
-In diesem Kapitel benötigen Sie die folgenden R-Pakete.
-
+### Benötigte R-Pakete
 
 ```{r}
 #| message: false
 library(tidyverse)
+library(easystats)
 ```
 
 
 
+## Datenjudo
+
+### Die Wahrheit über Data Science
+
+Denkt man an Data Science, stellt man sich coole Leute vor (in San Francisco oder Berlin), die an abgefahrenen Berechnungen mit hoch komplexen statistischen Modellen für gigantische Datenmengen basteln.
+
+Laut dem [Harvard Business Review](https://hbr.org/2018/08/what-data-scientists-really-do-according-to-35-data-scientists) allerdings,
+verbringen diese Leute "80%" ihrer Zeit mit dem *Aufbereiten* von Daten [@bowne-anderson_what_2018].
+Ja: mit uncoolen Tätigkeiten wie Tippfehler aus Datensätzen entfernen oder die Daten überhaupt nutzbar und verständlich zu machen.
+
+Das zeigt zumindest, dass das Aufbereiten von Daten a) wichtig ist und b) dass man allein damit schon weit kommt. 
+Eine gute Nachricht ist (vielleicht),
+dass das Aufbereiten von Daten keine aufwändige Mathematik verlangt,
+stattdessen muss man ein paar Handgriffe und Kniffe kennen.
+Daher passt der Begriff *Datenjudo* vielleicht ganz gut. 
+Kümmern wir uns also um das Aufbereiten bzw. Umformen von Daten, um das Datenjudo.
+
+
+:::{#exm-datenjudo}
+
+Beispiele für typische Tätigkeiten dees Datenjudos sind:
+
+- Zeilen *filtern* (z. B. nur Studentis des Studiengangs X)
+- Zeilen *sortieren* (z. B. Studenten mit guten Noten in den oberen Zeilen)
+- Spalten *wählen* (z. B. 100 weitere Produkte ausblenden) 
+- Spalten in eine Zahl *zusammenfassen* (z. B. Notenschnitt der 1. Klausur)
+- Tabelle *gruppieren* (z. B. Analyse getrennt nach Standorten)
+- Werte aus einer Spalte *verändern* oder *neue Spalte* bilden (z. B. Punkte in Prozent-Richtige umrechnen).
+- ... $\square$
+
+:::
+
+
+### Mach's einfach
+
+Es gibt einen (einfachen) Trick, wie man umfangreiche Datenaufbereitung elegant geregelt kriegt, 
+klingt fast zu schön, um wahr zu sein (s. @fig-that-would-be-great).
+
+![made at imgflip.com, Meme Generator](img/thatwouldbegreat.jpg){#fig-that-would-be-great}
+
+Der Trick besteht darin, komplexe Operationen in mehrere einfache Teilschritte zu zergliedern^[Genau darin besteht das Wesen einer Analyse: die Zerlegung eines Objekts in seine Bestandteile.].
+Man könnte vom "Lego-Prinzip" sprechen, s. @fig-lego.
+Im linken Teil von @fig-lego sieht man ein (recht) komplexes Gebilde.
+Zerlegt man es aber in seine Einzelteile, so sind es deutlich einfachere geometrische Objekte wie Dreiecke oder Quadrate (rechter Teil des Diagramms).
+
+![Das Lego-Prinzip](img/Bausteine_dplyr_crop){#fig-lego width="75%"}
+
+Damit Sie es selber einfach machen können, müssen Sie selber Hand anlegen.
+Importieren Sie daher den Datensatz `mariokart`, z.B. so:
+
+
+```{r}
+library(easystats)  # Das Paket muss installiert sein
+mariokart <- data_read("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+
+glimpse(mariokart)
+```
+
+
+```{r}
+#| echo: false
+mariokart <- as_tibble(mariokart)
+```
+
+
+:::{#exm-datenjudo}
+
+Sie arbeiten immer noch bei dem großen Online-Auktionshaus.
+Mittlerweile haben Sie sich den Ruf des "Datenguru" erworben.
+Vielleicht weil Sie behauptet haben, Data Science sei zu 80% Datenjudo,
+das hat irgendwie Eindruck geschindet...
+Naja, jedenfalls müssen Sie jetzt mal zeigen, dass Sie nicht nur schlaue Sprüche draufhaben, sondern auch die Daten ordentlich abbürsten können.
+Sie analysieren dafür im Folgenden den Datensatz `mariokart`. Na, dann los.$\square$
+:::
+
+## Die Verben des Datenjudos
+
+Im R-Paket `{dplyr}`, das wiederum Teil des R-Pakets `{tidyverse}` ist,
+gibt es eine Reihe von R-Befehlen,
+die das Datenjudo in eine Handvoll einfacher Verben runterbrechen.^[Falls Sie das R-Paket `{tidyverse}` noch nicht installiert haben sollten, wäre jetzt ein guter Zeitpunkt dafür.]
+Die wichtigsten Verben des Datenjudos schauen wir uns im Folgenden an.
+
+
+Wir betrachten dazu im Folgenden einen einfachen (Spielzeug-)Datensatz,
+an dem wir zunächst die Verben des Datenjudos vorstellen, s. @tbl-datenjudo.
+
+```{r d-base}
+#| echo: false
+d <- 
+tibble(id = c(1, 2, 3),
+       name = c("Anni", "Berti", "Charli"),
+       gruppe = c("A", "A", "B"),
+       note = c(2.7, 2.7, 1.7))
+
+ra <- png::readPNG("img/rightarrow.png", native = TRUE)
+
+p_d1 <- ggtexttable(d, rows=NULL)
+p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1)
+```
+
+```{r}
+#| echo: false
+#| tbl-cap: "Ein einfacher Datensatz von schlichtem Gemüt"
+#| label: tbl-datenjudo
+d
+```
+
+
+:::{.callout-important}
+Die Verben des Datenjudos wohnen im Paket `{dyplr}`,
+welches gestartet wird, wenn Sie `library(tidyverse)` eingeben.
+Vergessen Sie, `{tidyverse}` zu starten, dann funktionieren diese Befehle nicht.$\square$
+:::
+
+
+### Tabelle sortieren: `arrange`
+
+*Sortieren* der Zeilen ist eine einfache, aber häufige Tätigkeit des Datenjudos, s. @fig-arrange.
+
+```{r plot-arrange}
+#| echo: false
+#| label: fig-arrange
+#| fig-cap: "Sinnbild für das Sortieren einer Tabelle mit `arrange()`"
+d_arranged <-
+  d %>% 
+  arrange(note)
+
+p_d_arranged <- ggtexttable(d_arranged, rows=NULL) 
+
+p_d_arranged <-
+  p_d_arranged %>% 
+  table_cell_bg(column = 4, fill = "red", row = 2:tab_nrow(p_d_arranged))
+
+p_text <- grid::textGrob("arrange()")
+
+design <- 
+  "
+A#D
+ABD
+ACD
+A#D
+"
+
+p_arrange <- wrap_plots(A= p_d1, 
+                        B = p_text , 
+                        C = p_ra, 
+                        D = p_d_arranged, 
+           widths = c(4,1,4),
+           design = design) 
+p_arrange
+```
+
+
+:::{#exm-arrange1}
+
+### Was sind die höchsten Preise?
+
+Sie wollen mal locker anfangen. Was sind denn eigentlich die höchsten Preise, für die das Spiel Mariokart über den Online-Ladentisch geht.
+Die entsprechende Spalte heißt offenbar `total_pr`.
+In Excel kann die Spalte, nach der man die Tabelle sortieren möchte,
+einfach anklicken. Ob das in R auch so einfach geht?
+
+
+```{r}
+arrange(mariokart, total_pr)
+```
+
+Übersetzen wir die R-Syntax ins Deutsche:
+
+```
+Hey R,
+arrangiere (sortiere) `mariokart` nach der Spalte `total_pr`
+```
+
+Gar nicht so schwer.$\square$
+:::
 
 
 
+Übrigens wird in `arrange()` per Voreinstellung aufsteigend sortiert.
+Setzt man ein Minus vor der zu sortierenden Spalte,
+wird umgekehrt, also *absteigend* sortiert:
 
-s
+```{r}
+#| eval: false
+arrange(mariokart, -total_pr)
+```
+
+
+
+### Zeilen filtern: `filter`
+
+*Zeilen filtern* bedeutet, dass man nur *bestimmte* Zeilen (Beobachtungen) behalten möchte, die restlichen Zeilen brauchen wir nicht, weg mit ihnen.
+Wir haben also ein Filterkriterium im Kopf,
+anhand dessen wir die Tabelle filern, s. @fig-filter.
+
+
+```{r plot-filter}
+#| echo: false
+#| label: fig-filter
+#| fig-cap: "Sinnbild für das Filtern einer Tabelle mit `filter()`"
+d_filter <-
+  d %>% 
+  filter(note > 2)
+
+
+p_d1 <- ggtexttable(d, rows=NULL)
+p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1)
+p_d_filter <- ggtexttable(d_filter, rows=NULL) 
+
+p_d_filter <- 
+  p_d_filter %>% 
+  table_cell_bg(column = 1:4, fill = "red", row = 2:tab_nrow(p_d_filter))
+
+p_text_filter <- grid::textGrob("filter()")
+
+design <- 
+  "
+A#D
+ABD
+ACD
+A#D
+"
+
+p_filter <- wrap_plots(A= p_d1, 
+                       B = p_text_filter , 
+                       C = p_ra, 
+                       D = p_d_filter, 
+                       widths = c(4,1,4),
+                       design = design) 
+p_filter
+```
+
+
+:::{#exm-filter}
+
+### Ob ein Foto für den Verkaufspreis nützlich ist?
+
+Als nächstes kommt Ihnen die Idee, 
+mal zu schauen, ob Auktionen mit Photo der Ware einen höheren Verkaufspreis erzielen
+als Auktionen ohne Photo.
+
+```{r}
+filter(mariokart, stock_photo == "yes")
+```
+
+Sie filtern also die Tabelle so,
+dass *nur* diese Auktionen im Datensatz verbleiben,
+welche ein Photo haben,
+mit anderen Worten, Auktionen (Beobachtungen) bei denen gilt: `stock_photo == TRUE`.$\square$
+:::
+
+:::{#exm-filter2}
+
+### Komplexeres Filtern
+
+Angestachelt von Ihren Erfolgen möchten Sie jetzt komplexere Hypothesen prüfen:
+Ob wohl Auktionen von *neuen* Spielen und zwar *mit* Photo einen höheren Preis erzielen als die übrigen Auktionen?
+
+Anders gesagt haben Sie zwei Filterkriterien im Blick: Neuheit `cond` und Photo `stock_photo`. Nur diejenigen Auktionen, die *sowohl* Neuheit *als auch* Photo erfüllen, möchten Sie näher untersuchen.
+
+```{r}
+filter(mariokart, stock_photo == "yes" & cond == "new")
+```
+
+
+Hm. Was ist mit den Auktionen, die *entweder* über ein Photo verfügen *oder* neu sind (oder beides)?
+
+```{r}
+filter(mariokart, stock_photo == "yes" | cond == "new")
+```
+
+Hier könnte man noch viele interessante Hypothesen prüfen, denken Sie sich und tun das auch ... $\square$
+:::
+
+### Spalten auswählen mit `select`
+
+Eine Tabelle mit vielen Spalten kann schnell unübersichtlich werden.
+Da lohnt es sich, eine alte goldene Regel zu beachten: Mache die Dinge so einfach wie möglich, aber nicht einfacher.
+Wählen wir also *nur* die Spalten aus, die uns interessieren und entfernen wir die restlichen, s. @fig-select.
+
+```{r select}
+#| echo: false
+#| label: fig-select
+#| fig-cap: "Sinnbild für das Auswählen von Spalten mit `select()`"
+d_select <-
+  d %>% 
+  select(id, note)
+
+p_d1 <- ggtexttable(d, rows=NULL)
+p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1)
+p_d_select <- ggtexttable(d_select, rows=NULL) 
+
+p_d_select2 <- 
+  p_d1 %>% 
+  table_cell_bg(column = 2, fill = "red", row = 2:tab_nrow(p_d_select))
+
+p_text_select <- grid::textGrob("select()")
+
+design <- 
+  "
+A#D
+ABD
+ACD
+A#D
+"
+
+p_select <- wrap_plots(A= p_d_select2, 
+                       B = p_text_select, 
+                       C = p_ra, 
+                       D = p_d_select, 
+                       widths = c(4,1,4),
+                       design = design) 
+p_select
+```
+
+:::{#exm-select}
+
+### Fokus auf nur zwei Spalten
+
+Ob wohl gebrauchte Spiele deutlich geringere Preise erzielen im Vergleich zu neuwertigen Spielen?
+Sie entschließen sich, mal ein Stündchen auf die relevanten Daten zu starren.
+
+```{r}
+select(mariokart, cond, total_pr)
+```
+
+Aha (?)$\square$
+:::
+
+### Spalten zu einer Zahl zusammenfassen mit `summarise`
+
+So eine lange Spalte mit Zahlen -- mal ehrlich: wer blickt da schon durch?
+Viel besser wäre es doch, die Spalte `total_pr` zu einer Zahl zusammenzufassen, das ist doch viel handlicher.
+Kurz entschlossen fassen Sie die Spalte `total_pr`, den Verkaufspreis, zum Mittelwert zusammen, s. @fig-summarise.
+
+```{r plot-summarise}
+#| echo: false
+#| label: fig-summarise
+#| fig-cap: "Spalten zu einer einzelnen Zahl zusammenfassen mit `summaris()`"
+d_summ <-
+  d %>% 
+  summarise(note_mw = round(mean(note), 1))
+
+
+p_d1 <- ggtexttable(d, rows=NULL)
+p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1)
+p_d_summ <- ggtexttable(d_summ, rows=NULL) 
+
+p_text_summ <- grid::textGrob("summarise()",
+                              gp=grid::gpar(fontsize=8))
+
+design <- 
+  "
+A#D
+ABD
+ACD
+A#D
+"
+
+p_summ <- wrap_plots(A= p_d1, 
+                       B = p_text_summ, 
+                       C = p_ra, 
+                       D = p_d_summ, 
+                       widths = c(4,1,4),
+                       design = design) 
+p_summ
+```
+
+:::{#exm-summarise}
+
+### Was ist der mittlere Verkaufspreis?
+
+```{r}
+summarise(mariokart, preis_mw = mean(total_pr))
+```
+Aha! Etwa 50$ erzielt so eine Auktion im Schnitt.$\square$
+:::
+
+
+### Tabelle gruppieren
+
+Es ist ja gut und schön, zu wissen, was so ein Spiel im Schnitt kostet.
+Aber viel interessanter wäre es doch, denken Sie sich,
+zu wissen, ob die neuen Spiele im Schnitt mehr kosten als die alten?
+Ob R Ihnen so etwas ausrechnen kann?
+
+>   🤖 Ich tue fast alles für dich. 🧡 
+
+Also gut, R, dann gruppiere die Tabelle, s. @fig-group.
+
+
+```{r plot-group}
+#| echo: false
+#| label: fig-group
+#| fig-cap: "Gruppieren von Datensätzen mit `group_by()`"
+d_groupby <-
+  d %>% 
+  group_by(gruppe)
+
+d_g1 <-
+  d %>% 
+  filter(gruppe == "A")
+
+d_g2 <-
+  d %>% 
+  filter(gruppe == "B")
+
+
+p_d_g1 <- ggtexttable(d_g1, rows=NULL) 
+p_d_g2 <- ggtexttable(d_g2, rows=NULL)
+
+
+p_d_g1 <- 
+  p_d_g1 %>% 
+  table_cell_bg(column = 3, fill = "blue", row = 2:tab_nrow(p_d_g1))
+
+p_d_g2 <- 
+  p_d_g2 %>% 
+  table_cell_bg(column = 3, fill = "green", row = 2:tab_nrow(p_d_g2))
+
+p_text_summ <- grid::textGrob("group_by(gruppe)",
+                              gp=grid::gpar(fontsize=8))
+
+design <- 
+  "
+A#D
+ABD
+ACE
+A#E
+"
+
+p_group <- wrap_plots(A= p_d1, 
+                       B = p_text_summ, 
+                       C = p_ra, 
+                       D = p_d_g1, 
+                       E = p_d_g2,
+                       widths = c(3,1,3),
+                       design = design) 
+p_group
+```
+
+
+:::{#exm-groupby}
+
+### Mittlerer Preis pro Gruppe
+
+Gruppieren alleine liefert Ihnen zwei (oder mehrere) Teiltabellen,
+etwa neue Spiele (Gruppe 1, `new`) vs. gebrauchte Spiele (Gruppe 2, `used`).
+Mit anderen Worten: Wir gruppieren anhand der Variable `cond`.
+
+```{r}
+mariokart_gruppiert <- group_by(mariokart, cond)
+```
+
+Das ist aber nur die halbe Miete. 
+Jetzt können Sie an jeder Teiltabelle Ihre weiteren Berechnungen vornehmen, etwa die Berechnung des mittleren Verkaufspreises.
+
+
+```{r}
+summarise(mariokart_gruppiert, preis_mw = mean(total_pr))
+```
+
+Langsam fühlen Sie sich als Datenchecker.. 🥷 🦹‍♀️. $\square$.
+:::
+
+
+### Spalten verändern mit `mutate`
+
+Immer mal wieder möchte man *Spalten verändern*, bzw. deren Werte umrechnen, s. @fig-mutate.
+
+```{r plot-mutate}
+#| echo: false
+#| label: fig-mutate
+#| fig-cap: "Spalten verändern/neu berechnen mit `mutate()`"
+d_mutate <-
+  d %>% 
+  mutate(punkte = c(73, 72, 89))
+
+p_d_mutate <- ggtexttable(d_mutate, rows=NULL) 
+
+p_d_mutate <- 
+  p_d_mutate %>% 
+  table_cell_bg(column = 5, fill = "red", row = 2:tab_nrow(p_d_select))
+
+p_text_mutate <- grid::textGrob("mutate()",
+                              gp=grid::gpar(fontsize=7))
+
+design <- 
+  "
+A#D
+ABD
+ACD
+A#D
+"
+
+p_mutate <- wrap_plots(A= p_d1, 
+                       B = p_text_mutate, 
+                       C = p_ra, 
+                       D = p_d_mutate, 
+                       widths = c(3,1,4),
+                       design = design) 
+p_mutate
+```
+
+:::{#exm-mutate}
+
+Der Hersteller des Computerspiels *Mariokart* kommt aus Japan; 
+daher erscheint es Ihnen opportun für ein anstehendes Meeting mit dem Hersteller die Verkaufspreise von Dollar in japanische Yen umzurechnen.
+Nach etwas Googeln finden Sie einen Umrechnungskurs von 1:133.
+
+```{r}
+mariokart2 <- mutate(mariokart, total_pr_yen = total_pr * 133)
+mariokart2 <- select(mariokart2, total_pr_yen, total_pr)
+mariokart2
+```
+
+Sicherlich werden Sie Ihre Gesprächspartner schwer beeindrucken.$\square$
+:::
+
+## Die Pfeife
+
+🚬 👈 Das ist keine Pfeife, wie René Magritte 1929 in seinem [berühmten Bild](https://en.wikipedia.org/wiki/File:MagrittePipe.jpg) schrieb.
+
+
+## Praxisprobleme des Datenaufbereitens
+
+### Fehlende Werte 
+
+### Spalten umbenennen
+
+### Werte umkodieren
+
+## Praxisbezug
+
+## Fallstudie
+
+## Aufgaben
+
+
+## Vertiefung
+
+## Literatur
+

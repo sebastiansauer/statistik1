@@ -1,0 +1,1013 @@
+# Daten einlesen 
+
+
+
+
+
+```{r libs}
+#| include: false
+library(tibble)
+library(tidyverse)
+# library(grid)
+# library(gridExtra)
+```
+
+```{r}
+#| include: false
+theme_set(theme_minimal())
+```
+
+
+
+
+```{css, echo = FALSE}
+.justify {
+  text-align: justify !important
+}
+
+.centered {
+  text-align-last: center;
+}
+
+.xlarge {
+  font-size: 300%;
+}
+```
+
+
+
+## Lernsteuerung
+
+### Standort im Lernpfad
+
+Abb. @fig-ueberblick-r zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
+
+
+
+### Standort im Lernpfad
+
+Abb. @fig-ueberblick-r zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
+
+
+
+```{mermaid}
+%%| fig-cap: Überblick über den Inhalt und Verlauf des Buches
+%%| label: fig-ueberblick-r
+%%| out-width: "100%"
+
+
+flowchart LR
+  subgraph R[Rahmen]
+    direction LR
+    subgraph V[Vorbereiten]
+      direction TB
+      E[<font size=5>**Einlesen**] --> Um[Umformen]
+    end
+    subgraph M[Modellieren]
+      direction TB
+      M1[Punktmodelle] --> Vis[Verbildlichen]
+      Vis --> U[Ungewissheit]
+      U --> G[Geradenmodelle]
+    end
+    subgraph N[Nachbereiten]
+      direction TB
+      D[Antworten diskutieren]
+    end
+  V --> M
+  M --> N
+  end
+  
+
+```
+
+
+```{r}
+#| echo: false
+ggplot2::theme_set(theme_minimal())
+```
+
+
+### Lernziele
+
+
+- Sie können R und RStudio starten.
+- Sie können R-Pakete installieren und starten
+- Sie können Variablen in R zuweisen und auslesen.
+- Sie können Daten in R importieren.
+- Sie können den Begriff *Reproduzierbarkeit* definieren.
+
+
+
+
+
+
+
+
+
+### Überblick
+
+
+Abb. @fig-ueberblick zeigt Ihnen, wo auf unserer Reise durch die Datenanalyse sich dieses Kapitels verorten lässt.
+
+
+### Benötigte R-Pakete
+
+
+```{r}
+library(easystats)
+```
+
+
+
+### Begleitvideos
+
+Schauen Sie sich mal in [dieser Playlist](https://www.youtube.com/playlist?list=PLRR4REmBgpIEaIyeNBgNGPgmhQJ_T1y8_) um,
+dort finden Sie einige Videos zum Thema R.
+
+## Errrstkontakt
+
+
+### Warum R?
+
+
+Gründe, die für den Einsatz von R sprechen:
+
+1. 🆓 R ist kostenlos, andere Softwarepakete für Datenanalyse sind teuer. 💸
+2. 📖 R und R-Befehle sind quelloffen, d.h. man kann sich die zugrundeliegenden Computerbefehle anschauen. Jeder kann prüfen, ob es vernünftig arbeitet. Jeder kann beitragen.
+
+3. 🆕 R hat die neuesten Methoden.
+
+4. 🫂R hat eine große Community.
+
+5. 🪡 R ist maßgeschneidert für Datenanalyse.
+
+
+Allerdings gibt es auch abweichende Meinungen, s. @fig-bill-excel.
+
+![Nicht jeder ist R-Freund](img/bill-gates-excel.jpg){#fig-bill-excel width="50%"}
+
+
+
+
+### R und Reproduziberkeit
+
+
+:::{#def-repro}
+
+### Reproduzierbarkeit
+
+
+Ein (wissenschaftlicher) Befunde ist reproduzierbar, wenn andere Analystis mit dem gleichen experimentellen Setup zum gleichen Ergebnis (wie in der ursprünglichen Analyse) kommen [@plesser_reproducibility_2018]. $\square$
+:::
+
+
+{{< https://www.nationalacademies.org/our-work/reproducibility-and-replicability-in-science >}}
+
+
+@def-repro ist, etwas überspitzt, in @fig-repro wiedergegeben.
+
+```{r}
+#| dev: "ragg_png"
+#| echo: false
+#| fig-cap: "Daten + Syntax + genaue Beschreibung der Messungen = reproduzierbar"
+#| label: fig-repro
+
+ggplot(tibble(x=c(0,1))) +
+  annotate("label", x = 0, y = 0, label = "🔢 + 🤖 + 🔬 = 🤩", 
+           size = 20) +
+  theme_void() +
+  theme(plot.margin=grid::unit(c(0,0,0,0), "mm")) +
+  coord_fixed(ratio = 1/4) 
+```
+
+
+
+
+:::{#exm-repro}
+
+
+### Aus der Forschung: Reproduzierbarkeit in der Psychologie
+
+>   🧑‍🎓 Wie ist es um unsere Wissenschaft, Psychologie, bestellt? Haben die Befunde Hand und Fuß?
+
+
+@obels_analysis_2020 haben die Reproduzierbarkeit in psychologischen Studien untersucht. 
+Sie berichten folgendes Ergebnis
+
+>   We examined data and code sharing for Registered Reports published in the psychological
+literature from 2014 to 2018 and attempted to independently computationally reproduce the main results in each
+article. Of the 62 articles that met our inclusion criteria, 41 had data available, and 37 had analysis scripts available.
+Both data and code for 36 of the articles were shared. We could run the scripts for 31 analyses, and we reproduced the
+main results for 21 articles. $\square$
+
+
+
+:::
+
+
+
+
+
+## Architektur von R
+
+
+### R & RStudio
+
+
+:::: {.columns}
+
+
+
+::: {.column width="40%"}
+
+![](img/R-logo.png){width="20%"}
+:::
+
+
+
+::: {.column width="20%"}
+:::{.xlarge}
+💖
+:::
+:::
+
+
+
+::: {.column width="40%"}
+
+![](img/rlogo.png){width="40%"}
+:::
+
+
+::::
+
+
+
+@ismay_statistical_2020 zeigen eine schöne Analogie, was der Unterschied von *R* und *RStudio* ist, s. @fig-r-rstudio.
+
+
+```{r r-rstudio}
+#| echo: false
+#| fig-cap: "R vs. RStudio"
+#| label: fig-r-rstudio
+
+knitr::include_graphics("img/r_vs_rstudio_1.png")
+```
+
+
+Wir verwenden beide Programme. Aber wir *öffnen* nur RStudio. 
+RStudio findet selbständig R und öffnet diese "heimlich".
+Öffnen Sie nicht noch extra R (sonst wäre R zweifach geöffnet).
+
+
+Hier ein Screenshot von der Oberfläche von RStudio, s.  @fig-rstudio.
+
+
+![So sieht RStudio aus](img/rstudio.png){#fig-rstudio}
+
+
+
+### R-Studio Cloud
+
+
+RStudio Cloud ist ein Webdienst von RStudio (zum Teil kostenlos).
+Man kann damit online mit R arbeiten. Die Oberfläche ist praktisch identisch zur 
+Desktop-Version, s. @fig-rstudio-cloud.
+Ein Vorteil ist, dass man als Nutzer nichts installieren muss.
+
+![So sieht RStudio Cloud aus. Genau wie RStudio Desktop](img/rstudio-cloud.png){#fig-rstudio-cloud}
+
+
+### Installation
+
+Lesen Sie [hier](https://data-se.netlify.app/2021/11/30/installation-von-r-und-seiner-freunde/#installation) die Installation von R und seiner Freunde nach.
+
+
+
+
+### R-Pakete
+
+
+Typisch für R ist sein modularer Aufbau: Man kann eine große Zahl an Erweiterungen ("Pakete") installieren, alle kostenlos.
+
+In R Paketen "wohnen" Funktionen, also Dinge, die R kann, wenn das Paket verfügbar ist.
+
+Man kann sich daher ein R-Paket vorstellen wie ein Buch:
+Wenn R es gelesen hat, dann kennt es die Inhalte.
+Diese Inhalte könnten irgendwelche Formeln, also Berechnungen sein.
+Es könnte aber die "Bauanleitung" für ein schönes Diagramm sein.
+
+Ist ein spezielles R-Paket auf Ihrem Computer vorhanden,
+so können Sie diese Funktionalität nutzen.
+
+
+Die Zahl an diesen "Paketen" ist groß; zur Verdeutlichung s. @fig-ship.
+
+![Containershiff, Corey Seeman, CC-BY-NC 20, Flickr.com](img/11102039694_d42ca1ff1c_c.jpg){#fig-ship width="50%"}
+
+
+
+*Erweiterungen* kennt man von vielen Programmen, sie werden auch *Add-Ons*, *Plug-Ins* oder sonstwie genannt.
+
+Man siehe zur Verdeutlichung Erweiterungen beim Broswer Chrome, @fig-chrome.
+
+![Erweiterungen beim Browser Chrome](img/chrome-extensions.png){#fig-chrome width="50%"}
+
+
+
+Die Anzahl der R-Pakete ist groß; allein auf dem "offiziellen Web-Store" (nennt sich "CRAN") von R 
+gibt es ca. 20,000 Pakete (@fig-cran); [Stand: 2022; Quelle](https://gist.github.com/daroczig/3cf06d6db4be2bbe3368)).
+
+![Die Anzahl der R-Pakete ist expoenziell gewachsen](img/number-of-submitted-packages-to-CRAN.png){#fig-cran}
+
+
+
+
+
+#### Pakete installieren {#install-r-pckgs}
+
+Wie jede Software muss man Pakete (Erweiterungen für R) erst einmal installieren,
+bevor man sie verwenden kann.
+Ja, einmal installieren reicht.
+
+Das geht komfortabel, wenn man beim Reiter *Packages* auf *Install* klickt (s. @fig-install-packages).
+
+![Klicken Sie auf "Install" im Reiter "Packages", um R-Pakete zu installieren](img/install-packages.png){#fig-install-packages}
+
+
+![So kann man R-Pakete installieren in RStudio](img/install-pckgs.gif){width="50%"}
+
+
+Dann öffnet sich ein Menü, wo man die Namen der gewünschten R-Pakete eingeben kann (s. Abbildung @fig-install-packages2).
+
+
+![Hier den oder die Namen der gewünschten R-Pakete eingeben](img/install-packages2.png){#fig-install-packages2 width="25%"}
+
+
+>   🧑‍🎓Welche R-Pakete sind denn schon installiert?
+
+
+Im Reiter *Packages* können Sie nachschauen, welche Pakete 
+auf Ihrem Computer schon installiert sind.
+Diese Pakete brauchen Sie logischerweise dann *nicht* noch mal installieren.
+
+
+
+>   🧑‍🎓Ja, aber welche R-Pakete "soll" ich denn installieren, welche brauch ich denn?
+
+Im Moment sollten Sie die folgenden Pakete installiert haben:
+
+- `tidyverse`
+- `easystats` 
+
+
+Wenn Sie die noch nicht installiert haben sollten,
+dann können Sie das jetzt ja nachholen.
+
+
+
+#### Pakete starten
+
+
+Wenn Sie ein Softwareprogramm - nichts anderes sind R-Pakete - installiert haben,
+müssen Sie es noch *starten*.
+
+Merke: Ein bestimmtes Paket muss man nur einmalig installieren.
+Aber man muss es jedes Mal neu starten, wenn man R (bzw. RStudio) startet.
+
+Sie erkennen leicht, ob ein Paket gestartet ist, wenn Sie ein Häkchen vor dem
+Namen des Pakets in der Paketliste (Reiter *Packages*) sehen, s. Abbildung \@ref(fig:install-packages).
+
+
+
+[Dieses Video](https://www.youtube.com/watch?v=Yej9xzKQ3yI&list=PLRR4REmBgpIEaIyeNBgNGPgmhQJ_T1y8_&index=26) verdeutlicht den Unterschied zwischen *Installation* und *Starten* eines R-Pakets. 
+
+### Projekte in R
+
+
+Ein *Projekt* in RStudio ist letztlich ein Ordner, 
+der als "Basis" für eine Reihe von Dateien verwendet wird.
+Sagen wir, das Projekt heißt `cool_stuff`. 
+RStudio legt uns diesen Ordner an einem von uns gewählten Platz auf unserem Computer an.
+Das ist ganz praktisch, weil man dann sagen kann "Hey R, nimmt die Datei 'daten.csv'", 
+ohne einen Pfad anzugeben.
+Vorausgesetzt, die Datei liegt auch im Projektordner (`cool_stuff`).
+
+Projekte kann anlegen mit Klick auf das Icon, das einen Quader mit dem Buchstaben R darin anzeigt (s. @fig-rstudio-projekte).
+
+
+![RStudio-Projekte, Beispiele](img/rstudio-projekte.png){#fig-rstudio-projekte width="20%"}
+
+
+
+
+
+
+### Skriptdateien
+
+Die R-Befehle ("Syntax") schreiben Sie am besten in eine speziell dafür 
+vorgesehene Textdatei in RStudio.
+Eine Sammlung von (R-)Befehlen nennt man auch ein *Skript*,
+daher spricht man auch von einer *Skriptdatei*.
+Um eine neue R-Skriptdatei zu öffnen, klicken Sie auf das Icon,
+das ein weißes Blatt mit einem grünen Pluszeichen zeigt, s.
+@fig-script-new.
+
+
+![So erstellen Sie eine neue Skriptdatei](img/script-new.png){#fig-script-new width="50%"}
+
+
+Vergessen Sie nicht zu speichern,
+wenn Sie ein tolles Skript geschrieben haben.
+Dafür gibt es mehrere Möglichkeiten:
+
+- Strg+S
+- Menü: File > Save
+- Klick auf das Icon mit der Diskette, s. @fig-script-new.
+
+
+Eine Skriptdatei können Sie in typischer Manier öffnen:
+
+- Strg+O
+- Klick auf das Icon mit der Akte und dem grünen Pfeil (vgl.  @fig-script-new)
+- Menü: File > Open File...
+
+
+## Grundlagen von R
+
+
+### Variablen {#sec-rvars}
+
+In jeder Programmiersprache kann man Variablen definieren,
+so auch in R:
+
+
+
+
+```{r echo = TRUE}
+richtige_antwort = 42
+falsche_antwort = 43
+typ = "Antwort"
+ist_korrekt = TRUE
+```
+
+
+Alternativ zum Gleichheitszeichen `=` können Sie auch (synonym) den Zuweisungspfeil `<-` verwenden. 
+Beides führt zum gleichen Ergebnis. Allerdings ist der Pfeil präziser, 
+und sollte daher bevorzugt werden.
+
+Der *Zuweisungspfeil* `<-` bzw. das Gleichheitszeichen `=` definiert eine neue *Variable* (oder überschreibt den Inhalt,
+wenn die Variable schon existiert).
+
+
+```{r echo = TRUE}
+richtige_antwort <- 42
+falsche_antwort <- 43
+typ <- "Antwort"
+ist_korrekt <- TRUE
+```
+
+
+[Dieses Video](https://www.youtube.com/watch?v=TKQk-tEF9YQ&list=PLRR4REmBgpIEaIyeNBgNGPgmhQJ_T1y8_&index=28) und [dieses Video](https://www.youtube.com/watch?v=Nal0m_AmMwg&list=PLRR4REmBgpIEaIyeNBgNGPgmhQJ_T1y8_&index=48) geben eine Einführung in das Definieren von Variablen in R.
+
+
+Sie können sich eine Variable wie einen Becher oder Behälter vorstellen,
+der bestimmte Werte enthält. 
+Auf dem Becher steht (mit Edding geschrieben) der Name des Bechers.
+Natürlich können Sie die Werte aus dem Becher entfernen und sie
+durch neue ersetzen (vgl. @fig-def-vars).
+
+
+![Variablen zuweisen](img/Variablen_zuweisen.png){#fig-def-vars width="25%"}
+
+
+
+
+
+R kann übrigens auch rechnen:
+
+```{r echo = TRUE}
+die_summe <- falsche_antwort + richtige_antwort
+```
+
+
+
+
+
+
+
+Aber was ist jetzt der Wert, der "Inhalt" der Variable `die_summe`? 
+
+Um den Wert, d.h. den Inhalt einer Variablen in R *auszulesen*, 
+geben wir einfach den Namen des Objekts ein:
+
+```{r echo = TRUE}
+die_summe
+```
+
+
+Was passiert wohl, wenn wir `die_summe` jetzt wie folgt definieren:
+
+```{r echo = TRUE}
+die_summe <- falsche_antwort + richtige_antwort + 1
+```
+
+
+Wer hätt's geahnt:
+
+```{r echo = TRUE}
+die_summe
+```
+
+
+
+Variablen können auch "leer" sein:
+
+```{r}
+alter <- NA
+alter
+```
+
+`NA` steht für *not available*, nicht verfügbar und macht deutlich, dass hier ein Wert fehlt.
+
+>    🧑‍🎓 Wozu brauche ich bitte fehlende Werte?!
+
+Fehlende Werte sind ein häufiges Problem in der Praxis.
+Vielleicht hat sich die befragte Person geweigert, ihr Alter anzugeben^[Datenschutz!]. Oder als Sie die Daten in Ihren Computer eingeben wollten, ist Ihre Katze über die Tastatur gelaufen und alles war futsch...
+
+
+
+
+### Funktionen - "Befehle"
+
+
+
+#### Vektoren
+
+Das, was R kann, ist in "Funktionen" hinterlegt.
+Ein Beispiel für eine solche Funktion könnte sein: 
+"Berechne den Mittelwert" (schauen wir uns gleich an). 
+
+Ein weiteres Beispiel für eine Funktion ist:
+"Erstelle eine Liste (Vektor) von Werten".
+
+Das geht so:
+
+```{r echo = TRUE}
+Antworten <- c(42, 43)
+```
+
+
+
+Der Befehl `c` (c wie *c*ombine) fügt mehrere Werte zusammen zu einer "Liste" (einem Vektor).
+
+Mit dem Zuweisungspfeil geben wir dieser Liste einen Namen, hier `Antworten`. 
+Diese Liste besteht aus zwei Werten, zuerst `42`, dann kommt `43`.
+
+
+
+#### Unsere erste statistische Funktion
+
+
+Jetzt wird's ernst. Jetzt kommt die Statistik.
+Berechnen wir also unsere erste statistische Funktion:
+Den Mittelwert. Puh.
+
+
+```{r echo = TRUE}
+mean(Antworten)
+```
+
+Sie hätten `Antworten` auch durch `c(42, 43)` ersetzen können,
+so haben Sie ja schließlich die Variable gerade definiert.
+
+R arbeitet so einen "verschachtelten" Befehl *von innen nach außen* ab:
+
+
+Start: `mean(Antworten)`
+
+      ⬇️ 
+
+Schritt 1: `mean(c(42, 43))`
+
+      ⬇️ 
+
+Schritt 2: `42.5`
+
+
+#### Schema einer Funktion
+
+
+```{r}
+#| echo: false
+#| eval: false
+library(magick)
+img_path <- "img/function-schema.pdf"
+p <- image_read_pdf(img_path)
+p_trimmed <- image_trim(p)
+image_write(p_trimmed, "img/function-schema.png")
+```
+
+@fig-function-schema stellt eine Funktion schematisch dar.
+
+
+
+![Schema einer Funktion](img/function-schema){#fig-function-schema}
+
+
+
+
+Eine Funktion hat einen oder mehrere *Inputs*,
+das sind Daten oder Verarbeitungshinweise, die man in die Funktion `fun` *eingibt*, bevor sie loslegt.
+Eine Funktion hat immer (genau) eine *Ausgabe* (Output),
+in der das Ergebnis einer Funktion ausgegeben wird.
+
+:::{#def-args}
+
+### Argumente einer Funktion
+
+Die "Trichter" einer (R-)Funktion, in denen man die Eingaben "einfüllt",
+nennt man auch *Argumente*.$\square$
+:::
+
+So hat die Funktion `mean()` z.B. folgende Argumente:
+
+`mean(x, trim = 0, na.rm = FALSE, ...)`
+
+- `x`: das ist der Vektor, für den der Mittelwert berechnet werden soll
+- `trim = 0`: Sollen die extremsten Werte von `x` lieber "abgeschnitten" werden, also nicht in die Berechnung des Mittelwerts einfließen?
+- `na.rm = FALSE`: Wie soll mit fehlenden Werten `NA` umgegangen werden? Im Standard liefert `mean`^[und viele andere arithmetische Funktionen in R] `NA` zurück. R schwenkt sozusagen die rote Fahne, um zu signalisieren, Achtung, Mensch, hier ist irgendwas nicht in Ordnung. Setzt man aber `na.rm = TRUE`, dann entfernt (remove, rm) R die fehlenden Werte und berechnet den Mittelwert.
+- `...` heißt "sonstiges Zeugs, das manchmal eine Rolle spielen könnte"; darum kümmern wir uns nicht.
+
+Einige Argumente haben einen *Standardwert* bzw. eine *Voreinstellung* (default).
+So wird bei der Funktion `mean` im Standard nicht getrimmt (`trim = 0`) und fehlende Werte werden nicht entfernt (`na.rm = FALSE)`.
+
+:::{.callout-note}
+Wenn ein R-Befehl ein Argument mit Voreinstellung hat,
+brauchen Sie dieses Argument nicht zu befüllen. 
+In dem Fall wird auf den Wert der Voreinstellung zurückgegriffen.
+Argumente ohne Voreinstellung - wie `x` bei `mean()` - müssen Sie aber auf jeden Fall mit einem Wert befüllen.
+:::
+
+Sagen wir, wir haben einen fehlenden Wert in unseren Daten:
+
+
+```{r echo = TRUE}
+Antworten <- c(42, 43, NA)
+Antworten
+```
+
+Wenn wir jetzt den Mittelwert berechnen wollen,
+quittiert R das mit einem schnöden `NA`:
+
+```{r}
+mean(Antworten)
+```
+
+R meint es gut mit Ihnen^[>   🤖 Naja, manchmal.]. Stellen Sie sich vor, 
+dass R Sie auf dieses Problem aufmerksam machen möchte: 
+
+>   🤖 Achtung, lieber Herr und Gebieter, du hast nicht mehr alle Latten am Zaun, will sagen, alle Daten im Vektor!
+
+(Danke, R.)
+
+
+Möchten Sie aber lieber R dieses Verhalten austreiben, so befüllen Sie das Argument `na.rm` mit dem Wert `TRUE`.
+
+```{r}
+mean(Antworten, na.rm = TRUE)
+```
+
+
+Bei jedem R-Befehl haben die Argumente eine bestimmte Reihenfolge,
+etwa bei `mean()`: `mean(x, trim = 0, na.rm = FALSE, ...)`.
+
+(Nur) wenn man die Argumente in ihrer vorgegebenen Reihenfolge anspricht,
+muss man *nicht* den Namen des Arguments anführen:
+
+✅  `mean(Antworten, 0, FALSE)` 
+
+Hält man sic aber nicht an die vorgebene Reihenfolge,
+so weiß R nicht, was zu tun ist und flüchtet sich in eine Fehlermeldung:
+
+```{r}
+#| error: true
+mean(Antworten, FALSE, 0)  # FALSCH, DON'T DO IT 🙅‍♀️
+```
+
+Wenn man die Namen der Argumente anspricht, ist die Reihenfolge egal:
+
+```{r}
+#| eval: false
+mean(na.rm = FALSE, x = Antworten)
+mean(trim = 0, x = Antworten, na.rm = TRUE)
+```
+
+Übrigens: 
+Leerzeichen sind R fast immer egal. 
+Aus Gründen der Übersichtlichkeit sollte man aber Leerzeichen verwenden. 
+In diesen Fällen sind Leerzeichen nicht erlaubt:
+
+- `<-`
+- `<=` etc.
+- Variablennamen
+
+
+
+### Häufige Fragen
+
+- *Wo finde ich Hilfe zu einer bestimmten Funktion, z.B. `fun()`*? Geben Sie dazu folgenden R-Befehl ein: `help(fun)`.
+- *In welchem Paket wohnt meine R-Funktion*? Suchen Sie nach der Funktion [auf dieser Seite](https://www.rdocumentation.org/).
+- *Ich weiß nicht, wie der R-Befehl funktioniert*? Vermutlich haben andere Ihr Problem auch, und meistens hat irgendwer das Problem schon gelöst. Am besten suchen Sie mal auf [Stackoverflow](www.stackoverflow.com).
+- *Ich muss mal grundlegend verstehen, wozu ein bestimmten R-Paket gut ist. Was tun*? Lesen Sie die Dokumenation ("Vignette") eines R-Pakets durch. Für das Paket `dplyr` bekommen Sie so einen Überblick über die verfügbaren Vignetten diese Pakets: `vignette(package = "dplyr")`. Dann suchen Sie sich aus der angezeigten Liste eine Vignette raus; mit `vignette("rowwise")` können Sie sich dann die gewünschte Vignette (z.B. `rowwise`) anzeigen lassen.
+
+
+
+## Daten importieren
+
+
+### Wo sind meine Daten?
+
+Damit Sie eine Datendatei importieren können, müssen Sie wissen, 
+wo die Datei ist.
+
+Schauen wir uns zwei Möglichkeiten an,
+wo eine Datei liegen könnte.
+
+1. Irgendwo im Internet, z.B. [hier](https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv)
+2. Irgendwo auf Ihrem Computer, z.B. in Ihrem Projektordner
+
+In beiden Fällen wird der "Aufenthaltsort" der Datei durch den Pfad (in welcher Ordnerhierarchie?) und den Namen definiert.
+
+:::{.callout-note}
+Wir werden in diesem Kurs häufiger mit dem Daten `mariokart` arbeiten;
+Sie finden ihn [hier](https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv).^[Auf [dieser Webseite](https://vincentarelbundock.github.io/Rdatasets/articles/data.html) finden Sie eine große Zahl an Datensätzen. Nur für den Fall, dass Ihnen langweilig ist.]
+:::
+
+
+
+
+### Gebräuchliche Formate
+
+
+Daten werden in verschiedenen Formaten im Computer abgespeichert;
+Tabellen häufig als 
+
+- Excel-Datei
+- CSV-Datei
+
+In der Datenanalyse ist das gebräuchlichste Format für Daten in Tabellenform die *CSV-Datei*.
+Das hat den Grund, weil dieses Format technisch schön einfach ist.
+Für uns Endverbraucher tut das nichts groß zur Sache, die CSV-Datei beherbergt 
+einfach eine brave Tabelle in einer *Textdatei*, sonst nichts.
+
+
+🏋️‍♀️ Öffnen Sie mal eine CSV-Datei mit einem *Texteditor* (nicht mit Word und auch nicht mit Excel). Schauen Sie sich gut an, was Sie dort sehen und erklären Sie die Datenstruktur.
+
+
+### Einlesen aus einem R-Paket
+
+Ihr Datensatz schon in einem R-Paket gespeichert,
+können Sie ihn aus diesem R-Paket starten. 
+Das ist die bequemste Option.
+Zum Beispiel "wohnt" der Datensatz `mariokart` im 
+R-Paket `openintro`.
+
+:::callout-tip
+Ein häufiger Fehler ist, dass man vergisst,
+dass man zuerst ein R-Paket installieren muss,
+bevor man es nutzen kann.
+Auf der anderen Seite muss man ein R-Paket (wie andere Software auch)
+nur ein Mal installieren - das Paket muss man ein Paket nach jedem Neustart von RStuio mit `library()` starten.
+:::
+
+
+```{r}
+data("mariokart", package = "openintro")
+```
+
+
+```{r}
+#| echo: false
+d <- mariokart
+```
+
+ 
+
+### Einlesen von einer Webseite
+
+So importieren Sie eine Tabelle von einer Webseite (URL) in R:
+
+```{r}
+#| eval: false
+library(easystats)  # Das Paket muss installiert sein
+d <- data_read("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+```
+
+
+Schauen wir uns die R-Syntax en Detail an:
+
+```
+Hey R,
+hol das "Buch" easystats aus der Bücherei und lies es
+definiere als "d" die Tabelle,
+die du unter der angegebenen URL findest.
+```
+
+Es ist egal,
+welchen Namen Sie der Tabelle geben.
+Ich nehme oft `d`, *d* die Daten. Außerdem ist es kurz,
+muss man nicht so viel tippen.
+
+Werfen wir einen Blick in die Tabelle (engl. *to glimpse*):
+
+
+```{r}
+glimpse(d)
+```
+
+
+[Hier](https://vincentarelbundock.github.io/Rdatasets/doc/openintro/mariokart.html) findet sich eine Erklärung des Datensatzes.
+
+
+![Download einer Datendatei (CSV-Format) von einer Webseite](img/download-csv.gif)
+
+
+
+
+### Importieren von Ihrem Computer
+
+Stellen Sie zuerst sicher, dass sich die Datendatei in Ihrem RStudio-Projektordner befindet.
+Dann können Sie die Datei einfach so importieren:
+
+```{r}
+#| eval: false
+d <- data_read("mariokart.csv")
+```
+
+
+[Dieses Video](https://youtu.be/B_nuN-M0pQM) erklärt die Schritte des Importierens einer Datendatei von Ihrem Computer.
+
+:::{.callout-note}
+Es gibt verschiedene Formate, in denen (Tabellen-)Dateien in einem Computer abgespeichert werden.
+Die gebräuchlichsten sind CSV und Excel.
+Praktischerweise kann der R-Befehl `data_read()` viele verschiedene Formate automatisch einlesen, so dass wir uns nicht weiter um das Format kümmern brauchen.
+:::
+
+## Logikprüfung
+
+
+>   🧑‍🎓 Wer will schon wieder wen prüfen?!
+
+In diesem Abschnitt schauen wir uns *Logikprüfungen* an: 
+Wir lassen R prüfen, ob eine Variable einen bestimmten Wert hat oder größer/kleiner als ein Referenzwert ist.
+
+
+Definieren wir zuerst eine Variable, `x`.
+
+```{r}
+x <- 42
+```
+
+Dann fragen wir R, ob diese Variable den Wert `42` hat.
+
+```{r}
+x == 42
+```
+
+>   🤖 Hallo, Mensch. Ja, diese Variable hat den Wert R.
+
+(Danke, R.)
+
+Möchte man mit R prüfen, ob eine Variable `x` einen bestimmten `Wert` ("Inhalt") hat, so schreibt man:
+
+`x == Wert`.
+
+:::{.callout-important}
+Man beachte das *doppelte* Gleichheitszeichen! Zur Prüfung auf Gleichheit muss man das doppelte Gleichheitszeichen verwenden.
+:::
+
+:::{.callout-caution}
+Ein beliebter Fehler ist es, bei der Prüfung auf Gleichheit, nur ein Gleichheitszeichen zu verwenden, z.B. so: `x = 73`.
+Mit einem Gleichheitszeichen prüft man aber *nicht* auf Gleichheit,
+sondern man definiert die Variable, s. @sec-rvars.
+:::
+
+Prüfungen mit dem logischen UND bzw. ODER sind in @XXX erläutert.
+
+
+@tbl-lgl gibt einen Überblick über wichtige Logikprüfungen in R.
+
+```{r}
+#| echo: false
+#| tbl-cap: "Logische Prüfungen in R"
+#| label: tbl-lgl
+lgl_df <- tibble::tribble(
+                ~Prüfung.auf,                 ~`R-Syntax`,
+                "Gleichheit",                 "x == Wert",
+              "Ungleichheit",                 "x != Wert",
+           "Größer als Wert",                  "x > Wert",
+   "Größer oder gleich Wert",                 "x >= Wert",
+          "Kleiner als Wert",                  "x < Wert",
+  "Kleiner oder gleich Wert",                 "x <= Wert",
+             "Logisches UND", "(x < Wert1) & (x > Wert2)",
+            "Logisches ODER", "(x < Wert1) | (x > Wert2)"
+  )
+
+lgl_df
+```
+
+
+
+## Praxisbezug
+
+
+>   🧑‍🎓Wird R in der Praxis wirklich genutzt? 
+Oder ist R nur der Traum von (vielleicht verwirrten) Profs im Elfenbeinturm?
+
+Schauen wir uns dazu die Suchanfragen bei [stackoverflow.com](www.stackoverflow.com) an,
+dem größten FAQ-Forum für Software-Entwicklung.
+Wir vergleichen Suchanfragen mit dem Tag `[r]` zu Suchanfragen mit dem Tag `[spss]`^[Durchgeführt am 2022-02-24, 17:21 CET]. Die Ergebnisse sind in Abbildung @fig-stackoverflow1 dargestellt.
+
+
+```{r stackoverflow}
+#| label: fig-stackoverflow1
+#| fig-cap: "Suchanfragen nach R bzw SPSS, Stand 2022-02-24"
+#| echo: false
+d <- tibble(
+  Anzahl = c(1923,438255),
+  Tag = c("spss", "r")
+)
+
+ggplot(d) +
+  aes(x = Tag, y = Anzahl) +
+  geom_col() +
+  theme_minimal() +
+  geom_label(aes(y = Anzahl, label = Anzahl))
+```
+
+
+Das ist grob gerechnet ein Faktor von 200 (der Unterschied von R zu SPSS). 
+Dieses Ergebnis lässt darauf schließen, dass R in der Praxis viel mehr als Excel gebraucht wird.
+
+
+
+
+
+>   🧑‍🎓 Aber ist R wirklich ein Werkzeug, das mir im Job hilft? 
+
+Viele Firmen weltweit nutzen R zur Datenanalyse, wie [diese Liste](https://www.quora.com/Which-organizations-use-R?share=1) zeigt.
+
+>   👨‍🏫 R ist *der* Place-to-be für die Datenanalyse.
+
+
+>   🧑‍🎓 Aber ist Datenanalyse wirklich etwas, womit ich in Zukunft einen guten Job bekomme?
+
+
+Berufe mit Bezug zu Daten, Datenanalyse oder, allgemeiner, Künstlicher Intelligenz (artificial intelligence) gehören zu den am meisten wachsenden Berufen:
+
+
+>   Artificial intelligence (AI) continues to make a strong showing on our Emerging Jobs lists, which is no surprise. Many jobs that have risen up as a result of AI in ﬁelds like cybersecurity and data science and because it’s is so pervasive many roles may demand more knowledge of AI than you may think. For example, real estate and business development roles. [Quelle: LinkedIn](https://blog.linkedin.com/2019/december/10/the-jobs-of-tomorrow-linkedins-2020-emerging-jobs-report)
+
+
+## Aufgaben
+
+1. [Typ-Fehler-R-01](https://datenwerk.netlify.app//Typ-Fehler-R-01/Typ-Fehler-R-01.html)
+1. [Typ-Fehler-R-02](https://datenwerk.netlify.app//Typ-Fehler-R-02/Typ-Fehler-R-02.html)
+1. [Typ-Fehler-R-03](https://datenwerk.netlify.app//Typ-Fehler-R-03/Typ-Fehler-R-03.html)
+1. [Typ-Fehler-R-04](https://datenwerk.netlify.app//Typ-Fehler-R-04/Typ-Fehler-R-04.html)
+1. [Typ-Fehler-R-06a](https://datenwerk.netlify.app//Typ-Fehler-R-06a/Typ-Fehler-R-06a.html)
+1. [Typ-Fehler-R-07](https://datenwerk.netlify.app//Typ-Fehler-R-07/Typ-Fehler-R-07.html)
+
+## Vertiefung
+
+
+Sie können bei [LinkedIn](https://www.linkedin.com/help/linkedin/answer/a510481) ein Zertifikat bekommen, das Ihre R-Kenntnisse dokumentiert.
+Praktischerweise wird das Zertifikat gleich Ihrem Profil zugeordnet.
+
+Suchen Sie ein schönes Meme zum Thema Statistik, Datenanalyse und Data Science. [Hier](https://data-se.netlify.app/2021/02/23/data-science-memes/) ist ein Startpunkt.
+
+Das Kombinieren von Funktionen kann kompliziert werden:
+
+```{r}
+x <- c(1, 2, 3)
+sum(abs(mean(x)-x)) 
+```
+
+Die Funktion `abs(x)` gibt den (Absolut-)Betrag von `x` zurück (entfernt das Vorzeichen, mit anderen Worten).
+
+
+
+
+
+## Literaturhinweise
+
+"Warum R? Warum, R?" heißt ein Kapitel in @sauer_moderne_2019, das einiges zum Pro und Contra von R ausführt.
+In Kapitel 3 in der gleichen Quelle finden sich viele Hinweise, wie man R startet;
+In Kapitel 4 werden Grundlagen von "Errisch" erläutert;
+Kapitel 5 führt in Datenstrukturen von R ein (schon etwas anspruchsvoller).
+Alternativ bietet [Kapitel 1](https://moderndive.com/1-getting-started.html) von @ismay_statistical_2020 einen guten Überblick.
+
+
+
+

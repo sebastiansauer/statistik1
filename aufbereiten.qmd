@@ -61,7 +61,9 @@ ggplot2::theme_set(theme_minimal())
 ### Lernziele
 
 
-- Sie können die grundlegenden Verben des Datenjudo anwenden
+- Sie können folgende Verben des Datenjudo anwenden: `arrange`, `filter`,  `select`, `summarise`, `group_by`, `mutate`
+- Sie können Daten in R importieren
+- Sie können R-Befehle mit der "Pfeife" verketten
 
 
 ### Benötigte R-Pakete
@@ -79,6 +81,12 @@ library(easystats)
 ### Die Wahrheit über Data Science
 
 Denkt man an Data Science, stellt man sich coole Leute vor (in San Francisco oder Berlin), die an abgefahrenen Berechnungen mit hoch komplexen statistischen Modellen für gigantische Datenmengen basteln.
+Tatsächlich besteht ein großer Teil der Arbeit aus dem Aufbereiten von Daten.
+
+
+:::{.exm-datenjudo1}
+
+### Praxisbezug: Aus dem Alltag des Data Scientisten
 
 Laut dem [Harvard Business Review](https://hbr.org/2018/08/what-data-scientists-really-do-according-to-35-data-scientists) allerdings,
 verbringen diese Leute "80%" ihrer Zeit mit dem *Aufbereiten* von Daten [@bowne-anderson_what_2018].
@@ -89,7 +97,9 @@ Eine gute Nachricht ist (vielleicht),
 dass das Aufbereiten von Daten keine aufwändige Mathematik verlangt,
 stattdessen muss man ein paar Handgriffe und Kniffe kennen.
 Daher passt der Begriff *Datenjudo* vielleicht ganz gut. 
-Kümmern wir uns also um das Aufbereiten bzw. Umformen von Daten, um das Datenjudo.
+Kümmern wir uns also um das Aufbereiten bzw. Umformen von Daten, um das Datenjudo.$\square$
+
+:::
 
 
 :::{#exm-datenjudo}
@@ -112,7 +122,7 @@ Beispiele für typische Tätigkeiten dees Datenjudos sind:
 Es gibt einen (einfachen) Trick, wie man umfangreiche Datenaufbereitung elegant geregelt kriegt, 
 klingt fast zu schön, um wahr zu sein (s. @fig-that-would-be-great).
 
-![made at imgflip.com, Meme Generator](img/thatwouldbegreat.jpg){#fig-that-would-be-great}
+![Mach's einfach. Made at imgflip.com, Meme Generator](img/thatwouldbegreat.jpg){#fig-that-would-be-great}
 
 Der Trick besteht darin, komplexe Operationen in mehrere einfache Teilschritte zu zergliedern^[Genau darin besteht das Wesen einer Analyse: die Zerlegung eines Objekts in seine Bestandteile.].
 Man könnte vom "Lego-Prinzip" sprechen, s. @fig-lego.
@@ -404,6 +414,23 @@ select(mariokart, cond, total_pr)
 Aha (?)$\square$
 :::
 
+Der Befehl `select` erwartet als Input eine Tabelle und gibt (als Output) eine Tabelle zurück - genau wie die meisten anderen Befehle des Datenjudos.
+Auch wenn Sie nur eine Spalte auswählen, bleibt es eine Tabelle,
+eben eine Tabelle mit nur einer Spalte.
+
+`select` erlaubt Komfort; Sie können Spalten auf mehrere Arten auswählen,
+z.B.
+
+```{r}
+#| eval: false
+select(mariokart, 1, 2)  # Spalte 1 und 2
+select(mariokart, 2:5)  #  Spalten 2 *bis* 5 
+select(mariokart, -1)  # Alle Spalte *bis auf* Spalte 1
+```
+
+Vertiefte Informationen zum Auswählen von Spalten mit `select` findet sich [hier](https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html).
+
+
 ### Spalten zu einer Zahl zusammenfassen mit `summarise`
 
 So eine lange Spalte mit Zahlen -- mal ehrlich: wer blickt da schon durch?
@@ -594,27 +621,323 @@ mariokart2
 Sicherlich werden Sie Ihre Gesprächspartner schwer beeindrucken.$\square$
 :::
 
+
+### Zeilen zählen mit `count`
+
+
+Arbeitet man mit nominalskalierten Daten, ist (fast) alles, was man tun kann,
+das Zeilen zählen.^[Ja, das ist traurig.]
+
+Man könnte z.B. fragen, wie viele neue und wie viele alte Spiele in der Tabelle (Dataframe) `mariokart` vorhanden sind.
+
+:::{#exm-count}
+Nach der letzten Präsentation Ihrer Analyse hat Ihre Chefin gestöhnt: Oh nein, 
+alles so kompliziert. Statistik! Himmel hilf! Kann man das niht einfacher machen?
+Anstelle von irgendwelchen komplizierten Berechnungen (Mittelwert?) möchten Sie beim nächsten Treffen nur zeigen, wie viele Computerspiele neu und wie viele gebraucht sind (in Ihrem Datensatz).
+Schlichte Häufigkeiten! Hoffentlich ist Ihre Chefin nicht wieder überfordert...
+
+```{r}
+mariocart_counted <- count(mariokart, cond)
+mariocart_counted
+```
+
+
+Aha! Es gibt mehr gebrauchte als neue Spiele.$\square$
+:::
+
+Jetzt könnte man noch den *Anteil* ergänzen:
+Welcher *Anteil* (der 143 Spiele in `mariokart`) ist neu, welcher gebraucht?
+
+```{r}
+mariocart_counted %>% 
+  mutate(Anteil = n / sum(n))
+```
+
+
+
+
 ## Die Pfeife
 
-🚬 👈 Das ist keine Pfeife, wie René Magritte 1929 in seinem [berühmten Bild](https://en.wikipedia.org/wiki/File:MagrittePipe.jpg) schrieb.
+🚬 👈 Das ist keine Pfeife, wie René Magritte 1929 in seinem [berühmten Bild](https://en.wikipedia.org/wiki/File:MagrittePipe.jpg) schrieb, s. @fig-pfeife [@m7_savinellis_2004-1].
+
+:::: {.columns}
+
+::: {.column width="60%"}
+![Das ist keine Pfeife. Sondern ein Bild einer Pfeife](img/800px-Pipa_savinelli.jpg){#fig-pfeife width="50%"}
+
+:::
 
 
-## Praxisprobleme des Datenaufbereitens
 
-### Fehlende Werte 
 
-### Spalten umbenennen
+::: {.column width="10%"}
+<!-- Empty col -->
 
-### Werte umkodieren
+:::
+
+
+::: {.column width="40%"}
+:::{.xlarge}
+%>%   
+:::
+
+So sieht die Pfeife in R aus^[Jaja, das ist keine Pfeife, sondern ein Symbol einer Pfeife...].
+
+::::
+
+
+
+
+### Russische Puppen
+
+Computerbefehle, und im Speziellen R-Befehle kann man "aufeinander" - oder vielmehr: ineinander - stapeln, so ähnlich wie eine russische Puppe (vgl. @sec-first-fun).
+
+Definieren wir zuerst einen Vektor `x` aus drei Zahlen:
+
+```{r}
+x <- c(1, 2, 3)
+```
+
+Und dann kommt unser verschachtelter Befehl:
+
+```{r}
+sum(x - mean(x))
+```
+
+Wie schon erwähnt, arbeitet R so einen "verschachtelten" Befehl *von innen nach außen* ab:
+
+
+Start: `sum(x - mean(x))`
+
+      ⬇️ 
+
+Schritt 1: `sum(x - 2)`
+
+      ⬇️ 
+
+Schritt 2: `sum(-1, 0, 1)`
+
+      ⬇️ 
+
+Schritt 3: `0`. Fertig. Puh. ''
+
+
+Soweit kann man noch einigermaßen folgen. 
+Aber das Verschachteln kann man noch extremer machen,
+dann wird's wild.
+Schauen Sie sich mal folgende (Pseudo-)Syntax an:
+
+
+```{#lst-schachtel .r lst-cap="Eine wild verschachtelte Sequenz von R-Befehlen"}
+fasse_zusammen(gruppiere(wähle_spalten(filter_zeilen(meine_daten)))))
+```
+
+
+### Die Pfeife zur Rettung
+
+@lst-schachtel ist schon harter Tobak, was für echte Fans.
+Wäre es nicht einfacher, man könnte @lst-schachtel wie folgt schreiben:
+
+
+```
+Nimm "meine_daten" *und dann*
+  filter gewünschte Zeilen *und dann*
+  wähle gewünschte Spalten *und dann*
+  teile in Subgruppen *und dann*
+  fasse sie zusammen.
+```
+
+
+:::{.callout-note}
+Der Befehl ` %>% ` verknüpft Befehle, man nennt ihn "Pfeife" (pipe).
+Der Shortcut für diesen Befehl ist Strg-Shift-M.
+Die Pfeife `%>%` "wohnt" im Paket `{tidyverse}`.^[Genauer gesagt im Paket `{magrittr}`,
+welches aber under the hood von `{tidyverse}` geladen wird. 
+Also nichts, um dass Sie sich kümmern müssten.]
+:::
+
+Mittlerweile ist auch im Standard-R eine Pfeife eingebaut.
+die sieht so aus: `|>`.
+Die eingebaute Pfeife funktioniert praktisch gleich zur anderen Pfeife ` %>% `,
+hat aber den Vorteil, dass Sie nicht `{tidyverse}` starten müssen.
+Da wir `{tidyverse}` aber sowieso praktisch immer starten werden, 
+bringt es uns keinen Vorteil, die neuere Pfeife des Standard-R `|>` zu verwenden.^[Unter *Tools > Global Options...* können Sie einstellen, dass der Shortcut Strg-Shit-M die eingebaute Pfeife verwendet.] 
+
+::::{.columns}
+
+:::{.column width="50%"}
+
+```{mermaid}
+%%| fig-cap: Illustration für eine Pfeifensequenz
+%%| label: fig-pfeife
+%%| out-width: "100%"
+flowchart TD
+  A["meine Daten #9637;"] --filter_zeilen-->B["#9637;"] 
+  B --wähle_spalten--> C["#9637;"]
+  C --gruppiere--> D["#9637;"]
+  D --fasse_zusammen--> E["#9637; Fertig. #129321;"]
+
+```
+
+:::
+
+:::{.column width="50%"}
+
+
+Und jetzt kommt's: So eine Art von Befehls-Verkettung gibt es in R.
+Schauen Sie sich mal @lst-pfeife an:
+
+```{#lst-pfeife .r lst-cap="Eine Pfeifen-Befehlssequenz"}
+meine_daten %>%
+  filter_gewünschte_zeilen() %>%
+  wähle_gewünschte_spalten() %>%
+  gruppiere() %>%
+  fasse_zusammen() 
+```
+
+
+So eine Pfeifen-Befehlsequenz ist ein wie ein Fließband,
+an dem es mehrere Arbeitsstationen gibt, s. @fig-pfeife. 
+Unser Datensatz wird am Fließband von Station zu Station weitergereicht und
+an jeder Stelle weiterverarbeitet.
+
+:::
+::::
+
+<!-- ## Praxisprobleme des Datenaufbereitens -->
+
+<!-- ### Fehlende Werte  -->
+
+<!-- ### Spalten umbenennen -->
+
+<!-- ### Werte umkodieren -->
 
 ## Praxisbezug
 
+
+Die Covid19-Epidemie hatte weltweit massive Auswirkungen; auch psychologischer Art wie Vereinsamung, Angst oder Depression.
+
+Eine Studie, die die psychologischen Auswirkungen von @mulukom_psychological_2020,
+die [unter diesem Projekt bei der Open Science Foundation (OSF) angemeldet ist](https://osf.io/tsjnb/).
+
+Die Daten wurden mit R ausgewertet. Beispielhaft ist [hier](https://osf.io/4b9p2) die R-Syntax zu sehen, die die Autoren zur Datenaufbereitung verwendet haben. 
+Einen guten Teil dieser Syntax kennen Sie aus diesem Kapitel.
+
+Diese Studie ist, neben einigen vergleichbaren, ein schönes Beispiel, wie Forschung und Praxis ineinander  greifen können: Angewandte Forschung als Beitrag zur Lösung eines akuten Problems, der Corona-Pandemie.
+
+
+## Wie man mit Statistik lügt
+
+Ein (leider) immer mal wieder zu beobachtender "Trick", um Daten zu frisieren ist,
+nur die Daten zu berichten, die einem in den Kram passen.
+
+:::{#exm-luege-filter}
+
+```{r}
+#| echo: false
+pr_mean <- round(mean(mariokart$total_pr), 0)
+```
+
+
+Ei Analysti 🧑‍🦰 möchte zeigen, dass der Verkaufspreis von Mariokart-Spielen "viel zu niedrig" ist. Es muss ein höherer Wert rauskommen, findet dis Analysti. Der mittlere Verkaufspreis (im Datensatz `mariokart`) liegt bei 50$. 
+
+
+>   ‍🦰 Kann man den Wert nicht ... "kreativ verbessern"? Ein paar Statistik-Tricks anwenden?
+
+Um dieses Ziel zu erreichen, teilt dis Analysti den Datensatz in Gruppen nach Anzahl der dem Spiel beigelegten Lenkräder (`wheels`). Dann berechnet er den Mittelwert pro Gruppe.
+
+```{r}
+mariokart_wheels <- 
+mariokart %>% 
+  group_by(wheels) %>% 
+  summarise(pr_mean = mean(total_pr),
+            count_n = n())  # n() gibt die Anzahl der Zeilen pro Gruppe an
+
+mariokart_wheels
+```
+
+Schließlich berechnet unser Analysti den *ungewichteten* Mittelwert über diese 5 Gruppen:
+
+```{r}
+mariokart_wheels %>% 
+  summarise(mean(pr_mean))
+```
+
+Und das Ergebnis lautet: 56$! Das ist doch schon etwas "besser" als 50$.
+
+Natürlich ist es *falsch* und irreführend, hier einen ungewichteten Mittelwert zu berechnen.
+Der gewichtete Mittelwert würde wiederum zum korrekten Ergebnis, 50$, führen.$\square$
+:::
+
 ## Fallstudie
+
+![Possierlich: Die Pinguine](img/penguins.png){#fig-penguins width="50%"}
+
+Bearbeiten Sie die [Fallstudie zu Pinguinen](https://allisonhorst.shinyapps.io/dplyr-learnr/#section-welcome) von Allison Horst.
+Sie können die Teile auslassen, die Themen beinhalten,
+die *nicht* in diesem Kapitel vorgestellt wurden.
+
+
 
 ## Aufgaben
 
+1. [tidydata1](https://datenwerk.netlify.app/posts/tidydata1/tidydata1.html) 
+1. [wrangle9](https://datenwerk.netlify.app/posts/wrangle9/wrangle9.html) 
+1. [wrangle7](https://datenwerk.netlify.app/posts/wrangle7/wrangle7.html) 
+1. [affairs-dplyr](https://datenwerk.netlify.app/posts/affairs-dplyr/affairs-dplyr.html) 
+1. [mariokart-mean1](https://datenwerk.netlify.app/posts/mariokart-mean1/mariokart-mean1.html) 
+1. [wrangle10](https://datenwerk.netlify.app/posts/wrangle10/wrangle10.html) 
+1. [mariokart-max1](https://datenwerk.netlify.app/posts/mariokart-max1/mariokart-max1.html) 
+1. [dplyr-uebersetzen](https://datenwerk.netlify.app/posts/dplyr-uebersetzen/dplyr-uebersetzen.html) 
+1. [wrangle5](https://datenwerk.netlify.app/posts/wrangle5/wrangle5.html) 
+1. [haeufigkeit01](https://datenwerk.netlify.app/posts/haeufigkeit01/haeufigkeit01.html) 
+1. [mariokart-mean2](https://datenwerk.netlify.app/posts/mariokart-mean2/mariokart-mean2.html) 
+1. [mariokart-mean3](https://datenwerk.netlify.app/posts/mariokart-mean3/mariokart-mean3.html)
+
 
 ## Vertiefung
+
+
+:::{.callout-note}
+In weiterführendem Material werden Sie immer wieder auf Inhalte treffen,
+die Sie noch nicht kennen, die etwa noch nicht im Unterricht behandelt wurden.
+Seien Sie unbesorgt: In der Regel können Sie diese Inhalte einfach auslassen,
+ohne den Anschluss zu verlieren. 
+Einfach ignorieren. 😄
+::: 
+
+
+
+Wer sich tiefer in das Datenjudo mit dem Tidyverse einarbeiten möchte,
+dem sei z.B. dieser [Kurs](https://www.datacamp.com/courses/introduction-to-the-tidyverse) empfohlen.
+
+
+Ein gutes und frei verfügbares Buch ist das von @wickham_r_2018; Kap. 5 behandelt (etwas ausführlicher) die Themen dieses Kapitels.
+
+
+[Diese Fallstudie](https://sebastiansauer.github.io/Fallstudie_Flights/) hat die Analyse von Flugverspätungen zum Thema.
+
+
+
+::::{.columns}
+
+:::{.column width="30%"}
+![Studie COVIDiSTTRESS](img/Covidistress1)
+<https://osf.io/z39us/>
+:::
+
+:::{.column width="70%"}
+
+>   The COVIDiSTRESS global survey is an international collaborative undertaking for data gathering on human experiences, behavior and attitudes during the COVID-19 pandemic. In particular, the survey focuses on psychological stress, compliance with behavioral guidelines to slow the spread of Coronavirus, and trust in governmental institutions and their preventive measures, but multiple further items and scales are included for descriptive statistics, further analysis and comparative mapping between participating countries. Round one data collection was concluded May 30. 2020. To gather comparable data swiftly from across the globe, when the Coronavirus started making a critical impact on societies and individuals, the collaboration and survey was constructed as an urgent collaborative process. Individual contributors and groups in the COVIDiSTRESS network (see below) conducted translations to each language and shared online links by their own best means in each country.
+
+
+[Die Daten](https://osf.io/z39us/files/osfstorage) stehen zur freien Verfügung. Sie können diese echten Daten eigenständig analysieren. [Diese Datei](https://osf.io/z39us/files/osfstorage/5f20b69732080501f5156b02) beinhaltet die finalen, aufbereiteten Daten. Achtung: Die Datei ist recht groß, ca. 90 MB.
+
+:::
+::::
+
+
+
 
 ## Literatur
 

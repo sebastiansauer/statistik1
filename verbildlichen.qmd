@@ -1,13 +1,741 @@
 # Daten verbildlichen
 
 
-```{r}
-library(ggpubr)
-```
 
+## Lernsteuerung
 
 
 ```{r}
 
 ```
+
+
+
+### Standort im Lernpfad
+
+Abb. @fig-ueberblick-vis zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
+
+
+
+```{mermaid}
+%%| fig-cap: Überblick über den Inhalt und Verlauf des Buches
+%%| label: fig-ueberblick-vis
+%%| fig-width: 1  
+
+
+flowchart LR
+  subgraph R[Rahmen]
+    direction LR
+    subgraph V[Vorbereiten]
+      direction TB
+      E[Einlesen] --> Um[Umformen]
+    end
+    subgraph M[Modellieren]
+      direction TB
+      M1[Punktmodelle] --> Vis[<font size=5>Verbildlichen]
+      Vis --> U[Ungewissheit]
+      U --> G[Geradenmodelle]
+    end
+    subgraph N[Nachbereiten]
+      direction TB
+      D[Diskutieren]
+    end
+  V --> M
+  M --> N
+  end
+```
+
+
+```{r}
+#| echo: false
+ggplot2::theme_set(theme_minimal())
+```
+
+
+### Lernziele
+
+
+- Sie können erläutern, wann und wozu das Visualisieren statistischer Inhalte sinnvoll ist.
+- Sie kennen typische Arte von Datendiagrammen.
+- Sie können typische Datendiagramme mit R visualisieren.
+- Sie können zentrale Ergebnisse aus Datendiagrammen herauslesen.
+
+
+### Benötigte R-Pakete
+
+```{r}
+#| message: false
+library(tidyverse)
+library(easystats)
+library(DataExplorer)  # nicht vergessen zu installieren
+```
+
+
+
+
+
+
+
+### Wozu das alles?
+
+
+
+
+
+::: {.content-visible unless-format="pdf"}
+
+<iframe src="https://giphy.com/embed/3oriNSf2iLjMVO7dao" width="480" height="244" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/culture--meme-kermit-3oriNSf2iLjMVO7dao">Wir müssen die Galaxis verteidigen, Kermit. Quelle: GIPHY</a></p>
+
+
+:::
+
+
+
+## Ein Dino sagt mehr als 1000 Worte
+
+Es heißt, ein Bild sage mehr als 1000 Worte. Schon richtig, aber ein Dinosaurier sagt auch mehr als 1000 Worte,
+s. @fig-dino1.
+
+
+![Dinosaurier und Kreis: Gleiche statistischen Kennwerte](img/dino-corr.gif){#fig-dino1}
+
+
+:::{.xsmall}
+[Quelle](https://towardsdatascience.com/how-to-turn-a-dinosaur-dataset-into-a-circle-dataset-with-the-same-statistics-64136c2e2ca0)
+:::
+
+
+In @fig-dino1 sieht man zwei verschiedene "Bilder", also Datensätze: einmal einen Dino und einmal einen Kreis.
+Obwohl die Bilder grundverschiedene sind, sind die zentralen statistischen Kennwerte (praktisch) identisch.
+Die Idee stammt von @Anscombe1973. [Hier](https://de.wikipedia.org/wiki/Anscombe-Quartett) ist ein weiteres Beispiel (von Anscombe),
+das zeigt, dass Bilder mehr zeigen als typische Statistiken es vermögen.
+
+
+
+
+Unter visueller Cortex ist sehr leistungsfähig. Wir können ohne Mühe eine große Anzahl
+an Informationen aufnehmen und parallel verarbeiten.
+Aus diesem Grund sind Datendiagramme eine effektive und einfache Art,
+aus Daten Erkenntnisse zu ziehen.
+
+
+
+::: {.callout-tip}
+Nutzen Sie Datendiagramme umfassend; sie sind einfach zu verstehen und doch sehr mächtig.
+:::
+
+
+::: {def-datendiagramm}
+### Datendiagramm
+Ein *Datendiagramm* (kurz: Diagramm) ist ein Diagramm, das Daten und Statistiken zeigt, mit dem Zweck,
+Erkenntnisse daraus zu ziehen.
+:::
+
+
+
+:::{.exm-datendiagramm}
+
+### Aus der Forschung: Ein aufwändiges (und ansprechendes) Datendiagramm
+
+[Hier](https://besjournals.onlinelibrary.wiley.com/cms/asset/22fa2646-002f-4890-800d-2717cc12bce8/jane13070-fig-0002-m.jpg) finden Sie ein Beispiel für ein Datendiagramm,
+ das mit R erzeugt wurde [@scherer_seasonal_2019].
+:::
+
+ 
+
+
+### Ein Bild hat nicht so viele Dimensionen
+
+
+@fig-many-dims zeigt ein Bild mit mehreren Variablen.
+Wie man (nicht) sieht, wird es langsam unübersichtlich.
+Offenbar kann man in einem Bild nicht beliebig viele Variablen reinquetschen.
+Die "Dimensionalität" eines Diagramms hat ihre Grenzen,
+vielleicht bei 4-6 Variablen.
+
+```{r}
+#| echo: false
+#| label: fig-many-dims
+#| fig-cap: "Ein Diagramm kann nur eine begrenzte Anzahl von Variablen zeigen"
+
+data(mariokart, package ="openintro")
+
+mariokart |> 
+  filter(total_pr < 100) |> 
+  ggplot(aes(x = duration, y = total_pr, color = cond, size = wheels, shape = stock_photo)) +
+  geom_point()
+```
+
+Möchten wir den Zusammenhang von vielen Variablen, z.B. mehr als 5, verstehen,
+kommen wir mit Bildern nicht weiter.
+Dann brauchen wir andere Werkzeuge: statistics to the rescue.
+
+
+:::{.callout-note}
+Bei klaren Zusammenhängen und wenig Variablen braucht man keine (aufwändige) Statistik.
+Ein Bild (Datendiagramm) ist dann (oft) ausreichend.
+Man könnte sagen, dass es Statistik nur deshalb gibt, weil unser Auge mit mehr als ca. 4-6 Variablen nicht gleichzeitig umgehen kann.
+:::
+
+:::{.exr-anz-dims}
+Wie viele Variablen sind in @fig-many-dims dargestellt?^[5]
+:::
+
+
+Eine weitere Möglichkeit, mehr Variablen in einem Diagramm unterzubringen,
+ist die "Flatlands" zu verlassen, also von 2D auf 3D zu wechseln, s. @fig-3d-germany.
+
+```{r}
+#| echo: false
+#| message: false
+#| label: fig-3d-germany
+#| fig-cap: "Eine 3D-Karte der Erde"
+
+library(anglr)
+library(maptools)
+library(plotly)
+data(wrld_simpl)
+
+
+
+map1 <- subset(wrld_simpl,
+               NAME %in% c("Germany"))
+map1 <- wrld_simpl
+
+## DEL model (like TRI in silicate)
+delmesh <-  anglr::globe(anglr::DEL(map1, max_area = 0.5))
+mesh <- as.mesh3d(delmesh)
+
+
+# plot point cloud
+x <- mesh$vb[1,]
+y <- mesh$vb[2, ]
+z <- mesh$vb[3,]
+m <- matrix(c(x,y,z), ncol=3, dimnames=list(NULL,c("x","y","z")))
+
+# colours in z don't make sense here, need to map object aesthetics above
+zmean <- apply(t(mesh$it),MARGIN=1,function(row){mean(m[row,3])})
+
+library(scales)
+facecolor = colour_ramp(
+  brewer_pal(palette="RdBu")(9)
+)(rescale(x=zmean))
+
+fig <- plot_ly(
+  x = x, y = y, z = z,
+  i = mesh$it[1,]-1, j = mesh$it[2,]-1, k = mesh$it[3,]-1,
+  facecolor = facecolor,
+  type = "mesh3d"
+)
+
+fig
+
+```
+
+
+[Quelle](https://plotly.com/r/trisurf/)
+
+
+Etwas weniger spektakulär, aber näher an der Datenanalyse ist @fig-mario-3d.
+
+
+```{r}
+#| echo: false
+#| label: fig-mario-3d
+#| fig-cap: "3D-Punktediagramm zum Datensatz mariokart"
+
+fig <- plot_ly(mariokart, x = ~duration, y = ~n_bids, z = ~total_pr, color = ~cond, colors = c('#BF382A', '#0C4B8E'))
+fig <- fig %>% add_markers()
+fig <- fig %>% layout(scene = list(xaxis = list(title = 'duration'),
+                     yaxis = list(title = 'number of bids'),
+                     zaxis = list(title = 'total price')))
+
+fig
+```
+
+
+Leider ist @fig-mario-3d nicht sehr aufschlussreich.
+Daraus kann man zweierlei lernen:
+
+- Nicht jedes Datendiagramm (ist auf Anhieb) informativ.
+- Die Daten müssen ggf. erst umgeformt werden.
+
+:::{.exr-mario3d}
+Es gibt einen Extremwert im Diagramm. Finden Sie ihn?
+:::
+
+
+
+
+## Nomenklatur von Datendiagrammen
+
+@tbl-nom-plots zeigt eine - sehr kurze Nomenklatur - an Datendigrammen.^[Weitere Nomenklaturen sind möglich, aber wir halten hier die Sache einfach.]
+
+```{r}
+#| echo: false
+#| label: tbl-nom-plots
+#| tbl-cap: "Ein (sehr kurze) Nomenklartur von Datendiagrammen"
+nom_plots <-
+  tribble(
+~Erkenntnisziel, ~qualitativ, ~quantitativ,
+"Verteilung", "Balkendiagramm"," Histogramm und Dichtediagramm",
+"Zusammenhang", "gefülltes Balkendiagramm", "Streudiagramm",
+"Unterschied", "gefülltes Balkendiagramm", "Boxplot")
+
+nom_plots
+```
+
+
+
+:::{.callout-note}
+Wir arbeiten hier mit dem Datensatz `mariokart`. Hilfe bzw. ein Codebook finden Sie [hier](https://www.rdocumentation.org/packages/openintro/versions/2.4.0/topics/mariokart).
+:::
+
+
+### Verteilung: nominale Variable
+
+:::{.def-verteilung}
+### Verteilung
+Eine (Häufigkeits-)Verteilung einer Variablen $X$ schlüsselt auf, wie häufig jede Ausprägung von $X$ ist.$\square$
+:::
+
+:::{.exm-verteilung1}
+@tbl-wheels-n zeigt die Häufigkeitsverteilung von `cond` aus dem Datensatz `mariokart`.
+Die Variable hat 5 Ausprägungen; z.b. kommt die Ausprägung `new`  59 mal vor.$\square$
+:::
+
+
+
+```{r}
+#| echo: false
+#| label: tbl-wheels-n
+#| tbl-cap: "Häufigkeitsverteilung von `cond` aus dem Datensatz `mariokart`"
+
+mariokart |> 
+  count(cond)
+```
+
+Zugegeben, das Datendiagramm von `cond` ist nicht so aufregend, s. @fig-mario-n-plot-cond.
+Wie man sieht, besteht so ein Diagramm als *Balken*, daher heißt es *Balkendiagramm*.
+Man kann so ein Diagramm um 90° drehen, keine Ausrichtung ist unbedingt besser als die andere.
+
+
+:::{#def-balken}
+### Balkendiagramm
+Ein Balkendiagramm eignet sich, um Häufigkeiten darzustellen
+:::
+
+
+```{r}
+#| echo: false
+#| label: fig-mario-n-plot-cond
+#| fig-cap: "Häufigkeitsverteilung der Variable `cond`"
+
+mario_n1 <-
+  mariokart |> 
+  count(cond) |> 
+  ggplot(aes(y = n, x = cond)) + 
+  geom_col() +
+  coord_flip()
+
+mario_n2 <-
+  mariokart |> 
+  count(cond) |> 
+  ggplot(aes(y = n, x = cond)) + 
+  geom_col() 
+
+plots(mario_n1, mario_n2)
+```
+
+
+Es gibt viele Methoden, sich mit R ein Balkendiagramm ausgeben zu lassen.
+Eine einfache, komfortable ist die mit dem Paket `DataExplorer`,
+s. @fig-de1.
+
+
+Zuerst importieren wir die Daten und starten das R-Paket `DataExplorer:
+
+```{r}
+library(DataExplorer)  # installieren vorab nicht vergessen
+mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+```
+
+
+
+```{#lst-de1 .r lst-cap="Syntax zur Erstellung eines Balkendiagramms"}
+mariokart %>% 
+  select(cond) %>% 
+  plot_bar()
+```
+
+
+Die Syntax ist in @lst-de1 abgedruckt. Übersetzen wir die Syntax ins Deutsche:
+
+```
+Nimm den Datensatz mariokart *und dann*
+  wähle die Spalte cond *und dann*
+  zeichne ein Balkendiagramm.
+```  
+
+:::{.exr-de1}
+### Spalten wählen für das Balkendiagramm
+Hätten wir andere Spalten ausgewählt, so würde das Balkendiagramm die Verteilung jener Variablen zeigen. Ja, Sie können auch mehrere Variablen auf einmal auswählen. Probieren Sie das doch mal aus!
+:::
+
+
+```{r}
+#| label: fig-de1
+#| echo: false
+#| fig-cap: "Balkendiagramm mit dem R-Paket `DataExplorer`"
+library(DataExplorer)
+mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+
+mariokart %>% 
+  select(cond) %>% 
+  plot_bar()
+```
+
+So können Sie 
+
+
+### Verteilung: quantitative Variable
+
+#### Histogramm
+
+Bei einer quantitativen Variablen mit vielen Ausprägungen wäre ein Balkendiagramm nicht so aussagekräftig, s. @fig-balken-total-pr. Es gibt einfach zu viele Ausprägungen.
+
+```{r}
+#| echo: false
+#| fig-cap: "Balkendiagramm für `total_pr`"
+#| label: fig-balken-total-pr
+
+mariokart |> 
+  filter(total_pr < 200) |> 
+  mutate(total_pr = round(total_pr, digits = 1)) |> 
+  ggplot(aes(x = total_pr)) +
+  geom_bar()
+```
+
+Die Lösung: Wir reduzieren die Anzahl der Ausprägungen, in dem wir auf ganze Dollar runden.
+Oder, um noch weniger Ausprägungen zu bekommen, können wir einfach Gruppen definieren, z.B.
+
+- Gruppe 1: 0-5 Dollar
+- Gruppe 2: 6-10 Dollar
+- Gruppe 2: 11-15 Dollar
+...
+
+
+In @fig-balken-total-pr-hist sind z.B. die Ausprägungen des Verkaufspreis (`total_pr`) in in Gruppen der Breite von 5 Dollar aufgeteilt worden. Zusätzlich sind noch die einzelnen Werte als schwarze Punkte gezeigt.
+
+```{r}
+#| echo: false
+#| fig-cap: "Balkendiagramm für `total_pr`"
+#| label: fig-balken-total-pr-hist
+
+m1a <- 
+  mariokart |> 
+  filter(total_pr < 100)
+
+m1a |> 
+  ggplot(aes(x = total_pr)) +
+  geom_histogram(binwidth = 5, alpha = .7, center = 0, color = "white")  +
+  geom_dotplot(binwidth = 1, method = "histodot") +
+  labs(caption = paste0("n = ", nrow(m1a))) +
+  scale_y_continuous(
+    name = "Anzahl",
+    sec.axis = sec_axis(trans = ~. / 141, name = "Anteil"))
+```
+
+
+
+:::{#def-histogramm}
+#### Histogramm
+Ein Histogramm ist ein Diagramm zur Darstellung der Häufigkeitsverteilung einer quantitativen Variablen. Die Daten werden in Gruppen (Klassen) eingeteilt, die dann durch einen Balken dargestellt sind.
+Die Höhe der Balken zeigt die Häufigkeit der Daten in dieser Gruppe/in diesem Balken^[bei konstanter Balkenbreite].
+:::
+
+
+
+
+Es gibt keine klare Regel, wie viele Balken in einem Histogramm stehen sollten.
+Nur: Es sollten nicht sehr viele und nicht sehr wenig sein, s. @fig-zu-wenig-viele links bzw. @fig-zu-wenig-viele, rechts.
+
+
+```{r}
+#| echo: false
+#| label: fig-zu-wenig-viele
+#| layout-ncol: 2
+#| fig-cap: "Nicht zu wenig und nicht zu vielle Balken im Balkendiagramm"
+#| fig-subcap: 
+#|   - "Zu viele Gruppen (Balken)"
+#|   - "Zu wenige Gruppen (Balken)"
+
+p_mario_zu_viele <- 
+  mariokart |> 
+  filter(total_pr < 100) |> 
+  ggplot(aes(x = total_pr)) +
+  geom_histogram(binwidth = 1) 
+
+p_mario_zu_viele
+
+p_mario_zu_wenige <- 
+  mariokart |> 
+  filter(total_pr < 100) |> 
+  ggplot(aes(x = total_pr)) +
+  geom_histogram(bins = 2) 
+
+p_mario_zu_wenige
+```
+
+
+Zur Erstellung eines Histogramms können Sie die Syntax @lst-de2 nützen, vlg. @fig-de-hist-density, links. 
+
+
+
+
+```{#lst-de2 .r lst-cap="Syntax zur Erstellung eines Histogramms"}
+mariokart %>% 
+  select(total_pr) %>% 
+  filter(total_pr < 100) %>%  # ohne Extremwerte
+  plot_histogram()
+```
+
+
+```{r}
+#| echo: false
+#| label: fig-de-hist-density
+#| layout-ncol: 2
+#| fig-cap: "Eine stetige Verteilung verbildlichen"
+#| fig-subcap:
+#|   - Symmetrisch (Normal)
+#|   - Schief 
+
+mariokart %>% 
+  select(total_pr) %>% 
+  filter(total_pr < 100) %>%  # ohne Extremwerte
+  plot_histogram()
+
+mariokart %>% 
+  select(total_pr) %>% 
+  filter(total_pr < 100) %>%  # ohne Extremwerte
+  plot_density()
+```
+
+
+
+#### Dichtediagramm
+
+@fig-balken-total-pr-hist-dens fügt zu @fig-balken-total-pr-hist ein *Dichtediagramm* hinzu (rote Linie). Ein Dichtediagramm ähnelt einem "glattgeschmirgeltem" Histogramm.
+
+
+:::{.def-dichtediagramm}
+#### Dichtediagramm
+Ein Dichtediagramm visualisiert die Verteilung einer stetigen Variablen.
+Im Gegensatz zum Histogramm wird der Verlauf der Kurve geglättet,
+so kann Rauschen besser ausgeblendet werden.^[Mit *Dichte* ist die Anzahl der Beobachtungen pro Einheit der Variablen auf der X-Achse gemeint.]
+:::
+
+
+
+```{r}
+#| echo: false
+#| fig-cap: "Balkendiagramm für `total_pr`"
+#| label: fig-balken-total-pr-hist-dens
+
+m1a |> 
+  ggplot(aes(x = total_pr, y = ..density..)) +
+  geom_histogram(binwidth = 5, alpha = .7, center = 0)  +
+  #geom_dotplot(binwidth = 1, method = "histodot") +
+  geom_density(color = "red")
+  #geom_dotplot(binwidth = 1, method = "histodot")
+```
+
+
+
+:::{.exr-plot-density}
+Erstellen Sie das Diagramm @fig-de-hist-density, rechtes Teildiagramm!^[Grob gesagt: `mariokart %>% plot_density()`.]$\square$
+:::
+
+
+
+#### Eigenschaften von Verteilungen
+
+(Diagramme von) Verteilungen können symmetrisch oder schief (nicht symmetrisch) sein, s. @fig-symm-schief.
+
+
+```{r}
+#| echo: false
+#| label: fig-symm-schief
+#| layout-ncol: 2
+#| fig-cap: "Symmetrische vs. schiefe Verteilung, verbildlicht"
+#| fig-subcap:
+#|   - "Symmetrisch (Normal)"
+#|   - "Schief "
+p_norm <- 
+  ggplot(NULL) +
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 1)) +
+  scale_x_continuous(limits = c(-3, 3))
+
+p_norm
+
+ggplot(NULL) +
+  stat_function(fun = dgamma, args = list(shape = 2, rate = 3))  +
+  scale_x_continuous(limits = c(0, 3))
+```
+
+
+@fig-plot-distribs zeigt verschiedene Formen von Verteilungen.
+
+```{r}
+#| echo: false
+#| label: fig-plot-distribs
+#| fig-cap: "Verschiedene Verteilungsformen"
+source("funs/plot-distribs.R")
+#plot_distribs()
+```
+
+
+[Quelle: ifes/FOM Hochschule](https://github.com/FOM-ifes/VL-Vorlesungsfolien)
+
+
+### Normalverteilung
+
+
+Eine Normalverteilung sehen Sie in @fig-symm-schief, links. 
+Sie hat u.a. folgende Eigenschaften:
+
+- symmetrisch
+- glockenförmig
+- stetig
+- eingipflig (unimodal)
+- Mittelwert, Median und Modus sind identisch
+
+:::{.exm-norm}
+Beispiele für normalverteilte Variablen sind Körpergröße von Männern oder Frauen, IQ-Werte, Prüfungsergebnisse, Messfehler, Lebensdauer von Glühbirnen, Gewichte von Brotlaiben, Milchproduktion von Kühen, Brustumfang schottischer Soldaten [@lyon_why_2014].
+:::
+
+
+
+Die Normalverteilung ist von hoher Bedeutung, da  diese Verteilung unter (recht häufigen) Bedingungen zwangsläufig ergeben muss. Wenn sich eine Variable als Summe mehrerer, unabhängiger, etwa gleich starker Summanden, dann kann man erwarten, dass sich diese Variable normalverteilt.
+Dieses Phänomen kann man gut anhand des [Galton-Bretts](https://www.youtube.com/watch?v=3m4bxse2JEQ) veranschaulichen.
+
+
+
+{{< video https://youtu.be/3m4bxse2JEQ >}}
+
+
+
+### Zusammenhang: nominale Variablen
+
+
+:::{.exm-nom-zshg}
+### Beispiele für Zusammenhänge bei nominalen Variablen
+
+- Hängt Berufserfolg (Führungskraft ja/nein) mit dem Geschlecht zusammen?
+- Hängt der Beruf des Vaters mit dem Schulabschluss des Kindes (Abitur, Realschule, Mittelschule) zusammen?
+- Gibt es einen Zusammenhang zwischen Automarke und politische Präferenz einer Partei?
+$\square$
+:::
+
+
+Sagen wir, Sie arbeiten immer noch beim Online-Auktionshaus und Sie fragen sich,
+ob ein Produktfoto wohl primär bei neuwertigen Produkten beiliegt, aber nicht bei gebrauchten?
+Dazu betrachten Sie wieder die `mariokart`-Daten, s. @fig-zshg-nom1.
+
+
+
+```{r}
+#| echo: false
+#| label: fig-zshg-nom1
+#| fig-cap: "Zusammenhang zwischen nominalskalierten Variablen verbildlichen"
+#| fig-subcap: 
+#|   - "Es findet sich ein Zusammenhang von Foto und Zustand in den Daten"
+#|   - "Es findet sich (fast) kein Zusammenhang von `wheel` und Foto in den Daten"
+#| layout-ncol: 2
+#| 
+mariokart %>% 
+  ggplot(aes(x = cond, fill = stock_photo)) +
+  geom_bar(position = "fill") +
+  scale_fill_viridis_d() +
+  theme(legend.position = "bottom")
+
+mariokart %>% 
+  ggplot(aes(x = wheels > 0, fill = stock_photo)) +
+  geom_bar(position = "fill") +
+  scale_fill_viridis_d() +
+  theme(legend.position = "bottom")
+```
+
+Tatsächlich: Es findet sich ein Zusammenhang zwischen der Tatsache, ob dem versteigerten Produkt ein Foto bei lag und ob es neuwertig oder gebraucht war (@fig-zshg-nom1, links).
+Bei neuen Spielen war fast immer (ca 90%) ein Foto dabei. Bei
+gebrauchten Spiel immerhin bei gut der Hälfte der Fälle.
+
+Anders sieht es aus für die Frage, ob ein (oder mehrere) Lenkräder dem Spiel beilagen (oder nicht) in Zusammenhang mit der Fotofrage Hier gab es fast keinen Unterschied zwischen neuen und alten Spielen, was die Frage nach "Foto des Produkts dabei" betraf (@fig-zshg-nom1, rechts),
+der Anteil betrug jeweils ca. 70%.
+
+Anders gesagt: Unterscheiden sich die "Füllhöhe" in den Diagrammen, so gibt es einen Unterschied hinsichtlich "Foto ist dabei" zwischen den beiden Gruppen (linker vs. rechter Balken).
+Unterscheiden sich die Anteile in den Gruppen (neuwertige vs. gebrauchte Spiele), so spielt z.B. die Variable "Foto dabei" offenbar eine Rolle. Dann hängen Neuwertigkeit und "Foto dabei" also zusammen!
+
+So können Sie sich in R ein gefülltes Balkendiagramm ausgeben lassen,
+s. @fig-de-bar-filled.
+
+```{r}
+#| label: fig-de-bar-filled
+#| fig-cap: "Ein gefülltes Balkendiagramm zur Untersuchung eines Zusammenhangs zwischen nominalskalierter Variablen"
+mariokart %>% 
+  select(cond, stock_photo) %>% 
+  plot_bar(by = "cond")
+```
+
+
+:::{.callout-note}
+*Gefüllte Balkendiagramme* eignen sich zur Analyse eines Zusammenhangs zwischen nominalskalierten Variablen. Allerdings sollte eine der beiden Variablen nur zwei Ausprägungen aufweisen,
+sonst sind die Zusammenhänge nicht mehr so gut zu erkennen.
+:::
+
+
+
+
+
+## Praxisbezug
+
+
+Ein, wie ich finde schlagendes Beispiel zur Stärke von Datendiagrammen ist @fig-vaccine.
+Das Diagramm zeigt die Häufigkeit von Masern, vor und nach der Einführung der Impfung.
+Die Daten und die Idee zur Visualisierung gehen auf @van_panhuis_contagious_2013 zurück.
+Das Diagramm und weitere finden sich in ähnlicher Form imn [Wall Street Journal](http://graphics.wsj.com/infectious-diseases-and-vaccines/).
+
+
+![Häufigkeit von Masern und Impfung in den USA, Lizenz: MIT](img/vaccine.jpg){#fig-vaccine width=50%}
+
+[Quellcode](https://github.com/blmoore/blogR/blob/master/R/measles_incidence_heatmap.R)
+[Datenquelle](https://www.tycho.pitt.edu)
+
+
+
+
+
+### Zusammenhang: quantitative Variablen
+
+
+## Vertiefung
+
+
+Mehr zu `{DataExplorer}` finden Sie [hier](https://boxuancui.github.io/DataExplorer/index.html).
+
+
+Eine weitere nützliche Art von Visualisierung sind Karten. So zeigt z.B. @fig-le-world die Veränderung der Lebenserwartung (in Jahren) über die letzten Dekaden.
+
+![Animation zur Veränderung der Lebenserwartung](img/life-exp-world.gif){#fig-le-world width="75%"}
+
+Der Quellcode der Animination ist [hier](https://gist.github.com/rafapereirabr/0d68f7ccfc3af1680c4c8353cf9ab345) zu finden.
+
+Natürlich sind der Fantasie keine Grenzen gesetzt, so ist etwa [diese Animationen](https://www.tylermw.com/wp-content/uploads/2019/06/featuredmeasles.mp4) ziemlich atemberaubend.
+
+
+
+## Literatur
+
+
+
 

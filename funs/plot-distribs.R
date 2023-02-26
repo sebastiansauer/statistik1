@@ -1,5 +1,5 @@
 
-plot_distribs <- function() {
+plot_distribs <- function(plot_it = FALSE) {
   
   #library(openintro)
   library(mosaic)
@@ -76,6 +76,7 @@ plot_distribs <- function() {
              axis.title.y = element_blank(), 
              axis.ticks = element_blank())
   
-  plot(out)
+  if (plot_it) plot(out)
+  
   return(out)
 }

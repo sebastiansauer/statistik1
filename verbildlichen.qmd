@@ -7,6 +7,9 @@
 #| echo: false
 library(tidyverse)
 library(easystats)
+library(anglr)
+library(maptools)
+library(plotly)
 ```
 
 
@@ -199,10 +202,6 @@ ist die "Flatlands" zu verlassen, also von 2D auf 3D zu wechseln, s. @fig-3d-ger
 #| message: false
 #| label: fig-3d-germany
 #| fig-cap: "Eine 3D-Karte der Erde"
-
-library(anglr)
-library(maptools)
-library(plotly)
 data(wrld_simpl)
 
 
@@ -297,7 +296,7 @@ nom_plots
 
 
 :::{.callout-note}
-Wir arbeiten hier mit dem Datensatz `mariokart`. Hilfe bzw. ein Codebook finden Sie [hier](https://www.rdocumentation.org/packages/openintro/versions/2.4.0/topics/mariokart).
+Wir arbeiten hier mit dem Datensatz `mariokart`. Hilfe bzw. ein Data-Dictionary (Codebook) finden Sie [hier](https://www.rdocumentation.org/packages/openintro/versions/2.4.0/topics/mariokart).
 :::
 
 ## Verteilungen verbildlichen
@@ -537,8 +536,8 @@ mariokart %>%
 #| layout-ncol: 2
 #| fig-cap: "Eine stetige Verteilung verbildlichen"
 #| fig-subcap:
-#|   - Symmetrisch (Normal)
-#|   - Schief 
+#|   - Histogramm
+#|   - Dichtediagramm 
 
 mariokart %>% 
   select(total_pr) %>% 
@@ -914,7 +913,7 @@ mariokart2 %>%
 
 Ohne Extremwerte schält sich ein deutlicheres Bild (@fig-mario-scatter2) hervor: Startpreis (`start_pr`) und Anzahl  der Räder (`wheels`) scheinen am stärksten mit dem Abschlusspreis zusammenzuhängen.
 
-Das Argument `by = "total_pr"`) bei `plot_scatterplot` weist R an, als Y-Variable stets `total_pr` zu verwenden. Alle übrigen Variablen kommen jeweils einmal als X-Variable vor.
+Das Argument `by = "total_pr"`) bei `plot_scatterplot` weist R an, als Y-Variable stets `total_pr` zu verwenden. Alle übrigen Variablen kommen jeweils einmal als X-Variable vor.$\square$
 
 :::
 
@@ -1236,11 +1235,41 @@ ggboxplot(mariokart2, x = "cond", y = "total_pr")
 ```
 
 
+
+Möchte man Mittelwerte vergleichen, so sind Boxplots nicht ideal, 
+da diese ja nicht den Mittelwert, sondern den Median heraustellen.
+Eine Abhilfe (also eine Darstellung des Mittelwerts) schafft man (z.B.) mit `ggpubr`,
+s. @fig-comp-means-ggpubr.
+
+
+```{r}
+#| label: fig-comp-means-ggpubr
+ggviolin(mariokart2, x = "cond", y = "total_pr",
+         add = "mean_sd") 
+```
+
+Ein "Violinenplot" hat die gleiche Aussage wie ein Dichtediagramm:
+Je breiter die "Violine", desto mehr Beobachtungen gibt es an dieser Stelle.
+Weitere Varianten zum Violinenplot mit ggpubr finden sich [hier](https://rpkgs.datanovia.com/ggpubr/reference/ggviolin.html).
+
+
+
+
 Sowohl `ggpubr` als auch `DataExplorer` (und viele andere R-Pakete) bauen auf dem R-Paket `ggplot2` auf.
 `ggplot2` ist eines der am weitesten ausgearbeiteten Softwarepakete zur Erstellung von Datendiagrammen.
 Das Buch zur Software (vom Autor von `ggplot2`) ist empfehlenswert [@wickham_ggplot2_2009].
 Eine neue, gute Einführung in Datenvisualisierung findet sich bei @wilke_fundamentals_2019.
 Beide Bücher sind kostenfrei online lesbar.
+
+
+
+>   🧑‍🎓 Ich würde gerne mal Beispiele von *schlechten* Datendiagrammen sehen.
+
+>   👨‍🏫 Auf der Seite von [Flowingdata](https://flowingdata.com/category/visualization/ugly-visualization/) findet sich eine nette Liste mit schlechten Datendiagrammen.
+
+
+
+
 
 ## Aufgaben
 

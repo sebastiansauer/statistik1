@@ -128,7 +128,7 @@ Allerdings gibt es auch abweichende Meinungen, s. @fig-bill-excel.
 
 
 
-### R und Reproduziberkeit
+### R und Reproduziebarkeit
 
 
 :::{#def-repro}
@@ -810,6 +810,7 @@ ggplot(d_x) +
 - *In welchem Paket wohnt meine R-Funktion*? Suchen Sie nach der Funktion [auf dieser Seite](https://www.rdocumentation.org/).
 - *Ich weiß nicht, wie der R-Befehl funktioniert*? Vermutlich haben andere Ihr Problem auch, und meistens hat irgendwer das Problem schon gelöst. Am besten suchen Sie mal auf [Stackoverflow](www.stackoverflow.com).
 - *Ich muss mal grundlegend verstehen, wozu ein bestimmten R-Paket gut ist. Was tun*? Lesen Sie die Dokumenation ("Vignette") eines R-Pakets durch. Für das Paket `dplyr` bekommen Sie so einen Überblick über die verfügbaren Vignetten diese Pakets: `vignette(package = "dplyr")`. Dann suchen Sie sich aus der angezeigten Liste eine Vignette raus; mit `vignette("rowwise")` können Sie sich dann die gewünschte Vignette (z.B. `rowwise`) anzeigen lassen.
+- *Oh nein, ich seh rot, das heißt, R zeigt mir irgendwas in roter Schrift an. Ist jetzt was kaputt?* Keine Sorge, R ist in seiner Ausgabe nicht sparsam mit roter Frabe. Solange es nicht als Fehlermeldung (`ERROR`) erscheint, ist es meist kein Problem.
 
 
 
@@ -855,6 +856,10 @@ einfach eine brave Tabelle in einer *Textdatei*, sonst nichts.
 🏋️‍♀️ Öffnen Sie mal eine CSV-Datei mit einem *Texteditor* (nicht mit Word und auch nicht mit Excel). Schauen Sie sich gut an, was Sie dort sehen und erklären Sie die Datenstruktur.
 
 
+
+
+
+
 ### Einlesen aus einem R-Paket
 
 Ihr Datensatz schon in einem R-Paket gespeichert,
@@ -886,7 +891,16 @@ d <- mariokart
 
 ### Einlesen von einer Webseite
 
-So importieren Sie eine Tabelle von einer Webseite (URL) in R:
+Hier ist eine Möglihckeit, Daten (in Form einer Tabelle) von einer Webseite (URL) in R zu importieren:
+
+
+```{r}
+#| eval: false
+mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+```
+
+
+Hier ist eine weitere Möglichkeit:
 
 ```{r}
 #| eval: false
@@ -895,7 +909,9 @@ d <- data_read("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mar
 ```
 
 
-Schauen wir uns die R-Syntax en Detail an:
+Der Unterschied ist, dass `data_read` *viele* Formate von Daten (Excel, CSV, SPSS, ...) verkraftet, wohingeben `read.csv` nur Standard-CSV einlesen kann.
+
+Schauen wir uns die letzte R-Syntax en Detail an:
 
 ```
 Hey R,
@@ -906,7 +922,8 @@ die du unter der angegebenen URL findest.
 
 Es ist egal,
 welchen Namen Sie der Tabelle geben.
-Ich nehme oft `d`, *d* die Daten. Außerdem ist es kurz,
+Ich nehme oft `d`, *d* die Daten. 
+Außerdem ist `d` kurz,
 muss man nicht so viel tippen.
 
 Werfen wir einen Blick in die Tabelle (engl. *to glimpse*):
@@ -1111,6 +1128,15 @@ Berufe mit Bezug zu Daten, Datenanalyse oder, allgemeiner, Künstlicher Intellig
 1. [Typ-Fehler-R-04](https://datenwerk.netlify.app//Typ-Fehler-R-04/Typ-Fehler-R-04.html)
 1. [Typ-Fehler-R-06a](https://datenwerk.netlify.app//Typ-Fehler-R-06a/Typ-Fehler-R-06a.html)
 1. [Typ-Fehler-R-07](https://datenwerk.netlify.app//Typ-Fehler-R-07/Typ-Fehler-R-07.html)
+1. [Logikpruefung2](https://datenwerk.netlify.app/posts/logikpruefung2/logikpruefung2)
+1. [there-is-no-package](https://datenwerk.netlify.app/posts/there-is-no-package/there-is-no-package.html)
+1. [Wertberechnen2](https://datenwerk.netlify.app/posts/wertberechnen2/wertberechnen2)
+1. [Wertzuweisen_mc](https://datenwerk.netlify.app/posts/wertzuweisen_mc/wertzuweisen_mc)
+1. [argumente](https://datenwerk.netlify.app/posts/argumente/argumente.html)
+1. [Logikpruefung1](https://datenwerk.netlify.app/posts/logikpruefung1/logikpruefung1)
+1. [import-mtcars](https://datenwerk.netlify.app/posts/import-mtcars/import-mtcars.html) 
+1. [Wertzuweisen](https://datenwerk.netlify.app/posts/wertzuweisen/wertzuweisen)
+1. [Wertpruefen](https://datenwerk.netlify.app/posts/wertpruefen/wertpruefen) 
 
 ## Vertiefung
 
@@ -1118,8 +1144,8 @@ Berufe mit Bezug zu Daten, Datenanalyse oder, allgemeiner, Künstlicher Intellig
 In R gibt es oft viele Möglichkeiten, ein Ziel zu erreichen.
 Zum Beispiel haben wir hier den Befehl `data_read()` verwendet,
 um Daten zu importieren.
-Andere, gebräuchliche Befehle, die CSV-Dateien importieren, heißen `read.csv()` (aus dem Standard-R) und `read_csv()` (aus dem Paket `{tidyverse}`).
-`data_read()` ist praktischer, da es viele verschiedenen Datenformate lesen kann und selbständig erkennt, um welches Datenformat (CSV, XLSX,...) es sich handelt.
+Andere, gebräuchliche Befehle, die CSV-Dateien importieren, heißen `read.csv()` (aus dem Standard-R, kein Extra-Paket nötig) und `read_csv()` (aus dem Paket `{tidyverse}`).
+`data_read()` ist praktisch, da es viele verschiedenen Datenformate lesen kann und selbständig erkennt, um welches Datenformat (CSV, XLSX,...) es sich handelt.
 
 
 
@@ -1150,5 +1176,7 @@ Kapitel 5 führt in Datenstrukturen von R ein (schon etwas anspruchsvoller).
 Alternativ bietet [Kapitel 1](https://moderndive.com/1-getting-started.html) von @ismay_statistical_2020 einen guten Überblick.
 
 
+
+## Literatur
 
 

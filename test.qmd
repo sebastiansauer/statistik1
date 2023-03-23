@@ -1,102 +1,19 @@
-# TEST
+# TESWT
 
 
-```{r}
-mariokart %>% 
-  filter(total_pr < 100) %>% 
-  filter(wheels %in% c(0, 2))
-```
+@fig-median-human stellt den Median schematisch dar.
 
+::: {#fig-median-human layout-ncol=5 width="1%" fig-align="bottom"}
+![1](img/Human_Silhouette.svg.png){width=0.1%}
 
+![2](img/Human_Silhouette.svg.png){width=0.13%}
 
-```{r}
-m <-
-  mariokart %>%
-  filter(total_pr < 100) %>% 
-  filter(wheels %in% c(0, 2)) %>% 
-  mutate(ID = 1:nrow(.),
-         total_pr_resid = total_pr - mean(total_pr),
-         total_pr_resid_quad = total_pr_resid^2) %>% 
-  group_by(wheels) %>% 
-  mutate(total_pr_mean_group = mean(total_pr)) %>% 
-  ungroup()
+![3: Median!](img/human-red.png){width=0.15%}
 
+![4](img/Human_Silhouette.svg.png){width=0.16%}
 
-m_sum <- 
-  m %>% 
-  group_by(wheels) %>% 
-  summarise(total_pr = mean(total_pr)) %>% 
-  ungroup()
+![5](img/Human_Silhouette.svg.png){width=0.2%}
 
+Der Median als der Wert des "mittleren" Objekts, wenn die Objekte aufsteigend sortiert sind.
 
-m %>% 
-  ggplot() +
-  geom_hline(aes(yintercept = mean(total_pr))) +
-  geom_segment(aes(x = ID,
-                   xend = ID,
-                   y = total_pr,
-                   yend = mean(total_pr)
-                   ), color = "grey") +
-  geom_point(aes(x = ID, y = total_pr)) 
-
-
-
-m %>% 
-  ggplot() +
-  geom_segment(data = filter(m, wheels == 0),
-               aes(x = ID,
-                   xend = ID,
-                   y = total_pr,
-                   yend = mean(total_pr)
-               ), color = "grey") +
-   geom_hline(data = m_sum,
-     aes(yintercept = total_pr,
-                 color = factor(wheels))) +
-   geom_segment(data = filter(m, wheels == 2),
-               aes(x = ID,
-                   xend = ID,
-                   y = total_pr,
-                   yend = mean(total_pr)
-               ), color = "grey") +
-  geom_point(
-    aes(x = ID, y = total_pr, color = factor(wheels)) )
-```
-
-
-
-
-
-```{r}
-p2 <- 
-  
-  
-  
-  ggplot(m) +
-  geom_hline(data = m_sum,
-             aes(yintercept = total_pr,
-                 color = ordered(wheels)),
-             wheels = "yes") +
-  geom_segment(aes(x = ID,
-                   xend = ID,
-                   y = total_pr,
-                   yend = total_pr_mean_group),
-               color = "grey80",
-               wheels = "no") +
-  geom_point(data = m,
-             aes(x = ID, 
-                 y = total_pr, 
-                 color = ordered(wheels)),
-             wheels = 7) +
-  theme(legend.position = "none") +
-  labs(title = "total_pr ~ wheels",
-       x = "",
-       y = "",
-       caption = "Relativ wenig Residualstreuung") +
-  scale_color_viridis_d(alpha = 0.6) +
-  geom_label(data = m_sum,
-             aes(y = total_pr),
-             x = 1, label = paste0("wheels: ", m$wheels), hjust = 0) 
-
-grid.arrange(p1, p2, nrow = 1)
-```
-
+:::

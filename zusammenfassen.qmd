@@ -1,4 +1,4 @@
-# Punktmodelle
+# Punktmodelle 1
 
 
 
@@ -14,7 +14,9 @@
 ### Lernziele
 
 
-- Sie ...
+- Sie können gängige Arten von Lagemaße definieren.
+- Sie können erläutern, inwiefern man ein Lagemaß als ein Modell hernehmen kann.
+- Sie können Lagemaße mit R berechnen.
 
 
 ### Benötigte R-Pakete
@@ -37,6 +39,9 @@ library(easystats)
 ggplot2::theme_set(theme_minimal())
 ```
 
+
+
+
 ## Mittelwert als Modell
 
 Der klassische Mittelwert (arithmetisches Mittel) ist ein prototypisches Beispiel für ein Modell in der Statistik.
@@ -52,6 +57,7 @@ Der Durchschnitt ($\varnothing$) beträgt: 2.
 :::
 
 >   🧑‍🎓 Zu easy!
+
 >   👨‍🏫 Schon gut! Chill mal. Wird gleich interessanter.
 
 
@@ -94,7 +100,7 @@ Eine nützliche Anschauung zum Mittelwert ist die Vorstellung des Mittelwerts al
 In "Mathe-Sprech" bezeichnet man den Mittelwert häufig mit $\bar{x}$ und schreibt die Rechenregel so, s. #eq-mw-formel.
 
 
-$\bar {x} =\frac{1}{n} \sum_{i=1}^{n}{x_{i}}=\frac {x_{1}+x_{2}+\dotsb +x_{n}} {n}$
+$$\bar {x} =\frac{1}{n} \sum_{i=1}^{n}{x_{i}}=\frac {x_{1}+x_{2}+\dotsb +x_{n}} {n}$$ {#eq-mw-formel}
 
 
 Da der Mittelwert eine zentrale Rolle spielt in der Statistik,
@@ -114,6 +120,41 @@ $$\text{Daten} = \text{Modell} + \text{Rest}$$
 
 Der Mittelwert ist hier unser Modell der Daten.
 Wie gesagt: Ein Modell ist eine vereinfachte (zusammengefasste) Beschreibung einer Datenreihe.
+
+
+Um Modelle darzustellen, wird in der Datenanalyse häufig folgende Art von Modellgleichung verwendet:
+
+
+$$y \sim m$$
+
+Lies: "Y ist eine Funktion des Modells plus dem Fehler". 
+Der Kringel "~"^[die sog. "Tilde"] soll also hier heißen "... ist eine Funktion von ...".
+
+Mit $Y$ sind die Daten bzw. die zu erklärende Variable^[AV, Output-Variable, Zielvariable] gemeint.
+
+In diesem Fall ist das Modell einfach gleich dem Mittelwert (und nicht irgendeiner Funktion des Mittelwerts), so dass wir schreiben können:
+
+
+$$y = \bar{x} + e$$
+
+
+Die Zielvariable $Y$ wird also durch ihren eigenen Mittelwert erklärt.
+In späteren Kapiteln werden wir andere Variablen heranziehen, um die Zielvariable zu erklären.
+Würden wir z.B. sagen wollen, dass wir $Y$ als Funktion einer Variable $X$ erklären,
+so würden wir schreiben:
+
+$$y \sim x$$
+Da wir im Moment aber keine andere Variablen bemühen, um $Y$ zu erklären schreibt man auch:
+
+$$y \sim 1$$
+
+Diese Schreibweise sieht verwirrend aus. 
+Die $1$ soll aber einfach zeigen, dass wir keine andere Variable zur Erklärung von $Y$ verwenden, 
+daher steht hier kein Buchstabe, sondern eine einfache $1$.
+
+
+
+Schauen Sie sich die Abweichungsbalken^[Residuen, Fehler; häufig mit $e$ wie *error* bezeichnet] in @fig-mw1 einmal genauer an.
 
 
 ```{r fig-abw-balken-mw, echo = FALSE}
@@ -167,7 +208,7 @@ p_mean_deltas
 ```
 
 
-Schauen Sie sich die Abweichungsbalken einmal genauer an.
+
 Jetzt stellen Sie sich vor, Sie würden die vom Mittelwert nach oben ragenden Balkenlängen aneinanderlegen.
 Sehen Sie das vor Ihrem geistigen Auge? 
 Jetzt legen Sie auch noch die Abweichungsbalken, die nach unten ragen aneinander.
@@ -216,7 +257,8 @@ dass alle der 100 Studentis 1000 Euro im Jahr verdienen.
 In R kann man das mittlere Vermögen (präziser: das arithmetische Mittel des Vermögens) wie folgt berechnen.
 
 ```{r}
-einkommen_studis <- rep(x = 0, times = 100)  # rep wie "repeat": wiederhole 1000 USD 100 Mal
+set.seed(42)  # Zufallszahlen festlegen, hier nicht so wichtig
+einkommen_studis <- rep(x = 1, times = 100)  # rep wie "repeat": wiederhole 1000 USD 100 Mal
 einkommen <- c(einkommen_studis, 120*1e6)
 einkommen_mw <- mean(einkommen)
 ```
@@ -237,7 +279,9 @@ Der Mittelwert im Hörsaal beträgt also `r scales::label_comma()(einkommen_mw)`
 
 
 >   🧑‍🎓 Hey, der Mittelwert ist doch Quatsch! Das ist gar kein typischer Wert für die Menschen im Hörsaal. Weder für den Mbappé, noch für uns Studis!
+
 >   👨‍🏫 Ja, da habt ihr Recht.
+
 >    ⚽   Die Welt  ist schon ungerecht! 
 
 
@@ -246,19 +290,34 @@ Bei (sehr) schiefen Verteilungen (s. @fig-mbappe) ist der Mittelwert (sehr) weni
 da er nicht mehr "typische" Werte für die Merkmalsträger beschreibt.
 :::
 
+@fig-mbappe stellt die Verteilung einer mit normal skalierter Achse und einmal mit logarithmischer X-Achse.
+Die logarithmische X-Achse stellt den Unterschied von Mittelwert und Median deutlicher heraus als die "normale" (additive) Achse. 
+
 ```{r}
 #| echo: false
 #| fig-cap: "Die Einkommensverteilung im Hörsaal"
 #| label: fig-mbappe
+#| fig-subcap: 
+#|   - X-Achse in additiver Form
+#|   - X-Achse in multiplikativer Form (logarithmische Darstellung)
 
 d <-
   tibble(einkommen = einkommen,
          id = 1:length(einkommen))
 
-ggplot(d) +
+p1 <- ggplot(d) +
   aes(x = einkommen) +
   geom_histogram() +
-  theme_minimal()
+  theme_minimal() +
+  geom_vline(xintercept = c(mean(einkommen)), color = "red") +
+  geom_vline(xintercept = c(median(einkommen)), color = "blue") +
+  annotate("label", x = median(einkommen), y = 100, label = "Median", color = "blue") +
+  annotate("label", x = mean(einkommen), y = 0, label = "MW", color = "red") 
+
+p1
+
+p1 +
+  scale_x_continuous(trans = "log10")
 ```
 
 
@@ -279,17 +338,6 @@ Man sagt, der Mittelwert ist nicht *robust* (gegenüber Extremwerten).
 ### Das Median-Einkommen einiger Studentinnen
 Fünf Studentinnen tauschen sich über ihr Einkommen aus, s. @fig-md1, links.
 Es handelt sich um eine schiefe Verteilung.
-:::
-
-Wir könnten jetzt behaupten, dass Carla das typische Einkommen (für diese Datenreihe) aufweist,
-da es genauso viele Studentinnen gibt, die mehr verdienen, wie solche, die weniger verdienen.
-
-
-:::{.def-median}
-### Median
-Merkmalsausprägung, die bei (aufsteigend) sortierten Beobachtungen in der Mitte liegt.
-:::
-
 
 
 
@@ -326,6 +374,50 @@ d %>%
   annotate("label", x = 22, y = 1, label = "MW", color = "blue")   +
   theme_minimal()
 ```
+
+
+
+Wir könnten jetzt behaupten, dass Carla das typische Einkommen (für diese Datenreihe) aufweist,
+da es genauso viele Studentinnen gibt, die mehr verdienen, wie solche, die weniger verdienen.
+
+$\square$
+
+:::
+
+
+:::{#def-median}
+### Median
+Merkmalsausprägung, die bei (aufsteigend) sortierten Beobachtungen in der Mitte liegt.
+:::
+
+@fig-median-human stellt den Median schematisch dar.
+
+
+
+
+::: {#fig-median-human layout-ncol=5 width="1%" fig-align="bottom"}
+![1](img/Human_Silhouette.svg.png){width=0.1%}
+
+![2](img/Human_Silhouette.svg.png){width=0.13%}
+
+![3: Median!](img/human-red.png){width=0.15%}
+
+![4](img/Human_Silhouette.svg.png){width=0.16%}
+
+![5](img/Human_Silhouette.svg.png){width=0.2%}
+
+Der Median als der Wert des "mittleren" Objekts, wenn die Objekte aufsteigend sortiert sind.
+
+:::
+
+
+Bei geradem $n$ werden die beiden mittleren Werte betrachtet und das arithmetische Mittel aus diesen beiden Werten gebildet.
+
+
+:::{#exm-med2}
+Bei der Messreihe 1, 2, 3, 4, 5, 6, 8, 9 beträgt der Median 4.5.$\square$
+:::
+
 
 
 :::{#exr-md2}
@@ -525,143 +617,10 @@ mariokart_lagemaße_total_pr
 :::{#def-punktmodell}
 ### Punktmodell
 Ein Modell, welches für alle Beobachtungen ein und denselben Wert annimmt (vorhersagt),
-heißt ein *Punktmodell.$\square$
+heißt ein *Punktmodell. Anders gesagt fasst ein Punktmodell eine Wertereihe (häufig ist das eine Tabellenspalte) zu einer Zahl zusammen, s. @eq-desk.$\square$
 :::
 
-
-
-## Modellgüte
-
->   👩‍🎓 Ich frage mich, ob man so ein Modell nicht verbessern kann?
-
->   👩‍🏫 Die Frage ist, was wir mit "verbessern" meinen?
-
->    👩‍🎓 Naja, kürzere Fehlerbalken, ist doch klar!
-
->    🧑‍🎓 Da die Anzahl der Lenkräder mit dem Verkaufsgebot zusammenhängt, könnte es vielleicht sein, dass wir die Lenkräder-Anzahl da irgendwie nutzen könnten!
-
->    👩‍🏫 Ein gute Gedanke, das sollten wir ausprobieren.
-
-
-```{r}
-#| echo: false
-#| label: fig-fehler-red
-#| fig-cap: Fehlerbalken in einem einfachen und komplexeren Modell
-#| layout-ncol: 2
-#| fig-subcap:
-#|   - "Fehlerbalken im einfachen Modell: Ein Mittelwert"
-#|   - "Fehlerbalken im komplexen Modell: Zwei Mittelwerte"
-m <-
-  mariokart %>%
-  filter(total_pr < 100) %>% 
-  filter(wheels %in% c(0, 2)) %>% 
-  mutate(ID = 1:nrow(.),
-         total_pr_resid = total_pr - mean(total_pr),
-         total_pr_resid_quad = total_pr_resid^2) %>% 
-  group_by(wheels) %>% 
-  mutate(total_pr_mean_group = mean(total_pr)) %>% 
-  ungroup()
-
-
-m_sum <- 
-  m %>% 
-  group_by(wheels) %>% 
-  summarise(total_pr = mean(total_pr)) %>% 
-  ungroup()
-
-
-m %>% 
-  ggplot() +
-  geom_hline(aes(yintercept = mean(total_pr))) +
-  geom_segment(aes(x = ID,
-                   xend = ID,
-                   y = total_pr,
-                   yend = mean(total_pr)
-                   ), color = "grey") +
-  geom_point(aes(x = ID, y = total_pr)) 
-
-
-
-m %>% 
-  ggplot() +
-  geom_segment(data = filter(m, wheels == 0),
-               aes(x = ID,
-                   xend = ID,
-                   y = total_pr,
-                   yend = mean(total_pr)
-               ), color = "grey") +
-   geom_hline(data = m_sum,
-     aes(yintercept = total_pr,
-                 color = factor(wheels))) +
-   geom_segment(data = filter(m, wheels == 2),
-               aes(x = ID,
-                   xend = ID,
-                   y = total_pr,
-                   yend = mean(total_pr)
-               ), color = "grey") +
-  geom_point(
-    aes(x = ID, y = total_pr, color = factor(wheels))) +
-  labs(color = "wheels") +
-  theme(legend.position = "none") +
-  geom_label(data = m_sum,
-    aes(label = paste0(wheels, "Räder"), y = total_pr, color = factor(wheels)), x = 3)
-```
-
-
-
-@fig-fehler-red zeigt, dass die Fehlerbalken *kürzer* werden, wenn wir ein (sinnvolles) komplexeres Modell finden.
-Innerhalb jeder der beiden Gruppen (mit 2 Lenkrädern vs. mit 0 Lenkrädern) sind die Fehlerbalken jeweils im Durchschnitt kürzer (rechtes Teildiagramm) als im Modell ohne Gruppierung (linkes Teildaigramm).^[Aus Gründen der Übersichtlichkeit wurden nur Autos mit Verkaufsgebot von weniger als 100 Euros berücksichtigt und nur Spiele mit 0 oder mit 2 Lenkrädern.]
-
-
-:::{.callout-important}
-Wir wollen ein präzises Modell, also kurze Fehlerbalken: Das Modell soll die Daten gut erklären, also wenig vom tatsächlichen Wert abweichen.$\square$
-:::
-
-
-
->   🧑‍🎓  Immer diese Trivialitäten!
-
->   👩‍🏫 Wird gleich interessanter.
-
-
-@fig-streuung zeigt ein einfaches Modell (Mittelwert) mit wenig Streuung (links) vs. ein einfaches Modell mit viel Streuung (rechts).
-
-```{r}
-#| echo: false
-#| label: fig-streuung
-#| fig-cap: Ein Modell mit wenig Streuung vs. ein Modell mit viel Streuung
-d <-
-  tibble(
-    id = 1:100,
-    x1 = rnorm(100, 0, 1),
-    x2 = rnorm(100, 0, 3)
-  ) %>% 
-  pivot_longer(-id) %>% 
-  group_by(name) %>% 
-  mutate(avg = mean(value),
-         e = value - avg) %>% 
-  ungroup()
-
-d_sum <-
-  d %>% 
-  group_by(name) %>% 
-  summarise(avg = mean(value))
-
-group_names <-
-  c(x1 = "wenig Streuung",
-    x2 = "viel Streuung")
-
-d %>% 
-  ggplot(aes(x = id, y = value)) +
-  geom_point() +
-  facet_wrap(~ name, labeller = as_labeller(group_names)) +
-  geom_hline(data = d_sum,
-             color = "blue", aes(yintercept = avg)) +
-  geom_segment(aes(x = id, xend = id, y = value, yend = avg), 
-               alpha = .5, color = "grey") +
-  theme_minimal()
-```
-
+$$\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarrow \qquad \begin{array}{|c|} \hline \\ \hline  \hline \end{array}$$ {#eq-desk}
 
 
 

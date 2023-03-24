@@ -400,11 +400,17 @@ Um die Standardabweichung zu berechnen, berechnet man zunächst die *Varianz*, $
 Als Formel ausgedrückt, lautet die Definition der Varianz^[sog. unkorrigierte Stichprobenvarianz] einer Stichprobe:
 
 
-$${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\bar {x}}\right)^{2}.}$$
+$${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\bar {y}}\right)^{2}.}$$
 
 
 
-Die Varianz steht im engen Verhältnis zur Kovarianz, s. Kap. XXX.
+Die Varianz steht im engen Verhältnis zur Kovarianz, s. @sec-cov.
+
+Die Varianz kann auch verstehen als den mittleren Quadratfehler (Mean Squared Error, MSE) eines Modells.
+Im Fall eines Punktmodells ist der Mittelwert der vorhergesagte Wert eines Modells.
+
+
+$${\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\hat {y}}\right)^{2}.}$$
 
 
 :::: {.columns}
@@ -509,9 +515,12 @@ Zunächst betrachten Sie die Streuung in den Verkaufspreisen:
 library(easystats)  # Das Paket muss installiert sein
 mariokart <- data_read("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 
+m <-
+  mariokart %>%
+  filter(total_pr < 100)  # ohne Extremwerte
+
 m_summ <- 
-mariokart %>% 
-  filter(total_pr < 100) %>%  # ohne Extremwerte
+  m %>% 
   summarise(
     pr_mw = mean(total_pr),
     pr_maa = mean(abs(total_pr - mean(total_pr))),
@@ -520,6 +529,10 @@ mariokart %>%
 
 m_summ
 ```
+
+
+
+
 
 Statistiken sind ja schön ... aber Bilder sind auch gut, s. @fig-var.
 
@@ -595,16 +608,21 @@ Kennt man die Varianz, so lässt sich die Standardabweichung einfach als Quadrat
 
 :::{#def-sd}
 ### Standardabweichung
-Die Standardabweichung ist die Quadratwurzel der Varianz.
+Die Standardabweichung (SD, s, $\sigma$) ist definiert als die Quadratwurzel der Varianz. 
 
 
-$$s = \sqrt{s^2}$$
+$$s := \sqrt{s^2}$$
 
 $\square$
 :::
 
 
 Durch das Wurzelziehen besitzt die Standardabweichung wieder in etwa die gleiche Größenordnung wie die Daten (im Gegensatz zur Varianz, die durch das Quadrieren sehr groß werden kann).
+
+
+Aus einem Modellierungsblickwinkel kann man die SD definieren als die Wurzel von MSE.
+Dann nennt man sie *Root Mean Squared Error* (RMSE): $rmse = \sqrt{mse}$.
+
 
 :::{.callout-note}
 Die SD ist i.d.R. ungleich zur MAE.$\square$
@@ -657,6 +675,28 @@ mae(lm2)
 
 Ah! Sehr schön, Sie haben mit `lm2` ein besseres Modell als einfach nur den Mittelwert gefunden.$\square$
 :::
+
+
+## Streuung als Modellfehler
+
+Wenn wir den Mittelwert als Punktmodell des Verkaufpreises auffassen, so kann man die verschiedenen Kennwerte der Streuung als verschiedene Kennwerte der Modellgüte auffassen.
+
+Definieren wir zunächst als Punktmodell auf Errisch:
+
+```{r}
+lm_mario1 <- lm(total_pr ~ 1, data = m)
+```
+
+Zur Erinnerung: Wir modellieren `total_pr` ohne Prädiktoren, sondern als Punktmodell,
+und zwar schätzen wir den Mittelwert mit den Daten `m`.
+
+Das Paket `easystats` bietet komfortable Befehle, um die Modellgüte zu berechnen:
+
+```{r}
+mae(lm_mario1)  # Mean absolute error
+mse(lm_mario1)  # Mean squared error
+rmse(lm_mario1)  # Root mean squared error
+```
 
 
 ## Fazit

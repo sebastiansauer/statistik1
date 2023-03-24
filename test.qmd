@@ -1,19 +1,49 @@
 # TESWT
 
+```{r, engine="tikz"}
 
-@fig-median-human stellt den Median schematisch dar.
+\begin{tikzpicture}[
+    thick,
+    >=stealth',
+    dot/.style = {
+      draw,
+      fill = white,
+      circle,
+      inner sep = 0pt,
+      minimum size = 4pt
+    }
+  ]
+  \coordinate (O) at (0,0);
 
-::: {#fig-median-human layout-ncol=5 width="1%" fig-align="bottom"}
-![1](img/Human_Silhouette.svg.png){width=0.1%}
+  \draw[->] (-0.3,0) -- (8,0) coordinate[label = {below:$x$}] (xmax);
+  \draw[->] (1,-0.3) -- (1,5) coordinate[label = {right:$f(x)$}] (ymax);
+  \path[name path=x] (0.3,0.5) -- (6.7,4.7);
+  \path[name path=y] plot[smooth] coordinates {(-0.3,2) (2,1.5) (4,2.8) (6,5)};
+  
+  %\node[left] {$\beta_0$} at (1,1);
+  \fill (1,1) circle (3pt) [red] ;
+  \draw[ thick, red] (1,0) --  (1,1)  node[left]{$\beta_0$} (1,1);
+  
+  \scope[name intersections = {of = x and y, name = i}]
+    \fill[gray!20] (i-1) -- (i-2 |- i-1) -- (i-2) -- cycle;
+    \draw      (0.3,0.5) -- (6.7,4.7) node[pos=0.8, below right] {Regressionsgerade};
+    %\draw[red] plot[smooth] coordinates {(-0.3,2) (2,1.5) (4,2.8) (6,5)};
+    \draw (i-1) node[dot, label = {above:$P$}] (i-1) {} -- node[left]
+      {} (i-1 |- O) node[dot, label = {below:$x_0$}] {};
+   
+     
+    \path (i-2) node[dot, label = {above:$Q$}] (i-2) {} -- (i-2 |- i-1)
+      node[dot] (i-12) {};
+    \draw           (i-12) -- (i-12 |- O) node[dot,
+                              label = {below:$x_0 + 1$}] {};
+    \draw[blue, <->] (i-2) -- node[right] {$\beta_1$}
+                              (i-12);
+    \draw[blue, <->] (i-1) -- node[below] {$1$} (i-12);
+    \path       (i-1 |- O) -- node[below] {$1$} (i-2 |- O);
+    \draw[gray]      (i-2) -- (i-2 -| xmax);
+    \draw[gray, <->] ([xshift = -0.5cm]i-2 -| xmax) -- node[fill = white]
+      {$f(x_0 + 1)$}  ([xshift = -0.5cm]xmax);
+  \endscope
+\end{tikzpicture}
+```
 
-![2](img/Human_Silhouette.svg.png){width=0.13%}
-
-![3: Median!](img/human-red.png){width=0.15%}
-
-![4](img/Human_Silhouette.svg.png){width=0.16%}
-
-![5](img/Human_Silhouette.svg.png){width=0.2%}
-
-Der Median als der Wert des "mittleren" Objekts, wenn die Objekte aufsteigend sortiert sind.
-
-:::

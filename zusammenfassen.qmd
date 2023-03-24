@@ -223,9 +223,9 @@ p_mean_deltas
 
 Jetzt stellen Sie sich vor, Sie würden die vom Mittelwert nach oben ragenden Balkenlängen aneinanderlegen.
 Sehen Sie das vor Ihrem geistigen Auge? 
-Jetzt legen Sie auch noch die Abweichungsbalken, die nach unten ragen aneinander.
+Jetzt legen Sie auch noch die Abweichungsbalken, die nach unten ragen aneinander, aneinander.
 Wer viel Phantasie hat, erkennt (sieht) jetzt,
-dass die Gesamtlänge der "Balken nach oben" identisch ist zur Gesamtlänge der nach "unten ragenden Balken".
+dass die Gesamtlänge der "Balken nach oben" identisch ist zur Gesamtlänge der nach "unten ragenden Balken", vgl. @fig-wippe.
 
 Präziser ausgedrückt und ohne Ihre Phantasie zu strapazieren:
 
@@ -245,8 +245,8 @@ Die Summe der Abweichungen vom Mittelwert ist Null.
 :::{#exm-md}
 ### Der reichste Mensch der Welt in Ihrem Hörsaal
 
-Kommt der wertvollste Fußballspieler der Welt in Ihren Hörsaal, sagen wir, es ist Kylian Mbappé[Quelle: https://www.transfermarkt.de/spieler-statistik/wertvollstespieler/marktwertetop, 2023-03-19)].
-Das Jahreseinkommen mit einem Jahreseinkommen von ca. 120 Millionen Euro^[Quelle:https://www.einkommenmagazin.de/kylian-mbappe-einkommen/, 2023-03-19).
+Kommt der wertvollste Fußballspieler der Welt in Ihren Hörsaal, sagen wir, es ist Kylian Mbappé^[Quelle: https://www.transfermarkt.de/spieler-statistik/wertvollstespieler/marktwertetop, 2023-03-19].
+Das Jahreseinkommen mit einem Jahreseinkommen von ca. 120 Millionen Euro^[Quelle: https://www.einkommenmagazin.de/kylian-mbappe-einkommen/, 2023-03-19].
 
 >    🦹‍♂️ Hey Leute, wie geht's denn so! Wie viel Kohle verdient ihr eigentlich so?
 
@@ -261,17 +261,17 @@ Aber zumindest verteilt der Fußballspieler Autogramme.
 ### Mittleres Einkommen im Hörsaal, mit Kylian Mbappé
 
 Schätzen Sie - im Kopf - das mittlere Vermögen im Hörsaal, gehen Sie davon aus,
-dass alle der 100 Studentis 1000 Euro im Jahr verdienen.
+dass alle der 100 Studentis jeweils 1000 Euro im Jahr verdienen.
 :::
 
 
 
-In R kann man das mittlere Vermögen (präziser: das arithmetische Mittel des Vermögens) wie folgt berechnen.
+In R kann man das mittlere Einkommen (präziser: das arithmetische Mittel des Einkommenss) wie folgt berechnen.
 
 ```{r}
 set.seed(42)  # Zufallszahlen festlegen, hier nicht so wichtig
 einkommen_studis <- rep(x = 1, times = 100)  # rep wie "repeat": wiederhole 1000 USD 100 Mal
-einkommen <- c(einkommen_studis, 120*1e6)
+einkommen <- c(einkommen_studis, 120*1e6)  # 100 Studis mit 1000E, 1 Mbappé mit 120 Mio
 einkommen_mw <- mean(einkommen)
 ```
 
@@ -280,11 +280,12 @@ einkommen_mw <- mean(einkommen)
 1 Million hat 6 Nuller hinter der führenden Eins,
 das ist 1000 mal 1000.
 Anders gesagt: 1 Million = $10^6 = 10^3 * 10^3$.
-In Taschenrechner oder Computerschreibweise: 1 Mrd = `1e6`,
-das `1e6` ist zu lesen als "Ein Mal 10 mit 6 im *E*xponenten".
+In Taschenrechner oder Computerschreibweise: 1 Mio = `1e6`,
+das `1e6` ist zu lesen als "1 Mal 10 mit 6 im *E*xponenten".
 :::
 
 Der Mittelwert im Hörsaal beträgt also `r scales::label_comma()(einkommen_mw)` Euro.
+Ist das ein gutes Modell für dasa "typische" Vermögen im Hörsaal?
 
 
 ## Median als Modell
@@ -309,6 +310,7 @@ Die logarithmische X-Achse stellt den Unterschied von Mittelwert und Median deut
 #| echo: false
 #| fig-cap: "Die Einkommensverteilung im Hörsaal"
 #| label: fig-mbappe
+#| layout-ncol: 2
 #| fig-subcap: 
 #|   - X-Achse in additiver Form
 #|   - X-Achse in multiplikativer Form (logarithmische Darstellung)
@@ -408,15 +410,15 @@ Merkmalsausprägung, die bei (aufsteigend) sortierten Beobachtungen in der Mitte
 
 
 ::: {#fig-median-human layout-ncol=5 width="1%" fig-align="bottom"}
-![1](img/Human_Silhouette.svg.png){width=0.1%}
+![1,60m](img/Human_Silhouette.svg.png){width=0.1%}
 
-![2](img/Human_Silhouette.svg.png){width=0.13%}
+![1,72m](img/Human_Silhouette.svg.png){width=0.13%}
 
-![3: Median!](img/human-red.png){width=0.15%}
+![1,79m: Median!](img/human-red.png){width=0.15%}
 
-![4](img/Human_Silhouette.svg.png){width=0.16%}
+![1,94](img/Human_Silhouette.svg.png){width=0.16%}
 
-![5](img/Human_Silhouette.svg.png){width=0.2%}
+![2,12m](img/Human_Silhouette.svg.png){width=0.2%}
 
 Der Median als der Wert des "mittleren" Objekts, wenn die Objekte aufsteigend sortiert sind.
 
@@ -504,7 +506,7 @@ Bei schiefen Verteilungen ist der Median dem Mittelwert als Modell für den "typ
 
 
 Der Median teilt eine Verteilung in eine untere und ein obere Hälfte.
-Er markiert sozusagen eine "50-Prozent-Marke".
+Er markiert sozusagen eine "50-Prozent-Marke" (der aufsteigend sortierten Beobachtungen).
 Betrachten wir einmal nur alle Spiele, die für weniger als 100 Euro verkauft wurden (`total_pr`, finales Verkaufsgebot), 
 s. @fig-mario-qs.
 50% aller Spiele wurden für weniger als ca. 46 Euro verkauft;

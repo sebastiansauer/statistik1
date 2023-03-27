@@ -374,14 +374,14 @@ mae(lm1)
 Vergleichen wir MAE im  Nullmodell mit MAE in `lm1`: 
 
 ```{r}
-verhaeltnis_fehler_gerade_zu_punkt <- mae(lm1) / mae(lm0)
-verhaeltnis_fehler_gerade_zu_punkt
+verhaeltnis_fehler_gerade_zu_punkt_mae <- mae(lm1) / mae(lm0)
+verhaeltnis_fehler_gerade_zu_punkt_mae
 ```
 
 
 
 Ah! Das Geradenmodell ist viel besser:
-Von `lm0` zu `lm1` haben die mittlere (Absolut-)Länge des Fehlerbalkens auf `r round(verhaeltnis_fehler_gerade_zu_punkt, 2)*100` Prozent verbessert.
+Von `lm0` zu `lm1` haben die mittlere (Absolut-)Länge des Fehlerbalkens auf `r round(verhaeltnis_fehler_gerade_zu_punkt_mae, 2)*100` Prozent verbessert.
 Nicht schlecht!
 
 
@@ -399,8 +399,8 @@ mse(lm1)
 
 
 ```{r}
-verhaeltnis_fehler_gerade_zu_punkt <- mse(lm1)/mse(lm0)
-verhaeltnis_fehler_gerade_zu_punkt
+verhaeltnis_fehler_gerade_zu_punkt_mse <- mse(lm1)/mse(lm0)
+verhaeltnis_fehler_gerade_zu_punkt_mse
 ```
 
 
@@ -420,7 +420,9 @@ Eine schöne Darstellung dazu findet sich bei @kaplan_statistical_2009.
 
 ## R-Quadrat
 
-Anders gesagt, wir haben uns um $1 - `r round(verhaeltnis_fehler_gerade_zu_punkt, 2)`$ verbessert:
+### R-Quadrat als Verringerung der Fehlerstreuung
+
+Anders gesagt, wir haben uns um $1 - `r round(verhaeltnis_fehler_gerade_zu_punkt_mse, 2)`$ verbessert:
 
 ```{r}
 1 - verhaeltnis_fehler_gerade_zu_punkt
@@ -444,6 +446,7 @@ Im Nullmodell liegt R-Quadrat per Definition bei 0.
 Im Fall von Modellen des Typs $y\sim x$ gilt: $R^2 = r_{xy}^2$.
 $\square$
 :::
+
 
 
 Bei einer perfekten Korrelation ist $r=1$, daher ist dann auch $R^2 = 1$^[Bei Modellen mit einem Prädiktor; gibt es mehrere Prädiktoren gilt die Beziehung nur wenn die Prädiktoren alle paarweise unabhängig sind.], 
@@ -485,13 +488,31 @@ Im gegenteiligen Extremfall von $R^2=0$ ist die Vorhersage genauso gut, wie wenn
 [Diese App der FOM-Hochschule](https://fomshinyapps.shinyapps.io/Variationszerlegung/) erlaubt es Ihnen mit der Größe der Residuen eines linearen Modells zu spielen.
 
 
+### Addition der Varianzen
+
+
+Nennen wir die Varianz des Verkaufspreis $s^2_y$, die Verbesserung der Fehlerstreuung durch das *M*odell $s^2_m$ und die restliche Fehlerstreuung, den MSE, $s^2_e$.
+Dann gilt:
+
+$$s^2_y = s^2_m + s^2_e \\
+s^2_m = s^2_y - s^2_e$$
+
+```{r}
+s2_y = var(noten2$y)
+s2_e = mse(lm1)
+s2_m = s2_y - s2_e
+s2_m
+```
+
+Die Varianzanteile addieren sich. Mit anderen Kennzahlen der Streuung (SD, MAE) funktioniert das nicht.
+
 
 ## Interpretation des Modells
 
 
 ### Modellgüte
 
-Die Residuen bestimmen die Modellgüte. Verschiedenen Koeffizienten stehen hier zur Verfügung: R-Quadrat, MSE, RMSE, MAE, ...
+Die Residuen bestimmen die Modellgüte. Verschiedenen Koeffizienten stehen hier zur Verfügung: R-Quadrat, r^[als Korrelation von tatsächlichem $y$ und vorhergesaten $\hat{y}, MSE, RMSE, MAE, ...
 
 
 ### Koeffizienten
@@ -553,9 +574,46 @@ es resultiert `lm3`:
 
 ```{r}
 lm3 <- lm(total_pr ~ ship_pr, data = mariokart)
-r2(lm3)
+```
+
+Der Achsenabschnitt liegt bei ca. 36 Euro: Ein Spiel, das mit Null Euro Preis startet, kann laut `lm3` etwa 36 Euro finaler Verkaufspreis erwarten.
+Pro Euro an Versandkosten (`ship_pr`) steigt der zu erwartende finale Verkaufspreis um ca. 4 Euro.^[Die Spalte `95 CI` gibt einen Schätzbereich für den jeweiligen Modellkoeffizienten an,
+denn es handelt sich bei den Koeffizienten um Schätzwerte;
+der wahre Wert in der Population ist unbekannt. 
+Wir kennen schließlich nur eine Stichprobe der Größe $n=143$.].
+
+Man kann sich die erwarteten Werte ("expectations") des Verkaufspreises in Abhängigkeit vom Wert der UV (`ship_pr`) auch schätzen ("to estimate") lassen, und zwar so^[Die Funktion stammt aus easystats]: 
+
+```{r}
+estimate_expectation(lm3) %>% head()  # nur die ersten paar vorhergesagten Werte
+```
+
+
+Ah, bei 4 Euro Versandkosten ist laut dem Modell knapp 54 Euro Verkaufspreis zu erwarten, fassen Sie sich die Ausgabe zusammen.
+
+Aber nützlich wäre noch, das Modell (bzw. die Schätzung der erwarteten Werte) als Diagramm zu bekommen.
+Das erreicht man z.B. so, s. @fig-lm3.
+
+```{r}
+#| label: fig-lm3
+#| fig-cap: Verbildlichung der erwarteteten Werte laut lm3
+estimate_expectation(lm3) %>% plot()
+```
+
+
+Am wichtigsten ist Ihnen aber im Moment die Frage, wie "gut" das Modell ist, spricht wie lang oder kurz die Vorhersagefehler-Balken sind:
+
+```{r}
 mae(lm3)
 ```
+
+Das Modell erklärt einen Anteil von ca. `r round(r2(lm3)$R2, 2)` der Gesamtstreuung.
+
+
+```{r}
+mae(lm3)
+```
+
 
 
 Im nächsten Meeting erzählen Sie Ihrem Chef "Ich kann den Verkaufspreis von Mariokart-Spielen im Schnitt auf 13 Dollar genau vorhersagen!".

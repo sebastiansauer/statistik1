@@ -1,0 +1,573 @@
+# Geradenmodelle 2
+
+
+
+
+## Lernsteuerung
+
+
+
+
+### Standort im Lernpfad
+
+Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
+
+
+
+
+
+
+
+### Lernziele
+
+
+- Sie können Regressionsmodelle für Forschungsfragen mit binärer, nominaler und metrischer UV erläutern und in R anwenden.
+- Sie können Interaktionseffekte in Regressionsmodellen erläutern und in R anwenden.
+- Sie können den Anwendungszweck von Zentrieren und z-Transformationen zur besseren Interpretation von Regressionsmodellen erläutern und in R anwenden.
+
+
+### Benötigte R-Pakete
+
+```{r}
+#| message: false
+library(tidyverse)
+library(easystats)
+```
+
+
+```{r}
+#| include: false
+library(ggpubr)
+```
+
+
+## Wetter in Deutschland
+
+
+:::{#exm-wetterdaten}
+### Wetterdaten
+Nachdem Sie einige Zeit als Datenanalyst bei dem Online-Auktionshaus gearbeitet haben, stand Ihnen der Sinn nach ewtas Abwechslung. 
+Viel Geld verdienen und Ruhm und Anerkennung sind ja schon ganz nett,
+aber Ihnen viel ein, dass Sie ja zu Generation Z gehören, 
+und daher den schnöden Mammon nicht so hoch schätzen sollten.
+Sie entschließen sich, Ihre hochgeschätzten Analyse-Skills für etwas einzusetzen,
+das Ihnen sinnvoll erscheint: Die Analyse des Klimawandels.
+
+Beim [Deutschen Wetterdienst, DWD](https://www.dwd.de/DE/Home/home_node.html) haben Sie sich Wetterdaten von Deutschland heruntergeladen.
+Nach etwas [Datenjudo, auf das wir hier nicht eingehen wollen](https://data-se.netlify.app/2022/07/24/preparing-german-weather-data/) 
+resultiert ein schöner Datensatz, den Sie jetzt analysieren wollen:
+
+```{r}
+wetter_path <- "https://raw.githubusercontent.com/sebastiansauer/datasets/main/csv/precip_temp_DWD.csv"
+wetter <- read.csv(wetter_path)
+```
+
+In @tbl-wetter kann man sich die Daten en Detail anschauen.
+
+```{r}
+#| tbl-cap: Wetterdaten für Deutschland
+#| label: tbl-wetter
+#| echo: false
+wetter
+```
+
+Hervorragend!
+
+An die Arbeit 💪 
+
+:::
+
+
+### metrische UV
+
+Sie stellen sich nun folgende Forschungsfrage:
+
+>   🧑‍🎓 Um wieviel ist die Temperatur in Deutschland pro Jahr gestiegen, wenn man die letzten ca. 100 Jahre betrachtet?$
+
+
+```{r}
+lm_wetter1 <- lm(temp ~ year, data = wetter)
+parameters(lm_wetter1)
+```
+
+Laut Ihrem Modell wurde es pro Jahr um 0.01 Grad wärmer, pro Jahrzehnt also 0.1 und pro Jahrhundert 1 Grad.
+
+
+>   🧑‍🎓 Das ist sicherlich nicht linear! Vermutlich ist die Temperatur bis 1950 konstant geblieben und jetzt knallt sie durch die Decke!
+
+>   👨‍🏫 Mit der Ruhe, schauen wir uns alles noch an.
+
+Das Modell, bzw. die Schätzungen zu den erwarteten Werten, kann mich sich so ausgeben lassen, s. @fig-wetter1, links.
+Allerdings sind das zu viele Datenpunkte. Wir sollten es vielleicht anders visualisieren, s. fig-wetter1, rechts.
+Dazu aggregieren wir die Messwerte eines Jahres zu jeweils einem Mittelwert.
+
+
+```{r}
+wetter_summ <-
+  wetter %>% 
+  group_by(year) %>% 
+  summarise(temp = mean(temp))
+```
+
+Auf dieser Basis erstellen wir ein neues lineares Modell:
+
+```{r}
+lm_wetter1a <- lm(temp ~ year, data = wetter_summ)
+parameters(lm_wetter1a)
+```
+
+
+```{r}
+#| label: fig-wetter1
+#| fig-cap: "Die Veränderung der mittleren Temperatur in Deutschland im Zeitverlauf (Datenquelle: DWD)"
+#| layout-ncol: 2
+#| fig-subcap:
+#|   - Jeder Punkt ist ein Tag
+#|   - Jeder Punkt ist ein Jahr
+plot(estimate_relation(lm_wetter1))
+plot(estimate_relation(lm_wetter1a))
+```
+
+
+>    🧑‍🎓 Moment mal, der Achsenabschnitt liegt bei -15 Grad! Was soll das bitte bedeuten?
+
+
+### UV zentrieren
+
+Der Achsenabschnitt ist definiert als der Y-Wert an der Stelle X=0.
+In den Wetterdaten wäre Jahr=0 Christi Geburt. 
+Da unsere Wetteraufzeichnung gerade mal a. 150 Jahre in die Vergangenheit reicht,
+ist es vollkommen vermessen, dass Modell 2000 Jahre in die Vergangenheit zu extraplieren,
+ganz ohne dass wir dafür Daten haben, s. @fig-extrapolation.
+
+
+![Du sollst nicht ein Modell weit außerhalb seines Datenbereichs extrapolieren](img/extrapolating.png){#fig-extrapolation}
+
+Sinnvoller ist es da, z.B. einen *Referenzwert* festzulegen, etwa 1950.
+Wenn wir dann von allen Jahren 1950 abziehen, wird das Jahr 1950 zum neuen Jahr Null.
+Damit bezöge sich der Achsenabschnitt auf das Jahr 1950,
+was Sinn macht, denn für dieses Jahr haben wir Daten.
+
+Hat man nicht einen bestimmten Wert, der sich als Referenzwert anbietet,
+so ist es üblich, z.B. den Mittelwert als Referenzwert zu nehmen.
+Diese Transformation bezeichnet man als *Zentrierung* (engl. centering) der Daten.
+
+```{r}
+wetter <-
+  wetter %>% 
+  mutate(year_c = year - mean(year))  # "c" wie centered
+```
+
+Das mittlere Jahr in unserer Messwertereihe ist 1951:
+
+```{r}
+wetter %>% 
+  summarise(mean(year))
+```
+
+```{r}
+lm_wetter1c <- lm(temp ~ year_c, data = wetter)
+parameters(lm_wetter1c)
+```
+
+Jetzt ist die Interpretation des Achsenabschnitts komfortabel:
+Im Jahr 1951 (x=0) lag die mittlere Temperatur in Deutschland (laut DWD) bei ca. 8.5 Grad Celcius.
+
+
+```{r}
+r2(lm_wetter1c)
+```
+
+Viel Varianz des Wetters erklärt `year_c`^[`year` und `year_c` sind gleich stark mit `temp` korreliert, daher wird sich die Modellgüte nicht unterscheiden.] aber nicht.
+Macht auch Sinn: Abgesehen von der Jahreszahl spielt z.B. die Jahreszeit eine große Rolle für die Temperatur. Das haben wir nicht berücksichtigt.
+
+
+
+### Binäre UV
+
+
+:::{#def-binvar}
+### Binäre Variable 
+Eine *binäre* UV, auch Indikatorvariable genannt, hat nur zwei Ausprägungen: 0 und 1.$\square$
+:::
+
+
+:::{#exm-bin}
+### Binäre Variablen 
+Das sind zum Beispiel *weiblich* mit den Ausprägungen `0` (nein) und `1` (ja) oder *before_1950* mit `1` für Jahre früher als 1950 und `0` ansonsten.$\square$
+:::
+
+:::{#exm-binuv}
+
+Hier interessiert Sie folgende Forschungsfrage: 
+
+>   🧑‍🎓 Ob es in der zweiten Hälfte des 20. Jahrhunderts wohl wärmer warm, im Durchschnitt, als vorher?$\square$
+:::
+
+Aber wie erstellen Sie eine Variable `after_1950`, um die zweite Hälfte des 20. Jahrhunderts (und danach) zu fassen?
+Nach einigem Überlegen kommen Sie auf die Idee, das vektorisierte Rechnen von R (s. @sec-veccalc) auszunutzen:
+
+```{r}
+year <- c(1940, 1950, 1960)
+after_1950 <- year > 1950
+after_1950
+```
+
+
+
+Ja, so könnte das klappen! Diese Syntax übertragen Sie auf Ihre `wetter`-Daten:
+
+```{r}
+wetter <-
+  wetter %>% 
+  mutate(after_1950 = year > 1950) %>% 
+  filter(region != "Deutschland")  # ohne Daten für Gesamt-Deutschland
+```
+
+
+Scheint zu klappen!
+
+Jetzt ein lineares Modell dazu
+
+```{r}
+lm_wetter1 <- lm(temp ~ after_1950, data = wetter)
+```
+
+Die Parameter des Modells lassen darauf schließen, dass es tatsächlich wärmer war nach 1950, und zwar im Schnitt offenbar ein gutes halbes Grad, s. @fig-wetter2.
+
+```{r}
+#| label: fig-wetter2
+#| fig-cap: Modell temp ~ after_1950
+#| layout-ncol: 2
+#| fig-subcap:
+#|   - Der Schätzbereich für den Parameter reicht von ca. 0.5 bis 0.8 Grad Unterschied
+#|   - Wie man sieht, überlappen die Temperaturen dennoch beträchtlich  
+plot(parameters(lm_wetter1))
+plot(estimate_expectation(lm_wetter1))
+```
+
+Leider zeigt ein Blick zum `r2`, dass die Vorhersagegüte des Modells zu wünschen übrig lässt^[`r2(lm_wetter1)`].$\square$
+:::
+
+
+Um die Koeffizienten eines linearen Modells auszurechnen,
+benötigt man eine metrische X- und eine metrische Y-Variablen.
+Hier haben wir aber keine richtige metrische X-Variable^[UV],
+sondern eine *logische* Variable mit den Werten `TRUE` und `FALSE`.
+
+Um die X-Variable in eine metrische Variable umzuwandeln, gibt es einen einfachen Trick,
+den R für uns ohne viel Ankündigung durchführt.
+
+:::{.callout-note}
+Hat ein nominaler Prädiktor zwei Stufen, so überführt R diese Variable in eine binäre Variable.
+Da eine binäre Variable metrisch ist, kann die Regression in gewohnter Weise durchgeführt werden.$\square$
+:::
+
+:::: {.columns}
+
+`after_1950` wird in eine Indikatorvariable umgewandelt:
+
+::: {.column width="40%"}
+
+```{r}
+#| echo: false
+
+d <- tribble(
+  ~id, ~after_1950, ~after_1950TRUE,
+  1,   TRUE,       1,
+  2,  FALSE,       0
+)
+
+d[1:2]
+```
+
+:::
+
+::: {.column width="20%"}
+
+$\qquad \rightarrow$
+
+:::
+
+::: {.column width="40%"}
+```{r}
+#| echo: false
+
+d[c(1,3)]
+```
+:::
+::::
+
+
+
+:::: {.columns}
+
+`geschlecht` wird in eine Indikatorvariable umgewandelt:
+
+::: {.column width="40%"}
+
+
+```{r}
+#| echo: false
+
+d2 <- tribble(
+  ~id, ~geschlecht, ~geschlechtMann,
+  1,   "Mann",       1,
+  2,  "Frau",       0
+)
+
+d2[1:2]
+```
+
+:::
+
+::: {.column width="20%"}
+
+$\qquad \rightarrow$
+
+:::
+
+::: {.column width="40%"}
+
+```{r}
+#| echo: false
+
+d2 <- tribble(
+  ~id, ~geschlecht, ~geschlechtMann,
+  1,   "Mann",       1,
+  2,  "Frau",       0
+)
+
+d2[1:3]
+```
+
+:::
+::::
+
+
+Ein lineares Modell mit binärer UV ist nichts anderes die Differenz der Gruppenmittelwerte zu berechnen:
+
+```{r}
+wetter %>% 
+  group_by(after_1950) %>% 
+  summarise(temp_mean = mean(temp))
+```
+
+Die Interpretation eines linearen Modells mit binärer UV veranschaulicht @fig-binvar: Der Achsenabschnitt (b0) entspricht dem Mittelwert der 1. Gruppe.
+Der Mittelwert der 2. Gruppe entspricht der *Summe* aus Achsenabschnitt und dem Koeffizienten der zweiten Gruppe.
+
+```{r}
+#| echo: false
+#| label: fig-binvar
+#| fig-cap: Sinnbild zur Interpretation eines linearen Modells mit binärer UV (reingezoomt, um den Mittelwertsunterschied hervorzuheben)
+
+wetter %>% 
+  mutate(after1950_TRUE = ifelse(after_1950, 1, 0)) %>% 
+  ggplot(aes(x = after1950_TRUE, y = temp)) +
+  #geom_violin(alpha = .7) +
+  theme_minimal() +
+  geom_abline(slope =  coef(lm_wetter1)[2], intercept =  coef(lm_wetter1)[1], color = "grey20") +
+  stat_summary(fun = "mean", color = "grey20") + 
+  geom_hline(yintercept = coef(lm_wetter1)[1], linetype = "dashed", color = "blue") +
+  coord_cartesian(ylim = c(7, 9))  +
+  annotate("label", x = Inf, y = coef(lm_wetter1)[1], 
+           hjust = "right", label = paste0("b0"), color = "blue") +
+  geom_segment(x = 1, y = coef(lm_wetter1)[1], xend = 1, 
+               yend = coef(lm_wetter1)[1] + coef(lm_wetter1)[2], 
+               color = "red", arrow = arrow()) +
+  annotate("label", x = 1 , y = coef(lm_wetter1)[1] + (coef(lm_wetter1)[2] / 2), 
+           hjust = "right", label = paste0("b1"), color = "red")  +
+  annotate("text", x = 0.5, y = coef(lm_wetter1)[1] + (coef(lm_wetter1)[2] / 2.3),
+           color = "grey20", label = "Regressionsgerade", angle = 11, hjust = "bottom") +
+  scale_x_continuous(breaks = c(0, 1))
+```
+
+Fassen wir die Interpretation der Koeffizienten für das Modell mit binärer UV zusammen:
+
+1. Mittelwert der 1. Gruppe: Achsenabschnitt (b0)
+2. Mittelwert der 2. Gruppe: Achsenabschnitt (b0) + Steigung der Regressionsgeraden (b1)
+
+
+
+### Nominale UV
+
+
+
+:::{#exm-wetter2}
+Ob es wohl substanzielle^[wie könnte man dieses Wort eigentlich definieren?] Temperaturunterschiede zwischen den Bundesländern gibt?
+:::
+
+Befragen wir dazu ein lineares Modell
+
+```{r}
+lm_wetter2 <- lm(temp ~ region, data = wetter)
+parameters(lm_wetter2)
+```
+
+Auch im Fall mehrerer Ausprägungen einer nominalen Variablen gilt die gleiche Logik der Interpretation wie bei beinären Variablen:
+
+
+
+1. Mittelwert der 1. Gruppe: Achsenabschnitt (b0)
+2. Mittelwert der 2. Gruppe: Achsenabschnitt (b0) + Steigung der 1. Regressionsgeraden (b1)
+3. Mittelwert der 2. Gruppe: Achsenabschnitt (b0) + Steigung der  2. Regressionsgeraden (b2)
+4. usw.
+
+Etwas nervig ist, dass das Bundesland, welches als *Referenzgruppe*, sprich als Gruppe des Achsenabschnitts ausgewählt wurde, nicht explizit angegeben ist.
+
+:::{.callout-note}
+Soweit nicht anders festgelegt, wählt R die alphabetisch erste Gruppe als Referenzgruppe für ein lineares Modell aus. Der Mittelwert dieser Gruppe entspricht dem Achsenabschnitt.$\square$
+:::
+
+
+:::{#exm-bawü}
+### Achsenabschnitt in wetter_lm2
+Da Baden-Württemberg das alphabetisch erste Bundesland ist, wird es von R als Referenzgruppe ausgewählt, dessen Mitelwert als Achsenabschnitt im linearen Modell hergenommen wird.$\square$
+:::
+
+
+
+Am einfachsten verdeutlicht sich `lm_wetter2` vielleicht mit einem Diagramm, s. @fig-bin-nom.
+
+
+
+```{r}
+#| echo: false
+#| label: fig-bin-nom
+#| fig-cap: Sinnbild zur Interpretation eines linearen Modells mit nominaler UV (reingezoomt, um den Mittelwertsunterschied hervorzuheben). Die Achsen wurden um 90° gedreht, damit man die Namen der Bundesländer besser lessen kann.
+
+wetter_summ <- 
+  wetter %>% 
+  group_by(region) %>% 
+  summarise(temp = mean(temp)) %>% 
+  mutate(id = 0:15) %>% 
+  ungroup() %>%
+  mutate(grandmean = mean(temp),
+         delta = temp - grandmean)
+
+wetter_summ %>%  
+# filter(region != "Deutschland") %>% 
+  ggplot(aes(x = region, y = temp)) +
+  theme_minimal() +
+  geom_label(aes(label = paste0("b", id),
+                 y = grandmean + delta), color = "red", vjust = 1) +
+  stat_summary(fun = "mean", color = "grey20") + 
+  geom_hline(yintercept = coef(lm_wetter2)[1], linetype = "dashed", color = "blue") +
+  coord_cartesian(ylim = c(7, 9))  +
+  coord_flip() +
+  annotate("label", x = -Inf, y = coef(lm_wetter2)[1], 
+           hjust = "top", label = paste0("b0"), color = "blue") +
+  annotate("point", x = 1, y = coef(lm_wetter2)[1], color = "blue", size = 4) +
+  geom_segment(aes(xend = region, yend = temp), y = coef(lm_wetter2)[1], color = "red") 
+
+```
+
+
+
+### Binäre plus metrische UV
+
+
+:::{#exm-rain1}
+Ob sich die Niederschlagsmenge wohl unterschiedlich zwischen den Monaten entwickelt hat in den letzten gut 100 Jahren?
+Der Einfachheit halber greifen Sie sich zwei Monate (Januar und )
+
+
+```{r}
+wetter2 <-
+  wetter %>% 
+  filter(region == "Bayern"  | region == "Saarland")
+```
+
+Okay.
+Wie spezifiziert man jetzt das lineare Modell?$\square$
+:::
+
+Hat man mehrere Prädiktoren, so trennt man sich mit einem Plus-Zeichen in der Regressionsformel:
+
+`temp ~ year + region`.
+
+Das Pluszeichen hat hier *keine* arithmetische Funktion. Es wird nichts addiert.
+In der Regressionsformel sagt das Pluszeichen nur "und noch folgende UV...".
+
+Die obige Regressionsformel liest sich also so:
+
+>    Temperatur ist eine Funktion von der Jahreszahl und des Bundeslands
+
+
+```{r}
+lm3 <- lm(temp ~ year + region, data = wetter2)
+parameters(lm3)
+```
+Die Modellkoeffizienten sind so zu interpretieren:
+
+1. Achsenabschnitt (b0): Im Jahr Null^[Christi Geburt!] müsste  laut dem Modell eine mittlere Jahrestemperatur von -17 Grad geherrscht haben. Unser Datenbereich erstreckt sich etwa 150 Jahre; ohne Daten mal schnell 2000 Jahre zurückzurechnen kann nur in grobe Ungenauigkeit münden. Daher ist der Achsenabschnitt hier nicht zu gebrauchen.
+2. Regressionssteigung (b1): Pro Jahr stieg die Temperatur laut dem Modell um 0.01 Grad, in 10 Jahren also um 0,.1 Grad und in 100 Jahren um 1 Grad.
+
+Visualisieren wir uns die geschätzten Erwartungswert pro Prädiktorwert, s. @fig-lm3.
+
+```{r}
+#| label: fig-lm3
+#| fig-cap: Temperaturverlauf über die Jahre in zwei Bundesländer. Man beachte, dass die Regressionsgeraden parallel sind.
+plot(estimate_expectation((lm3)))
+```
+
+
+### Interaktion
+
+Die Regressionsformel `temp ~ year + region` zwingt die Regressionsgeraden dazu, parallel zu verlaufen.
+Aber vielleicht würden sie besser in die Punktewolken passen, wenn wir ihnen erlauben, auch nicht parallel verlaufen zu dürfen.
+
+
+
+```{r}
+wetter3 <-
+  wetter %>% 
+  filter(month %in% c(1,7))
+
+lm4 <- lm(precip ~ year * factor(month), data = wetter3)
+parameters(lm4)
+plot(estimate_expectation(lm4))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Vertiefung
+
+:::{#exm-wetter3}
+Als nächstes möchten Sie untersuchen, wie groß der Temperaturunterschied im Schnitt zwischen den Monaten ist.
+
+
+```{r}
+lm_wetter2 <- lm(temp ~ month, data = wetter)
+parameters(lm_wetter2)
+```
+
+Moment! `month` ist als metrische Variable in der Tabelle repräsentiert.
+Aber der Monat sollte besser eine *nominale* Variable sein.
+:::
+
+
+
+## Aufgaben
+
+
+
+## Literatur

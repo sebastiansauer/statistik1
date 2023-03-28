@@ -32,8 +32,8 @@ Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt dam
 ```{r}
 #| message: false
 library(tidyverse)
+library(yardstick)  
 library(easystats)
-library(yardstick)
 ```
 
 
@@ -837,13 +837,18 @@ Um die Güte Ihrer Vorhersagen zu prüfen, teilt Ihr Chef den Datensatz in zwei 
 
 
 ```{r}
-mariokart <- read.csv("daten/mariokart.csv")
+#| echo: false
+#| eval: false
+#write_csv(mariokart_train, "daten/mariokart_train.csv")
 
-set.seed(42)  # Zufallszahlen festlegen
-mariokart_train <- 
-  mariokart %>% 
-  sample_frac(size = .7) %>% 
-  select(-X, -id, -title)  # diese Variablen brauchen wir nicht zum Vorhersagen
+# mariokart_train <-
+#   mariokart_train %>% 
+#   select(-title)
+```
+
+
+```{r}
+mariokart_train <- read.csv("daten/mariokart_train.csv")
 ```
 
 
@@ -858,6 +863,17 @@ r2(lm_allin)
 
 
 Der Punkt in `total_pr ~ . ` heißt "alle Variablen in der Tabelle (außer `total_pr`)".
+
+Das R-Quadrat ist ja durchaus ordentlich.
+Schauen wir uns noch den `rmse` (die SD der Vorhersagefehler) an^[der Befehl wohnt im Paket `performance`, Teil des Metapakets `easystats`]:
+
+
+>   🤖 Gut gemacht!
+
+
+```{r}
+performance::rmse(lm_allin)
+```
 
 
 
@@ -908,17 +924,21 @@ mariokart_test <-
 Okay, was ist jetzt der mittlere Vorhersagefehler?
 
 
-Um die Vorhersage-Güte auszurechnen, nutzen wir die Funktionen des R-Paketes `yardstick`^[welches Sie vielleicht noch installieren müssen.]:
+Um die Vorhersagegüte im Test-Sample auszurechnen, 
+nutzen wir die Funktionen des R-Paketes `yardstick`^[welches Sie vielleicht noch installieren müssen.]:
 
 ```{r}
 library(yardstick)
 
-mae(data = mariokart_test,
-    truth = total_pr,  # echter Verkaufspreis
-    estimate = lm_allin_predictions)  # Ihre Vorhersage
+yardstick::mae(data = mariokart_test,
+               truth = total_pr,  # echter Verkaufspreis
+               estimate = lm_allin_predictions)  # Ihre Vorhersage
 ```
 
-Ihr mittlerer Vorhersagefehler (MAE) liegt bei ca. 12 Euro. 
+
+
+Ihr mittlerer Vorhersagefehler (MAE) liegt bei ca. 13 Euro.^[Wir haben hier `yardstick::mae` geschrieben und nicht nur `mae`, da es sowohl im Paket `performance` ( Teil des Metapakets `easystats`) als auch im Paket `yardstick` (Teil des Metapakets `tidymodels`) einen Befehl des Namens `mae` gibt. 
+R könnte daher den anderen `mae` meinen als Sie, was garantiert zu Verwirrung führt. Entweder bei R oder bei Ihnen.]
 
 >   🧔‍♂️ Ganz okay.
 
@@ -931,13 +951,64 @@ rsq(data = mariokart_test,
     estimate = lm_allin_predictions)  # Ihre Vorhersage
 ```
 
->   🧔‍♂️ Nicht berauschend, aber solide!
+>   🧔‍♂️ Nicht berauschend, aber immerhin!
+
+
+:::{.callout-note}
+### Modellgüte im Test-Sample meist geringer als im Train-Sample
+Wie das Beispiel zeigt, ist die Modellgüte im Test-Sample (leider) oft *geringer* als im Train-Sample. 
+Die Modellgüte im Train-Sample ist mitunter übermäßig optimistisch.
+Dieses Phänomen bezeichnet man als *Overfitting*.$\square$
+:::
+
+:::{.callout-tip}
+Bevor man Vorhersagen eines Modells einreicht, 
+bietet es sich, die Modellgüte in einem neuen Datensatz, als einem Test-Sample, zu überprüfen.$\square$
+:::
+
+## Vertiefung: Train- und Test-Sample
+
+Wenn Sie eine robuste Schätzung der Güte Ihres Modells erfahren möchten,
+bietet es sich an, die Vorhersagegenauigkeit Ihres Modells in einem neuen Datensatz, 
+einem sog. Test-Sample, zu überprüfen.
+
+Die Aufteilung Ihres Datensatzes in ein Train- und ein Test-Sample können Sie z.B. so bewerkstelligen:
+
+
+```{r}
+library(rsample)
+mariokart <- read.csv("daten/mariokart.csv")
+
+meine_aufteilung <- initial_split(mariokart, strata = total_pr)
+```
+
+
+`initial_split` *bestimmt* für jede Zeile (Beobachtung) zufällig aus, ob diese Zeile in das Train- oder in das Test-Sample kommen soll.
+Im Standard werden 70% der Daten in das Train- und 30% in das Test-Sample eingeteilt;
+das ist eine sinnvolle Aufteilung.
+Das Argument `strata` sorgt dafür, dass die Verteilung der AV in beiden Stichproben gleich ist.
+Es wäre nämlich blöd für Ihr Modell, wenn im Train-Sample z.B. nur die teuren, und im Test-Sample nur die günstigen Spiele landen würde. 
+In so einem Fall würde sich Ihr Modell unnötig schwer tun.
+
+Im nächsten Schritt können Sie anhand anhand der von `initial_split` bestimmten Aufteilung die Daten tatsächlich aufteilen.^[initial_split sagt nur, welche Zeile in welche der beiden Stichproben kommen *soll*. Die eigentliche Aufteilung wird aber noch nicht durchgeführt.]
+
+
+```{r}
+mariokart_train <- training(meine_aufteilung)  # Train-Sample
+mariokart_test <- testing(meine_aufteilung)  # Test-Sample
+```
 
 
 
-### Fazit
+## Fazit
 
-In diesem Kapitel haben Sie lineare Modelle gelernt, die über einfache Modelle der Art `y ~ x` hinausgehen. Dazu gehören multiple Modelle, das sind Modelle mit mehr als einer UV (Prädiktor) und auch Interaktionsmodelle.
+In diesem Kapitel haben Sie lineare Modelle gelernt, 
+die über einfache Modelle der Art `y ~ x` hinausgehen. 
+Dazu gehören multiple Modelle, 
+das sind Modelle mit mehr als einer UV (Prädiktor) und auch Interaktionsmodelle.
+Außerdem haben Sie sich mit einem Datensatz von gesamtgesellschaftlichen Nutzen beschäftigt - sehr schön.
+Das Fallbeispiel zum Schluss war vielleicht erhellend insofern,
+als dass ein gutes Modell im Train-Sample nicht (notwendig) zu guten Vorhersagen im Test-Sample führt.
 
 
 ## Aufgaben

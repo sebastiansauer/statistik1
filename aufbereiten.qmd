@@ -256,7 +256,7 @@ wird umgekehrt, also *absteigend* sortiert:
 
 ```{r}
 #| eval: false
-arrange(mariokart, -total_pr)
+mario_sortiert <- arrange(mariokart, -total_pr)
 ```
 
 
@@ -334,14 +334,16 @@ Ob wohl Auktionen von *neuen* Spielen und zwar *mit* Photo einen höheren Preis 
 Anders gesagt haben Sie zwei Filterkriterien im Blick: Neuheit `cond` und Photo `stock_photo`. Nur diejenigen Auktionen, die *sowohl* Neuheit *als auch* Photo erfüllen, möchten Sie näher untersuchen.
 
 ```{r}
-filter(mariokart, stock_photo == "yes" & cond == "new")
+mario_filter1 <- filter(mariokart, stock_photo == "yes" & cond == "new")
+mario_filter1
 ```
 
 
 Hm. Was ist mit den Auktionen, die *entweder* über ein Photo verfügen *oder* neu sind (oder beides)?
 
 ```{r}
-filter(mariokart, stock_photo == "yes" | cond == "new")
+mario_filter2 <- filter(mariokart, stock_photo == "yes" | cond == "new")
+mario_filter2
 ```
 
 Hier könnte man noch viele interessante Hypothesen prüfen, denken Sie sich und tun das auch ... $\square$
@@ -396,7 +398,8 @@ Ob wohl gebrauchte Spiele deutlich geringere Preise erzielen im Vergleich zu neu
 Sie entschließen sich, mal ein Stündchen auf die relevanten Daten zu starren.
 
 ```{r}
-select(mariokart, cond, total_pr)
+mario_select1 <- select(mariokart, cond, total_pr)
+mario_select1
 ```
 
 Aha (?)$\square$
@@ -470,12 +473,7 @@ Aha! Etwa 50$ erzielt so eine Auktion im Schnitt.$\square$
 :::
 
 
-Ein bisschen abstrakter gesprochen, fasst `summarise` also eine *Spalte* zu einer (einzelnen) *Zahl* zusammen, s. @eq-desk-summ.^[Eine Alternative, um eine Spalte zu einer Zahl zusammenzufassen, bietet der "Dollar-Operator" (`$`: 
-
-```{r}
-mean(mariokart$total_pr)
-```
-
+Ein bisschen abstrakter gesprochen, fasst `summarise` also eine *Spalte* zu einer (einzelnen) *Zahl* zusammen, s. @eq-desk-summ.^[Eine Alternative, um eine Spalte zu einer Zahl zusammenzufassen, bietet der "Dollar-Operator" (`$`):  `mean(mariokart$total_pr)`.
 Der Dollar-Operator trennt hier die Tabelle von der Spalte: `tibble$spalte`.
 Im Gegensatz zu den Verben des Tidyverse (die immer einer Tabelle zurückliefern),
 liefert der Dollar-Operator einen Vektor (Spalte) zurück. (Diese wird von `mean` dann zu einer einzelnen Zahl zusammengefasst.)]
@@ -549,6 +547,10 @@ p_group <- wrap_plots(A= p_d1,
                        design = design) 
 p_group
 ```
+
+Durch das Gruppieren wird die Tabelle in "Teiltabellen" - entsprechend der Gruppen - aufgeteilt.
+Das sieht man der Tabelle aber nicht wirklich an.
+Aber alle nachfolgenden Berechnungen werden *für jede Teiltabelle* einzeln ausgeführt.
 
 
 :::{#exm-groupby}
@@ -660,6 +662,8 @@ Welcher *Anteil* (der 143 Spiele in `mariokart`) ist neu, welcher gebraucht?
 mariocart_counted %>% 
   mutate(Anteil = n / sum(n))
 ```
+
+
 
 
 ### Fazit
@@ -809,7 +813,7 @@ flowchart TD
 Und jetzt kommt's: So eine Art von Befehls-Verkettung gibt es in R.
 Schauen Sie sich mal @lst-pfeife an:
 
-```{#lst-pfeife .r lst-cap="Eine Pfeifen-Befehlssequenz"}
+```{#lst-pfeife .r lst-cap="Eine Pfeifen-Befehlssequenz (Pseudo-Syntax)"}
 meine_daten %>%
   filter_gewünschte_zeilen() %>%
   wähle_gewünschte_spalten() %>%
@@ -826,6 +830,8 @@ an jeder Stelle weiterverarbeitet.
 :::
 ::::
 
+
+<!-- TODO  -->
 <!-- ## Praxisprobleme des Datenaufbereitens -->
 
 <!-- ### Fehlende Werte  -->
@@ -833,6 +839,91 @@ an jeder Stelle weiterverarbeitet.
 <!-- ### Spalten umbenennen -->
 
 <!-- ### Werte umkodieren -->
+
+
+
+So könnte Ihre "Pfeifen-Sequenz" aussehen:
+
+```{r}
+library(easystats)  # Das Paket muss installiert sein
+mariokart <- data_read("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")  # Daten einlesen nicht vergessen
+
+library(tidyverse)  # Die Pfeife wohnt auch im Paket "tidyverse"
+
+# Hey R:
+mariokart %>%   # nimm die Tabelle "mariokart" und dann...
+  filter(total_pr < 100) %>%  # filter nur die günstigen Spiele und dann...
+  select(cond, total_pr) %>%  # wähle die zwei Spalten und dann ...
+  group_by(cond) %>%  # gruppiere die Tabelle nach Zustand des Spiels und dann ...
+  summarise(total_pr_mean = mean(total_pr))  # fasse beide Gruppen nach dem mittleren Preis zusammen
+```
+
+
+## Fallbeispiel
+
+
+### Forschungsfrage 1
+
+>   🧔‍♂️ Ich würde gerne wissen, was das teuerste Spiel ist, aber jeweils für neue und gebrauchte Spiele. Aber nur für Spiele, die mit Foto verkauft wurden!
+
+
+```{r}
+mariokart %>% 
+  filter(stock_photo == "yes") %>% 
+  group_by(cond) %>% 
+  summarise(total_pr_max = max(total_pr))
+```
+
+Die Funktion `max` liefert den größten Wert eines Vektors zurück:
+
+```{r}
+x <- c(1, 2, 10)
+max(x)
+```
+
+
+### Forschungsfrage 2
+
+
+>    🧔‍♂️ Ich würde gerne die mittlere Versandpauschale wissen, aber getrennt nach Anzahl der Lenkräder, die dem Spiel beigelegt sind. Und ich will nur Gruppen berücksichtigen, die aus mindestens 10 Spielen bestehen!
+
+
+Wenn wir die Anzahl der Spiele zählen in Abhängigkeit der beigelegten Lenkräder (`wheels`), bekommen wir eine Tabelle mit zwei Spalten: `wheels` und `n`.
+`n` zählt, wie viele Spiele (Zeilen) in der jeweiligen Gruppe ("Teiltabelle") von `wheels` sind.
+
+```{r}
+mariokart %>%
+  count(wheels)
+```
+
+Aus dieser Tabellet sehen wir, dass es 3 oder 4 Lenkräder nur selten (2 bzw. 1 Mal) beigelegt wurden und wir solche Spiele herausfiltern sollten bevor wir den Mittelwert der Versankosten ausrechnen:
+
+```{r}
+mariokart %>%
+  filter(wheels < 3) %>% 
+  group_by(wheels) %>% 
+  summarise(mittlere_versandkosten = mean(ship_pr),
+            anzahl_spiele = n())
+```
+
+Die Funktion `n()` gibt die Anzahl der Zeilen pro Teiltabelle zurück.
+
+### Forschungsfrage 3
+
+
+>   🧔‍♂️ Ich würde gerne den Verkaufspreis in Yen wissen, nicht in Euro. Dann rechne mal den mittleren Verkaufspreis aus und ziehe 10% ab, die wir als Provision unseren Verkäufern zahlen müssen.
+
+
+```{r}
+mariokart %>% 
+  select(total_pr) %>% 
+  mutate(total_pr_yen = total_pr * 133) %>% 
+  summarise(preis_yen_mw = mean(total_pr_yen),
+            preis_yen_mw_minus_10proz = preis_yen_mw - 0.1*preis_yen_mw)
+```
+
+Wie man sieht kann man in `summarise` auch mehr als eine Berechnung einstellen.
+In diesem Fall haben wir zwei Berechnungen angestellt: Einmal den Mittelwert und einmal den Mittelwert minus 10% (des Mittelwerts).
 
 ## Praxisbezug
 
@@ -861,7 +952,7 @@ pr_mean <- round(mean(mariokart$total_pr), 0)
 ```
 
 
-Ei Analysti 🧑‍🦰 möchte zeigen, dass der Verkaufspreis von Mariokart-Spielen "viel zu niedrig" ist. Es muss ein höherer Wert rauskommen, findet dis Analysti. Der mittlere Verkaufspreis (im Datensatz `mariokart`) liegt bei 50$. 
+Ei Analysti 🧑‍🦰 möchte zeigen, dass der Verkaufspreis von Mariokart-Spielen "viel zu niedrig" ist. Es muss ein höherer Wert rauskommen, findet dis Analysti. Der mittlere Verkaufspreis (im Datensatz `mariokart`) liegt bei 50 Euro. 
 
 
 >   ‍🦰 Kann man den Wert nicht ... "kreativ verbessern"? Ein paar Statistik-Tricks anwenden?
@@ -885,10 +976,10 @@ mariokart_wheels %>%
   summarise(mean(pr_mean))
 ```
 
-Und das Ergebnis lautet: 56$! Das ist doch schon etwas "besser" als 50$.
+Und das Ergebnis lautet: 56 Euro! Das ist doch schon etwas "besser" als 50 Euro.
 
 Natürlich ist es *falsch* und irreführend, hier einen ungewichteten Mittelwert zu berechnen.
-Der gewichtete Mittelwert würde wiederum zum korrekten Ergebnis, 50$, führen.$\square$
+Der gewichtete Mittelwert würde wiederum zum korrekten Ergebnis, 50 Euro, führen.$\square$
 :::
 
 ## Fallstudie

@@ -791,6 +791,28 @@ an jeder Stelle weiterverarbeitet.
 :::
 ::::
 
+So sieht dann Ihre Befehlssequenz mit der Pfeife ("%>%") aus:
+
+```{r}
+# Daten einlesen:
+mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+
+# R-Paket tidyverse, darin wohnen die Pfeife und die Tidyverse-Verben:
+library(tidyverse)
+
+mariokart_pfeifentest <- 
+mariokart %>%  # Nimm die Tabelle mariokart und dann ... 
+  filter(total_pr < 100)  %>%  # filtere die günstigen Spiele und dann ...
+  select(total_pr, cond)  %>%   # wähle die benötigen Spalten und dann ...
+  group_by(cond) %>%  # gruppiere nach Zustand (neu/alt) und dann ...
+  summarise(pr_mean = mean(total_pr))  # fasse zusammen zum mittleren Verkaufspreis
+
+mariokart_pfeifentest
+```
+
+
+
+
 <!-- ## Praxisprobleme des Datenaufbereitens -->
 
 <!-- ### Fehlende Werte  -->
@@ -853,7 +875,7 @@ mariokart_wheels %>%
 Und das Ergebnis lautet: 56$! Das ist doch schon etwas "besser" als 50$.
 
 Natürlich ist es *falsch* und irreführend, hier einen ungewichteten Mittelwert zu berechnen.
-Der gewichtete Mittelwert würde wiederum zum korrekten Ergebnis, 50$, führen.$\square$
+Der gewichtete Mittelwert würde wiederum zum korrekten Ergebnis, 50 Euro, führen.$\square$
 :::
 
 ## Fallstudie

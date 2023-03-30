@@ -1,0 +1,722 @@
+# Modellgüte
+
+
+## Lernsteuerung
+
+
+### Standort im Lernpfad
+
+@fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
+
+
+
+
+### Lernziele
+
+
+- Sie kennen gängige Maße der Streuung einer Stichprobe und können diese definieren und mit Beispielen erläutern.
+- Sie können gängige Maße der Streuung einer Stichprobe mit R berechnen.
+- Sie können die Bedeutung von Streuung für die Güte eines Modells erläutern.
+
+### Benötigte R-Pakete
+
+In diesem Kapitel benötigen Sie folgende R-Pakete.
+
+```{r}
+library(tidyverse)
+library(easystats)
+```
+
+
+
+
+
+
+
+```{r}
+#| echo: false
+ggplot2::theme_set(theme_minimal())
+```
+
+
+
+
+## Prof. Weiss-Ois hat eine Idee
+
+
+:::: {.columns}
+::: {.column width="45%"}
+
+### Was er sagt
+
+!["Ich habe eine Schlankheitspille entwickelt, die pro Einnahme das Gewicht im Schnitt um 1kg reduziert!"](img/teacher.png){width="25%"}
+
+:::
+
+
+::: {.column width="10%"}
+<!-- empty column to create gap -->
+:::
+
+
+::: {.column width="45%"}
+### Was er NICHT sagt
+!["Allerdings streuten die Werte der Gewichtsveränderung um 10kg um den Mittelwert herum."](img/teacher.png){width="25%"}
+
+:::
+
+::::
+
+
+[Icon unter Flaticon licence, Autor: iconixar](https://www.flaticon.com/free-icons/professor)
+
+
+:::{.callout-important}
+Wie sehr die Werte eines Modells streuen, ist eine wichtige Information.$\square$
+:::
+
+
+
+
+
+
+
+## Woran erkennt man ein gutes Modell?
+
+
+
+
+
+
+
+
+@fig-streuung zeigt ein einfaches Modell (Mittelwert) mit wenig Streuung (links) vs. ein einfaches Modell mit viel Streuung (rechts).
+
+```{r viel-wenig-streuung}
+#| echo: false
+#| label: fig-streuung
+#| fig-cap: Ein Modell mit wenig Streuung vs. ein Modell mit viel Streuung
+d <-
+  tibble(
+    id = 1:100,
+    x1 = rnorm(100, 0, 1),
+    x2 = rnorm(100, 0, 3)
+  ) %>% 
+  pivot_longer(-id) %>% 
+  group_by(name) %>% 
+  mutate(avg = mean(value),
+         e = value - avg) %>% 
+  ungroup()
+
+d_sum <-
+  d %>% 
+  group_by(name) %>% 
+  summarise(avg = mean(value))
+
+group_names <-
+  c(x1 = "wenig Streuung",
+    x2 = "viel Streuung")
+
+d %>% 
+  ggplot(aes(x = id, y = value)) +
+  geom_point() +
+  facet_wrap(~ name, labeller = as_labeller(group_names)) +
+  geom_hline(data = d_sum,
+             color = "blue", aes(yintercept = avg)) +
+  geom_segment(aes(x = id, xend = id, y = value, yend = avg), 
+               alpha = .5, color = "grey") +
+  theme_minimal()
+```
+
+
+
+
+
+<!-- >   🧑‍🎓  Immer diese Trivialitäten! -->
+
+<!-- >   👩‍🏫 Wird gleich interessanter. -->
+
+
+:::{.callout-important}
+Wir wollen ein präzises Modell, also kurze Fehlerbalken: Das Modell soll die Daten gut erklären, also wenig vom tatsächlichen Wert abweichen.$\square$
+:::
+
+
+
+>   👩‍🎓 Ich frage mich, ob man so ein Modell nicht verbessern kann?
+
+>   👩‍🏫 Die Frage ist, was wir mit "verbessern" meinen?
+
+>    👩‍🎓 Naja, kürzere Fehlerbalken, ist doch klar!
+
+Da die Anzahl der Lenkräder mit dem Verkaufsgebot zusammenhängt, könnte es vielleicht sein, dass wir die Lenkräder-Anzahl da irgendwie nutzen könnten.
+Das sollten wir ausprobieren.
+
+
+@fig-fehler-red zeigt, dass die Fehlerbalken *kürzer* werden, wenn wir ein (sinnvolles) komplexeres Modell finden.
+Innerhalb jeder der beiden Gruppen (mit 2 Lenkrädern vs. mit 0 Lenkrädern) 
+sind die Fehlerbalken jeweils im Durchschnitt kürzer (rechtes Teildiagramm) als im Modell ohne Gruppierung (linkes Teildaigramm).^[Aus Gründen der Übersichtlichkeit wurden nur Autos mit Verkaufsgebot von weniger als 100 Euros berücksichtigt und nur Spiele mit 0 oder mit 2 Lenkrädern.]
+
+
+
+
+```{r fehlerbalken}
+#| echo: false
+#| label: fig-fehler-red
+#| fig-cap: Fehlerbalken in einem einfachen und komplexeren Modell
+#| layout-ncol: 2
+#| fig-subcap:
+#|   - "Fehlerbalken im einfachen Modell: Ein Mittelwert"
+#|   - "Fehlerbalken im komplexen Modell: Zwei Mittelwerte"
+data(mariokart, package = "openintro")
+m <-
+  mariokart %>%
+  filter(total_pr < 100) %>% 
+  filter(wheels %in% c(0, 2)) %>% 
+  mutate(ID = 1:nrow(.),
+         total_pr_resid = total_pr - mean(total_pr),
+         total_pr_resid_quad = total_pr_resid^2) %>% 
+  group_by(wheels) %>% 
+  mutate(total_pr_mean_group = mean(total_pr)) %>% 
+  ungroup()
+
+
+m_sum <- 
+  m %>% 
+  group_by(wheels) %>% 
+  summarise(total_pr = mean(total_pr)) %>% 
+  ungroup()
+
+
+m %>% 
+  ggplot() +
+  geom_hline(aes(yintercept = mean(total_pr))) +
+  geom_segment(aes(x = ID,
+                   xend = ID,
+                   y = total_pr,
+                   yend = mean(total_pr)
+                   ), color = "grey") +
+  geom_point(aes(x = ID, y = total_pr)) 
+
+
+
+m %>% 
+  ggplot() +
+  geom_segment(data = filter(m, wheels == 0),
+               aes(x = ID,
+                   xend = ID,
+                   y = total_pr,
+                   yend = mean(total_pr)
+               ), color = "grey") +
+   geom_hline(data = m_sum,
+     aes(yintercept = total_pr,
+                 color = factor(wheels))) +
+   geom_segment(data = filter(m, wheels == 2),
+               aes(x = ID,
+                   xend = ID,
+                   y = total_pr,
+                   yend = mean(total_pr)
+               ), color = "grey") +
+  geom_point(
+    aes(x = ID, y = total_pr, color = factor(wheels))) +
+  labs(color = "wheels") +
+  theme(legend.position = "none") +
+  geom_label(data = m_sum,
+    aes(label = paste0(wheels, "Räder"), y = total_pr, color = factor(wheels)), x = 3)
+```
+
+
+
+
+## Streuungsmaße
+
+### Der mittlere Abweichungsbalken
+
+>   🧑‍🎓 Wir müssen jetzt mal präziser werden! Wie können wir die Streuung berechnen?
+
+>   👨‍🏫 Gute Frage! Am einfachsten ist es, wenn wir die mittlere Länge eines Abweichungsbalkens ausrechnen. 
+
+
+
+Legen wir (gedanklich) alle Abweichungsbalken $e$ aneinander und teilen durch die Anzahl $n$ der Balken,
+so erhalten wir wir den "mittleren Abweichungsbalken",
+den wir mit $\varnothing e$ bezeichnen könnten.
+Diesen Kennwert bezeichnet man als *Mean Absolute Error* (MAE) 
+bzw. als *Mittlere Absolutabweichung* (MAA).
+Er ist so definiert:
+
+
+${\displaystyle \mathrm {MAE} ={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}.}$
+
+In Worten: Der MAE ist definiert als die Summe der Absolutwerte der Differenzen eines Messwerts zum Mittelwert, geteilt durch die Anzahl der Messwerte.^[Wenn man solche Sätze liest, fühlt sich die Formel fast einfacher an.]
+
+:::{#exm-mae}
+@fig-mae visualisiert ein einfaches Beispiel zum MAE.
+Rechnen wir den MAE für das Beispiel von @fig-mae aus:
+
+$MAE = \frac{1 + |- 2| + 1 + 1}{4} = 5/4 = 1.25$
+:::
+
+```{r mae-balken}
+#| echo: false
+#| label: fig-mae
+#| fig-cap: "Abweichungsbalken und der MAE"
+d <-
+  tibble(id = 1:4,
+         y = c(1, -3, 1, 1))
+
+
+ggplot(d) +
+  aes(x = id, y = y) +
+  geom_point(size = 5, alpha = .7, color = "red") +
+  geom_segment(aes(x = id, xend = id, y = y, yend = mean(y))) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  annotate("label", x = 1, y = 0, label = "MW") +
+  theme_minimal()
+```
+
+Natürlich können wir R auch die Rechenarbeit überlassen.
+
+
+>   🤖 Loving it!!
+
+
+Schauen Sie: Den Mittelwert (s. @fig-mae) kann man doch mit Fug und Recht als ein *lineares Modell*, eine Gerade, betrachten, oder nicht?
+Schließlich erklären wir $y$ anhand einer Gerade (die parallel zur X-Achse ist).
+
+In R gibt es einen Befehl für ein *l*ineares *M*odell, 
+er heißt `lm`.
+
+Die Syntax von `lm()` lautet:
+
+`lm(y ~ 1, data = meine_daten)`.
+
+In Worten: 
+
+>   Hey R, berechne mit ein lineares Modell zur Erklärung von Y. Aber verwende keine andere Variable zur Erklärung von Y, sondern nimm den Mittelwert von Y.
+
+```{r}
+lm1 <- lm(y ~ 1, data = d)
+```
+
+
+Den MAE können wir uns jetzt so ausgeben lassen:
+
+```{r}
+mae(lm1)
+```
+
+
+
+### Der mittlere Quadratfehler
+
+
+
+Sagen wir, wir möchten die Körpergröße erwachsener (deutscher) Männer modellieren.
+Einfach gesagt: Wir möchten wissen, wie groß typischerweise ein deutscher Mann ist.
+Wir verwenden den Mittelwert, um diese Frage zu beantworten.
+Aus der Literatur erfahren wir, dass die mittlere Körpergröße belgischer Männer bei 179 cm liegt und normalverteilt ist [@Garcia:2007aa].^[Das sind Daten für Belgien; Daten zur Standardabweichung für Deutschland habe ich nicht gefunden.]
+
+
+Sind Ihre Daten normalverteilt, dann sind die Abweichungen vom Mittelwert auch normalverteilt.
+Denn wenn man eine Konstante zu einer Verteilung addiert, "verschiebt man den Berg" ja nur zur Seite, ohne seine Form zu verändern, s. @fig-norm-dev.
+
+
+```{r fig-norm-verschieb-pfeil}
+#| echo: false
+#| label: fig-norm-dev
+#| fig-cap: Die Abweichungen zum Mittelwert einer normalverteilten Variable sind selber normalverteilt
+
+
+d <- 
+  tibble(groesse = rnorm(1e5, 178.6, 6.6),
+         groesse_zentriert = groesse - mean(groesse))
+
+d_sum <-
+  d %>% 
+  pivot_longer(everything()) %>%
+  group_by(name) %>% 
+  summarise(MW = mean(value))
+  
+
+d %>% 
+  ggplot() +
+  geom_density(aes(x = groesse), color = "red") +
+  geom_density(aes(x = groesse_zentriert), color = "blue") +
+  theme_minimal() +
+  geom_vline(data = d_sum,
+             aes(xintercept = MW)) +
+  geom_label(data = d_sum,
+             aes(label = paste0("MW: ", round(MW, 0)), x = MW),
+             y = 0) +
+  labs(x = "(zentrierte) Körpergröße", 
+       y = "") +
+  annotate("segment", x = 125, xend = 75, y = 0.01, yend = 0.01,
+           arrow = arrow(type = "closed", length = unit(0.02, "npc")))
+
+
+
+# d %>% 
+#   pivot_longer(everything()) %>% 
+#   ggplot() +
+#   aes(x = value) +
+#   geom_density() +
+#   facet_wrap(~ name) +
+#   theme_minimal() +
+#   geom_vline(data = d_sum,
+#              aes(xintercept = MW), color = "red") +
+#   geom_label(data = d_sum,
+#              aes(label = paste0("MW: ", round(MW, 0)), x = MW),
+#              y = 0) +
+#   labs(x = "(zentrierte) Körpergröße", 
+#        y = "")
+```
+
+Hat man normalverteilte Residuen, so ist die *Standardabweichung* (engl. standard deviation, SD, $\sigma$, $s$) eine komfortable Maßeinheit der Streuung,
+denn damit lässt sich die Streuung (Abweichung vom Mittelwert, Residuen) der Normalverteilung gut beschreiben.
+
+:::{.callout-note}
+Normalverteilte Residuen lassen sich gut mit der Standardabweichung beschreiben.$\square$
+:::
+
+
+>   🧑‍🎓 Aber wie berechnet man jetzt diese Standardabweichung?
+
+>    👨‍🏫 Moment, noch ein kurzer Exkurs zur Varianz ...
+
+>    🧑‍🎓 (seufzt)
+
+
+#### Varianz
+
+Um die Standardabweichung zu berechnen, berechnet man zunächst die *Varianz*, $s^2$ abgekürzt. Hier ist ein "Kochrezept"^[Algorithmus] zur Berechnung der Varianz:
+
+1. Für alle Datenpunkte $x_i$: Berechne die Abweichungen vom Mittelwert, $\bar{x}$
+2. Quadriere diese Werte
+3. Summiere dann auf
+4. Teile durch die Anzahl $N$ der Werte
+
+
+Als Formel ausgedrückt, lautet die Definition der Varianz^[sog. unkorrigierte Stichprobenvarianz] einer Stichprobe:
+
+
+$${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\bar {y}}\right)^{2}.}$$
+
+
+
+Die Varianz steht im engen Verhältnis zur Kovarianz, s. @sec-cov.
+
+Die Varianz kann auch verstehen als den mittleren Quadratfehler (Mean Squared Error, MSE) eines Modells.
+Im Fall eines Punktmodells ist der Mittelwert der vorhergesagte Wert eines Modells.
+
+
+$${\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\hat {y}}\right)^{2}.}$$
+
+
+:::: {.columns}
+
+::: {.column}
+
+@fig-var illustriert die Varianz:
+
+1. Man gehe von der Häufigkeitverteilung der Daten aus.
+2. Betrachtet man die Daten als Gewichte auf einer Wippe, so ist der Schwerpunkt der Wippe der Mittelwert.
+3. Man bilde Quadrate für jeden Datenpunkt mit der Kantenlänge, die dem Abstand des Punktes zum Mittelwert entspricht.
+4. Die Quadrate quetscht man jetzt wo nötig in rechteckige Formen (ohne dass sich die Fläche ändern darf) und verschiebt sie, bis sich alle Formen zu einem Rechteck mit Seitenlänge $n$ und $\sigma^2$ anordnen.
+
+:::
+
+:::: {.column}
+
+
+![Illustration zur Varianz als "mittlerer Quadratfehler"](img/Variance_visualisation.svg.png){#fig-var}
+
+[By Cmglee - Own work, CC BY-SA 3.0](https://commons.wikimedia.org/w/index.php?curid=39472834)
+
+:::
+
+::::
+
+
+:::{#def-varianz}
+### Varianz
+Die Varianz einer Stichprobe entspricht dem mittleren Quadrat der Abweichungen.
+:::
+
+
+
+
+@fig-mse visualisiert die Varianz für @exm-mae.^[Die Abweichungsquadrate wirken optischt nicht quadratisch, da die X-Achse breiter skaliert dargestellt ist als die Y-Achse. Trotzdem sind es Quadrate, nur nicht optisch, wenn Sie wissen, was ich meine...]
+
+
+```{r delta-plot, echo = FALSE}
+#| echo: false
+#| label: fig-mse
+#| fig-cap: Quadrierte Fehlerbalken
+#| warning: false
+
+library(viridis)
+
+
+
+d <-
+  tibble(id = 1:4,
+         y = c(0.1, -.3, .1, .1)) %>% 
+  mutate(y_avg = mean(y),
+         delta = y - y_avg,
+         delta_abs = abs(delta),
+         pos = ifelse(delta > 0, "positiv", "negativ"),
+         delta_sq = delta^2)
+
+d %>%   
+  ggplot(aes(x = id, y = y)) +
+  geom_hline(yintercept = mean(d$y), linetype = "dashed") +
+  geom_segment(aes(y = mean(d$y),
+                   yend = y,
+                   x = id,
+                   xend = id,
+                   linetype = pos)) +
+    annotate(geom = "label",
+           x = 0,
+           hjust = 0,
+           y = mean(d$y), 
+           label = paste0("MW = ", round(mean(d$y), 2))) +
+  geom_rect(aes(ymin = y_avg,
+                ymax = y,
+                xmin = id,
+                xmax = id+delta_abs),
+            fill = viridis(1, alpha = 0.6),
+            alpha = .5) +
+  geom_text(aes(label=round(d$delta_sq,3)),
+            hjust = "left", 
+            nudge_x = 0.05,
+            vjust = ifelse(d$pos == "positiv", "top", "bottom"),
+            nudge_y = ifelse(d$pos == "positiv", -0.05, 0.05),
+            color = viridis(1, alpha=0.8),
+            size = 6) +
+  geom_point(size = 5) +
+    labs(linetype = "Richtung der Abweichung",
+         x = "",
+         y = "") + 
+ # coord_fixed(ratio = 2) +
+  theme(legend.position = "bottom")
+```
+
+Bildquelle: FOM-ifes
+
+
+:::{#exm-var}
+Sie arbeiten immer noch bei einem Online-Auktionshaus und untersuchen den Verkauf von Videospielen.
+Natürlich mit dem Ziel, dass Ihre Firma mehr von dem Zeug verkaufen kann.
+
+Zunächst betrachten Sie die Streuung in den Verkaufspreisen:
+
+```{r}
+library(easystats)  # Das Paket muss installiert sein
+mariokart <- data_read("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+
+m <-
+  mariokart %>%
+  filter(total_pr < 100)  # ohne Extremwerte
+
+m_summ <- 
+  m %>% 
+  summarise(
+    pr_mw = mean(total_pr),
+    pr_maa = mean(abs(total_pr - mean(total_pr))),
+    pr_var = var(total_pr),
+    pr_sd = sd(total_pr))
+
+m_summ
+```
+
+
+
+
+
+Statistiken sind ja schön ... aber Bilder sind auch gut, s. @fig-var.
+
+
+```{r}
+#| eval: false
+mariokart %>% 
+  mariokart %>% 
+  select(total_pr) %>% 
+  filter(total_pr < 100) %>%  # ohne Extremwerte
+  plot_density()
+```
+
+
+
+```{r}
+#| echo: false
+#| fig-cap: Die Verteilung des Verkaufspreises von Mariokart-Spielen 
+#| label: fig-var
+#| layout-ncol: 2
+#| fig-subcap: 
+#|   - Dichtediagramm mit MW±SD in roter Farbe
+#|   - Violindiagramm mit MW±SD in roter Farbe
+mariokart %>% 
+  select(total_pr) %>% 
+  filter(total_pr < 100) %>%  # ohne Extremwerte
+  ggplot() +
+  geom_density(aes(x = total_pr)) +
+  geom_rect(data = m_summ, 
+               aes(
+                 xmin = pr_mw - 0.5*(pr_sd),
+                 xmax = pr_mw + 0.5*(pr_sd),
+                 ymin = 0,
+                 ymax = Inf
+               ),
+            alpha = .5,
+            fill = "red")
+
+mariokart %>% 
+  select(total_pr) %>% 
+  filter(total_pr < 100) %>%  # ohne Extremwerte
+  ggplot() +
+  geom_violin(aes(
+    x = 1,
+    y = total_pr)) +
+  geom_jitter(aes(
+    x = 1,
+    y = total_pr),
+    width = 0.1) +
+  scale_x_continuous(limits = c(0, 2)) +
+  geom_rect(data = m_summ, 
+               aes(
+                 ymin = pr_mw - 0.5*(pr_sd),
+                 ymax = pr_mw + 0.5*(pr_sd),
+                 xmin = -Inf,
+                 xmax = Inf
+               ),
+            alpha = .5,
+            fill = "red")
+```
+
+$\square$
+:::
+
+
+Wer sich die Berechnung von Hand für `pr_maa` sparen möchte, kann die [Funktion `meanAD` aus dem Paket `DescTools`](https://rdrr.io/cran/DescTools/man/MeanAD.html) nutzen.
+
+
+### Die Standardabweichung
+
+Kennt man die Varianz, so lässt sich die Standardabweichung einfach als Quadratwurzel der Varianz berechnen.
+
+
+:::{#def-sd}
+### Standardabweichung
+Die Standardabweichung (SD, s, $\sigma$) ist definiert als die Quadratwurzel der Varianz. 
+
+
+$$s := \sqrt{s^2}$$
+
+$\square$
+:::
+
+
+Durch das Wurzelziehen besitzt die Standardabweichung wieder in etwa die gleiche Größenordnung wie die Daten (im Gegensatz zur Varianz, die durch das Quadrieren sehr groß werden kann).
+
+
+Aus einem Modellierungsblickwinkel kann man die SD definieren als die Wurzel von MSE.
+Dann nennt man sie *Root Mean Squared Error* (RMSE): $rmse = \sqrt{mse}$.
+
+
+:::{.callout-note}
+Die SD ist i.d.R. ungleich zur MAE.$\square$
+:::
+
+
+:::{#exm-sd-mario}
+
+Sie arbeiten weiter an Ihrem Mariokart-Projekt.
+Da Sie heute keine Lust auf viel Tippen haben,
+nutzen Sie das R-Paket `easystats` mit der Funktion `describe_distribution`.
+
+```{r}
+library(easystats)
+
+mariokart %>% 
+  select(total_pr) %>% 
+  describe_distribution()
+```
+
+Ah! Das war einfach. Wird auch langsam Zeit für Feierabend.$\square$
+:::
+
+
+
+:::{#exm-gruppen-mw}
+
+Bevor Sie nach Hause gehen, möchten Sie noch eine Sache anschauen.
+In einer früheren Analyse (s. @fig-fehler-red) fanden Sie heraus,
+dass die Fehlerbalken kürzer werden, wenn man ein geschickteres und komplexeres Modell findet. 
+
+Das wollen Sie natürlich prüfen.
+Sie überlegen: "Okay, ich will ein einfaches Modell, in dem der Mittelwert das Modell des Verkaufpreis sein soll."
+
+Das spezifizieren Sie so:
+
+```{r}
+lm1 <- lm(total_pr ~ 1, data = mariokart)
+mae(lm1)
+```
+
+
+Im nächsten Schritt spezifizieren Sie ein Modell,
+in dem der Verkaufpreis eine Funktion der Anzahl der Lenkräder ist (ähnlich wie in @fig-fehler-red):
+
+```{r}
+lm2 <- lm(total_pr ~ wheels, data = mariokart)
+mae(lm2)
+```
+
+Ah! Sehr schön, Sie haben mit `lm2` ein besseres Modell als einfach nur den Mittelwert gefunden.$\square$
+:::
+
+
+## Streuung als Modellfehler
+
+Wenn wir den Mittelwert als Punktmodell des Verkaufpreises auffassen, so kann man die verschiedenen Kennwerte der Streuung als verschiedene Kennwerte der Modellgüte auffassen.
+
+Definieren wir zunächst als Punktmodell auf Errisch:
+
+```{r}
+lm_mario1 <- lm(total_pr ~ 1, data = m)
+```
+
+Zur Erinnerung: Wir modellieren `total_pr` ohne Prädiktoren, sondern als Punktmodell,
+und zwar schätzen wir den Mittelwert mit den Daten `m`.
+
+Das Paket `easystats` bietet komfortable Befehle, um die Modellgüte zu berechnen:
+
+```{r}
+mae(lm_mario1)  # Mean absolute error
+mse(lm_mario1)  # Mean squared error
+rmse(lm_mario1)  # Root mean squared error
+```
+
+
+## Fazit
+
+Der „gesunde Menschenverstand“ würde spontan den mittleren Absolutabstand (MAA oder MAE) der Varianz (oder der Standardabweichung, SD) vorziehen. 
+Das ist vernünftig, denn die MAA ist anschaulicher und damit nützlicher als die Varianz und die SD.
+
+Warum sollte man überhaupt ein unanschauliches Maß wie die Varianz verwenden? 
+Wenn es nur um deskriptive Statistik geht, braucht man die Varianz (oder die SD) nicht unbedingt.
+
+Gründe, warum Sie die Varianz (bzw. SD) kennen und nutzen sollten, sind:^[Ich wollte noch hinzufügen, dass die Varianz eng verknüpft mit der linearen Algebra, aber ich war nicht sicher, ob das Argument allgemein überzeugen würde.]
+
+- Die SD ist sehr nützlich zur Beschreibung der Normalverteilung
+- Die Varianz wird häufig verwendet bzw. in Forschungsarbeiten berichtet, also müssen Sie die Varianz kennen.
+
+
+
+
+
+## Aufgaben
+
+
+## Literatur

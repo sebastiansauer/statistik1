@@ -1,0 +1,604 @@
+# Punktmodelle 2
+
+
+
+## Lernsteuerung
+
+### Standort im Lernpfad
+
+@fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
+
+
+
+
+### Lernziele
+
+
+- Sie können die Begriffe Kovarianz und Korrelation definieren und ihren Zusammenhäng erläutern.
+- Sie können die Stärke einer Korrelation einschätzen.
+
+### Benötigte R-Pakete
+
+In diesem Kapitel benötigen Sie folgende R-Pakete.
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(easystats)
+library(ggplot2)
+
+ggplot2::theme_set(theme_minimal())
+```
+
+```{r}
+#| include: false
+library(ggpubr)
+library(TeachingDemos)
+#library('MASS')
+```
+
+
+
+## Zusammenfassen zum Zusammenhang
+
+
+In @sec-punktmodelle1 haben wir gelernt,
+dass das Wesen eines Punktmodells als Zusammenfassung *einer* Spalte (eines Vektors) zu einer einzelnen Zahl^[auch Skalar genannt], zu einem "Punkt" sozusagen, zusammengefasst werden kann.
+
+In diesem Kapitel fassen wir *zwei* Spalten zusammen, wieder zu *einer* Zahl, s. @eq-desk2.
+
+$$\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} + \begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarrow \qquad \begin{array}{|c|} \hline \\ \hline  \hline \end{array}$$ {#eq-desk2}
+
+
+Wo wir in @sec-punktmodelle1 eine Variable mit Hilfe eines Lagemaßes beschrieben/dargestellt/zusammengefasst/modelliert haben, tun wir hier das Gleich für zwei Variablen.
+Beschreibt man aber zwei Variablen, so geht es um die Frage, was die beiden Variablen miteinander zu tun haben:
+Wie die beiden Variablen von einander abhängen bzw. miteinander (irgendwie) zusammenhängen.
+Wir begrenzen auf *metrische* Variablen.
+
+Die Verbildlichung^[Visualisierung] zweier metrischer Variablen haben wir bereits in @sec-zshg-metr kennengelernt.
+Zur Verdeutlichung, wie ein Zusammenhang zweier metrischer Variablen aussehen kann, helfe noch einmal @fig-zshg.
+
+
+```{r}
+#| echo: false
+#| label: fig-zshg
+#| fig-cap: Visualisierung des Zusammenhangs von wheels und total_pr
+#| fig-subcap: 
+#|   - Streudiagramm mit Trendlinie (und Ellipse zur Verdeutlichung)
+#|   - "'Verwackeltes' Streudiagramm, um die einzelnen Punkte besser zu erkennen"
+#| layout-ncol: 2
+data(mariokart, package = "openintro")
+
+mariokart %>% 
+  filter(total_pr < 100) %>% 
+  ggscatter(x = "wheels", 
+            y = "total_pr",
+            add = "reg.line",
+            add.params = list(color = "blue"),
+            ellipse = TRUE)
+
+mariokart %>% 
+  filter(total_pr < 100) %>% 
+  ggplot() +
+  aes(x = wheels, y = total_pr) +
+  geom_jitter()
+```
+
+
+
+## Abweichungsrechtecke
+
+
+### Noten und Abweichungsrechtecke
+
+
+```{r}
+#| echo: false
+d <- tibble::tribble(
+  ~id, ~y, ~x,
+   1L,   72,     70,
+   2L,   44,     40,
+   3L,   39,     35,
+   4L,   50,     67
+  ) %>% 
+  mutate(x_avg = mean(x),
+         y_avg = mean(y),
+         x_delta = x - mean(x),
+         y_delta = y - mean(y),
+         x_pos = x > mean(x),
+         y_pos = y > mean(y),
+         cov_sign = sign(x_delta * y_delta),
+         xy_area = x_delta * y_delta)
+
+#write.csv(d, file = "noten.csv")
+
+# cor(d$punkte, d$lernzeit)
+#plot(d$lernzeit, d$punkte)
+```
+
+
+:::{#exm-noten2}
+### Wieder Statistiknoten
+
+Anton, Bert, Carl und Daniel haben ihre Statistikklausur zurückbekommen.
+Die Lernzeit $X$ scheint mit der erreichten Punktzahl $Y$ (0-100, je mehr desto besser) zusammenzuhängen.^[>    🧑‍🎓  Typisches Lehrerbeispiel!!]
+Gar nicht so schlecht ausgefallen, s. @tbl-noten2.$\square$
+:::
+
+```{r}
+#| echo: false
+#| label: tbl-noten2
+#| tbl-cap: Statistiknoten und Lernzeit
+
+d %>% 
+  select(id, y, x) %>% 
+  kable()
+```
+
+Zeichner wir uns die Daten als Streudiagramm, s. @fig-delta-rect.
+Dabei zeichnen wir noch *Abweichungsrechtecke* ein.
+
+
+:::{#def-abweichungsrechteck}
+### Abweichungsrechteck
+Im zweidimensionalen Fall spannt sich ein Abweichungsrechteck vom Mittelwert $\bar{x}$ bis zum Messwert $x_i$ und genauso für $Y$.
+Wir bezeichnen mit $dx_i$ die Distanz (Abweichung) vom Mittelwert $\bar{x}$ bis zum Messwert $x_i$ (und analog $dy_i$), also $dx_i = x_i - \bar{x}$.  Die Fläche des Abweichungsrechtecks ist dann das Produkt der Abweichungen: $dx_i \cdot dy_i$.$\square$
+:::
+
+```{r}
+#| echo: false
+#| label: fig-delta-rect
+#| fig-cap: "Die Kovarianz als mittleres Abweichungsrechteck. In jedem der vier Quadranten (Q1, Q2, Q3, Q4) ist das Vorzeichen der Abweichungsrechtecke dargestellt. Die Farben der Abweichungsrechtecke spiegeln das Vorzeichen wider."
+ggplot(d) +
+  aes(x = x, y = y) +
+  geom_vline(xintercept = mean(d$x), linetype = "dashed") +
+  geom_hline(yintercept = mean(d$y), linetype = "dashed") +
+  geom_point(size = 2, color = "blue") +
+  geom_rect(aes(xmin = x, xmax = x_avg, ymin = y, ymax = y_avg,
+                fill = factor(cov_sign)),
+            alpha = .5) +
+  labs(x = "Lernzeit",
+       y = "Punkte (0-100)",
+       fill = "Vorzeichen") + 
+  theme_minimal() +
+  annotate("label", x = Inf, y = Inf, label = "Q1: +", hjust = "right", vjust = "top") +
+  annotate("label", x = Inf, y = -Inf, label = "Q2: -", hjust = "right", vjust = "bottom") +
+  annotate("label", x = -Inf, y = -Inf, label = "Q3: +", hjust = "left", vjust = "bottom") +
+  annotate("label", x = -Inf, y = Inf, label = "Q4: -", hjust = "left", vjust = "top") 
+
+```
+
+
+Stellen Sie sich vor, wir legen alle Rechtecke zusammen aus @fig-delta-rect.
+Nennen wir das resultierende Rechteck das "Summenrechteck".
+Ja, ich weiß, ich strapaziere mal wieder Ihre Phantasie^[hoffentlich nicht Ihre Geduld].
+Jetzt kommt's: Je größer die Fläche des Summenrechtecks, desto stärker der (lineare) Zusammenhang.
+
+Beachten Sie, dass die Flächen Vorzeichen haben, positiv oder negativ (Plus oder Minus), je nach dem, in welchem der vier Quadranten sie stehen. Die Füllfarben der Rechtecke verdeutlichen dies, s. @fig-delta-rect.
+
+Das *Vorzeichen* der Summe zeigt an, ob der Zusammenhang positiv (gleichsinnig, ansteigende Trendlinie) oder negativ (gegensinnig, absinkende Trendlinie) ist.
+
+So zeigt @fig-kov links eine positive Summe der Abweichungsrechtecke und rechts eine negative Summe. Man sieht im linken Diagramme, dass die Summe der Rechtecke mit positivem Vorzeigen (rot) überwiegt; im rechten Diagramm ist es umgekehrt (blau, negativ überwiegt).
+
+```{r}
+#| label: fig-kov
+#| fig-cap: "Positive und negative Kovarianz: Einmal resultiert eine positive Summe, einmal eine negative Summe, wenn man die Flächen der Abweichungsrechtecke addiert."
+#| layout-ncol: 2
+#| fig-subcap: 
+#|   - Positive Vorzeichen (Quadranten 1 und 3) überweigen, was in einer positiven Kovarianz resultiert
+#|    - Negative Vorzeichen (Quadranten 2 und 4) überweigen, was in einer negativen Kovarianz resultiert
+#| echo: false
+
+## Positive correlation
+x <- rnorm(25)
+y <- x + rnorm(25,3, .5)
+#cor(x,y)
+cor.rect.plot(x,y)
+## negative correlation
+x <- rnorm(25)
+y <- rnorm(25,10,1.5) - x
+#cor(x,y)
+cor.rect.plot(x,y)
+```
+
+
+
+Wir können das Summenrechteck noch durch die Anzahl der Datenpunkte teilen,
+das ändert nichts an der Aussage,
+aber der Mittelwert hat gegenüber der Summe den Vorteil, dass er unabhängig ist in seiner Aussage von der Anzahl der eingegangenen Datenpunkte.
+Das resultierende Rechteck nennen wir das *mittlere Abweichungsrechteck*.
+
+
+Ein Maß für den Zusammenhang von Lernzeit und Klausurpunkte ist also die *Größe des mittleren Abweichungsrechtecks*.
+
+
+### Kovarianz {#sec-kov}
+
+:::{#def-kov}
+### Kovarianz
+Die Kovarianz ist definiert als die Fläche des mittleren Abweichungsrechtecks.
+Sie ist ein Maß für die Stärke und Richtung des linearen Zusammenhangs zweier metrischer Variablen.$\square$
+:::
+
+
+>   👩‍🎓 Zu viele Bilder! Ich brauch Zahlen.
+
+>   👩‍🏫 Kommen schon!
+
+
+@tbl-kov2 zeigt die Werte für die X- und Y-Abweichung und die resultierenden Flächen der Abweichungsrechtecke.
+Wenn Sie die Werte selber nachrechnen wollen, finden Sie den Noten-Datensatz in der Datei [noten.csv](https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv).
+
+
+
+```{r}
+#| echo: false
+#| label: tbl-kov2
+#| tbl-cap: Werte der Abweichungsrechtecke
+
+d %>% 
+  kable()
+```
+
+
+Berechnen wir als nächstes das mittlere Abweichungsrechteck, die Kovarianz:
+
+```{r}
+d %>%
+  summarise(kovarianz = sum(xy_area))
+```
+
+Die Formel der Kovarianz lautet (@eq-cov3): 
+
+$$\text{cov(xy)} = s_{xy}:=\frac{1}{n}\sum_{i=1}^n (x_i-\bar{x})(y_i-\bar{y}) = \frac{1}{n}\sum_{i=1}^n dx_i\cdot dy_i$$ {#eq-cov3}.
+
+In Worten:
+
+1. Rechne für jedes $x_i$ die Abweichung vom Mittelwert, $\bar{x}$, aus, $dx_i$
+1. Rechne für jedes $y_i$ die Abweichung vom Mittelwert, $\bar{y}$, aus, $dy_i$
+3. Multipliziere für alle $i$ $dx_i$ mit $xy_i$, um die Abweichungsrechtecke $dx_i dy_i$ zu berechnen
+4. Addiere die Flächen der Abweichungsrechtecke
+5. Teile durch die Anzahl der Beobachtungen $n$
+
+
+:::{#exm-pos-kov}
+### Variablen mit positiver Kovarianz
+
+- Größe und Gewicht
+- Lernzeit und Klausurerfolg
+- Distanz zum Ziel und Reisezeit
+- Temperatur und Eisverkauf$\square$
+:::
+
+
+
+:::{#exm-neg-kov}
+### Variablen mit negativer Kovarianz
+
+- Lernzeit und Freizeit
+- Alter und Restlebenszeit
+- Temperatur und Schneemenge
+- Lebenszufriedenheit und Depressivität$\square$
+:::
+
+
+Drei Extrembeispiele für Kovarianz-Werte sind in @fig-demos-cov dargestellt.
+
+
+```{r}
+#| echo: false
+#| label: fig-demos-cov
+#| fig-cap: Verschiedene Werte der Kovarianz
+#| fig-subcap: 
+#|   - Perfekter positiver Zusammenhang
+#|   - stark negativer Zusammenhang
+#|   - kein Zusammenhang
+#| layout-ncol: 3
+
+# zero correlation
+points1 <- data.frame(
+  x = c(1,1,2,2,4,4,5,5),
+  y = c(1,5,2,4,2,4,5,1)
+)
+
+cor.rect.plot(y = points1$y, x = points1$x)
+
+# perfect correlation
+points2 <- data.frame(
+  x = c(1,2,3,4,5,6,7),
+  y = c(1,2,3,4,5,6,7)
+)
+
+cor.rect.plot(y = points2$y, x = points2$x)
+
+# perfect negative correlation
+points3 <- data.frame(
+  x = c(1,2,3,4,5,6,7),
+  y = c(2.1,6,5,4,3,2,1)
+)
+
+
+cor.rect.plot(y = points3$y, x = points3$x)
+
+```
+
+
+
+Bei einer Kovarianz von 0 ist die Fläche der Abweichungsrechtecke^[Bei der Varianz waren es Quadrate, bei der Kovarianz sind es Rechtecke.], wenn man sie pro Quadrant aufsummiert, etwa gleich groß, s. @fig-covnull.
+Addiert man die Abweichungsrechtecke (unter Beachtung der Vorzeichen: rot = positiv; blau = negativ), so beträgt die Summe in etwa (oder genau) Null.
+
+Damit ist die Kovarianz in diesem Fall etwa (bzw. genau) Null:
+
+
+$$\begin{align}
+\sum \left(dX \cdot dY \right) &= 0\\
+\Leftrightarrow \varnothing \left(dX \cdot dY \right) &= 0\\
+\Leftrightarrow \text{cov} &= 0
+\end{align}$$
+
+
+
+
+```{r}
+#| echo: false
+#| label: fig-covnull
+#| fig-cap: Wenn die Kovarianz 0 ist, gleichen sich die Abweichungsrechtecke auf 0 aus
+#| layout-ncol: 2
+#| fig-subcap: 
+#|   - 4 Abweichungsrechtecke, deren Fläche sich zu 0 addiert
+#|   - 200 Abweichungsrechtecke, deren Fläche sich zu 0 addiert
+
+
+
+# zero correlation
+points1 <- data.frame(
+  x = c(1,1,2,2,4,4,5,5),
+  y = c(1,5,2,4,2,4,5,1)
+)
+
+#cor(points1$x, points1$y)
+
+cor.rect.plot(y = points1$y, x = points1$x)
+
+
+# simulated data, uncorrelated
+samples = 200
+r = 0
+
+
+data = MASS::mvrnorm(n=samples, mu=c(0, 0), Sigma=matrix(c(1, r, r, 1), nrow=2), empirical=TRUE)
+
+data.df <- data.frame(data)
+
+# p1 <- ggplot(data.df, aes(x=X1, y=X2)) + geom_point() + 
+#   theme(text = element_text(size = 18))
+# p1
+
+cor.rect.plot(y = data.df$X1, x = data.df$X2)
+
+```
+
+
+
+
+
+
+### Die Kovarianz ist schwer zu interpretieren
+
+Die Kovarianz hat den Nachteil, dass sie abhängig ist von der Skalierung.
+So steigt die Kovarianz z.B. um den Faktor 100, wenn man eine Variable (z.B. Einkommen) anstelle von Euro in Cent bemisst.
+Das ist nicht wünschenswert, denn der Zusammenhang zwischen z.B. Einkommen und Lebenszufriedenheit ist unabhängig davon, ob man Einkommen in Euro, Cent oder Dollar misst.
+Außerdem hat die Kovarianz keinen Maximalwert, der einen perfekten Zusammenhang anzeigt.
+
+Insgesamt ist die Kovarianz schwer zu interpretieren und wird in der praktischen Anwendung nur wenig verwendet.
+
+
+
+## Korrelation
+
+Der Korrelationskoeffizient $r$ nach Karl Pearson löst das Problem, dass die Kovarianz schwer interpretierbar ist.
+Der Wertebereich von $r$ reicht von -1 (perfekte negative lineare Korrelation) bis +1 (perfekte positive lineare Korrelation).
+Eine Korrelation von $r = 0$ bedeutet kein linearer Zusammenhang.
+
+
+Die Korrelation berechnet sich wie folgt:
+
+1. Teile alle $x_i$ durch ihre Standardabweichung, $s_x$
+2. Teile alle $y_i$ durch ihre Standardabweichung, $s_y$
+3. Berechne mit diesen Werten die Kovarianz
+
+
+Teilt man nämlich alle $x_i$ bzw. $y_i$ durch ihre Standardabweichung,
+so führt man mit $X$ bzw. $Y$ eine z-Transformation durch.
+Daher kann man den Korrelationskoeffizienten $r$ so definieren:
+
+
+:::{#def-r}
+### Korrelationskoeffizient r
+
+Der Korrelationskoeffizient $r$ ist definiert als das mittlere Produkt der z-Wert-Paare: $r_{xy}=\frac{1}{n}\sum_{i=1}^n z^x_i z^y_i$.$\square$
+:::
+
+
+
+:::{.callout-note}
+Aus dem Korrelationskoeffizienten können Sie zwei Informationen ableiten:
+
+1. *Vorzeichen*: Ein positives Vorzeichen bedeutet positiver (gleichsinniger) linearer Zusammenhang (und umgekehrt: negatives Vorzeichen, negativer, also gegensinniger linearer Zusamamenhang).
+2. *Absolutwert* der Korrelation: Der Absolutwert des Korrelationskoeffizienten gibt die Stärke des linearen Zusammenhangs an. Je näher der Wert bei 1 liegt desto stärker der Zusammenhang. 
+  - $r = 0$: kein linearer Zusammenhang
+  - $r = 1$: perfekter linearer Zusammenhang$\square$
+:::
+
+
+
+Eine Zuordnung des Korrelationskoeffizienten zum Profil des Streudiagramms zeigt @fig-corr-wiki.
+
+![Verschiedene Streudiagramme, die sich in ihrem Korrelationskoeffizienten unterscheiden. Quelle: Wikipedia, By DenisBoigelot, original uploader was Imagecreator, CC0, https://commons.wikimedia.org/w/index.php?curid=15165296 CC0](img/Correlation_examples2.svg){#fig-corr-wiki}
+
+
+
+:::{#exr-corrgame}
+### Korrelationsspiel
+Spielen Sie das [Korrelationsspiel](https://gallery.shinyapps.io/correlation_game/): Sie Sehen ein Streudiagramm und müssen den richtigen Korrelationskoeffizienten eingeben.$\square$
+:::
+
+
+:::{#exr-corrvis}
+### Interaktive Visualisierung der Korrelation
+
+Auf der Seite von [RPsychologist](https://rpsychologist.com/correlation/) findet sich eine ansprechende dynamische Visualisierung der Korrelation.
+Nutzen Sie sie, um Ihr Gefühl für die Stärke des Korrelationskoeffizienten zu entwickeln.$\square$
+:::
+
+
+
+
+
+### Korrelation ≠ Kausation
+
+Eine Studie fand eine starke Korrelation, 
+ zwischen der (Höhe des) Schokoladenkonsums eines Landes und (Anzahl der) Nobelpreise eines Landes [@messerli_chocolate_2012], s. @fig-schoki.
+ 
+ ![Schoki futtern macht schlau?](img/correlation_550.png){#fig-schoki}
+
+:::{.callout-caution}
+Korrelation (bzw. Zusammenhang) ungleich Kausation! Korrelation kann bedeuten, dass eine Kausation vorliegt, aber es muss auch nicht sein, dass Kausation vorliegt. 
+Liegt Korrelation ohne Kausation vor, so spricht man von einer Scheinkorrelation. 
+:::
+
+
+### Korrelation misst nur linearen Zusammenhang
+
+
+
+
+
+:::{#exm-scheinkorr}
+### Scheinkorrelation
+Eine Urban Myth besagt: Die Anzahl der Störche pro Landkreis korreliert mit der Anzahl der Babies in diesem Landkreis.
+
+>   Bald men at higher risk of severe case of Covid-19, research finds^[https://www.telegraph.co.uk/global-health/science-and-disease/bald-men-higher-risk-severe-case-covid-19-research-finds/, Abruf 2023-03-24]
+
+Macht die Glatze krank? Männer mit Glatze bekommen häufiger Corona [@goren_preliminary_2020].
+
+
+[Hier](https://scheinkorrelation.jimdofree.com/) finden Sie weitere Beispiele für Scheinkorerlation.$\square$
+:::
+
+
+
+## Fallbeispiel
+
+
+In Ihrer Arbeit beim Online-Auktionshaus analysieren Sie, welche Variablen mit dem Verkaufspreis von Computerspielen zusammenhängen.
+
+
+Falls der Datensatz auf Ihrem Computer (am besten in Ihrem Projektverzeichnis in RStudio) abgelegt ist, können Sie die Daten so (in mittlerweile gewohnter Manier) importieren:
+
+```{r}
+#| eval: false
+mariokart <- read.csv("mariokart.csv")
+```
+
+
+Falls der Datensatz im Unterordner mit Namen "Mein_Unterordner" liegt, so würden Sie folgenden Pfad eingeben:
+
+```{r}
+#| eval: false
+mariokart <- read.csv("Mein_Unterordner/mariokart.csv")
+```
+
+Man beachte, dass solche sog. relativen Pfade (relativ zu Ihrem Arbeitsverzeichnis, d.h. Ihr Projektverzeichnis in R-Studio) *nicht* mit einem Schrägstrich (Slash) beginnen.
+
+Falls Sie die Daten nicht auf Ihrem Computer haben,
+können Sie sie komfortable von z.B. der Webseite von [Vincent Arel-Bundock](https://vincentarelbundock.github.io/Rdatasets) herunterladen:
+
+```{r}
+mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+```
+
+Sie wählen die Variablen von `mariokart`, die Sie interessieren - natürlich nur die metrischen - und lassen sich mit `cor` die Korrelation aller Variablen untereinander ausgeben: 
+
+```{r}
+mariokart %>%  
+  dplyr::select(duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels) %>% 
+  cor() %>% 
+  round(2) # Runden auf zwei Dezimalen
+```
+
+
+
+:::{.callout-caution}
+### Namensverwechslung (name clash)
+Es kann vorkommen, dass Sie zwei R-Pakete geladen haben, in denen es jeweils z.B. eine Funktion mit Namen `select` gibt.
+R wird in dem Fall diejenige Funktion verwenden, deren Paket Sie als letztes gestartet haben.
+Das kann dann das falsche `select` sein, wie es mir oben in der Syntax passiert ist.
+In dem Fall resultiert eine verwirrende Fehlermeldung, die sinngemäß sagt: "Hey Mensch, du hast Argumente in der Funktion verwendet, die du gar nicht verwenden darfst, da es sie nicht gibt." Auf Errisch: `Error in select(., duration, n_bids, start_pr, ship_pr, total_pr, seller_rate,  : unused arguments (duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels)`.
+Eine einfache Abhilfe ist es, R zu sagen: "Hey R, nimm gefälligst `select` aus dem Paket `dplyr`, dort "wohnt" nämlich `select`. Auf Errisch spricht sich das so: `dplyr::select(...)`.$\square$
+:::
+
+
+
+Etwas schöner sieht die Ausgabe mit dem Befehl `correlation` aus `{easystats}` aus, s. @tbl-mario-corr.
+
+```{r}
+#| label: tbl-mario-corr
+#| tbl-cap: Korrelationstabelle (tidy) im Datensatz mariokart
+mariokart %>% 
+  dplyr::select(duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels) %>% 
+  correlation() 
+```
+
+
+Neben einigen Statistiken, die wir einfach geflissentlich ausblenden (`t` und `p`) beinhaltet die Tabelle eine interessante Information: den Schätzbereich für die Korrelation, gekennzeichnet als `95% CI`.
+*Grob* gesagt können wir diese Information so interpretieren: "Mit 95% Wahrscheinlichkeit liegt der echte Wert der Korrelation in folgendem Bereich."^[Bayesianische Interpretation]
+
+
+Möchte man nur einzelne Korrelationskoeffizienten ausrechnen, können wir die Idee des Zusammenfassens, s. @eq-desk2, nutzen:
+
+```{r}
+mariokart %>% 
+  summarise(cor_super_wichtig = cor(total_pr, wheels))
+```
+
+:::{.callout-caution}
+Im Falle von fehlenden Werte müssen Sie R aus seiner schüchternen Vorsicht befreien und ermutigen, trotz fehlender Werte einen Korrelationskoeffizienten auszugeben.
+Das geht mit dem Argument `use = "complete.obs"` in `cor`:
+
+```{r}
+mariokart %>% 
+  summarise(cor_super_wichtig = cor(total_pr, wheels, use = "complete.obs"))
+```
+:::
+
+
+>   🧑‍🎓 Immer so viele Zahlen! Ich brauch Bilder.
+
+
+Mit dem Befehl `plot_correlation` aus dem R-Paket `{dataExplorer}` bekommt man eine ansehnliche Heatmap zur Verdeutlichung der Korrelationswerte, s. @fig-mario-corr.
+
+```{r}
+#| label: fig-mario-corr
+#| fig-cap: Heatmap zu den Korrelationen im Datensatz mariokart.
+library(DataExplorer)
+
+mariokart %>% 
+  dplyr::select(duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels) %>% 
+  plot_correlation()
+```
+
+
+
+## Vertiefung
+
+[TED-Vortrag](https://www.youtube.com/watch?v=8B271L3NtAw) zum Thema Scheinkorrelation.
+
+
+
+## Aufgaben
+
+
+
+
+

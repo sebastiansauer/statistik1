@@ -90,7 +90,7 @@ s. @fig-dino1.
 
 
 
-::: {.content-visible unless-format="pdf"}
+
 
 ![Dinosaurier und Kreis: Gleiche statistischen Kennwerte](img/dino-corr.gif){#fig-dino1}
 
@@ -102,19 +102,21 @@ s. @fig-dino1.
 In @fig-dino1 sieht man zwei verschiedene "Bilder", also Datensätze: einmal einen Dino und einmal einen Kreis.
 Obwohl die Bilder grundverschiedene sind, sind die zentralen statistischen Kennwerte (praktisch) identisch.
 
-:::
 
 
+In die gleiche Bresche schlägt "Anscombes Quartett", s. @fig-dino2:
+Es zeigt 4 Datensätze, in denen die zentralen Statistiken fast identisch sind,
+also Mittelwerte, Streuungen, Korrelationen.
+Aber die Streudiagramme sind grundverschieden.
+Anscombes Beispiel zeigt (zugespitzt): Eine Visualisierung enthüllt, was der Statistik (als Kennzahl) verhüllt bleibt.
 
-::: {.content-visible unless-format="html"}
 
-![Anscombes Quartet: Gleiche statistischen Kennwerte in vier Datensätzen](img/anscombe.png){#fig-dino1}
+![Anscombes Quartet: Gleiche statistischen Kennwerte in vier Datensätzen](img/anscombe.png){#fig-dino2}
 
 :::{.xsmall}
 [Quelle](https://en.wikipedia.org/wiki/Anscombe%27s_quartet)
 :::
 
-:::
 
 
 
@@ -124,8 +126,6 @@ Obwohl die Bilder grundverschiedene sind, sind die zentralen statistischen Kennw
 
 
 
-Die Idee stammt von @Anscombe1973. [Hier](https://de.wikipedia.org/wiki/Anscombe-Quartett) ist ein weiteres Beispiel (von Anscombe),
-das zeigt, dass Bilder mehr zeigen als typische Statistiken es vermögen.
 
 
 
@@ -312,7 +312,7 @@ nom_plots <-
 "Zusammenhang", "gefülltes Balkendiagramm", "Streudiagramm",
 "Unterschied", "gefülltes Balkendiagramm", "Boxplot")
 
-nom_plots
+nom_plots |> knitr::kable()
 ```
 
 
@@ -386,7 +386,7 @@ Eine einfache, komfortable ist die mit dem Paket `DataExplorer`,
 s. @fig-de1.
 
 
-Zuerst importieren wir die Daten und starten das R-Paket `DataExplorer`, s. @lst-mariokart.
+Zuerst importieren wir die Daten, s. @lst-mariokart.
 
 ```{#lst-mariokart .r lst-cap="Mariokart-Daten importieren von einer Webseite"}
 mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
@@ -516,7 +516,7 @@ Nur: Es sollten nicht sehr viele und nicht sehr wenig sein, s. @fig-zu-wenig-vie
 #| echo: false
 #| label: fig-zu-wenig-viele
 #| layout-ncol: 2
-#| fig-cap: "Nicht zu wenig und nicht zu vielle Balken im Balkendiagramm"
+#| fig-cap: "Nicht zu wenig und nicht zu viele Balken im Balkendiagramm"
 #| fig-subcap: 
 #|   - "Zu viele Gruppen (Balken)"
 #|   - "Zu wenige Gruppen (Balken)"
@@ -583,7 +583,7 @@ mariokart %>%
 #### Dichtediagramm
 Ein Dichtediagramm visualisiert die Verteilung einer stetigen Variablen.
 Im Gegensatz zum Histogramm wird der Verlauf der Kurve geglättet,
-so kann Rauschen besser ausgeblendet werden.^[Mit *Dichte* ist die Anzahl der Beobachtungen pro Einheit der Variablen auf der X-Achse gemeint.]
+so kann Rauschen (Zufallsschwankung) besser ausgeblendet werden.^[Mit *Dichte* ist die Anzahl der Beobachtungen pro Einheit der Variablen auf der X-Achse gemeint.]
 :::
 
 
@@ -652,6 +652,8 @@ p_distribs
 
 ### Normalverteilung
 
+Eine Normalverteilung ist eine bestimmte Art von Verteilung einer quantitativen Variablen.
+Aber sie ist besonders wichtig, und daher hier herausgestellt.
 
 Eine Normalverteilung sehen Sie in @fig-symm-schief, links. 
 Sie hat u.a. folgende Eigenschaften:
@@ -679,6 +681,26 @@ Dieses Phänomen kann man gut anhand des [Galton-Bretts](https://www.youtube.com
 {{< video https://youtu.be/3m4bxse2JEQ >}}
 
 :::
+
+Eine Normalverteilung lässt sich exakt beschreiben anhand zweier Parameter: ihres Mittelwerts, $\mu$ und ihrer Standardabweichung, $\sigma$.
+
+Kennt man diese beiden Parameter, so kann man einfach angeben, welcher Anteil der Fläche sich in einem bestimmten Bereich befindet, s. @fig-norm-perc.
+
+Davon leitet sich die "68-95-99-Prozentregel" ab:
+
+- $68\,\%$ der Werte im Bereich $\mu\pm 1 \cdot \sigma$ 
+- $95\,\%$ der Werte im Bereich $\mu\pm 2 \cdot \sigma$ 
+- $99{,}7\,\%$ der Werte im Bereich $\mu\pm 3 \cdot \sigma$ 
+
+
+
+
+
+![Die Flächeninhalte (Wahrscheinlichkeitsmasse) einer Normalverteilung in Abhängigkeit der SD-Einheiten](img/Standard_deviation_diagram_micro.svg.png){#fig-norm-perc}
+
+[By Ainali - Own work, CC BY-SA 3.0](https://commons.wikimedia.org/w/index.php?curid=3141713)
+
+
 
 
 
@@ -756,7 +778,7 @@ sonst sind die Zusammenhänge nicht mehr so gut zu erkennen.$\square$
 
 
 
-### Zusammenhang: metrisch
+### Zusammenhang: metrisch {#sec-zshg-metr}
 
 
 Den (etwaigen) Zusammenhang zweier metrischer Variablen kann man mit einem *Streudiagramm* visualisieren (engl. scatterplot). 
@@ -829,7 +851,7 @@ Quelle: Aufbauend auf FOM/ifes, Norman Markgraf
 
 
 In @fig-cors ist für jedes Teildiagramm eine Zahl angegeben: der *Korrelationskoeffizient*.
-Diese Statistik quantifiziert Richtung und Stärke des Zusammenhangs (mehr dazu in Kap. XXX).
+Diese Statistik quantifiziert Richtung und Stärke des Zusammenhangs (mehr dazu in Kap. @sec-zusammenhaenge).
 Ein positives Vorzeichen steht für einen positiven Zusammenhang, ein negatives Vorzeichen für einen negativen Zusammenhang.
 Der (Absolut-)Wert gibt die Stärke des linearen Zusammenhangs an [@cohen_power_1992]:
 
@@ -855,7 +877,7 @@ fig_cors2
 ```
 
 
-Man sieht in @fig-cors und @fig-cors2, dass ein *negativer* Korrelationskoeffizient mit einer *absinkenden* Trendgerade (blaue Linie) einhergeht.
+Man sieht in @fig-cors und @fig-cors2, dass ein *negativer* Korrelationskoeffizient mit einer *absinkenden* Trendgerade ^[synonym: Regressionsgerade] (blaue Linie) einhergeht.
 Umgekehrt geht ein *positiver* Trend mit einer *ansteigenden* Trendgerade einher.
 Zweitens erkennt man, dass *starke* Zusammenhänge mit einer *schmaler* Ellipse einhergehen
 und *schwache* Zusammenhänge mit einer *breiten* Ellipse einhergehen.
@@ -921,7 +943,7 @@ mariokart %>%
 Aha... Was sagt uns das Bild? Hm. Es scheint einige Extremwerte zu geben, die 
 dafür sorgen, dass der Rest der Daten recht zusammengequetscht auf dem Bild erscheint.
 Vielleicht sollten Sie solche Extremwerte lieber entfernen?
-Sie entscheiden sich, nur Verkäufe mit einem Abschlusspreis von weniger als 150 Dollar anzuschauen (`total_pr < 100`).
+Sie entscheiden sich, nur Verkäufe mit einem Abschlusspreis von weniger als 100 Dollar anzuschauen (`total_pr < 100`).
 Das Ergebnis ist in @fig-mario-scatter2 zu sehen.
 
 
@@ -941,7 +963,7 @@ mariokart2 %>%
 
 Ohne Extremwerte schält sich ein deutlicheres Bild (@fig-mario-scatter2) hervor: Startpreis (`start_pr`) und Anzahl  der Räder (`wheels`) scheinen am stärksten mit dem Abschlusspreis zusammenzuhängen.
 
-Das Argument `by = "total_pr"`) bei `plot_scatterplot` weist R an, als Y-Variable stets `total_pr` zu verwenden. Alle übrigen Variablen kommen jeweils einmal als X-Variable vor.$\square$
+Das Argument `by = "total_pr"` bei `plot_scatterplot` weist R an, als Y-Variable stets `total_pr` zu verwenden. Alle übrigen Variablen kommen jeweils einmal als X-Variable vor.$\square$
 
 :::
 
@@ -1017,6 +1039,7 @@ mariokart %>%
 
 Das linke Teildiagramm von @fig-compare-groups zeigt den Unterschied in den Verteilungen von `total_pr`, einmal für die neuen Computerspiele (`cond == new`) und einmal für gebrauchte Spiele (`cond == used`).
 
+Was ein "deutlicher"^["substanzieller", "bedeutsamer", "relevanter" oder "(inhaltlich) signifikanter"] Zusammenhang ist, ist keine statistische, sondern inhaltliche Frage, die man mit Sachverstand zum Forschungsgegenstand beantworten muss.
 
 :::{#def-boxplot}
 

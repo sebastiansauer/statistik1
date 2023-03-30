@@ -1,26 +1,661 @@
-# Punktmodelle
+# Punktmodelle 1 {#sec-punktmodelle1}
 
 
 
-$\begin{matrix} \\ \\ \square \\ \end{matrix} + \begin{matrix} \\ \square \\ \square \\ \end{matrix}+ \begin{matrix} \square \\ \square \\ \square \\ \end{matrix} = 3 \cdot \begin{vmatrix} \\ \square \\ \square \\ \end{vmatrix}$
+## Lernsteuerung
 
-kjdsf
+### Standort im Lernpfad
 
-$\begin{array}{|c|} \hline \\ \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array}$
-
-jkl
-
-sfdj
+@fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
 
 
 
+
+### Lernziele
+
+
+- Sie können gängige Arten von Lagemaße definieren.
+- Sie können erläutern, inwiefern man ein Lagemaß als ein Modell hernehmen kann.
+- Sie können Lagemaße mit R berechnen.
+
+
+### Benötigte R-Pakete
+
+In diesem Kapitel benötigen Sie folgende R-Pakete.
+
+```{r}
+library(tidyverse)
+library(easystats)
+```
+
+
+
+
+
+
+
+```{r}
+#| echo: false
+ggplot2::theme_set(theme_minimal())
+```
+
+
+
+
+## Mittelwert als Modell
+
+Der klassische Mittelwert (arithmetisches Mittel) ist ein prototypisches Beispiel für ein Modell in der Statistik.
+
+
+
+:::{#exm-mw}
+### Beispiel zum Mittelwert
+
+Ein Statistikkurs besteht aus drei Studentinnen: Anna, Berta und Carla.
+Sie haben gerade ihre Noten in der Klausur erfahren. Anna hat eine 1, Berta eine 2 und Carla eine 3.
+Der Durchschnitt ($\varnothing$) beträgt: 2.
+:::
+
+>   🧑‍🎓 Zu easy!
+
+>   👨‍🏫 Schon gut! Chill mal. Wird gleich interessanter.
+
+
+Die Rechenregel zum Mittelwert lautet:
+
+1. Addiere alle Werte
+2. Teile durch die Anzahl der Werte
+3. Fertig. 😄
+
+
+
+
+Etwas abstrakter kann man @exm-mw in folgendem Schaubild darstellen, s. @eq-mw.
+
+
+$$
+\begin{array}{|c|} \hline \\ \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \square \\ \square \\ \square \\ \hline \end{array} = 3 \cdot \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array}
+$$ {#eq-mw}
+
+
+Der Nutzen des Mittelwerts liegt darin, dass er uns ein Bild gibt (ein Modell ist!) für die "typische Note" im Statistikkurs, s. #eq-mw2.
+
+
+$$\begin{array}{|c|} \hline \\ \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \square \\ \square \\ \square \\ \hline \end{array} \qquad \leftrightarrow  \qquad \underbrace{\begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array}}_{\text{"typischer Vertreter"}}$$ {#eq-mw2}
+
+
+:::{.callout-important}
+Der Nutzen des Mittelwerts liegt darin, dass er eine Datenreihe zu einen "typischen Vertreter" zusammenfasst.
+Er ist typisch in dem Sinne, als dass die Werte aller Merkmalsträger in gleichem Maße einfließen.
+Er gibt uns eine (mögliche) Vorstellung (ein Modell!), wie wir uns die Werte der Datenreihe vorstellen sollen.
+:::
+
+
+Eine nützliche Anschauung zum Mittelwert ist die Vorstellung des Mittelwerts als eine ausbalancierte Wippe, s. @fig-wippe.
+
+![Mittelwert als ausbalancierte Wippe](img/1280px-Seesaw_with_mean.svg.png){#fig-wippe width="70%"}
+
+:::{.xsmall}
+[Quelle: Von Maphry - Eigenes Werk, CC BY-SA 4.0]( https://commons.wikimedia.org/w/index.php?curid=79390659)
+:::
+
+In "Mathe-Sprech" bezeichnet man den Mittelwert häufig mit $\bar{x}$ und schreibt die Rechenregel so, s. #eq-mw-formel.
+
+
+$$\bar {x} =\frac{1}{n} \sum_{i=1}^{n}{x_{i}}=\frac {x_{1}+x_{2}+\dotsb +x_{n}} {n}$$ {#eq-mw-formel}
+
+
+Da der Mittelwert eine zentrale Rolle spielt in der Statistik,
+sollten wir ihn uns noch etwas genauer anschauen.
+In s. @fig-mw1 sehen wir die Noten von (dieses Mal) vier Studentis.
+Die gestrichelte horizontale Linie zeigt den Mittelwert der vier Noten.
+Die schwarzen Punkte sind die Daten, in dem Fall die einzelnen Noten.
+Die vertikalen Linien zeigen die Abweichungen der Noten zum Mittelwert.
+Bezeichnen wir die Abweichung^[auch als "Fehler", "Rest" oder "Residuum" bezeichnet] der $i$-ten Person mit $e_i$ (e wie "Fehler) und die $i$-te Note mit $x_i$, so können wir festhalten:
+
+$$x_i = \bar{x} + e_i$$
+
+Einfacher ausgedrückt:
+
+
+$$\text{Daten} = \text{Modell} + \text{Rest}$$
+
+Der Mittelwert ist hier unser Modell der Daten.
+Wie gesagt: Ein Modell ist eine vereinfachte (zusammengefasste) Beschreibung einer Datenreihe.
+
+
+Um Modelle darzustellen, wird in der Datenanalyse häufig folgende Art von Modellgleichung verwendet:
+
+
+$$\hat{y} \sim m$$
+
+Lies: "Der Modellwert $\hat{y}$ ist eine Funktion des Modells plus dem Fehler". 
+Der Kringel "~"^[die sog. "Tilde"] soll also hier heißen "... ist eine Funktion von ...".
+
+Mit $\hat{y}$ sind die vorhergesagten bzw. die zu erklärende Variable^[AV, Output-Variable, Zielvariable] gemeint.
+
+Das "Dach"  über dem $y$ bedeutet "vorhergesager Y-Wert" oder "Y-Wert laut dem Modell".
+
+In diesem Fall ist das Modell einfach gleich dem Mittelwert (und nicht irgendeiner Funktion des Mittelwerts), so dass wir schreiben können:
+
+
+$$y = \bar{x} + e$$
+
+
+Die Zielvariable $Y$ wird also durch ihren eigenen Mittelwert erklärt, außer gehen wir von einem Fehler $e$ in unseren Modellvorhersagen aus. Nobody is perfect.
+In späteren Kapiteln werden wir andere Variablen heranziehen, um die Zielvariable zu erklären.
+Würden wir z.B. sagen wollen, dass wir $Y$ als Funktion einer Variable $X$ erklären,
+so würden wir schreiben:
+
+$\bar{y} \sim x$$
+Da wir im Moment aber keine andere Variablen bemühen, um $Y$ zu erklären schreibt man auch:
+
+$$\bar{y] \sim 1$$
+
+Diese Schreibweise sieht verwirrend aus. 
+Die $1$ soll aber einfach zeigen, dass wir keine andere Variable zur Erklärung von $Y$ verwenden, 
+daher steht hier kein Buchstabe, sondern eine einfache $1$.
+
+
+:::{#exm-noten}
+### Noten, Mittelwert und Abweichung
+
+Vier Studentis Anna, Berta, Carl, Dani haben ihre Statistik-Klausur zurückbekommen.
+Die Noten sehen Sie in @fig-mw1.
+Außerdem ist der Mittelwert (gestrichelte horizontale Linie) sowie die Abweichungen der einzelnen Noten vom Mittelwert eingezeichnet.$\square$
+:::
+
+
+Schauen Sie sich die Abweichungsbalken^[Residuen, Fehler; häufig mit $e$ wie *error* bezeichnet] in @fig-mw1 einmal genauer an.
+
+
+```{r fig-abw-balken-mw, echo = FALSE}
+#| fig-cap: "Der Mittelwert als horizontale (gestrichelte) Linie. Die vertikalen Linien zeigen die Abweichungen der einzelnen Werte zum Mittelwert. Die Abweichungen summieren sich zu Null auf."
+#| label: fig-mw1
+
+d <- tibble::tribble(
+  ~id, ~note, ~note_avg, ~delta, ~note2, ~note_avg2,
+   1L,     2,     2.325, -0.325,  2.325,          2,
+   2L,   2.7,     2.325,  0.375,    2.7,      2.325,
+   3L,   3.1,     2.325,  0.775,    3.1,      2.325,
+   4L,   1.5,     2.325, -0.825,  2.325,        1.5
+  )
+
+
+d <- d %>% 
+  mutate(delta_abs = abs(delta),
+         pos = ifelse(delta > 0, "positiv", "negativ"),
+         delta_sq = delta^2)
+
+
+
+d %>%
+  ggplot(aes(x = id, 
+             y = note)) +
+  geom_hline(yintercept = mean(d$note), 
+             linetype = "dashed") +
+  geom_segment(aes(y = mean(d$note),
+                   yend = note,
+                   x = id,
+                   xend = id,
+                   linetype = pos)
+               ) +
+  geom_point(size = 5) + 
+  labs(linetype = "Richtung der Abweichung") +
+  theme(legend.position =  c(1, 1),
+        legend.justification = c(1, 1)) +
+  annotate(geom = "label",
+           x = 0,
+           hjust = 0,
+           y = mean(d$note), 
+           label = paste0("MW = ", round(mean(d$note), 2))) +
+  scale_y_continuous(limits = c(1, 4)) +
+  labs(x = "",
+       y = "") +
+  scale_x_continuous(breaks = 1:4) +
+  theme(legend.position = "bottom") +
+  theme_minimal() -> p_mean_deltas
+
+p_mean_deltas
+```
+
+
+
+Jetzt stellen Sie sich vor, Sie würden die vom Mittelwert nach oben ragenden Balkenlängen aneinanderlegen.
+Sehen Sie das vor Ihrem geistigen Auge? 
+Jetzt legen Sie auch noch die Abweichungsbalken, die nach unten ragen aneinander, aneinander.
+Wer viel Phantasie hat, erkennt (sieht) jetzt,
+dass die Gesamtlänge der "Balken nach oben" identisch ist zur Gesamtlänge der nach "unten ragenden Balken", vgl. @fig-wippe.
+
+Präziser ausgedrückt und ohne Ihre Phantasie zu strapazieren:
+
+$$\sum_{i=1}^n (x_i-\bar{x})=\sum_{i=1}^n x_i - \sum_{i=1}^n \bar{x} = n\cdot \bar{x} - n\cdot \bar{x}=0$$
+
+:::{.callout-note}
+Die Summe der Abweichungen vom Mittelwert ist Null.
+:::
+
+
+
+
+
+### Der Median
+
+
+:::{#exm-md}
+### Der reichste Mensch der Welt in Ihrem Hörsaal
+
+Kommt der wertvollste Fußballspieler der Welt in Ihren Hörsaal, sagen wir, es ist Kylian Mbappé^[Quelle: https://www.transfermarkt.de/spieler-statistik/wertvollstespieler/marktwertetop, 2023-03-19].
+Das Jahreseinkommen mit einem Jahreseinkommen von ca. 120 Millionen Euro^[Quelle: https://www.einkommenmagazin.de/kylian-mbappe-einkommen/, 2023-03-19].
+
+>    🦹‍♂️ Hey Leute, wie geht's denn so! Wie viel Kohle verdient ihr eigentlich so?
+
+>    🧑‍🎓 Äh, wir studieren und verdienen fast nix!
+
+Die 100 Studis im Hörsaal schauen verdattert aus der Wäsche: Was ist das für eine komische Frage!?
+Aber zumindest verteilt der Fußballspieler Autogramme.
+:::
+
+
+:::{#exr-elon}
+### Mittleres Einkommen im Hörsaal, mit Kylian Mbappé
+
+Schätzen Sie - im Kopf - das mittlere Vermögen im Hörsaal, gehen Sie davon aus,
+dass alle der 100 Studentis jeweils 1000 Euro im Jahr verdienen.
+:::
+
+
+
+In R kann man das mittlere Einkommen (präziser: das arithmetische Mittel des Einkommenss) wie folgt berechnen.
+
+```{r}
+set.seed(42)  # Zufallszahlen festlegen, hier nicht so wichtig
+einkommen_studis <- rep(x = 1, times = 100)  # rep wie "repeat": wiederhole 1000 USD 100 Mal
+einkommen <- c(einkommen_studis, 120*1e6)  # 100 Studis mit 1000E, 1 Mbappé mit 120 Mio
+einkommen_mw <- mean(einkommen)
+```
+
+
+:::{.callout-note}
+1 Million hat 6 Nuller hinter der führenden Eins,
+das ist 1000 mal 1000.
+Anders gesagt: 1 Million = $10^6 = 10^3 * 10^3$.
+In Taschenrechner oder Computerschreibweise: 1 Mio = `1e6`,
+das `1e6` ist zu lesen als "1 Mal 10 mit 6 im *E*xponenten".
+:::
+
+Der Mittelwert im Hörsaal beträgt also `r scales::label_comma()(einkommen_mw)` Euro.
+Ist das ein gutes Modell für dasa "typische" Vermögen im Hörsaal?
+
+
+## Median als Modell
+
+
+>   🧑‍🎓 Hey, der Mittelwert ist doch Quatsch! Das ist gar kein typischer Wert für die Menschen im Hörsaal. Weder für den Mbappé, noch für uns Studis!
+
+>   👨‍🏫 Ja, da habt ihr Recht.
+
+>    ⚽   Die Welt  ist schon ungerecht! 
+
+
+:::{.callout-important}
+Bei (sehr) schiefen Verteilungen (s. @fig-mbappe) ist der Mittelwert (sehr) wenig aussagekräftig,
+da er nicht mehr "typische" Werte für die Merkmalsträger beschreibt.
+:::
+
+@fig-mbappe stellt die Verteilung einer mit normal skalierter Achse und einmal mit logarithmischer X-Achse.
+Die logarithmische X-Achse stellt den Unterschied von Mittelwert und Median deutlicher heraus als die "normale" (additive) Achse. 
+
+```{r}
+#| echo: false
+#| fig-cap: "Die Einkommensverteilung im Hörsaal"
+#| label: fig-mbappe
+#| layout-ncol: 2
+#| fig-subcap: 
+#|   - X-Achse in additiver Form
+#|   - X-Achse in multiplikativer Form (logarithmische Darstellung)
+
+d <-
+  tibble(einkommen = einkommen,
+         id = 1:length(einkommen))
+
+p1 <- ggplot(d) +
+  aes(x = einkommen) +
+  geom_histogram() +
+  theme_minimal() +
+  geom_vline(xintercept = c(mean(einkommen)), color = "red") +
+  geom_vline(xintercept = c(median(einkommen)), color = "blue") +
+  annotate("label", x = median(einkommen), y = 100, label = "Median", color = "blue") +
+  annotate("label", x = mean(einkommen), y = 0, label = "MW", color = "red") 
+
+p1
+
+p1 +
+  scale_x_continuous(trans = "log10")
+```
+
+
+Der Mittelwert ist Hörsaal ist nicht typisch für die Menschen im Hörsaal:
+Weder für Mbappé, noch für die Studis.
+Genau genommen ist der Mittelwert in diesem Fall ziemlich nutzlos.
+
+
+:::{.callout-important}
+Der Mittelwert ist empfänglich für Extremwerte:
+Gibt es einen extremen Wert in einer Datenreihe,
+so spiegelt der Mittelwert stark diesen Wert wieder
+und weniger die Mehrheit der gemäßigten Werte.
+Man sagt, der Mittelwert ist nicht *robust* (gegenüber Extremwerten).
+:::
+
+:::{#exm-med}
+### Das Median-Einkommen einiger Studentinnen
+Fünf Studentinnen tauschen sich über ihr Einkommen aus, s. @fig-md1, links.
+Es handelt sich um eine schiefe Verteilung.
+
+
+
+```{r}
+#| label: fig-md1
+#| fig-cap: Das Median-Einkommen einiger Studentinnen sowie der Mittelwert (MW) ihres Einkommens
+#| fig-subcap: 
+#|   - "ID auf der X-Achse, Einkommen auf der Y-Achse"
+#|   - "Einkommen auf der X-Achse, Häufigkeit auf der Y-Achse"
+#| echo: false
+#| layout-ncol: 2
+
+
+d <-
+  tibble(id = 1:5,
+         name = c("Anna", "Berta", "Carla", "Dora", "Emma"),
+         einkommen = c(1, 2, 3, 4, 100))
+
+d %>% 
+  ggplot(aes(x = id, y = einkommen)) +
+  geom_vline(xintercept = 3, color = "red") +
+  geom_col() +
+  geom_label(aes(label = name)) +
+  annotate("label", x = 3, y = 50, label = "Median") +
+  theme_minimal()
+
+
+d %>% 
+  ggplot(aes(x = einkommen)) +
+  geom_histogram(binwidth = 1, color = "white") +
+  geom_vline(xintercept = median(d$einkommen), color = "red") +
+  annotate("label", x = 3, y = 1, label = "Median", color = "red") +
+  geom_vline(xintercept = mean(d$einkommen), color = "blue") +  
+  annotate("label", x = 22, y = 1, label = "MW", color = "blue")   +
+  theme_minimal()
+```
+
+
+
+Wir könnten jetzt behaupten, dass Carla das typische Einkommen (für diese Datenreihe) aufweist,
+da es genauso viele Studentinnen gibt, die mehr verdienen, wie solche, die weniger verdienen.
+
+$\square$
+
+:::
+
+
+:::{#def-median}
+### Median
+Merkmalsausprägung, die bei (aufsteigend) sortierten Beobachtungen in der Mitte liegt.
+:::
+
+@fig-median-human stellt den Median schematisch dar.
+
+
+
+
+::: {#fig-median-human layout-ncol=5 width="1%" fig-align="bottom"}
+![1,60m](img/Human_Silhouette.svg.png){width=0.1%}
+
+![1,72m](img/Human_Silhouette.svg.png){width=0.13%}
+
+![1,79m: Median!](img/human-red.png){width=0.15%}
+
+![1,94](img/Human_Silhouette.svg.png){width=0.16%}
+
+![2,12m](img/Human_Silhouette.svg.png){width=0.2%}
+
+Der Median als der Wert des "mittleren" Objekts, wenn die Objekte aufsteigend sortiert sind.
+
+:::
+
+
+Bei geradem $n$ werden die beiden mittleren Werte betrachtet und das arithmetische Mittel aus diesen beiden Werten gebildet.
+
+
+:::{#exm-med2}
+Bei der Messreihe 1, 2, 3, 4, 5, 6, 8, 9 beträgt der Median 4.5.$\square$
+:::
+
+
+
+:::{#exr-md2}
+### Emma wird reich
+Durch ein geniales Patent wird Emma steinreich. Ihr Einkommen erhöht sich um das Hundertfache.
+Wie verändert sich der Median?^[Er bleibt gleich, verändert sich also nicht.]$\square$
+:::
+
+Der Median ist *robust*, er verändert sich nicht oder kaum, wenn Extremwerte vorliegen.
+
+
+
+:::{#exr-mw-md}
+
+### Wer ist mehr "mittel"? Median oder Mittelwert?
+
+
+>   🧑‍🎓 Das arithmetische Mittel sollte Mittelwert heißen, weil es die Mitte von zwei Messwerten widerspiegelt, also z.B. von 1 und 10 ist die Mitte 5,5 - also genau beim Mittelwert!
+
+>   👩‍🎓 Moment! Der Median zeigt den mittleren Messert! Links und rechts sind gleich viele Messwerte, wenn man die Werte der Größe nach sortiert. Also liegt der Median genau in der Mitte!
+
+Nehmen Sie Stellung zu dieser Diskussion!$\square$
+:::
+
+
+:::{#exm-md3}
+
+### Ein "mittlerer" Preis für Mariokart
+
+Der Mittelwert (das arithmetische Mittel) und der Median für das Start-Gebot (`start_pr)` von Mariokart-Spielen sind nicht gleich, der Mittelwert ist höher als der Median.
+
+```{r}
+mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+
+mariokart %>% 
+  summarise(price_mw = mean(start_pr),
+            price_md = median(start_pr))
+```
+
+Wie man sieht, ist der Mittelwert größer als der Median, s. @fig-mario-md
+
+
+```{r fig-mario-md}
+#| echo: false
+#| fig-cap: "Das Start-Gebot bei Mariokart-Spielen ist schief verteilt: Median und Mittelwert sind unterschiedlich"
+#| label: fig-mario-md
+mariokart %>% 
+  select(start_pr) %>% 
+  ggplot(aes(x = start_pr)) +
+  geom_histogram() +
+  geom_vline(xintercept = 1, color = "red") +
+  annotate("label", x = 1, y = 0.1, label = "Md: 1", color = "red") +
+  geom_vline(xintercept = 8.7, color = "blue") +
+  annotate("label", x = 8.7, y = 0.1, label = "MW: 8.7", color = "blue") +
+  theme_minimal()
+
+```
+
+
+:::
+
+
+:::{.callout-note}
+Klaffen Mittelwert und Median auseinander, so liegt eine schiefe Verteilung vor.
+Ist der Mittelwert größer als der Median, so nennt man die Verteilung rechtsschief.
+Bei schiefen Verteilungen ist der Median dem Mittelwert als Modell für den "typischen Wert" vorzuziehen.
+:::
+
+
+
+### Quartile
+
+
+Der Median teilt eine Verteilung in eine untere und ein obere Hälfte.
+Er markiert sozusagen eine "50-Prozent-Marke" (der aufsteigend sortierten Beobachtungen).
+Betrachten wir einmal nur alle Spiele, die für weniger als 100 Euro verkauft wurden (`total_pr`, finales Verkaufsgebot), 
+s. @fig-mario-qs.
+50% aller Spiele wurden für weniger als ca. 46 Euro verkauft;
+50% aller Spiele für mehr als 46 Euro.
+
+Jetzt könnten wir nur die günstigere Hälfte betrachten und wieder nach dem Median fragen.
+Dieser "Median der günstigeren Hälfte" grenzt damit das insgesamt günstigste Viertel vom Rest der Verkaufsgebote ab.
+In unserem Datensatz liegt dieser Wert bei ca. 41 Euro.
+Entsprechend kann man nach dem Wert fragen, der das oberste Viertel 
+vom Rest der Verkaufsgebote abtrennt.
+Dieser Wert liegt bei ca. 54 Euro.
+
+
+:::{#def-quartile}
+
+### Quartile
+
+Sortiert man die Daten aufsteigend, so nennt man den Wert,
+der das Viertel mit den kleisten Wert vom Rest der Daten trennt das *erste Quartil* (Q1, 25%).
+Den Median nennt man das *zweite Quartil* (Q2, 50%).
+Entsprechend heißt der Wert, der die drei Viertel kleinsten Werte vom oberen Viertel abtrennt, das *dritte Quartil* (Q3, 75%).$\square$
+:::
+
+:::{#exm-mario-qs}
+
+### Quartile des Verkaufsgebot
+
+@fig-mario-qs zeigt die Quartile für das Verkaufsgebot.$\square$
+:::
+
+
+
+
+Jetzt könnte man sagen, hey, warum nur in 25%-Stücke die Verteilung aufteilen?
+Warum nicht in 10%-Schritten? Oder in 1%-Schritten oder in sonstigen Schnitten?
+Wo die Quartile in 25%-Schritten aufteilen, teilt in *Quantil* in $p$-Prozent-Schritten auf.
+
+
+:::{#def-quantile}
+### Quantile
+Ein p-Quantil ist der Wert, der von $p$ Prozent der Werte nicht überschritten wird.$\square$
+:::
+
+
+```{r}
+#| echo: false
+#| label: fig-mario-qs
+#| fig-cap: Q1, Q2 und Q3 für das Schlussgebot (nur Spiele für weniger als 100 Euro)
+mario_quantile <- 
+mariokart %>% 
+  filter(total_pr < 100) %>% 
+  summarise(q25 = quantile(total_pr, .25),
+            q50 = quantile(total_pr, .50),
+            q75 = quantile(total_pr, .75))
+
+mario_quantile <- 
+  mariokart %>% 
+  filter(total_pr < 100) %>% 
+  reframe(qs = quantile(total_pr, c(.25, .5, .75)))
+
+mariokart %>% 
+  filter(total_pr < 100) %>%  
+  ggplot(aes(x = total_pr)) +
+  geom_histogram() +
+  geom_vline(xintercept = mario_quantile$qs) +
+  annotate("label", x =  mario_quantile$qs, y = 0, label =  mario_quantile$qs)
+```
+
+
+Quantile kann man in R so berechnen:
+
+```{r}
+#| eval: false
+mario_quantile <- 
+mariokart %>% 
+  filter(total_pr < 100) %>% 
+  summarise(q25 = quantile(total_pr, .25),
+            q50 = quantile(total_pr, .50),
+            q75 = quantile(total_pr, .75))
+```
+
+
+## Lagemaße
+
+>    🧑‍🎓 Was ist der Oberbegriff für Median, Mittelwert und so weiter?
+
+>    👩‍🏫 Gute Frage! Wie würden Sie ihn nennen?
+
+
+
+:::{#def-lage}
+
+### Lagemaß
+Ein Lagemaß oder *Maß der zentralen Tendenz* gibt einen Vorschlag, welchen Wert wir als typisch, normal, zu erwarten, repräsentativ oder mittel ansehen sollten.$\square$
+:::
+
+Typische Lagemaße:
+
+- Mittelwert (arithmetisches Mittel)
+- Median
+- Quartile
+- Quantile
+- Minimum (kleinester Wert)
+- Maximum (größter Wert)
+- Modus (häufigster Wert)
+
+
+```{r}
+mariokart_lagemaße_total_pr <-
+  mariokart %>% 
+  summarise(mw = mean(total_pr),
+            md = median(total_pr),
+            q1 = quantile(total_pr, .25),
+            q2 = quantile(total_pr, .5),
+            q3 = quantile(total_pr, .75),
+            min = min(total_pr),
+            max = max(total_pr))
+mariokart_lagemaße_total_pr
+```
+
+
+:::{#def-punktmodell}
+### Punktmodell
+Ein Modell, welches für alle Beobachtungen ein und denselben Wert annimmt (vorhersagt),
+heißt ein *Punktmodell*. 
+Anders gesagt fasst ein Punktmodell eine Wertereihe (häufig ist das eine Tabellenspalte) zu einer einzelnen Zahl zusammen, einem "Punkt" in diesem Sinne, s. @eq-desk.$\square$
+:::
+
+$$\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarrow \qquad \begin{array}{|c|} \hline \\ \hline  \hline \end{array}$$ {#eq-desk}
+
+
+
+## Fazit
 
 :::{.exm-survival1}
 ### Survival-Tipp
 
-Eine Studentin aus dem dem Bachelorstudiengang "Angewandte Medien- und Wirtschaftspsychologie" mit Schwerpunkt *Data Science* berichtet ihr "Survival-Tipps" für Statistik.
+Eine Studentin aus dem dem Bachelorstudiengang "Angewandte Medien- und Wirtschaftspsychologie" mit Schwerpunkt *Data Science* berichtet ihre "Survival-Tipps" für Statistik.
 
 1. Wenn man mal nicht weiterkommt hilft es auch mal ein paar Tage Abstand von R und Statistik zu nehmen. 
 2. Sich während des Semesters neue Begriffe und ihre Erklärung zusammenschreiben.
 3. Mit KommilitonInnen austauschen oder in höheren Semester nach Tipps fragen.
 :::
+
+
+
+## Aufgaben
+
+
+## Literatur
+
+

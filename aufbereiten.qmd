@@ -234,7 +234,8 @@ einfach anklicken. Ob das in R auch so einfach geht?
 
 
 ```{r}
-arrange(mariokart, total_pr)
+mariokart_neu <- arrange(mariokart, total_pr)
+mariokart_neu
 ```
 
 Übersetzen wir die R-Syntax ins Deutsche:
@@ -313,7 +314,8 @@ mal zu schauen, ob Auktionen mit Photo der Ware einen höheren Verkaufspreis erz
 als Auktionen ohne Photo.
 
 ```{r}
-filter(mariokart, stock_photo == "yes")
+mariokart_neu <- filter(mariokart, stock_photo == "yes")
+mariokart_neu
 ```
 
 Sie filtern also die Tabelle so,
@@ -461,10 +463,29 @@ p_summ
 ### Was ist der mittlere Verkaufspreis?
 
 ```{r}
-summarise(mariokart, preis_mw = mean(total_pr))
+mariokart_neu <- summarise(mariokart, preis_mw = mean(total_pr))
+mariokart_neu
 ```
 Aha! Etwa 50$ erzielt so eine Auktion im Schnitt.$\square$
 :::
+
+
+Ein bisschen abstrakter gesprochen, fasst `summarise` also eine *Spalte* zu einer (einzelnen) *Zahl* zusammen, s. @eq-desk-summ.^[Eine Alternative, um eine Spalte zu einer Zahl zusammenzufassen, bietet der "Dollar-Operator" (`$`: 
+
+```{r}
+mean(mariokart$total_pr)
+```
+
+Der Dollar-Operator trennt hier die Tabelle von der Spalte: `tibble$spalte`.
+Im Gegensatz zu den Verben des Tidyverse (die immer einer Tabelle zurückliefern),
+liefert der Dollar-Operator einen Vektor (Spalte) zurück. (Diese wird von `mean` dann zu einer einzelnen Zahl zusammengefasst.)]
+
+
+
+$$\begin{array}{|c|} \hline \\ \hline \\  \\  \\ \\ \hline \end{array} \qquad \rightarrow  \qquad \begin{array}{|c|} \hline \\  \hline \end{array}$$ {#eq-desk-summ}
+
+
+
 
 
 ### Tabelle gruppieren
@@ -542,7 +563,8 @@ Mit anderen Worten: Wir gruppieren anhand der Variable `cond`.
 mariokart_gruppiert <- group_by(mariokart, cond)
 ```
 
-Das ist aber nur die halbe Miete. 
+Wenn Sie die neue Tabelle betrachte, sehen Sie wenig Aufregendes, nur einen Hinweis, dass die Tabelle gruppiert ist.
+
 Jetzt können Sie an jeder Teiltabelle Ihre weiteren Berechnungen vornehmen, etwa die Berechnung des mittleren Verkaufspreises.
 
 
@@ -640,6 +662,19 @@ mariocart_counted %>%
 ```
 
 
+### Fazit
+
+die Befehle ("Verben") des Tidyverse sind jeweils für einzelne, typische Aufgaben des Datenaufbereitens ("Datenjudo") zuständig.
+
+Typischerweise erwarten diese Befehle eine Tabelle (▥) als Input und liefern eine Tabelle aus Output zurück, s. @fig-tbl-in-out.
+
+
+```{mermaid}
+%%| label: fig-tbl-in-out
+%%| fig-cap: Tidyverse-Befehle erwarten normalerweise eine Tabelle (tibble) als Input und geben auch eine Tabelle zurück als Output
+flowchart LR
+  A["▥"] --> B[tidyverse-Befehl] --> C["▥"] 
+```
 
 
 ## Die Pfeife
@@ -759,10 +794,10 @@ bringt es uns keinen Vorteil, die neuere Pfeife des Standard-R `|>` zu verwenden
 %%| label: fig-pfeife
 %%| out-width: "100%"
 flowchart TD
-  A["meine Daten #9637;"] --filter_zeilen-->B["#9637;"] 
-  B --wähle_spalten--> C["#9637;"]
-  C --gruppiere--> D["#9637;"]
-  D --fasse_zusammen--> E["#9637; Fertig. #129321;"]
+  A["meine Daten 🗳"] --filter_zeilen-->B["▥"] 
+  B --wähle_spalten--> C["▥"]
+  C --gruppiere--> D["▥"]
+  D --fasse_zusammen--> E["▥ Fertig. 🤩"]
 
 ```
 
@@ -890,18 +925,32 @@ die *nicht* in diesem Kapitel vorgestellt wurden.
 
 ## Aufgaben
 
-1. [tidydata1](https://datenwerk.netlify.app/posts/tidydata1/tidydata1.html) 
-1. [wrangle9](https://datenwerk.netlify.app/posts/wrangle9/wrangle9.html) 
+
+1. [wrangle3](https://datenwerk.netlify.app/posts/wrangle3/wrangle3.html)
+1. [wrangle4](https://datenwerk.netlify.app/posts/wrangle4/wrangle4.html)
+1. [wrangle5](https://datenwerk.netlify.app/posts/wrangle5/wrangle5.html)
 1. [wrangle7](https://datenwerk.netlify.app/posts/wrangle7/wrangle7.html) 
+1. [wrangle9](https://datenwerk.netlify.app/posts/wrangle9/wrangle9.html) 
+1. [wrangle10](https://datenwerk.netlify.app/posts/wrangle10/wrangle10.html)
+1. [tidydata1](https://datenwerk.netlify.app/posts/tidydata1/tidydata1.html) 
 1. [affairs-dplyr](https://datenwerk.netlify.app/posts/affairs-dplyr/affairs-dplyr.html) 
-1. [mariokart-mean1](https://datenwerk.netlify.app/posts/mariokart-mean1/mariokart-mean1.html) 
-1. [wrangle10](https://datenwerk.netlify.app/posts/wrangle10/wrangle10.html) 
-1. [mariokart-max1](https://datenwerk.netlify.app/posts/mariokart-max1/mariokart-max1.html) 
+ 
+
 1. [dplyr-uebersetzen](https://datenwerk.netlify.app/posts/dplyr-uebersetzen/dplyr-uebersetzen.html) 
-1. [wrangle5](https://datenwerk.netlify.app/posts/wrangle5/wrangle5.html) 
 1. [haeufigkeit01](https://datenwerk.netlify.app/posts/haeufigkeit01/haeufigkeit01.html) 
+1. [mariokart-mean1](https://datenwerk.netlify.app/posts/mariokart-mean1/mariokart-mean1.html)
 1. [mariokart-mean2](https://datenwerk.netlify.app/posts/mariokart-mean2/mariokart-mean2.html) 
 1. [mariokart-mean3](https://datenwerk.netlify.app/posts/mariokart-mean3/mariokart-mean3.html)
+1. [mariokart-mean4](https://datenwerk.netlify.app/posts/mariokart-mean4/mariokart-mean4.html)
+1. [mariokart-max1](https://datenwerk.netlify.app/posts/mariokart-max1/mariokart-max1.html) 
+1. [mariokart-max2](https://datenwerk.netlify.app/posts/mariokart-max2/mariokart-max2.html)
+1. [filter01](https://datenwerk.netlify.app/posts/filter01/filter01.html)
+1. [affairs-dplyr](https://datenwerk.netlify.app/posts/affairs-dplyr/affairs-dplyr.html)
+1. [summarise01](https://datenwerk.netlify.app/posts/summarise01/summarise01.html)
+1. [summarise02](https://datenwerk.netlify.app/posts/summarise02/summarise02.html)
+
+1. [mutate01](https://datenwerk.netlify.app/posts/mutate01/mutate01.html)
+
 
 
 ## Vertiefung

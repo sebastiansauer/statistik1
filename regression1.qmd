@@ -152,7 +152,17 @@ noten2 %>%
 ```
 
 
-Auf dieser Basis antworten Sie Toni: "Bei 42 Stunden Lernzeit solltest du so 40% Punkte bekommen. Könnte mit dem Bestehen eng werden."
+```{r}
+#| echo: false
+lm1 <- lm(y ~ x, data = noten2)
+lm1_b0 <- coef(lm1)[1]
+lm1_b2 <- coef(lm1)[2]
+
+toni_punkte <- predict(lm1, newdata = data.frame(x=42))
+```
+
+
+Auf dieser Basis antworten Sie Toni: "Bei 42 Stunden Lernzeit solltest du so `r round(toni_punkte, 0)` Punkte bekommen. Könnte mit dem Bestehen eng werden."
 Toni ist nicht begeistert von Ihrer Prognose und zieht von dannen.$\square$
 :::
 
@@ -172,9 +182,7 @@ Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einz
 
 #noten2 <- read.csv(noten2, "daten/noten2.csv")
 
-lm1 <- lm(y ~ x, data = noten2)
-lm1_b0 <- coef(lm1)[1]
-lm1_b2 <- coef(lm1)[2]
+
 
 ggplot(noten2) +
   aes(x, y) +
@@ -194,7 +202,7 @@ noten2 %>%
            label = paste0("MW: ", round(mean(noten2$x))), vjust = "bottom") +
   annotate("label", y = mean(noten2$y), x = -Inf, 
            label = paste0("MW: ", round(mean(noten2$y))), hjust = "left")   +
-  annotate("point", x = 42, y = predict(lm1, newdata = data.frame(x=42)), color = "red",
+  annotate("point", x = 42, y = toni_punkte, color = "red",
            alpha = .7, size = 4) +
   scale_x_continuous(breaks = c(40, 42, 60, 80, 100)) +
   labs(x = "Lernzeit",
@@ -410,7 +418,7 @@ verhaeltnis_fehler_gerade_zu_punkt_mse
 Aber wie legt man die Regressionsgerade in das Streudiagramm, bildlich gesprochen?
 
 Die Regressionskoeffizienten b0 und b1 wählt man so, dass die Residuen minimal sind.
-Es gibt verschiedene Algorithmen, um dies zu berechnen. 
+Es gibt verschiedene Algorithmen, um dies zu berechnen^[aber nicht in diesem Buch zu finden].
 Eine schöne Darstellung dazu findet sich bei @kaplan_statistical_2009.
 
 "Von Hand" können Sie die Optimierung von b0 und b1 in [dieser App der FOM-Hochschule](https://fomshinyapps.shinyapps.io/KleinsteQuadrate/) ausprobieren.
@@ -425,7 +433,7 @@ Eine schöne Darstellung dazu findet sich bei @kaplan_statistical_2009.
 Anders gesagt, wir haben uns um $1 - `r round(verhaeltnis_fehler_gerade_zu_punkt_mse, 2)`$ verbessert:
 
 ```{r}
-1 - verhaeltnis_fehler_gerade_zu_punkt
+1 - verhaeltnis_fehler_gerade_zu_punkt_mse
 ```
 
 
@@ -440,7 +448,7 @@ r2(lm1)
 
 :::{#def-r2}
 ### R-Quadrat
-R-Quadrat eines Modells $m$ ist definiert als die Verringerung der Streuung, wenn man das Modell $m$ mit dem Nullmodell $m_0$ vergleicht: $R^2 =1-  \frac{\text{MSE}_{m}}{\text{MSE}_{m0}}$. R-Quadrat ist ein Maß der *Modellgüte*: Je größer, desto besser die Vorhersage. 
+R-Quadrat ($R^2$) eines Modells $m$ ist definiert als die Verringerung der Streuung, wenn man das Modell $m$ mit dem Nullmodell $m_0$ vergleicht: $R^2 =1-  \frac{\text{MSE}_{m}}{\text{MSE}_{m0}}$. R-Quadrat ist ein Maß der *Modellgüte*: Je größer $R^2$, desto besser die Vorhersage. 
 Da es ein Anteilsmaß^[Prozentzahl] ist, liegt der Wertebereich zwischen 0 uns 1.
 Im Nullmodell liegt R-Quadrat per Definition bei 0.
 Im Fall von Modellen des Typs $y\sim x$ gilt: $R^2 = r_{xy}^2$.
@@ -482,7 +490,7 @@ d_r1 %>%
 ```
 
 Bei einer perfekten Korrelation $R^2=1$ liegen die Punkte auf der Geraden.
-Im gegenteiligen Extremfall von $R^2=0$ ist die Vorhersage genauso gut, wie wenn man für jedes $y_$ den Mittelwert, $\bar{y}$, vorhersagen würde. 
+Im gegenteiligen Extremfall von $R^2=0$ ist die Vorhersage genauso gut, wie wenn man für jedes $y$ den Mittelwert, $\bar{y}$, vorhersagen würde. 
 
 
 [Diese App der FOM-Hochschule](https://fomshinyapps.shinyapps.io/Variationszerlegung/) erlaubt es Ihnen mit der Größe der Residuen eines linearen Modells zu spielen.
@@ -512,7 +520,7 @@ Die Varianzanteile addieren sich. Mit anderen Kennzahlen der Streuung (SD, MAE) 
 
 ### Modellgüte
 
-Die Residuen bestimmen die Modellgüte. Verschiedenen Koeffizienten stehen hier zur Verfügung: R-Quadrat, r^[als Korrelation von tatsächlichem $y$ und vorhergesaten $\hat{y}, MSE, RMSE, MAE, ...
+Die Residuen bestimmen die Modellgüte. Verschiedenen Koeffizienten stehen hier zur Verfügung: R-Quadrat, r^[als Korrelation von tatsächlichem $y$ und vorhergesaten $\hat{y}], MSE, RMSE, MAE, ...
 
 
 ### Koeffizienten
@@ -541,7 +549,7 @@ lm1_b1 <- coef(lm1)[2] %>% round(2)
 ```
 
 
-"Im Modell `lm1` beträgt der Regressionskoeffizient `b1` $`r lm1_b1`$. Zwei Studenti, deren Lernzeit sich um eine Stunde unterscheidet, unterscheiden sich als *laut Modell* um den Wert von b1."
+"Im Modell `lm1` beträgt der Regressionskoeffizient `b1` $`r lm1_b1`$. Zwei Studenti, deren Lernzeit sich um eine Stunde unterscheidet, unterscheiden sich *laut Modell* um den Wert von b1."
 
 :::{.callout-caution}
 Häufig liest man, der "Effekt des Prädiktors" auf die AV betrage z.B. $`r lm1_b1`$. "Effekt" ist aber ein Wort, dass man kausal verstehen kann. Ohne weitere Absicherung kann man aber Regressionskoeffizienten nicht kausal verstehen. Daher sollte man das Wort "Effekt" mit Vorsicht genießen. Manche sprechen daher auch von einem "statistischen Effekt".$\square$.

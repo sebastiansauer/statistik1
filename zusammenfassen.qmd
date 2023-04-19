@@ -29,6 +29,11 @@ library(easystats)
 ```
 
 
+### Benötigte Daten
+
+```{r}
+mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+```
 
 
 
@@ -45,6 +50,17 @@ ggplot2::theme_set(theme_minimal())
 ## Mittelwert als Modell {#sec-mw}
 
 Der klassische Mittelwert (arithmetisches Mittel) ist ein prototypisches Beispiel für ein Modell in der Statistik.
+
+
+:::{#exr-mw-md-mod}
+Welche Vorstellung haben Sie, wenn Sie hören, dass der "typische deutsche Mann" 1,80m groß ist [@owidhumanheight]?
+
+a) Die Hälfte der Männer ist größer als 1,80m, die andere Hälfte kleiner.
+b) Das arithmetische Mittel der Männer beträgt 1,80m.
+c) Die meisten Männer sind 1,80m groß.
+d) Etwas anderes.
+e) Keine Ahnung!$\square$
+:::
 
 
 
@@ -77,8 +93,7 @@ $$
 \begin{array}{|c|} \hline \\ \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \square \\ \square \\ \square \\ \hline \end{array} = 3 \cdot \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array}
 $$ {#eq-mw}
 
-
-Der Nutzen des Mittelwerts liegt darin, dass er uns ein Bild gibt (ein Modell ist!) für die "typische Note" im Statistikkurs, s. #eq-mw2.
+Der Nutzen des Mittelwerts liegt darin, dass er uns ein Bild gibt (ein Modell ist!) für die "typische Note" im Statistikkurs, s. @eq-mw2.
 
 
 $$\begin{array}{|c|} \hline \\ \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \square \\ \square \\ \square \\ \hline \end{array} \qquad \leftrightarrow  \qquad \underbrace{\begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array}}_{\text{"typischer Vertreter"}}$$ {#eq-mw2}
@@ -99,7 +114,7 @@ Eine nützliche Anschauung zum Mittelwert ist die Vorstellung des Mittelwerts al
 [Quelle: Von Maphry - Eigenes Werk, CC BY-SA 4.0]( https://commons.wikimedia.org/w/index.php?curid=79390659)
 :::
 
-In "Mathe-Sprech" bezeichnet man den Mittelwert häufig mit $\bar{x}$ und schreibt die Rechenregel so, s. #eq-mw-formel.
+In "Mathe-Sprech" bezeichnet man den Mittelwert häufig mit $\bar{x}$ und schreibt die Rechenregel so, s. @eq-mw-formel.
 
 
 $$\bar {x} =\frac{1}{n} \sum_{i=1}^{n}{x_{i}}=\frac {x_{1}+x_{2}+\dotsb +x_{n}} {n}$$ {#eq-mw-formel}
@@ -129,12 +144,19 @@ Um Modelle darzustellen, wird in der Datenanalyse häufig folgende Art von Model
 
 $$\hat{y} \sim m$$
 
-Lies: "Der Modellwert $\hat{y}$ ist eine Funktion des Modells plus dem Fehler". 
+Lies: "Der Modellwert $\hat{y}$ ist eine Funktion des Modells (m) ". 
 Der Kringel "~"^[die sog. "Tilde"] soll also hier heißen "... ist eine Funktion von ...".
 
 Mit $\hat{y}$ sind die vorhergesagten bzw. die zu erklärende Variable^[AV, Output-Variable, Zielvariable] gemeint.
 
 Das "Dach"  über dem $y$ bedeutet "vorhergesager Y-Wert" oder "Y-Wert laut dem Modell".
+
+Der tatsächliche, beobachtete Wert $y$ setzt sich zusammen aus dem Modellwert (m) plus einem Fehler (e wie error):
+
+$$y = m + e$$
+
+Anstelle von $m$ schreibt ma nauch $\hat{y}$ ("y-Dach"). \hat{y} bedeutet der "vorhergesagte y-Wert laut einem Modell".
+
 
 In diesem Fall ist das Modell einfach gleich dem Mittelwert (und nicht irgendeiner Funktion des Mittelwerts), so dass wir schreiben können:
 
@@ -147,10 +169,10 @@ In späteren Kapiteln werden wir andere Variablen heranziehen, um die Zielvariab
 Würden wir z.B. sagen wollen, dass wir $Y$ als Funktion einer Variable $X$ erklären,
 so würden wir schreiben:
 
-$\bar{y} \sim x$$
+$$\bar{y} \sim x$$
 Da wir im Moment aber keine andere Variablen bemühen, um $Y$ zu erklären schreibt man auch:
 
-$$\bar{y] \sim 1$$
+$$\bar{y} \sim 1$$
 
 Diese Schreibweise sieht verwirrend aus. 
 Die $1$ soll aber einfach zeigen, dass wir keine andere Variable zur Erklärung von $Y$ verwenden, 
@@ -227,15 +249,25 @@ Jetzt legen Sie auch noch die Abweichungsbalken, die nach unten ragen aneinander
 Wer viel Phantasie hat, erkennt (sieht) jetzt,
 dass die Gesamtlänge der "Balken nach oben" identisch ist zur Gesamtlänge der nach "unten ragenden Balken", vgl. @fig-wippe.
 
-Präziser ausgedrückt und ohne Ihre Phantasie zu strapazieren:
+Präziser ausgedrückt und ohne Ihre Phantasie zu strapazieren (@eq-summenull):
 
-$$\sum_{i=1}^n (x_i-\bar{x})=\sum_{i=1}^n x_i - \sum_{i=1}^n \bar{x} = n\cdot \bar{x} - n\cdot \bar{x}=0$$
+$$\sum_{i=1}^n (x_i-\bar{x})=\sum_{i=1}^n x_i - \sum_{i=1}^n \bar{x} = n\cdot \bar{x} - n\cdot \bar{x}=0$$ {#eq-summenull}
 
 :::{.callout-note}
 Die Summe der Abweichungen vom Mittelwert ist Null.
 :::
 
 
+
+:::{#exr-mw-wealth1}
+Was schätzen Sie, wie hoch das mittlere Vermögen des Haushalte in Deutschland in etwa ist?^[Quelle:  [WSI](https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.htm), Abruf 2023-04-19])
+
+a) 50.000 Euro
+b) 100.000 Euro
+c) 150.000 Euro
+d) 200.000 Euro
+e) 250.000 Euro$\square$
+:::
 
 
 
@@ -285,7 +317,7 @@ das `1e6` ist zu lesen als "1 Mal 10 mit 6 im *E*xponenten".
 :::
 
 Der Mittelwert im Hörsaal beträgt also `r scales::label_comma()(einkommen_mw)` Euro.
-Ist das ein gutes Modell für dasa "typische" Vermögen im Hörsaal?
+Ist das ein gutes Modell für das "typische" Vermögen im Hörsaal?
 
 
 ## Median als Modell {#sec-median}
@@ -502,6 +534,29 @@ Bei schiefen Verteilungen ist der Median dem Mittelwert als Modell für den "typ
 
 
 
+:::{#exr-mw-wealthmd}
+Was schätzen Sie, wie hoch das *mediane* Vermögen des Haushalte in Deutschland in etwa ist?^[Quelle:  [WSI](https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.htm), Abruf 2023-04-19])
+
+a) 50.000 Euro
+b) 100.000 Euro
+c) 150.000 Euro
+d) 200.000 Euro
+e) 250.000 Euro$\square$
+:::
+
+
+:::{#exr-mw-wealthmd}
+Was schätzen Sie, wie groß der *Unterschied* zwischen medianem und mittlerem (arithm. Mittel) des Jahreseinkommen deutscher Haushalte ungefähr ist?^[Quelle:  [Wikipedia](https://de.wikipedia.org/wiki/Einkommensverteilung_in_Deutschland), Abruf 2023-04-19, der Unterschied beträgt knapp 3000 Euro laut der Quelle])
+
+a) 1.000 Euro
+b) 2.000 Euro
+c) 3.000 Euro
+d) 4.000 Euro
+e) 5.000 Euro$\square$
+:::
+
+
+
 ### Quartile
 
 
@@ -628,6 +683,44 @@ mariokart_lagemaße_total_pr
 ```
 
 
+### Gruppierte Lagemaße
+
+Häufig möchte man Statistiken wie Lagemaße für mehrere Teilgruppen - z.B. Mittlere Körpergröße von Frauen vs. Mittlere Körpergröße von Männer - berechnen und dann vergleichen.
+Die dahinter stehende *Forschungsfrage* könnte lauten:
+
+
+>    Unterscheidet sich die mittlere Körpergröße von Frauen und Männern?
+
+Oder vielleicht:
+
+>    Hat das Geschlecht einen Einfluss auf die Körpergröße?
+
+
+Anders ausgedrückt:
+
+
+>    Körpergröße $y$ ist eine Funktion des Geschlechts $G$.
+
+
+Die *Modellformel* könnte also lauten:
+
+$$y \sim G$$
+
+Gruppierte Lagemaße lassen sich in R z.B. so berechnen:
+
+
+```{r}
+mariokart_lagemaße_gruppiert <-
+  mariokart %>% 
+  group_by(wheels) %>%  # neue Zeile, der Rest ist gleich!
+  summarise(mw = mean(total_pr))
+
+mariokart_lagemaße_gruppiert
+```
+
+
+
+
 :::{#def-punktmodell}
 ### Punktmodell
 Ein Modell, welches für alle Beobachtungen ein und denselben Wert annimmt (vorhersagt),
@@ -641,19 +734,46 @@ $$\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarr
 
 ## Fazit
 
-:::{.exm-survival1}
+:::{#exm-survival1}
 ### Survival-Tipp
 
 Eine Studentin aus dem dem Bachelorstudiengang "Angewandte Medien- und Wirtschaftspsychologie" mit Schwerpunkt *Data Science* berichtet ihre "Survival-Tipps" für Statistik.
 
 1. Wenn man mal nicht weiterkommt hilft es auch mal ein paar Tage Abstand von R und Statistik zu nehmen. 
 2. Sich während des Semesters neue Begriffe und ihre Erklärung zusammenschreiben.
-3. Mit KommilitonInnen austauschen oder in höheren Semester nach Tipps fragen.
+3. Mit KommilitonInnen austauschen oder in höheren Semestern nach Tipps fragen.$\square$
 :::
+
+
+>    👩‍🎓 Irgendwie kann ich mir R-Code so schlecht merken.
+
+>    👩‍🏫 Frag doch mal ChatGPT, da bekommt man auch R-Code ausgegegeben.
+
+
 
 
 
 ## Aufgaben
+
+
+1. [Kennwert-robust](https://datenwerk.netlify.app/posts/kennwert-robust/kennwert-robust)
+1. [mw-berechnen](https://datenwerk.netlify.app/posts/mw-berechnen/mw-berechnen.html)
+1. [mariokart-max2](https://datenwerk.netlify.app/posts/mariokart-max2/mariokart-max2.html)
+1. [nasa01](https://datenwerk.netlify.app/posts/nasa01/nasa01.html)
+1. [nasa02](https://datenwerk.netlify.app/posts/nasa02/nasa02.html)
+1. [mariokart-mean1](https://datenwerk.netlify.app/posts/mariokart-mean1/mariokart-mean1.html)
+1. [wrangle10](https://datenwerk.netlify.app/posts/wrangle10/wrangle10.html)
+1. [summarise01](https://datenwerk.netlify.app/posts/summarise01/summarise01.html)
+1. [mariokart-max1](https://datenwerk.netlify.app/posts/mariokart-max1/mariokart-max1.html)
+1. [Schiefe1](https://datenwerk.netlify.app/posts/schiefe1/schiefe1)
+1. [mariokart-mean2](https://datenwerk.netlify.app/posts/mariokart-mean2/mariokart-mean2.html)
+1. [summarise03](https://datenwerk.netlify.app/posts/summarise03/summarise03.html)
+1. [mariokart-mean4](https://datenwerk.netlify.app/posts/mariokart-mean4/mariokart-mean4.html)
+1. [mariokart-mean3](https://datenwerk.netlify.app/posts/mariokart-mean3/mariokart-mean3.html)
+1. [summarise02](https://datenwerk.netlify.app/posts/summarise02/summarise02.html)
+
+
+Schauen Sie sich auch mal auf [Datenwerk](https://datenwerk.netlify.app/) die Aufgaben zu z.B. dem Tag [EDA](https://datenwerk.netlify.app/#category=eda)
 
 
 ## Literatur

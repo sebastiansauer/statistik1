@@ -227,8 +227,10 @@ div.csl-indent {
 <a href="#sec-streuung" id="toc-sec-streuung" class="nav-link" data-scroll-target="#sec-streuung"><span class="header-section-number">7.4</span> Streuungsmaße</a>
   <ul class="collapse">
 <li><a href="#der-mittlere-abweichungsbalken" id="toc-der-mittlere-abweichungsbalken" class="nav-link" data-scroll-target="#der-mittlere-abweichungsbalken"><span class="header-section-number">7.4.1</span> Der mittlere Abweichungsbalken</a></li>
-  <li><a href="#der-mittlere-quadratfehler" id="toc-der-mittlere-quadratfehler" class="nav-link" data-scroll-target="#der-mittlere-quadratfehler"><span class="header-section-number">7.4.2</span> Der mittlere Quadratfehler</a></li>
-  <li><a href="#die-standardabweichung" id="toc-die-standardabweichung" class="nav-link" data-scroll-target="#die-standardabweichung"><span class="header-section-number">7.4.3</span> Die Standardabweichung</a></li>
+  <li><a href="#der-interquartilsabstand" id="toc-der-interquartilsabstand" class="nav-link" data-scroll-target="#der-interquartilsabstand"><span class="header-section-number">7.4.2</span> Der Interquartilsabstand</a></li>
+  <li><a href="#der-mittlere-quadratfehler" id="toc-der-mittlere-quadratfehler" class="nav-link" data-scroll-target="#der-mittlere-quadratfehler"><span class="header-section-number">7.4.3</span> Der mittlere Quadratfehler</a></li>
+  <li><a href="#varianz" id="toc-varianz" class="nav-link" data-scroll-target="#varianz"><span class="header-section-number">7.4.4</span> Varianz</a></li>
+  <li><a href="#die-standardabweichung" id="toc-die-standardabweichung" class="nav-link" data-scroll-target="#die-standardabweichung"><span class="header-section-number">7.4.5</span> Die Standardabweichung</a></li>
   </ul>
 </li>
   <li><a href="#streuung-als-modellfehler" id="toc-streuung-als-modellfehler" class="nav-link" data-scroll-target="#streuung-als-modellfehler"><span class="header-section-number">7.5</span> Streuung als Modellfehler</a></li>
@@ -303,6 +305,15 @@ div.csl-indent {
 </div>
 </div>
 <p><a href="https://www.flaticon.com/free-icons/professor">Icon unter Flaticon licence, Autor: iconixar</a></p>
+<div class="{exr-weisoiss2}">
+<p>Würden Sie die Pille von Prof.&nbsp;Weiss-Ois nehmen?</p>
+<ol type="a">
+<li>ja</li>
+<li>nein</li>
+<li>Nur wenn ich 100 Euro bekomme</li>
+<li>Okay, für 1000 Euro$</li>
+</ol>
+</div>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -389,10 +400,12 @@ Wichtig
 </blockquote>
 <p>Legen wir (gedanklich) alle Abweichungsbalken <span class="math inline">\(e\)</span> aneinander und teilen durch die Anzahl <span class="math inline">\(n\)</span> der Balken, so erhalten wir wir den “mittleren Abweichungsbalken”, den wir mit <span class="math inline">\(\varnothing e\)</span> bezeichnen könnten. Diesen Kennwert bezeichnet man als <em>Mean Absolute Error</em> (MAE) bzw. als <em>Mittlere Absolutabweichung</em> (MAA). Er ist so definiert:</p>
 <p><span class="math inline">\({\displaystyle \mathrm {MAE} ={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}.}\)</span></p>
-<p>In Worten: Der MAE ist definiert als die Summe der Absolutwerte der Differenzen eines Messwerts zum Mittelwert, geteilt durch die Anzahl der Messwerte.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<div id="def-mae" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 7.1 (Mittlere Absolutabweichung) </strong></span>Die Mittlere Absolutabweichung (MAA, MAE) ist definiert als die Summe der Absolutwerte der Differenzen eines Messwerts zum Mittelwert, geteilt durch die Anzahl der Messwerte.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a><span class="math inline">\(\square\)</span></p>
+</div>
 <div id="exm-mae" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 7.2 </strong></span><a href="#fig-mae">Abbildung&nbsp;<span>7.3</span></a> visualisiert ein einfaches Beispiel zum MAE. Rechnen wir den MAE für das Beispiel von <a href="#fig-mae">Abbildung&nbsp;<span>7.3</span></a> aus:</p>
-<p><span class="math inline">\(MAE = \frac{1 + |- 2| + 1 + 1}{4} = 5/4 = 1.25\)</span></p>
+<p><span class="math inline">\(MAE = \frac{1 + |- 3| + 1 + 1}{4} = 6/4 = 1.5\)</span></p>
 </div>
 <div class="cell" data-hash="modellguete_cache/html/fig-mae_95b0e500b5143f5552bd437866662ca3">
 <div class="cell-output-display">
@@ -423,11 +436,18 @@ Wichtig
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span></span>
 <span><span class="co">## [1] 1.5</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="der-mittlere-quadratfehler" class="level3" data-number="7.4.2"><h3 data-number="7.4.2" class="anchored" data-anchor-id="der-mittlere-quadratfehler">
-<span class="header-section-number">7.4.2</span> Der mittlere Quadratfehler</h3>
+</section><section id="der-interquartilsabstand" class="level3" data-number="7.4.2"><h3 data-number="7.4.2" class="anchored" data-anchor-id="der-interquartilsabstand">
+<span class="header-section-number">7.4.2</span> Der Interquartilsabstand</h3>
+<p>Der Interquartilsabstand (engl. inter quartile range, IQR) ist ein Streuungsmaß, das nicht auf dem Mittelwert aufbaut. Der IQR ist robuster als z.B. der MAA oder die Varianz und die Standardabweichung.</p>
+<p>:::{#def-iqr} ### Interquartilsabstand Der Interquartilsabstand (IRR) ist definiert als der die Differenz vom 3. Quartil und 1. Quartil.<span class="math inline">\(\square\)</span></p>
+<div id="exm-iqr" class="theorem example">
+<p><span class="theorem-title"><strong>Beispiel 7.3 (IQR im Hörsaal) </strong></span>In einem Statistikkurs betragen die Quartile der Körpergröße: Q1: 1.65m, Q2 (Median): 1,70m, Q3: 1.75m. Der IQR beträgt dann: <span class="math inline">\(IQR = Q3-Q1 = 1.75m - 1.65m = 0.10m\)</span>, d.h. 10 cm.<span class="math inline">\(\square\)</span></p>
+</div>
+</section><section id="der-mittlere-quadratfehler" class="level3" data-number="7.4.3"><h3 data-number="7.4.3" class="anchored" data-anchor-id="der-mittlere-quadratfehler">
+<span class="header-section-number">7.4.3</span> Der mittlere Quadratfehler</h3>
 <p>Sagen wir, wir möchten die Körpergröße erwachsener (deutscher) Männer modellieren. Einfach gesagt: Wir möchten wissen, wie groß typischerweise ein deutscher Mann ist. Wir verwenden den Mittelwert, um diese Frage zu beantworten. Aus der Literatur erfahren wir, dass die mittlere Körpergröße belgischer Männer bei 179 cm liegt und normalverteilt ist <span class="citation" data-cites="Garcia:2007aa">(<a href="#ref-Garcia:2007aa" role="doc-biblioref">Garcia und Quintana-Domeque 2007</a>)</span>.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
 <p>Sind Ihre Daten normalverteilt, dann sind die Abweichungen vom Mittelwert auch normalverteilt. Denn wenn man eine Konstante zu einer Verteilung addiert, “verschiebt man den Berg” ja nur zur Seite, ohne seine Form zu verändern, s. <a href="#fig-norm-dev">Abbildung&nbsp;<span>7.4</span></a>.</p>
-<div class="cell" data-hash="modellguete_cache/html/fig-norm-dev_472a67f30287b64196f52569b80f2688">
+<div class="cell" data-fig.asp="0.5" data-hash="modellguete_cache/html/fig-norm-dev_14b49879efa229a6629701f41aa2edaf">
 <div class="cell-output-display">
 <div id="fig-norm-dev" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure"><p><img src="modellguete_files/figure-html/fig-norm-dev-1.png" class="img-fluid figure-img" width="672"></p>
@@ -459,8 +479,8 @@ Hinweis
 <blockquote class="blockquote">
 <p>🧑‍🎓 (seufzt)</p>
 </blockquote>
-<section id="varianz" class="level4" data-number="7.4.2.1"><h4 data-number="7.4.2.1" class="anchored" data-anchor-id="varianz">
-<span class="header-section-number">7.4.2.1</span> Varianz</h4>
+</section><section id="varianz" class="level3" data-number="7.4.4"><h3 data-number="7.4.4" class="anchored" data-anchor-id="varianz">
+<span class="header-section-number">7.4.4</span> Varianz</h3>
 <p>Um die Standardabweichung zu berechnen, berechnet man zunächst die <em>Varianz</em>, <span class="math inline">\(s^2\)</span> abgekürzt. Hier ist ein “Kochrezept”<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> zur Berechnung der Varianz:</p>
 <ol type="1">
 <li>Für alle Datenpunkte <span class="math inline">\(x_i\)</span>: Berechne die Abweichungen vom Mittelwert, <span class="math inline">\(\bar{x}\)</span>
@@ -471,6 +491,9 @@ Hinweis
 </ol>
 <p>Als Formel ausgedrückt, lautet die Definition der Varianz<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> einer Stichprobe:</p>
 <p><span class="math display">\[{\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\bar {y}}\right)^{2}.}\]</span></p>
+<div id="def-var" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 7.2 (Varianz) </strong></span>Die Varianz (<span class="math inline">\(s^2, \sigma^2\)</span>) ist definiert als der Mittelwert der quadradrierten Abweichungen (vom Mittelwert).<span class="math inline">\(\square\)</span></p>
+</div>
 <p>Die Varianz steht im engen Verhältnis zur Kovarianz, s. <span class="quarto-unresolved-ref">?sec-cov</span>.</p>
 <p>Die Varianz kann auch verstehen als den mittleren Quadratfehler (Mean Squared Error, MSE) eines Modells. Im Fall eines Punktmodells ist der Mittelwert der vorhergesagte Wert eines Modells.</p>
 <p><span class="math display">\[{\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\hat {y}}\right)^{2}.}\]</span></p>
@@ -492,9 +515,6 @@ Hinweis
 <p><a href="https://commons.wikimedia.org/w/index.php?curid=39472834">By Cmglee - Own work, CC BY-SA 3.0</a></p>
 </div>
 </div>
-<div id="def-varianz" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 7.1 (Varianz) </strong></span>Die Varianz einer Stichprobe entspricht dem mittleren Quadrat der Abweichungen.</p>
-</div>
 <p><a href="#fig-mse">Abbildung&nbsp;<span>7.6</span></a> visualisiert die Varianz für <a href="#exm-mae">Beispiel&nbsp;<span>7.2</span></a>.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
 <div class="cell" data-hash="modellguete_cache/html/fig-mse_5d5554a1b85ff16168463c5c0094a218">
 <div class="cell-output-display">
@@ -507,9 +527,9 @@ Hinweis
 </div>
 <p>Bildquelle: FOM-ifes</p>
 <div id="exm-var" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 7.3 </strong></span>Sie arbeiten immer noch bei einem Online-Auktionshaus und untersuchen den Verkauf von Videospielen. Natürlich mit dem Ziel, dass Ihre Firma mehr von dem Zeug verkaufen kann.</p>
+<p><span class="theorem-title"><strong>Beispiel 7.4 </strong></span>Sie arbeiten immer noch bei einem Online-Auktionshaus und untersuchen den Verkauf von Videospielen. Natürlich mit dem Ziel, dass Ihre Firma mehr von dem Zeug verkaufen kann.</p>
 <p>Zunächst betrachten Sie die Streuung in den Verkaufspreisen:</p>
-<div class="cell" data-hash="modellguete_cache/html/unnamed-chunk-6_acb1026a912139b594db32b3b94afec5">
+<div class="cell" data-hash="modellguete_cache/html/unnamed-chunk-6_78785f39e68147439089aaec39b9e0c6">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/easystats/">easystats</a></span><span class="op">)</span>  <span class="co"># Das Paket muss installiert sein</span></span>
 <span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu">data_read</span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span>
 <span></span>
@@ -521,6 +541,7 @@ Hinweis
 <span>  <span class="va">m</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
 <span>    pr_mw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span>,</span>
+<span>    pr_iqr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/IQR.html">IQR</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span>,</span>
 <span>    pr_maa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    pr_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span>,</span>
 <span>    pr_sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span><span class="op">)</span></span>
@@ -530,7 +551,7 @@ Hinweis
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["pr_mw"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["pr_maa"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["pr_var"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["pr_sd"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"47.43191","2":"7.199762","3":"83.05864","4":"9.113651"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["pr_mw"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["pr_iqr"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["pr_maa"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["pr_var"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["pr_sd"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"47.43191","2":"12.99","3":"7.199762","4":"83.05864","5":"9.113651"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -565,12 +586,12 @@ Hinweis
 </div>
 <p><span class="math inline">\(\square\)</span></p>
 </div>
-<p>Wer sich die Berechnung von Hand für <code>pr_maa</code> sparen möchte, kann die <a href="https://rdrr.io/cran/DescTools/man/MeanAD.html">Funktion <code>meanAD</code> aus dem Paket <code>DescTools</code></a> nutzen.</p>
-</section></section><section id="die-standardabweichung" class="level3" data-number="7.4.3"><h3 data-number="7.4.3" class="anchored" data-anchor-id="die-standardabweichung">
-<span class="header-section-number">7.4.3</span> Die Standardabweichung</h3>
+<p>Wer sich die Berechnung von Hand für <code>pr_maa</code> sparen möchte, kann die <a href="https://rdrr.io/cran/DescTools/man/MeanAD.html">Funktion <code>MeanAD</code> aus dem Paket <code>DescTools</code></a> nutzen.</p>
+</section><section id="die-standardabweichung" class="level3" data-number="7.4.5"><h3 data-number="7.4.5" class="anchored" data-anchor-id="die-standardabweichung">
+<span class="header-section-number">7.4.5</span> Die Standardabweichung</h3>
 <p>Kennt man die Varianz, so lässt sich die Standardabweichung einfach als Quadratwurzel der Varianz berechnen.</p>
 <div id="def-sd" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 7.2 (Standardabweichung) </strong></span>Die Standardabweichung (SD, s, <span class="math inline">\(\sigma\)</span>) ist definiert als die Quadratwurzel der Varianz.</p>
+<p><span class="theorem-title"><strong>Definition 7.3 (Standardabweichung) </strong></span>Die Standardabweichung (SD, s, <span class="math inline">\(\sigma\)</span>) ist definiert als die Quadratwurzel der Varianz.</p>
 <p><span class="math display">\[s := \sqrt{s^2}\]</span></p>
 <p><span class="math inline">\(\square\)</span></p>
 </div>
@@ -590,7 +611,7 @@ Hinweis
 </div>
 </div>
 <div id="exm-sd-mario" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 7.4 </strong></span>Sie arbeiten weiter an Ihrem Mariokart-Projekt. Da Sie heute keine Lust auf viel Tippen haben, nutzen Sie das R-Paket <code>easystats</code> mit der Funktion <code>describe_distribution</code>.</p>
+<p><span class="theorem-title"><strong>Beispiel 7.5 </strong></span>Sie arbeiten weiter an Ihrem Mariokart-Projekt. Da Sie heute keine Lust auf viel Tippen haben, nutzen Sie das R-Paket <code>easystats</code> mit der Funktion <code>describe_distribution</code>.</p>
 <div class="cell" data-hash="modellguete_cache/html/unnamed-chunk-9_abb4fc83da276e6815290e68b2e53750">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/easystats/">easystats</a></span><span class="op">)</span></span>
 <span></span>
@@ -609,7 +630,7 @@ Hinweis
 <p>Ah! Das war einfach. Wird auch langsam Zeit für Feierabend.<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exm-gruppen-mw" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 7.5 </strong></span>Bevor Sie nach Hause gehen, möchten Sie noch eine Sache anschauen. In einer früheren Analyse (s. <a href="#fig-fehler-red">Abbildung&nbsp;<span>7.2</span></a>) fanden Sie heraus, dass die Fehlerbalken kürzer werden, wenn man ein geschickteres und komplexeres Modell findet.</p>
+<p><span class="theorem-title"><strong>Beispiel 7.6 </strong></span>Ihr Job als Datenanalyst ist anstrengend, aber auch mitunter interessant. So auch heute. Bevor Sie nach Hause gehen, möchten Sie noch eine Sache anschauen. In einer früheren Analyse (s. <a href="#fig-fehler-red">Abbildung&nbsp;<span>7.2</span></a>) fanden Sie heraus, dass die Fehlerbalken kürzer werden, wenn man ein geschickteres und komplexeres Modell findet.</p>
 <p>Das wollen Sie natürlich prüfen. Sie überlegen: “Okay, ich will ein einfaches Modell, in dem der Mittelwert das Modell des Verkaufpreis sein soll.”</p>
 <p>Das spezifizieren Sie so:</p>
 <div class="cell" data-hash="modellguete_cache/html/unnamed-chunk-10_211f8750ce590b579c9adf8b0e9d7ddd">
@@ -623,7 +644,7 @@ Hinweis
 <span><span class="fu">mae</span><span class="op">(</span><span class="va">lm2</span><span class="op">)</span></span>
 <span><span class="co">## [1] 7.375873</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Ah! Sehr schön, Sie haben mit <code>lm2</code> ein besseres Modell als einfach nur den Mittelwert gefunden.<span class="math inline">\(\square\)</span></p>
+<p>Ah! Sehr schön, Sie haben mit <code>lm2</code> ein besseres Modell als einfach nur den Mittelwert gefunden. Ab nach hause!<span class="math inline">\(\square\)</span></p>
 </div>
 </section></section><section id="streuung-als-modellfehler" class="level2" data-number="7.5"><h2 data-number="7.5" class="anchored" data-anchor-id="streuung-als-modellfehler">
 <span class="header-section-number">7.5</span> Streuung als Modellfehler</h2>
@@ -633,7 +654,7 @@ Hinweis
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_mario1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">m</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Zur Erinnerung: Wir modellieren <code>total_pr</code> ohne Prädiktoren, sondern als Punktmodell, und zwar schätzen wir den Mittelwert mit den Daten <code>m</code>.</p>
-<p>Das Paket <code>easystats</code> bietet komfortable Befehle, um die Modellgüte zu berechnen:</p>
+<p>Das (Meta-)Paket <code>easystats</code> bietet komfortable Befehle, um die Modellgüte zu berechnen:</p>
 <div class="cell" data-hash="modellguete_cache/html/unnamed-chunk-13_965c29a52a9bc017ad1f941ecc6fdc7c">
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm_mario1</span><span class="op">)</span>  <span class="co"># Mean absolute error</span></span>
 <span><span class="co">## [1] 7.199762</span></span>
@@ -650,15 +671,18 @@ Hinweis
 <ul>
 <li>Die SD ist sehr nützlich zur Beschreibung der Normalverteilung</li>
 <li>Die Varianz wird häufig verwendet bzw. in Forschungsarbeiten berichtet, also müssen Sie die Varianz kennen.</li>
-</ul></section><section id="aufgaben" class="level2" data-number="7.7"><h2 data-number="7.7" class="anchored" data-anchor-id="aufgaben">
+</ul>
+<p>Liegen Exremwerte vor, kann es vorteilhafter sein, den IQR vorzuziehen gegenüber Mittelwert basierten Streuungsmaßen (MAA, Varianz, SD).</p>
+</section><section id="aufgaben" class="level2" data-number="7.7"><h2 data-number="7.7" class="anchored" data-anchor-id="aufgaben">
 <span class="header-section-number">7.7</span> Aufgaben</h2>
+<p>Schauen Sie sich auch mal auf <a href="https://datenwerk.netlify.app/">Datenwerk</a> die Aufgaben zu dem Tag <a href="https://datenwerk.netlify.app/#category=variability">variability</a> an.</p>
 </section><section id="literatur" class="level2" data-number="7.8"><h2 data-number="7.8" class="anchored" data-anchor-id="literatur">
 <span class="header-section-number">7.8</span> Literatur</h2>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-Garcia:2007aa" class="csl-entry" role="listitem">
-Garcia, Jaume, und Climent Quintana-Domeque. 2007. <span>„The evolution of adult height in Europe: a brief note“</span>. <em>Econ Hum Biol</em> 5 (2): 340–49. <a href="https://doi.org/10.1016/j.ehb.2007.02.002">https://doi.org/10.1016/j.ehb.2007.02.002</a>.
+Garcia, Jaume, und Climent Quintana-Domeque. 2007. <span>„The Evolution of Adult Height in <span>Europe</span>: A Brief Note“</span>. <em>Econ Hum Biol</em> 5 (2): 340–49. <a href="https://doi.org/10.1016/j.ehb.2007.02.002">https://doi.org/10.1016/j.ehb.2007.02.002</a>.
 </div>
 </div>
 </section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>

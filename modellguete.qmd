@@ -78,6 +78,16 @@ ggplot2::theme_set(theme_minimal())
 [Icon unter Flaticon licence, Autor: iconixar](https://www.flaticon.com/free-icons/professor)
 
 
+:::{exr-weisoiss2}
+Würden Sie die Pille von Prof. Weiss-Ois nehmen?
+
+a) ja
+b) nein
+c) Nur wenn ich 100 Euro bekomme
+d) Okay, für 1000 Euro\square$
+:::
+
+
 :::{.callout-important}
 Wie sehr die Werte eines Modells streuen, ist eine wichtige Information.$\square$
 :::
@@ -270,13 +280,16 @@ Er ist so definiert:
 
 ${\displaystyle \mathrm {MAE} ={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}.}$
 
-In Worten: Der MAE ist definiert als die Summe der Absolutwerte der Differenzen eines Messwerts zum Mittelwert, geteilt durch die Anzahl der Messwerte.^[Wenn man solche Sätze liest, fühlt sich die Formel fast einfacher an.]
+:::{#def-mae}
+### Mittlere Absolutabweichung
+Die Mittlere Absolutabweichung (MAA, MAE) ist definiert als die Summe der Absolutwerte der Differenzen eines Messwerts zum Mittelwert, geteilt durch die Anzahl der Messwerte.^[Wenn man solche Sätze liest, fühlt sich die Formel fast einfacher an.]$\square$
+:::
 
 :::{#exm-mae}
 @fig-mae visualisiert ein einfaches Beispiel zum MAE.
 Rechnen wir den MAE für das Beispiel von @fig-mae aus:
 
-$MAE = \frac{1 + |- 2| + 1 + 1}{4} = 5/4 = 1.25$
+$MAE = \frac{1 + |- 3| + 1 + 1}{4} = 6/4 = 1.5$
 :::
 
 ```{r mae-balken}
@@ -330,6 +343,23 @@ mae(lm1)
 
 
 
+
+### Der Interquartilsabstand
+
+
+Der Interquartilsabstand (engl. inter quartile range, IQR) ist ein Streuungsmaß, das nicht auf dem Mittelwert aufbaut.
+Der IQR ist robuster als z.B. der MAA oder die Varianz und die Standardabweichung.
+
+:::{#def-iqr}
+### Interquartilsabstand
+Der Interquartilsabstand (IRR) ist definiert als der die Differenz vom 3. Quartil und 1. Quartil.$\square$
+
+:::{#exm-iqr}
+### IQR im Hörsaal
+In einem Statistikkurs betragen die Quartile der Körpergröße: Q1: 1.65m, Q2 (Median): 1,70m, Q3: 1.75m. Der IQR beträgt dann: $IQR = Q3-Q1 = 1.75m - 1.65m = 0.10m$, d.h. 10 cm.$\square$
+:::
+
+
 ### Der mittlere Quadratfehler
 
 
@@ -348,6 +378,7 @@ Denn wenn man eine Konstante zu einer Verteilung addiert, "verschiebt man den Be
 #| echo: false
 #| label: fig-norm-dev
 #| fig-cap: Die Abweichungen zum Mittelwert einer normalverteilten Variable sind selber normalverteilt
+#| fig-asp: 0.5
 
 
 d <- 
@@ -409,7 +440,7 @@ Normalverteilte Residuen lassen sich gut mit der Standardabweichung beschreiben.
 >    🧑‍🎓 (seufzt)
 
 
-#### Varianz
+### Varianz
 
 Um die Standardabweichung zu berechnen, berechnet man zunächst die *Varianz*, $s^2$ abgekürzt. Hier ist ein "Kochrezept"^[Algorithmus] zur Berechnung der Varianz:
 
@@ -424,6 +455,11 @@ Als Formel ausgedrückt, lautet die Definition der Varianz^[sog. unkorrigierte S
 
 $${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\bar {y}}\right)^{2}.}$$
 
+
+:::{#def-var}
+### Varianz
+Die Varianz ($s^2, \sigma^2$) ist definiert als der Mittelwert der quadradrierten Abweichungen (vom Mittelwert).$\square$
+:::
 
 
 Die Varianz steht im engen Verhältnis zur Kovarianz, s. @sec-cov.
@@ -460,10 +496,6 @@ $${\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\hat {y}}\right)^
 ::::
 
 
-:::{#def-varianz}
-### Varianz
-Die Varianz einer Stichprobe entspricht dem mittleren Quadrat der Abweichungen.
-:::
 
 
 
@@ -545,6 +577,7 @@ m_summ <-
   m %>% 
   summarise(
     pr_mw = mean(total_pr),
+    pr_iqr = IQR(total_pr),
     pr_maa = mean(abs(total_pr - mean(total_pr))),
     pr_var = var(total_pr),
     pr_sd = sd(total_pr))
@@ -620,7 +653,7 @@ $\square$
 :::
 
 
-Wer sich die Berechnung von Hand für `pr_maa` sparen möchte, kann die [Funktion `meanAD` aus dem Paket `DescTools`](https://rdrr.io/cran/DescTools/man/MeanAD.html) nutzen.
+Wer sich die Berechnung von Hand für `pr_maa` sparen möchte, kann die [Funktion `MeanAD` aus dem Paket `DescTools`](https://rdrr.io/cran/DescTools/man/MeanAD.html) nutzen.
 
 
 ### Die Standardabweichung
@@ -672,6 +705,7 @@ Ah! Das war einfach. Wird auch langsam Zeit für Feierabend.$\square$
 
 :::{#exm-gruppen-mw}
 
+Ihr Job als Datenanalyst ist anstrengend, aber auch mitunter interessant. So auch heute. 
 Bevor Sie nach Hause gehen, möchten Sie noch eine Sache anschauen.
 In einer früheren Analyse (s. @fig-fehler-red) fanden Sie heraus,
 dass die Fehlerbalken kürzer werden, wenn man ein geschickteres und komplexeres Modell findet. 
@@ -695,7 +729,7 @@ lm2 <- lm(total_pr ~ wheels, data = mariokart)
 mae(lm2)
 ```
 
-Ah! Sehr schön, Sie haben mit `lm2` ein besseres Modell als einfach nur den Mittelwert gefunden.$\square$
+Ah! Sehr schön, Sie haben mit `lm2` ein besseres Modell als einfach nur den Mittelwert gefunden. Ab nach hause!$\square$
 :::
 
 
@@ -712,13 +746,16 @@ lm_mario1 <- lm(total_pr ~ 1, data = m)
 Zur Erinnerung: Wir modellieren `total_pr` ohne Prädiktoren, sondern als Punktmodell,
 und zwar schätzen wir den Mittelwert mit den Daten `m`.
 
-Das Paket `easystats` bietet komfortable Befehle, um die Modellgüte zu berechnen:
+Das (Meta-)Paket `easystats` bietet komfortable Befehle, um die Modellgüte zu berechnen:
 
 ```{r}
 mae(lm_mario1)  # Mean absolute error
 mse(lm_mario1)  # Mean squared error
 rmse(lm_mario1)  # Root mean squared error
 ```
+
+
+
 
 
 ## Fazit
@@ -735,10 +772,16 @@ Gründe, warum Sie die Varianz (bzw. SD) kennen und nutzen sollten, sind:^[Ich w
 - Die Varianz wird häufig verwendet bzw. in Forschungsarbeiten berichtet, also müssen Sie die Varianz kennen.
 
 
-
+Liegen Exremwerte vor, kann es vorteilhafter sein, den IQR vorzuziehen gegenüber Mittelwert basierten Streuungsmaßen (MAA, Varianz, SD).
 
 
 ## Aufgaben
+
+
+
+
+Schauen Sie sich auch mal auf [Datenwerk](https://datenwerk.netlify.app/) die Aufgaben zu  dem Tag [variability](https://datenwerk.netlify.app/#category=variability) an.
+
 
 
 ## Literatur

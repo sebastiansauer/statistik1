@@ -62,6 +62,17 @@ d) Etwas anderes.
 e) Keine Ahnung!$\square$
 :::
 
+:::{#exr-mw2}
+Laut [dieser Quelle](https://en.wikipedia.org/wiki/Average_human_height_by_country) beträgt der Wert der mittleren Größe deutscher Frauen etwa 1,66m, also 14cm weniger als bei Männern.
+Ist das viel?
+
+a) ja
+b) nein
+c) kommt drauf an
+d) weiß nicht$\square$
+:::
+
+
 
 
 :::{#exm-mw}
@@ -119,6 +130,11 @@ In "Mathe-Sprech" bezeichnet man den Mittelwert häufig mit $\bar{x}$ und schrei
 
 $$\bar {x} =\frac{1}{n} \sum_{i=1}^{n}{x_{i}}=\frac {x_{1}+x_{2}+\dotsb +x_{n}} {n}$$ {#eq-mw-formel}
 
+
+:::{#def-mw}
+### Mittelwert
+Der Mittelwert von $X$, präziser: das arithmetische Mittel, ist definiert als die Summe der Elemente von $X$ geteilt durch deren Anzahl, $n$.\square$
+:::
 
 Da der Mittelwert eine zentrale Rolle spielt in der Statistik,
 sollten wir ihn uns noch etwas genauer anschauen.
@@ -271,9 +287,6 @@ e) 250.000 Euro$\square$
 
 
 
-### Der Median
-
-
 :::{#exm-md}
 ### Der reichste Mensch der Welt in Ihrem Hörsaal
 
@@ -298,11 +311,11 @@ dass alle der 100 Studentis jeweils 1000 Euro im Jahr verdienen.
 
 
 
-In R kann man das mittlere Einkommen (präziser: das arithmetische Mittel des Einkommenss) wie folgt berechnen.
+In R kann man das mittlere Einkommen (präziser: das arithmetische Mittel des Einkommenss) wie folgt berechnen.^[Die Details der Syntax, z.B. der Befehl `rep()` sind von geringer Bedeutung.]
 
 ```{r}
 set.seed(42)  # Zufallszahlen festlegen, hier nicht so wichtig
-einkommen_studis <- rep(x = 1, times = 100)  # rep wie "repeat": wiederhole 1000 USD 100 Mal
+einkommen_studis <- rep(x = 1000, times = 100)  # rep wie "repeat": wiederhole 1000 USD 100 Mal
 einkommen <- c(einkommen_studis, 120*1e6)  # 100 Studis mit 1000E, 1 Mbappé mit 120 Mio
 einkommen_mw <- mean(einkommen)
 ```
@@ -318,6 +331,72 @@ das `1e6` ist zu lesen als "1 Mal 10 mit 6 im *E*xponenten".
 
 Der Mittelwert im Hörsaal beträgt also `r scales::label_comma()(einkommen_mw)` Euro.
 Ist das ein gutes Modell für das "typische" Vermögen im Hörsaal?
+
+
+
+
+
+
+
+### Der Mittelwert als lineares Modell
+
+Man kann den Mittelwert als Gerade einzeichnen, s. @fig-mw2, bzw. als Gerade begreifen.
+Insofern kann man vom Mittelwert auch als *lineares Modell* sprechen.
+
+:::{#def-lm}
+### Lineares Modell
+Ein lineares Modell verwendet eine Gerade als Modell von Daten.$\square$
+:::
+
+
+```{r}
+#| label: fig-mw2
+#| fig-cap: Der mittlere Preis von Mariokart-Spielen als Gerade eingezeichnet
+#| fig-subcap: 
+#|   - "Mit Extremwerten"
+#|   - "Ohne Extremwerte (<100 Euro)"
+#| echo: false
+#| layout-ncol: 2
+
+ggplot(mariokart) +
+  aes(x = X, y = total_pr) +
+  geom_point(alpha = .7) +
+  geom_hline(yintercept = mean(mariokart$total_pr),
+             color = "red", size = 2) +
+  labs(caption = paste0("MW: ", round(mean(mariokart$total_pr), 2)),
+       x = "Nr. des Spiel") +
+  scale_y_continuous(limits = c(0, 400))
+
+mariokart2 <- 
+mariokart %>% 
+  filter(total_pr < 100)
+  
+ggplot(mariokart2) +
+  aes(x = X, y = total_pr) +
+  geom_point(alpha = .7) +
+  geom_hline(yintercept = mean(mariokart2$total_pr),
+             color = "red", size = 2) +
+  labs(caption = paste0("MW: ", round(mean(mariokart2$total_pr), 2)),
+       x = "Nr. des Spiel") +
+  scale_y_continuous(limits = c(0, 400))
+
+
+```
+
+
+Ein lineares Modell kann man in R so berechnen:
+
+
+```{r}
+lm(einkommen ~ 1)  # lm wie "lineares Modell" oder engl. "linear modell"
+```
+
+Der Befehl gibt als *Koeffizient* einen Wert zurück und zwar den Mittelwert von `einkommen`, s. oben.
+Dieser Wert wird als Achsenabschnitt (engl. *intercept*) bezeichnet,
+das wird verständlich, wenn man z.B. in @fig-mw2 sieht, dass die Gerade genau an diesem Punkt die Y-Achse schneidet.
+
+Die Syntax des Befehls `lm()` sieht etwas merkwürdig aus.
+Ignorieren Sie das fürs Erste, wir besprechen das später (@sec-gerade1) ausführlich.
 
 
 ## Median als Modell {#sec-median}
@@ -342,7 +421,8 @@ Die logarithmische X-Achse stellt den Unterschied von Mittelwert und Median deut
 #| echo: false
 #| fig-cap: "Die Einkommensverteilung im Hörsaal"
 #| label: fig-mbappe
-#| layout-ncol: 2
+#| layout-ncol: 1
+#| fig-asp: 0.5
 #| fig-subcap: 
 #|   - X-Achse in additiver Form
 #|   - X-Achse in multiplikativer Form (logarithmische Darstellung)
@@ -394,7 +474,8 @@ Es handelt sich um eine schiefe Verteilung.
 #|   - "ID auf der X-Achse, Einkommen auf der Y-Achse"
 #|   - "Einkommen auf der X-Achse, Häufigkeit auf der Y-Achse"
 #| echo: false
-#| layout-ncol: 2
+#| layout-ncol: 1
+#| fig-asp: 0.5 
 
 
 d <-
@@ -435,6 +516,8 @@ $\square$
 ### Median
 Merkmalsausprägung, die bei (aufsteigend) sortierten Beobachtungen in der Mitte liegt.
 :::
+
+Der Median ist robust (gegenüber) Extremwerten: Fügt man Extremwerte zu einer Verteilung hinzu, ändert sich der Median zumeist (deutlich) weniger als der Mittelwert.
 
 @fig-median-human stellt den Median schematisch dar.
 
@@ -557,7 +640,7 @@ e) 5.000 Euro$\square$
 
 
 
-### Quartile
+## Quartile
 
 
 Der Median teilt eine Verteilung in eine untere und ein obere Hälfte.
@@ -730,6 +813,10 @@ Anders gesagt fasst ein Punktmodell eine Wertereihe (häufig ist das eine Tabell
 
 $$\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarrow \qquad \begin{array}{|c|} \hline \\ \hline  \hline \end{array}$$ {#eq-desk}
 
+Mittelwert, Median und Quartile sind Beispiele für Punktmodelle:
+Sie fassen eine Verteilung zu einem einzelnen Wert zusammen und geben uns ein "Bild" der Daten, machen Sie uns verständlich - sie sind uns ein Modell.
+
+
 
 
 ## Fazit
@@ -755,6 +842,10 @@ Eine Studentin aus dem dem Bachelorstudiengang "Angewandte Medien- und Wirtschaf
 
 ## Aufgaben
 
+Ein Teil der Aufgaben kann Stoff beinhalten,
+den Sie noch nicht kennen, aber später kennenlernen.
+Ignorieren Sie daher Aufgaben(teile) mit (noch) unbekannte Stoff.
+
 
 1. [Kennwert-robust](https://datenwerk.netlify.app/posts/kennwert-robust/kennwert-robust)
 1. [mw-berechnen](https://datenwerk.netlify.app/posts/mw-berechnen/mw-berechnen.html)
@@ -773,7 +864,7 @@ Eine Studentin aus dem dem Bachelorstudiengang "Angewandte Medien- und Wirtschaf
 1. [summarise02](https://datenwerk.netlify.app/posts/summarise02/summarise02.html)
 
 
-Schauen Sie sich auch mal auf [Datenwerk](https://datenwerk.netlify.app/) die Aufgaben zu z.B. dem Tag [EDA](https://datenwerk.netlify.app/#category=eda)
+Schauen Sie sich auch mal auf [Datenwerk](https://datenwerk.netlify.app/) die Aufgaben zu z.B. dem Tag [EDA](https://datenwerk.netlify.app/#category=eda) an.
 
 
 ## Literatur

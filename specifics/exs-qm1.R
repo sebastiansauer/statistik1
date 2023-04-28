@@ -295,3 +295,20 @@ teachertools::render_exs(ex_modellguete,
                          render_yamlrmd = TRUE,
                          thema_nr = "_vis")
 
+
+
+# Punktmodelle 2 -------------------------------------------------------------
+
+
+exs_zshg <-
+  c("korr01.Rmd",
+    "korr02.Rmd",
+    "nasa3.Rmd",
+    "mariokart-korr1.Rmd",
+    "mariokart-korr2.Rmd",    
+    "mariokart-korr3.Rmd",
+    "mariokart-korr4.Rmd"
+  )
+
+
+

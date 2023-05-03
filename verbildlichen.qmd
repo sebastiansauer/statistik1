@@ -58,13 +58,6 @@ theme_set(theme_minimal())
 
 
 
-### Benötigte Daten
-
-```{r}
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
-```
-
-
 
 
 ### Wozu das alles?
@@ -618,58 +611,9 @@ Erstellen Sie das Diagramm @fig-de-hist-density, rechtes Teildiagramm!^[Grob ges
 
 #### Eigenschaften von Verteilungen
 
-Verteilungen unterscheiden sich z.B. in ihrem "typischen" oder "mittleren" Wert^[vgl. @sec-streuung] und/oder in ihrer Streuung, s.@fig-vert-dif.
+Verteilungen unterscheiden sich z.B. einerseits in ihrem "typischen" oder "mittleren" Wert^[vgl. @sec-lage] und anderseits in ihrer Streuung^[vgl. ]
 
-Im Histogramm (oder Dichtediagramm) erkennt man den mittleren Wert an der Lage des "Berggipfel"; so sind die "Berggipfel" in @fig-vert-dif unterschiedlich weit links oder rechts auf der X-Achse positioniert.
-Man erkennt im Histogramm die Streuung an der "Breite des Berges", s. @fig-vert-dif.
-
-
-```{r}
-#| echo: false
-#| fig-cap: Unterschiede in Mittelwert und Streuung zwischen Verteilungen
-#| layout-ncol: 2
-#| label: fig-vert-dif
-#| fig-subcap: 
-#|   - Unterschiedliche Mittelwerte, etwa gleiche Streuung
-#|   - Etwa gleiche Mittelwerte, unterschiedliche Streuungen
-
-n <- 1e3
-
-d <-
-  tibble(x1 = rnorm(n),
-         x2 = rnorm(n, 2, 1),
-         x3 = rnorm(n, 4, 1),
-         x4 = rnorm(n, 0, 2),
-         x5 = rnorm(n, 0, 4)
-         )
-
-
-d %>% 
-  ggplot() +
-  geom_density(aes(x = x1), fill = "red", alpha = .3) + 
-  geom_density(aes(x = x2), fill = "green", alpha = .3) + 
-  geom_density(aes(x = x3), fill = "blue", alpha = .3) + 
-  theme_minimal() +
-  labs(x = "Variable",
-       y = "relative Häufigkeit")
-
-
-d %>% 
-  ggplot() +
-  geom_density(aes(x = x1), fill = "red", alpha = .3) + 
-  geom_density(aes(x = x4), fill = "green", alpha = .3) + 
-  geom_density(aes(x = x5), fill = "blue", alpha = .3) + 
-  theme_minimal() +
-  labs(x = "Variable",
-       y = "relative Häufigkeit")
-
-```
-
-
-
-
-(Diagramme von) Verteilungen können sich auch in ihrer *Schiefe* unterscheiden: 
-Verteilungen können symmetrisch oder schief (nicht symmetrisch) sein, s. @fig-symm-schief.
+(Diagramme von) Verteilungen können symmetrisch oder schief (nicht symmetrisch) sein, s. @fig-symm-schief.
 
 
 ```{r}
@@ -740,32 +684,9 @@ Dieses Phänomen kann man gut anhand des [Galton-Bretts](https://www.youtube.com
 
 :::
 
-Eine Normalverteilung lässt sich exakt beschreiben anhand zweier Parameter: 
-ihres zentralen Werts (Mittelwerts), $\mu$ und ihrer Streuung (Standardabweichung), $\sigma$,
-s. @fig-nv-div.
+Eine Normalverteilung lässt sich exakt beschreiben anhand zweier Parameter: ihres zentralen Werts (Mittelwerts), $\mu$ und ihrer Streuung (Standardabweichung), $\sigma$.
 
-
-```{r}
-#| echo: false
-#| label: fig-nv-div 
-#| fig-cap: Verschiedene Normalverteilungen, die sich in Mittelwert und Streuung unterscheiden
-
-
-ggplot(tibble(x = -5:5)) +
-  aes(x = -5:5) +
-  stat_function(fun = dnorm) +
-  stat_function(fun = dnorm, args = list(mean = 2, sd = 1), color = "red") +
-  stat_function(fun = dnorm, args = list(mean = -2, sd = 1), color = "green") +
-  stat_function(fun = dnorm, args = list(mean = 1, sd = 2), color = "blue") +
-  stat_function(fun = dnorm, args = list(mean = -1, sd = 2), color = "orange") +
-  theme_minimal() +
-  labs(x = "Variable",
-       y = "relative Häufigkeit")
-```
-
-
-Kennt man diese beiden Parameter $\mu$ und $\sigma$, 
-so kann man einfach angeben, welcher Anteil der Fläche sich in einem bestimmten Bereich befindet, s. @fig-norm-perc.
+Kennt man diese beiden Parameter, so kann man einfach angeben, welcher Anteil der Fläche sich in einem bestimmten Bereich befindet, s. @fig-norm-perc.
 
 Davon leitet sich die "68-95-99-Prozentregel" ab:
 

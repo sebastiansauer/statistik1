@@ -424,14 +424,38 @@ Hinweis
 <p><span class="theorem-title"><strong>Beispiel 9.3 (Toni will es genau wissen) </strong></span>Da Toni Sie als Statistik-Profi abgespeichert hat, werden Sie wieder konsultiert. “Okay, ich hab noch zwei Fragen. Erstens: Wie viele Punkte bekomme ich, wenn ich gar nicht lerne? Zweitens, wie viele Punkte bekomme ich pro gelernte Stunde? Ist immerhin meine Lebenszeit, krieg ich nicht zurück!”</p>
 <p>Das sind gute Fragen. Den Y-Wert (Klausurpunkte) bei <span class="math inline">\(X=0\)</span> gibt der Achsenabschnitt zurück. Schnell skizzieren Sie dazu ein Diagramm, s. <a href="#fig-beta0">Abbildung&nbsp;<span>9.4</span></a>. Puh, die Antwort wird Toni nicht gefallen …</p>
 </div>
-<div class="cell" data-hash="regression1_cache/html/fig-beta0_2062822622bf391c4f8d6de40e592e97">
+<div class="cell" data-hash="regression1_cache/html/fig-beta0_2e532a81a10013a6f6ba10fce9d4683d">
 <div class="cell-output-display">
 <div id="fig-beta0" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure"><p><img src="regression1_files/figure-html/fig-beta0-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Abbildung&nbsp;9.4: Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei 0 Lernstunden? (roter Punkt)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;9.4: Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei 0 Lernstunden? (roter Punkt bei x=0)</figcaption><p></p>
 </figure>
 </div>
 </div>
+</div>
+<p>Anstelle auf <a href="#fig-beta0">Abbildung&nbsp;<span>9.4</span></a> zu schauen, können Sie sich auch von R Tonis Klausurerfolg vorhersagen (to predict) lassen:</p>
+<blockquote class="blockquote">
+<p>🧑‍🎓 Hey R, predicte mir mal auf Basis vom Modell “lm1” den Lernerfolg für Toni, wenn der x=0 Stunden lernt.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>🤖 Okay, ich predicte mit Modell “lm1” und nehme als neue Datentabelle Tonis Lernzeit (x=0)!</p>
+</blockquote>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-12_4b1532cd46dfdcd12d6086c3e5b24e83">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tonis_lernzeit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">tonis_lernzeit</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["x"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-13_a445df4204cbc1758d06a98963c3ae12">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm1</span>, newdata <span class="op">=</span> <span class="va">tonis_lernzeit</span><span class="op">)</span></span>
+<span><span class="co">##        1 </span></span>
+<span><span class="co">## 8.603032</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="spezifikation-eines-geradenmodells" class="level3" data-number="9.3.2"><h3 data-number="9.3.2" class="anchored" data-anchor-id="spezifikation-eines-geradenmodells">
 <span class="header-section-number">9.3.2</span> Spezifikation eines Geradenmodells</h3>
@@ -439,15 +463,15 @@ Hinweis
 <p><span id="eq-mod1"><span class="math display">\[\hat{y} \sim x \tag{9.1}\]</span></span></p>
 <p>Lies: “Laut meinem Modell ist <span class="math inline">\(\hat{y}\)</span> irgendeine Funktion von <span class="math inline">\(y\)</span>”. Wir werden als Funktion (erstmal) nur Geraden verwenden. Die genauen Werte der Gerade lassen wir uns (erstmal) vom Computer ausrechnen.</p>
 <p><a href="#eq-mod1">Gleichung&nbsp;<span>9.1</span></a> können Sie so ins Errische übersetzen:</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-12_2265badff476a2694d0ecf1a1d67a8e7">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data <span class="op">=</span> <span class="va">meine_daten</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-14_44d1a0bb62b3124432d183f13e99b787">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data <span class="op">=</span> <span class="va">meine_daten</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>lm</code> steht für “lineares Modell”, also eine Gerade als Modell. Die Gerade nennt man auch <em>Regressionsgerade</em><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
 <div id="exm-noten5" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 9.4 (Zahlen für Toni) </strong></span>Toni ist nicht zufrieden mit Ihren Vorhersagen: “Jetzt hör mal auf mit deinem Lineal hier herum zu malen. Ich will es genau wissen, sag mir präzise Zahlen!”.</p>
 </div>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-13_4b14b9978102d7bae46761c2ad332f12">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data <span class="op">=</span> <span class="va">noten2</span><span class="op">)</span></span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-15_846fdd97182898b626bc4851c280e2bf">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data <span class="op">=</span> <span class="va">noten2</span><span class="op">)</span></span>
 <span><span class="va">lm1</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Call:</span></span>
@@ -461,14 +485,30 @@ Hinweis
 <p>Mit Kenntnis der beiden Koeffizienten kann man beliebige Y-Werte ausrechnen gegeben bestimmte X-Werte.</p>
 <div id="exm-noten6" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 9.5 (Vorhersage für Klausurerfolg, nächster Versuch) </strong></span>Sie versuchen, noch etwas Gutes für Toni zu tun. R hilft Ihnen dabei und rechnet die erwartete Punktzahl aus, wenn Toni 73 Stunden lernt.</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-14_e23cdedf312cb582b6f22fc59fa429f1">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm1</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">73</span><span class="op">)</span><span class="op">)</span></span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-16_676afc7dc97bb257196d7fb6f791f967">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tonis_lernzeit2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">73</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-17_fc9296b72d7a544c5eae2f94fecf25e8">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm1</span>, newdata <span class="op">=</span> <span class="va">tonis_lernzeit2</span><span class="op">)</span></span>
 <span><span class="co">##       1 </span></span>
 <span><span class="co">## 72.7999</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Die Syntax von <code>predict</code> lautet:</p>
 <pre><code>predict(name_des_objekts, newdata = tabelle_mit_prädiktorwerten)</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hinweis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Mit <code>predict</code> bekommt man eine Vorhersage; im Standard eine “Punkt-Vorhersage”, eine einzelne Zahl.<span class="math inline">\(\square\)</span></p>
+</div>
+</div>
 </section><section id="vorhersagefehler" class="level3" data-number="9.3.3"><h3 data-number="9.3.3" class="anchored" data-anchor-id="vorhersagefehler">
 <span class="header-section-number">9.3.3</span> Vorhersagefehler</h3>
 <p>Die Differenz zwischen vorhergesagten Wert für eine (neue) Beobachtung, <span class="math inline">\(\hat{y_0}\)</span> und ihrem tatsächlichen Wert nennt man Vorhersagefehler (error, <span class="math inline">\(e_i\)</span>) oder <em>Residuum</em>: <span class="math inline">\(e_i = y_i - \hat{y}_i\)</span>.</p>
@@ -494,15 +534,15 @@ Hinweis
 </div>
 <p>Wie ist es mit den Vorhersagefehlern von beiden Modellen bestellt?</p>
 <p>Lassen wir uns von R die Streuung (Residuen) in Form der mittleren Absolutabweichung (MAE) ausgeben<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>:</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-16_32da3db72ac204dda3952c0187cdc847">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-19_9b2cb0e6eb7870a94e9ad4a4d1c0f851">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
 <span><span class="co">## [1] 11.18385</span></span>
 <span><span class="fu">mae</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span></span>
 <span><span class="co">## [1] 7.954085</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Vergleichen wir MAE im Nullmodell mit MAE in <code>lm1</code>:</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-17_d1e41663ce30c947231223523e70ad0f">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">verhaeltnis_fehler_gerade_zu_punkt_mae</span> <span class="op">&lt;-</span> <span class="fu">mae</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span> <span class="op">/</span> <span class="fu">mae</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-20_3880e66421a30ce939045b71fada1af2">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">verhaeltnis_fehler_gerade_zu_punkt_mae</span> <span class="op">&lt;-</span> <span class="fu">mae</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span> <span class="op">/</span> <span class="fu">mae</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
 <span><span class="va">verhaeltnis_fehler_gerade_zu_punkt_mae</span></span>
 <span><span class="co">## [1] 0.7112118</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -521,14 +561,14 @@ Hinweis
 </div>
 </div>
 <p>Natürlich können wir - in Analogie zur Varianz - auch den mittleren Quadratfehlerbalken (Mean Squared Error, MSE) berechnen<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>.</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-18_16411e8f2ac132b59c65cf36d4e7010e">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mse</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-21_7436194d167aea77fa2b70351397a597">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mse</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
 <span><span class="co">## [1] 192.7863</span></span>
 <span><span class="fu">mse</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span></span>
 <span><span class="co">## [1] 106.4519</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-19_e6bb117091af5206cc5aaf6a41791f91">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">verhaeltnis_fehler_gerade_zu_punkt_mse</span> <span class="op">&lt;-</span> <span class="fu">mse</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span><span class="op">/</span><span class="fu">mse</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-22_f3f73cc64a55ffe768fe2301535494bc">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">verhaeltnis_fehler_gerade_zu_punkt_mse</span> <span class="op">&lt;-</span> <span class="fu">mse</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span><span class="op">/</span><span class="fu">mse</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
 <span><span class="va">verhaeltnis_fehler_gerade_zu_punkt_mse</span></span>
 <span><span class="co">## [1] 0.5521755</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -542,14 +582,14 @@ Hinweis
 <section id="r-quadrat-als-verringerung-der-fehlerstreuung" class="level3" data-number="9.4.1"><h3 data-number="9.4.1" class="anchored" data-anchor-id="r-quadrat-als-verringerung-der-fehlerstreuung">
 <span class="header-section-number">9.4.1</span> R-Quadrat als Verringerung der Fehlerstreuung</h3>
 <p>Anders gesagt, wir haben uns um <span class="math inline">\(1 - 0.55\)</span> verbessert:</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-20_bcd27f32ea9e889c367fdf774f891e12">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fl">1</span> <span class="op">-</span> <span class="va">verhaeltnis_fehler_gerade_zu_punkt_mse</span></span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-23_e7534ebec6bf90fdc65901c2dbdf6364">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fl">1</span> <span class="op">-</span> <span class="va">verhaeltnis_fehler_gerade_zu_punkt_mse</span></span>
 <span><span class="co">## [1] 0.4478245</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Die Verbesserung (als Anteil) von <code>lm0</code> zum gerade untersuchten Modell nennt man auch <em>R-Quadrat</em> (<span class="math inline">\(R^2\)</span>).</p>
 <p>Wir können es uns von R z.B. so ausgeben lassen:</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-21_940f555e749d3afd9b7d00f07b11d5eb">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span></span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-24_4ca1c4ba778274d93ecdbbe269d129fe">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span></span>
 <span><span class="co">## # R2 for Linear Regression</span></span>
 <span><span class="co">##        R2: 0.448</span></span>
 <span><span class="co">##   adj. R2: 0.442</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -585,8 +625,8 @@ Hinweis
 <p>Nennen wir die Varianz des Verkaufspreis <span class="math inline">\(s^2_y\)</span>, die Verbesserung der Fehlerstreuung durch das <em>M</em>odell <span class="math inline">\(s^2_m\)</span> und die restliche Fehlerstreuung, den MSE, <span class="math inline">\(s^2_e\)</span>. Dann gilt:</p>
 <p><span class="math display">\[s^2_y = s^2_m + s^2_e \\
 s^2_m = s^2_y - s^2_e\]</span></p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-23_d4e06211dd5277d62b92331ef4180044">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">s2_y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">noten2</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-26_9bc4b2f521d088218a3ec17369321d30">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">s2_y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">noten2</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span>
 <span><span class="va">s2_e</span> <span class="op">=</span> <span class="fu">mse</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span></span>
 <span><span class="va">s2_m</span> <span class="op">=</span> <span class="va">s2_y</span> <span class="op">-</span> <span class="va">s2_e</span></span>
 <span><span class="va">s2_m</span></span>
@@ -627,24 +667,24 @@ Vorsicht
 <span class="header-section-number">9.6</span> Fallbeispiel</h2>
 <p>Als mittlerweile anerkannter Extrem-Datenanalyst in dem Online-Auktionshaus, in dem Sie arbeiten, haben Sie sich neue Ziele gesetzt. Sie möchten eine genaue Vorhersage von Verkaufspreisen erzielen. Als Sie von diesem Plan berichteten, leuchteten die Augen Ihres Chefs. Genaue Vorhersagen, das ist etwas von hoher betriebswirtschaftlicher Relevanz. Auf geht’s!</p>
 <p>Daten laden:<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a></p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-25_3bd7b3798a8e641e9cbdfd8955f5b966">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-28_84b385cfaeb7ae84867fbe32509b4e86">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-26_901a433887ccaffe1c6d6d6b8a4b57e8">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">start_pr</span>, data <span class="op">=</span> <span class="va">mariokart</span><span class="op">)</span></span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-29_98b337b88682db16c53e66457ee9a18b">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">start_pr</span>, data <span class="op">=</span> <span class="va">mariokart</span><span class="op">)</span></span>
 <span><span class="fu">r2</span><span class="op">(</span><span class="va">lm2</span><span class="op">)</span></span>
 <span><span class="co">## # R2 for Linear Regression</span></span>
 <span><span class="co">##        R2: 0.005</span></span>
 <span><span class="co">##   adj. R2: -0.002</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Oh nein! Unterirdisch schlecht. Anstelle von bloßen Rumprobieren überlegen Sie und schauen dann in <a href="zusammenhaenge.html#fig-mario-corr">Abbildung&nbsp;<span>8.8</span></a> nach, welche Variable am stärksten korreliert mit <code>total_pr</code>, es resultiert <code>lm3</code>:</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-27_e1ec074330719597f567a5e77a8ba98c">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">ship_pr</span>, data <span class="op">=</span> <span class="va">mariokart</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-30_84f15efee0005aa64e6ef953057dcd40">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">ship_pr</span>, data <span class="op">=</span> <span class="va">mariokart</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Der Achsenabschnitt liegt bei ca. 36 Euro: Ein Spiel, das mit Null Euro Preis startet, kann laut <code>lm3</code> etwa 36 Euro finaler Verkaufspreis erwarten. Pro Euro an Versandkosten (<code>ship_pr</code>) steigt der zu erwartende finale Verkaufspreis um ca. 4 Euro.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>.</p>
 <p>Man kann sich die erwarteten Werte (“expectations”) des Verkaufspreises in Abhängigkeit vom Wert der UV (<code>ship_pr</code>) auch schätzen (“to estimate”) lassen, und zwar so<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a>:</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-28_b3ad849ea4b08d0556c96f9ae35639a7">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">estimate_expectation</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># nur die ersten paar vorhergesagten Werte</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-31_5364fc1dff631a600ebaf169a9ab17a1">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">estimate_expectation</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># nur die ersten paar vorhergesagten Werte</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -655,9 +695,28 @@ Vorsicht
 </div>
 </div>
 <p>Ah, bei 4 Euro Versandkosten ist laut dem Modell knapp 54 Euro Verkaufspreis zu erwarten, fassen Sie sich die Ausgabe zusammen.</p>
-<p>Aber nützlich wäre noch, das Modell (bzw. die Schätzung der erwarteten Werte) als Diagramm zu bekommen. Das erreicht man z.B. so, s. <a href="regression2.html#fig-lm3">Abbildung&nbsp;<span>10.8</span></a>.</p>
+<blockquote class="blockquote">
+<p>🤖 Das sieht man in der Spalte <code>Predicted</code>, dort steht der vorhersagte Wert für <code>total_pr</code> für einen bestimmten Wert von <code>ship_pr</code>.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>🧑‍🎓 Kann ich auch <code>predict</code> benutzen? Ich würde gerne den Verkaufspreis wissen, wenn die Versandkosten bei 1 und bei 4 Euro liegen.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>🤖 Ja, klar!</p>
+</blockquote>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-32_3461bd4f99ca16adc6fef4b3861f2e59">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">neue_daten</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
+<span>  ship_pr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span>  <span class="co"># zwei Werte zum Vorhersagen</span></span>
+<span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-33_a402df193e76682ed578e6dac5d25f27">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm3</span>, newdata <span class="op">=</span> <span class="va">neue_daten</span><span class="op">)</span></span>
+<span><span class="co">##        1        2 </span></span>
+<span><span class="co">## 40.58276 53.59442</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Aber nützlich wäre noch, das Modell (bzw. die Schätzung der erwarteten Werte) als Diagramm zu bekommen. Das erreicht man z.B. so, s. <a href="regression2.html#fig-lm3">Abbildung&nbsp;<span>10.9</span></a>.</p>
 <div class="cell" data-hash="regression1_cache/html/fig-lm3_fdb7e07bca47ff211f7ec45d0fca15ec">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">estimate_expectation</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">estimate_expectation</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-lm3" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure"><p><img src="regression1_files/figure-html/fig-lm3-1.png" class="img-fluid figure-img" width="672"></p>
@@ -666,14 +725,15 @@ Vorsicht
 </div>
 </div>
 </div>
+<p><code>estimate_expectation</code> heißt sinngemäß “schätze den zu erwartenden Wert”. Kurz gesagt: Wir wollen eine Vorhersage von R.</p>
 <p>Am wichtigsten ist Ihnen aber im Moment die Frage, wie “gut” das Modell ist, spricht wie lang oder kurz die Vorhersagefehler-Balken sind:</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-30_4bf5d7c067fbc7272be7c850292be057">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span></span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-35_8fa46db65f9e684a2d893c8bfc552b9a">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span></span>
 <span><span class="co">## [1] 13.0632</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Das Modell erklärt einen Anteil von ca. 0.29 der Gesamtstreuung.</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-32_42139403732371329fe1fcf3a4000508">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span></span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-37_ae44153020dd8efe293194480f5fd7d9">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span></span>
 <span><span class="co">## [1] 13.0632</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Im nächsten Meeting erzählen Sie Ihrem Chef “Ich kann den Verkaufspreis von Mariokart-Spielen im Schnitt auf 13 Dollar genau vorhersagen!”. Hört sich gut an. Allerdings hätte ihr Chef es gerne genauer. Kann man da noch was machen?</p>
@@ -681,6 +741,24 @@ Vorsicht
 <span class="header-section-number">9.7</span> Fazit</h2>
 </section><section id="aufgaben" class="level2" data-number="9.8"><h2 data-number="9.8" class="anchored" data-anchor-id="aufgaben">
 <span class="header-section-number">9.8</span> Aufgaben</h2>
+<p>Suchen Sie beim <a href="https://datenwerk.netlify.app/">Datenwerk</a> nach diesen Aufgaben</p>
+<pre><code>- Aussagen-einfache-Regr
+- interpret-koeff-lm
+- korr-als-regr
+- Linearitaet1a
+- lm1
+- mtcars-regr01
+- nichtlineare-regr1
+- penguins-regr02
+- regression1
+- regression1b
+- Regression3
+- Regression4
+- Regression5
+- Regression6</code></pre>
+<p>Schauen Sie sich die Aufgaben beim <a href="https://datenwerk.netlify.app/">Datenwerk</a> an, vor allem die Tags <a href="https://datenwerk.netlify.app/#category=regression">regression</a> und <a href="https://datenwerk.netlify.app/#category=lm">lm</a>.</p>
+<p><em>Nicht alle Aufgaben</em> aus dieser Sammlung passen zum Stoff; vielleicht können Sie einige Aufgaben nicht lösen. Ignorieren Sie einfach diese Aufgaben.</p>
+<p>Beachten Sie die <a href="https://datenwerk.netlify.app/hinweise">Hinweise zu den Aufgaben</a>.</p>
 </section><section id="literatur" class="level2" data-number="9.9"><h2 data-number="9.9" class="anchored" data-anchor-id="literatur">
 <span class="header-section-number">9.9</span> Literatur</h2>
 

@@ -131,7 +131,7 @@ Laut Ihrem Modell wurde es pro Jahr um 0.01 Grad wärmer, pro Jahrzehnt also 0.1
 >   👨‍🏫 Mit der Ruhe, das schauen Sie sich später an.
 
 Das Modell, bzw. die Schätzungen zu den erwarteten Werten, kann mich sich so ausgeben lassen, s. @fig-wetter1, links.
-Allerdings sind das zu viele Datenpunkte. Wir sollten es vielleicht anders visualisieren, s. fig-wetter1, rechts.
+Allerdings sind das zu viele Datenpunkte. Wir sollten es vielleicht anders visualisieren, s. @fig-wetter1, rechts.
 Dazu aggregieren wir die Messwerte eines Jahres zu jeweils einem Mittelwert.
 
 
@@ -168,9 +168,12 @@ plot(estimate_relation(lm_wetter1a))
 
 ### UV zentrieren
 
-Der Achsenabschnitt ist definiert als der Y-Wert an der Stelle X=0.
+:::{#def-beta0}
+Der Achsenabschnitt ($\beta_0$; engl. Intercept) ist definiert als der Y-Wert an der Stelle X=0.$\square$
+:::
+
 In den Wetterdaten wäre Jahr=0 Christi Geburt. 
-Da unsere Wetteraufzeichnung gerade mal a. 150 Jahre in die Vergangenheit reicht,
+Da unsere Wetteraufzeichnung gerade mal ca. 150 Jahre in die Vergangenheit reicht,
 ist es vollkommen vermessen, dass Modell 2000 Jahre in die Vergangenheit zu extraplieren,
 ganz ohne dass wir dafür Daten haben, s. @fig-extrapolation.
 
@@ -186,13 +189,15 @@ Hat man nicht einen bestimmten Wert, der sich als Referenzwert anbietet,
 so ist es üblich, z.B. den Mittelwert als Referenzwert zu nehmen.
 Diese Transformation bezeichnet man als *Zentrierung* (engl. centering) der Daten.
 
+So zentriert man eine Verteilung:
+
 ```{r}
 wetter <-
   wetter %>% 
   mutate(year_c = year - mean(year))  # "c" wie centered
 ```
 
-Das mittlere Jahr in unserer Messwertereihe ist 1951:
+Das mittlere Jahr in unserer Messwertereihe ist übrigens 1951:
 
 ```{r}
 wetter %>% 
@@ -210,17 +215,39 @@ Im Jahr 1951 (x=0) lag die mittlere Temperatur in Deutschland (laut DWD) bei ca.
 
 :::{.callout-important}
 ### Referenzwert entspricht Null
-Der Referenzwert bzw. die Referenzgruppe entspricht dem Wert 0 im Regressionsmodell.$\square$
+Der Referenzwert bzw. die Referenzgruppe entspricht dem Wert x=0 im Regressionsmodell.$\square$
 :::
 
+Wie gut erklärt unser Modell die Daten?
 
 ```{r}
 r2(lm_wetter1_zentriert)
 ```
 
-Viel Varianz des Wetters erklärt `year_c`^[`year` und `year_c` sind gleich stark mit `temp` korreliert, daher wird sich die Modellgüte nicht unterscheiden.] aber nicht.
+Viel Varianz des Wetters erklärt das Modell mit `year_c`^[`year` und `year_c` sind gleich stark mit `temp` korreliert, daher wird sich die Modellgüte nicht unterscheiden.] aber nicht.
 Macht auch Sinn: Abgesehen von der Jahreszahl spielt z.B. die Jahreszeit eine große Rolle für die Temperatur. Das haben wir nicht berücksichtigt.
 
+
+>    🧑‍🎓 Wie warm ist es laut unserem Modell dann im Jahr 2051?
+
+```{r}
+predict(lm_wetter1_zentriert, newdata = tibble(year_c = 100))
+```
+
+
+>    🧑‍🎓 Moment! Die Vorhersage ist doch Quatsch! Schon im Jahr 2022 lag die Durchschnittstemperatur bei 10,5° Celcius.^[[Quelle: Umweltbundesamt](https://www.umweltbundesamt.de/daten/klima/trends-der-lufttemperatur#steigende-durchschnittstemperaturen-weltweit)]
+
+
+>   👨‍🏫 Wir brauchen ein besseres Modell! Zum Glück haben wir ambitionierte Nachwuchs-Wissenschaftler:innen.
+
+
+Die Veränderung der auf fünf Jahre gemittelten Abweichung der Lufttemperatur zum Mittel von von 1951 bis 1980 ist in @fig-temp-de dargestellt.
+Links ist eine grobe Temperaturrasterung zu sehen (Daten ab 1753)^[[Quelle](https://de.wikipedia.org/wiki/Zeitreihe_der_Lufttemperatur_in_Deutschland#cite_ref-3)]; rechts eine feinere (Daten ab 1881)^[[Quelle](https://opendata.dwd.de/climate_environment/CDC/grids_germany/monthly/air_temperature_mean/].
+
+
+![Temperaturverlauf in Deutschland von 1753 bis 2020](img/temp-de.gif){#fig-temp-de width="50%"}
+
+[Bildquelle; Lizenz: GeoNutzV](https://de.wikipedia.org/wiki/Zeitreihe_der_Lufttemperatur_in_Deutschland)
 
 
 ### Binäre UV

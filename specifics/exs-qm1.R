@@ -297,13 +297,13 @@ teachertools::render_exs(ex_modellguete,
 
 
 
-# Punktmodelle 2 -------------------------------------------------------------
+# Punktmodelle 2 (Zshg) -------------------------------------------------------------
 
 
 exs_zshg <-
   c("korr01.Rmd",
     "korr02.Rmd",
-    "nasa3.Rmd",
+    "nasa03.Rmd",
     "mariokart-korr1.Rmd",
     "mariokart-korr2.Rmd",    
     "mariokart-korr3.Rmd",
@@ -312,3 +312,54 @@ exs_zshg <-
 
 
 
+# datenwerk:
+teachertools::render_exs(exs_zshg,
+                         my_edir = ex_dir,
+                         output_path = path_datenwerk,
+                         render_html = FALSE,
+                         render_moodle = FALSE,
+                         render_pdf_print = FALSE,
+                         render_markdown = FALSE,
+                         render_yamlrmd = TRUE,
+                         thema_nr = "_vis")
+
+
+
+
+
+
+# Geradenmodelle 1 --------------------------------------------------------
+
+
+
+exs_lm1 <-
+  c(
+    "Aussagen-einfache-Regr.Rmd",
+    "interpret-koeff-lm.Rmd",
+    "korr-als-regr.Rmd",
+    "Linearitaet1a.Rmd",
+    "lm1.Rmd",
+    "mtcars-regr01.Rmd",
+    "nichtlineare-regr1.Rmd",
+    "penguins-regr02.Rmd",
+    "regression1.Rmd",
+    "regression1b.Rmd",
+    "Regression3.Rmd",
+    "Regression4.Rmd",
+    "Regression5.Rmd",
+    "Regression6.Rmd"
+  )
+
+
+
+
+# datenwerk:
+teachertools::render_exs(exs_lm1,
+                         my_edir = ex_dir,
+                         output_path = path_datenwerk,
+                         render_html = FALSE,
+                         render_moodle = FALSE,
+                         render_pdf_print = FALSE,
+                         render_markdown = FALSE,
+                         render_yamlrmd = TRUE,
+                         thema_nr = "_vis")

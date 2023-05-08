@@ -265,7 +265,7 @@ Puh, die Antwort wird Toni nicht gefallen ...
 ```{r}
 #| echo: false
 #| label: fig-beta0
-#| fig-cap: "Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei 0 Lernstunden? (roter Punkt)"
+#| fig-cap: "Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei 0 Lernstunden? (roter Punkt bei x=0)"
 
 
 noten2 %>% 
@@ -277,7 +277,26 @@ noten2 %>%
   theme_minimal() +
   scale_x_continuous(limits = c(0, 100)) +
   scale_y_continuous(limits = c(0, 100)) +
-  annotate("point", x = 0, y = lm1_b0, color = "red", size = 5, alpha = .5)
+  annotate("point", x = 0, y = lm1_b0, color = "red", size = 7, alpha = .7)
+```
+
+
+
+Anstelle auf @fig-beta0 zu schauen, können Sie sich auch von R Tonis Klausurerfolg vorhersagen (to predict) lassen:
+
+
+>    🧑‍🎓 Hey R, predicte mir mal auf Basis vom Modell "lm1" den Lernerfolg für Toni, wenn der x=0 Stunden lernt.
+
+>    🤖 Okay, ich predicte mit Modell "lm1" und nehme als neue Datentabelle Tonis Lernzeit (x=0)!
+
+```{r}
+tonis_lernzeit <- tibble(x = 0)
+tonis_lernzeit
+```
+
+
+```{r}
+predict(lm1, newdata = tonis_lernzeit)
 ```
 
 
@@ -327,7 +346,12 @@ R hilft Ihnen dabei und rechnet die erwartete Punktzahl aus, wenn Toni 73 Stunde
 
 
 ```{r}
-predict(lm1, newdata = tibble(x = 73))
+tonis_lernzeit2 <- tibble(x = 73)
+```
+
+
+```{r}
+predict(lm1, newdata = tonis_lernzeit2)
 ```
 :::
 
@@ -338,6 +362,9 @@ Die Syntax von `predict` lautet:
 predict(name_des_objekts, newdata = tabelle_mit_prädiktorwerten)
 ```
 
+:::{.callout-note}
+Mit `predict` bekommt man eine Vorhersage; im Standard eine "Punkt-Vorhersage", eine einzelne Zahl.$\square$
+:::
 
 
 ### Vorhersagefehler
@@ -606,6 +633,29 @@ estimate_expectation(lm3) %>% head()  # nur die ersten paar vorhergesagten Werte
 
 Ah, bei 4 Euro Versandkosten ist laut dem Modell knapp 54 Euro Verkaufspreis zu erwarten, fassen Sie sich die Ausgabe zusammen.
 
+
+>   🤖 Das sieht man in der Spalte `Predicted`, dort steht der vorhersagte Wert für `total_pr` für einen bestimmten Wert von `ship_pr`.
+
+
+>    🧑‍🎓 Kann ich auch `predict` benutzen? Ich würde gerne den Verkaufspreis wissen, wenn die Versandkosten bei 1 und bei 4 Euro liegen.
+
+>   🤖 Ja, klar!
+
+
+```{r}
+neue_daten <- tibble(
+  ship_pr = c(1, 4)  # zwei Werte zum Vorhersagen
+)
+```
+
+
+```{r}
+predict(lm3, newdata = neue_daten)
+```
+
+
+
+
 Aber nützlich wäre noch, das Modell (bzw. die Schätzung der erwarteten Werte) als Diagramm zu bekommen.
 Das erreicht man z.B. so, s. @fig-lm3.
 
@@ -615,6 +665,8 @@ Das erreicht man z.B. so, s. @fig-lm3.
 estimate_expectation(lm3) %>% plot()
 ```
 
+`estimate_expectation` heißt sinngemäß "schätze den zu erwartenden Wert".
+Kurz gesagt: Wir wollen eine Vorhersage von R.
 
 Am wichtigsten ist Ihnen aber im Moment die Frage, wie "gut" das Modell ist, spricht wie lang oder kurz die Vorhersagefehler-Balken sind:
 
@@ -647,6 +699,33 @@ Allerdings hätte ihr Chef es gerne genauer. Kann man da noch was machen?
 ## Fazit
 
 ## Aufgaben
+
+Suchen Sie beim [Datenwerk](https://datenwerk.netlify.app/) nach diesen Aufgaben
+
+    - Aussagen-einfache-Regr
+    - interpret-koeff-lm
+    - korr-als-regr
+    - Linearitaet1a
+    - lm1
+    - mtcars-regr01
+    - nichtlineare-regr1
+    - penguins-regr02
+    - regression1
+    - regression1b
+    - Regression3
+    - Regression4
+    - Regression5
+    - Regression6
+    
+    
+
+Schauen Sie sich die Aufgaben beim [Datenwerk](https://datenwerk.netlify.app/) an, vor allem die Tags [regression](https://datenwerk.netlify.app/#category=regression) und [lm](https://datenwerk.netlify.app/#category=lm).
+
+*Nicht alle Aufgaben* aus dieser Sammlung passen zum Stoff; vielleicht können Sie einige Aufgaben nicht lösen.
+Ignorieren Sie einfach diese Aufgaben.
+
+Beachten Sie die [Hinweise zu den Aufgaben](https://datenwerk.netlify.app/hinweise).
+
 
 
 

@@ -88,14 +88,69 @@ das Ihnen sinnvoll erscheint: Die Analyse des Klimawandels.
 
 Beim [Deutschen Wetterdienst, DWD](https://www.dwd.de/DE/Home/home_node.html) haben Sie sich Wetterdaten von Deutschland heruntergeladen.
 Nach etwas [Datenjudo, auf das wir hier nicht eingehen wollen](https://data-se.netlify.app/2022/07/24/preparing-german-weather-data/) 
-resultiert ein schöner Datensatz, den Sie jetzt analysieren wollen:
+resultiert ein schöner Datensatz, den Sie jetzt analysieren wollen^[Temperatur: Grad Celcius, Niederschlag (`precip`) mm Niederschlag pro Quadratmeter]:
 
 ```{r}
 wetter_path <- "https://raw.githubusercontent.com/sebastiansauer/datasets/main/csv/precip_temp_DWD.csv"
 wetter <- read.csv(wetter_path)
 ```
 
-In @tbl-wetter kann man sich die Daten en Detail anschauen.
+In @tbl-wetter und @fig-wetter-anim kann man sich die Daten en Detail anschauen.
+
+
+```{r}
+#| echo: false
+#| fig-cap: fig-wetter-anim
+#| label: Veränderung der Temperatur und Niederschlag (10-Jahres-Mittel) in Deutschland
+#| eval: true
+#| layout-ncol: 2
+#| fig-subcap: 
+#|   - Temperatur (Grad Celcius)
+#|   - Niederschlag (mm pro Quadratmeter)
+
+
+library(gganimate)
+wetter %>%
+  select(year, temp) %>% 
+  mutate(decade_year = year %% 10,
+         decade = (year %/% 10) * 10) %>% 
+  group_by(decade) %>% 
+  summarise(temp = mean(temp, na.rm = TRUE)) %>% 
+  ggplot(aes(x = decade, y = temp,
+             frame = decade)) +
+  geom_line() +
+  geom_point() +
+  scale_color_viridis_c() +
+  transition_reveal(decade) 
+
+
+wetter %>%
+  select(year, precip) %>% 
+  mutate(decade_year = year %% 10,
+         decade = (year %/% 10) * 10) %>% 
+  group_by(decade) %>% 
+  summarise(precip = mean(precip, na.rm = TRUE)) %>% 
+  ggplot(aes(x = decade, y = precip,
+             frame = decade)) +
+  geom_line() +
+  geom_point() +
+  scale_color_viridis_c() +
+  transition_reveal(decade) 
+
+
+
+# library(gganimate)
+# wetter %>% 
+#   ggplot(aes(x = temp, y = precip, color = month,
+#              frame = year)) +
+#   geom_point() +
+#   scale_color_viridis_c() +
+#   transition_time(year) +
+#   labs(title = "Year: {frame_time}")
+```
+
+
+
 
 ```{r}
 #| tbl-cap: Wetterdaten für Deutschland
@@ -245,7 +300,14 @@ Die Veränderung der auf fünf Jahre gemittelten Abweichung der Lufttemperatur z
 Links ist eine grobe Temperaturrasterung zu sehen (Daten ab 1753)^[[Quelle](https://de.wikipedia.org/wiki/Zeitreihe_der_Lufttemperatur_in_Deutschland#cite_ref-3)]; rechts eine feinere (Daten ab 1881)^[[Quelle](https://opendata.dwd.de/climate_environment/CDC/grids_germany/monthly/air_temperature_mean/].
 
 
-![Temperaturverlauf in Deutschland von 1753 bis 2020](img/temp-de.gif){#fig-temp-de width="50%"}
+:::{#fig-temp-de}
+![Temperaturverlauf in Deutschland von 1753 bis 2020](img/temp-de.gif){width="50%"}
+
+![](img/legende.png)
+
+
+:::
+
 
 [Bildquelle; Lizenz: GeoNutzV](https://de.wikipedia.org/wiki/Zeitreihe_der_Lufttemperatur_in_Deutschland)
 
@@ -671,6 +733,28 @@ Hat man mehrere Prädiktoren, so trennt man sich mit einem Plus-Zeichen in der R
 `temp ~ year_c + month`.
 
 
+Die Veränderung der monatlichen Temperatur (10-Jahres-Mittel) ist in @fig-temp-monat dargestellt.
+
+```{r}
+#| echo: false
+#| fig-cap: Veränderung der Temperatur pro Monat in Deutschland im Zeitverlauf (10-Jahres-Mittelwerte)
+#| label: fig-temp-monat
+wetter %>%
+  select(year, temp, month) %>% 
+  mutate(decade_year = year %% 10,
+         decade = (year %/% 10) * 10) %>% 
+  group_by(decade, month) %>% 
+  summarise(temp = mean(temp, na.rm = TRUE)) %>% 
+  ggplot(aes(x = decade, y = temp, color = month,
+             group = month,
+             frame = decade)) +
+  geom_line() +
+  scale_color_viridis_c() +
+  transition_reveal(decade) 
+```
+
+
+
 :::{.callout-note}
 ### Modellgleichung
 Das Pluszeichen hat in der Modellgleichung^[synonym: Regressionsformel] *keine* arithmetische Funktion. 
@@ -728,6 +812,10 @@ Visualisieren wir uns die geschätzten Erwartungswert pro Prädiktorwert, s. @fi
 #| fig-cap: Temperaturverlauf über die Jahre für zwei Monate. Man beachte, dass die Regressionsgeraden parallel sind.
 plot(estimate_expectation((lm_year_month)))
 ```
+
+
+
+
 
 
 ### Interaktion

@@ -547,6 +547,10 @@ Hinweis
 <span><span class="co">## [1] 0.7112118</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ah! Das Geradenmodell ist viel besser: Von <code>lm0</code> zu <code>lm1</code> haben die mittlere (Absolut-)Länge des Fehlerbalkens auf 71 Prozent verbessert. Nicht schlecht!</p>
+<div id="def-fehlerstreung" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 9.2 (Fehlerstreuung) </strong></span>Als Fehlerstreuung bezeichnen wir die Gesamtheit der Abweichungen der beobachteten Werte (<span class="math inline">\(y_i\)</span>) vom vorhergesagten Wert (<span class="math inline">\(\hat{y}_i\)</span>).<span class="math inline">\(\square\)</span></p>
+</div>
+<p>Zur Berechnung der Fehlerstreuung gibt es mehrere Kenngrößen wie MAE oder MSE.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -557,7 +561,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Ein Geradenmodell ist immer besser als ein Punktmodell, solange X mit Y korreliert ist.<span class="math inline">\(\square\)</span></p>
+<p>Ein Geradenmodell ist immer besser als ein Punktmodell (im Hinblick auf die Verringerung der Fehlerstreung), solange X mit Y korreliert ist.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p>Natürlich können wir - in Analogie zur Varianz - auch den mittleren Quadratfehlerbalken (Mean Squared Error, MSE) berechnen<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>.</p>
@@ -586,7 +590,9 @@ Hinweis
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fl">1</span> <span class="op">-</span> <span class="va">verhaeltnis_fehler_gerade_zu_punkt_mse</span></span>
 <span><span class="co">## [1] 0.4478245</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Die Verbesserung (als Anteil) von <code>lm0</code> zum gerade untersuchten Modell nennt man auch <em>R-Quadrat</em> (<span class="math inline">\(R^2\)</span>).</p>
+<div id="def-r2" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 9.3 (R-Quadrat) </strong></span>Die Verringerung (als Anteil) der Fehlerstreuung der Zielvariablen von <code>lm0</code> zum gerade untersuchten Modell nennt man <em>R-Quadrat</em> (<span class="math inline">\(R^2\)</span>).<span class="math inline">\(\square\)</span></p>
+</div>
 <p>Wir können es uns von R z.B. so ausgeben lassen:</p>
 <div class="cell" data-hash="regression1_cache/html/unnamed-chunk-24_4ca1c4ba778274d93ecdbbe269d129fe">
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span></span>
@@ -595,7 +601,7 @@ Hinweis
 <span><span class="co">##   adj. R2: 0.442</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="def-r2" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 9.2 (R-Quadrat) </strong></span>R-Quadrat (<span class="math inline">\(R^2\)</span>) eines Modells <span class="math inline">\(m\)</span> ist definiert als die Verringerung der Streuung, wenn man das Modell <span class="math inline">\(m\)</span> mit dem Nullmodell <span class="math inline">\(m_0\)</span> vergleicht: <span class="math inline">\(R^2 =1- \frac{\text{MSE}_{m}}{\text{MSE}_{m0}}\)</span>. R-Quadrat ist ein Maß der <em>Modellgüte</em>: Je größer <span class="math inline">\(R^2\)</span>, desto besser die Vorhersage. Da es ein Anteilsmaß<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> ist, liegt der Wertebereich zwischen 0 uns 1. Im Nullmodell liegt R-Quadrat per Definition bei 0. Im Fall von Modellen des Typs <span class="math inline">\(y\sim x\)</span> gilt: <span class="math inline">\(R^2 = r_{xy}^2\)</span>. <span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Definition 9.4 (R-Quadrat) </strong></span>R-Quadrat (<span class="math inline">\(R^2\)</span>) eines Modells <span class="math inline">\(m\)</span> ist definiert als die Verringerung der Streuung, wenn man das Modell <span class="math inline">\(m\)</span> mit dem Nullmodell <span class="math inline">\(m_0\)</span> vergleicht: <span class="math inline">\(R^2 =1- \frac{\text{MSE}_{m}}{\text{MSE}_{m0}}\)</span>. R-Quadrat ist ein Maß der <em>Modellgüte</em>: Je größer <span class="math inline">\(R^2\)</span>, desto besser die Vorhersage. Da es ein Anteilsmaß<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> ist, liegt der Wertebereich zwischen 0 uns 1. Im Nullmodell liegt R-Quadrat per Definition bei 0. Im Fall von Modellen des Typs <span class="math inline">\(y\sim x\)</span> gilt: <span class="math inline">\(R^2 = r_{xy}^2\)</span>. <span class="math inline">\(\square\)</span></p>
 </div>
 <p>Bei einer perfekten Korrelation ist <span class="math inline">\(r=1\)</span>, daher ist dann auch <span class="math inline">\(R^2 = 1\)</span><a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>, s. <a href="#fig-r2-extreme">Abbildung&nbsp;<span>9.6</span></a>.</p>
 <div id="fig-r2-extreme" class="cell quarto-layout-panel" data-hash="regression1_cache/html/fig-r2-extreme_504305156e68603978d7c9a70f866dd8">
@@ -619,6 +625,19 @@ Hinweis
 </figure>
 </div>
 <p>Bei einer perfekten Korrelation <span class="math inline">\(R^2=1\)</span> liegen die Punkte auf der Geraden. Im gegenteiligen Extremfall von <span class="math inline">\(R^2=0\)</span> ist die Vorhersage genauso gut, wie wenn man für jedes <span class="math inline">\(y\)</span> den Mittelwert, <span class="math inline">\(\bar{y}\)</span>, vorhersagen würde.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hinweis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Je größer R-Quadrat, desto besser erklärt das Modell die Daten (desto besser der “Fit”, sagt man).</p>
+</div>
+</div>
 <p><a href="https://fomshinyapps.shinyapps.io/Variationszerlegung/">Diese App der FOM-Hochschule</a> erlaubt es Ihnen mit der Größe der Residuen eines linearen Modells zu spielen.</p>
 </section><section id="addition-der-varianzen" class="level3" data-number="9.4.2"><h3 data-number="9.4.2" class="anchored" data-anchor-id="addition-der-varianzen">
 <span class="header-section-number">9.4.2</span> Addition der Varianzen</h3>
@@ -714,7 +733,7 @@ Vorsicht
 <span><span class="co">##        1        2 </span></span>
 <span><span class="co">## 40.58276 53.59442</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Aber nützlich wäre noch, das Modell (bzw. die Schätzung der erwarteten Werte) als Diagramm zu bekommen. Das erreicht man z.B. so, s. <a href="regression2.html#fig-lm3">Abbildung&nbsp;<span>10.9</span></a>.</p>
+<p>Aber nützlich wäre noch, das Modell (bzw. die Schätzung der erwarteten Werte) als Diagramm zu bekommen. Das erreicht man z.B. so, s. <a href="regression2.html#fig-lm3">Abbildung&nbsp;<span>10.10</span></a>.</p>
 <div class="cell" data-hash="regression1_cache/html/fig-lm3_fdb7e07bca47ff211f7ec45d0fca15ec">
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">estimate_expectation</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">

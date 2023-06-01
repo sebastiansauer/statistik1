@@ -771,6 +771,19 @@ Vorsicht
 <p>Im nächsten Meeting erzählen Sie Ihrem Chef “Ich kann den Verkaufspreis von Mariokart-Spielen im Schnitt auf 13 Dollar genau vorhersagen!”. Hört sich gut an. Allerdings hätte ihr Chef es gerne genauer. Kann man da noch was machen?</p>
 </section><section id="fallstudie-immobilienpreise" class="level2" data-number="9.7"><h2 data-number="9.7" class="anchored" data-anchor-id="fallstudie-immobilienpreise">
 <span class="header-section-number">9.7</span> Fallstudie Immobilienpreise</h2>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Vorsicht
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Diese Fallstudie stellt die Prüfungsleistung “Prognosewettbewerb” einführend dar. Es empfiehlt sich für Sie, diese Fallstudie sorgsam zu bearbeiten.<span class="math inline">\(\square\)</span></p>
+</div>
+</div>
 <section id="einführung" class="level3" data-number="9.7.1"><h3 data-number="9.7.1" class="anchored" data-anchor-id="einführung">
 <span class="header-section-number">9.7.1</span> Einführung</h3>
 <p>In dieser Fallstudie geht es darum, die Preise von Immobilien vorherzusagen. Kurz gesagt: Sagen Sie die Hauspreise vorher, und reichen Sie Ihre Vorhersagen als CSV bei <a href="https://www.kaggle.com/">Kaggle</a> ein.</p>
@@ -939,16 +952,27 @@ Vorsicht
 <span class="header-section-number">9.7.7</span> Vorhersagen im Test-Datensatz</h3>
 <p>Wir haben jetzt unseren Champion, <code>m1</code>. Alle Hoffnung ruht auf diesem Modell. Ob die Vorhersagen im Test-Sample präzise sein werden? Oder himmelweit daneben? Bitte, enttäusche uns nicht!</p>
 <p>Hier sind die Vorhersagen:</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-49_5d3282f9fdd7760ee95b3da9c71715a1">
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m1</span>, newdata <span class="op">=</span> <span class="va">d_test</span><span class="op">)</span></span>
-<span></span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-49_19a69242d1d83be7b0a98e91745e6e23">
+<div class="sourceCode" id="annotated-cell-37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m1</span>, newdata <span class="op">=</span> <span class="va">d_test</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">m1_pred</span><span class="op">)</span></span>
 <span><span class="co">##        1        2        3        4        5        6 </span></span>
 <span><span class="co">## 103394.7 152441.4 161837.8 187675.8 225467.0 190260.2</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl>
+<dt data-target-cell="annotated-cell-37" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-37" data-code-annotation="1" data-code-lines="1">predicte anhand der Regressionsgerade von m1 und zwar anhand der Daten aus <code>d_test</code></span>
+</dd>
+<dt data-target-cell="annotated-cell-37" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-37" data-code-annotation="2" data-code-lines="2">zeige den “Kopf” der Vorhersagen (<code>m1_pred</code>), d.h. die ersten paar Vorhersagen</span>
+</dd>
+</dl>
+</div>
 </div>
 <p>Die Vohersagen fügen wir jetzt dem Test-Sample hinzu:</p>
 <div class="cell" data-hash="regression1_cache/html/unnamed-chunk-50_baedf33c9e8aa7a21ae5178615524158">
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d_test</span> <span class="op">&lt;-</span> </span>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d_test</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="va">d_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>SalePrice <span class="op">=</span> <span class="va">m1_pred</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -957,22 +981,42 @@ Vorsicht
 <p>So, wir haben unsere Vorhersagen! Jetzt reichen wir diese Vorhesagen ein.</p>
 <p>Für die Prognosedatei (submission file) zum Einreichen brauchen wir nur die Spalten <code>id</code> und <code>SalePrice</code>:</p>
 <div class="cell" data-hash="regression1_cache/html/unnamed-chunk-51_89cdd78c0e2b16cae0a4d66ddf3cc069">
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1_subm</span> <span class="op">&lt;-</span></span>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1_subm</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">d_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Id</span>, <span class="va">SalePrice</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Kaggle möchte keine fehlenden Werten in den Vorhersagen, also prüfen wir das mal:</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-52_82846994ba6e09178b39868f11380f1b">
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1_subm</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<div class="cell" data-code-annotations="hover" data-hash="regression1_cache/html/unnamed-chunk-52_8799b4635be28accb038272f396d3be6">
+<div class="sourceCode" id="annotated-cell-40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1_subm</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">## [1] 1458</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl>
+<dt data-target-cell="annotated-cell-40" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-40" data-code-annotation="1" data-code-lines="2">Lass alle Zeilen mit NAs (fehlenden Werten in irgendeiner Spalte) fallen, filtere diese Zeilen also raus</span>
+</dd>
+<dt data-target-cell="annotated-cell-40" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-40" data-code-annotation="2" data-code-lines="3">zähle die Anzahl der Zeilen</span>
+</dd>
+</dl>
+</div>
 </div>
 <p>Oh, das ist <em>eine</em> Zeile weniger! Wir haben also einen fehlenden Wert!</p>
 <p>Filtern wir die Spalte <code>SalePrice</code> mal nach “ist NA”:</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-53_9516592a1f6c7e9ad79a115c91ff9dec">
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1_subm</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-53_af17ac3f3ecd45e82580d473d6106b1a">
+<div class="sourceCode" id="annotated-cell-41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1_subm</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="co"># &lt;1)</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SalePrice</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl>
+<dt data-target-cell="annotated-cell-41" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-41" data-code-annotation="2" data-code-lines="2">Filter so, dass du nur Zeilen hast, für die gilt, “hier ist ein NA in der Spalte <code>SalePrice</code></span>
+</dd>
+</dl>
+</div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -984,14 +1028,30 @@ Vorsicht
 </div>
 <p>Ah, da ist er, der fehlende Wert, in Zeile 2577! Hinfort!</p>
 <p>Wir ersetzen die fehlenden Werte in <code>SalePrice</code> mit dem Mittelwert von <code>SalePrice</code>:</p>
-<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-54_6be1da30088d552043c02fee6ee80284">
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1_subm_nona</span> <span class="op">&lt;-</span></span>
-<span>  <span class="va">m1_subm</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<div class="cell" data-hash="regression1_cache/html/unnamed-chunk-54_e2594464bf6b6fd0adff2f12341683be">
+<div class="sourceCode" id="annotated-cell-42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1_subm_nona</span> <span class="op">&lt;-</span></span>
+<span>  <span class="va">m1_subm</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>SalePrice <span class="op">=</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/replace_na.html">replace_na</a></span><span class="op">(</span><span class="va">SalePrice</span>, <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">SalePrice</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl>
+<dt data-target-cell="annotated-cell-42" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-42" data-code-annotation="1" data-code-lines="1">Definiere <code>m1_subm_nona</code> wie folgt</span>
+</dd>
+<dt data-target-cell="annotated-cell-42" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-42" data-code-annotation="2" data-code-lines="2">Nimm <code>m1_subm</code> und dann</span>
+</dd>
+<dt data-target-cell="annotated-cell-42" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-42" data-code-annotation="3" data-code-lines="3">Verändere die Spalte <code>SalePrice</code> und zwar so, dass NAs ersetzt werden durch den Mittelwert von <code>SalePrice</code></span>
+</dd>
+</dl>
+</div>
 </div>
 <p>Und? Gib es jetzt noch fehlende Werte?</p>
 <div class="cell" data-hash="regression1_cache/html/unnamed-chunk-55_51fd311b541a204f0c72245c5422f3a6">
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1_subm_nona</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1_subm_nona</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SalePrice</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
@@ -1002,10 +1062,10 @@ Vorsicht
 </div>
 </div>
 </div>
-<p>Nein! “No NA” - Keine NAs, keine fehlenden Werte mehr.</p>
-<p>Diesen Tibble speichern wir als CSV-Datei an geeigneter Stelle ab:</p>
+<p>Nein! Die Ergebnistabelle hat null Zeilen. “No NA” - Keine NAs, keine fehlenden Werte mehr.</p>
+<p>Diesen Tibble speichern wir als CSV-Datei an geeigneter Stelle ab.<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a>.</p>
 <div class="cell" data-hash="regression1_cache/html/unnamed-chunk-56_4e1373caa016fa826be77f4fb7eef924">
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span><span class="op">(</span><span class="va">m1_subm_nona</span>, <span class="st">"daten/ames-kaggle/m1-subm.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span><span class="op">(</span><span class="va">m1_subm_nona</span>, <span class="st">"daten/ames-kaggle/m1-subm.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Und dann laden Sie diese Datei, <code>m1_subm.csv</code> bei Kaggle hoch und hoffen auf einen Hauptgewinn.</p>
 <p>Das Modell erzielte einen Score von <em>0.55521</em>.</p>
@@ -1015,13 +1075,18 @@ Vorsicht
 <p>Hier sind einige Fragen, die Sie sich dazu stellen können:</p>
 <ul>
 <li>Welche Prädiktoren sollte ich in das Modell aufnehmen?</li>
-<li>Sollte ich Interaktionen berücksichtigen?</li>
 <li>Wie gehe ich mit fehlenden Werten um?</li>
 <li>Wenn ein Prädiktor schief ist, sollte ich ihn dann log-transformieren?</li>
 <li>Vielleicht sollte man manche Prädiktoren quadrieren?</li>
+<li>Wie gehe ich mit nominalskalierten Variablen um, wenn diese viele Stufen haben?</li>
+<li>…</li>
 </ul>
-<!-- ## Fazit --><!-- TODO  --></section></section><section id="aufgaben" class="level2" data-number="9.8"><h2 data-number="9.8" class="anchored" data-anchor-id="aufgaben">
+<p>Viel Spielraum für Ihre Kreativität!</p>
+<!-- ## Fazit -->
+<!-- TODO  -->
+</section></section><section id="aufgaben" class="level2" data-number="9.8"><h2 data-number="9.8" class="anchored" data-anchor-id="aufgaben">
 <span class="header-section-number">9.8</span> Aufgaben</h2>
+<p>Eine Aufgabe, die eine Einführung zum [Kaggle-Wettbewerb Ames House Prices]((https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview) bietet, finden Sie <a href="https://datenwerk.netlify.app/posts/ames-kaggle1/ames-kaggle1.html">hier im Datenwerk</a>.</p>
 <p>Suchen Sie beim <a href="https://datenwerk.netlify.app/">Datenwerk</a> nach diesen Aufgaben</p>
 <pre><code>- Aussagen-einfache-Regr
 - interpret-koeff-lm
@@ -1064,7 +1129,8 @@ Kaplan, Daniel T. 2009. <em>Statistical Modeling: A Fresh Approach</em>. <span>S
 <li id="fn11"><p>Die Spalte <code>95 CI</code> gibt einen Schätzbereich für den jeweiligen Modellkoeffizienten an, denn es handelt sich bei den Koeffizienten um Schätzwerte; der wahre Wert in der Population ist unbekannt. Wir kennen schließlich nur eine Stichprobe der Größe <span class="math inline">\(n=143\)</span>.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn12"><p>Die Funktion stammt aus easystats<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn13"><p>die vorherzusagende Variable, auch Ziel- oder Outcome-Variable genannt<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn14"><p>Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: Im Zweifel einfach ignorieren.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p>Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: Im Zweifel einfach ignorieren. Wenn Sie die R-Syntax nicht verstehen: Führen Sie die Syntax schrittweise aus. Zuerst <code>d_train</code> ausführen und das Ergebnis betrachten. Dann <code>d_train %&gt;% select(-Id)</code> ausführen, wieder die Ausgabe betrachten, usw.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p>Es bietet sich an <code>write_csv</code> zu verwenden, da <code>write.csv</code> automatisch (ungefragt) noch eine Id-Spalte ohne Namen einfügt (mit den Zeilennummern), das mag aber Kaggle nicht. Kaggle erwartet exakt zwei Spalten und zwar mit den Namen <code>Id</code> und <code>SalePrice</code><a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

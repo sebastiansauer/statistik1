@@ -137,7 +137,7 @@ d_train %>%
 ```
 
 
-Aha! Ein Menge Information.^[Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: Im Zweifel einfach ignorieren.]
+Aha! Ein Menge Information.^[Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: Im Zweifel einfach ignorieren. Wenn Sie die R-Syntax nicht verstehen: Führen Sie die Syntax schrittweise aus. Zuerst `d_train` ausführen und das Ergebnis betrachten. Dann `d_train %>% select(-Id)` ausführen, wieder die Ausgabe betrachten, usw.]
 
 Diese Variablen sind einigermaßen stark mit unserer Zielvariablen `SalePrice` korreliert.
 Nutzen wir also diese Variablen (oder einige von ihnen) zur Vorhersage.
@@ -211,10 +211,12 @@ Hier sind die Vorhersagen:
 
 
 ```{r}
-m1_pred <- predict(m1, newdata = d_test)
-
-head(m1_pred)
+m1_pred <- predict(m1, newdata = d_test)  # <1> 
+head(m1_pred) # <2>
 ```
+1. predicte anhand der Regressionsgerade von m1 und zwar anhand der Daten aus `d_test`
+2. zeige den "Kopf" der Vorhersagen (`m1_pred`), d.h. die ersten paar Vorhersagen
+
 
 
 Die Vohersagen fügen wir jetzt dem Test-Sample hinzu:
@@ -245,19 +247,26 @@ m1_subm <-
 Kaggle möchte keine fehlenden Werten in den Vorhersagen, also prüfen wir das mal:
 
 ```{r}
+#| eval: true
+#| code-annotations: hover
 m1_subm %>% 
-  drop_na() %>% 
-  nrow()
+  drop_na() %>%  # <1>
+  nrow()         # <2>
 ```
+1. Lass alle Zeilen mit NAs (fehlenden Werten in irgendeiner Spalte) fallen, filtere diese Zeilen also raus
+2. zähle die Anzahl der Zeilen
+
 
 Oh, das ist *eine* Zeile weniger! Wir haben also einen fehlenden Wert!
 
 Filtern wir die Spalte `SalePrice` mal nach "ist NA":
 
 ```{r}
-m1_subm %>% 
-  filter(is.na(SalePrice))
+m1_subm %>% # <1)
+  filter(is.na(SalePrice)) # <2>
 ```
+1. Nimm die Tabelle `m1_smb`
+2. Filter so, dass du nur Zeilen hast, für die gilt, "hier ist ein NA in der Spalte `SalePrice`
 
 Ah, da ist er, der fehlende Wert, in Zeile 2577!
 Hinfort!
@@ -265,10 +274,13 @@ Hinfort!
 Wir ersetzen die fehlenden Werte in `SalePrice` mit dem Mittelwert von `SalePrice`:
 
 ```{r}
-m1_subm_nona <-
-  m1_subm %>% 
-  mutate(SalePrice = replace_na(SalePrice, mean(SalePrice, na.rm = TRUE)))
+m1_subm_nona <- # <1>
+  m1_subm %>%  # <2>
+  mutate(SalePrice = replace_na(SalePrice, mean(SalePrice, na.rm = TRUE))) # <3>
 ```
+1. Definiere `m1_subm_nona` wie folgt
+2. Nimm `m1_subm` und dann
+3. Verändere die Spalte `SalePrice` und zwar so, dass NAs ersetzt werden durch den Mittelwert von `SalePrice`
 
 
 Und? Gib es jetzt noch fehlende Werte?
@@ -278,9 +290,10 @@ m1_subm_nona %>%
   filter(is.na(SalePrice))
 ```
 
-Nein! "No NA" - Keine NAs, keine fehlenden Werte mehr.
+Nein! Die Ergebnistabelle hat null Zeilen. 
+"No NA" - Keine NAs, keine fehlenden Werte mehr.
 
-Diesen Tibble speichern wir als CSV-Datei an geeigneter Stelle ab:
+Diesen Tibble speichern wir als CSV-Datei an geeigneter Stelle ab.^[Es bietet sich an `write_csv` zu verwenden, da `write.csv` automatisch (ungefragt) noch eine Id-Spalte  ohne Namen einfügt (mit den Zeilennummern), das mag aber Kaggle nicht. Kaggle erwartet exakt zwei Spalten und zwar mit den Namen `Id` und `SalePrice`].
 
 
 ```{r}
@@ -301,10 +314,13 @@ Sicherlich gibt es viele Ansätze, dieses Modell zu verbessern.
 Hier sind einige Fragen, die Sie sich dazu stellen können:
 
 - Welche Prädiktoren sollte ich in das Modell aufnehmen?
-- Sollte ich Interaktionen berücksichtigen?
 - Wie gehe ich mit fehlenden Werten um?
 - Wenn ein Prädiktor schief ist, sollte ich ihn dann log-transformieren?
 - Vielleicht sollte man manche Prädiktoren quadrieren?
+- Wie gehe ich mit nominalskalierten Variablen um, wenn diese viele Stufen haben?
+- ...
+
+Viel Spielraum für Ihre Kreativität!
 
 
 

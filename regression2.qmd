@@ -95,18 +95,18 @@ wetter_path <- "https://raw.githubusercontent.com/sebastiansauer/datasets/main/c
 wetter <- read.csv(wetter_path)
 ```
 
-In @tbl-wetter und @fig-wetter-anim kann man sich die Daten en Detail anschauen.
+In @tbl-wetter und @fig-wetter-anim kann man sich die Daten en Detail anschauen (Temperatur und Niederschlag im Zeitverlauf).
 
 
 ```{r}
 #| echo: false
-#| fig-cap: fig-wetter-anim
-#| label: Veränderung der Temperatur und Niederschlag (10-Jahres-Mittel) in Deutschland
+#| label: fig-wetter-anim
+#| fig-cap: Veränderung der Temperatur und Niederschlag (10-Jahres-Mittel) in Deutschland
 #| eval: true
 #| layout-ncol: 2
 #| fig-subcap: 
-#|   - Temperatur (Grad Celcius)
-#|   - Niederschlag (mm pro Quadratmeter)
+#|   - "Temperatur (Grad Celcius)"
+#|   - "Niederschlag (mm pro Quadratmeter)"
 
 
 library(gganimate)
@@ -174,9 +174,16 @@ Sie stellen sich nun folgende Forschungsfrage:
 
 
 ```{r}
+#| results: hide
 lm_wetter1 <- lm(temp ~ year, data = wetter)
 parameters(lm_wetter1)
 ```
+
+```{r}
+#| echo: false
+parameters(lm_wetter1)
+```
+
 
 Laut Ihrem Modell wurde es pro Jahr um 0.01 Grad wärmer, pro Jahrzehnt also 0.1 und pro Jahrhundert 1 Grad.
 
@@ -201,8 +208,14 @@ wetter_summ <-
 Auf dieser Basis erstellen wir ein neues lineares Modell:
 
 ```{r}
+#| results: hide
 lm_wetter1a <- lm(temp ~ year, data = wetter_summ)
 parameters(lm_wetter1a)
+```
+
+```{r}
+#| echo: false
+parameters(lm_wetter1a) %>% print_md()
 ```
 
 
@@ -260,8 +273,15 @@ wetter %>%
 ```
 
 ```{r}
+#| results: hide
 lm_wetter1_zentriert <- lm(temp ~ year_c, data = wetter)
 parameters(lm_wetter1_zentriert)
+```
+
+
+```{r}
+#| echo: false
+parameters(lm_wetter1_zentriert) %>% print_md()
 ```
 
 Jetzt ist die Interpretation des Achsenabschnitts komfortabel:
@@ -396,6 +416,9 @@ Da eine binäre Variable metrisch ist, kann die Regression in gewohnter Weise du
 Wenn Sie die Ausgabe der Parameter betrachten, so sehen Sie die neu erstellte binäre Variable.
 Man beachte, dass der ursprüngliche Datensatz nicht geändert wird, nur während der Analyse von `lm` wird die Umwandlung der Variable ^[Transformation] druchgeführt.$\square$
 :::
+
+
+>    🤖 Eine `1` kannst du als "Ja! Richtig!" verstehen und eine`0` als "Nein! Falsch!"
 
 :::: {.columns}
 
@@ -543,11 +566,18 @@ Ob es wohl substanzielle^[wie könnte man dieses Wort eigentlich definieren?] Te
 Befragen wir dazu ein lineares Modell:
 
 ```{r}
+#| results: false
 lm_wetter_region <- lm(temp ~ region, data = wetter)
 parameters(lm_wetter_region)
 ```
 
-Auch im Fall mehrerer Ausprägungen einer nominalen Variablen gilt die gleiche Logik der Interpretation wie bei beinären Variablen:
+
+```{r}
+#| echo: false
+parameters(lm_wetter_region) %>% print_md()
+```
+
+Auch im Fall mehrerer Ausprägungen einer nominalen Variablen gilt die gleiche Logik der Interpretation wie bei binären Variablen:
 
 
 
@@ -565,7 +595,7 @@ Soweit nicht anders festgelegt, wählt R die alphabetisch erste Gruppe als Refer
 
 :::{#exm-bawü}
 ### Achsenabschnitt in wetter_lm2
-Da Baden-Württemberg das alphabetisch erste Bundesland ist, wird es von R als Referenzgruppe ausgewählt, dessen Mitelwert als Achsenabschnitt im linearen Modell hergenommen wird.$\square$
+Da Baden-Württemberg das alphabetisch erste Bundesland ist, wird es von R als Referenzgruppe ausgewählt, dessen Mittelwert als Achsenabschnitt im linearen Modell hergenommen wird.$\square$
 :::
 
 
@@ -618,9 +648,16 @@ Los R, rechnen!
 
 
 ```{r}
+#| results: hide
 lm_wetter_month <- lm(precip ~ month, data = wetter)
 parameters(lm_wetter_month)
 ```
+
+```{r}
+#| echo: false
+parameters(lm_wetter_month) %>% print_md()
+```
+
 
 Ja, da scheint es deutliche Unterschied im Niederschlag zu geben. 
 Wir brauchen ein Diagramm zur Verdeutlichung, s. @fig-wetter-month, links.^[`plot(estimate_expectation(lm_wetter_month)`]
@@ -649,9 +686,17 @@ wetter <-
 Jetzt berechnen wir mit der faktorisierten Variablen ein lineares Modell:
 
 ```{r}
+#| results: hide
 lm_wetter_month_factor <- lm(precip ~ month_factor, data = wetter)
 parameters(lm_wetter_month_factor)
 ```
+
+```{r}
+#| echo: false
+parameters(lm_wetter_month_factor) %>% print_md()
+```
+
+
 
 Sehr schön! Jetzt haben wir eine Referenzgruppe (Monat 1, d.h. Januar) und 11 Unterschiede zum Januar, s. @fig-wetter-month, rechts.
 
@@ -769,9 +814,13 @@ Die obige Modellgleichung liest sich also so:
 
 ```{r}
 lm_year_month <- lm(precip ~ year_c + month_factor, data = wetter_month_1_7)
-parameters(lm_year_month)
 ```
 
+
+```{r}
+#| echo: false
+parameters(lm_year_month) %>% print_md()
+```
 
 
 
@@ -855,11 +904,12 @@ Liegt ein Interaktionseffekt vor, kann man nicht mehr von "dem" (statistischen) 
 Vielmehr muss man unterscheiden: Je nach Gruppe (z.B. Monat) unterscheidet der Effekt.^[Effekt ist hier immer statistisch, nie kausal gemeint.]
 
 
-Betrachten wir die Parameterwerte des Interkationsmodells:
+Betrachten wir die Parameterwerte des Interaktionsmodells (`parameters(lm_year_month_interaktion)`):
 
 
-```{r}
-parameters(lm_year_month_interaktion)
+```{r} 
+#| echo: false
+parameters(lm_year_month_interaktion) %>% print_md()
 ```
 
 Neu bei der Ausgabe zu diesem Modell ist die Zeile `year c × month factor [7]`.

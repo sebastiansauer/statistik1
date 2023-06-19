@@ -40,6 +40,7 @@ library(easystats)
 ```{r}
 #| include: false
 library(ggpubr)
+library(plotly)
 ```
 
 
@@ -172,6 +173,7 @@ Sie stellen sich nun folgende Forschungsfrage:
 
 >   🧑‍🎓 Um wieviel ist die Temperatur in Deutschland pro Jahr gestiegen, wenn man die letzten ca. 100 Jahre betrachtet?
 
+Die Modellparameter von `lm_wetter1` sind in @tbl-lm-wetter1 zu sehen.
 
 ```{r}
 #| results: hide
@@ -181,6 +183,8 @@ parameters(lm_wetter1)
 
 ```{r}
 #| echo: false
+#| label: tbl-lm-wetter1
+#| tbl-cap: "Modellparameter von lm_wetter1"
 parameters(lm_wetter1)
 ```
 
@@ -205,7 +209,7 @@ wetter_summ <-
             precip = mean(precip))
 ```
 
-Auf dieser Basis erstellen wir ein neues lineares Modell:
+Auf dieser Basis erstellen wir ein neues lineares Modell, s. @tbl-lm-wetter1a.
 
 ```{r}
 #| results: hide
@@ -215,6 +219,8 @@ parameters(lm_wetter1a)
 
 ```{r}
 #| echo: false
+#| label: tbl-lm-wetter1a
+#| tbl-cap: "Modellparameter von lm_wetter1a"
 parameters(lm_wetter1a) %>% print_md()
 ```
 
@@ -272,6 +278,9 @@ wetter %>%
   summarise(mean(year))
 ```
 
+Die Steigung (d.h. der Regressionskoeffizient für `year_c`) bleibt unverändert,
+nur der Achsenabschnitt ändert sich, s. @tbl-lm_wetter1_zentriert.
+
 ```{r}
 #| results: hide
 lm_wetter1_zentriert <- lm(temp ~ year_c, data = wetter)
@@ -281,11 +290,15 @@ parameters(lm_wetter1_zentriert)
 
 ```{r}
 #| echo: false
+#| label: tbl-lm_wetter1_zentriert
+#| tbl-cap: "Modellparameter von lm_wetter1_zentriert"
 parameters(lm_wetter1_zentriert) %>% print_md()
 ```
 
 Jetzt ist die Interpretation des Achsenabschnitts komfortabel:
 Im Jahr 1951 (x=0) lag die mittlere Temperatur in Deutschland (laut DWD) bei ca. 8.5 Grad Celcius.
+Die Regressionsgleichung lautet: `temp_pred = 8.49 + 0.01*year_c`.
+In Worten: Wir sagen eine Temperatur vorher, die sich als Summe von 8.49 Grad plus 0.01 mal das Jahr (in zentrierter Form) berechnet.
 
 
 :::{.callout-important}
@@ -317,7 +330,7 @@ predict(lm_wetter1_zentriert, newdata = tibble(year_c = 100))
 
 
 Die Veränderung der auf fünf Jahre gemittelten Abweichung der Lufttemperatur zum Mittel von von 1951 bis 1980 ist in @fig-temp-de dargestellt.
-Links ist eine grobe Temperaturrasterung zu sehen (Daten ab 1753)^[[Quelle](https://de.wikipedia.org/wiki/Zeitreihe_der_Lufttemperatur_in_Deutschland#cite_ref-3)]; rechts eine feinere (Daten ab 1881)^[[Quelle](https://opendata.dwd.de/climate_environment/CDC/grids_germany/monthly/air_temperature_mean/].
+Links ist eine grobe Temperaturrasterung zu sehen (Daten ab 1753)^[Quelle: https://de.wikipedia.org/wiki/Zeitreihe_der_Lufttemperatur_in_Deutschland#cite_ref-3)]; rechts eine feinere (Daten ab 1881)^[Quelle: https://opendata.dwd.de/climate_environment/CDC/grids_germany/monthly/air_temperature_mean/].
 
 
 :::{#fig-temp-de}
@@ -337,7 +350,7 @@ Links ist eine grobe Temperaturrasterung zu sehen (Daten ab 1753)^[[Quelle](http
 
 :::{#def-binvar}
 ### Binäre Variable 
-Eine *binäre* UV, auch Indikatorvariable genannt, hat nur zwei Ausprägungen: 0 und 1.$\square$
+Eine *binäre* UV, auch *Indikatorvariable* oder *Dummyvariable* genannt, hat nur zwei Ausprägungen: 0 und 1.$\square$
 :::
 
 
@@ -483,7 +496,7 @@ d2 <- tribble(
   2,  "Frau",       0
 )
 
-d2[1:2]
+d2[1:2] %>% kable()
 ```
 
 :::
@@ -505,7 +518,7 @@ d2 <- tribble(
   2,  "Frau",        0
 )
 
-d2[c(1,3)] 
+d2[c(1,3)] %>% kable()
 
 ```
 
@@ -565,7 +578,7 @@ Fassen wir die Interpretation der Koeffizienten für das Modell mit binärer UV 
 Ob es wohl substanzielle^[wie könnte man dieses Wort eigentlich definieren?] Temperaturunterschiede zwischen den Bundesländern gibt?
 :::
 
-Befragen wir dazu ein lineares Modell:
+Befragen wir dazu ein lineares Modell, s. @tbl-lm_wetter_region.
 
 ```{r}
 #| results: false
@@ -576,8 +589,54 @@ parameters(lm_wetter_region)
 
 ```{r}
 #| echo: false
+#| label: tbl-lm_wetter_region
+#| tbl-cap: "Modellparameter für lm_wetter_region"
 parameters(lm_wetter_region) %>% print_md()
 ```
+
+Hat die nominalskalierte UV mehr als zwei Stufen, so transformiert `lm` sie in mehr als eine Indikatorvariablen um.
+Genauer gesagt ist es immer eine Indikatorvariablen weniger als es Stufen in der nominalskalierten Variablen gibt.
+
+
+
+:::: {.columns}
+
+Betrachten wir ein einfaches Beispiel, eine Tabelle mit der Spalte `Bundesland` (aus Gründen der Einfachheit hier nur mit 3 Bundesländern). Damit `lm` arbeiten kann, wird `Bundesland` in zwei Indikatorvariablen umgewandelt:
+
+::: {.column width="40%"}
+
+```{r}
+#| echo: false
+
+d <- tribble(
+  ~id, ~Bundesland, ~BL_Bayern, ~BL_Bra,
+  1,   "BaWü",       0,   0,
+  2,  "Bayern",       1,  0,
+  3, "Brandenburg",   0,  1
+)
+
+d[1:2] %>% kable()
+```
+
+:::
+
+::: {.column width="20%"}
+
+$\qquad \rightarrow$
+
+:::
+
+::: {.column width="40%"}
+```{r}
+#| echo: false
+
+d[c(1,3, 4)] %>% kable()
+```
+:::
+::::
+
+
+
 
 Auch im Fall mehrerer Ausprägungen einer nominalen Variablen gilt die gleiche Logik der Interpretation wie bei binären Variablen:
 
@@ -588,7 +647,8 @@ Auch im Fall mehrerer Ausprägungen einer nominalen Variablen gilt die gleiche L
 3. Mittelwert der 2. Gruppe: Achsenabschnitt (b0) + Steigung der  2. Regressionsgeraden (b2)
 4. usw.
 
-Etwas nervig ist, dass das Bundesland, welches als *Referenzgruppe*, sprich als Gruppe des Achsenabschnitts ausgewählt wurde, nicht explizit angegeben ist.
+Am Anfang kann es nervig sein, dass das Bundesland, welches als *Referenzgruppe*, sprich als Gruppe des Achsenabschnitts ausgewählt wurde, nicht explizit in der Ausgabe angegeben ist.
+Der Wert der Referenzgruppe findet seinen Niederschlag im Achsenabschnitt.
 
 :::{.callout-note}
 Soweit nicht anders festgelegt, wählt R die alphabetisch erste Gruppe als Referenzgruppe für ein lineares Modell aus. Der Mittelwert dieser Gruppe entspricht dem Achsenabschnitt.$\square$
@@ -645,7 +705,7 @@ wetter_summ %>%
 Eine weitere Forschungsfrage, die Sie nicht außer acht lassen wollen, ist die Frage nach den jahreszeitlichen Unterschieden im Niederschlag (engl. precipitation).
 Los R, rechnen!
 
->    🤖 Endlich geht's weiter!$\square$
+>    🤖 Endlich geht's weiter! Ergebnisse in @tbl-lm_wetter-month! $\square$
 :::
 
 
@@ -657,6 +717,8 @@ parameters(lm_wetter_month)
 
 ```{r}
 #| echo: false
+#| label: tbl-lm_wetter-month
+#| tbl-cap: Modellparameter für lm_wetter-month"
 parameters(lm_wetter_month) %>% print_md()
 ```
 
@@ -685,7 +747,7 @@ wetter <-
   mutate(month_factor = factor(month))
 ```
 
-Jetzt berechnen wir mit der faktorisierten Variablen ein lineares Modell:
+Jetzt berechnen wir mit der faktorisierten Variablen ein lineares Modell, s. @tbl-lm_wetter_month_factor.
 
 ```{r}
 #| results: hide
@@ -695,6 +757,8 @@ parameters(lm_wetter_month_factor)
 
 ```{r}
 #| echo: false
+#| label: tbl-lm_wetter_month_factor
+#| tbl-cap: "Modellparameter von lm_wetter_month_factor"
 parameters(lm_wetter_month_factor) %>% print_md()
 ```
 
@@ -708,8 +772,8 @@ Sehr schön! Jetzt haben wir eine Referenzgruppe (Monat 1, d.h. Januar) und 11 U
 #| fig-cap: Niederschlagsunterschiede pro Monat (ein Punkt ist ein Jahr); aufgrund der vielen Datenpunkte ist das Diagramm wenig übersichtlich (Overplotting).
 #| layout-ncol: 2
 #| fig-subcap: 
-#|   - Modell `lm_wetter_month`
-#|   - Modell `lm_wetter_month_text`
+#|   - Modell `lm_wetter_month`, Monat fälschlich als metrische Variable
+#|   - Modell `lm_wetter_month_text`, Monat korrekt als nominale Variable
 
 plot(estimate_expectation(lm_wetter_month))
 plot(estimate_expectation(lm_wetter_month_factor))
@@ -818,9 +882,12 @@ Die obige Modellgleichung liest sich also so:
 lm_year_month <- lm(precip ~ year_c + month_factor, data = wetter_month_1_7)
 ```
 
+Die Modellparameter sind in @tbl-lm_year_month zu sehen.
 
 ```{r}
 #| echo: false
+#| label: tbl-lm_year_month
+#| tbl-cap: "Modellparameter von lm_year_month"
 parameters(lm_year_month) %>% print_md()
 ```
 
@@ -833,13 +900,19 @@ Die Modellkoeffizienten sind so zu interpretieren:
 3. Regressionskoeffizient für Monat (b2, `month [7]`) Im Monat `7` (Juli) lag die mittlere Niederschlagsmenge (im Referenzjahr) knapp 25 mm über dem mittleren Wert des Referenzmonats (Januar).
 
 
+Die Regressiongleichung von `lm_year_month` lautet: `precip_pred = 56.94 + 0.03*year_c + 24.37*month_factor_7`.
+
+Im Monat Juli ist `month_factor_7 = 1`, ansonsten (Januar) ist `month_factor = 0`. 
+
 >   🧑‍🎓 Puh, kompliziert!
 
 >   👨‍🏫 Es gibt einen Trick, man kann sich von R einfach einen beliebigen Y-Wert berechnen lassen, s. @exm-niederschlag1.
 
+
+
 :::{#exm-niederschlag1}
 ### Niederschlag laut Modell Im Juli 2020?
-Hey R, berechne uns anhand neuer Daten den laut Modell zu erwartenden Niederschlag!
+Hey R, berechne uns anhand neuer Daten den laut Modell zu erwartenden Niederschlag für Januar im Jahr 2020!
 
 ```{r}
 neue_daten <- tibble(year_c = 2020-1951,
@@ -866,6 +939,10 @@ plot(estimate_expectation((lm_year_month)))
 
 
 
+Die erklärte Varianz von `lm_year_month` liegt bei:
+```{r}
+r2(lm_year_month)
+```
 
 
 
@@ -906,11 +983,13 @@ Liegt ein Interaktionseffekt vor, kann man nicht mehr von "dem" (statistischen) 
 Vielmehr muss man unterscheiden: Je nach Gruppe (z.B. Monat) unterscheidet der Effekt.^[Effekt ist hier immer statistisch, nie kausal gemeint.]
 
 
-Betrachten wir die Parameterwerte des Interaktionsmodells (`parameters(lm_year_month_interaktion)`):
+Betrachten wir die Parameterwerte des Interaktionsmodells (`parameters(lm_year_month_interaktion)`), s. @tbl-lm_year_month_interaktion.
 
 
 ```{r} 
 #| echo: false
+#| label: tbl-lm_year_month_interaktion
+#| tbl-cap: "Modellparameter von lm_year_month_interaktion"
 parameters(lm_year_month_interaktion) %>% print_md()
 ```
 
@@ -919,12 +998,21 @@ Sie gibt die Stärke des Interaktionseffekts an.
 Da die Null nicht im Schätzbereich (`95 CI`) liegt, ist der Interaktionseffekt offenbar nicht Null, also vorhanden (zumindest laut unserem Modell^[unser Modell könnte ja auch falsch sein.].
 Die Zeile zeigt, wie unterschiedlich sich die die Niederschlagsmenge zwischen den beiden Monaten im Verlauf der Jahre ändert: Im Monat `"7"` ist der Effekt von `year_c` um 0.20 mm geringer: Die Regressionsgerade neigt sich mehr nach "unten" im Monat Juli, da der Koeffizient kleiner als Null ist.
 
+Die Regressionsgleichung lautet:
+`precip_pred = 56.91 + 0.13*year_c + 24.37*month_factor_7 - 0.20*year_c:month_factor_7`.
+
 
 :::{.callout-important}
 Der Achsenabschnitt gibt den Wert für Y an unter der Annahme, dass alle Prädiktoren den Wert Null aufweisen.
 Die Regressionskoeffizienten geben die Zunahme in Y an, wenn der jeweilige Prädiktorwert um 1 steigt, die übrigen Prädiktoren aber den Wert 0 aufweisen.$\square$
 :::
 
+
+Das R-Quadrat von `lm_year_month_interaktion` beträgt übrigens `r r2(lm_year_month_interaktion)[["R2"]]`.
+
+```{r}
+r2(lm_year_month_interaktion)[["R2"]]
+```
 
 
 
@@ -959,7 +1047,7 @@ Man weiß also nicht, ob die Modellkoeffizienten belastbar, robust, stichhaltig 
 ```{r}
 #| echo: false
 #| label: fig-confounder
-#| fig-cap: "Fügt man in ein Modell eine Variable hinzu, können sich die Koeffizienten massiv ändern. In beiden Diagrammen wurden die gleichen Daten verwendet"
+#| fig-cap: "Fügt man in ein Modell eine Variable hinzu, können sich die Koeffizienten massiv ändern. In beiden Diagrammen wurden die gleichen Daten verwendet."
 #| layout-ncol: 2
 #| fig-subcap: 
 #|   - "Modell: `y ~ x`, starker Zusammenhang; b1 ist stark positiv"
@@ -1008,6 +1096,51 @@ Daher werden deskriptive Befunde immer wieder unzulässig kausal interpretiert -
 ## Modelle mit vielen Variablen
 
 Grundsätzlich kann man viele Prädiktoren in ein (lineares) Modell aufnehmen.
+
+```{r}
+#| echo: false
+data(mariokart, package = "openintro")
+```
+
+Betrachten wir z.B. folgendes lineares Modell mit zwei UV, s. auch @fig-mario-2uv.
+
+```{r}
+lm_mario_2uv <- lm(total_pr ~ start_pr + ship_pr, data = mariokart %>% filter(total_pr < 100))
+```
+
+
+```{r}
+#| echo: false
+#| label: fig-mario-2uv
+#| fig-cap: "Lineares Modell mit 2 metrischen UV (und 1 metrische AV)"
+lm_coefs <- coef(lm_mario_2uv)
+
+start_seq <- seq(0, 70, by = 1)
+ship_seq <- seq(0, 10, by = 1)
+
+z2 <- t(outer(start_seq, ship_seq,
+            function(x,y) {lm_coefs[1] + lm_coefs[2]*x + lm_coefs[3]*y}))
+
+plot_ly(x = ~ start_seq,
+        y = ~ ship_seq,
+        z = ~ z2,
+        type = "surface") %>% 
+  add_trace(data = mariokart %>% filter(total_pr < 100),
+            x = ~start_pr,
+            y = ~ship_pr,
+            z = ~total_pr,
+            mode = "markers",
+            type = "scatter3d")
+```
+
+
+
+
+Jedes der beiden Regressionsgewichte in `lm_mario_2uv` entspricht der Steigung in der beiden Achsen in @fig-mario-2uv,
+d.h. die Steigung für `start_pr` bzw. die Steigung für `ship_pr`.
+
+
+Wir könnten im Prinzip alle Variablen unserer Datentabelle als Prädiktoren in das Regressionsmodellaufnehmen.
 Die Frage ist nur: macht es Sinn?
 
 Hier sind einige Richtlinien, die helfen, welche Prädiktoren (und wie viele) man in ein Modell aufnehmen sollte [@gelman_regression_2021, S. 199f]:
@@ -1122,13 +1255,16 @@ mariokart_test <-
 Okay, was ist jetzt der mittlere Vorhersagefehler?
 
 
-Um die Vorhersagegüte im Test-Sample auszurechnen, 
+Um die Vorhersagegüte im Test-Sample auszurechnen^[wir verwenden dazu die Funktionen `mae` und `rsq`], 
 nutzen wir die Funktionen des R-Paketes `yardstick`^[welches Sie vielleicht noch installieren müssen.]:
 
 ```{r}
 library(yardstick)
 
 yardstick::mae(data = mariokart_test,
+               truth = total_pr,  # echter Verkaufspreis
+               estimate = lm_allin_predictions)  # Ihre Vorhersage
+yardstick::rmse(data = mariokart_test,
                truth = total_pr,  # echter Verkaufspreis
                estimate = lm_allin_predictions)  # Ihre Vorhersage
 ```
@@ -1144,6 +1280,7 @@ Wie ist es um das R-Quadrat Ihrer Vorhersagen bestellt?
 
 
 ```{r}
+# auch aus dem Paket yardstick:
 rsq(data = mariokart_test,
     truth = total_pr,  # echter Verkaufspreis
     estimate = lm_allin_predictions)  # Ihre Vorhersage
@@ -1240,6 +1377,18 @@ Statistik, Sie und Party: Gestern und (vielleicht) morgen.
 
 ## Aufgaben
 
+- [interpret-koeff-lm](https://datenwerk.netlify.app/posts/interpret-koeff-lm/interpret-koeff-lm.html) 
+- [Aussagen-einfache-Regr](https://datenwerk.netlify.app/posts/aussagen-einfache-regr/aussagen-einfache-regr)
+- [interpret-koeff](https://datenwerk.netlify.app/posts/interpret-koeff/interpret-koeff.html)
+- [regression1b](https://datenwerk.netlify.app/posts/regression1b/regression1b.html)
+- [mtcars-regr01](https://datenwerk.netlify.app/posts/mtcars-regr01/mtcars-regr01.html)
+- [regression1a](https://datenwerk.netlify.app/posts/regression1a/regression1a.html)
+- [lm1](https://datenwerk.netlify.app/posts/lm1/lm1.html)
+- [Regression5](https://datenwerk.netlify.app/posts/regression5/regression5)
+- [Regression6](https://datenwerk.netlify.app/posts/regression6/regression6)
+- [lm-mario1](https://datenwerk.netlify.app/posts/lm-mario1/lm-mario1.html)
+- [lm-mario2](https://datenwerk.netlify.app/posts/lm-mario2/lm-mario2.html)
+- [lm-mario3](https://datenwerk.netlify.app/posts/lm-mario3/lm-mario3.html)
 
 
 ## Literatur

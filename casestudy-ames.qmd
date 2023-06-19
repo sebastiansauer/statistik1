@@ -146,9 +146,10 @@ describe_distribution(d_train)
 
 
 Eine einfache Antwort auf die Frage, welche Variablen sich zur Vorhersage eignen, ist, 
-die Korrelation aller Prädiktoren mit der abhängigen Variablen^[die vorherzusagende Variable, auch Ziel- oder Outcome-Variable genannt] zu berechnen.
+die Korrelation aller Prädiktoren mit der abhängigen Variablen^[die vorherzusagende Variable, auch Ziel- oder Outcome-Variable genannt] zu berechnen, s. @tbl-d_train_corr.
 
 ```{r}
+#| results: hide
 d_train %>% 
   select(-Id) %>% 
   correlation() %>%  # berechne Korrelationen
@@ -158,6 +159,19 @@ d_train %>%
 ```
 
 
+```{r}
+#| echo: false
+#| label: tbl-d_train_corr
+#| tbl-cap: "Korrelation der Prädiktoren (UV) mit der AV"
+d_train %>% 
+  select(-Id) %>% 
+  correlation() %>%  # berechne Korrelationen
+  filter(Parameter2 == "SalePrice") %>%   # aber nur, wo die zweite Variable "SalesPrice" ist
+  arrange(-abs(r)) %>%   # sortiere absteigend nach der Höhe des Korrelationskoeffizienten r
+  filter(abs(r) > .3)  %>%  # nur |r| > 3.
+  print_md()
+```
+
 Aha! Ein Menge Information.^[Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: Im Zweifel einfach ignorieren. Wenn Sie die R-Syntax nicht verstehen: Führen Sie die Syntax schrittweise aus. Zuerst `d_train` ausführen und das Ergebnis betrachten. Dann `d_train %>% select(-Id)` ausführen, wieder die Ausgabe betrachten, usw.]
 
 Diese Variablen sind einigermaßen stark mit unserer Zielvariablen `SalePrice` korreliert.
@@ -166,9 +180,20 @@ Nutzen wir also diese Variablen (oder einige von ihnen) zur Vorhersage.
 
 #### Model 1
 
+Berechnen wir ein erstes Modell für diese Forschungsfrage, s. @tbl-m1-params.
 
 ```{r}
+#| results: hide
 m1 <- lm(SalePrice ~ OverallQual + GrLivArea + GarageCars, data = d_train)
+parameters(m1)
+```
+
+
+```{r}
+#| echo: false
+#| label: tbl-m1-params
+#| tbl-cap: "Modellparameter von m1"
+parameters(m1) %>% print_md()
 ```
 
 
@@ -286,8 +311,11 @@ Filtern wir die Spalte `SalePrice` mal nach "ist NA":
 m1_subm %>% # <1)
   filter(is.na(SalePrice)) # <2>
 ```
-1. Nimm die Tabelle `m1_smb`
-2. Filter so, dass du nur Zeilen hast, für die gilt, "hier ist ein NA in der Spalte `SalePrice`
+
+Übersetzen wir die Syntax auf Detusch:
+
+1. Nimm zuerst die Tabelle `m1_smb`
+2. Filter dann so, dass du nur Zeilen hast, für die gilt, "hier ist ein NA in der Spalte `SalePrice`
 
 Ah, da ist er, der fehlende Wert, in Zeile 2577!
 Hinfort!
@@ -299,6 +327,9 @@ m1_subm_nona <- # <1>
   m1_subm %>%  # <2>
   mutate(SalePrice = replace_na(SalePrice, mean(SalePrice, na.rm = TRUE))) # <3>
 ```
+
+Die Syntax wieder auf Deutsch:
+
 1. Definiere `m1_subm_nona` wie folgt
 2. Nimm `m1_subm` und dann
 3. Verändere die Spalte `SalePrice` und zwar so, dass NAs ersetzt werden durch den Mittelwert von `SalePrice`

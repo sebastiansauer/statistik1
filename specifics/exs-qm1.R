@@ -363,3 +363,12 @@ teachertools::render_exs(exs_lm1,
                          render_markdown = FALSE,
                          render_yamlrmd = TRUE,
                          thema_nr = "_vis")
+
+
+
+
+# Geradenmodell 2 ---------------------------------------------------------
+
+
+exs_lm2 <-
+  c("Regression3.Rmd")

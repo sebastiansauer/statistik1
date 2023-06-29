@@ -92,9 +92,22 @@ Nach etwas [Datenjudo, auf das wir hier nicht eingehen wollen](https://data-se.n
 resultiert ein schöner Datensatz, den Sie jetzt analysieren wollen^[Temperatur: Grad Celcius, Niederschlag (`precip`) mm Niederschlag pro Quadratmeter]:
 
 ```{r}
-wetter_path <- "https://raw.githubusercontent.com/sebastiansauer/datasets/main/csv/precip_temp_DWD.csv"
+wetter_path <- "https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/precip_temp_DWD.csv"
 wetter <- read.csv(wetter_path)
 ```
+
+Ein *Data-Dictionary* für den Datensatz können Sie [hier](https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/wetter-dwd-data-dict.md) herunterladen.
+
+
+:::{.callout-note}
+Ein *Data-Dictionary* (Codebook) erklärt einen Datensatz.
+Oft bedeutet das, das für jede Spalte der Datentabelle erklärt wird,
+was die Spalte bedeutet.$\square$
+:::
+
+
+
+
 
 In @tbl-wetter und @fig-wetter-anim kann man sich die Daten en Detail anschauen (Temperatur und Niederschlag im Zeitverlauf).
 
@@ -1157,9 +1170,13 @@ Hier sind einige Richtlinien, die helfen, welche Prädiktoren (und wie viele) ma
 
 :::{#exm-prognose}
 ### Prognose des Verkaufspreis
-Ganz können Sie von Business-Welt und ihren Gratifikationen nicht lassen, trotz Ihrer wissenschaftlichen Ambitionen.
-Sie haben den Auftrag bekommen, den Verkaufspreis von Mariokart-Spielen möglichst exakt vorherzusagen. Also gut, das Honorar ist phantastisch, Sie sind jung und brauchen das Geld.$\square$
+Ganz können Sie von Business-Welt und ihren Gratifikationen nicht lassen, 
+trotz Ihrer wissenschaftlichen Ambitionen.
+Sie haben den Auftrag bekommen, den Verkaufspreis von Mariokart-Spielen möglichst exakt vorherzusagen. 
+Also gut, das Honorar ist phantastisch, Sie sind jung und brauchen das Geld.$\square$
 :::
+
+### Modell "all-in"
 
 Um die Güte Ihrer Vorhersagen zu prüfen, teilt Ihr Chef den Datensatz in zwei zufällige Teile.
 
@@ -1167,19 +1184,32 @@ Um die Güte Ihrer Vorhersagen zu prüfen, teilt Ihr Chef den Datensatz in zwei 
 >    🧔‍♂️ Ich teile den Datensatz `mariokart` zufällig in zwei Teile. Den ersten Teil kannst du nutzehn, um Modelle zu berechnen ("trainieren") und ihre Güte zu prüfen. Den Teil nenne ich "Trainingssample", hört sich cool an, oder? Im Train-Sample ist ein Anteil (`frac`tion) von 70% der Daten, okay? Die restlichen Daten behalte ich. Wenn du ein gutes Modell hast, kommst du und wir berechnen die Güte deiner Vorhersagen.
 
 
-```{r}
+```{r mariokart-train-test}
 #| echo: false
 #| eval: false
+# library(readr)
 #write_csv(mariokart_train, "daten/mariokart_train.csv")
-
-# mariokart_train <-
-#   mariokart_train %>% 
-#   select(-title)
+#write_csv(mariokart_test, "daten/mariokart_test.csv")
 ```
 
+Wenn die Daten auf Ihrer Festplatte liegen, z.B. im Unterordner `daten`,
+dann könne Sie sie von dort importieren:
 
 ```{r}
+#| eval: false
 mariokart_train <- read.csv("daten/mariokart_train.csv")
+```
+
+Alternativ können Sie sie auch von diesem Pfad von einem Rechner in der Cloud herunterladen:
+
+```{r}
+mariokart_train <- read.csv("https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/mariokart_train.csv")
+```
+
+Dann importieren wir auf gleiche Wiese Test-Sample in R:
+
+```{r}
+mariokart_test <- read.csv("https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/mariokart_test.csv")
 ```
 
 
@@ -1189,11 +1219,77 @@ Viel hilft viel, oder nicht?
 
 ```{r}
 lm_allin <- lm(total_pr ~ ., data = mariokart_train)
-r2(lm_allin)
+r2(lm_allin)  # aus easystats
 ```
 
 
 Der Punkt in `total_pr ~ . ` heißt "alle Variablen in der Tabelle (außer `total_pr`)".
+
+
+>    🧔‍♂️ Hey! Das ist ja fast perfekte Modellgüte!
+
+>    🦹‍♀️ Vorsicht: Wenn ein Angebot aussieht wie "too good to be true", dann ist es meist auch too good to be true.
+
+
+
+
+
+:::{.callout-note}
+### Overfitting
+Der Grund für den fast perfekten Modellfit ist die Spalte `Title`.
+Unser Modell hat einfach den Titel jeder Auktion auswendig gelernt.
+Weiß man, welcher Titel zu welcher Auktion gehört, kann man perfekt die Auktion aufsagen bzw. das Verkaufsgebot perfekt vorhersagen.
+Leider nützen die Titel der Auktionen im Train-Sample *nichts* für andere Auktionen.
+Im Test-Sample werden unsere Vorhersagen also grottenschlecht sein,
+wenn wir uns auf die Titel der Auktionen im Test-Sample stützen.
+Merke: Höchst idiografische Informationen wie Namen, Titel etc. sind nicht nützlich,
+um allgemeine Muster zu erkennen und damit exakte Prognosen zu erstellen.$\square$
+:::
+
+
+
+Probieren wir also die Vorhersage im Test-Sample:
+
+```{r}
+#| error: true
+predict(lm_allin, newdata = mariokart_test)
+```
+
+
+
+Oh nein! Was ist los!? Eine Fehlermeldung!
+
+:::{.callout-caution}
+Nominalskalierte Prädiktorvariablen mit vielen Ausprägungen, wie `title` sind problematisch.
+Kommt eine Ausprägung von `title` im Test-Sample vor,
+die es *nicht* im Train-Sample gab, so resultiert ein Fehler beim `predict`en.
+Häufig ist es sinnvoll, auf diese Variable zu verzichten,
+da diese Variablen oft zu Overfitting führen.$\square$
+:::
+
+
+### Modell "all-in", ohne Titelspalte
+
+Okay, also auf die Titelspalte sollten wir vielleicht besser verzichten.
+Nächster Versuch.
+
+```{r}
+mariokart_train2 <-
+  mariokart_train %>% 
+  select(-c(title, V1, id))
+```
+
+
+Wir entfernen auch die Spalte `V1` und `id`,
+da sie ebenfalls keine Informatione bergen.
+
+
+```{r lm_allin_no_title}
+lm_allin_no_title <- lm(total_pr ~ ., data = mariokart_train2)
+r2(lm_allin_no_title) 
+```
+
+
 
 Das R-Quadrat ist ja durchaus ordentlich.
 Schauen wir uns noch den `rmse` (die SD der Vorhersagefehler) an^[der Befehl wohnt im Paket `performance`, Teil des Metapakets `easystats`]:
@@ -1203,27 +1299,22 @@ Schauen wir uns noch den `rmse` (die SD der Vorhersagefehler) an^[der Befehl woh
 
 
 ```{r}
-performance::rmse(lm_allin)
+performance::rmse(lm_allin_no_title)
 ```
 
 
 
 Sie rennen zu Ihrem Chef, der jetzt die Güte Ihrer Vorhersagen in den *restlichen* Daten bestimmen soll.
 
->    🧔‍♂️ Da wir dein Modell in diesem Teil des Komplett-Datensatzes testen, nennen wir diesen Teil das "Test-Sample".
+>    🧔‍♂️ Da wir dein Modell in diesem Teil des Komplett-Datensatzes *testen*, nennen wir diesen Teil das "Test-Sample".
 
-Zuerst das Test-Sample in R importieren:
-
-```{r}
-mariokart_test <- read.csv("https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/mariokart_test.csv")
-```
 
 
 Ihr Chef schaut sich die Verkaufspreise im Test-Sample an:
 
 ```{r}
 mariokart_test %>% 
-  select(X, id, total_pr) %>% 
+  select(id, total_pr) %>% 
   head()
 ```
 
@@ -1232,7 +1323,7 @@ mariokart_test %>%
 Hier sind Ihre Vorhersagen^[engl. predictions; to predict: vorhersagen]:
 
 ```{r}
-lm_allin_predictions <- predict(lm_allin, newdata = mariokart_test)
+lm_allin_predictions <- predict(lm_allin_no_title, newdata = mariokart_test)
 ```
 
 
@@ -1247,7 +1338,7 @@ Dies Vorhersagen fügen wir noch der Ordnung halber in die Tabelle mit den Test-
 ```{r}
 mariokart_test <-
   mariokart_test %>% 
-  mutate(lm_allin_predictions = predict(lm_allin, newdata = mariokart_test))
+  mutate(lm_allin_predictions = predict(lm_allin_no_title, newdata = mariokart_test))
 ```
 
 
@@ -1257,7 +1348,7 @@ Okay, was ist jetzt der mittlere Vorhersagefehler?
 
 Um die Vorhersagegüte im Test-Sample auszurechnen^[wir verwenden dazu die Funktionen `mae` und `rsq`], 
 nutzen wir die Funktionen des R-Paketes `yardstick`^[welches Sie vielleicht noch installieren müssen.]:
-
+ 
 ```{r}
 library(yardstick)
 
@@ -1312,8 +1403,15 @@ Die Aufteilung Ihres Datensatzes in ein Train- und ein Test-Sample können Sie z
 
 ```{r}
 library(rsample)
-mariokart <- read.csv("daten/mariokart.csv")
+mariokart <- read_csv("daten/mariokart.csv")  # Wenn die CSV-Datei in einem Unterordner mit Namen "daten" liegt
 
+meine_aufteilung <- initial_split(mariokart, strata = total_pr)
+```
+
+
+```{r}
+#| echo: false
+set.seed(42)
 meine_aufteilung <- initial_split(mariokart, strata = total_pr)
 ```
 
@@ -1334,6 +1432,11 @@ mariokart_test <- testing(meine_aufteilung)  # Test-Sample
 ```
 
 
+Ich persönliche nenne die Tabelle mit den Daten gerne `d_train` bzw. `d_test`,
+das ist kürzer zu tippen und einheitlich.
+Sie können aber auch ein eigenes Namens-Schema nutzen;
+was aber hilfreich ist, ist Konsistenz in der Benamung,
+außerdem Kürze und aussagekräftige Namen.
 
 ## Praxisbezug
 
@@ -1372,7 +1475,12 @@ Statistik, Sie und Party: Gestern und (vielleicht) morgen.
 [Quelle: imgflip](https://imgflip.com/memegenerator/Distracted-Boyfriend)
 
 
+## Fallstudien
 
+Die folgenden Fallstudien zeigen auf recht anspruchsvollem Niveau (bezogen auf diesen Kurs) beispielhalft zwei Fallstudien:
+
+1. [Vorhersage von Flugverspätungen](https://data-se.netlify.app/2021/03/10/fallstudie-modellierung-von-flugversp%C3%A4tungen/)
+2. [Vorhersagen von Filmerlösen](https://data-se.netlify.app/2020/11/13/fallstudie-zur-regressionsanalyse-ggplot2movies/)
 
 
 ## Aufgaben
@@ -1389,6 +1497,6 @@ Statistik, Sie und Party: Gestern und (vielleicht) morgen.
 - [lm-mario1](https://datenwerk.netlify.app/posts/lm-mario1/lm-mario1.html)
 - [lm-mario2](https://datenwerk.netlify.app/posts/lm-mario2/lm-mario2.html)
 - [lm-mario3](https://datenwerk.netlify.app/posts/lm-mario3/lm-mario3.html)
-
+- [ausreisser1](https://datenwerk.netlify.app/posts/ausreisser1/ausreisser1.html)
 
 ## Literatur

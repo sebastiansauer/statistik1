@@ -261,7 +261,7 @@ div.csl-indent {
   <li><a href="#uv-zentrieren" id="toc-uv-zentrieren" class="nav-link" data-scroll-target="#uv-zentrieren"><span class="header-section-number">11.3.2</span> UV zentrieren</a></li>
   <li><a href="#bin%C3%A4re-uv" id="toc-binäre-uv" class="nav-link" data-scroll-target="#bin%C3%A4re-uv"><span class="header-section-number">11.3.3</span> Binäre UV</a></li>
   <li><a href="#nominale-uv" id="toc-nominale-uv" class="nav-link" data-scroll-target="#nominale-uv"><span class="header-section-number">11.3.4</span> Nominale UV</a></li>
-  <li><a href="#bin%C3%A4re-plus-metrische-uv" id="toc-binäre-plus-metrische-uv" class="nav-link" data-scroll-target="#bin%C3%A4re-plus-metrische-uv"><span class="header-section-number">11.3.5</span> Binäre plus metrische UV</a></li>
+  <li><a href="#sec-faktorvar" id="toc-sec-faktorvar" class="nav-link" data-scroll-target="#sec-faktorvar"><span class="header-section-number">11.3.5</span> Binäre plus metrische UV</a></li>
   <li><a href="#interaktion" id="toc-interaktion" class="nav-link" data-scroll-target="#interaktion"><span class="header-section-number">11.3.6</span> Interaktion</a></li>
   </ul>
 </li>
@@ -1066,7 +1066,7 @@ Hinweis
 <li>Mittelwert der 2. Gruppe: Achsenabschnitt (b0) + Steigung der 2. Regressionsgeraden (b2)</li>
 <li>usw.</li>
 </ol>
-<p>Am Anfang kann es nervig sein, dass das Bundesland, welches als <em>Referenzgruppe</em>, sprich als Gruppe des Achsenabschnitts ausgewählt wurde, nicht explizit in der Ausgabe angegeben ist. Der Wert der Referenzgruppe findet seinen Niederschlag im Achsenabschnitt.</p>
+<p>Am Anfang kann es nervig sein, dass das Bundesland, welches als <em>Referenzgruppe</em> (sprich als Gruppe des Achsenabschnitts ausgewählt wurde) nicht explizit in der Ausgabe angegeben ist. Der Wert der Referenzgruppe findet seinen Niederschlag im Achsenabschnitt.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1077,7 +1077,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Soweit nicht anders festgelegt, wählt R die alphabetisch erste Gruppe als Referenzgruppe für ein lineares Modell aus. Der Mittelwert dieser Gruppe entspricht dem Achsenabschnitt.<span class="math inline">\(\square\)</span></p>
+<p>Bei einer Variable vom Typ <code>character</code> wählt R den alphabetisch ersten Wert als Referenzgruppe für ein lineares Modell aus. Bei einer Variable vom Typ <code>factor</code> ist die Reihenfolge bereits festgelegt, vgl. <a href="#sec-faktorvar"><span>Kapitel&nbsp;11.3.5</span></a>. Der Mittelwert dieser Gruppe entspricht dem Achsenabschnitt. <span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <div id="exm-bawü" class="theorem example">
@@ -1303,12 +1303,23 @@ Hinweis
 <p></p><figcaption class="figure-caption">Abbildung&nbsp;11.9: Niederschlagsunterschiede pro Monat (ein Punkt ist ein Jahr); aufgrund der vielen Datenpunkte ist das Diagramm wenig übersichtlich (Overplotting).</figcaption><p></p>
 </figure>
 </div>
-</section><section id="binäre-plus-metrische-uv" class="level3" data-number="11.3.5"><h3 data-number="11.3.5" class="anchored" data-anchor-id="binäre-plus-metrische-uv">
+<p>Möchte man die Referenzgruppe eines Faktors ändern, kann man dies mit <code>relevel</code> tun:</p>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-39_68df180819dbed6c8d3afb76073da0c5">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">wetter</span> <span class="op">&lt;-</span></span>
+<span>  <span class="va">wetter</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>month_factor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/relevel.html">relevel</a></span><span class="op">(</span><span class="va">month_factor</span>, ref <span class="op">=</span> <span class="st">"7"</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So sieht dann die geänderte Reihenfolge aus:</p>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-40_b871973729e6eddcffc2ff8670efc48a">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">wetter</span><span class="op">$</span><span class="va">month_factor</span><span class="op">)</span></span>
+<span><span class="co">##  [1] "7"  "1"  "2"  "3"  "4"  "5"  "6"  "8"  "9"  "10" "11" "12"</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="sec-faktorvar" class="level3" data-number="11.3.5"><h3 data-number="11.3.5" class="anchored" data-anchor-id="sec-faktorvar">
 <span class="header-section-number">11.3.5</span> Binäre plus metrische UV</h3>
 <div id="exm-rain1" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 11.12 </strong></span>Ob sich die Niederschlagsmenge wohl unterschiedlich zwischen den Monaten entwickelt hat in den letzten gut 100 Jahren? Der Einfachheit halber greifen Sie sich nur zwei Monate heraus (Januar und Juli).</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-39_c43be0852aa844c10772ee3d7c515a81">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">wetter_month_1_7</span> <span class="op">&lt;-</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-41_8935492774c1283a879482fe34056452">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">wetter_month_1_7</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">wetter</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">month</span> <span class="op">==</span> <span class="fl">1</span>  <span class="op">|</span> <span class="va">month</span> <span class="op">==</span> <span class="fl">7</span><span class="op">)</span> </span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1331,8 +1342,8 @@ Faktorvariable
 </div>
 <div id="exm-factor1" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 11.10 (Beispiel für eine Faktorvariable) </strong></span>&nbsp;</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-40_b394c9decca969766897376bbd626b43">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">geschlecht</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"f"</span>, <span class="st">"f"</span>, <span class="st">"m"</span><span class="op">)</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-42_245479b8dc90a9b6916258dc53ed511b">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">geschlecht</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"f"</span>, <span class="st">"f"</span>, <span class="st">"m"</span><span class="op">)</span></span>
 <span><span class="va">geschlecht_factor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">geschlecht</span><span class="op">)</span></span>
 <span><span class="va">geschlecht_factor</span></span>
 <span><span class="co">## [1] f f m</span></span>
@@ -1343,8 +1354,8 @@ Faktorvariable
 <p><span class="theorem-title"><strong>Beispiel 11.11 (Filtern verändert die Faktorstufen nicht) </strong></span>Wenn Sie von der Faktorvariablen <code>geschlecht</code> das 3. Element (<code>"m"</code>) herausfiltern, so dass z.B. nur <code>"f"</code> übrig bleibt, merkt sich R trotzdem, dass es <em>zwei</em> Faktorstufen gibt.</p>
 <p>Wenn Sie aus <code>wetter</code> nur die Monate <code>"1"</code> und <code>"7"</code> herausfiltern, merkt sich R, dass es 12 Faktorstufen gibt. Möchten Sie, die herausgefilterten Faktorstufen auch “löschen”, so können Sie einfach die Faktorvariable neu berechnen (mit <code>factor</code>).<span class="math inline">\(\square\)</span></p>
 </div>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-41_0e306bd59e4a1e3fc5dd184055c3c93d">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">wetter_month_1_7</span> <span class="op">&lt;-</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-43_09dd05964b0909dd1b65bb6a03101cd5">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">wetter_month_1_7</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">wetter</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">month</span> <span class="op">==</span> <span class="fl">1</span>  <span class="op">|</span> <span class="va">month</span> <span class="op">==</span> <span class="fl">7</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>month_factor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">month</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Faktor (und damit die Faktorstufen) neu berechnen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1380,8 +1391,8 @@ Modellgleichung
 <blockquote class="blockquote">
 <p>Temperatur ist eine Funktion von der (zentrierten) Jahreszahl und des Monats</p>
 </blockquote>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-43_b474d13be416a49b482f0562f6830e04">
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_year_month</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">precip</span> <span class="op">~</span> <span class="va">year_c</span> <span class="op">+</span> <span class="va">month_factor</span>, data <span class="op">=</span> <span class="va">wetter_month_1_7</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-45_330182e4995e5a16db32987cbb6f141c">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_year_month</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">precip</span> <span class="op">~</span> <span class="va">year_c</span> <span class="op">+</span> <span class="va">month_factor</span>, data <span class="op">=</span> <span class="va">wetter_month_1_7</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Die Modellparameter sind in <a href="#tbl-lm_year_month">Tabelle&nbsp;<span>11.8</span></a> zu sehen.</p>
 <div class="cell" data-hash="090-regression2_cache/html/tbl-lm_year_month_3880def358aee09db671aeee7a0d57da">
@@ -1451,8 +1462,8 @@ Modellgleichung
 </blockquote>
 <div id="exm-niederschlag1" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 11.13 (Niederschlag laut Modell Im Juli 2020?) </strong></span>Hey R, berechne uns anhand neuer Daten den laut Modell zu erwartenden Niederschlag für Januar im Jahr 2020!</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-45_55deed66efe321fba18e8e3f3e5b8950">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">neue_daten</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>year_c <span class="op">=</span> <span class="fl">2020</span><span class="op">-</span><span class="fl">1951</span>,</span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-47_a2abc450a7f9f259fd8f847ac95051a9">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">neue_daten</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>year_c <span class="op">=</span> <span class="fl">2020</span><span class="op">-</span><span class="fl">1951</span>,</span>
 <span>                     month_factor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="st">"1"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_year_month</span>, newdata <span class="op">=</span> <span class="va">neue_daten</span><span class="op">)</span></span>
 <span><span class="co">##        1 </span></span>
@@ -1474,7 +1485,7 @@ Hinweis
 </div>
 <p>Visualisieren wir uns die geschätzten Erwartungswert pro Prädiktorwert, s. <a href="#fig-lm3">Abbildung&nbsp;<span>11.11</span></a>.</p>
 <div class="cell" data-hash="090-regression2_cache/html/fig-lm3_e5d030a7b63511173a3026c9237830ee">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">estimate_expectation</span><span class="op">(</span><span class="op">(</span><span class="va">lm_year_month</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">estimate_expectation</span><span class="op">(</span><span class="op">(</span><span class="va">lm_year_month</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-lm3" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure"><p><img src="090-regression2_files/figure-html/fig-lm3-1.png" class="img-fluid figure-img" width="672"></p>
@@ -1484,8 +1495,8 @@ Hinweis
 </div>
 </div>
 <p>Die erklärte Varianz von <code>lm_year_month</code> liegt bei:</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-47_5b1bb5474f12ec1f5bad76c95c2bb52f">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_year_month</span><span class="op">)</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-49_58b0e871c8233715f9e2f3c9225f3244">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_year_month</span><span class="op">)</span></span>
 <span><span class="co">## # R2 for Linear Regression</span></span>
 <span><span class="co">##        R2: 0.124</span></span>
 <span><span class="co">##   adj. R2: 0.124</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1495,7 +1506,7 @@ Hinweis
 <p>Eine Modellgleichung der Form <code>temp ~ year + month</code> zwingt die Regressionsgeraden dazu, parallel zu verlaufen. Aber vielleicht würden sie besser in die Punktewolken passen, wenn wir ihnen erlauben, auch <em>nicht</em> parallel verlaufen zu dürfen?</p>
 <p>Nicht-parallele Regressionsgeraden erlauben wir, indem wir das Regressionsmodell wie folgt spezifizieren und visualisieren, s. <a href="#fig-wetter-interakt">Abbildung&nbsp;<span>11.12</span></a>.</p>
 <div class="cell" data-hash="090-regression2_cache/html/fig-wetter-interakt_5b2dc4fadc61e2c80b6333c675bf3b4a">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_year_month_interaktion</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_year_month_interaktion</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span></span>
 <span>  <span class="va">precip</span> <span class="op">~</span> <span class="va">year_c</span> <span class="op">+</span> <span class="va">month_factor</span> <span class="op">+</span> <span class="va">year_c</span><span class="op">:</span><span class="va">month_factor</span>, </span>
 <span>  data <span class="op">=</span> <span class="va">wetter_month_1_7</span><span class="op">)</span></span>
 <span></span>
@@ -1602,8 +1613,8 @@ Wichtig
 </div>
 </div>
 <p>Das R-Quadrat von <code>lm_year_month_interaktion</code> beträgt übrigens 0.1385194.</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-50_51b9241fa4d10887c5d517d441d782b8">
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_year_month_interaktion</span><span class="op">)</span><span class="op">[[</span><span class="st">"R2"</span><span class="op">]</span><span class="op">]</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-52_5ae249359566eaaac582862eb426902b">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_year_month_interaktion</span><span class="op">)</span><span class="op">[[</span><span class="st">"R2"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">##        R2 </span></span>
 <span><span class="co">## 0.1385194</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1625,7 +1636,7 @@ Wichtig
 <p>Nur wenn man die Ursache-Wirkungs-Beziehungen in einem System kennt, macht es Sinn, die Modellkoeffizienten kausal zu interpretieren. Andernfalls lässt man besser die Finger von der Interpretation der Modellkoeffizienten und begnügt sich mit der Beschreibung der Modellgüte und mit Vorhersage<a href="#fn16" class="footnote-ref" id="fnref16" role="doc-noteref"><sup>16</sup></a>.</p>
 <p>Wer das nicht glaubt, der betrachte <a href="#fig-confounder">Abbildung&nbsp;<span>11.13</span></a>, links.<a href="#fn17" class="footnote-ref" id="fnref17" role="doc-noteref"><sup>17</sup></a> Ei Forschi stellt das Modell <code>m1: y ~ x</code> auf und interpretiert dann <code>b1</code>: “Ist ja klar, X hat einen starken positiven Effekt auf Y!”.</p>
 <p>In der nächsten Studie nimmt dis Forschi dann eine zweite Variable, <code>group</code> (z.B. Geschlecht) in das Modell auf: <code>m2: y ~ x + g</code>. Oh Schreck! Jetzt ist <code>b1</code> auf einmal nicht mehr stark positiv, sondern praktisch Null, und zwar in jeder Gruppe, s. <a href="#fig-confounder">Abbildung&nbsp;<span>11.13</span></a>, rechts!</p>
-<p>Dieses Umschwenken der Regressionskoeffizienten kann <em>nicht</em> passieren, wenn der Effekt “echt”, also kausal, ist. Handelt es sich aber um “nicht echte”, also nicht-kausale Zusammenhänge, so können sich die Modellkoeffizienten dramatisch verändern (auch das Vorzeichen ändern), wenn man das Modell verändert, also Variablen hinzufügt oder wegnimmt.</p>
+<p>Dieses Umschwenken der Regressionskoeffizienten kann <em>nicht</em> passieren, wenn der Effekt “echt”, also kausal, ist. Handelt es sich aber um “nicht echte”, also nicht-kausale Zusammenhänge, so können sich die Modellkoeffizienten dramatisch verändern (auch das Vorzeichen ändern<a href="#fn18" class="footnote-ref" id="fnref18" role="doc-noteref"><sup>18</sup></a>), wenn man das Modell verändert, also Variablen hinzufügt oder wegnimmt.</p>
 <p>Wenn man die kausalen Abhängigkeiten nicht kennt, weiß man also nicht, ob die Zusammenhänge kausal oder nicht-kausal sind. Man weiß also nicht, ob die Modellkoeffizienten belastbar, robust, stichhaltig sind oder nicht.</p>
 <div id="fig-confounder" class="cell quarto-layout-panel" data-hash="090-regression2_cache/html/fig-confounder_d79dc6e2540b33826d961c0de9b68265">
 <figure class="figure"><div class="quarto-layout-row quarto-layout-valign-top">
@@ -1647,16 +1658,17 @@ Wichtig
 <p></p><figcaption class="figure-caption">Abbildung&nbsp;11.13: Fügt man in ein Modell eine Variable hinzu, können sich die Koeffizienten massiv ändern. In beiden Diagrammen wurden die gleichen Daten verwendet.</figcaption><p></p>
 </figure>
 </div>
-<p>Man könnte höchstens sagen, dass man (wenn man die Kausalstruktur nicht kennt) die Modellkoeffizienten nur <em>deskriptiv</em> interpretiert, z.B. “Dort wo es viele Störche gibt, gibt es auch viele Babies”.<a href="#fn18" class="footnote-ref" id="fnref18" role="doc-noteref"><sup>18</sup></a> Leider ist unser Gehirn auf kausale Zusammenhänge geprägt: Es fällt uns schwer, Zusammenhänge nicht kausal zu interpretieren. Daher werden deskriptive Befunde immer wieder unzulässig kausal interpretiert - von Laien und Wissenschaftlis auch.</p>
+<p>Man könnte höchstens sagen, dass man (wenn man die Kausalstruktur nicht kennt) die Modellkoeffizienten nur <em>deskriptiv</em> interpretiert, z.B. “Dort wo es viele Störche gibt, gibt es auch viele Babies”.<a href="#fn19" class="footnote-ref" id="fnref19" role="doc-noteref"><sup>19</sup></a> Leider ist unser Gehirn auf kausale Zusammenhänge geprägt: Es fällt uns schwer, Zusammenhänge nicht kausal zu interpretieren. Daher werden deskriptive Befunde immer wieder unzulässig kausal interpretiert - von Laien und Wissenschaftlis auch.</p>
 </section><section id="modelle-mit-vielen-variablen" class="level2" data-number="11.5"><h2 data-number="11.5" class="anchored" data-anchor-id="modelle-mit-vielen-variablen">
 <span class="header-section-number">11.5</span> Modelle mit vielen Variablen</h2>
 <p>Grundsätzlich kann man viele Prädiktoren in ein (lineares) Modell aufnehmen.</p>
 <p>Betrachten wir z.B. folgendes lineares Modell mit zwei UV.</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-53_d78ecd48da0f58775920b38bf19499e5">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_mario_2uv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">start_pr</span> <span class="op">+</span> <span class="va">ship_pr</span>, data <span class="op">=</span> <span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-55_3e12092629cf57a5b187f8521d3ee8bf">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_mario_2uv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">start_pr</span> <span class="op">+</span> <span class="va">ship_pr</span>, data <span class="op">=</span> <span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!-- , s. auch @fig-mario-2uv. -->
-<p>Jedes der beiden Regressionsgewichte in <code>lm_mario_2uv</code> entspricht der Steigung in der beiden Achsen in <span class="quarto-unresolved-ref">?fig-mario-2uv</span>, d.h. die Steigung für <code>start_pr</code> bzw. die Steigung für <code>ship_pr</code>.</p>
+<!-- Jedes der beiden Regressionsgewichte in `lm_mario_2uv` entspricht der Steigung in der beiden Achsen in @fig-mario-2uv, -->
+<!-- d.h. die Steigung für `start_pr` bzw. die Steigung für `ship_pr`. -->
 <p>Wir könnten im Prinzip alle Variablen unserer Datentabelle als Prädiktoren in das Regressionsmodellaufnehmen. Die Frage ist nur: macht es Sinn?</p>
 <p>Hier sind einige Richtlinien, die helfen, welche Prädiktoren (und wie viele) man in ein Modell aufnehmen sollte <span class="citation" data-cites="gelman_regression_2021">(<a href="#ref-gelman_regression_2021" role="doc-biblioref">Gelman, Hill, und Vehtari 2021, 199f</a>)</span>:</p>
 <ol type="1">
@@ -1675,20 +1687,20 @@ Wichtig
 <p>🧔‍♂️ Ich teile den Datensatz <code>mariokart</code> zufällig in zwei Teile. Den ersten Teil kannst du nutzehn, um Modelle zu berechnen (“trainieren”) und ihre Güte zu prüfen. Den Teil nenne ich “Trainingssample”, hört sich cool an, oder? Im Train-Sample ist ein Anteil (<code>frac</code>tion) von 70% der Daten, okay? Die restlichen Daten behalte ich. Wenn du ein gutes Modell hast, kommst du und wir berechnen die Güte deiner Vorhersagen.</p>
 </blockquote>
 <p>Wenn die Daten auf Ihrer Festplatte liegen, z.B. im Unterordner <code>daten</code>, dann könne Sie sie von dort importieren:</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-54_33b89e84e1d73be52b99874d65728e71">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"daten/mariokart_train.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-56_6cec2967276676f32283f36422b40ba4">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"daten/mariokart_train.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Alternativ können Sie sie auch von diesem Pfad von einem Rechner in der Cloud herunterladen:</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-55_22dc5b11ea341efd17c895d645b5cf25">
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/mariokart_train.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-57_ebd1f43eaa60b22aacc16e9502cd7383">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/mariokart_train.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dann importieren wir auf gleiche Wiese Test-Sample in R:</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-56_281e82ea12c6c05bdc86aa902765efdd">
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/mariokart_test.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-58_5163d18b4f95e48132dc89e3a7787c6b">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/mariokart_test.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Also los. Sie probieren mal die “All-in-Strategie”: Alle Variablen rein in das Modell. Viel hilft viel, oder nicht?</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-57_72821dc89617556b7c9ed8fd5a5c4fa8">
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_allin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">mariokart_train</span><span class="op">)</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-59_1e18f107a56699867933134fee0011d1">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_allin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">mariokart_train</span><span class="op">)</span></span>
 <span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_allin</span><span class="op">)</span>  <span class="co"># aus easystats</span></span>
 <span><span class="co">## # R2 for Linear Regression</span></span>
 <span><span class="co">##        R2: 0.994</span></span>
@@ -1715,8 +1727,8 @@ Overfitting
 </div>
 </div>
 <p>Probieren wir also die Vorhersage im Test-Sample:</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-58_6d13afb8bd46d42c0037781cc8c5f9ee">
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_allin</span>, newdata <span class="op">=</span> <span class="va">mariokart_test</span><span class="op">)</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-60_bff014a746371162f91ede8b1d9f77f1">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_allin</span>, newdata <span class="op">=</span> <span class="va">mariokart_test</span><span class="op">)</span></span>
 <span><span class="co">## Error in eval(predvars, data, env): object 'V1' not found</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Oh nein! Was ist los!? Eine Fehlermeldung!</p>
@@ -1736,25 +1748,25 @@ Vorsicht
 </section><section id="modell-all-in-ohne-titelspalte" class="level3" data-number="11.6.2"><h3 data-number="11.6.2" class="anchored" data-anchor-id="modell-all-in-ohne-titelspalte">
 <span class="header-section-number">11.6.2</span> Modell “all-in”, ohne Titelspalte</h3>
 <p>Okay, also auf die Titelspalte sollten wir vielleicht besser verzichten. Nächster Versuch.</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-59_079e2a9ee69d56179d47d6e6d8a2cebd">
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_train2</span> <span class="op">&lt;-</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-61_254c3b821a93aa125f65309e4489da01">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_train2</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">mariokart_train</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">title</span>, <span class="va">V1</span>, <span class="va">id</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Wir entfernen auch die Spalte <code>V1</code> und <code>id</code>, da sie ebenfalls keine Informatione bergen.</p>
 <div class="cell" data-hash="090-regression2_cache/html/lm_allin_no_title_57c13b85c206b3052993820c53d2ef14">
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_allin_no_title</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">mariokart_train2</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_allin_no_title</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">mariokart_train2</span><span class="op">)</span></span>
 <span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_allin_no_title</span><span class="op">)</span> </span>
 <span><span class="co">## # R2 for Linear Regression</span></span>
 <span><span class="co">##        R2: 0.521</span></span>
 <span><span class="co">##   adj. R2: 0.441</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Das R-Quadrat ist ja durchaus ordentlich. Schauen wir uns noch den <code>rmse</code> (die SD der Vorhersagefehler) an<a href="#fn19" class="footnote-ref" id="fnref19" role="doc-noteref"><sup>19</sup></a>:</p>
+<p>Das R-Quadrat ist ja durchaus ordentlich. Schauen wir uns noch den <code>rmse</code> (die SD der Vorhersagefehler) an<a href="#fn20" class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a>:</p>
 <blockquote class="blockquote">
 <p>🤖 Gut gemacht!</p>
 </blockquote>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-60_5a7f17455024646bee8bc7e1173d0f0f">
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">performance</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/performance/reference/performance_rmse.html">rmse</a></span><span class="op">(</span><span class="va">lm_allin_no_title</span><span class="op">)</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-62_eca48d28438f63e0d4df9420ce438576">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">performance</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/performance/reference/performance_rmse.html">rmse</a></span><span class="op">(</span><span class="va">lm_allin_no_title</span><span class="op">)</span></span>
 <span><span class="co">## [1] 20.22998</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Sie rennen zu Ihrem Chef, der jetzt die Güte Ihrer Vorhersagen in den <em>restlichen</em> Daten bestimmen soll.</p>
@@ -1762,8 +1774,8 @@ Vorsicht
 <p>🧔‍♂️ Da wir dein Modell in diesem Teil des Komplett-Datensatzes <em>testen</em>, nennen wir diesen Teil das “Test-Sample”.</p>
 </blockquote>
 <p>Ihr Chef schaut sich die Verkaufspreise im Test-Sample an:</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-61_699dc2bd8ac8d70faad32627acab7b76">
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-63_c2b4a6a9360a7dd90c4e35c28541dfc4">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">total_pr</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -1778,26 +1790,26 @@ Vorsicht
 <blockquote class="blockquote">
 <p>🧔‍♂️ Okay, hier sind die ersten paar echten Verkaufspreise. Jetzt mach mal deine Vorhersagen auf Basis deines besten Modells!</p>
 </blockquote>
-<p>Hier sind Ihre Vorhersagen<a href="#fn20" class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a>:</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-62_cae9a6685783e3d6ffc934f80819e128">
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_allin_predictions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_allin_no_title</span>, newdata <span class="op">=</span> <span class="va">mariokart_test</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Hier sind Ihre Vorhersagen<a href="#fn21" class="footnote-ref" id="fnref21" role="doc-noteref"><sup>21</sup></a>:</p>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-64_3b0cff23871e735df9e4b83f8ee9e772">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_allin_predictions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_allin_no_title</span>, newdata <span class="op">=</span> <span class="va">mariokart_test</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Hier sind Ihre ersten paar Vorhersagen:</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-63_b748c39007912eb3c4448b821eaa1093">
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">lm_allin_predictions</span><span class="op">)</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-65_1c74f5c935b7778b5c8a9b5c6336b115">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">lm_allin_predictions</span><span class="op">)</span></span>
 <span><span class="co">##        1        2        3        4        5        6 </span></span>
 <span><span class="co">## 28.62826 53.85885 53.28035 54.03619 41.75512 46.57713</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dies Vorhersagen fügen wir noch der Ordnung halber in die Tabelle mit den Test-Daten:</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-64_2ef67f26177e18257638aabe9aaea26e">
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_test</span> <span class="op">&lt;-</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-66_87f7bb4199ec1ea1b2c231628118f015">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_test</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">mariokart_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>lm_allin_predictions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_allin_no_title</span>, newdata <span class="op">=</span> <span class="va">mariokart_test</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Okay, was ist jetzt der mittlere Vorhersagefehler?</p>
-<p>Um die Vorhersagegüte im Test-Sample auszurechnen<a href="#fn21" class="footnote-ref" id="fnref21" role="doc-noteref"><sup>21</sup></a>, nutzen wir die Funktionen des R-Paketes <code>yardstick</code><a href="#fn22" class="footnote-ref" id="fnref22" role="doc-noteref"><sup>22</sup></a>:</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-65_78539ab90667b3af322a185a0b18be14">
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/yardstick">yardstick</a></span><span class="op">)</span></span>
+<p>Um die Vorhersagegüte im Test-Sample auszurechnen<a href="#fn22" class="footnote-ref" id="fnref22" role="doc-noteref"><sup>22</sup></a>, nutzen wir die Funktionen des R-Paketes <code>yardstick</code><a href="#fn23" class="footnote-ref" id="fnref23" role="doc-noteref"><sup>23</sup></a>:</p>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-67_2429af2c69ce2495749a5151920fe73c">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/yardstick">yardstick</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">yardstick</span><span class="fu">::</span><span class="fu"><a href="https://yardstick.tidymodels.org/reference/mae.html">mae</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">mariokart_test</span>,</span>
 <span>               truth <span class="op">=</span> <span class="va">total_pr</span>,  <span class="co"># echter Verkaufspreis</span></span>
@@ -1810,7 +1822,7 @@ Vorsicht
   </script>
 </div>
 </div>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">yardstick</span><span class="fu">::</span><span class="fu"><a href="https://yardstick.tidymodels.org/reference/rmse.html">rmse</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">mariokart_test</span>,</span>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">yardstick</span><span class="fu">::</span><span class="fu"><a href="https://yardstick.tidymodels.org/reference/rmse.html">rmse</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">mariokart_test</span>,</span>
 <span>               truth <span class="op">=</span> <span class="va">total_pr</span>,  <span class="co"># echter Verkaufspreis</span></span>
 <span>               estimate <span class="op">=</span> <span class="va">lm_allin_predictions</span><span class="op">)</span>  <span class="co"># Ihre Vorhersage</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -1822,13 +1834,13 @@ Vorsicht
 </div>
 </div>
 </div>
-<p>Ihr mittlerer Vorhersagefehler (MAE) liegt bei ca. 13 Euro.<a href="#fn23" class="footnote-ref" id="fnref23" role="doc-noteref"><sup>23</sup></a></p>
+<p>Ihr mittlerer Vorhersagefehler (MAE) liegt bei ca. 13 Euro.<a href="#fn24" class="footnote-ref" id="fnref24" role="doc-noteref"><sup>24</sup></a></p>
 <blockquote class="blockquote">
 <p>🧔‍♂️ Ganz okay.</p>
 </blockquote>
 <p>Wie ist es um das R-Quadrat Ihrer Vorhersagen bestellt?</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-66_6923f118790aa46d02fa2cab6e3005b6">
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># auch aus dem Paket yardstick:</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-68_7e30186939fe569454b0260885569edb">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># auch aus dem Paket yardstick:</span></span>
 <span><span class="fu"><a href="https://yardstick.tidymodels.org/reference/rsq.html">rsq</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">mariokart_test</span>,</span>
 <span>    truth <span class="op">=</span> <span class="va">total_pr</span>,  <span class="co"># echter Verkaufspreis</span></span>
 <span>    estimate <span class="op">=</span> <span class="va">lm_allin_predictions</span><span class="op">)</span>  <span class="co"># Ihre Vorhersage</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1874,16 +1886,16 @@ Tipp
 <span class="header-section-number">11.7</span> Vertiefung: Train- und Test-Sample</h2>
 <p>Wenn Sie eine robuste Schätzung der Güte Ihres Modells erfahren möchten, bietet es sich an, die Vorhersagegenauigkeit Ihres Modells in einem neuen Datensatz, einem sog. Test-Sample, zu überprüfen.</p>
 <p>Die Aufteilung Ihres Datensatzes in ein Train- und ein Test-Sample können Sie z.B. so bewerkstelligen:</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-67_70ef818bb6e4caa739d89ad4f7c57206">
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rsample.tidymodels.org">rsample</a></span><span class="op">)</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-69_480a87ce6596d849837bbf2cf442c7a9">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rsample.tidymodels.org">rsample</a></span><span class="op">)</span></span>
 <span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"daten/mariokart.csv"</span><span class="op">)</span>  <span class="co"># Wenn die CSV-Datei in einem Unterordner mit Namen "daten" liegt</span></span>
 <span></span>
 <span><span class="va">meine_aufteilung</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">initial_split</a></span><span class="op">(</span><span class="va">mariokart</span>, strata <span class="op">=</span> <span class="va">total_pr</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>initial_split</code> <em>bestimmt</em> für jede Zeile (Beobachtung) zufällig aus, ob diese Zeile in das Train- oder in das Test-Sample kommen soll. Im Standard werden 70% der Daten in das Train- und 30% in das Test-Sample eingeteilt; das ist eine sinnvolle Aufteilung. Das Argument <code>strata</code> sorgt dafür, dass die Verteilung der AV in beiden Stichproben gleich ist. Es wäre nämlich blöd für Ihr Modell, wenn im Train-Sample z.B. nur die teuren, und im Test-Sample nur die günstigen Spiele landen würde. In so einem Fall würde sich Ihr Modell unnötig schwer tun.</p>
-<p>Im nächsten Schritt können Sie anhand anhand der von <code>initial_split</code> bestimmten Aufteilung die Daten tatsächlich aufteilen.<a href="#fn24" class="footnote-ref" id="fnref24" role="doc-noteref"><sup>24</sup></a></p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-69_4d2ac11b8478ed5975bd033ef7048519">
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">training</a></span><span class="op">(</span><span class="va">meine_aufteilung</span><span class="op">)</span>  <span class="co"># Train-Sample</span></span>
+<p>Im nächsten Schritt können Sie anhand anhand der von <code>initial_split</code> bestimmten Aufteilung die Daten tatsächlich aufteilen.<a href="#fn25" class="footnote-ref" id="fnref25" role="doc-noteref"><sup>25</sup></a></p>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-71_0045f0e92943d45ce17bb017f919ff6a">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">training</a></span><span class="op">(</span><span class="va">meine_aufteilung</span><span class="op">)</span>  <span class="co"># Train-Sample</span></span>
 <span><span class="va">mariokart_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">testing</a></span><span class="op">(</span><span class="va">meine_aufteilung</span><span class="op">)</span>  <span class="co"># Test-Sample</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ich persönliche nenne die Tabelle mit den Daten gerne <code>d_train</code> bzw. <code>d_test</code>, das ist kürzer zu tippen und einheitlich. Sie können aber auch ein eigenes Namens-Schema nutzen; was aber hilfreich ist, ist Konsistenz in der Benamung, außerdem Kürze und aussagekräftige Namen.</p>
@@ -1945,10 +1957,10 @@ Tipp
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-gelman_regression_2021" class="csl-entry" role="listitem">
-Gelman, Andrew, Jennifer Hill, und Aki Vehtari. 2021. <em>Regression and Other Stories</em>. Analytical Methods for Social Research. <span>Cambridge</span>: <span>Cambridge University Press</span>.
+Gelman, Andrew, Jennifer Hill, und Aki Vehtari. 2021. <em>Regression and other stories</em>. Analytical methods for social research. Cambridge: Cambridge University Press.
 </div>
 <div id="ref-Kosinski2013" class="csl-entry" role="listitem">
-Kosinski, Michal, David Stillwell, und Thore Graepel. 2013. <span>„Private Traits and Attributes Are Predictable from Digital Records of Human Behavior“</span>. <em>Proceedings of the National Academy of Sciences</em> 110 (15): 5802–5. <a href="https://doi.org/10.1073/pnas.1218772110">https://doi.org/10.1073/pnas.1218772110</a>.
+Kosinski, Michal, David Stillwell, und Thore Graepel. 2013. <span>„Private traits and attributes are predictable from digital records of human behavior“</span>. <em>Proceedings of the National Academy of Sciences</em> 110 (15): 5802–5. <a href="https://doi.org/10.1073/pnas.1218772110">https://doi.org/10.1073/pnas.1218772110</a>.
 </div>
 <div id="ref-lalwani_customer_2022" class="csl-entry" role="listitem">
 Lalwani, Praveen, Manas Kumar Mishra, Jasroop Singh Chadha, und Pratyush Sethi. 2022. <span>„Customer Churn Prediction System: A Machine Learning Approach“</span>. <em>Computing</em> 104 (2): 271–94. <a href="https://doi.org/10.1007/s00607-021-00908-y">https://doi.org/10.1007/s00607-021-00908-y</a>.
@@ -1973,13 +1985,14 @@ Lalwani, Praveen, Manas Kumar Mishra, Jasroop Singh Chadha, und Pratyush Sethi. 
 <li id="fn15"><p>unser Modell könnte ja auch falsch sein.<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn16"><p>synonym: Prognose<a href="#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn17"><p><a href="https://data-se.netlify.app/2021/12/01/simulation-on-controlling-confounders/">Quelle</a><a href="#fnref17" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn18"><p>Das Störche-Babies-Beispiel passt auch zu <a href="#fig-confounder">Abbildung&nbsp;<span>11.13</span></a>.<a href="#fnref18" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn19"><p>der Befehl wohnt im Paket <code>performance</code>, Teil des Metapakets <code>easystats</code><a href="#fnref19" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn20"><p>engl. predictions; to predict: vorhersagen<a href="#fnref20" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn21"><p>wir verwenden dazu die Funktionen <code>mae</code> und <code>rsq</code><a href="#fnref21" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn22"><p>welches Sie vielleicht noch installieren müssen.<a href="#fnref22" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn23"><p>Wir haben hier <code><a href="https://yardstick.tidymodels.org/reference/mae.html">yardstick::mae</a></code> geschrieben und nicht nur <code>mae</code>, da es sowohl im Paket <code>performance</code> ( Teil des Metapakets <code>easystats</code>) als auch im Paket <code>yardstick</code> (Teil des Metapakets <code>tidymodels</code>) einen Befehl des Namens <code>mae</code> gibt. R könnte daher den anderen <code>mae</code> meinen als Sie, was garantiert zu Verwirrung führt. Entweder bei R oder bei Ihnen.<a href="#fnref23" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn24"><p>initial_split sagt nur, welche Zeile in welche der beiden Stichproben kommen <em>soll</em>. Die eigentliche Aufteilung wird aber noch nicht durchgeführt.<a href="#fnref24" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn18"><p>das nennt man dann <em>Simpsons Paradox</em><a href="#fnref18" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn19"><p>Das Störche-Babies-Beispiel passt auch zu <a href="#fig-confounder">Abbildung&nbsp;<span>11.13</span></a>.<a href="#fnref19" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn20"><p>der Befehl wohnt im Paket <code>performance</code>, Teil des Metapakets <code>easystats</code><a href="#fnref20" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn21"><p>engl. predictions; to predict: vorhersagen<a href="#fnref21" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn22"><p>wir verwenden dazu die Funktionen <code>mae</code> und <code>rsq</code><a href="#fnref22" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn23"><p>welches Sie vielleicht noch installieren müssen.<a href="#fnref23" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn24"><p>Wir haben hier <code><a href="https://yardstick.tidymodels.org/reference/mae.html">yardstick::mae</a></code> geschrieben und nicht nur <code>mae</code>, da es sowohl im Paket <code>performance</code> ( Teil des Metapakets <code>easystats</code>) als auch im Paket <code>yardstick</code> (Teil des Metapakets <code>tidymodels</code>) einen Befehl des Namens <code>mae</code> gibt. R könnte daher den anderen <code>mae</code> meinen als Sie, was garantiert zu Verwirrung führt. Entweder bei R oder bei Ihnen.<a href="#fnref24" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn25"><p>initial_split sagt nur, welche Zeile in welche der beiden Stichproben kommen <em>soll</em>. Die eigentliche Aufteilung wird aber noch nicht durchgeführt.<a href="#fnref25" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

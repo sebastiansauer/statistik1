@@ -1,0 +1,1017 @@
+# Rahmen
+
+
+
+
+
+```{r libs}
+#| include: false
+library(tibble)
+library(tidyverse)
+# library(grid)
+# library(gridExtra)
+```
+
+```{r}
+#| include: false
+theme_set(theme_minimal())
+```
+
+
+
+```{css, echo = FALSE}
+.justify {
+  text-align: justify !important
+}
+
+.centered {
+  text-align-last: center;
+}
+
+.xlarge {
+  font-size: 300%;
+}
+```
+
+
+
+## Lernsteuerung
+
+### Standort im Lernpfad
+
+@fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
+
+
+@fig-tidy5 zeigt, dass unser Vorgehen in diesem Buch einem Fließband gleicht: Schritt für Schritt, in der richtigen Reihenfolge, vom Anfang bis Ende, erarbeiten wir unser "Datenprodukt".
+
+![Datenanalyse als eine Abfolge am Fließband](img/tidydata_5.jpg){#fig-tidy5 width="50%"}
+
+
+
+
+:::{.xsmall}
+[Quelle](https://github.com/allisonhorst/stats-illustrations)
+:::
+
+
+
+
+```{r}
+#| echo: false
+ggplot2::theme_set(theme_minimal())
+```
+
+
+### Lernziele
+
+
+- Sie können eine Definition von Statistik wiedergeben.
+- Sie können eine Definition von Daten wiedergeben.
+- Sie können den Begriff Tidy-Daten erläutern.
+- Sie können Beispiele für verschiedene Skalenniveaus nennen.
+
+
+## Was ist Statistik und wozu ist sie gut?
+
+Es gibt mehrere Definition von Statistik;
+hier ist eine.
+
+
+:::{#def-statistik}
+
+
+
+## Statistik
+Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entnehmen und beschreibt die Ungewissheit unserer Schlüsse @kaplan_statistical_2009, @poldrack_statistical_2023.$\square$
+
+:::
+
+:::{.callout-note}
+In diesem Buch werden die Begriffe *Statistik*, *Datenanalyse* und *Data Science* synonym verwendet.$\square$
+:::
+
+
+Hm. Vielleicht fragen wir mal ChatGPT, was es unter Statistik versteht:
+
+
+
+
+
+> 👨 Was ist Statistik? Bitte definiere verständlich.
+
+> 🤖 Statistik ist eine Wissenschaft, die sich mit der Sammlung, Analyse, Interpretation, Präsentation und Übertragung von Daten beschäftigt. Ziel ist es, Muster und Trends in den Daten zu erkennen und verlässliche Schlussfolgerungen über eine größere Gruppe (z.B. Bevölkerung) auf der Basis einer Stichprobe (Teilmenge) zu treffen. Die Statistik hilft uns bei der Beantwortung von Fragen, indem sie uns dabei hilft, die Unsicherheit in den Daten zu messen und zu verstehen^[Release 2023-Jan].
+
+
+Gute Antwort, oder?
+
+:::{#exr-nutzen-statistik}
+
+### Nutzen von Statistik
+
+🏋️‍♀️ Fragen Sie ChatGPT, was der Nutzen von Statistik ist. Diskutieren Sie die Antwort.
+
+
+<!-- Statistik ist gut für: -->
+
+<!-- Entscheidungsfindung: Durch die Analyse von Daten können wir bessere Entscheidungen treffen, indem wir Muster und Trends erkennen. -->
+
+<!-- Prognostizieren: Statistik kann verwendet werden, um zukünftige Ereignisse vorherzusagen, indem auf der Grundlage von Daten aus der Vergangenheit Schätzungen erstellt werden. -->
+
+<!-- Testen von Hypothesen: Statistik ermöglicht es uns, Hypothesen zu testen, um zu überprüfen, ob sie wahr oder falsch sind. -->
+
+<!-- Risikoabschätzung: Statistik kann verwendet werden, um das Risiko von Ereignissen oder Trends zu bewerten und entsprechende Maßnahmen zu ergreifen. -->
+
+<!-- Planung und Überwachung von Studien: Statistik ist ein wichtiger Bestandteil bei der Planung und Überwachung von Studien, um sicherzustellen, dass die Daten valide und zuverlässig sind. -->
+
+<!-- Kommunikation von Daten: Statistik hilft uns, Daten zu visualisieren und zu präsentieren, um sie leichter verständlich und nachvollziehbar zu machen. -->
+
+:::
+
+
+
+
+Ein zentrales Vorgehen bei statistischen Analysen ist es, 
+die *Unterschiedlichkeit der Dinge* zu beschreiben,
+präziser gesagt: die *Variation zu quantifizieren*. Betrachten wir dazu das Beispiel in s. @fig-groesse.
+
+
+```{r}
+#| echo: false
+#| label: fig-groesse
+#| fig-cap: "Wenig Variation in der Körpergröße bei den Basketballern. Alles lange Kerle. Viel Variation bei den Schachspielern: Manche sind klein, ander groß."
+#| dev: "ragg_png"
+
+groesse <- 
+  tibble::tribble(
+     ~id, ~groesse,        ~team,
+      1L,     197L, "Basketball 🏀",
+      2L,     203L, "Basketball 🏀",
+      3L,     201L, "Basketball 🏀",
+     4L,     194L, "Basketball 🏀",
+     5L,     205L, "Basketball 🏀",
+     1L,     167L,     "Schach ♟️",
+     2L,     198L,        "Schach ♟️",
+     3L,     177L,      "Schach ♟️",
+     4L,     171L,        "Schach ♟️",
+     5L,     189L,    "Schach ♟️",
+     )
+
+
+groesse %>% 
+  ggplot(aes(x = id, y = groesse)) +
+  geom_col() +
+  facet_wrap(~team) +
+  labs(title = "Variation in der Körpergröße")
+
+
+
+  # geom_label(x = 3, y = 200, label = "🏀",
+  #            family = "Apple Color Emoji")
+
+```
+
+
+Bei den Basketballern gibt es *wenig* Variation in der Körpergröße - alle sind groß, ähnlich groß.
+Bei den Schachspielenr gibt es (im Verhältnis) *viel* Variation: Einige Personen sind groß, andere klein.
+
+Die Variation (auch "Variabilität" genannt) kann man auch gut so darstellen wie in s. @fig-variab gezeigt.
+
+
+```{r}
+#| echo: false
+#| label: fig-variab
+#| fig-cap: "Die Abweichungen der einzelnen Personen von der mittleren Körpergröße ihres Teams"
+#| dev: "ragg_png"
+
+groesse_summ <-
+  groesse %>% 
+  group_by(team) %>% 
+  summarise(groesse_mw = mean(groesse))
+
+groesse <-
+  groesse %>% 
+  group_by(team) %>% 
+  mutate(groesse_mw = mean(groesse)) %>% 
+  mutate(abweichung = groesse - groesse_mw) %>% 
+  mutate(vorzeichen = factor(sign(abweichung)))
+
+groesse %>% 
+  ggplot(aes(x = id)) +
+  geom_segment(aes(x = id, xend = id, y = groesse, yend = groesse_mw, color = vorzeichen)) +
+  geom_point(aes(x = id, y = groesse), color = "grey60", alpha = .7) +
+  facet_wrap(~ team) +
+  geom_hline(aes(yintercept = groesse_mw), data = groesse_summ) +
+  labs(title = "Abweichung vom Mittelwert der Körpergröße pro Team")
+  
+```
+
+Eine *Abweichung* (auch *Residium*) genannt, zeigt die Differenz von Mittelwert und dem Wert der Körpergröße bei der jeweiligen Person.
+Wenn wir allgemein von einer Person $i$ sprechen,
+die Körpergröße mit $x$ bezeichnen und den Mittelwert der Körpergröße als $\bar{x}$ ("x quer"),
+dann können wir knapp und präzise das Residuum $r$ so definieren:
+$r_i = x_i - \bar{x}$.
+
+
+
+
+
+
+## Was ist das Ziel Ihrer Analyse?
+
+
+### Arten von Zielen
+
+```{mermaid}
+%%| fig-cap: Zielarten einer Datenanalyse
+%%| label: fig-ziele
+
+graph TD
+  subgraph Ziele
+    A[beschreiben]
+    B[vorhersagen]
+    C[erklären]
+  end
+```
+
+
+Beispiele für die einzelnen Zielarten der Datenanalyse:
+
+- *Beschreiben*: "Wie groß ist der Gender-Paygap in der Branche X im Zeitraum Y?"
+- *Vorhersagen*: Wenn ich 100 Stunden auf die Statistikklausur lernen, welche Note kann ich dann erwarten?
+- *Erklären*: Wie viel bringt mir das Lernen auf die Statistikklausur?
+
+###  Forschungsfrage
+
+Eine Forschungsfrage ist die Leitfrage Ihrer Analyse.
+Sie definiert, was Sie herausfinden wollen.
+Häufig sind Forschungsfragen so aufgebaut:
+
+>   Hat X einen Einfluss auf Y?
+
+
+
+
+
+
+Eine Forschungsfrage weist häufig folgende Struktur auf, s. @fig-fo-struktur.
+
+
+
+```{mermaid}
+%%| fig-cap: Struktur eine Forschungsfrage
+%%| label: fig-fo-struktur
+%%| out-width: "100%"
+
+graph LR
+    Input --> X[hier passiert irgendwas]
+    subgraph "Schwarze Kiste"
+      X
+    end
+    X --> Output
+```
+
+
+
+:::{#exm-fofrage1}
+
+### Forschungsfrage 1
+
+>   Hat Lernen einen Einfluss auf den Prüfungserfolg?
+>   Verringert Joggen die Menge des Hüftgolds?
+>   Um welchen Betrag erhöht sich der Umsatz, wenn wir 1000€ mehr Werbung ausgeben?$\square$
+
+:::
+
+
+
+:::{#exm-fofrage2}
+
+### Forschungsfrage 2
+
+Nach dem Studium haben Sie bei einem großen Online-Auktionshaus angeheuert. Da Sie angaben, sich im Studium ~~intensiv~~ etwas mit Statistik beschäftigt zu haben, hat man Sie in die F&E-Abteilung^[Forschung und Entwicklung] gesteckt. 
+Heute ist es Ihre Aufgabe, Auktionen zur Spielekonsole [Wii](https://www.nintendo.de/Wii/Wii-94559.html) zu untersuchen,
+genauer gesagt, geht es um das Spiel [Mariokart](https://www.nintendo.de/Spiele/Wii/Mario-Kart-Wii-281848.html#_bersicht).
+Ihre Forschungsfrage lautet:
+
+>   Welche Produktmerkmale stehen mit einem hohen Verkaufserlös in Zusammenhang?$\square$
+
+
+
+
+:::
+
+:::{#exm-braindrain}
+
+## Aus der Forschung: Smartphone-Brain-Drain
+
+@ward_brain_2017 untersuchten die Forschungsfrage, ob die bloße Gegenwart eines Handies (z.B. wenn es vor Ihnen auf dem Tisch dazu führt, dass man abgelenkt wird und daher schlechtere kognitive Leistungen zeigt.
+
+Leider schreiben die Autoren Ihre Hypothese nicht glasklar, aber implizit ist obige Hypothese herauszulesen:
+
+>   First, smartphones may redirect the orientation of conscious attention away from the focal task and toward thoughts or behaviors associated with one’s phone. Prior research provides ample evidence that ... that this digital distraction adversely affects both performance ... and enjoyment.
+
+Später formulieren Sie Ihre Hypothese noch genauer:
+
+>   In two experiments, we test the hypothesis that the mere presence of one’s own smartphone reduces available cognitive capacity.
+
+Die Ergebnisse unterstützen Ihre Hypothese, s. @fig-braindrain. 
+Im Diagramm ist ersichtlich, dass die kognitive Leistung (Y-Achse) sowohl in der Kapazität des Arbeitsgedächtnisses (links) als auch in der fluiden Intelligenz (rechts) am geringsten ist, wenn das Handy auf dem Schreibtisch (Desk) liegt. Am besten ist die kognitive Leistung, wenn das Handy nicht im Raum ist.$\square$
+
+
+
+
+![Handy in Sichtweite verringert die kognitiven Ressourcen](img/braindrain1.jpg){#fig-braindrain}
+
+:::
+
+
+
+
+
+
+
+:::{.callout-caution}
+Es ist ein häufiger Fehler, in der Forschungsfrage zu formulieren "X führt zu Y", aber in der Analyse keine Methode zu verwenden, die geeignet ist, kausale Zusammenhänge aufzudecken. Es reicht nicht, dass man z.B. einen (negativen) Zusammenhang zwischen der Häufigkeit von Smartphone-Nutzung und Konzentrationsfähigkeit findet [@schwaiger_impact_2022], um zu sagen: "Daddeln macht dumm!". Es könnte ja z.B. auch umgekehrt sein. Platt gesagt: "Dummheit führt zu Daddeln". Weitere Erklärungen sind möglich. Vorsicht also mit (vor)schnellen Aussagen zu kausalen Abhängigkeiten.
+:::
+
+
+## Was sind Daten?
+
+:::{#def-daten}
+
+### Hallo, Daten
+
+Daten kann man als eine geordnete Folge von Zeichen definieren.$\square$
+
+:::
+
+
+
+Daten kommen häufig in Tabellenform vor; 
+so sind sie am besten zu untersuchen,
+s. @tbl-daten.
+
+```{r}
+#| echo: false
+#| tbl-cap: "So sehen Daten aus."
+#| label: tbl-daten
+d <- 
+  tribble(~ id, ~name, ~note,
+          1, "Anna", 1.3,
+          2, "Berta", 2.3,
+          3, "Carla", 3)
+
+d
+```
+
+
+Die erste Spalte `id` ist nur eine laufende Nummer.
+Sie dient dazu, die einzelnen Beobachtungen (hier Studentis) 
+identifizieren zu können und birgt ansonsten keine Information.
+Beispiele für ID-Variablen sind z.B. Matrikulationsnummer, Personalausweisnummern oder Bestellnumern.
+
+
+
+
+### Je mehr, desto besser (?)
+
+
+Was Daten betrifft, könnte man behaupten: "Viel hilft viel" oder "Je mehr, desto besser".
+Natürlich unter sonst gleichen Umständen^[Ceteris paribus, auf Latein, hört sich gleich viel schlauer an]. Viel Datenmüll ist natürlich nicht besser als ein paar knappe, wasserdichte Fakten!
+
+
+:::{#exm-samplesize}
+
+Um Ihre eigene Lehraktivität zu organisieren, wollen Sie sich ein Bild machen, 
+wie viel Ihre Nebensitzer im Hörsaal so lernen.
+Sie blicken nach links und fragen "wie viel lernst du so?".
+Sie blicken nach recht und wiederholen die Frage gerichtet an den rechtsnebensitzenden Kommilitonen.
+Dann addieren Sie die zwei Zahlen (unter der Annahme, dass Sie zwei Zahlen bekommen haben),
+und teilen durch zwei, um den Mittelwert zu erhalten.
+
+Ein kritischer Geist könnte anmerken, dass Sie besser die Untersuchung nicht gemacht hätten (auch wenn Sie, vielleicht ohne zu wollen, eine statistische Untersuchung angestellt haben).
+Denn bei so wenig befragten Personen ist die Ungenauigkeit Ihrer Schätzung der typischen Lernzeit bei Studentis einfach zu hoch.$\square$
+
+:::
+
+@fig-sample-estimate veranschaulicht, dass man einen Mittelwert genauer schätzen kann,
+wenn man auf eine größere Stichprobe zurückgreift.
+
+![Schätzgenauigkeit als Funktion der Stichprobengröße](img/Estimate.gif){#fig-sample-estimate}
+
+Bildquelle: Karsten Lübke
+
+
+
+
+
+
+
+
+:::{#exm-daten}
+
+### Daten zur Forschungsfrage 2
+
+Hier ist ein Auszug der Daten zur Tabelle `mariokart`, s. @tbl-mariokart.
+
+```{r tbl-mariokart}
+#| echo: false
+#| label: tbl-mariokart
+#| tbl-cap: Auszug aus der Tabelle mariokart
+#library(dplyr)
+#library(DT)
+data("mariokart", package = "openintro")
+
+#mariokart <- as_tibble("mariokart")
+
+head(mariokart)
+
+# if (knitr:::is_html_output()) {
+#   mariokart %>% 
+#     select(-title) %>% 
+#     DT::datatable() 
+# }
+# 
+# if (knitr:::is_latex_output()) {
+#   mariokart %>% 
+#     select(-title) %>% 
+#     head() 
+# }
+
+```
+
+
+Eine Erklärung aller Variablen findet sich [hier](https://www.openintro.org/data/index.php?data=mariokart). 
+Eine Erklärung, was die Namen einer Datentabelle bedeuten,
+nennt man *Code Book* or *Data Dictionary*.$\square$
+
+:::
+
+
+:::{.callout-note}
+## Wie man mit Statistik lügt: Das File-Drawer-Problem
+
+Sie haben ein tolles Experiment durchgeführt, viel Arbeit, viel Stress, endlich geschafft, puh. Von den 20 Variablen (als AV, s. @sec-arten-variablen), die Sie untersucht haben, zeigt nur 1 einen interessanten Effekt, leider. 1 von 20, das hört sich nicht so toll an. Wäre es da nicht "elegant", die 19 Variablen ohne schönen Effekt einfach in der Schublade liegen zu lassen bis zum Sankt-Nimmerleins-Tag? Dann könnten Sie stattdessen als Ergebnis nur die eine Variable mit schönen Ergebnis präsentieren, ganz ohne widersprechende Befunde. 
+
+Dieser Versuchung nicht zu erliegen, kann schwer sein. Es ist aber gefährlich, missliebige Ergebnisse zu verschweigen: Die anderen Menschen bekommen dann ein falsches Bild der Ergebnislage; man spricht von [Publikationsbias](https://de.wikipedia.org/wiki/Publikationsbias). Wer Ergebnisse verschweig, verzerrt die insgesamte Befundlage.
+:::
+
+
+
+
+### Was ist eine Variable?
+
+:::{#def-var}
+
+## Variable
+
+Eine Variable ist ein Platzhalter, der für ein Merkmal steht, das verschiedene Werte annehmen kann.$\square$
+
+:::
+
+
+Man kann sich eine Variable wie einen Behälter vorstellen,
+auf dem mit einem Stift geschrieben steht, was für eine Art Inhalt darin ist,
+s. @fig-var-zuweisen.
+
+
+![Wir definieren eine Variable "temp" mit dem Inhalt "9"](img/Variablen_zuweisen.png){#fig-var-zuweisen width="25%"}
+
+
+
+
+### Beobachtungseinheit
+
+:::{#def-beobeinheit}
+
+## Beobachtungseinheit
+
+Beobachtungseinheiten sind die Dinge, die wir untersuchen (beobachten).
+Beobachtungseinheiten sind die Träger von Variablen.$\square$
+
+:::
+
+
+In @tbl-daten gibt es drei Variablen: `id`, `Name` und `Note`. 
+Es gibt auch drei Beobachtungseinheiten: *Anna*, *Berta* und *Carla.*
+
+
+### Wert
+
+:::{#def-wert}
+
+Ein *Wert* ist der Inhalt einer Variablen.$\square$
+
+:::
+
+
+In  @fig-var-zuweisen ist der Wert von `temp` 9.
+
+In @tbl-daten hat die Variable `name` drei Elemente: Anna, Berta, Carla.
+Der Wert des 2. Elements ist Berta.
+
+Als *Ausprägungen* bezeichnet man die verschiedenen Werte einer Variablen.
+
+
+:::{#exm-geschlecht}
+
+In einer Studie wurden zehn Probanden untersucht. 
+Die Variable `geschlecht` dokumentiert die Geschlechter der Personen:
+
+```{r}
+geschlecht <- c("Mann", "Frau", "Frau", "Frau", "Mann",
+                "Frau", "Mann", "Mann", "divers", "Frau")
+geschlecht
+```
+
+In dieser Variable (die aus 10 Werten besteht) finden sich drei Ausprägungen:
+divers, Frau, Mann.$\square$
+
+:::
+
+:::{.callout-tip}
+Gerade haben Sie etwas Computer-Syntax gesehen, genauer gesagt, Befehle aus der Programmiersprache *R*. 
+Bisher haben wir diese Befehle nicht kennengelernt. 
+Sie verstehen Sie vermutlich (nicht ganz).
+Ignorieren Sie diese Befehle einfach erstmal. 
+:::
+
+
+
+
+### Tidy-Data
+
+:::{#def-tidy}
+
+Unter *Tidy-Data* (tidy data, "Normalform") versteht man eine Tabelle,
+in der jede Zeile eine Beobachtungseinheit darstellt,
+jede Spalte eine Variable und jede Zelle der Tabelle einen Wert, s. @fig-tidy1.
+(Zusätzlich ist noch eine "Kopfzeile" erlaubt, in der die Namen der Variablen stehen.)$\square$
+
+:::
+
+@tbl-daten ist ein Beispiel für Tidy-Data. 
+@fig-tidy1 zeigt ein Sinnbild für Tidy-Data [@wickham_r_2018]. Und @fig-tidy-hadley erläutert das Tidy-Prinzip genauer.
+
+
+:::{#fig-tidy-all layout-ncol=2}
+![Tidy-Data-Sinnbild. Image Credit: Hadley Wickham](img/tidy-1.png){#fig-tidy1}
+
+![Was ist Tidy-Data?. Image Credit: Allision Horst](img/tidydata_1.jpg){#fig-tidy-hadley}
+
+Stay Tidy!
+
+:::
+
+:::callout-important
+Für eine statistische Analyse ist es fast immer nötig, dass die Daten im Tidy-Format vorliegen.
+:::
+
+Der Vorteil des Tidy-Formats ist es, 
+dass man weiß, wie die Daten aufgebaut sind. 
+Außerdem können Statistikprogramme oft mit dieser Form am besten umgehen, s. fig-tidy3.
+
+
+
+![Immer schön Ordnung halten... Image credit: Allision Horst](img/tidydata_3.jpg){#fig-tidy3 width="50%"}
+
+
+:::{.xsmall}
+[Quelle](https://github.com/allisonhorst/stats-illustrations)
+:::
+
+
+
+
+
+
+
+
+
+Das Tidy-Format wird auch als "langes" Format bezeichnet.
+
+@fig-long-wide-anim zeigt einen Datensatz in der "langen" Form, also tidy, und den gleichen Datensatz, umformatiert in der "breiten" Form, nicht-tidy.
+
+::: {.content-visible unless-format="pdf"}
+
+![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ist tidy.](img/tidyr-pivoting.gif){#fig-long-wide-anim width="50%"}
+:::
+
+
+
+
+
+
+
+::: {.callout-tip}
+In fast allen Organisationen werden Exceltabellen zur Datenverarbeitung verwendet. 
+Dabei wiederholen sich immer wieder die gleichen Fehler bzw. suboptimalen Vorgehensweise zum Aufbau einer Exceltabelle.
+
+[Dieser Artikel](https://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989) von @broman_data_2018 zeigt anhand einiger praktischer Tipps, wie man Exceltabellen so aufbaut, dass Fehler minimiert werden. 
+:::
+
+
+## Arten von Variablen  {#sec-arten-variablen}
+
+
+### Nach Position in der Forschungsfrage
+
+Angenommen, Ihre Forschungsfrage lautet:
+
+>   Hat Lernen einen Einfluss auf den Prüfungserfolg?
+
+In dem Fall gilt:
+
+- *Lernen* ist die Inputvariable/X-Variable/Ursache/UV
+- *Prüfungserfolg*  ist die Outputvariable/Y-Variable/Wirkung/AV
+
+@fig-ueberblick-fragen stellt diese beiden "Positionen" einer Variable dar. Die erste Position ist vor dem Pfeil.
+Die zweite Position ist nach dem Pfeil.
+
+```{mermaid}
+%%| fig-cap: Synonyme Bezeichnungen für Input- und Output-Variablen einer Forschungsfrage
+%%| label: fig-ueberblick-fragen
+%%| out-width: "100%"
+
+graph LR
+    Input --> Output
+    X --> Y
+    P[Prädiktor] --> K[Kriterium]
+    Ursache --> Wirkung
+    UV[unabhängige Variable] --> AV[abhängige Variable]
+```
+
+
+### Nach dem Skalenniveau
+
+@fig-skalenniveau gibt einen Überblick über typisch verwendete Skalenniveaus.
+
+
+```{mermaid}
+%%| fig-cap: Skalenniveaus
+%%| label: fig-skalenniveau
+%%| out-width: "100%"
+
+graph TD
+    Variablen --> qualitativ
+    Variablen --> quantitativ
+    qualitativ --> nominal
+    qualitativ --> ordinal
+    quantitativ --> Intervallniveau
+    quantitativ --> Verhältnisniveau
+```
+
+
+:::{exm-skalen}
+
+### Beispiele für Skalenniveaus
+
+Beispiele zu den Skalenniveaus sind in @tbl-skalen-bsps aufgeführt.
+
+```{r}
+#| echo: false
+#| tbl-cap: "Beispiele für Skalenniveaus"
+#| label: tbl-skalen-bsps
+skalen_bsps <- 
+  tibble::tribble(
+                        ~Variable,     ~Skalenniveau,
+                      "Haarfarbe",    "Nominalskala",
+                     "Augenfarbe",    "Nominalskala",
+                     "Geschlecht",    "Nominalskala",
+                      "Automarke",    "Nominalskala",
+                         "Partei",    "Nominalskala",
+                 "Lieblingsessen",    "Ordinalskala",
+  "Medaillen beim 100-Meter-Lauf",    "Ordinalskala",
+                     "Uniranking",    "Ordinalskala",
+                             "IQ",  "Intervallskala",
+                   "Extraversion",  "Intervallskala",
+          "Temperatur in Celcius",  "Intervallskala",
+       "Temperatur in Fahrenheit",  "Intervallskala",
+           "Temperatur in Kelvin", "Verhältnisskala",
+                    "Körpergröße", "Verhältnisskala",
+                "Geschwindigkeit", "Verhältnisskala",
+                          "Länge", "Verhältnisskala"
+  )
+skalen_bsps
+```
+$\square$
+:::
+
+
+
+Je nach dem, über welches Skalenniveau eine Variable verfügt,
+sind verschiedenen Rechenoperationen erlaubt, s. @tbl-skalenniveaus.
+
+
+```{r}
+#| dev: "ragg_png"
+#| echo: false
+#| tbl-cap: "Erlaubte Rechenoperationen nach Skalenniveau"
+#| label: tbl-skalenniveaus
+skalenniveaus <-
+  tibble::tribble(
+       ~Skalenniveau, ~Quantitativ, ~`≠`, ~`≼`, ~`+`, ~`×`,
+     "Nominalniveau",       "nein",  "✅",  "❌",  "❌",  "❌",
+     "Ordinalniveau",       "nein",  "✅",  "✅",  "❌",  "❌",
+   "Intervallniveau",         "ja",  "✅",  "✅",  "✅",  "❌",
+  "Verhältnisniveau",         "ja",  "✅",  "✅",  "✅",  "✅"
+  )
+
+skalenniveaus
+
+```
+
+
+
+Was soll das bedeuten, "Rechenoperationen"?
+
+
+Schauen wir uns für jedes Skalenniveau ein "Rechenbeispiel" an.
+
+*Nominalskala*: Die Variable *Geschlecht* ist nominalskaliert. Das bedeutet, dass ihre Ausprägungen *Frau* und *Mann* z.B. nicht (sinnvoll) addiert oder sonswie "verrechnet" werden können. Man könnte, z.B. um das Eintippen zu erleichtern, Frauen mit `1` kodieren und Männer mit `2`. Damit darf man aber nicht rechnen! Es macht keinen Sinn zu sagen: "Ich habe eine Frau und einen Mann in meiner Tabelle, das ist im Schnitt ein diverses Geschlecht, weil der Mittelwert von 1 und 2 ist 1,5!"
+
+Die *einzige* "Rechenoperation", die man auf der Nominalskala machen darf, ist die Prüfung auf Gleichheit: Mann kann feststellen, ob ein Objekt gleich zu einem anderen ist oder unterschiedlich. Also ob zwei Personen das gleiche Geschlecht haben oder von unterschiedlichem Geschlecht sind.
+Etwas formaler ausgedrückt:
+
+- 👩 $\ne$ 👨
+- 👩 $=$ 👩
+- 👨 $=$ 👨
+
+```{r}
+#| dev: "ragg_png"
+#| echo: false
+#| fig-cap: "Gleichheit oder Ungleichheit: Mehr geht nicht bei einer Ordinalskala. Taschenrechner wegpacken."
+#| label: fig-nominal
+#| eval: false
+
+tibble(x=0, y = 0) %>% 
+  ggplot()+
+  aes(x=x, y=y) +
+  geom_label(label = latex2exp::TeX("👨 $\\ne$ 👨")) +
+  theme_void()
+```
+
+
+
+*Ordinalskala*: Diese Skala entspricht einer Rangordnung. Eine Rangordnung ist etwa die geordnete Abfolge Ihres Leibgerichte^[1. Pizza, 2. Spagetthi, 3. Schnitzel]. Etwas formaler ausgedrückt:
+
+- 🍕 $\succ$  🍝 $\succ$ 🥩
+
+Das komische Zeichen $\succ$ soll heißen: "Ist auf meiner Liste von Leibgerichten weiter oben, mag ich lieber".
+Man kann aber *nicht* sagen, "Ich mag aber Pizza um 42% mehr als die Spagetthi und die wieder um 73% mehr als ein Schnitzel!". Zumindest kann man das nicht ohne weitere Informationen und Annahmen. Es gibt also Dinge auf der Welt, die man leicht in eine Rangordnung bringen kann, aber die man nur schwer in der Größe der Unterschiede bemessen kann. Das ist die Ordinalskala, s. @fig-ordinal.
+
+
+```{r}
+#| dev: "ragg_png"
+#| echo: false
+#| out-width: "100%"
+#| label: fig-ordinal
+#| fig-asp: 0.3
+#| fig-cap: "Die Ordinalskala: Je weiter rechts auf der X-Achse, desto höher lieber esse ich das Gericht."
+
+tibble(x = c(1,2,5), Liebling = c("🥩", "🍝", "🍕")) %>% 
+  ggplot()+
+  aes(x=x) +
+  geom_label(aes(label = Liebling), y = 0) +
+  theme_minimal() +
+  labs(x = "Wie sehr ich dieses Essen mag") +
+  theme(axis.text = element_blank())
+```
+
+
+*Intervallskala*: Das ist vielleicht eine Überraschung für Sie: Wenn es heute 10°C hat und morgen 5°C -- dann ist es heute *nicht* doppelt so warm wie morgen. Ja, 10 ist das Doppelte von 5. Aber *10° Celcius* ist nicht doppelt so warm wie 20° Celcius. Wenn Sie das verwundert: Das ist normal, so geht es den meisten, wenn sie das zum ersten Mal hören.
+Der Grund, dass es nicht erlaubt ist, Verhältnisse (wie doppelt/halb so viel etc.) auf der Celcius-Skala zu bilden,
+ist, dass der Nullpunkt der Skala, 0° C, kein echter, physikalischer Nullpunkt ist. Bei 0° C liegt eben nicht Null Wärmeenergie vor. Stattdessen wurde eine Wärmenergiemenge gewählt, die für uns Menschen ganz praktisch, da augenfällig ist: der Gefrierpunkt von Wasser. Was bei der Intervallskala erlaubt ist, ist das Addieren (und Subtrahieren): heute 10°C, morgen 5°C, das ist ein Unterschied von 5°C. Oder: Im Schnitt waren es 7,5°C, das ist genau in der Mitte von 5 und 10°C. @fig-intervall versinnbildlicht die Intervallskala.
+
+
+
+
+```{r}
+#| dev: "ragg_png"
+#| echo: false
+#| out-width: "100%"
+#| fig-asp: 0.3
+#| label: fig-intervall
+#| fig-cap: "Ein Metermaß steckt im Wasser. Auf dem Metermaß können wir die aufgedruckten Zahlen ablesen. Aber wir wissen nicht, ob der Metermaß auf dem Boden steht. Wir wissen demnach nicht, ob der vom Metermaß angegebene Nullpunkt der wahre Nullpunkt (Meeresboden) ist."
+
+tibble(y = c(10, 20, 30)) %>% 
+  ggplot()+
+  aes(x=x) +
+  annotate("segment", x = 0, xend = 0, y = 0, yend = 30) +
+  theme_minimal() +
+  annotate("rect", fill = "blue", alpha = .8,
+           xmin = -1, xmax = 1, ymin = 10, ymax = 0) +
+  theme_void() +
+  geom_label(x = 0, aes(y = y, label = y))
+```
+
+
+
+*Verhältnisskala*: Eine Verhältnisskala  ist das, was man sich gemeinhin unter einer metrische Variable vorstellt: Man kann "normal" rechnen, alle Rechenoperationen sind erlaubt. Zuzüglich zu denen, die auch in anderen, "niedrigeren" Skalenniveaus erlaubt sind, ist das das Bilden von Verhältnissen - Multiplizieren, s. @fig-verhaeltnis.
+
+```{r}
+#| dev: "ragg_png"
+#| echo: false
+#| fig-asp: 0.3
+#| label: fig-verhaeltnis
+#| fig-cap: Puh! Der rote Flitzer ist 10 Mal so teuer wie die blaue Möhre. Kohlen zusammenkratzen."
+tibble(Preis = c(1e4, 1e5),
+       id = c(1, 2),
+       Auto = c("🚙", "🏎️")  ) %>% 
+  ggplot() +
+  geom_col(aes(y = Preis, x = id)) +
+  scale_x_discrete() +
+  geom_label(aes(x = id, y = Preis, label = Preis)) +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  geom_label(aes(x = id, label = Auto), y = 0 )
+  
+```
+
+
+
+In [diesem Video](https://www.youtube.com/watch?v=_mN3kFe56ng) gibt es noch ausführlichere Erklärung zum Thema Skalenniveaus.
+
+
+
+{{< video https://youtu.be/_mN3kFe56ng >}}
+
+
+
+Außerdem können quantitative Variablen untergliedert werden in:
+
+- *stetige* Variablen, das sind Variablen, bei denen man zwischen zwei Ausprägungen immer noch eine weitere quetschen kann. So gibt es eine Wert für die Köpergröße zwischen 1.60m und 1.61. Und einen Wert zwischen 1.601m und 1.602m, etc.
+- diskrete Variablen, das sind metrische Variablen, die nur bestimmte Ausprägungen haben, häufig sind das die natürlichen Zahlen: $1,2,...$. Ein Beispiel wäre die Anzahl der Kinder in einer Familie.
+
+
+
+:::{.callout-tip}
+Fragen nach Skalenniveaus gehören zu den Lieblingsprüfungsfragen in diesem Themenbereich. Sie sind gut beraten, sich gerade mit dieser Frage intensiver zu beschäftigen. Auch in thematisch angrenzenden Fächern wird immer wieder die Frage nach dem Skalennvieau aufgeworfen. Das zeigt natürlich auch die hohe Relevanz des Themas.
+:::
+
+
+## Modelle
+
+Woran denken Sie beim Wort "Modell"?
+Vielleicht an Spielzeugautos, s. @fig-matchbox.
+
+
+![Matchbox-Autos sind Modelle für Autos](img/matchbox.jpg){#fig-matchbox width="25%"}
+
+:::{#def-modelle}
+
+## Modelle
+
+Modelle sind ein vereinfachtes Abbild der Realität eine *Repräsentation* [@kaplan_statistical_2009].$\square$
+
+:::
+
+
+:::{#exm-Modelle}
+
+## Beispiele für Modelle
+Puppen sind Modelle für Babies, Landkarten für Landstriche und [das Atommodell von Nils Bohr](https://de.wikipedia.org/wiki/Bohrsches_Atommodell) ist ein Modell für Atome.$\square$
+
+:::
+
+Auch in der Statistik nutzen wir Modelle.
+Helfen Sie Prof. Weiss-Ois: Er blickt nicht durch.
+Gerne würde er wissen, wie viele Stunden seine Studentis auf die Prüfung lernen. Aber mit so vielen Zahlen kann er nicht umgehen ...
+Geben Sie ihm ein Modell: Sagen Sie ihm, wie lang die Studis typischerweise lernen (sagen Sie ihm ein einfach den Mittelwert der Lernzeiten).
+
+
+:::: {.columns}
+::: {.column width="45%"}
+
+### Vorher
+
+```{r}
+#| echo: false
+set.seed(42)
+zeiten <- rnorm(30, mean = 10, sd = 2) %>% trunc()
+zeiten_mw <- mean(zeiten)
+```
+
+`r zeiten`
+
+![Oh jeh, so viele Zahlen! Ich check nix! Wie viel lernen denn jetzt meine Studis?!](img/teacher.png){width="25%"}
+:::
+
+
+::: {.column width="10%"}
+<!-- empty column to create gap -->
+:::
+
+
+::: {.column width="45%"}
+### Nachher
+
+::: {.centered}
+**`r zeiten_mw`** 
+:::
+</br>
+
+![Yeah, jetzt weiß ich, wie viel die Studis so typischerweise lernen. Viel zu wenig natürlich!](img/teacher.png){width="25%"}
+
+
+:::
+
+::::
+
+
+[Icon unter Flaticon licence, Autor: iconixar](https://www.flaticon.com/free-icons/professor)
+
+Der Nutzen von Modellen ist,
+dass sie komplexe Sachverhalte vereinfachen und damit oft überhaupt erst dem Verständnis oder einer Untersuchung zugänglich machen:
+Modelle ermöglichen Verständnis.
+In der Datenanalyse bzw. Statistik^[die beiden Begriffe werden hier weitgehend synonym gebraucht] fassen Sie oft viele Daten prägnant zusammen, z.B. zu einer einzelnen Kennzahl.
+Das Verrückte an Modellen ist, dass man Informationen wegwirft, um eine (andere, hoffentlich nützlichere) Information zu bekommen [@stigler_seven_2016]. Weniger ist mehr?!
+
+
+
+
+## Nomenklatur
+
+
+In diesem Buch werden ein paar (wenige) griechische Buchstaben verwendet,
+die in der Statistik üblich sind.
+
+Häufig werden *griechische* Buchstaben verwendet, um eine Grundgesamtheit (Population) zu beschreiben (die meistens unbekannt ist).
+Lateinische ("normale") Buchstaben werden demgegenüber verwendet, um eine Stichprobe (Datensatz, vorliegende Daten) zu beschreiben.
+
+@tbl-griech stellt diese Buchstaben zusammen mit ihrer Aussprache und Bedeutung vor.
+
+
+
+| Zeichen      | Aussprache | Buchstabe | Bedeutung in der Statistik |
+|--------------|------------|-----------|---------------------------:|
+| $\beta$      |  beta      |         b |      Regressionskoeffizent |
+| $\mu$        |  mü        |         m |                 Mittelwert |
+| $\sigma$     | sigma      |         s |             Streuung       |
+| $\Sigma$     | Sigma      |         S | Summenzeichen   |
+| $\rho$       | rho        |         r | Korrelation (nach Pearson) |
+
+: Griechische Buchstaben, die in diesem Buch verwendet werden. {#tbl-griech}
+
+
+Mehr griechische Buchstaben finden sich [hier](https://de.wikipedia.org/wiki/Griechisches_Alphabet).
+
+
+## Praxisbezug
+
+
+Wir leben im Datenzeitalter; Daten durchdringen alle Bereiche des beruflichen, gesellschaftlichen und privaten Lebens. Die Datenanalyse hat sich in den letzten Jahren massiv verändert, s. @fig-fo-früher-heute.
+
+
+![Forschung früher und heute](img/Forschung_frueher_heute-crop.png){#fig-fo-früher-heute}
+
+
+
+
+Diese Entwicklung ist durchaus auch kritisch zu betrachten.
+Mit der wachsenden Bedeutung von Daten wächst in gleichem Maße die Bedeutung von Datenanalyse.
+Denn Daten ohne Sinn sind nutzlos.
+Aus diesem Grund kann man sagen, dass Datenanalyse (und damit auch Statistik als eine spezielle Art von Datenanalyse) zu stark nachgefragten Jobs gehören.
+
+
+Laut [dem Entgeltatlas der Bundesagentur für Arbeit](https://web.arbeitsagentur.de/entgeltatlas/beruf/129987) liegt ein typisches Gehalt von Data Scientisten bei knapp 6000 € pro Monat (in der Altersgruppe von 25 bis 54)^[Abrufdatum: 1.2.23]. 
+Laut dem [Gehaltsreporter](https://gehaltsreporter.de/gehaelter-von-a-bis-z/it/data-scientist/) liegt das Einstiegsgehalt dieser Berufsgruppe bei knapp 50.000€ pro Jahr.
+
+
+
+
+
+
+## Fazit
+
+Die Aufgabe von Statistik ist es, durch Zusammenfassen von Daten Modelle zu bilden, die es uns einfacher machen, schwierige Sachverhalte zu verstehen. Zentral ist dabei, die Analyse von Variabilität der Daten. Daten kommen in verschiedenen Varianten vor, typischerweise in Tabellenform, möglichst im Tidy-Format.
+
+
+
+
+## Aufgaben
+
+1. [variation01](https://datenwerk.netlify.app/posts/variation01/variation01.html)
+1. [Def-Statistik01](https://datenwerk.netlify.app/posts/def-statistik01/def-statistik01)
+1. [tidy1](https://datenwerk.netlify.app/posts/tidy1/tidy1.html)
+1. [Skalenniveau1a
+](https://datenwerk.netlify.app/posts/skalenniveau1a/skalenniveau1a)
+1. [Ziele-Statistik](https://datenwerk.netlify.app/posts/ziele-statistik/ziele-statistik)
+1. [variation02
+](https://datenwerk.netlify.app/posts/variation02/variation02.html)
+1. [Skalenniveau1b](https://datenwerk.netlify.app/posts/skalenniveau1b/skalenniveau1b)
+1. [tidydata1](https://datenwerk.netlify.app/posts/tidydata1/tidydata1.html)
+
+## Vertiefung 
+
+
+Fassen Sie den Artikel von @broman_data_2018 zusammen.
+
+
+Inspiration von einer Praktikerin der Datenanalyse: Caitlin Hudon verrät [in diesem Video](https://www.youtube.com/watch?v=O5lP6XcopdQ&list=PL9HYL-VRX0oQchs7dqFICoxMgnvFO10tC&index=15&t=1s), welche Fehler Sie sie in in den acht Jahren ihrer Berufserfahrung gemacht hat und was sie daraus gelernt hat.
+
+{{< video https://www.youtube.com/watch?v=O5lP6XcopdQ&list=PL9HYL-VRX0oQchs7dqFICoxMgnvFO10tC&index=15&t=1s >}}
+
+
+
+## Literatur
+

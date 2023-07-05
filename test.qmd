@@ -1,24 +1,37 @@
 # TESWT
 
 
-
-```{mermaid}
-flowchart LR
-  A["▥"] --> B[tidyverse-Befehl] --> C["▥"] 
-  
-  
+```{r}
+library(tidyverse)
+library(plotly)
+data(mariokart, package  ="openintro")
 ```
-kjlö
 
 
-
-```{mermaid}
-flowchart TD
-  A["meine Daten #9637;"] --filter_zeilen-->B["#9637;"] 
-  B --wähle_spalten--> C["#9637;"]
-  C --gruppiere--> D["#9637;"]
-  D --fasse_zusammen--> E["#9637; Fertig. #129321;"]
-  
+```{r}
+lm_mario_2uv <- lm(total_pr ~ start_pr + ship_pr, data = mariokart %>% filter(total_pr < 100))
 ```
-  
-  
+
+
+```{r fig-mario-2uv}
+
+lm_coefs <- coef(lm_mario_2uv)
+
+start_seq <- seq(0, 70, by = 1)
+ship_seq <- seq(0, 10, by = 1)
+
+z2 <- t(outer(start_seq, ship_seq,
+            function(x,y) {lm_coefs[1] + lm_coefs[2]*x + lm_coefs[3]*y}))
+
+p <- plot_ly(x = ~ start_seq,
+        y = ~ ship_seq,
+        z = ~ z2,
+        type = "surface") %>% 
+  add_trace(data = mariokart %>% filter(total_pr < 100),
+            x = ~start_pr,
+            y = ~ship_pr,
+            z = ~total_pr,
+            mode = "markers",
+            type = "scatter3d")
+p
+```

@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.247">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Statistik1 - 4&nbsp; Daten einlesen</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./030-aufbereiten.html" rel="next">
+<link href="./010-rahmen.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "Keine Treffer",
+    "search-matching-documents-text": "Treffer",
+    "search-copy-link-title": "Link in die Suche kopieren",
+    "search-hide-matches-text": "Zusätzliche Treffer verbergen",
+    "search-more-match-text": "weitere Treffer in diesem Dokument",
+    "search-more-matches-text": "weitere Treffer in diesem Dokument",
+    "search-clear-button-title": "Zurücksetzen",
+    "search-detached-cancel-button-title": "Abbrechen",
+    "search-submit-button-title": "Abschicken"
+  }
+}</script><link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><link rel="stylesheet" href="styles.css">
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./010-rahmen.html">Vorbereiten</a></li><li class="breadcrumb-item"><a href="./020-R.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Daten einlesen</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Suchen" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Statistik1</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Suchen"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Organisatorisches</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Hinweise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pruefung.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Prüfung</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Vorbereiten</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-rahmen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rahmen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./020-R.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Daten einlesen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./030-aufbereiten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Daten umformen</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Modellieren</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./040-verbildlichen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Daten verbildlichen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./050-zusammenfassen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Punktmodelle 1</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./060-modellguete.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modellgüte</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./070-zusammenhaenge.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./080-regression1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./090-regression2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Geradenmodelle 2</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Inhaltsverzeichnis</h2>
+   
+  <ul>
+<li>
+<a href="#lernsteuerung" id="toc-lernsteuerung" class="nav-link active" data-scroll-target="#lernsteuerung"><span class="header-section-number">4.1</span> Lernsteuerung</a>
+  <ul class="collapse">
+<li><a href="#standort-im-lernpfad" id="toc-standort-im-lernpfad" class="nav-link" data-scroll-target="#standort-im-lernpfad"><span class="header-section-number">4.1.1</span> Standort im Lernpfad</a></li>
+  <li><a href="#lernziele" id="toc-lernziele" class="nav-link" data-scroll-target="#lernziele"><span class="header-section-number">4.1.2</span> Lernziele</a></li>
+  <li><a href="#%C3%BCberblick" id="toc-überblick" class="nav-link" data-scroll-target="#%C3%BCberblick"><span class="header-section-number">4.1.3</span> Überblick</a></li>
+  <li><a href="#ben%C3%B6tigte-r-pakete" id="toc-benötigte-r-pakete" class="nav-link" data-scroll-target="#ben%C3%B6tigte-r-pakete"><span class="header-section-number">4.1.4</span> Benötigte R-Pakete</a></li>
+  <li><a href="#ben%C3%B6tigte-daten" id="toc-benötigte-daten" class="nav-link" data-scroll-target="#ben%C3%B6tigte-daten"><span class="header-section-number">4.1.5</span> Benötigte Daten</a></li>
+  <li><a href="#begleitvideos" id="toc-begleitvideos" class="nav-link" data-scroll-target="#begleitvideos"><span class="header-section-number">4.1.6</span> Begleitvideos</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#errrstkontakt" id="toc-errrstkontakt" class="nav-link" data-scroll-target="#errrstkontakt"><span class="header-section-number">4.2</span> Errrstkontakt</a>
+  <ul class="collapse">
+<li><a href="#warum-r" id="toc-warum-r" class="nav-link" data-scroll-target="#warum-r"><span class="header-section-number">4.2.1</span> Warum R?</a></li>
+  <li><a href="#r-und-reproduziebarkeit" id="toc-r-und-reproduziebarkeit" class="nav-link" data-scroll-target="#r-und-reproduziebarkeit"><span class="header-section-number">4.2.2</span> R und Reproduziebarkeit</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#architektur-von-r" id="toc-architektur-von-r" class="nav-link" data-scroll-target="#architektur-von-r"><span class="header-section-number">4.3</span> Architektur von R</a>
+  <ul class="collapse">
+<li><a href="#r-rstudio" id="toc-r-rstudio" class="nav-link" data-scroll-target="#r-rstudio"><span class="header-section-number">4.3.1</span> R &amp; RStudio</a></li>
+  <li><a href="#r-studio-cloud" id="toc-r-studio-cloud" class="nav-link" data-scroll-target="#r-studio-cloud"><span class="header-section-number">4.3.2</span> R-Studio Cloud</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation"><span class="header-section-number">4.3.3</span> Installation</a></li>
+  <li><a href="#r-pakete" id="toc-r-pakete" class="nav-link" data-scroll-target="#r-pakete"><span class="header-section-number">4.3.4</span> R-Pakete</a></li>
+  <li><a href="#projekte-in-r" id="toc-projekte-in-r" class="nav-link" data-scroll-target="#projekte-in-r"><span class="header-section-number">4.3.5</span> Projekte in R</a></li>
+  <li><a href="#skriptdateien" id="toc-skriptdateien" class="nav-link" data-scroll-target="#skriptdateien"><span class="header-section-number">4.3.6</span> Skriptdateien</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#grundlagen-von-r" id="toc-grundlagen-von-r" class="nav-link" data-scroll-target="#grundlagen-von-r"><span class="header-section-number">4.4</span> Grundlagen von R</a>
+  <ul class="collapse">
+<li><a href="#sec-rvars" id="toc-sec-rvars" class="nav-link" data-scroll-target="#sec-rvars"><span class="header-section-number">4.4.1</span> Variablen</a></li>
+  <li><a href="#funktionen---befehle" id="toc-funktionen---befehle" class="nav-link" data-scroll-target="#funktionen---befehle"><span class="header-section-number">4.4.2</span> Funktionen - “Befehle”</a></li>
+  <li><a href="#sec-first-fun" id="toc-sec-first-fun" class="nav-link" data-scroll-target="#sec-first-fun"><span class="header-section-number">4.4.3</span> Unsere erste statistische Funktion</a></li>
+  <li><a href="#sec-veccalc" id="toc-sec-veccalc" class="nav-link" data-scroll-target="#sec-veccalc"><span class="header-section-number">4.4.4</span> Vektorielles Rechnen</a></li>
+  <li><a href="#h%C3%A4ufige-fragen" id="toc-häufige-fragen" class="nav-link" data-scroll-target="#h%C3%A4ufige-fragen"><span class="header-section-number">4.4.5</span> Häufige Fragen</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#daten-importieren" id="toc-daten-importieren" class="nav-link" data-scroll-target="#daten-importieren"><span class="header-section-number">4.5</span> Daten importieren</a>
+  <ul class="collapse">
+<li><a href="#wo-sind-meine-daten" id="toc-wo-sind-meine-daten" class="nav-link" data-scroll-target="#wo-sind-meine-daten"><span class="header-section-number">4.5.1</span> Wo sind meine Daten?</a></li>
+  <li><a href="#gebr%C3%A4uchliche-datenformate" id="toc-gebräuchliche-datenformate" class="nav-link" data-scroll-target="#gebr%C3%A4uchliche-datenformate"><span class="header-section-number">4.5.2</span> Gebräuchliche Datenformate</a></li>
+  <li><a href="#einlesen-aus-einem-r-paket" id="toc-einlesen-aus-einem-r-paket" class="nav-link" data-scroll-target="#einlesen-aus-einem-r-paket"><span class="header-section-number">4.5.3</span> Einlesen aus einem R-Paket</a></li>
+  <li><a href="#einlesen-von-einer-webseite" id="toc-einlesen-von-einer-webseite" class="nav-link" data-scroll-target="#einlesen-von-einer-webseite"><span class="header-section-number">4.5.4</span> Einlesen von einer Webseite</a></li>
+  <li><a href="#importieren-von-ihrem-computer" id="toc-importieren-von-ihrem-computer" class="nav-link" data-scroll-target="#importieren-von-ihrem-computer"><span class="header-section-number">4.5.5</span> Importieren von Ihrem Computer</a></li>
+  <li><a href="#dataframes" id="toc-dataframes" class="nav-link" data-scroll-target="#dataframes"><span class="header-section-number">4.5.6</span> Dataframes</a></li>
+  </ul>
+</li>
+  <li><a href="#sec-logic" id="toc-sec-logic" class="nav-link" data-scroll-target="#sec-logic"><span class="header-section-number">4.6</span> Logikprüfung</a></li>
+  <li><a href="#praxisbezug" id="toc-praxisbezug" class="nav-link" data-scroll-target="#praxisbezug"><span class="header-section-number">4.7</span> Praxisbezug</a></li>
+  <li><a href="#aufgaben" id="toc-aufgaben" class="nav-link" data-scroll-target="#aufgaben"><span class="header-section-number">4.8</span> Aufgaben</a></li>
+  <li><a href="#vertiefung" id="toc-vertiefung" class="nav-link" data-scroll-target="#vertiefung"><span class="header-section-number">4.9</span> Vertiefung</a></li>
+  <li><a href="#literaturhinweise" id="toc-literaturhinweise" class="nav-link" data-scroll-target="#literaturhinweise"><span class="header-section-number">4.10</span> Literaturhinweise</a></li>
+  <li><a href="#literatur" id="toc-literatur" class="nav-link" data-scroll-target="#literatur"><span class="header-section-number">4.11</span> Literatur</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Daten einlesen</span>
+</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><!-- ```{css, echo = FALSE} --><!-- .justify { --><!--   text-align: justify !important --><!-- } --><!-- .centered { --><!--   text-align-last: center; --><!-- } --><!-- .xlarge { --><!--   font-size: 300%; --><!-- } --><!-- ``` --><section id="lernsteuerung" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="lernsteuerung">
+<span class="header-section-number">4.1</span> Lernsteuerung</h2>
+<section id="standort-im-lernpfad" class="level3" data-number="4.1.1"><h3 data-number="4.1.1" class="anchored" data-anchor-id="standort-im-lernpfad">
+<span class="header-section-number">4.1.1</span> Standort im Lernpfad</h3>
+<p>Abb. <a href="index.html#fig-ueberblick">Abbildung&nbsp;<span>1.2</span></a> den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.</p>
+</section><section id="lernziele" class="level3" data-number="4.1.2"><h3 data-number="4.1.2" class="anchored" data-anchor-id="lernziele">
+<span class="header-section-number">4.1.2</span> Lernziele</h3>
+<ul>
+<li>Sie können R und RStudio starten.</li>
+<li>Sie können R-Pakete installieren und starten</li>
+<li>Sie können Variablen in R zuweisen und auslesen.</li>
+<li>Sie können Daten in R importieren.</li>
+<li>Sie können den Begriff <em>Reproduzierbarkeit</em> definieren.</li>
+</ul></section><section id="überblick" class="level3" data-number="4.1.3"><h3 data-number="4.1.3" class="anchored" data-anchor-id="überblick">
+<span class="header-section-number">4.1.3</span> Überblick</h3>
+<p><a href="index.html#fig-ueberblick">Abbildung&nbsp;<span>1.2</span></a> zeigt Ihnen, wo auf unserer Reise durch die Datenanalyse sich dieses Kapitels verorten lässt.</p>
+<p><a href="#fig-roller">Abbildung&nbsp;<span>4.1</span></a> zeigt den typischen Lernverlauf in Zusammenhang mit Datenanalyse (und R) an: Es gibt Höhen und Tiefen. Die wechseln sich ab. Das ist ganz normal!</p>
+<div id="fig-roller" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/r_rollercoaster.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.1: Life is a roller-coaster. You just have to ride it. Image credit: Allison Horst</figcaption><p></p>
+</figure>
+</div>
+<div class="xsmall">
+<p><a href="https://github.com/allisonhorst/stats-illustrations">Quelle</a></p>
+</div>
+</section><section id="benötigte-r-pakete" class="level3" data-number="4.1.4"><h3 data-number="4.1.4" class="anchored" data-anchor-id="benötigte-r-pakete">
+<span class="header-section-number">4.1.4</span> Benötigte R-Pakete</h3>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-3_8b32d28c91278bf3ce0a6bf90488d4bb">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/easystats/">easystats</a></span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="benötigte-daten" class="level3" data-number="4.1.5"><h3 data-number="4.1.5" class="anchored" data-anchor-id="benötigte-daten">
+<span class="header-section-number">4.1.5</span> Benötigte Daten</h3>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-4_b4eb55038c508f2f76dc69a012f7e504">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="begleitvideos" class="level3" data-number="4.1.6"><h3 data-number="4.1.6" class="anchored" data-anchor-id="begleitvideos">
+<span class="header-section-number">4.1.6</span> Begleitvideos</h3>
+<p>Schauen Sie sich mal in <a href="https://www.youtube.com/playlist?list=PLRR4REmBgpIEaIyeNBgNGPgmhQJ_T1y8_">dieser Playlist</a> um, dort finden Sie einige Videos zum Thema R.</p>
+</section></section><section id="errrstkontakt" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="errrstkontakt">
+<span class="header-section-number">4.2</span> Errrstkontakt</h2>
+<section id="warum-r" class="level3" data-number="4.2.1"><h3 data-number="4.2.1" class="anchored" data-anchor-id="warum-r">
+<span class="header-section-number">4.2.1</span> Warum R?</h3>
+<p>Gründe, die für den Einsatz von R sprechen:</p>
+<ol type="1">
+<li><p>🆓 R ist kostenlos, andere Softwarepakete für Datenanalyse sind teuer. 💸</p></li>
+<li><p>📖 R und R-Befehle sind quelloffen, d.h. man kann sich die zugrundeliegenden Computerbefehle anschauen. Jeder kann prüfen, ob es vernünftig arbeitet. Jeder kann beitragen.</p></li>
+<li><p>🆕 R hat die neuesten Methoden.</p></li>
+<li><p>🫂R hat eine große Community.</p></li>
+<li><p>🪡 R ist maßgeschneidert für Datenanalyse.</p></li>
+</ol>
+<p>Allerdings gibt es auch abweichende Meinungen, s. <a href="#fig-bill-excel">Abbildung&nbsp;<span>4.2</span></a>.</p>
+<div id="fig-bill-excel" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/bill-gates-excel.jpg" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.2: Nicht jeder ist R-Freund</figcaption><p></p>
+</figure>
+</div>
+</section><section id="r-und-reproduziebarkeit" class="level3" data-number="4.2.2"><h3 data-number="4.2.2" class="anchored" data-anchor-id="r-und-reproduziebarkeit">
+<span class="header-section-number">4.2.2</span> R und Reproduziebarkeit</h3>
+<div id="def-repro" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4.1 (Reproduzierbarkeit) </strong></span>Ein (wissenschaftlicher) Befunde ist reproduzierbar, wenn andere Analystis mit dem gleichen experimentellen Setup zum gleichen Ergebnis (wie in der ursprünglichen Analyse) kommen <span class="citation" data-cites="plesser_reproducibility_2018">(<a href="#ref-plesser_reproducibility_2018" role="doc-biblioref">Plesser 2018</a>)</span>. <span class="math inline">\(\square\)</span></p>
+</div>
+<p></p>
+<p><a href="#def-repro">Definition&nbsp;<span>4.1</span></a> ist, etwas überspitzt, in <a href="#fig-repro">Abbildung&nbsp;<span>4.3</span></a> wiedergegeben.</p>
+<div class="cell" data-hash="020-R_cache/html/fig-repro_83500e89e4ee8ab0e43decbeaa58d4dc">
+<div class="cell-output-display">
+<div id="fig-repro" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="020-R_files/figure-html/fig-repro-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.3: Daten + Syntax + genaue Beschreibung der Messungen = reproduzierbar</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="exm-repro" class="theorem example">
+<p><span class="theorem-title"><strong>Beispiel 4.1 (Aus der Forschung: Reproduzierbarkeit in der Psychologie) </strong></span>&nbsp;</p>
+<blockquote class="blockquote">
+<p>🧑‍🎓 Wie ist es um unsere Wissenschaft, Psychologie, bestellt? Haben die Befunde Hand und Fuß?</p>
+</blockquote>
+<p><span class="citation" data-cites="obels_analysis_2020">Obels u.&nbsp;a. (<a href="#ref-obels_analysis_2020" role="doc-biblioref">2020</a>)</span> haben die Reproduzierbarkeit in psychologischen Studien untersucht. Sie berichten folgendes Ergebnis</p>
+<blockquote class="blockquote">
+<p>We examined data and code sharing for Registered Reports published in the psychological literature from 2014 to 2018 and attempted to independently computationally reproduce the main results in each article. Of the 62 articles that met our inclusion criteria, 41 had data available, and 37 had analysis scripts available. Both data and code for 36 of the articles were shared. We could run the scripts for 31 analyses, and we reproduced the main results for 21 articles. <span class="math inline">\(\square\)</span></p>
+</blockquote>
+</div>
+</section></section><section id="architektur-von-r" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="architektur-von-r">
+<span class="header-section-number">4.3</span> Architektur von R</h2>
+<section id="r-rstudio" class="level3" data-number="4.3.1"><h3 data-number="4.3.1" class="anchored" data-anchor-id="r-rstudio">
+<span class="header-section-number">4.3.1</span> R &amp; RStudio</h3>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><img src="img/R-logo.png" class="img-fluid" style="width:20.0%"></p>
+</div><div class="column" style="width:20%;">
+<div class="xlarge">
+<p>💖</p>
+</div>
+</div><div class="column" style="width:40%;">
+<p><img src="img/rlogo.png" class="img-fluid" style="width:40.0%"></p>
+</div>
+</div>
+<p><span class="citation" data-cites="ismay_statistical_2020">Ismay und Kim (<a href="#ref-ismay_statistical_2020" role="doc-biblioref">2020</a>)</span> zeigen eine schöne Analogie, was der Unterschied von <em>R</em> und <em>RStudio</em> ist, s. <a href="#fig-r-rstudio">Abbildung&nbsp;<span>4.4</span></a>.</p>
+<div class="cell" data-hash="020-R_cache/html/fig-r-rstudio_5a5f983f01085c143e819ce98f9ed7eb">
+<div class="cell-output-display">
+<div id="fig-r-rstudio" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/r_vs_rstudio_1.png" class="img-fluid figure-img" width="758"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.4: R vs.&nbsp;RStudio</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Wir verwenden beide Programme. Aber wir <em>öffnen</em> nur RStudio. RStudio findet selbständig R und öffnet diese “heimlich”. Öffnen Sie nicht noch extra R (sonst wäre R zweifach geöffnet).</p>
+<p>Hier ein Screenshot von der Oberfläche von RStudio, s. <a href="#fig-rstudio">Abbildung&nbsp;<span>4.5</span></a>.</p>
+<div id="fig-rstudio" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/rstudio.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.5: So sieht RStudio aus</figcaption><p></p>
+</figure>
+</div>
+</section><section id="r-studio-cloud" class="level3" data-number="4.3.2"><h3 data-number="4.3.2" class="anchored" data-anchor-id="r-studio-cloud">
+<span class="header-section-number">4.3.2</span> R-Studio Cloud</h3>
+<p>RStudio Cloud ist ein Webdienst von RStudio (zum Teil kostenlos). Man kann damit online mit R arbeiten. Die Oberfläche ist praktisch identisch zur Desktop-Version, s. <a href="#fig-rstudio-cloud">Abbildung&nbsp;<span>4.6</span></a>. Ein Vorteil ist, dass man als Nutzer nichts installieren muss.</p>
+<div id="fig-rstudio-cloud" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/rstudio-cloud.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.6: So sieht RStudio Cloud aus. Genau wie RStudio Desktop</figcaption><p></p>
+</figure>
+</div>
+</section><section id="installation" class="level3" data-number="4.3.3"><h3 data-number="4.3.3" class="anchored" data-anchor-id="installation">
+<span class="header-section-number">4.3.3</span> Installation</h3>
+<p>Lesen Sie <a href="https://data-se.netlify.app/2021/11/30/installation-von-r-und-seiner-freunde/#installation">hier</a> die Installation von R und seiner Freunde nach.</p>
+</section><section id="r-pakete" class="level3" data-number="4.3.4"><h3 data-number="4.3.4" class="anchored" data-anchor-id="r-pakete">
+<span class="header-section-number">4.3.4</span> R-Pakete</h3>
+<p>Typisch für R ist sein modularer Aufbau: Man kann eine große Zahl an Erweiterungen (“Pakete”) installieren, alle kostenlos.</p>
+<p>In R Paketen “wohnen” Funktionen, also Dinge, die R kann, wenn das Paket verfügbar ist.</p>
+<p>Man kann sich daher ein R-Paket vorstellen wie ein Buch: Wenn R es gelesen hat, dann kennt es die Inhalte. Diese Inhalte könnten irgendwelche Formeln, also Berechnungen sein. Es könnte aber die “Bauanleitung” für ein schönes Diagramm sein.</p>
+<p>Ist ein spezielles R-Paket auf Ihrem Computer vorhanden, so können Sie diese Funktionalität nutzen.</p>
+<p>Die Zahl an diesen “Paketen” ist groß; zur Verdeutlichung s. <a href="#fig-ship">Abbildung&nbsp;<span>4.7</span></a>.</p>
+<div id="fig-ship" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/11102039694_d42ca1ff1c_c.jpg" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.7: Containershiff, Corey Seeman, CC-BY-NC 20, Flickr.com</figcaption><p></p>
+</figure>
+</div>
+<p><em>Erweiterungen</em> kennt man von vielen Programmen, sie werden auch <em>Add-Ons</em>, <em>Plug-Ins</em> oder sonstwie genannt.</p>
+<p>Man siehe zur Verdeutlichung Erweiterungen beim Broswer Chrome, <a href="#fig-chrome">Abbildung&nbsp;<span>4.8</span></a>.</p>
+<div id="fig-chrome" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/chrome-extensions.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.8: Erweiterungen beim Browser Chrome</figcaption><p></p>
+</figure>
+</div>
+<p>Die Anzahl der R-Pakete ist groß; allein auf dem “offiziellen Web-Store” (nennt sich “CRAN”) von R gibt es ca. 20,000 Pakete (<a href="#fig-cran">Abbildung&nbsp;<span>4.9</span></a>); <a href="https://gist.github.com/daroczig/3cf06d6db4be2bbe3368">Stand: 2022; Quelle</a>).</p>
+<div id="fig-cran" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/number-of-submitted-packages-to-CRAN.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.9: Die Anzahl der R-Pakete ist expoenziell gewachsen</figcaption><p></p>
+</figure>
+</div>
+<section id="install-r-pckgs" class="level4" data-number="4.3.4.1"><h4 data-number="4.3.4.1" class="anchored" data-anchor-id="install-r-pckgs">
+<span class="header-section-number">4.3.4.1</span> Pakete installieren</h4>
+<p>Wie jede Software muss man Pakete (Erweiterungen für R) erst einmal installieren, bevor man sie verwenden kann. Ja, einmal installieren reicht.</p>
+<p>Das geht komfortabel, wenn man beim Reiter <em>Packages</em> auf <em>Install</em> klickt (s. <a href="#fig-install-packages">Abbildung&nbsp;<span>4.10</span></a>).</p>
+<div id="fig-install-packages" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/install-packages.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.10: Klicken Sie auf “Install” im Reiter “Packages”, um R-Pakete zu installieren</figcaption><p></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="img/install-pckgs.gif" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">So kann man R-Pakete installieren in RStudio</figcaption><p></p>
+</figure>
+</div>
+<p>Dann öffnet sich ein Menü, wo man die Namen der gewünschten R-Pakete eingeben kann (s. Abbildung <a href="#fig-install-packages2">Abbildung&nbsp;<span>4.11</span></a>).</p>
+<div id="fig-install-packages2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/install-packages2.png" class="img-fluid figure-img" style="width:25.0%"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.11: Hier den oder die Namen der gewünschten R-Pakete eingeben</figcaption><p></p>
+</figure>
+</div>
+<blockquote class="blockquote">
+<p>🧑‍🎓Welche R-Pakete sind denn schon installiert?</p>
+</blockquote>
+<p>Im Reiter <em>Packages</em> können Sie nachschauen, welche Pakete auf Ihrem Computer schon installiert sind. Diese Pakete brauchen Sie logischerweise dann <em>nicht</em> noch mal installieren.</p>
+<blockquote class="blockquote">
+<p>🧑‍🎓Ja, aber welche R-Pakete “soll” ich denn installieren, welche brauch ich denn?</p>
+</blockquote>
+<p>Im Moment sollten Sie die folgenden Pakete installiert haben:</p>
+<ul>
+<li><code>tidyverse</code></li>
+<li><code>easystats</code></li>
+</ul>
+<p>Wenn Sie die noch nicht installiert haben sollten, dann können Sie das jetzt ja nachholen.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hinweis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ihre R-Pakete sollten aktuell sein. Klicken Sie beim Reiter <em>Packages</em> auf “Update”, um Ihre R-Pakete zu aktualisieren. Arnold Schwarzenegger rät, Ihre R-Pakete aktuell zu halten, s. <a href="#fig-arnie">Abbildung&nbsp;<span>4.12</span></a>.</p>
+</div>
+</div>
+<div id="fig-arnie" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/terminator.jpg" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.12: R-Pakete sollten stets aktuell sein, so Arnold Schwarzenegger</figcaption><p></p>
+</figure>
+</div>
+<div class=".xsmall">
+<p>made at https://imgflip.com/memegenerator</p>
+</div>
+</section><section id="pakete-starten" class="level4" data-number="4.3.4.2"><h4 data-number="4.3.4.2" class="anchored" data-anchor-id="pakete-starten">
+<span class="header-section-number">4.3.4.2</span> Pakete starten</h4>
+<p>Wenn Sie ein Softwareprogramm - nichts anderes sind R-Pakete - installiert haben, müssen Sie es noch <em>starten</em>.</p>
+<p>Merke: Ein bestimmtes Paket muss man nur einmalig installieren. Aber man muss es jedes Mal neu starten, wenn man R (bzw. RStudio) startet.</p>
+<p>Sie erkennen leicht, ob ein Paket gestartet ist, wenn Sie ein Häkchen vor dem Namen des Pakets in der Paketliste (Reiter <em>Packages</em>) sehen, s. Abbildung <a href="#fig-install-packages">Abbildung&nbsp;<span>4.10</span></a>.</p>
+<p><a href="https://www.youtube.com/watch?v=Yej9xzKQ3yI&amp;list=PLRR4REmBgpIEaIyeNBgNGPgmhQJ_T1y8_&amp;index=26">Dieses Video</a> verdeutlicht den Unterschied zwischen <em>Installation</em> und <em>Starten</em> eines R-Pakets.</p>
+</section></section><section id="projekte-in-r" class="level3" data-number="4.3.5"><h3 data-number="4.3.5" class="anchored" data-anchor-id="projekte-in-r">
+<span class="header-section-number">4.3.5</span> Projekte in R</h3>
+<p>Ein <em>Projekt</em> in RStudio (s. <a href="#fig-projects">Abbildung&nbsp;<span>4.13</span></a>) ist letztlich ein Ordner, der als “Basis” für eine Reihe von Dateien verwendet wird. Sagen wir, das Projekt heißt <code>cool_stuff</code>. RStudio legt uns diesen Ordner an einem von uns gewählten Platz auf unserem Computer an. Das ist ganz praktisch, weil man dann sagen kann “Hey R, nimmt die Datei ‘daten.csv’”, ohne einen Pfad anzugeben. Vorausgesetzt, die Datei liegt auch im Projektordner (<code>cool_stuff</code>).</p>
+<p>Projekte kann anlegen mit Klick auf das Icon, das einen Quader mit dem Buchstaben R darin anzeigt (s. <a href="#fig-rstudio-projekte">Abbildung&nbsp;<span>4.13 (a)</span></a>). RStudio-Projekte machen Ihr Leben leichter (s. <a href="#fig-projects">Abbildung&nbsp;<span>4.13</span></a>).</p>
+<div id="fig-projects" class="quarto-layout-panel">
+<figure class="figure"><div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-rstudio-projekte" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/rstudio-projekte.png" class="img-fluid figure-img" data-ref-parent="fig-projects"></p>
+<p></p><figcaption class="figure-caption">(a) RStudio-Projekte, Beispiele</figcaption><p></p>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-setwd" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/cracked_setwd.png" class="img-fluid figure-img" data-ref-parent="fig-projects"></p>
+<p></p><figcaption class="figure-caption">(b) RStudio-Projekte sind viel sicherer als das Arbeitsverzeichnis von Hand zu wählen oder mit Pfaden herumzubasteln. Image credit: Allision Horst</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.13: Nutzen Sie RStudio-Projekte, das macht Ihr Leben leichter.</figcaption><p></p>
+</figure>
+</div>
+</section><section id="skriptdateien" class="level3" data-number="4.3.6"><h3 data-number="4.3.6" class="anchored" data-anchor-id="skriptdateien">
+<span class="header-section-number">4.3.6</span> Skriptdateien</h3>
+<p>Die R-Befehle (“Syntax”) schreiben Sie am besten in eine speziell dafür vorgesehene Textdatei in RStudio. Eine Sammlung von (R-)Befehlen nennt man auch ein <em>Skript</em>, daher spricht man auch von einer <em>Skriptdatei</em>. Um eine neue R-Skriptdatei zu öffnen, klicken Sie auf das Icon, das ein weißes Blatt mit einem grünen Pluszeichen zeigt, s. <a href="#fig-script-new">Abbildung&nbsp;<span>4.14</span></a>.</p>
+<div id="fig-script-new" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/script-new.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.14: So erstellen Sie eine neue Skriptdatei</figcaption><p></p>
+</figure>
+</div>
+<p>Vergessen Sie nicht zu speichern, wenn Sie ein tolles Skript geschrieben haben. Dafür gibt es mehrere Möglichkeiten:</p>
+<ul>
+<li>Strg+S</li>
+<li>Menü: File &gt; Save</li>
+<li>Klick auf das Icon mit der Diskette, s. <a href="#fig-script-new">Abbildung&nbsp;<span>4.14</span></a>.</li>
+</ul>
+<p>Eine Skriptdatei können Sie in typischer Manier öffnen:</p>
+<ul>
+<li>Strg+O</li>
+<li>Klick auf das Icon mit der Akte und dem grünen Pfeil (vgl. <a href="#fig-script-new">Abbildung&nbsp;<span>4.14</span></a>)</li>
+<li>Menü: File &gt; Open File…</li>
+</ul></section></section><section id="grundlagen-von-r" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="grundlagen-von-r">
+<span class="header-section-number">4.4</span> Grundlagen von R</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hinweis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>R ist penibel: So sind <code>name</code> und <code>Name</code> zwei verschiedene Variablen für R. Groß- und Kleinschreibung wird von R genau beachtet! Hingegen ist es R egal, ob Sie zur besseren Übersichtlichkeit Leerzeichen in Ihre Syntax tippen. Ausnahme sind spezielle Operatoren wie <code>&lt;-</code> oder <code>&lt;=</code>.</p>
+<p>Eine gute Nachricht: Wenn R etwas von <code>WARNING</code> (bzw. Warnung) sagt, können Sie das zumeist ignorieren. Eine Warnung ist kein Fehler und meistens nicht gravierend oder nicht dringend. Bei einer Fehlermeldung hilft es, leider nicht immer, genau zu lesen, was die Fehlermeldung sagt. Im Zweifel ist Googeln eine gute Idee.<span class="math inline">\(\square\)</span></p>
+</div>
+</div>
+<section id="sec-rvars" class="level3" data-number="4.4.1"><h3 data-number="4.4.1" class="anchored" data-anchor-id="sec-rvars">
+<span class="header-section-number">4.4.1</span> Variablen</h3>
+<p>In jeder Programmiersprache kann man Variablen definieren, so auch in R:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-6_e56cdb385f78b15adf3a2c9865559e16">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">richtige_antwort</span> <span class="op">=</span> <span class="fl">42</span></span>
+<span><span class="va">falsche_antwort</span> <span class="op">=</span> <span class="fl">43</span></span>
+<span><span class="va">typ</span> <span class="op">=</span> <span class="st">"Antwort"</span></span>
+<span><span class="va">ist_korrekt</span> <span class="op">=</span> <span class="cn">TRUE</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Alternativ zum Gleichheitszeichen <code>=</code> können Sie auch (synonym) den Zuweisungspfeil <code>&lt;-</code> verwenden. Beides führt zum gleichen Ergebnis. Allerdings ist der Pfeil präziser, und sollte daher bevorzugt werden.</p>
+<p>Der <em>Zuweisungspfeil</em> <code>&lt;-</code> bzw. das Gleichheitszeichen <code>=</code> definiert eine neue <em>Variable</em> (oder überschreibt den Inhalt, wenn die Variable schon existiert).</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-7_aa5bc6aa716fb31799d2e25c47163340">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">richtige_antwort</span> <span class="op">&lt;-</span> <span class="fl">42</span></span>
+<span><span class="va">falsche_antwort</span> <span class="op">&lt;-</span> <span class="fl">43</span></span>
+<span><span class="va">typ</span> <span class="op">&lt;-</span> <span class="st">"Antwort"</span></span>
+<span><span class="va">ist_korrekt</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><a href="https://www.youtube.com/watch?v=TKQk-tEF9YQ&amp;list=PLRR4REmBgpIEaIyeNBgNGPgmhQJ_T1y8_&amp;index=28">Dieses Video</a> und <a href="https://www.youtube.com/watch?v=Nal0m_AmMwg&amp;list=PLRR4REmBgpIEaIyeNBgNGPgmhQJ_T1y8_&amp;index=48">dieses Video</a> geben eine Einführung in das Definieren von Variablen in R.</p>
+<p>Sie können sich eine Variable wie einen Becher oder Behälter vorstellen, der bestimmte Werte enthält. Auf dem Becher steht (mit Edding geschrieben) der Name des Bechers. Natürlich können Sie die Werte aus dem Becher entfernen und sie durch neue ersetzen (vgl. <a href="#fig-def-vars">Abbildung&nbsp;<span>4.15</span></a>).</p>
+<div id="fig-def-vars" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/Variablen_zuweisen.png" class="img-fluid figure-img" style="width:25.0%"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.15: Variablen zuweisen</figcaption><p></p>
+</figure>
+</div>
+<p>R kann übrigens auch rechnen:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-8_23ce1b9d71f085ef84a3b844d81707e5">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">die_summe</span> <span class="op">&lt;-</span> <span class="va">falsche_antwort</span> <span class="op">+</span> <span class="va">richtige_antwort</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Aber was ist jetzt der Wert, der “Inhalt” der Variable <code>die_summe</code>?</p>
+<p>Um den Wert, d.h. den Inhalt einer Variablen in R <em>auszulesen</em>, geben wir einfach den Namen des Objekts ein:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-9_8e816a9abe82522d77fbc55cc81f6aab">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">die_summe</span></span>
+<span><span class="co">## [1] 85</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Was passiert wohl, wenn wir <code>die_summe</code> jetzt wie folgt definieren?</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-10_741ef2f0db1f7ff503a5be0ecb4af89b">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">die_summe</span> <span class="op">&lt;-</span> <span class="va">falsche_antwort</span> <span class="op">+</span> <span class="va">richtige_antwort</span> <span class="op">+</span> <span class="fl">1</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Wer hätt’s geahnt:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-11_7393322e67d96fcb9fd6a84ac46b4647">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">die_summe</span></span>
+<span><span class="co">## [1] 86</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Variablen können auch “leer” sein:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-12_7177f3beb581d58f071262333a2cba8f">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">alter</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span><span class="va">alter</span></span>
+<span><span class="co">## [1] NA</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>NA</code> steht für <em>not available</em>, nicht verfügbar und macht deutlich, dass hier ein Wert fehlt.</p>
+<blockquote class="blockquote">
+<p>🧑‍🎓 Wozu brauche ich bitte fehlende Werte?!</p>
+</blockquote>
+<p>Fehlende Werte sind ein häufiges Problem in der Praxis. Vielleicht hat sich die befragte Person geweigert, ihr Alter anzugeben<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Oder als Sie die Daten in Ihren Computer eingeben wollten, ist Ihre Katze über die Tastatur gelaufen und alles war futsch…</p>
+</section><section id="funktionen---befehle" class="level3" data-number="4.4.2"><h3 data-number="4.4.2" class="anchored" data-anchor-id="funktionen---befehle">
+<span class="header-section-number">4.4.2</span> Funktionen - “Befehle”</h3>
+<section id="vektoren-erstellen" class="level4" data-number="4.4.2.1"><h4 data-number="4.4.2.1" class="anchored" data-anchor-id="vektoren-erstellen">
+<span class="header-section-number">4.4.2.1</span> Vektoren erstellen</h4>
+<p>Das, was R kann, ist in “Funktionen” hinterlegt. Ein Beispiel für eine solche Funktion könnte sein: “Berechne den Mittelwert” (schauen wir uns gleich an).</p>
+<p>Ein weiteres Beispiel für eine Funktion ist: “Erstelle eine Liste (Vektor) von Werten”.</p>
+<p>Das geht so:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-13_9037fff2a94924883fd8617051e07260">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Antworten</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">43</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Der Befehl <code>c</code> (c wie <em>c</em>ombine) fügt mehrere Werte zusammen zu einer “Liste” (einem Vektor).</p>
+<div id="def-vektor" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4.2 </strong></span>Als <em>Vektor</em> bezeichnen wir eine geordnete Liste von Werten. In R kann man sie mit dem Befehl <code><a href="https://rdrr.io/r/base/c.html">c()</a></code> erstellen. Die Werte eines Vektors bezeichnet man auch als <em>Elemente</em>.<span class="math inline">\(\square\)</span></p>
+</div>
+<p>Mit dem Zuweisungspfeil geben wir diesem Vektor einen Namen, hier <code>Antworten</code>. Dieser Vektor besteht aus zwei Werten, zuerst <code>42</code>, dann kommt <code>43</code>.</p>
+<div id="exm-vektoren" class="theorem example">
+<p><span class="theorem-title"><strong>Beispiel 4.2 (Beispiele für Vektoren) </strong></span>Vektoren können (praktisch) beliebig lang sein, z.B. drei Elemente.</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-14_b3c372808c65fe05cc8e942c34950628">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>  <span class="co"># x und y sind ungleich!</span></span>
+<span><span class="va">namen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Anni"</span>, <span class="st">"Bert"</span>, <span class="st">"Charli"</span><span class="op">)</span> <span class="co"># Text-Vektor</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>Zwei wichtige Typen von Vektoren sind numerische Vektoren (reelle Zahlen; in R auch als <em>numeric</em> oder <em>double</em> bezeichnet) und Texvektoren, in R auch als <em>String</em> oder <em>character</em> bezeichnet.</p>
+</section></section><section id="sec-first-fun" class="level3" data-number="4.4.3"><h3 data-number="4.4.3" class="anchored" data-anchor-id="sec-first-fun">
+<span class="header-section-number">4.4.3</span> Unsere erste statistische Funktion</h3>
+<p>Jetzt wird’s ernst. Jetzt kommt die Statistik. Berechnen wir also unsere erste statistische Funktion: Den Mittelwert. Puh.</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-15_7efb193430b277fee231002edac3638a">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Antworten</span><span class="op">)</span></span>
+<span><span class="co">## [1] 42.5</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Sie hätten <code>Antworten</code> auch durch <code>c(42, 43)</code> ersetzen können, so haben Sie ja schließlich die Variable gerade definiert.</p>
+<p>R arbeitet so einen “verschachtelten” Befehl <em>von innen nach außen</em> ab:</p>
+<p>Start: <code>mean(Antworten)</code></p>
+<pre><code>  ⬇️ </code></pre>
+<p>Schritt 1: <code>mean(c(42, 43))</code></p>
+<pre><code>  ⬇️ </code></pre>
+<p>Schritt 2: <code>42.5</code></p>
+<section id="schema-einer-funktion" class="level4" data-number="4.4.3.1"><h4 data-number="4.4.3.1" class="anchored" data-anchor-id="schema-einer-funktion">
+<span class="header-section-number">4.4.3.1</span> Schema einer Funktion</h4>
+<p><a href="#fig-function-schema">Abbildung&nbsp;<span>4.16</span></a> stellt eine Funktion schematisch dar.</p>
+<div id="fig-function-schema" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/function-schema.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.16: Schema einer Funktion</figcaption><p></p>
+</figure>
+</div>
+<p>Eine Funktion hat einen oder mehrere <em>Inputs</em>, das sind Daten oder Verarbeitungshinweise, die man in die Funktion <code>fun</code> <em>eingibt</em>, bevor sie loslegt. Eine Funktion hat immer (genau) eine <em>Ausgabe</em> (Output), in der das Ergebnis einer Funktion ausgegeben wird.</p>
+<div id="def-args" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4.3 (Argumente einer Funktion) </strong></span>Die “Trichter” einer (R-)Funktion, in denen man die Eingaben “einfüllt”, nennt man auch <em>Argumente</em>.<span class="math inline">\(\square\)</span></p>
+</div>
+<p>So hat die Funktion <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code> z.B. folgende Argumente:</p>
+<p><code>mean(x, trim = 0, na.rm = FALSE, ...)</code></p>
+<ul>
+<li>
+<code>x</code>: das ist der Vektor, für den der Mittelwert berechnet werden soll</li>
+<li>
+<code>trim = 0</code>: Sollen die extremsten Werte von <code>x</code> lieber “abgeschnitten” werden, also nicht in die Berechnung des Mittelwerts einfließen?</li>
+<li>
+<code>na.rm = FALSE</code>: Wie soll mit fehlenden Werten <code>NA</code> umgegangen werden? Im Standard liefert <code>mean</code><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <code>NA</code> zurück. R schwenkt sozusagen die rote Fahne, um zu signalisieren, Achtung, Mensch, hier ist irgendwas nicht in Ordnung. Setzt man aber <code>na.rm = TRUE</code>, dann entfernt (remove, rm) R die fehlenden Werte und berechnet den Mittelwert.</li>
+<li>
+<code>...</code> heißt “sonstiges Zeugs, das manchmal eine Rolle spielen könnte”; darum kümmern wir uns nicht.</li>
+</ul>
+<p>Einige Argumente haben einen <em>Standardwert</em> bzw. eine <em>Voreinstellung</em> (default). So wird bei der Funktion <code>mean</code> im Standard nicht getrimmt (<code>trim = 0</code>) und fehlende Werte werden nicht entfernt (<code>na.rm = FALSE)</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hinweis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Wenn ein R-Befehl ein Argument mit Voreinstellung hat, brauchen Sie dieses Argument nicht zu befüllen. In dem Fall wird auf den Wert der Voreinstellung zurückgegriffen. Argumente ohne Voreinstellung - wie <code>x</code> bei <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code> - müssen Sie aber auf jeden Fall mit einem Wert befüllen.<span class="math inline">\(\square\)</span></p>
+</div>
+</div>
+<p>Sagen wir, wir haben einen fehlenden Wert in unseren Daten:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-17_5da0fbfddcbe0eca3d44a1f79673dd82">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Antworten</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">43</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span><span class="va">Antworten</span></span>
+<span><span class="co">## [1] 42 43 NA</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Wenn wir jetzt den Mittelwert berechnen wollen, quittiert R das mit einem schnöden <code>NA</code>:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-18_036e3d44ab4592aa19e0a61510f55553">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Antworten</span><span class="op">)</span></span>
+<span><span class="co">## [1] NA</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>R meint es gut mit Ihnen<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Stellen Sie sich vor, dass R Sie auf dieses Problem aufmerksam machen möchte:</p>
+<blockquote class="blockquote">
+<p>🤖 Achtung, lieber Herr und Gebieter, du hast nicht mehr alle Latten am Zaun, will sagen, alle Daten im Vektor!</p>
+</blockquote>
+<p>(Danke, R.)</p>
+<p>Möchten Sie aber lieber R dieses Verhalten austreiben, so befüllen Sie das Argument <code>na.rm</code> mit dem Wert <code>TRUE</code>.</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-19_0e0e52588a429250406a7ab92c52677d">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Antworten</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">## [1] 42.5</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Bei jedem R-Befehl haben die Argumente eine bestimmte Reihenfolge, etwa bei <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code>: <code>mean(x, trim = 0, na.rm = FALSE, ...)</code>.</p>
+<p>(Nur) wenn man die Argumente in ihrer vorgegebenen Reihenfolge anspricht, muss man <em>nicht</em> den Namen des Arguments anführen:</p>
+<p>✅ <code>mean(Antworten, 0, FALSE)</code></p>
+<p>Hält man sic aber nicht an die vorgebene Reihenfolge, so weiß R nicht, was zu tun ist und flüchtet sich in eine Fehlermeldung:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-20_b5761d25937a5a619810ee9d12ed2817">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Antworten</span>, <span class="cn">FALSE</span>, <span class="fl">0</span><span class="op">)</span>  <span class="co"># FALSCH, DON'T DO IT 🙅‍♀️</span></span>
+<span><span class="co">## Error in mean.default(Antworten, FALSE, 0): 'trim' must be numeric of length one</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Wenn man die Namen der Argumente anspricht, ist die Reihenfolge egal:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-21_b66964e441d7f2c9c1552136f92ee424">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">FALSE</span>, x <span class="op">=</span> <span class="va">Antworten</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span>trim <span class="op">=</span> <span class="fl">0</span>, x <span class="op">=</span> <span class="va">Antworten</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Übrigens: Leerzeichen sind R fast immer egal. Aus Gründen der Übersichtlichkeit sollte man aber Leerzeichen verwenden. In diesen Fällen sind Leerzeichen nicht erlaubt:</p>
+<ul>
+<li><code>&lt;-</code></li>
+<li>
+<code>&lt;=</code> etc.</li>
+<li>Variablennamen</li>
+</ul></section></section><section id="sec-veccalc" class="level3" data-number="4.4.4"><h3 data-number="4.4.4" class="anchored" data-anchor-id="sec-veccalc">
+<span class="header-section-number">4.4.4</span> Vektorielles Rechnen</h3>
+<p>Das Rechnen mit Vektoren in R bezeichnen wir als <em>vektorielles Rechnen</em>. Das ist ein praktische Angelegenheit, man kann z.B. folgende Dinge einfach in R ausrechnen.</p>
+<p>Gegeben <code>x</code> als Vektor <code>(1, 2, 3)</code> können wir die Differenz (Abweichung) jedes Elements von <code>x</code> zum Mittelwert von <code>x</code> komfortabel so ausrechnen:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-23_47b725791cf30c922dce09333b9785d7">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="co">## [1] -1  0  1</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Etwas fancier ausgedrückt: Wir haben die Funktion mit Namen “Differenz” (“Minus-Rechnen”) auf jedes Element von <code>x</code> angewandt. Im Einzelnen haben wir also folgenden drei Differenzen ausgerechnet:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-24_c15c0296ee7346519c37896793bb7cfb">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fl">1</span> <span class="op">-</span> <span class="fl">2</span></span>
+<span><span class="fl">2</span> <span class="op">-</span> <span class="fl">2</span></span>
+<span><span class="fl">3</span> <span class="op">-</span> <span class="fl">2</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-fig.asp="0.5" data-hash="020-R_cache/html/fig-vektorierell_b4e45106549f107e692ea23192cc1d17">
+<div class="cell-output-display">
+<div id="fig-vektorierell" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="020-R_files/figure-html/fig-vektorierell-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.17: Schema des vektoriellen Rechnens: Eine Funktion wird auf jedes Elemnt eines Vektors angewandt</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="häufige-fragen" class="level3" data-number="4.4.5"><h3 data-number="4.4.5" class="anchored" data-anchor-id="häufige-fragen">
+<span class="header-section-number">4.4.5</span> Häufige Fragen</h3>
+<ul>
+<li>
+<em>Wo finde ich Hilfe zu einer bestimmten Funktion, z.B. <code>fun()</code></em>? Geben Sie dazu folgenden R-Befehl ein: <code>help(fun)</code>.</li>
+<li>
+<em>In welchem Paket wohnt meine R-Funktion</em>? Suchen Sie nach der Funktion <a href="https://www.rdocumentation.org/">auf dieser Seite</a>.</li>
+<li>
+<em>Ich weiß nicht, wie der R-Befehl funktioniert</em>? Vermutlich haben andere Ihr Problem auch, und meistens hat irgendwer das Problem schon gelöst. Am besten suchen Sie mal auf <a href="www.stackoverflow.com">Stackoverflow</a>.</li>
+<li>
+<em>Ich muss mal grundlegend verstehen, wozu ein bestimmten R-Paket gut ist. Was tun</em>? Lesen Sie die Dokumenation (“Vignette”) eines R-Pakets durch. Für das Paket <code>dplyr</code> bekommen Sie so einen Überblick über die verfügbaren Vignetten diese Pakets: <code>vignette(package = "dplyr")</code>. Dann suchen Sie sich aus der angezeigten Liste eine Vignette raus; mit <code>vignette("rowwise")</code> können Sie sich dann die gewünschte Vignette (z.B. <code>rowwise</code>) anzeigen lassen.</li>
+<li>
+<em>Oh nein, ich seh rot, das heißt, R zeigt mir irgendwas in roter Schrift an. Ist jetzt was kaputt?</em> Keine Sorge, R ist in seiner Ausgabe nicht sparsam mit roter Frabe. Solange es nicht als Fehlermeldung (<code>ERROR</code>) erscheint, ist es meist kein Problem.</li>
+</ul></section></section><section id="daten-importieren" class="level2" data-number="4.5"><h2 data-number="4.5" class="anchored" data-anchor-id="daten-importieren">
+<span class="header-section-number">4.5</span> Daten importieren</h2>
+<section id="wo-sind-meine-daten" class="level3" data-number="4.5.1"><h3 data-number="4.5.1" class="anchored" data-anchor-id="wo-sind-meine-daten">
+<span class="header-section-number">4.5.1</span> Wo sind meine Daten?</h3>
+<p>Damit Sie eine Datendatei importieren können, müssen Sie wissen, wo die Datei ist.</p>
+<p>Schauen wir uns zwei Möglichkeiten an, wo eine Datei liegen könnte.</p>
+<ol type="1">
+<li>Irgendwo im Internet, z.B. <a href="https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv">hier</a>
+</li>
+<li>Irgendwo auf Ihrem Computer, z.B. in Ihrem Projektordner</li>
+</ol>
+<p>In beiden Fällen wird der “Aufenthaltsort” der Datei durch den Pfad (in welcher Ordnerhierarchie?) und den Namen definiert.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hinweis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Wir werden in diesem Kurs häufiger mit dem Daten <code>mariokart</code> arbeiten; Sie finden ihn <a href="https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv">hier</a>.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+</div>
+</div>
+</section><section id="gebräuchliche-datenformate" class="level3" data-number="4.5.2"><h3 data-number="4.5.2" class="anchored" data-anchor-id="gebräuchliche-datenformate">
+<span class="header-section-number">4.5.2</span> Gebräuchliche Datenformate</h3>
+<p>Daten werden in verschiedenen Formaten im Computer abgespeichert; Tabellen häufig als</p>
+<ul>
+<li>Excel-Datei</li>
+<li>CSV-Datei</li>
+</ul>
+<p>In der Datenanalyse ist das gebräuchlichste Format für Daten in Tabellenform die <em>CSV-Datei</em>. Das hat den Grund, weil dieses Format technisch schön einfach ist. Für uns Endverbraucher tut das nichts groß zur Sache, die CSV-Datei beherbergt einfach eine brave Tabelle in einer <em>Textdatei</em>, sonst nichts.</p>
+<p>🏋️‍♀️ Öffnen Sie mal eine CSV-Datei mit einem <em>Texteditor</em> (nicht mit Word und auch nicht mit Excel). Schauen Sie sich gut an, was Sie dort sehen und erklären Sie die Datenstruktur.</p>
+</section><section id="einlesen-aus-einem-r-paket" class="level3" data-number="4.5.3"><h3 data-number="4.5.3" class="anchored" data-anchor-id="einlesen-aus-einem-r-paket">
+<span class="header-section-number">4.5.3</span> Einlesen aus einem R-Paket</h3>
+<p>Ihr Datensatz schon in einem R-Paket gespeichert, können Sie ihn aus diesem R-Paket starten. Das ist die bequemste Option. Zum Beispiel “wohnt” der Datensatz <code>mariokart</code> im R-Paket <code>openintro</code>; hallo Mario (s. <a href="#fig-mario">Abbildung&nbsp;<span>4.18</span></a>)!</p>
+<div id="fig-mario" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="img/mario.jpg" class="img-fluid figure-img" style="width:25.0%"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.18: Hallo, Mario</figcaption><p></p>
+</figure>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tipp
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ein häufiger Fehler ist, dass man vergisst, dass man zuerst ein R-Paket installieren muss, bevor man es nutzen kann. Auf der anderen Seite muss man ein R-Paket (wie andere Software auch) nur ein Mal installieren - das Paket muss man ein Paket nach jedem Neustart von RStuio mit <code><a href="https://rdrr.io/r/base/library.html">library()</a></code> starten.</p>
+</div>
+</div>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-26_286f0904392f5267b1594da062d0d5c2">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"mariokart"</span>, package <span class="op">=</span> <span class="st">"openintro"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="einlesen-von-einer-webseite" class="level3" data-number="4.5.4"><h3 data-number="4.5.4" class="anchored" data-anchor-id="einlesen-von-einer-webseite">
+<span class="header-section-number">4.5.4</span> Einlesen von einer Webseite</h3>
+<p>Hier ist eine Möglihckeit, Daten (in Form einer Tabelle) von einer Webseite (URL) in R zu importieren:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-28_ee9f1ff5f34a5170f9a4a7cd593ddc2c">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Hier ist eine weitere Möglichkeit:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-29_d431525119b113ee9562e4e2d5d70095">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/easystats/">easystats</a></span><span class="op">)</span>  <span class="co"># Das Paket muss installiert sein</span></span>
+<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">data_read</span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Der Unterschied ist, dass <code>data_read</code> <em>viele</em> Formate von Daten (Excel, CSV, SPSS, …) verkraftet, wohingeben <code>read.csv</code> nur Standard-CSV einlesen kann.</p>
+<p>Schauen wir uns die letzte R-Syntax en Detail an:</p>
+<pre><code>Hey R,
+hol das "Buch" easystats aus der Bücherei und lies es
+definiere als "d" die Tabelle,
+die du unter der angegebenen URL findest.</code></pre>
+<p>Es ist egal, welchen Namen Sie der Tabelle geben. Ich nehme oft <code>d</code>, <em>d</em> die Daten. Außerdem ist <code>d</code> kurz, muss man nicht so viel tippen.</p>
+<p>Werfen wir einen Blick in die Tabelle (engl. <em>to glimpse</em>):</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-30_112d296ec3ed26a628497915f00837ed">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">glimpse</span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
+<span><span class="co">## Rows: 143</span></span>
+<span><span class="co">## Columns: 12</span></span>
+<span><span class="co">## $ id          &lt;dbl&gt; 150377422259, 260483376854, 320432342985, 280405224677, 17…</span></span>
+<span><span class="co">## $ duration    &lt;int&gt; 3, 7, 3, 3, 1, 3, 1, 1, 3, 7, 1, 1, 1, 1, 7, 7, 3, 3, 1, 7…</span></span>
+<span><span class="co">## $ n_bids      &lt;int&gt; 20, 13, 16, 18, 20, 19, 13, 15, 29, 8, 15, 15, 13, 16, 6, …</span></span>
+<span><span class="co">## $ cond        &lt;fct&gt; new, used, new, new, new, new, used, new, used, used, new,…</span></span>
+<span><span class="co">## $ start_pr    &lt;dbl&gt; 0.99, 0.99, 0.99, 0.99, 0.01, 0.99, 0.01, 1.00, 0.99, 19.9…</span></span>
+<span><span class="co">## $ ship_pr     &lt;dbl&gt; 4.00, 3.99, 3.50, 0.00, 0.00, 4.00, 0.00, 2.99, 4.00, 4.00…</span></span>
+<span><span class="co">## $ total_pr    &lt;dbl&gt; 51.55, 37.04, 45.50, 44.00, 71.00, 45.00, 37.02, 53.99, 47…</span></span>
+<span><span class="co">## $ ship_sp     &lt;fct&gt; standard, firstClass, firstClass, standard, media, standar…</span></span>
+<span><span class="co">## $ seller_rate &lt;int&gt; 1580, 365, 998, 7, 820, 270144, 7284, 4858, 27, 201, 4858,…</span></span>
+<span><span class="co">## $ stock_photo &lt;fct&gt; yes, yes, no, yes, yes, yes, yes, yes, yes, no, yes, yes, …</span></span>
+<span><span class="co">## $ wheels      &lt;int&gt; 1, 1, 1, 1, 2, 0, 0, 2, 1, 1, 2, 2, 2, 2, 1, 0, 1, 1, 2, 2…</span></span>
+<span><span class="co">## $ title       &lt;fct&gt; "~~ Wii MARIO KART &amp;amp; WHEEL ~ NINTENDO Wii ~ BRAND NEW …</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><a href="https://vincentarelbundock.github.io/Rdatasets/doc/openintro/mariokart.html">Hier</a> findet sich eine Erklärung des Datensatzes.</p>
+<img src="img/download-csv.gif" class="img-fluid" alt="Download einer Datendatei (CSV-Format) von einer Webseite"></section><section id="importieren-von-ihrem-computer" class="level3" data-number="4.5.5"><h3 data-number="4.5.5" class="anchored" data-anchor-id="importieren-von-ihrem-computer">
+<span class="header-section-number">4.5.5</span> Importieren von Ihrem Computer</h3>
+<p>Stellen Sie zuerst sicher, dass sich die Datendatei in Ihrem RStudio-Projektordner befindet. Dann können Sie die Datei einfach so importieren:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-31_56787f2a56d6ff87623c705512168bbf">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">data_read</span><span class="op">(</span><span class="st">"mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><a href="https://youtu.be/B_nuN-M0pQM">Dieses Video</a> erklärt die Schritte des Importierens einer Datendatei von Ihrem Computer.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hinweis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Es gibt verschiedene Formate, in denen (Tabellen-)Dateien in einem Computer abgespeichert werden. Die gebräuchlichsten sind CSV und Excel. Praktischerweise kann der R-Befehl <code>data_read()</code> viele verschiedene Formate automatisch einlesen, so dass wir uns nicht weiter um das Format kümmern brauchen. Der Vorteil von <code>read.csv</code> ist, dass Sie kein Extra-Paket installiert bzw. gestartet haben müssen.</p>
+</div>
+</div>
+</section><section id="dataframes" class="level3" data-number="4.5.6"><h3 data-number="4.5.6" class="anchored" data-anchor-id="dataframes">
+<span class="header-section-number">4.5.6</span> Dataframes</h3>
+<p>Eine in R importierte Tabelle heißt <em>Dataframe</em>.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<div id="def-dataframe" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4.4 (Dataframe) </strong></span>Ein Dataframe (data frame; auch “Tibble” genannt<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>) ist ein Datenojbekt in R zur Darstellung von Tabellen. Dataframes bestehen aus einer oder mehreren Spalten. Spalten haben einen Namen, sozusagen einen “Spaltenkopf”. Alle Spalten müssen die gleiche Länge haben; anschaulich gesprochen ist eine Tabelle (in R) rechteckig. Jede Spalte einzeln betrachtet kann als Vektor aufgefasst werden.$square$</p>
+</div>
+<p><a href="#tbl-mariokart">Tabelle&nbsp;<span>4.1</span></a> ist die Tabelle mit den Mariokart-Daten; etwas präziser gesprochen ein Dataframe mit Namen <code>mariokart</code>. Übrigens ist <a href="#tbl-mariokart">Tabelle&nbsp;<span>4.1</span></a> in Normalform (Tidy-Format), vgl. <a href="010-rahmen.html#def-tidy">Definition&nbsp;<span>3.6</span></a>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hinweis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Geben Sie den Namen eines Dataframes ein, um sich den Inhalt anzeigen zu lassen. Mit dem Befehl <code>View(mariokart)</code> wird eine Excel ähnlich Tabellenansicht in RStudio geöffnet. Beachten Sie, dass Sie die Daten auf diese Weise nur anschauen, nicht ändern können.$square$</p>
+</div>
+</div>
+<div class="cell" data-hash="020-R_cache/html/tbl-mariokart_2debd7c4650d62d7851c3f9b79479ced">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="tbl-mariokart" class="anchored">
+
+<div data-pagedtable="false"> <div class="table-caption">Tabelle&nbsp;4.1:  <p>Der Dataframe ‘mariokart’</p> </div>
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["duration"],"name":[2],"type":["int"],"align":["right"]},{"label":["n_bids"],"name":[3],"type":["int"],"align":["right"]},{"label":["cond"],"name":[4],"type":["fct"],"align":["left"]},{"label":["start_pr"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ship_pr"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["total_pr"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["ship_sp"],"name":[8],"type":["fct"],"align":["left"]},{"label":["seller_rate"],"name":[9],"type":["int"],"align":["right"]},{"label":["stock_photo"],"name":[10],"type":["fct"],"align":["left"]},{"label":["wheels"],"name":[11],"type":["int"],"align":["right"]},{"label":["title"],"name":[12],"type":["fct"],"align":["left"]}],"data":[{"1":"150377422259","2":"3","3":"20","4":"new","5":"0.99","6":"4.00","7":"51.55","8":"standard","9":"1580","10":"yes","11":"1","12":"~~ Wii MARIO KART &amp; WHEEL ~ NINTENDO Wii ~ BRAND NEW ~~"},{"1":"260483376854","2":"7","3":"13","4":"used","5":"0.99","6":"3.99","7":"37.04","8":"firstClass","9":"365","10":"yes","11":"1","12":"Mariokart Wii Nintendo with wheel - Mario Kart Nintendo"},{"1":"320432342985","2":"3","3":"16","4":"new","5":"0.99","6":"3.50","7":"45.50","8":"firstClass","9":"998","10":"no","11":"1","12":"Mario Kart Wii (Wii)"},{"1":"280405224677","2":"3","3":"18","4":"new","5":"0.99","6":"0.00","7":"44.00","8":"standard","9":"7","10":"yes","11":"1","12":"Brand New Mario Kart Wii Comes with Wheel. Free Ship"},{"1":"170392227765","2":"1","3":"20","4":"new","5":"0.01","6":"0.00","7":"71.00","8":"media","9":"820","10":"yes","11":"2","12":"BRAND NEW NINTENDO 1 WII MARIO KART WITH 2 WHEELS +GAME"},{"1":"360195157625","2":"3","3":"19","4":"new","5":"0.99","6":"4.00","7":"45.00","8":"standard","9":"270144","10":"yes","11":"0","12":"Mario Kart Wii (GAME ONLY/NO WHEEL) - Nintendo Wii Game"},{"1":"120477729093","2":"1","3":"13","4":"used","5":"0.01","6":"0.00","7":"37.02","8":"standard","9":"7284","10":"yes","11":"0","12":"Mario Kart Wii (Wii) Nintendo Wii game *--WOW --AWESOME"},{"1":"300355501482","2":"1","3":"15","4":"new","5":"1.00","6":"2.99","7":"53.99","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"200392065459","2":"3","3":"29","4":"used","5":"0.99","6":"4.00","7":"47.00","8":"priority","9":"27","10":"yes","11":"1","12":"Wii game Mario Kart in box with 1 wheel Fast Shipping"},{"1":"330364163424","2":"7","3":"8","4":"used","5":"19.99","6":"4.00","7":"50.00","8":"firstClass","9":"201","10":"no","11":"1","12":"Nintendo Wii : Mario Kart Wii w/ Wii Wheel (2008, MINT)"},{"1":"290355805215","2":"1","3":"15","4":"new","5":"1.00","6":"2.99","7":"54.99","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"180415462166","2":"1","3":"15","4":"new","5":"0.01","6":"0.00","7":"56.01","8":"media","9":"820","10":"yes","11":"2","12":"BRAND NEW NINTENDO 1 WII MARIO KART WITH 2 WHEELS +GAME"},{"1":"300353460362","2":"1","3":"13","4":"new","5":"1.00","6":"2.99","7":"48.00","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"180415244903","2":"1","3":"16","4":"new","5":"0.01","6":"0.00","7":"56.00","8":"media","9":"820","10":"yes","11":"2","12":"BRAND NEW NINTENDO 1 WII MARIO KART WITH 2 WHEELS +GAME"},{"1":"250505391611","2":"7","3":"6","4":"used","5":"24.99","6":"4.00","7":"43.33","8":"standard","9":"154","10":"yes","11":"1","12":"Mario Kart Wii (Wii) w/ Wii Wheel"},{"1":"120474800581","2":"7","3":"22","4":"used","5":"0.99","6":"4.00","7":"46.00","8":"media","9":"309","10":"yes","11":"0","12":"Mario Kart Wii (Wii) - GAME ONLY"},{"1":"140350383072","2":"3","3":"14","4":"new","5":"0.99","6":"8.70","7":"46.71","8":"priority","9":"251","10":"yes","11":"1","12":"Wii Mario Kart game + wheel:  NIB, factory sealed"},{"1":"280406546082","2":"3","3":"23","4":"new","5":"0.99","6":"0.00","7":"46.00","8":"standard","9":"7","10":"yes","11":"1","12":"Brand New Mario Kart Wii Comes with Wheel. Free Ship"},{"1":"290356835892","2":"1","3":"10","4":"new","5":"1.00","6":"2.99","7":"55.99","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"110439174663","2":"7","3":"22","4":"used","5":"1.00","6":"25.51","7":"326.51","8":"parcel","9":"115","10":"no","11":"2","12":"Nintedo Wii Console Bundle Guitar Hero 5 Mario Kart"},{"1":"260486415542","2":"1","3":"7","4":"used","5":"0.99","6":"0.00","7":"31.00","8":"standard","9":"4982","10":"yes","11":"0","12":"Super Mario Kart Nintendo Wii Video Game Driving SMK"},{"1":"290356835900","2":"1","3":"16","4":"new","5":"1.00","6":"2.99","7":"53.98","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"350261958546","2":"1","3":"1","4":"new","5":"64.95","6":"0.00","7":"64.95","8":"standard","9":"118345","10":"yes","11":"2","12":"MARIO KART WITH WII OFFICIAL WHEEL+1 COBALT BLUE WHEEL"},{"1":"110441494985","2":"1","3":"18","4":"new","5":"1.00","6":"2.99","7":"50.50","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"110443013258","2":"3","3":"12","4":"used","5":"0.01","6":"4.00","7":"46.50","8":"firstClass","9":"172","10":"yes","11":"1","12":"Mario Kart Wii (Wii) Includes Steering Wheel!"},{"1":"180416694913","2":"1","3":"19","4":"new","5":"0.01","6":"0.00","7":"55.00","8":"media","9":"820","10":"yes","11":"2","12":"BRAND NEW NINTENDO 1 WII MARIO KART WITH 2 WHEELS +GAME"},{"1":"140350730320","2":"3","3":"5","4":"used","5":"15.00","6":"3.50","7":"34.50","8":"firstClass","9":"37","10":"yes","11":"0","12":"Mario Kart Wii (Wii)"},{"1":"300352773649","2":"3","3":"5","4":"used","5":"0.99","6":"0.00","7":"36.00","8":"upsGround","9":"15","10":"yes","11":"0","12":"Mario Kart Wii (Wii)"},{"1":"140350558850","2":"1","3":"13","4":"used","5":"0.99","6":"4.00","7":"40.00","8":"standard","9":"4200","10":"no","11":"0","12":"MARIO KART for Nintendo Wii"},{"1":"320430545471","2":"7","3":"15","4":"new","5":"9.99","6":"4.00","7":"47.00","8":"parcel","9":"62","10":"yes","11":"1","12":"Mario Kart Wii (Wii) - Brand New &amp; Sealed!!"},{"1":"170391192572","2":"1","3":"11","4":"used","5":"10.00","6":"4.00","7":"43.00","8":"priority","9":"18","10":"yes","11":"0","12":"Mario Kart Wii (Wii)"},{"1":"320429712274","2":"7","3":"14","4":"used","5":"1.99","6":"0.00","7":"31.00","8":"media","9":"166","10":"yes","11":"0","12":"Mario Kart Wii (Wii)"},{"1":"390101286838","2":"5","3":"13","4":"used","5":"0.99","6":"4.00","7":"41.99","8":"standard","9":"16041","10":"yes","11":"1","12":"Mario Kart Wii (Wii)"},{"1":"170388799958","2":"5","3":"24","4":"used","5":"0.99","6":"3.99","7":"49.49","8":"upsGround","9":"27","10":"yes","11":"2","12":"NA"},{"1":"190339151607","2":"3","3":"10","4":"used","5":"0.99","6":"0.00","7":"41.00","8":"priority","9":"42241","10":"yes","11":"1","12":"Mario Kart &amp; Wheel Nintendo Wii Game Free Priority Mail"},{"1":"150377945722","2":"3","3":"15","4":"used","5":"0.99","6":"8.70","7":"44.78","8":"priority","9":"88","10":"yes","11":"1","12":"MarioKart Wii"},{"1":"110441755664","2":"3","3":"16","4":"used","5":"0.99","6":"4.00","7":"47.00","8":"firstClass","9":"1270","10":"no","11":"0","12":"Mario Kart Wii (Wii) COMPLETE"},{"1":"140348739089","2":"7","3":"17","4":"used","5":"15.00","6":"4.00","7":"44.00","8":"priority","9":"2131","10":"no","11":"1","12":"Mario Kart Wii Complete"},{"1":"290356835914","2":"1","3":"9","4":"new","5":"1.00","6":"2.99","7":"63.99","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"290356333829","2":"1","3":"14","4":"new","5":"1.00","6":"2.99","7":"53.76","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"260482893160","2":"7","3":"5","4":"new","5":"30.00","6":"0.00","7":"46.03","8":"firstClass","9":"555","10":"no","11":"1","12":"New Nintendo Super Mario Kart Wii with Steering Wheel"},{"1":"360194236883","2":"3","3":"13","4":"used","5":"0.99","6":"0.00","7":"42.25","8":"priority","9":"42241","10":"no","11":"1","12":"Mario Kart &amp; Wheel Nintendo Wii Game Free Priority Mail"},{"1":"320433689752","2":"1","3":"14","4":"used","5":"0.99","6":"4.00","7":"46.00","8":"priority","9":"34","10":"no","11":"2","12":"Mario Kart with 2 wheels by Wii"},{"1":"110443667250","2":"1","3":"29","4":"new","5":"1.00","6":"2.99","7":"51.99","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"110443342909","2":"1","3":"17","4":"new","5":"1.00","6":"2.99","7":"55.99","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"180414145715","2":"3","3":"8","4":"used","5":"9.99","6":"3.99","7":"41.99","8":"firstClass","9":"69","10":"yes","11":"1","12":"Mario Kart Wii with Wii Wheel for Nintendo Wii FASTSHIP"},{"1":"290357882110","2":"1","3":"12","4":"new","5":"1.00","6":"2.99","7":"53.99","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"190338339476","2":"7","3":"20","4":"used","5":"15.00","6":"0.00","7":"39.00","8":"firstClass","9":"422","10":"yes","11":"0","12":"Mario Kart Wii (Wii) Used Ships Free!"},{"1":"380164318834","2":"7","3":"21","4":"used","5":"0.99","6":"3.00","7":"38.06","8":"firstClass","9":"8625","10":"yes","11":"0","12":"MARIO KART - NINTENDO WII ============================="},{"1":"160365983438","2":"7","3":"16","4":"used","5":"0.99","6":"0.00","7":"46.00","8":"priority","9":"90","10":"no","11":"1","12":"Mario Kart Wii (Wii) USED ONLY ONCE! MINT CONDITION!"},{"1":"110442981432","2":"1","3":"10","4":"new","5":"1.00","6":"2.99","7":"59.88","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"260487434344","2":"1","3":"17","4":"used","5":"0.99","6":"0.00","7":"28.98","8":"standard","9":"4982","10":"yes","11":"0","12":"Super Mario Kart Nintendo Wii Video Game Driving SMK"},{"1":"180414884615","2":"3","3":"16","4":"used","5":"0.99","6":"0.00","7":"36.00","8":"standard","9":"2046","10":"no","11":"1","12":"Mario Kart Wii Nintendo Wii Game &amp; Wheel"},{"1":"330364742474","2":"3","3":"2","4":"new","5":"51.99","6":"0.00","7":"51.99","8":"other","9":"223861","10":"yes","11":"0","12":"NINTENDO WII SUPER Mario Kart GAME ONLY NO Wheel NEW *"},{"1":"300353503260","2":"7","3":"16","4":"used","5":"0.99","6":"2.95","7":"43.95","8":"firstClass","9":"943","10":"yes","11":"0","12":"Wii Mario Kart Great Condition!"},{"1":"250507926501","2":"1","3":"14","4":"used","5":"0.99","6":"0.00","7":"32.00","8":"standard","9":"206","10":"yes","11":"0","12":"Mario Kart Wii (Wii) game"},{"1":"230383186236","2":"7","3":"10","4":"used","5":"0.99","6":"4.00","7":"40.06","8":"firstClass","9":"4473","10":"no","11":"1","12":"Mario Kart Wii (Wii) - Comes with Wheel - Used"},{"1":"290355740844","2":"5","3":"7","4":"used","5":"25.00","6":"2.99","7":"48.00","8":"priority","9":"239","10":"no","11":"1","12":"Mario Kart Wii + Wheel"},{"1":"230382161059","2":"7","3":"16","4":"used","5":"0.99","6":"4.00","7":"36.00","8":"parcel","9":"355","10":"no","11":"0","12":"Mario Kart Wii (Wii)"},{"1":"180413665867","2":"10","3":"3","4":"used","5":"30.00","6":"0.00","7":"31.00","8":"priority","9":"19","10":"no","11":"0","12":"Mario Kart Wii Good Condition (No Wii Wheel)"},{"1":"290356311538","2":"1","3":"23","4":"new","5":"1.00","6":"2.99","7":"53.99","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"120477734245","2":"1","3":"12","4":"used","5":"0.01","6":"0.00","7":"30.00","8":"standard","9":"7284","10":"yes","11":"0","12":"Mario Kart Wii (Wii) Nintendo Wii game *--WOW --AWESOME"},{"1":"300355190611","2":"1","3":"9","4":"new","5":"1.00","6":"2.99","7":"58.00","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"130334124980","2":"5","3":"18","4":"used","5":"9.99","6":"3.59","7":"38.10","8":"firstClass","9":"861","10":"no","11":"0","12":"MarioKart Mario Kart Nintendo Wii Rare great game race"},{"1":"130335427560","2":"3","3":"27","4":"used","5":"6.95","6":"4.00","7":"118.50","8":"parcel","9":"41","10":"no","11":"0","12":"10 Nintendo Wii Games - MarioKart Wii, SpiderMan 3, etc"},{"1":"110439935999","2":"7","3":"12","4":"used","5":"30.00","6":"0.00","7":"61.76","8":"standard","9":"27","10":"yes","11":"2","12":"Mario Kart Wii (Wii) game and 2 wheels!"},{"1":"110441494977","2":"1","3":"13","4":"new","5":"1.00","6":"2.99","7":"53.99","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"160366874975","2":"7","3":"14","4":"used","5":"0.99","6":"3.00","7":"40.00","8":"media","9":"88","10":"yes","11":"1","12":"Mario Kart Wii (Wii)"},{"1":"360193279993","2":"7","3":"12","4":"used","5":"0.99","6":"4.00","7":"64.50","8":"standard","9":"991","10":"no","11":"3","12":"Wii  MARIO KART GAME  PLUS 3 STEERING WHEELS!   Wii"},{"1":"120474301183","2":"7","3":"16","4":"used","5":"5.00","6":"4.00","7":"49.01","8":"upsGround","9":"285","10":"no","11":"2","12":"Mario Kart For Wii with 2-steering wheels NO RESERVE"},{"1":"110442400658","2":"3","3":"9","4":"new","5":"25.00","6":"4.00","7":"47.00","8":"ups3Day","9":"627","10":"yes","11":"1","12":"Mario Kart Wii with Wii Wheel for Wii (New)"},{"1":"160366789855","2":"3","3":"17","4":"used","5":"0.99","6":"0.00","7":"40.10","8":"standard","9":"2046","10":"no","11":"1","12":"Mario Kart Wii Nintendo Wii Game &amp; Wheel"},{"1":"320429126014","2":"7","3":"16","4":"new","5":"0.99","6":"3.50","7":"41.50","8":"firstClass","9":"998","10":"no","11":"1","12":"Mario Kart Wii (Wii)"},{"1":"180415469294","2":"1","3":"20","4":"new","5":"0.01","6":"0.00","7":"56.00","8":"media","9":"820","10":"yes","11":"2","12":"BRAND NEW NINTENDO 1 WII MARIO KART WITH 2 WHEELS +GAME"},{"1":"400077480990","2":"1","3":"1","4":"new","5":"64.95","6":"0.00","7":"64.95","8":"standard","9":"118345","10":"yes","11":"2","12":"NEW MARIO KART GAME+OFFICIAL WHITE+CRIMSON RED WHEELS!!"},{"1":"110443314932","2":"1","3":"13","4":"used","5":"0.99","6":"8.02","7":"49.00","8":"parcel","9":"350","10":"no","11":"2","12":"NINTENDO Wii Mario Kart 2 wheels 1 reg &amp; 1 sport NR E"},{"1":"140350338936","2":"3","3":"4","4":"used","5":"34.99","6":"4.00","7":"48.00","8":"standard","9":"85","10":"yes","11":"1","12":"Mario Kart Wii (Wii) In Original Box With Wheel"},{"1":"170389806612","2":"5","3":"21","4":"used","5":"0.99","6":"4.00","7":"38.00","8":"firstClass","9":"14504","10":"no","11":"0","12":"Nintendo Wii Mario Kart GAME ONLY"},{"1":"270464680053","2":"3","3":"14","4":"used","5":"0.99","6":"4.00","7":"45.00","8":"standard","9":"270144","10":"yes","11":"0","12":"Mario Kart Wii (GAME ONLY/NO WHEEL) - Nintendo Wii Game"},{"1":"200389906028","2":"5","3":"18","4":"used","5":"19.99","6":"2.95","7":"41.95","8":"parcel","9":"194","10":"yes","11":"0","12":"Mario Kart Wii (Wii)"},{"1":"320429166256","2":"10","3":"15","4":"used","5":"9.99","6":"6.00","7":"43.36","8":"parcel","9":"2399","10":"yes","11":"1","12":"Mario Kart Wii (Nintendo Wii) Complete, Mint!!"},{"1":"110442967284","2":"1","3":"8","4":"new","5":"1.00","6":"2.99","7":"54.99","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"280404748775","2":"3","3":"19","4":"used","5":"12.00","6":"4.00","7":"45.21","8":"standard","9":"64","10":"yes","11":"1","12":"Mario Kart Wii Nintendo Super"},{"1":"160366174782","2":"7","3":"2","4":"used","5":"55.00","6":"9.02","7":"65.02","8":"parcel","9":"25","10":"no","11":"4","12":"Mario Kart Wii (Wii) + 4 nerf wheels"},{"1":"110439483831","2":"7","3":"14","4":"used","5":"10.00","6":"3.75","7":"45.75","8":"upsGround","9":"0","10":"yes","11":"1","12":"Nintendo Wii MarioKart and Steering Wheel"},{"1":"160366410200","2":"3","3":"14","4":"new","5":"0.99","6":"4.00","7":"64.00","8":"standard","9":"127","10":"yes","11":"2","12":"Mario Kart Wii (Wii) w/ TWO OFFICIAL STEERING WHEELS"},{"1":"270464942103","2":"7","3":"7","4":"used","5":"0.99","6":"3.00","7":"36.00","8":"priority","9":"0","10":"yes","11":"0","12":"Mario Kart Wii (Wii)"},{"1":"280402374100","2":"7","3":"7","4":"new","5":"29.95","6":"8.70","7":"54.70","8":"priority","9":"208","10":"yes","11":"1","12":"Mario Kart Wii Game with 1 Wheel - (Wii)"},{"1":"120476317961","2":"5","3":"5","4":"new","5":"35.00","6":"4.00","7":"49.91","8":"parcel","9":"127","10":"yes","11":"1","12":"Mario Kart Wii (Wii) - NIB - Factory Sealed - NR"},{"1":"220491072489","2":"3","3":"16","4":"used","5":"0.99","6":"4.00","7":"47.00","8":"parcel","9":"231","10":"yes","11":"0","12":"Mario Kart Wii (Wii)"},{"1":"250505896381","2":"7","3":"13","4":"used","5":"10.00","6":"0.00","7":"43.00","8":"standard","9":"21","10":"no","11":"1","12":"Mario Kart Wii (Wii)"},{"1":"140349745540","2":"5","3":"10","4":"used","5":"9.99","6":"1.99","7":"35.99","8":"upsGround","9":"19","10":"yes","11":"0","12":"Mario Kart Wii (Wii)"},{"1":"180417692717","2":"1","3":"11","4":"used","5":"9.99","6":"3.99","7":"54.49","8":"firstClass","9":"69","10":"yes","11":"2","12":"MARIO KART FOR NINTENDO Wii WITH 2 WHEELS + GAME"},{"1":"230382795039","2":"7","3":"15","4":"used","5":"12.00","6":"0.00","7":"46.00","8":"priority","9":"15","10":"yes","11":"1","12":"Mario Kart Wii WITH  BONUS WHEEL!!!!!"},{"1":"110443640168","2":"1","3":"16","4":"used","5":"0.01","6":"0.00","7":"31.06","8":"standard","9":"7284","10":"yes","11":"0","12":"Mario Kart Wii (Wii) Nintendo Wii game *--WOW --AWESOME"},{"1":"260485846288","2":"3","3":"15","4":"used","5":"0.99","6":"0.00","7":"55.60","8":"upsGround","9":"54","10":"yes","11":"2","12":"Mario Kart Wii (Wii) w/2 Nintendo Wheels Excellent Cond"},{"1":"110441486551","2":"3","3":"23","4":"new","5":"0.99","6":"4.00","7":"40.10","8":"standard","9":"270144","10":"yes","11":"0","12":"Mario Kart Wii (GAME ONLY/NO WHEEL) - Nintendo Wii Game"},{"1":"110443692422","2":"1","3":"20","4":"new","5":"1.00","6":"2.99","7":"52.59","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"180412891421","2":"7","3":"9","4":"used","5":"10.00","6":"4.00","7":"44.00","8":"other","9":"103","10":"no","11":"2","12":"Mario Kart Wii (Wii)"},{"1":"250505900389","2":"5","3":"14","4":"used","5":"10.00","6":"9.26","7":"38.26","8":"upsGround","9":"35","10":"no","11":"1","12":"Mario Kart (Wii) with Wii Wheel"},{"1":"110442288138","2":"5","3":"11","4":"used","5":"19.99","6":"4.00","7":"51.00","8":"priority","9":"36","10":"no","11":"2","12":"NINTENDO WII MARIO KART GAME DISK WITH TWO (2) WHEELS"},{"1":"290355806517","2":"1","3":"13","4":"new","5":"1.00","6":"2.99","7":"48.99","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"400076879560","2":"1","3":"1","4":"new","5":"54.99","6":"11.45","7":"66.44","8":"upsGround","9":"118345","10":"yes","11":"2","12":"MARIO KART WITH WII WHEEL+1 GT PRO PINK WII WHEEL BUNDL"},{"1":"170390813853","2":"1","3":"22","4":"new","5":"0.01","6":"0.00","7":"63.50","8":"media","9":"820","10":"yes","11":"2","12":"BRAND NEW NINTENDO 1 WII MARIO KART WITH 2 WHEELS +GAME"},{"1":"350258355546","2":"5","3":"7","4":"used","5":"0.99","6":"4.00","7":"42.00","8":"firstClass","9":"14503","10":"no","11":"0","12":"Nintendo Wii Mario Kart GAME ONLY"},{"1":"230382266458","2":"7","3":"18","4":"new","5":"18.00","6":"4.00","7":"47.00","8":"standard","9":"389","10":"yes","11":"1","12":"Mario Kart Wii (Wii)"},{"1":"230382436039","2":"5","3":"17","4":"used","5":"0.99","6":"4.00","7":"55.00","8":"standard","9":"261","10":"no","11":"2","12":"Nintendo Wii Mario Kart With 2 Racing Wheels"},{"1":"290353981573","2":"7","3":"9","4":"used","5":"0.01","6":"3.00","7":"33.01","8":"media","9":"381","10":"yes","11":"1","12":"MarioKart (Wii) w/ wheel"},{"1":"300354031535","2":"1","3":"16","4":"new","5":"1.00","6":"2.99","7":"53.76","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"320430035588","2":"5","3":"20","4":"new","5":"0.01","6":"0.00","7":"46.00","8":"media","9":"8224","10":"yes","11":"1","12":"BRAND NEW! FACTORY SEALED! MARIO KART WITH Wii WHEEL"},{"1":"360194338883","2":"3","3":"16","4":"used","5":"0.99","6":"4.00","7":"43.00","8":"standard","9":"270143","10":"yes","11":"0","12":"Mario Kart Wii (GAME ONLY/NO WHEEL) - Nintendo Wii Game"},{"1":"170389664528","2":"3","3":"5","4":"used","5":"35.00","6":"0.00","7":"42.55","8":"priority","9":"10","10":"yes","11":"1","12":"Mario Kart Wii (Wii) with 1 Wheel"},{"1":"190338974387","2":"7","3":"5","4":"used","5":"1.00","6":"0.00","7":"52.50","8":"standard","9":"116","10":"yes","11":"2","12":"Mario Kart Wii with Bonus Wheel!!! (2 Wheels Included)"},{"1":"110441494999","2":"1","3":"25","4":"new","5":"1.00","6":"2.99","7":"57.50","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"350261016626","2":"1","3":"3","4":"new","5":"69.95","6":"0.00","7":"75.00","8":"standard","9":"118345","10":"yes","11":"3","12":"NEW MARIO KART WITH WII WHEEL+2 GT PRO WHITE WII WHEEL"},{"1":"150377042368","2":"7","3":"7","4":"used","5":"25.00","6":"11.42","7":"48.92","8":"parcel","9":"11","10":"yes","11":"1","12":"Mario Kart Wii (Wii)"},{"1":"160365924565","2":"7","3":"18","4":"new","5":"9.99","6":"4.00","7":"45.99","8":"firstClass","9":"1154","10":"yes","11":"1","12":"MARIO KART WII WITH STEERING WHEEL NEW NINTENDO WII"},{"1":"350258591183","2":"7","3":"10","4":"used","5":"0.99","6":"4.00","7":"40.05","8":"standard","9":"877","10":"yes","11":"1","12":"Mario Kart Wii (Wii) W/RACING WHEEL!"},{"1":"170389877681","2":"1","3":"13","4":"new","5":"0.01","6":"0.00","7":"45.00","8":"other","9":"556","10":"yes","11":"1","12":"Mario Kart Wii, Game and Wheel, Brand New Sealed"},{"1":"140350726723","2":"3","3":"8","4":"used","5":"20.00","6":"4.00","7":"50.00","8":"parcel","9":"63","10":"yes","11":"2","12":"Mario Kart Wii (Wii)"},{"1":"250505299784","2":"7","3":"16","4":"new","5":"9.99","6":"9.69","7":"49.75","8":"priority","9":"94","10":"yes","11":"0","12":"Mario Kart Wii (Wii)  *SEALED*"},{"1":"370266219023","2":"7","3":"3","4":"used","5":"38.00","6":"4.00","7":"47.00","8":"parcel","9":"508","10":"no","11":"1","12":"Mario Kart Wii (Wii)   -   Complete!    Perfect!"},{"1":"110443653510","2":"1","3":"17","4":"new","5":"1.00","6":"2.99","7":"56.00","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"320431084246","2":"1","3":"11","4":"used","5":"1.00","6":"0.00","7":"41.00","8":"priority","9":"30","10":"no","11":"1","12":"Mario Kart Wii with Wii Wheel"},{"1":"120477418866","2":"3","3":"9","4":"new","5":"0.01","6":"0.00","7":"46.00","8":"firstClass","9":"1144","10":"no","11":"1","12":"NEW Mario Kart Nintendo Wii Racing Game w/Wheel Online"},{"1":"230383658784","2":"7","3":"10","4":"used","5":"0.99","6":"3.99","7":"34.99","8":"firstClass","9":"462","10":"yes","11":"1","12":"Mario Kart Wii (Wii) Game and Steering Wheel"},{"1":"320432437858","2":"1","3":"23","4":"used","5":"0.99","6":"0.00","7":"49.00","8":"parcel","9":"280","10":"yes","11":"2","12":"Mario Kart Wii (Nintendo Wii) comes with 2 Wheels NEW!!"},{"1":"170391971205","2":"1","3":"19","4":"new","5":"0.01","6":"0.00","7":"61.00","8":"media","9":"820","10":"yes","11":"2","12":"BRAND NEW NINTENDO 1 WII MARIO KART WITH 2 WHEELS +GAME"},{"1":"180416291487","2":"1","3":"14","4":"new","5":"0.01","6":"0.00","7":"62.89","8":"media","9":"820","10":"yes","11":"2","12":"BRAND NEW NINTENDO 1 WII MARIO KART WITH 2 WHEELS +GAME"},{"1":"270466062990","2":"3","3":"11","4":"new","5":"0.99","6":"4.00","7":"46.00","8":"firstClass","9":"299","10":"yes","11":"1","12":"NINTENDO ~ MARIO KART Wii ~ NEW IN BOX ~ FACTORY SEALED"},{"1":"390103890073","2":"1","3":"1","4":"new","5":"64.95","6":"0.00","7":"64.95","8":"standard","9":"118345","10":"yes","11":"2","12":"MARIO KART WITH WII OFFICIAL WHEEL+1 COBALT BLUE WHEEL"},{"1":"390099348424","2":"7","3":"14","4":"used","5":"9.95","6":"3.99","7":"36.99","8":"media","9":"2290","10":"no","11":"0","12":"Mario Kart Nintendo Wii Game Complete &amp; MINT !"},{"1":"280404385327","2":"7","3":"14","4":"used","5":"16.00","6":"4.00","7":"44.00","8":"priority","9":"37","10":"yes","11":"1","12":"Mario Kart Wii w/ wheel"},{"1":"350258416318","2":"5","3":"17","4":"used","5":"0.99","6":"10.35","7":"41.35","8":"priority","9":"14503","10":"yes","11":"1","12":"Wii Mario Kart Game &amp; Wheel In Original Box Tested WKIN"},{"1":"230383342455","2":"7","3":"11","4":"used","5":"9.99","6":"3.00","7":"37.00","8":"priority","9":"297","10":"no","11":"0","12":"MarioKart Wii"},{"1":"300354862386","2":"1","3":"18","4":"new","5":"1.00","6":"2.99","7":"58.98","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"},{"1":"350258970192","2":"5","3":"20","4":"used","5":"0.99","6":"4.00","7":"39.00","8":"firstClass","9":"14503","10":"yes","11":"0","12":"Nintendo Wii Mario Kart GAME ONLY"},{"1":"120475800455","2":"7","3":"6","4":"used","5":"24.99","6":"8.70","7":"40.70","8":"priority","9":"3085","10":"no","11":"1","12":"NINTENDO WII MARIOKART (WHEEL AND GAME)"},{"1":"110441497272","2":"1","3":"20","4":"used","5":"0.01","6":"0.00","7":"39.51","8":"standard","9":"7284","10":"yes","11":"0","12":"Mario Kart Wii (Wii) Nintendo Wii game *--WOW --AWESOME"},{"1":"150376936435","2":"7","3":"9","4":"used","5":"17.99","6":"0.00","7":"52.00","8":"parcel","9":"121","10":"no","11":"2","12":"Mario Kart Wii (Wii)"},{"1":"140349730405","2":"3","3":"14","4":"new","5":"0.99","6":"8.70","7":"47.70","8":"priority","9":"251","10":"yes","11":"1","12":"Wii Mario Kart game + wheel:  NIB, factory sealed"},{"1":"300352306018","2":"7","3":"13","4":"used","5":"1.00","6":"4.90","7":"38.76","8":"parcel","9":"41","10":"no","11":"0","12":"Mario Kart Wii"},{"1":"110443320905","2":"1","3":"13","4":"new","5":"1.00","6":"2.99","7":"54.51","8":"upsGround","9":"4858","10":"yes","11":"2","12":"BRAND NEW NINTENDO MARIO KART WITH 2 WHEELS"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</div>
+</section></section><section id="sec-logic" class="level2" data-number="4.6"><h2 data-number="4.6" class="anchored" data-anchor-id="sec-logic">
+<span class="header-section-number">4.6</span> Logikprüfung</h2>
+<blockquote class="blockquote">
+<p>🧑‍🎓 Wer will schon wieder wen prüfen?!</p>
+</blockquote>
+<p>In diesem Abschnitt schauen wir uns <em>Logikprüfungen</em> an: Wir lassen R prüfen, ob eine Variable einen bestimmten Wert hat oder größer/kleiner als ein Referenzwert ist.</p>
+<p>Definieren wir zuerst eine Variable, <code>x</code>.</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-33_fa5cfdf9113f2a108c6fed2b12c40c16">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">42</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Dann fragen wir R, ob diese Variable den Wert <code>42</code> hat.</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-34_5a507de8232ecd9e725fc6110e1482fe">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">==</span> <span class="fl">42</span></span>
+<span><span class="co">## [1] TRUE</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<blockquote class="blockquote">
+<p>🤖 Hallo, Mensch. Ja, diese Variable hat den Wert 42.</p>
+</blockquote>
+<p>(Danke, R.)</p>
+<p>Möchte man mit R prüfen, ob eine Variable <code>x</code> einen bestimmten <code>Wert</code> (“Inhalt”) hat, so schreibt man:</p>
+<p><code>x == Wert</code>.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Wichtig
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Man beachte das <em>doppelte</em> Gleichheitszeichen! Zur Prüfung auf Gleichheit muss man das doppelte Gleichheitszeichen verwenden.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Vorsicht
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ein beliebter Fehler ist es, bei der Prüfung auf Gleichheit, nur ein Gleichheitszeichen zu verwenden, z.B. so: <code>x = 73</code>. Mit einem Gleichheitszeichen prüft man aber <em>nicht</em> auf Gleichheit, sondern man definiert die Variable, s. <a href="#sec-rvars"><span>Kapitel&nbsp;4.4.1</span></a>.$¿square$</p>
+</div>
+</div>
+<p>Prüfungen mit dem logischen UND bzw. ODER sind in <a href="#sec-logic"><span>Kapitel&nbsp;4.6</span></a> erläutert.</p>
+<p><a href="#tbl-lgl">Tabelle&nbsp;<span>4.2</span></a> gibt einen Überblick über wichtige Logikprüfungen in R.</p>
+<div class="cell" data-hash="020-R_cache/html/tbl-lgl_7ae6c4c78844adcdbf0e41c9efd08f18">
+<div class="cell-output-display">
+<div id="tbl-lgl" class="anchored">
+
+<div data-pagedtable="false"> <div class="table-caption">Tabelle&nbsp;4.2:  <p>Logische Prüfungen in R</p> </div>
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Prüfung.auf"],"name":[1],"type":["chr"],"align":["left"]},{"label":["R-Syntax"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"Gleichheit","2":"x == Wert"},{"1":"Ungleichheit","2":"x != Wert"},{"1":"Größer als Wert","2":"x > Wert"},{"1":"Größer oder gleich Wert","2":"x >= Wert"},{"1":"Kleiner als Wert","2":"x < Wert"},{"1":"Kleiner oder gleich Wert","2":"x <= Wert"},{"1":"Logisches UND","2":"(x < Wert1) & (x > Wert2)"},{"1":"Logisches ODER","2":"(x < Wert1) | (x > Wert2)"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</div>
+</section><section id="praxisbezug" class="level2" data-number="4.7"><h2 data-number="4.7" class="anchored" data-anchor-id="praxisbezug">
+<span class="header-section-number">4.7</span> Praxisbezug</h2>
+<blockquote class="blockquote">
+<p>🧑‍🎓Wird R in der Praxis wirklich genutzt? Oder ist R nur der Traum von (vielleicht verwirrten) Profs im Elfenbeinturm?</p>
+</blockquote>
+<p>Schauen wir uns dazu die Suchanfragen bei <a href="www.stackoverflow.com">stackoverflow.com</a> an, dem größten FAQ-Forum für Software-Entwicklung. Wir vergleichen Suchanfragen mit dem Tag <code>[r]</code> zu Suchanfragen mit dem Tag <code>[spss]</code><a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>. Die Ergebnisse sind in Abbildung <a href="#fig-stackoverflow1">Abbildung&nbsp;<span>4.19</span></a> dargestellt.</p>
+<div class="cell" data-hash="020-R_cache/html/fig-stackoverflow1_49d4ffbce784e3879b2121a105b8e951">
+<div class="cell-output-display">
+<div id="fig-stackoverflow1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="020-R_files/figure-html/fig-stackoverflow1-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;4.19: Suchanfragen nach R bzw SPSS, Stand 2022-02-24</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Das ist grob gerechnet ein Faktor von 200 (der Unterschied von R zu SPSS). Dieses Ergebnis lässt darauf schließen, dass R in der Praxis viel mehr als Excel gebraucht wird.</p>
+<blockquote class="blockquote">
+<p>🧑‍🎓 Aber ist R wirklich ein Werkzeug, das mir im Job hilft?</p>
+</blockquote>
+<p>Viele Firmen weltweit nutzen R zur Datenanalyse, wie <a href="https://www.quora.com/Which-organizations-use-R?share=1">diese Liste</a> zeigt.</p>
+<blockquote class="blockquote">
+<p>👨‍🏫 R ist <em>der</em> Place-to-be für die Datenanalyse.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>🧑‍🎓 Aber ist Datenanalyse wirklich etwas, womit ich in Zukunft einen guten Job bekomme?</p>
+</blockquote>
+<p>Berufe mit Bezug zu Daten, Datenanalyse oder, allgemeiner, Künstlicher Intelligenz (artificial intelligence) gehören zu den am meisten wachsenden Berufen:</p>
+<blockquote class="blockquote">
+<p>Artificial intelligence (AI) continues to make a strong showing on our Emerging Jobs lists, which is no surprise. Many jobs that have risen up as a result of AI in ﬁelds like cybersecurity and data science and because it’s is so pervasive many roles may demand more knowledge of AI than you may think. For example, real estate and business development roles. <a href="https://blog.linkedin.com/2019/december/10/the-jobs-of-tomorrow-linkedins-2020-emerging-jobs-report">Quelle: LinkedIn</a></p>
+</blockquote>
+</section><section id="aufgaben" class="level2" data-number="4.8"><h2 data-number="4.8" class="anchored" data-anchor-id="aufgaben">
+<span class="header-section-number">4.8</span> Aufgaben</h2>
+<ol type="1">
+<li><a href="https://datenwerk.netlify.app/posts/typ-fehler-r-01/typ-fehler-r-01.html">Typ-Fehler-R-01</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/typ-fehler-r-02/typ-fehler-r-02.html">Typ-Fehler-R-02</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/typ-fehler-r-03/typ-fehler-r-03.html">Typ-Fehler-R-03</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/typ-fehler-r-04/typ-fehler-r-04.html">Typ-Fehler-R-04</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/typ-fehler-r-06a/typ-fehler-r-06a.html">Typ-Fehler-R-06a</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/typ-fehler-r-07/typ-fehler-r-07.html">Typ-Fehler-R-07</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/logikpruefung1/logikpruefung1">Logikpruefung2</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/logikpruefung2/logikpruefung2">Logikpruefung2</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/there-is-no-package/there-is-no-package.html">there-is-no-package</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/wertberechnen2/wertberechnen2">Wertberechnen2</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/wertzuweisen_mc/wertzuweisen_mc">Wertzuweisen_mc</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/argumente/argumente.html">argumente</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/logikpruefung1/logikpruefung1">Logikpruefung1</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/import-mtcars/import-mtcars.html">import-mtcars</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/wertzuweisen/wertzuweisen">Wertzuweisen</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/wertpruefen/wertpruefen">Wertpruefen</a></li>
+<li><a href="https://datenwerk.netlify.app/posts/wrangle1/wrangle1.html">wrangle1</a></li>
+</ol></section><section id="vertiefung" class="level2" data-number="4.9"><h2 data-number="4.9" class="anchored" data-anchor-id="vertiefung">
+<span class="header-section-number">4.9</span> Vertiefung</h2>
+<p>In R gibt es oft viele Möglichkeiten, ein Ziel zu erreichen. Zum Beispiel haben wir hier den Befehl <code>data_read()</code> verwendet, um Daten zu importieren. Andere, gebräuchliche Befehle, die CSV-Dateien importieren, heißen <code><a href="https://rdrr.io/r/utils/read.table.html">read.csv()</a></code> (aus dem Standard-R, kein Extra-Paket nötig) und <code>read_csv()</code> (aus dem Paket <a href="https://tidyverse.tidyverse.org">tidyverse</a>). <code>data_read()</code> ist praktisch, da es viele verschiedenen Datenformate lesen kann und selbständig erkennt, um welches Datenformat (CSV, XLSX,…) es sich handelt.</p>
+<p>Sie können bei <a href="https://www.linkedin.com/help/linkedin/answer/a510481">LinkedIn</a> ein Zertifikat bekommen, das Ihre R-Kenntnisse dokumentiert. Praktischerweise wird das Zertifikat gleich Ihrem Profil zugeordnet.</p>
+<p>Suchen Sie ein schönes Meme zum Thema Statistik, Datenanalyse und Data Science. <a href="https://data-se.netlify.app/2021/02/23/data-science-memes/">Hier</a> ist ein Startpunkt.</p>
+<p>Das Kombinieren von Funktionen kann kompliziert werden:</p>
+<div class="cell" data-hash="020-R_cache/html/unnamed-chunk-36_2985148c8bd4bb29d35fe3caef859a04">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">-</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> </span>
+<span><span class="co">## [1] 2</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Die Funktion <code>abs(x)</code> gibt den (Absolut-)Betrag von <code>x</code> zurück (entfernt das Vorzeichen, mit anderen Worten).</p>
+</section><section id="literaturhinweise" class="level2" data-number="4.10"><h2 data-number="4.10" class="anchored" data-anchor-id="literaturhinweise">
+<span class="header-section-number">4.10</span> Literaturhinweise</h2>
+<p>“Warum R? Warum, R?” heißt ein Kapitel in <span class="citation" data-cites="sauer_moderne_2019">Sauer (<a href="#ref-sauer_moderne_2019" role="doc-biblioref">2019</a>)</span>, das einiges zum Pro und Contra von R ausführt. In Kapitel 3 in der gleichen Quelle finden sich viele Hinweise, wie man R startet; In Kapitel 4 werden Grundlagen von “Errisch” erläutert; Kapitel 5 führt in Datenstrukturen von R ein (schon etwas anspruchsvoller). Alternativ bietet <a href="https://moderndive.com/1-getting-started.html">Kapitel 1</a> von <span class="citation" data-cites="ismay_statistical_2020">Ismay und Kim (<a href="#ref-ismay_statistical_2020" role="doc-biblioref">2020</a>)</span> einen guten Überblick.</p>
+</section><section id="literatur" class="level2" data-number="4.11"><h2 data-number="4.11" class="anchored" data-anchor-id="literatur">
+<span class="header-section-number">4.11</span> Literatur</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-ismay_statistical_2020" class="csl-entry" role="listitem">
+Ismay, Chester, und Albert Young-Sun Kim. 2020. <em>Statistical Inference via Data Science: A <span>ModernDive</span> into <span>R</span> and the <span>Tidyverse</span></em>. Chapman &amp; <span>Hall</span>/<span>CRC</span> the <span>R Series</span>. <span>Boca Raton</span>: <span>CRC Press / Taylor &amp; Francis Group</span>. <a href="https://moderndive.com/">https://moderndive.com/</a>.
+</div>
+<div id="ref-obels_analysis_2020" class="csl-entry" role="listitem">
+Obels, Pepijn, Daniël Lakens, Nicholas A. Coles, Jaroslav Gottfried, und Seth A. Green. 2020. <span>„Analysis of <span>Open Data</span> and <span>Computational Reproducibility</span> in <span>Registered Reports</span> in <span>Psychology</span>“</span>. <em>Advances in Methods and Practices in Psychological Science</em> 3 (2): 229–37. <a href="https://doi.org/10.1177/2515245920918872">https://doi.org/10.1177/2515245920918872</a>.
+</div>
+<div id="ref-plesser_reproducibility_2018" class="csl-entry" role="listitem">
+Plesser, Hans E. 2018. <span>„Reproducibility vs. <span>Replicability</span>: <span>A Brief History</span> of a <span>Confused Terminology</span>“</span>. <em>Frontiers in Neuroinformatics</em> 11 (Januar): 76. <a href="https://doi.org/10.3389/fninf.2017.00076">https://doi.org/10.3389/fninf.2017.00076</a>.
+</div>
+<div id="ref-sauer_moderne_2019" class="csl-entry" role="listitem">
+Sauer, Sebastian. 2019. <em>Moderne Datenanalyse mit R: Daten einlesen, aufbereiten, visualisieren und modellieren</em>. 1. Auflage 2019. FOM-Edition. <span>Wiesbaden</span>: <span>Springer</span>. <a href="https://www.springer.com/de/book/9783658215866">https://www.springer.com/de/book/9783658215866</a>.
+</div>
+</div>
+</section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
+<ol>
+<li id="fn1"><p>Datenschutz!<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>und viele andere arithmetische Funktionen in R<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>&gt; 🤖 Naja, manchmal.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Auf <a href="https://vincentarelbundock.github.io/Rdatasets/articles/data.html">dieser Webseite</a> finden Sie eine große Zahl an Datensätzen. Nur für den Fall, dass Ihnen langweilig ist.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Etwas vereinfach ausgedrückt.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>von “tbl” wie Table<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Durchgeführt am 2022-02-24, 17:21 CET<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Kopiert");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Kopiert");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./010-rahmen.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rahmen</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./030-aufbereiten.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Daten umformen</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

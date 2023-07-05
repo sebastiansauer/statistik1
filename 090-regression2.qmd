@@ -661,12 +661,16 @@ Auch im Fall mehrerer Ausprägungen einer nominalen Variablen gilt die gleiche L
 3. Mittelwert der 2. Gruppe: Achsenabschnitt (b0) + Steigung der  2. Regressionsgeraden (b2)
 4. usw.
 
-Am Anfang kann es nervig sein, dass das Bundesland, welches als *Referenzgruppe*, sprich als Gruppe des Achsenabschnitts ausgewählt wurde, nicht explizit in der Ausgabe angegeben ist.
+Am Anfang kann es nervig sein, dass das Bundesland, 
+welches als *Referenzgruppe* (sprich als Gruppe des Achsenabschnitts ausgewählt wurde) nicht explizit in der Ausgabe angegeben ist.
 Der Wert der Referenzgruppe findet seinen Niederschlag im Achsenabschnitt.
 
 :::{.callout-note}
-Soweit nicht anders festgelegt, wählt R die alphabetisch erste Gruppe als Referenzgruppe für ein lineares Modell aus. Der Mittelwert dieser Gruppe entspricht dem Achsenabschnitt.$\square$
+Bei einer Variable vom Typ `character` wählt R den alphabetisch ersten Wert als Referenzgruppe für ein lineares Modell aus. Bei einer Variable vom Typ `factor` ist die Reihenfolge bereits festgelegt, vgl. @sec-faktorvar.
+Der Mittelwert dieser Gruppe entspricht dem Achsenabschnitt. $\square$
 :::
+
+
 
 
 :::{#exm-bawü}
@@ -794,8 +798,23 @@ plot(estimate_expectation(lm_wetter_month_factor))
 ```
 
 
+Möchte man die Referenzgruppe eines Faktors ändern, kann man dies mit `relevel` tun:
 
-### Binäre plus metrische UV
+```{r}
+wetter <-
+  wetter %>% 
+  mutate(month_factor = relevel(month_factor, ref = "7"))
+```
+
+So sieht dann die geänderte Reihenfolge aus:
+
+```{r}
+levels(wetter$month_factor)
+```
+
+
+
+### Binäre plus metrische UV {#sec-faktorvar}
 
 
 :::{#exm-rain1}
@@ -1051,7 +1070,7 @@ Oh Schreck! Jetzt ist `b1` auf einmal nicht mehr stark positiv, sondern praktisc
 Dieses Umschwenken der Regressionskoeffizienten kann *nicht* passieren,
 wenn der Effekt "echt", also kausal, ist. 
 Handelt es sich aber um "nicht echte", also nicht-kausale Zusammenhänge,
-so können sich die Modellkoeffizienten dramatisch verändern (auch das Vorzeichen ändern),
+so können sich die Modellkoeffizienten dramatisch verändern (auch das Vorzeichen ändern^[das nennt man dann *Simpsons Paradox*]),
 wenn man das Modell verändert, also Variablen hinzufügt oder wegnimmt.
 
 Wenn man die kausalen Abhängigkeiten nicht kennt,

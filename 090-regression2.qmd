@@ -113,15 +113,17 @@ was die Spalte bedeutet.$\square$
 In @tbl-wetter und @fig-wetter-anim kann man sich die Daten en Detail anschauen (Temperatur und Niederschlag im Zeitverlauf).
 
 
+:::{#fig-wetter-anim layout-ncols=2}
+![Temperatur (Grad Celcius) im Veraluf der Jahre](img/fig-wetter-anim-1.gif)
+
+![Niederschlage (mm) im Veraluf der Jahre](img/fig-wetter-anim-2.gif)
+
+Veränderung der Temperatur und Niederschlag (10-Jahres-Mittel) in Deutschland
+:::
+
 ```{r}
 #| echo: false
-#| label: fig-wetter-anim
-#| fig-cap: Veränderung der Temperatur und Niederschlag (10-Jahres-Mittel) in Deutschland
-#| eval: true
-#| layout-ncol: 2
-#| fig-subcap: 
-#|   - Temperatur (Grad Celcius) im Veraluf der Jahre
-#|   - Niederschlag (mm pro Quadratmeter) im Verlauf der Jahre
+#| eval: false
 
 
 library(gganimate)
@@ -586,6 +588,7 @@ Fassen wir die Interpretation der Koeffizienten für das Modell mit binärer UV 
 
 ### Nominale UV
 
+In diesem Abschnitt betrachten wir ein lineare Modell^[für uns synonym: Regressionsmodell] mit einer mehrstufigen^[drei oder mehr Stufen bzw. Ausprägungen] (nominalskalierten) UV.^[So ein Modell ist von den Ergebnissen her praktisch identisch zu einer einfachen *Varianzanalyse*.]
 
 
 :::{#exm-wetter2}
@@ -816,6 +819,7 @@ levels(wetter$month_factor)
 
 ### Binäre plus metrische UV {#sec-faktorvar}
 
+In diesem Abschnitt untersuchen wir ein lineares Modell mit zwei UV: einer zweistufigen (binären) UV plus einer metrischen UV.^[So ein Modell kann auch als *Kovarianzanalyse* (engl. analysis of covariance, ancova) bezeichnet werden.]
 
 :::{#exm-rain1}
 Ob sich die Niederschlagsmenge wohl unterschiedlich zwischen den Monaten entwickelt hat in den letzten gut 100 Jahren?
@@ -850,11 +854,11 @@ geschlecht_factor
 
 :::{#exm-factor2}
 ### Filtern verändert die Faktorstufen nicht
-Wenn Sie von der Faktorvariablen `geschlecht` das 3. Element (`"m"`) herausfiltern, so dass z.B. nur `"f"` übrig bleibt, merkt sich R trotzdem, dass es *zwei* Faktorstufen gibt.
+Wenn Sie von der Faktorvariablen^[synonym: nominalskalierte Variable] `geschlecht` das 3. Element (`"m"`) herausfiltern, so dass z.B. nur die ersten beiden Elemente übrig bleiben mit allein der Ausprägung `"f"`, merkt sich R trotzdem, dass es *zwei* Faktorstufen gibt (`"f"` und `"m"`).
 
-Wenn Sie aus `wetter` nur die Monate  `"1"` und `"7"` herausfiltern, 
-merkt sich R, dass es 12 Faktorstufen gibt. 
-Möchten Sie, die herausgefilterten Faktorstufen auch "löschen", so können Sie einfach die Faktorvariable neu berechnen (mit `factor`).$\square$
+Genaus so ist es, wenn Sie aus `wetter` nur die Monate  `"1"` und `"7"` herausfiltern:
+R merkt sich, dass es 12 Faktorstufen gibt. 
+Möchten Sie die herausgefilterten Faktorstufen "löschen", so können Sie einfach die Faktorvariable neu berechnen (mit `factor`).$\square$
 :::
 
 
@@ -879,10 +883,12 @@ Hat man mehrere Prädiktoren, so trennt man sich mit einem Plus-Zeichen in der R
 
 Die Veränderung der monatlichen Temperatur (10-Jahres-Mittel) ist in @fig-temp-monat dargestellt (aber mit allen 12 Monaten, sieht schöner aus).
 
+
+![Veränderung der Temperatur pro Monat in Deutschland im Zeitverlauf (10-Jahres-Mittelwerte)](img/fig-temp-monat-1.gif){#fig-temp-monat}
 ```{r}
 #| echo: false
-#| fig-cap: Veränderung der Temperatur pro Monat in Deutschland im Zeitverlauf (10-Jahres-Mittelwerte)
-#| label: fig-temp-monat
+#| eval: false
+
 wetter %>%
   select(year, temp, month) %>% 
   mutate(decade_year = year %% 10,

@@ -969,7 +969,9 @@ Das Argument `by = "total_pr"` bei `plot_scatterplot` weist R an, als Y-Variable
 ### Unterschied: nominale Variablen
 
 
-Gute Nachrichten: Für nominale Variablen bieten sich Balkendiagramme sowohl zur Darstellung von Zusammenhängen als auch von Unterschieden an. Genau genommen zeigt ja @fig-zshg-nom1 (links) den *Unterschied* zwischen neuen und gebrauchten Spielen hinsichtlich der Frage, ob Photos beiliegen. Und wie man in @fig-zshg-nom1 sieht, ist der Anteil der Spiele mit Foto bei den neuen Spielen höher als bei gebrauchten Spielen.
+Gute Nachrichten: Für nominale Variablen bieten sich Balkendiagramme sowohl zur Darstellung von Zusammenhängen als auch von Unterschieden an. 
+Genau genommen zeigt ja @fig-zshg-nom1 (links) den *Unterschied* zwischen neuen und gebrauchten Spielen hinsichtlich der Frage, ob Photos beiliegen. 
+Und wie man in @fig-zshg-nom1 sieht, ist der Anteil der Spiele mit Foto bei den neuen Spielen höher als bei gebrauchten Spielen.^[Aber [Freunde lassen Freunde keine Tortendiagramme verwenden](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart).]
 
 
 
@@ -982,7 +984,10 @@ Gute Nachrichten: Für nominale Variablen bieten sich Balkendiagramme sowohl zur
 ### Unterschied: quantitative Variablen
 
 
-Eine typische Analysefrage ist, ob sich zwei Gruppen hinsichtlich einer metrischen Zielvariablen deutlich unterscheiden. Genauer gesagt untersucht man z.B. oft, ob sich die Mittelwerte der beiden Gruppen zwischen der Zielvariablen deutlich unterscheiden. Das hört sich abstrakt an? Am besten wir schauen uns einige Beispiele an, s. @fig-compare-groups1.
+Eine typische Analysefrage ist, ob sich zwei Gruppen hinsichtlich einer metrischen Zielvariablen deutlich unterscheiden. 
+Genauer gesagt untersucht man z.B. oft, ob sich die Mittelwerte der beiden Gruppen zwischen der Zielvariablen deutlich unterscheiden. 
+Das hört sich abstrakt an? 
+Am besten wir schauen uns einige Beispiele an, s. @fig-compare-groups1.
 
 
 ```{r}
@@ -1008,7 +1013,7 @@ ggplot(mariokart2, aes(x = cond, y = total_pr)) +
 
 
 Das linke Teildiagramm von @fig-compare-groups1 zeigt das Histogramm von `total_pr`, getrennt für neue und gebrauchte Spiele, vgl. @fig-de-hist-density.
-Das rechte Teildiagramm zeigt die gleichen Verteilungen, aber mit einer vereinfachten, groberen Darstellungsfrom, den *Boxplot*.
+Das rechte Teildiagramm zeigt die gleichen Verteilungen, aber mit einer vereinfachten, groberen Darstellungsfrom, den *Boxplot*.^[Übrigens: [Freunde lassen Freunde nicht Balkendiagramme verwenden, um Mittelwerte darzustellen](https://github.com/cxli233/FriendsDontLetFriends#1-friends-dont-let-friends-make-bar-plots-for-means-separation).]
 
 
 ```{r}
@@ -1247,7 +1252,7 @@ Zwar sind sie beliebt, doch ist [von ihrer Verwendung abzuraten](https://www.dat
 ## Vertiefung
 
 
-Mehr zu `{DataExplorer}` finden Sie [hier](https://boxuancui.github.io/DataExplorer/index.html).
+Mehr Informationen zu `{DataExplorer}` finden Sie [hier](https://boxuancui.github.io/DataExplorer/index.html).
 
 
 Einen Überblick über verschiedene Typen an Diagrammen, sogar in Form einer systematischen Nomenklatur findet sich bei [data-to-vis](https://www.data-to-viz.com/).
@@ -1294,7 +1299,7 @@ mariokart %>%
 
 
 Möchte man Mittelwerte vergleichen, so sind Boxplots nicht ideal, 
-da diese ja nicht den Mittelwert, sondern den Median heraustellen.
+da diese ja nicht den Mittelwert, sondern den *Median* heraustellen.
 Eine Abhilfe (also eine Darstellung des Mittelwerts) schafft man (z.B.) mit `ggpubr`,
 s. @fig-comp-means-ggpubr.
 
@@ -1325,6 +1330,32 @@ lassen also Informationen weg.
 Manchmal auch wichtige Informationen. [Dieses Beispiel](https://www.autodesk.com/research/publications/same-stats-different-graphs) zeigt, wie etwa Histogramme wichtige Informationen unter den Tisch fallen lassen.
 
 
+Ein weiteres R-Paket zur Erstellung ansprechender Datenvisualisierung heißt [`ggstatsplot`](https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md).
+
+@fig-ggstatsplot zeigt ein [Histogramm](https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md#gghistostats), das mit `ggstatsplot` erstellt wurde.
+
+
+```{r}
+#| label: fig-ggstatsplot
+#| fig-cap: Ein Histogramm mit ggstatsplot
+library(ggstatsplot)
+
+gghistostats(
+  data       = mariokart2,
+  x          = total_pr,
+  xlab       = "Verkaufspreis" 
+  # results.subtitle = FALSE   # unterdrückt statistische Kennzahlen
+)
+```
+
+Die Menge der statistischen Kennzahlen bei `ggstatsplot` schindet ordentlich Eindruck. 
+Möchte man auf die Kennzahlen verzichten, so nutzt man den Schalter `results.subtitle = FALSE`.^[Weitere Hinweise finden sich [auf der Hilfeseite der Funktion](https://indrajeetpatil.github.io/ggstatsplot/articles/web_only/gghistostats.html)].
+
+
+
+
+
+
 
 >   🧑‍🎓 Ich würde gerne mal Beispiele von *schlechten* Datendiagrammen sehen.
 
@@ -1337,7 +1368,7 @@ Einige Überlegungen zur Farbwahl findet sich [in diesem Post](https://data-se.n
 
 
 ```{r}
-library(ggokabeito)
+library(ggokabeito)  # installieren nicht vergessen
 mariokart %>% 
   filter(total_pr < 100) %>% 
   ggboxplot(x = "cond", y = "total_pr", fill = "cond") +

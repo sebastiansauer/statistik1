@@ -320,9 +320,9 @@ div.csl-indent {
 <li>Sie können Modelle nutzen, um Vorhersagen anhand neuer Daten zu erstellen.</li>
 </ul></section><section id="benötigte-r-pakete" class="level3" data-number="11.1.3"><h3 data-number="11.1.3" class="anchored" data-anchor-id="benötigte-r-pakete">
 <span class="header-section-number">11.1.3</span> Benötigte R-Pakete</h3>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-1_5b81e451dcaf633065a5053926f2e7d4">
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-1_1d0f4078029e9b3af8276043d74cabfc">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/yardstick">yardstick</a></span><span class="op">)</span>  </span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/yardstick">yardstick</a></span><span class="op">)</span>  <span class="co"># für Modellgüte im Test-Sample</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/easystats/">easystats</a></span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="benötigte-daten" class="level3" data-number="11.1.4"><h3 data-number="11.1.4" class="anchored" data-anchor-id="benötigte-daten">
@@ -599,8 +599,8 @@ Referenzwert entspricht Null
 </div>
 </div>
 <p>Wie gut erklärt unser Modell die Daten?</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-16_dd6a840f222b799b1ac45c1906b05ae0">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_wetter1_zentriert</span><span class="op">)</span></span>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-16_cec93b5d7029adc4658ceb68edb2f219">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_wetter1_zentriert</span><span class="op">)</span>  <span class="co"># aus `{easystat}`</span></span>
 <span><span class="co">## # R2 for Linear Regression</span></span>
 <span><span class="co">##        R2: 0.005</span></span>
 <span><span class="co">##   adj. R2: 0.005</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1466,8 +1466,10 @@ Hinweis
 </div>
 </div>
 <p>Visualisieren wir uns die geschätzten Erwartungswert pro Prädiktorwert, s. <a href="#fig-lm3">Abbildung&nbsp;<span>11.11</span></a>.</p>
-<div class="cell" data-hash="090-regression2_cache/html/fig-lm3_e5d030a7b63511173a3026c9237830ee">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">estimate_expectation</span><span class="op">(</span><span class="op">(</span><span class="va">lm_year_month</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="090-regression2_cache/html/fig-lm3_17dffcc60b90f5add447e1967d4c68ab">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">estimate_expectation</span><span class="op">(</span><span class="op">(</span><span class="va">lm_year_month</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_color_okabeito</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_okabeito</span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-lm3" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure"><p><img src="090-regression2_files/figure-html/fig-lm3-1.png" class="img-fluid figure-img" width="672"></p>
@@ -1475,6 +1477,7 @@ Hinweis
 </div>
 </div>
 </div>
+<p>Mit <code>scale_color_okabeito</code> haben wir die Standard-Farbpalette durch die von <span class="citation" data-cites="okabeito">(<a href="#ref-okabeito" role="doc-biblioref">Okabe und Ito o.&nbsp;J.</a>)</span> ersetzt (s. <a href="https://malcolmbarrett.github.io/ggokabeito/reference/palette_okabe_ito.html">Hinweise hier</a>). Das ist nicht unbedingt nötig, aber robuster bei Schwarz-Weiß-Druck und bei Sehschwächen, vgl. <a href="040-verbildlichen.html#sec-farbwahl"><span>Kapitel&nbsp;6.9.3</span></a>.</p>
 <p>Die erklärte Varianz von <code>lm_year_month</code> liegt bei:</p>
 <div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-49_58b0e871c8233715f9e2f3c9225f3244">
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_year_month</span><span class="op">)</span></span>
@@ -1486,12 +1489,13 @@ Hinweis
 <span class="header-section-number">11.3.6</span> Interaktion</h3>
 <p>Eine Modellgleichung der Form <code>temp ~ year + month</code> zwingt die Regressionsgeraden dazu, parallel zu verlaufen. Aber vielleicht würden sie besser in die Punktewolken passen, wenn wir ihnen erlauben, auch <em>nicht</em> parallel verlaufen zu dürfen?</p>
 <p>Nicht-parallele Regressionsgeraden erlauben wir, indem wir das Regressionsmodell wie folgt spezifizieren und visualisieren, s. <a href="#fig-wetter-interakt">Abbildung&nbsp;<span>11.12</span></a>.</p>
-<div class="cell" data-hash="090-regression2_cache/html/fig-wetter-interakt_5b2dc4fadc61e2c80b6333c675bf3b4a">
+<div class="cell" data-hash="090-regression2_cache/html/fig-wetter-interakt_50cddf75c4fd29df8f0577ba1d7419f4">
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_year_month_interaktion</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span></span>
 <span>  <span class="va">precip</span> <span class="op">~</span> <span class="va">year_c</span> <span class="op">+</span> <span class="va">month_factor</span> <span class="op">+</span> <span class="va">year_c</span><span class="op">:</span><span class="va">month_factor</span>, </span>
 <span>  data <span class="op">=</span> <span class="va">wetter_month_1_7</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">estimate_expectation</span><span class="op">(</span><span class="va">lm_year_month_interaktion</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">estimate_expectation</span><span class="op">(</span><span class="va">lm_year_month_interaktion</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_color_okabeito</span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-wetter-interakt" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure"><p><img src="090-regression2_files/figure-html/fig-wetter-interakt-1.png" class="img-fluid figure-img" width="672"></p>
@@ -1592,9 +1596,9 @@ Wichtig
 <p>Der Achsenabschnitt gibt den Wert für Y an unter der Annahme, dass alle Prädiktoren den Wert Null aufweisen. Die Regressionskoeffizienten geben die Zunahme in Y an, wenn der jeweilige Prädiktorwert um 1 steigt, die übrigen Prädiktoren aber den Wert 0 aufweisen.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
-<p>Das R-Quadrat von <code>lm_year_month_interaktion</code> beträgt übrigens 0.1385194.</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-52_5ae249359566eaaac582862eb426902b">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_year_month_interaktion</span><span class="op">)</span><span class="op">[[</span><span class="st">"R2"</span><span class="op">]</span><span class="op">]</span></span>
+<p>Das R-Quadrat von <code>lm_year_month_interaktion</code> beträgt übrigens:</p>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-52_6ebf1c8c527baee67b34d7de17913a92">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_year_month_interaktion</span><span class="op">)</span><span class="op">[[</span><span class="st">"R2"</span><span class="op">]</span><span class="op">]</span>  <span class="co"># aus `{easystats}`</span></span>
 <span><span class="co">##        R2 </span></span>
 <span><span class="co">## 0.1385194</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1618,7 +1622,7 @@ Wichtig
 <p>In der nächsten Studie nimmt dis Forschi dann eine zweite Variable, <code>group</code> (z.B. Geschlecht) in das Modell auf: <code>m2: y ~ x + g</code>. Oh Schreck! Jetzt ist <code>b1</code> auf einmal nicht mehr stark positiv, sondern praktisch Null, und zwar in jeder Gruppe, s. <a href="#fig-confounder">Abbildung&nbsp;<span>11.13</span></a>, rechts!</p>
 <p>Dieses Umschwenken der Regressionskoeffizienten kann <em>nicht</em> passieren, wenn der Effekt “echt”, also kausal, ist. Handelt es sich aber um “nicht echte”, also nicht-kausale Zusammenhänge, so können sich die Modellkoeffizienten dramatisch verändern (auch das Vorzeichen ändern<a href="#fn23" class="footnote-ref" id="fnref23" role="doc-noteref"><sup>23</sup></a>), wenn man das Modell verändert, also Variablen hinzufügt oder wegnimmt.</p>
 <p>Wenn man die kausalen Abhängigkeiten nicht kennt, weiß man also nicht, ob die Zusammenhänge kausal oder nicht-kausal sind. Man weiß also nicht, ob die Modellkoeffizienten belastbar, robust, stichhaltig sind oder nicht.</p>
-<div id="fig-confounder" class="cell quarto-layout-panel" data-hash="090-regression2_cache/html/fig-confounder_d79dc6e2540b33826d961c0de9b68265">
+<div id="fig-confounder" class="cell quarto-layout-panel" data-hash="090-regression2_cache/html/fig-confounder_259495bc1e2311c75e10c5a651447dc6">
 <figure class="figure"><div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-confounder-1" class="quarto-figure quarto-figure-center anchored">
@@ -1648,7 +1652,7 @@ Wichtig
 <!-- Jedes der beiden Regressionsgewichte in `lm_mario_2uv` entspricht der Steigung in der beiden Achsen in @fig-mario-2uv, -->
 <!-- d.h. die Steigung für `start_pr` bzw. die Steigung für `ship_pr`. -->
 <p>Wir könnten im Prinzip alle Variablen unserer Datentabelle als Prädiktoren in das Regressionsmodellaufnehmen. Die Frage ist nur: macht es Sinn?</p>
-<p>Hier sind einige Richtlinien, die helfen, welche Prädiktoren (und wie viele) man in ein Modell aufnehmen sollte <span class="citation" data-cites="gelman_regression_2021">(<a href="#ref-gelman_regression_2021" role="doc-biblioref">Gelman, Hill, und Vehtari 2021, 199f</a>)</span>:</p>
+<p>Hier sind einige Richtlinien, die helfen, welche Prädiktoren (und wie viele) man in ein Modell aufnehmen sollte <span class="citation" data-cites="gelman_regression_2021">(<a href="#ref-gelman_regression_2021" role="doc-biblioref"><strong>gelman_regression_2021?</strong></a>)</span>:</p>
 <ol type="1">
 <li>Alle Prädiktoren aufnehmen, von denen anzunehmen ist, dass Sie Ursachen für die Zielvariablen sind</li>
 <li>Bei Prädiktoren mit starken Effekten kann es Sinn machen, ihre Interaktionseffekte auch mit in das Modell aufzunehmen</li>
@@ -1746,6 +1750,19 @@ Vorsicht
 <div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-62_eca48d28438f63e0d4df9420ce438576">
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">performance</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/performance/reference/performance_rmse.html">rmse</a></span><span class="op">(</span><span class="va">lm_allin_no_title</span><span class="op">)</span></span>
 <span><span class="co">## [1] 20.22998</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Name Clash
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Im Paket <code>yardstick</code> gibt es eine Funktion namens <code>rmse</code> und im Paket <code>performance</code>, Teil des Meta-Pakets <code>easystats</code> ebenfalls. Da sind Probleme vorprogrammiert. Das ist so als würde die Lehrerin rufen: “Schorsch, komm her!”. Dabei gibt es zwei Schorsche in der Klasse: Den Müllers Schorsch und den Meiers Schorsch. Sonst kommen beide, was die Lehrerin nicht will. Die Lehrerin müsste also rufen: “Schorsch Müller (oder Meier), komm her!”. Genau dasselbe machen wir, wenn wir das R-Paket eines Befehls mitschreiben, sozusagen den “Nachnamen” des Befehls: <code>paketname::funktion</code> ist wie <code>Müller::Schorsch</code>. In unserem Fall also: <code><a href="https://easystats.github.io/performance/reference/performance_rmse.html">performance::rmse</a></code> Endlich weiß R wieder, was zu tun ist!<span class="math inline">\(\square\)</span></p>
+</div>
 </div>
 <p>Sie rennen zu Ihrem Chef, der jetzt die Güte Ihrer Vorhersagen in den <em>restlichen</em> Daten bestimmen soll.</p>
 <blockquote class="blockquote">
@@ -1932,14 +1949,14 @@ Tipp
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-gelman_regression_2021" class="csl-entry" role="listitem">
-Gelman, Andrew, Jennifer Hill, und Aki Vehtari. 2021. <em>Regression and other stories</em>. Analytical methods for social research. Cambridge: Cambridge University Press.
-</div>
 <div id="ref-Kosinski2013" class="csl-entry" role="listitem">
 Kosinski, Michal, David Stillwell, und Thore Graepel. 2013. <span>„Private traits and attributes are predictable from digital records of human behavior“</span>. <em>Proceedings of the National Academy of Sciences</em> 110 (15): 5802–5. <a href="https://doi.org/10.1073/pnas.1218772110">https://doi.org/10.1073/pnas.1218772110</a>.
 </div>
 <div id="ref-lalwani_customer_2022" class="csl-entry" role="listitem">
 Lalwani, Praveen, Manas Kumar Mishra, Jasroop Singh Chadha, und Pratyush Sethi. 2022. <span>„Customer Churn Prediction System: A Machine Learning Approach“</span>. <em>Computing</em> 104 (2): 271–94. <a href="https://doi.org/10.1007/s00607-021-00908-y">https://doi.org/10.1007/s00607-021-00908-y</a>.
+</div>
+<div id="ref-okabeito" class="csl-entry" role="listitem">
+Okabe, Masataka, und Kei Ito. o.&nbsp;J. <span>„Color <span>Universal Design</span> (<span>CUD</span>) / <span>Colorblind Barrier Free</span>“</span>. Zugegriffen 3. August 2023. <a href="https://jfly.uni-koeln.de/color/">https://jfly.uni-koeln.de/color/</a>.
 </div>
 </div>
 </section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
@@ -1972,7 +1989,7 @@ Lalwani, Praveen, Manas Kumar Mishra, Jasroop Singh Chadha, und Pratyush Sethi. 
 <li id="fn26"><p>engl. predictions; to predict: vorhersagen<a href="#fnref26" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn27"><p>wir verwenden dazu die Funktionen <code>mae</code> und <code>rsq</code><a href="#fnref27" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn28"><p>welches Sie vielleicht noch installieren müssen.<a href="#fnref28" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn29"><p>Wir haben hier <code><a href="https://yardstick.tidymodels.org/reference/mae.html">yardstick::mae</a></code> geschrieben und nicht nur <code>mae</code>, da es sowohl im Paket <code>performance</code> ( Teil des Metapakets <code>easystats</code>) als auch im Paket <code>yardstick</code> (Teil des Metapakets <code>tidymodels</code>) einen Befehl des Namens <code>mae</code> gibt. R könnte daher den anderen <code>mae</code> meinen als Sie, was garantiert zu Verwirrung führt. Entweder bei R oder bei Ihnen.<a href="#fnref29" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn29"><p>Wir haben hier <code><a href="https://yardstick.tidymodels.org/reference/mae.html">yardstick::mae</a></code> geschrieben und nicht nur <code>mae</code>, da es sowohl im Paket <code>performance</code> ( Teil des Metapakets <code>easystats</code>) als auch im Paket <code>yardstick</code> (Teil des Metapakets <code>tidymodels</code>) einen Befehl des Namens <code>mae</code> gibt. Name-Clash-Alarm! R könnte daher den anderen <code>mae</code> meinen als Sie, was garantiert zu Verwirrung führt. Entweder bei R oder bei Ihnen.<a href="#fnref29" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn30"><p>initial_split sagt nur, welche Zeile in welche der beiden Stichproben kommen <em>soll</em>. Die eigentliche Aufteilung wird aber noch nicht durchgeführt.<a href="#fnref30" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {

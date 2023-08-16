@@ -32,7 +32,7 @@ Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt dam
 ```{r}
 #| message: false
 library(tidyverse)
-library(yardstick)  
+library(yardstick)  # für Modellgüte im Test-Sample
 library(easystats)
 ```
 
@@ -41,7 +41,7 @@ library(easystats)
 #| include: false
 library(ggpubr)
 library(plotly)
-
+library(openintro)  # dataset mariokart
 ```
 
 
@@ -325,7 +325,7 @@ Der Referenzwert bzw. die Referenzgruppe entspricht dem Wert x=0 im Regressionsm
 Wie gut erklärt unser Modell die Daten?
 
 ```{r}
-r2(lm_wetter1_zentriert)
+r2(lm_wetter1_zentriert)  # aus `{easystat}`
 ```
 
 Viel Varianz des Wetters erklärt das Modell mit `year_c`^[`year` und `year_c` sind gleich stark mit `temp` korreliert, daher wird sich die Modellgüte nicht unterscheiden.] aber nicht.
@@ -973,9 +973,13 @@ Visualisieren wir uns die geschätzten Erwartungswert pro Prädiktorwert, s. @fi
 ```{r}
 #| label: fig-lm3
 #| fig-cap: Temperaturverlauf über die Jahre für zwei Monate. Man beachte, dass die Regressionsgeraden parallel sind.
-plot(estimate_expectation((lm_year_month)))
+plot(estimate_expectation((lm_year_month))) +
+  scale_color_okabeito() +
+  scale_fill_okabeito()
 ```
 
+Mit `scale_color_okabeito` haben wir die Standard-Farbpalette durch die von  [@okabeito] ersetzt (s. [Hinweise hier](https://malcolmbarrett.github.io/ggokabeito/reference/palette_okabe_ito.html)).
+Das ist nicht unbedingt nötig, aber robuster bei Schwarz-Weiß-Druck und bei Sehschwächen, vgl. @sec-farbwahl.
 
 
 Die erklärte Varianz von `lm_year_month` liegt bei:
@@ -999,7 +1003,8 @@ lm_year_month_interaktion <- lm(
   precip ~ year_c + month_factor + year_c:month_factor, 
   data = wetter_month_1_7)
 
-plot(estimate_expectation(lm_year_month_interaktion))
+plot(estimate_expectation(lm_year_month_interaktion)) +
+  scale_color_okabeito()
 ```
 
 
@@ -1047,10 +1052,10 @@ Die Regressionskoeffizienten geben die Zunahme in Y an, wenn der jeweilige Präd
 :::
 
 
-Das R-Quadrat von `lm_year_month_interaktion` beträgt übrigens `r r2(lm_year_month_interaktion)[["R2"]]`.
+Das R-Quadrat von `lm_year_month_interaktion` beträgt übrigens:
 
 ```{r}
-r2(lm_year_month_interaktion)[["R2"]]
+r2(lm_year_month_interaktion)[["R2"]]  # aus `{easystats}`
 ```
 
 
@@ -1122,7 +1127,8 @@ d_sim %>%
   geom_smooth(method = "lm") +
   labs(title = "Oh nein, in beiden Gruppen keine Korrelation!") +
   theme(legend.position = "bottom") +
-  theme_minimal()
+  theme_minimal() +
+  scale_color_okabeito()
 ```
 
 
@@ -1332,6 +1338,20 @@ performance::rmse(lm_allin_no_title)
 ```
 
 
+:::{.callout-caution}
+### Name Clash
+Im Paket `yardstick` gibt es eine Funktion namens `rmse` und im Paket `performance`, Teil des Meta-Pakets `easystats` ebenfalls.
+Da sind Probleme vorprogrammiert.
+Das ist so als würde die Lehrerin rufen: "Schorsch, komm her!". 
+Dabei gibt es zwei Schorsche in der Klasse: Den Müllers Schorsch und den Meiers Schorsch.
+Sonst kommen beide, was die Lehrerin nicht will.
+Die Lehrerin müsste also rufen: "Schorsch Müller (oder Meier), komm her!".
+Genau dasselbe machen wir, wenn wir das R-Paket eines Befehls mitschreiben, sozusagen den "Nachnamen" des Befehls:
+`paketname::funktion` ist wie `Müller::Schorsch`. 
+In unserem Fall also: `performance::rmse`
+Endlich weiß R wieder, was zu tun ist!$\square$
+:::
+
 
 Sie rennen zu Ihrem Chef, der jetzt die Güte Ihrer Vorhersagen in den *restlichen* Daten bestimmen soll.
 
@@ -1391,7 +1411,7 @@ yardstick::rmse(data = mariokart_test,
 
 
 
-Ihr mittlerer Vorhersagefehler (MAE) liegt bei ca. 13 Euro.^[Wir haben hier `yardstick::mae` geschrieben und nicht nur `mae`, da es sowohl im Paket `performance` ( Teil des Metapakets `easystats`) als auch im Paket `yardstick` (Teil des Metapakets `tidymodels`) einen Befehl des Namens `mae` gibt. 
+Ihr mittlerer Vorhersagefehler (MAE) liegt bei ca. 13 Euro.^[Wir haben hier `yardstick::mae` geschrieben und nicht nur `mae`, da es sowohl im Paket `performance` ( Teil des Metapakets `easystats`) als auch im Paket `yardstick` (Teil des Metapakets `tidymodels`) einen Befehl des Namens `mae` gibt. Name-Clash-Alarm! 
 R könnte daher den anderen `mae` meinen als Sie, was garantiert zu Verwirrung führt. Entweder bei R oder bei Ihnen.]
 
 >   🧔‍♂️ Ganz okay.

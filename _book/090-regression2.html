@@ -109,7 +109,9 @@ div.csl-indent {
     "search-submit-button-title": "Abschicken",
     "search-label": "Suchen"
   }
-}</script><link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+}</script><meta name="mermaid-theme" content="default">
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script><script src="site_libs/quarto-diagram/mermaid-init.js"></script><link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><link rel="stylesheet" href="styles.css">
 </head>
 <body class="nav-sidebar floating">
@@ -280,7 +282,13 @@ div.csl-indent {
   <li><a href="#modell-all-in-ohne-titelspalte" id="toc-modell-all-in-ohne-titelspalte" class="nav-link" data-scroll-target="#modell-all-in-ohne-titelspalte"><span class="header-section-number">11.6.2</span> Modell “all-in”, ohne Titelspalte</a></li>
   </ul>
 </li>
-  <li><a href="#vertiefung-train--und-test-sample" id="toc-vertiefung-train--und-test-sample" class="nav-link" data-scroll-target="#vertiefung-train--und-test-sample"><span class="header-section-number">11.7</span> Vertiefung: Train- und Test-Sample</a></li>
+  <li>
+<a href="#vertiefung-das-aufteilen-ihrer-daten" id="toc-vertiefung-das-aufteilen-ihrer-daten" class="nav-link" data-scroll-target="#vertiefung-das-aufteilen-ihrer-daten"><span class="header-section-number">11.7</span> Vertiefung: Das Aufteilen Ihrer Daten</a>
+  <ul class="collapse">
+<li><a href="#analyse--und-assessment-sample" id="toc-analyse--und-assessment-sample" class="nav-link" data-scroll-target="#analyse--und-assessment-sample"><span class="header-section-number">11.7.1</span> Analyse- und Assessment-Sample</a></li>
+  <li><a href="#train--vs.-test-sample" id="toc-train--vs.-test-sample" class="nav-link" data-scroll-target="#train--vs.-test-sample"><span class="header-section-number">11.7.2</span> Train- vs.&nbsp;Test-Sample</a></li>
+  </ul>
+</li>
   <li><a href="#praxisbezug" id="toc-praxisbezug" class="nav-link" data-scroll-target="#praxisbezug"><span class="header-section-number">11.8</span> Praxisbezug</a></li>
   <li><a href="#fazit" id="toc-fazit" class="nav-link" data-scroll-target="#fazit"><span class="header-section-number">11.9</span> Fazit</a></li>
   <li><a href="#dran-bleiben" id="toc-dran-bleiben" class="nav-link" data-scroll-target="#dran-bleiben"><span class="header-section-number">11.10</span> Dran bleiben</a></li>
@@ -1877,24 +1885,63 @@ Tipp
 <p>Bevor man Vorhersagen eines Modells einreicht, bietet es sich, die Modellgüte in einem neuen Datensatz, als einem Test-Sample, zu überprüfen.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
-</section></section><section id="vertiefung-train--und-test-sample" class="level2" data-number="11.7"><h2 data-number="11.7" class="anchored" data-anchor-id="vertiefung-train--und-test-sample">
-<span class="header-section-number">11.7</span> Vertiefung: Train- und Test-Sample</h2>
-<p>Wenn Sie eine robuste Schätzung der Güte Ihres Modells erfahren möchten, bietet es sich an, die Vorhersagegenauigkeit Ihres Modells in einem neuen Datensatz, einem sog. Test-Sample, zu überprüfen.</p>
-<p>Die Aufteilung Ihres Datensatzes in ein Train- und ein Test-Sample können Sie z.B. so bewerkstelligen:</p>
+</section></section><section id="vertiefung-das-aufteilen-ihrer-daten" class="level2" data-number="11.7"><h2 data-number="11.7" class="anchored" data-anchor-id="vertiefung-das-aufteilen-ihrer-daten">
+<span class="header-section-number">11.7</span> Vertiefung: Das Aufteilen Ihrer Daten</h2>
+<section id="analyse--und-assessment-sample" class="level3" data-number="11.7.1"><h3 data-number="11.7.1" class="anchored" data-anchor-id="analyse--und-assessment-sample">
+<span class="header-section-number">11.7.1</span> Analyse- und Assessment-Sample</h3>
+<p>Wenn Sie eine robuste Schätzung der Güte Ihres Modells erfahren möchten, bietet sich folgendes Vorgehen an.</p>
+<ol type="1">
+<li>Berechnen Sie Ihr Modell in einem Teil Ihres Datensatzes (dem sog. <em>Validation-Sample</em>).</li>
+<li>Prüfen Sie die Modellügte in einem zweiten Teil Ihres Datensatzes (dem sog. <em>Assessment-Sample</em>)</li>
+</ol>
+<p>Diese Aufteilung Ihres Datensatzatzes in diese zwei Teile nennt man auch <em>Validierungsaufteilung</em> (validation split); Sie können sie z.B. so bewerkstelligen:</p>
 <div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-69_480a87ce6596d849837bbf2cf442c7a9">
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rsample.tidymodels.org">rsample</a></span><span class="op">)</span></span>
 <span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"daten/mariokart.csv"</span><span class="op">)</span>  <span class="co"># Wenn die CSV-Datei in einem Unterordner mit Namen "daten" liegt</span></span>
 <span></span>
 <span><span class="va">meine_aufteilung</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">initial_split</a></span><span class="op">(</span><span class="va">mariokart</span>, strata <span class="op">=</span> <span class="va">total_pr</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><code>initial_split</code> <em>bestimmt</em> für jede Zeile (Beobachtung) zufällig aus, ob diese Zeile in das Train- oder in das Test-Sample kommen soll. Im Standard werden 70% der Daten in das Train- und 30% in das Test-Sample eingeteilt; das ist eine sinnvolle Aufteilung. Das Argument <code>strata</code> sorgt dafür, dass die Verteilung der AV in beiden Stichproben gleich ist. Es wäre nämlich blöd für Ihr Modell, wenn im Train-Sample z.B. nur die teuren, und im Test-Sample nur die günstigen Spiele landen würde. In so einem Fall würde sich Ihr Modell unnötig schwer tun.</p>
-<p>Im nächsten Schritt können Sie anhand anhand der von <code>initial_split</code> bestimmten Aufteilung die Daten tatsächlich aufteilen.<a href="#fn30" class="footnote-ref" id="fnref30" role="doc-noteref"><sup>30</sup></a></p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-71_0045f0e92943d45ce17bb017f919ff6a">
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">training</a></span><span class="op">(</span><span class="va">meine_aufteilung</span><span class="op">)</span>  <span class="co"># Train-Sample</span></span>
-<span><span class="va">mariokart_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">testing</a></span><span class="op">(</span><span class="va">meine_aufteilung</span><span class="op">)</span>  <span class="co"># Test-Sample</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><code>initial_split</code> <em>bestimmt</em> für jede Zeile (Beobachtung) zufällig aus, ob diese Zeile in das Analyse- oder in das Assessment-Sample kommen soll. Im Standard werden 75% der Daten in das Train- und 25% in das Test-Sample eingeteilt<a href="#fn30" class="footnote-ref" id="fnref30" role="doc-noteref"><sup>30</sup></a>; das ist eine sinnvolle Aufteilung. Das Argument <code>strata</code> sorgt dafür, dass die Verteilung der AV in beiden Stichproben gleich ist. Es wäre nämlich blöd für Ihr Modell, wenn im Train-Sample z.B. nur die teuren, und im Test-Sample nur die günstigen Spiele landen würde.<a href="#fn31" class="footnote-ref" id="fnref31" role="doc-noteref"><sup>31</sup></a> In so einem Fall würde sich Ihr Modell unnötig schwer tun.</p>
+<p>Im nächsten Schritt können Sie anhand anhand der von <code>initial_split</code> bestimmten Aufteilung die Daten tatsächlich aufteilen.<a href="#fn32" class="footnote-ref" id="fnref32" role="doc-noteref"><sup>32</sup></a></p>
+<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-71_6ce5a4e631b66b8a320cd5ff9865563e">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">training</a></span><span class="op">(</span><span class="va">meine_aufteilung</span><span class="op">)</span>  <span class="co"># Analyse-Sample</span></span>
+<span><span class="va">mariokart_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">testing</a></span><span class="op">(</span><span class="va">meine_aufteilung</span><span class="op">)</span>  <span class="co"># Assessment-Sample</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Ich persönliche nenne die Tabelle mit den Daten gerne <code>d_train</code> bzw. <code>d_test</code>, das ist kürzer zu tippen und einheitlich. Sie können aber auch ein eigenes Namens-Schema nutzen; was aber hilfreich ist, ist Konsistenz in der Benamung, außerdem Kürze und aussagekräftige Namen.</p>
-</section><section id="praxisbezug" class="level2" data-number="11.8"><h2 data-number="11.8" class="anchored" data-anchor-id="praxisbezug">
+<p>Ich persönliche nenne die Tabelle mit den Daten gerne <code>d_analysis</code> bzw. <code>d_assess</code>, das ist kürzer zu tippen und einheitlich. Sie können aber auch ein eigenes Namens-Schema nutzen; was aber hilfreich ist, ist Konsistenz in der Benamung, außerdem Kürze und aussagekräftige Namen.</p>
+</section><section id="train--vs.-test-sample" class="level3" data-number="11.7.2"><h3 data-number="11.7.2" class="anchored" data-anchor-id="train--vs.-test-sample">
+<span class="header-section-number">11.7.2</span> Train- vs.&nbsp;Test-Sample</h3>
+<div id="def-trainsample" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 11.3 (Train-Sample) </strong></span>Den Datensatz, für die Sie sowohl UV <em>als auch AV</em> vorliegen haben, nennt man Train-Sample.</p>
+</div>
+<p>Das Train-Sample stellt die bekannten Daten dar; aus denen können wir lernen, d.h. unser Modell berechnen.</p>
+<div id="def-testsample" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 11.4 (Test-Sample) </strong></span>Den Datensatz, für den Sie <em>nur</em> Daten der UV, aber nicht zu der AV vorliegen haben, nennt man <em>Test-Sample</em>.</p>
+</div>
+<p>Das Test-Sample stellt das Problem der wirklichen Welt dar: Neue Beobachtungen, von denen man (noch) nicht weiß, was der Wert der AV ist.</p>
+<p>Der Zusammenhang dieser verschiedenen, aber zusammengehörigen Arten von Stichproben ist in <a href="#fig-sample-types">Abbildung&nbsp;<span>11.14</span></a> dargestellt.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-sample-types" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><div>
+<pre class="mermaid mermaid-js" data-label="fig-sample-types">flowchart TD
+  S[Samples] 
+  TS[Train-Sample]
+  TT[Test-Sample]
+  AS[Analyse-Sample]
+  AssS[Assessment-Sample]
+
+  S--&gt;TT
+  S--&gt;TS
+  TS--&gt;AS
+  TS--&gt;AssS
+  
+</pre>
+</div>
+<figcaption class="figure-caption">Abbildung&nbsp;11.14: Verschiedene Arten von zusammengehörigen Stichprobenarten im Rahmen einer Prognosemodellierung</figcaption></figure>
+</div>
+</div>
+</div>
+</section></section><section id="praxisbezug" class="level2" data-number="11.8"><h2 data-number="11.8" class="anchored" data-anchor-id="praxisbezug">
 <span class="header-section-number">11.8</span> Praxisbezug</h2>
 <p>Ein Anwendungsbezug von moderner Datenanalyse ist es vorherzusagen, welche Kunden “abwanderungsgefährdet” sind, also vielleicht in Zukunft bald nicht mehr unsere Kunden sind (“customer churn”). Es gibt eine ganze Reihe von Untersuchungen dazu, z.B. die von <span class="citation" data-cites="lalwani_customer_2022">Lalwani u.&nbsp;a. (<a href="#ref-lalwani_customer_2022" role="doc-biblioref">2022</a>)</span>. Die Forschis versuchen anhand von Daten und u.a. auch der linearen Regression vorherzusagen, welche Kunden abgewandert sein werden. Die Autoren berichten von einer Genauigkeit von über 80% in Ihrem (besten) Vorhersagemodell.</p>
 </section><section id="fazit" class="level2" data-number="11.9"><h2 data-number="11.9" class="anchored" data-anchor-id="fazit">
@@ -1918,7 +1965,7 @@ Tipp
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Abbildung&nbsp;11.14: Statistik, Sie und Party: Gestern und (vielleicht) morgen.</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Abbildung&nbsp;11.15: Statistik, Sie und Party: Gestern und (vielleicht) morgen.</figcaption><p></p>
 </figure>
 </div>
 <p><a href="https://imgflip.com/memegenerator/Distracted-Boyfriend">Quelle: imgflip</a></p>
@@ -1990,7 +2037,9 @@ Okabe, Masataka, und Kei Ito. o.&nbsp;J. <span>„Color <span>Universal Design</
 <li id="fn27"><p>wir verwenden dazu die Funktionen <code>mae</code> und <code>rsq</code><a href="#fnref27" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn28"><p>welches Sie vielleicht noch installieren müssen.<a href="#fnref28" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn29"><p>Wir haben hier <code><a href="https://yardstick.tidymodels.org/reference/mae.html">yardstick::mae</a></code> geschrieben und nicht nur <code>mae</code>, da es sowohl im Paket <code>performance</code> ( Teil des Metapakets <code>easystats</code>) als auch im Paket <code>yardstick</code> (Teil des Metapakets <code>tidymodels</code>) einen Befehl des Namens <code>mae</code> gibt. Name-Clash-Alarm! R könnte daher den anderen <code>mae</code> meinen als Sie, was garantiert zu Verwirrung führt. Entweder bei R oder bei Ihnen.<a href="#fnref29" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn30"><p>initial_split sagt nur, welche Zeile in welche der beiden Stichproben kommen <em>soll</em>. Die eigentliche Aufteilung wird aber noch nicht durchgeführt.<a href="#fnref30" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn30"><p>vgl. <code><a href="https://rsample.tidymodels.org/reference/initial_split.html">help(initial_split)</a></code><a href="#fnref30" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn31"><p>Anderes Beispiel: In den ersten Zeilen stehen nur Kunden aus Land A und in den unteren Zeilen nur aus Land B.<a href="#fnref31" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn32"><p>initial_split sagt nur, welche Zeile in welche der beiden Stichproben kommen <em>soll</em>. Die eigentliche Aufteilung wird aber noch nicht durchgeführt.<a href="#fnref32" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

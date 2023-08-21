@@ -1441,13 +1441,17 @@ Bevor man Vorhersagen eines Modells einreicht,
 bietet es sich, die Modellgüte in einem neuen Datensatz, als einem Test-Sample, zu überprüfen.$\square$
 :::
 
-## Vertiefung: Train- und Test-Sample
+## Vertiefung: Das Aufteilen Ihrer Daten
+
+### Analyse- und Assessment-Sample
 
 Wenn Sie eine robuste Schätzung der Güte Ihres Modells erfahren möchten,
-bietet es sich an, die Vorhersagegenauigkeit Ihres Modells in einem neuen Datensatz, 
-einem sog. Test-Sample, zu überprüfen.
+bietet sich folgendes Vorgehen an.
 
-Die Aufteilung Ihres Datensatzes in ein Train- und ein Test-Sample können Sie z.B. so bewerkstelligen:
+1. Berechnen Sie Ihr Modell in einem Teil Ihres Datensatzes (dem sog. *Validation-Sample*).
+2. Prüfen Sie die Modellügte in einem zweiten Teil Ihres Datensatzes (dem sog. *Assessment-Sample*)
+
+Diese Aufteilung Ihres Datensatzatzes in diese zwei Teile nennt man auch *Validierungsaufteilung* (validation split); Sie können sie z.B. so bewerkstelligen:
 
 
 ```{r}
@@ -1458,6 +1462,7 @@ meine_aufteilung <- initial_split(mariokart, strata = total_pr)
 ```
 
 
+
 ```{r}
 #| echo: false
 set.seed(42)
@@ -1465,27 +1470,67 @@ meine_aufteilung <- initial_split(mariokart, strata = total_pr)
 ```
 
 
-`initial_split` *bestimmt* für jede Zeile (Beobachtung) zufällig aus, ob diese Zeile in das Train- oder in das Test-Sample kommen soll.
-Im Standard werden 70% der Daten in das Train- und 30% in das Test-Sample eingeteilt;
+`initial_split` *bestimmt* für jede Zeile (Beobachtung) zufällig aus, ob diese Zeile in das Analyse- oder in das Assessment-Sample kommen soll.
+Im Standard werden 75% der Daten in das Train- und 25% in das Test-Sample eingeteilt^[vgl. `help(initial_split)`];
 das ist eine sinnvolle Aufteilung.
 Das Argument `strata` sorgt dafür, dass die Verteilung der AV in beiden Stichproben gleich ist.
-Es wäre nämlich blöd für Ihr Modell, wenn im Train-Sample z.B. nur die teuren, und im Test-Sample nur die günstigen Spiele landen würde. 
+Es wäre nämlich blöd für Ihr Modell, wenn im Train-Sample z.B. nur die teuren, und im Test-Sample nur die günstigen Spiele landen würde.^[Anderes Beispiel: In den ersten Zeilen stehen nur Kunden aus Land A und in den unteren Zeilen nur aus Land B.] 
 In so einem Fall würde sich Ihr Modell unnötig schwer tun.
 
 Im nächsten Schritt können Sie anhand anhand der von `initial_split` bestimmten Aufteilung die Daten tatsächlich aufteilen.^[initial_split sagt nur, welche Zeile in welche der beiden Stichproben kommen *soll*. Die eigentliche Aufteilung wird aber noch nicht durchgeführt.]
 
 
 ```{r}
-mariokart_train <- training(meine_aufteilung)  # Train-Sample
-mariokart_test <- testing(meine_aufteilung)  # Test-Sample
+mariokart_train <- training(meine_aufteilung)  # Analyse-Sample
+mariokart_test <- testing(meine_aufteilung)  # Assessment-Sample
 ```
 
 
-Ich persönliche nenne die Tabelle mit den Daten gerne `d_train` bzw. `d_test`,
+Ich persönliche nenne die Tabelle mit den Daten gerne `d_analysis` bzw. `d_assess`,
 das ist kürzer zu tippen und einheitlich.
 Sie können aber auch ein eigenes Namens-Schema nutzen;
 was aber hilfreich ist, ist Konsistenz in der Benamung,
 außerdem Kürze und aussagekräftige Namen.
+
+### Train- vs. Test-Sample
+
+:::{#def-trainsample}
+### Train-Sample
+Den Datensatz, für die Sie sowohl UV *als auch AV* vorliegen haben, nennt man Train-Sample.
+:::
+
+Das Train-Sample stellt die bekannten Daten dar; aus denen können wir lernen, d.h. unser Modell berechnen.
+
+:::{#def-testsample}
+### Test-Sample
+Den Datensatz, für den Sie *nur* Daten der UV, aber nicht zu der AV vorliegen haben, nennt man *Test-Sample*.
+:::
+
+Das Test-Sample  stellt das Problem der wirklichen Welt dar: Neue Beobachtungen, von denen man (noch) nicht weiß, was der Wert der AV ist.
+
+
+Der Zusammenhang dieser verschiedenen, aber zusammengehörigen Arten von Stichproben ist in @fig-sample-types dargestellt.
+
+
+```{mermaid}
+%%| label: fig-sample-types
+%%| fig-cap: Verschiedene Arten von zusammengehörigen Stichprobenarten im Rahmen einer Prognosemodellierung
+flowchart TD
+  S[Samples] 
+  TS[Train-Sample]
+  TT[Test-Sample]
+  AS[Analyse-Sample]
+  AssS[Assessment-Sample]
+
+  S-->TT
+  S-->TS
+  TS-->AS
+  TS-->AssS
+  
+```
+
+
+
 
 ## Praxisbezug
 

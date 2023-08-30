@@ -318,9 +318,9 @@ div.csl-indent {
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title">
+<div class="quarto-title-block"><div><h1 class="title">
 <span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Daten verbildlichen</span>
-</h1>
+</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -1165,6 +1165,8 @@ Vorsicht
 <span class="header-section-number">6.11</span> Literatur</h2>
 
 
+<!-- -->
+
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-cohen_power_1992" class="csl-entry" role="listitem">
 Cohen, J. 1992. <span>„A Power Primer“</span>. <em>Psychological Bulletin</em> 112 (1): 155–59.
@@ -1402,6 +1404,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
   function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
@@ -1565,7 +1618,1410 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Punktmodelle 1</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Quellcode</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb12" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Daten verbildlichen</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{r libs-hidden}</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#library(anglr)</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#library(maptools)</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="fu">## Lernsteuerung</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="fu">### Standort im Lernpfad</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="fu">### Lernziele</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Sie können erläutern, wann und wozu das Visualisieren statistischer Inhalte sinnvoll ist.</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Sie kennen typische Arte von Datendiagrammen.</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Sie können typische Datendiagramme mit R visualisieren.</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Sie können zentrale Ergebnisse aus Datendiagrammen herauslesen.</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a><span class="fu">### Benötigte R-Pakete</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer)  <span class="co"># nicht vergessen zu installieren</span></span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_minimal</span>())</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a><span class="fu">### Wozu das alles?</span></span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a>::: {.content-visible unless-format="pdf"}</span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;iframe</span> <span class="er">src</span><span class="ot">=</span><span class="st">"https://giphy.com/embed/3oriNSf2iLjMVO7dao"</span> <span class="er">width</span><span class="ot">=</span><span class="st">"480"</span> <span class="er">height</span><span class="ot">=</span><span class="st">"244"</span> <span class="er">frameBorder</span><span class="ot">=</span><span class="st">"0"</span> <span class="er">class</span><span class="ot">=</span><span class="st">"giphy-embed"</span> <span class="er">allowFullScreen</span><span class="kw">&gt;&lt;/iframe&gt;&lt;p&gt;&lt;a</span> <span class="er">href</span><span class="ot">=</span><span class="st">"https://giphy.com/gifs/culture--meme-kermit-3oriNSf2iLjMVO7dao"</span><span class="kw">&gt;</span>. Quelle: GIPHY<span class="kw">&lt;/a&gt;&lt;/p&gt;</span></span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;   🥷 Wir müssen die Galaxis verteidigen, Kermit</span></span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;   🐸 *Schlock*</span></span>
+<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ein Dino sagt mehr als 1000 Worte</span></span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a>Es heißt, ein Bild sage mehr als 1000 Worte. </span>
+<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a>Schon richtig, aber ein Dinosaurier sagt auch mehr als 1000 Worte,</span>
+<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a>s. @fig-dino1.</span>
+<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-96"><a href="#cb12-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-97"><a href="#cb12-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a><span class="al">![Dinosaurier und Kreis: Gleiche statistischen Kennwerte](img/dino-corr.gif)</span>{#fig-dino1}</span>
+<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a>:::{.xsmall}</span>
+<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Quelle</span><span class="co">](https://towardsdatascience.com/how-to-turn-a-dinosaur-dataset-into-a-circle-dataset-with-the-same-statistics-64136c2e2ca0)</span></span>
+<span id="cb12-103"><a href="#cb12-103" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-104"><a href="#cb12-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-105"><a href="#cb12-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a>In @fig-dino1 sieht man zwei verschiedene "Bilder", also Datensätze: einmal einen Dino und einmal einen Kreis.</span>
+<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a>Obwohl die Bilder grundverschiedene sind, sind die zentralen statistischen Kennwerte (praktisch) identisch.</span>
+<span id="cb12-108"><a href="#cb12-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-109"><a href="#cb12-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-110"><a href="#cb12-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-111"><a href="#cb12-111" aria-hidden="true" tabindex="-1"></a>In die gleiche Bresche schlägt "Anscombes Quartett", s. @fig-dino2:</span>
+<span id="cb12-112"><a href="#cb12-112" aria-hidden="true" tabindex="-1"></a>Es zeigt 4 Datensätze, in denen die zentralen Statistiken fast identisch sind,</span>
+<span id="cb12-113"><a href="#cb12-113" aria-hidden="true" tabindex="-1"></a>also Mittelwerte, Streuungen, Korrelationen.</span>
+<span id="cb12-114"><a href="#cb12-114" aria-hidden="true" tabindex="-1"></a>Aber die Streudiagramme sind grundverschieden.</span>
+<span id="cb12-115"><a href="#cb12-115" aria-hidden="true" tabindex="-1"></a>Anscombes Beispiel zeigt (zugespitzt): Eine Visualisierung enthüllt, was der Statistik (als Kennzahl) verhüllt bleibt.</span>
+<span id="cb12-116"><a href="#cb12-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-118"><a href="#cb12-118" aria-hidden="true" tabindex="-1"></a><span class="al">![Anscombes Quartet: Gleiche statistischen Kennwerte in vier Datensätzen](img/anscombe.png)</span>{#fig-dino2}</span>
+<span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a>:::{.xsmall}</span>
+<span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Quelle</span><span class="co">](https://en.wikipedia.org/wiki/Anscombe%27s_quartet)</span></span>
+<span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-124"><a href="#cb12-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-125"><a href="#cb12-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-126"><a href="#cb12-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-127"><a href="#cb12-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-128"><a href="#cb12-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-129"><a href="#cb12-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-130"><a href="#cb12-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-131"><a href="#cb12-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-132"><a href="#cb12-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-133"><a href="#cb12-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-134"><a href="#cb12-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-135"><a href="#cb12-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-136"><a href="#cb12-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-137"><a href="#cb12-137" aria-hidden="true" tabindex="-1"></a>Unter visueller Cortex ist sehr leistungsfähig. Wir können ohne Mühe eine große Anzahl</span>
+<span id="cb12-138"><a href="#cb12-138" aria-hidden="true" tabindex="-1"></a>an Informationen aufnehmen und parallel verarbeiten.</span>
+<span id="cb12-139"><a href="#cb12-139" aria-hidden="true" tabindex="-1"></a>Aus diesem Grund sind Datendiagramme eine effektive und einfache Art,</span>
+<span id="cb12-140"><a href="#cb12-140" aria-hidden="true" tabindex="-1"></a>aus Daten Erkenntnisse zu ziehen.</span>
+<span id="cb12-141"><a href="#cb12-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-142"><a href="#cb12-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-143"><a href="#cb12-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-144"><a href="#cb12-144" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip}</span>
+<span id="cb12-145"><a href="#cb12-145" aria-hidden="true" tabindex="-1"></a>Nutzen Sie Datendiagramme umfassend; sie sind einfach zu verstehen und doch sehr mächtig.</span>
+<span id="cb12-146"><a href="#cb12-146" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-147"><a href="#cb12-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-148"><a href="#cb12-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-149"><a href="#cb12-149" aria-hidden="true" tabindex="-1"></a>::: {def-datendiagramm}</span>
+<span id="cb12-150"><a href="#cb12-150" aria-hidden="true" tabindex="-1"></a><span class="fu">### Datendiagramm</span></span>
+<span id="cb12-151"><a href="#cb12-151" aria-hidden="true" tabindex="-1"></a>Ein *Datendiagramm* (kurz: Diagramm) ist ein Diagramm, das Daten und Statistiken zeigt, mit dem Zweck,</span>
+<span id="cb12-152"><a href="#cb12-152" aria-hidden="true" tabindex="-1"></a>Erkenntnisse daraus zu ziehen.</span>
+<span id="cb12-153"><a href="#cb12-153" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-154"><a href="#cb12-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-155"><a href="#cb12-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-156"><a href="#cb12-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-157"><a href="#cb12-157" aria-hidden="true" tabindex="-1"></a>:::{#exm-datendiagramm}</span>
+<span id="cb12-158"><a href="#cb12-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-159"><a href="#cb12-159" aria-hidden="true" tabindex="-1"></a><span class="fu">### Aus der Forschung: Ein aufwändiges (und ansprechendes) Datendiagramm</span></span>
+<span id="cb12-160"><a href="#cb12-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-161"><a href="#cb12-161" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Hier</span><span class="co">](https://besjournals.onlinelibrary.wiley.com/cms/asset/22fa2646-002f-4890-800d-2717cc12bce8/jane13070-fig-0002-m.jpg)</span> finden Sie ein Beispiel für ein Datendiagramm,</span>
+<span id="cb12-162"><a href="#cb12-162" aria-hidden="true" tabindex="-1"></a> das mit R erzeugt wurde <span class="co">[</span><span class="ot">@scherer_seasonal_2019</span><span class="co">]</span>.</span>
+<span id="cb12-163"><a href="#cb12-163" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-164"><a href="#cb12-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-165"><a href="#cb12-165" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb12-166"><a href="#cb12-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-167"><a href="#cb12-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-168"><a href="#cb12-168" aria-hidden="true" tabindex="-1"></a><span class="fu">### Ein Bild hat nicht so viele Dimensionen</span></span>
+<span id="cb12-169"><a href="#cb12-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-170"><a href="#cb12-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-171"><a href="#cb12-171" aria-hidden="true" tabindex="-1"></a>@fig-many-dims zeigt ein Bild mit mehreren Variablen.</span>
+<span id="cb12-172"><a href="#cb12-172" aria-hidden="true" tabindex="-1"></a>Wie man (nicht) sieht, wird es langsam unübersichtlich.</span>
+<span id="cb12-173"><a href="#cb12-173" aria-hidden="true" tabindex="-1"></a>Offenbar kann man in einem Bild nicht beliebig viele Variablen reinquetschen.</span>
+<span id="cb12-174"><a href="#cb12-174" aria-hidden="true" tabindex="-1"></a>Die "Dimensionalität" eines Diagramms hat ihre Grenzen,</span>
+<span id="cb12-175"><a href="#cb12-175" aria-hidden="true" tabindex="-1"></a>vielleicht bei 4-6 Variablen.</span>
+<span id="cb12-176"><a href="#cb12-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-179"><a href="#cb12-179" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-180"><a href="#cb12-180" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-181"><a href="#cb12-181" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-many-dims</span></span>
+<span id="cb12-182"><a href="#cb12-182" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Ein Diagramm kann nur eine begrenzte Anzahl von Variablen zeigen"</span></span>
+<span id="cb12-183"><a href="#cb12-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-184"><a href="#cb12-184" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(mariokart, <span class="at">package =</span><span class="st">"openintro"</span>)</span>
+<span id="cb12-185"><a href="#cb12-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-186"><a href="#cb12-186" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">|&gt;</span> </span>
+<span id="cb12-187"><a href="#cb12-187" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-188"><a href="#cb12-188" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> duration, <span class="at">y =</span> total_pr, <span class="at">color =</span> cond, <span class="at">size =</span> wheels, <span class="at">shape =</span> stock_photo)) <span class="sc">+</span></span>
+<span id="cb12-189"><a href="#cb12-189" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb12-190"><a href="#cb12-190" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-191"><a href="#cb12-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-192"><a href="#cb12-192" aria-hidden="true" tabindex="-1"></a>Möchten wir den Zusammenhang von vielen Variablen, z.B. mehr als 5, verstehen,</span>
+<span id="cb12-193"><a href="#cb12-193" aria-hidden="true" tabindex="-1"></a>kommen wir mit Bildern nicht weiter.</span>
+<span id="cb12-194"><a href="#cb12-194" aria-hidden="true" tabindex="-1"></a>Dann brauchen wir andere Werkzeuge: statistics to the rescue.</span>
+<span id="cb12-195"><a href="#cb12-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-196"><a href="#cb12-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-197"><a href="#cb12-197" aria-hidden="true" tabindex="-1"></a>:::{.callout-note}</span>
+<span id="cb12-198"><a href="#cb12-198" aria-hidden="true" tabindex="-1"></a>Bei klaren Zusammenhängen und wenig Variablen braucht man keine (aufwändige) Statistik.</span>
+<span id="cb12-199"><a href="#cb12-199" aria-hidden="true" tabindex="-1"></a>Ein Bild (Datendiagramm) ist dann (oft) ausreichend.</span>
+<span id="cb12-200"><a href="#cb12-200" aria-hidden="true" tabindex="-1"></a>Man könnte sagen, dass es Statistik nur deshalb gibt, weil unser Auge mit mehr als ca. 4-6 Variablen nicht gleichzeitig umgehen kann.</span>
+<span id="cb12-201"><a href="#cb12-201" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-202"><a href="#cb12-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-203"><a href="#cb12-203" aria-hidden="true" tabindex="-1"></a>:::{#exr-anz-dims}</span>
+<span id="cb12-204"><a href="#cb12-204" aria-hidden="true" tabindex="-1"></a>Wie viele Variablen sind in @fig-many-dims dargestellt?^<span class="co">[</span><span class="ot">5</span><span class="co">]</span></span>
+<span id="cb12-205"><a href="#cb12-205" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-206"><a href="#cb12-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-207"><a href="#cb12-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-208"><a href="#cb12-208" aria-hidden="true" tabindex="-1"></a>Eine weitere Möglichkeit, mehr Variablen in einem Diagramm unterzubringen,</span>
+<span id="cb12-209"><a href="#cb12-209" aria-hidden="true" tabindex="-1"></a>ist die "Flatlands" zu verlassen, also von 2D auf 3D zu wechseln, <span class="co">[</span><span class="ot">s. hier</span><span class="co">](https://plotly.com/r/3d-surface-plots/)</span>.</span>
+<span id="cb12-210"><a href="#cb12-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-211"><a href="#cb12-211" aria-hidden="true" tabindex="-1"></a>#s. @fig-3d-germany.</span>
+<span id="cb12-212"><a href="#cb12-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-213"><a href="#cb12-213" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig-3d-earth}</span></span>
+<span id="cb12-214"><a href="#cb12-214" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-215"><a href="#cb12-215" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb12-216"><a href="#cb12-216" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb12-217"><a href="#cb12-217" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache: false</span></span>
+<span id="cb12-218"><a href="#cb12-218" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-3d-germany</span></span>
+<span id="cb12-219"><a href="#cb12-219" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Eine 3D-Karte der Erde"</span></span>
+<span id="cb12-220"><a href="#cb12-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-221"><a href="#cb12-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-222"><a href="#cb12-222" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(wrld_simpl, <span class="at">package =</span> <span class="st">"maptools"</span>)</span>
+<span id="cb12-223"><a href="#cb12-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-224"><a href="#cb12-224" aria-hidden="true" tabindex="-1"></a>map1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(wrld_simpl,</span>
+<span id="cb12-225"><a href="#cb12-225" aria-hidden="true" tabindex="-1"></a>               NAME <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Germany"</span>))</span>
+<span id="cb12-226"><a href="#cb12-226" aria-hidden="true" tabindex="-1"></a>map1 <span class="ot">&lt;-</span> wrld_simpl</span>
+<span id="cb12-227"><a href="#cb12-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-228"><a href="#cb12-228" aria-hidden="true" tabindex="-1"></a><span class="do">## DEL model (like TRI in silicate)</span></span>
+<span id="cb12-229"><a href="#cb12-229" aria-hidden="true" tabindex="-1"></a>delmesh <span class="ot">&lt;-</span>  anglr<span class="sc">::</span><span class="fu">globe</span>(anglr<span class="sc">::</span><span class="fu">DEL</span>(map1, <span class="at">max_area =</span> <span class="fl">0.5</span>))</span>
+<span id="cb12-230"><a href="#cb12-230" aria-hidden="true" tabindex="-1"></a>mesh <span class="ot">&lt;-</span> anglr<span class="sc">::</span><span class="fu">as.mesh3d</span>(delmesh)</span>
+<span id="cb12-231"><a href="#cb12-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-232"><a href="#cb12-232" aria-hidden="true" tabindex="-1"></a><span class="co"># plot point cloud</span></span>
+<span id="cb12-233"><a href="#cb12-233" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> mesh<span class="sc">$</span>vb[<span class="dv">1</span>,]</span>
+<span id="cb12-234"><a href="#cb12-234" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> mesh<span class="sc">$</span>vb[<span class="dv">2</span>, ]</span>
+<span id="cb12-235"><a href="#cb12-235" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> mesh<span class="sc">$</span>vb[<span class="dv">3</span>,]</span>
+<span id="cb12-236"><a href="#cb12-236" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(x,y,z), <span class="at">ncol=</span><span class="dv">3</span>, <span class="at">dimnames=</span><span class="fu">list</span>(<span class="cn">NULL</span>,<span class="fu">c</span>(<span class="st">"x"</span>,<span class="st">"y"</span>,<span class="st">"z"</span>)))</span>
+<span id="cb12-237"><a href="#cb12-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-238"><a href="#cb12-238" aria-hidden="true" tabindex="-1"></a><span class="co"># colours in z don't make sense here, need to map object aesthetics above</span></span>
+<span id="cb12-239"><a href="#cb12-239" aria-hidden="true" tabindex="-1"></a>zmean <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">t</span>(mesh<span class="sc">$</span>it),<span class="at">MARGIN=</span><span class="dv">1</span>,<span class="cf">function</span>(row){<span class="fu">mean</span>(m[row,<span class="dv">3</span>])})</span>
+<span id="cb12-240"><a href="#cb12-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-241"><a href="#cb12-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-242"><a href="#cb12-242" aria-hidden="true" tabindex="-1"></a>facecolor <span class="ot">=</span> scales<span class="sc">::</span><span class="fu">colour_ramp</span>(</span>
+<span id="cb12-243"><a href="#cb12-243" aria-hidden="true" tabindex="-1"></a>  scales<span class="sc">::</span><span class="fu">brewer_pal</span>(<span class="at">palette=</span><span class="st">"RdBu"</span>)(<span class="dv">9</span>)</span>
+<span id="cb12-244"><a href="#cb12-244" aria-hidden="true" tabindex="-1"></a>)(scales<span class="sc">::</span><span class="fu">rescale</span>(<span class="at">x=</span>zmean))</span>
+<span id="cb12-245"><a href="#cb12-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-246"><a href="#cb12-246" aria-hidden="true" tabindex="-1"></a>fig <span class="ot">&lt;-</span> plotly<span class="sc">::</span><span class="fu">plot_ly</span>(</span>
+<span id="cb12-247"><a href="#cb12-247" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">z =</span> z,</span>
+<span id="cb12-248"><a href="#cb12-248" aria-hidden="true" tabindex="-1"></a>  <span class="at">i =</span> mesh<span class="sc">$</span>it[<span class="dv">1</span>,]<span class="sc">-</span><span class="dv">1</span>, <span class="at">j =</span> mesh<span class="sc">$</span>it[<span class="dv">2</span>,]<span class="sc">-</span><span class="dv">1</span>, <span class="at">k =</span> mesh<span class="sc">$</span>it[<span class="dv">3</span>,]<span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb12-249"><a href="#cb12-249" aria-hidden="true" tabindex="-1"></a>  <span class="at">facecolor =</span> facecolor,</span>
+<span id="cb12-250"><a href="#cb12-250" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"mesh3d"</span></span>
+<span id="cb12-251"><a href="#cb12-251" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-252"><a href="#cb12-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-253"><a href="#cb12-253" aria-hidden="true" tabindex="-1"></a>fig</span>
+<span id="cb12-254"><a href="#cb12-254" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-255"><a href="#cb12-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-256"><a href="#cb12-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-257"><a href="#cb12-257" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Quelle: Plotly</span><span class="co">](https://plotly.com/r/trisurf/)</span></span>
+<span id="cb12-258"><a href="#cb12-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-259"><a href="#cb12-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-260"><a href="#cb12-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-261"><a href="#cb12-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-262"><a href="#cb12-262" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Etwas weniger spektakulär, aber näher an der Datenanalyse ist @fig-mario-3d. --&gt;</span></span>
+<span id="cb12-263"><a href="#cb12-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-264"><a href="#cb12-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-265"><a href="#cb12-265" aria-hidden="true" tabindex="-1"></a><span class="in">```{r mario3d}</span></span>
+<span id="cb12-266"><a href="#cb12-266" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-267"><a href="#cb12-267" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb12-268"><a href="#cb12-268" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-mario-3d</span></span>
+<span id="cb12-269"><a href="#cb12-269" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "3D-Punktediagramm zum Datensatz mariokart"</span></span>
+<span id="cb12-270"><a href="#cb12-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-271"><a href="#cb12-271" aria-hidden="true" tabindex="-1"></a>fig2 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(mariokart, <span class="at">x =</span> <span class="sc">~</span>duration, <span class="at">y =</span> <span class="sc">~</span>n_bids, <span class="at">z =</span> <span class="sc">~</span>total_pr, <span class="at">color =</span> <span class="sc">~</span>cond, <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">'#BF382A'</span>, <span class="st">'#0C4B8E'</span>))</span>
+<span id="cb12-272"><a href="#cb12-272" aria-hidden="true" tabindex="-1"></a>fig2 <span class="ot">&lt;-</span> fig2 <span class="sc">%&gt;%</span> <span class="fu">add_markers</span>()</span>
+<span id="cb12-273"><a href="#cb12-273" aria-hidden="true" tabindex="-1"></a>fig2 <span class="ot">&lt;-</span> fig2 <span class="sc">%&gt;%</span> <span class="fu">layout</span>(<span class="at">scene =</span> <span class="fu">list</span>(<span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">'duration'</span>),</span>
+<span id="cb12-274"><a href="#cb12-274" aria-hidden="true" tabindex="-1"></a>                     <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">'number of bids'</span>),</span>
+<span id="cb12-275"><a href="#cb12-275" aria-hidden="true" tabindex="-1"></a>                     <span class="at">zaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">'total price'</span>)))</span>
+<span id="cb12-276"><a href="#cb12-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-277"><a href="#cb12-277" aria-hidden="true" tabindex="-1"></a>fig2</span>
+<span id="cb12-278"><a href="#cb12-278" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-279"><a href="#cb12-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-280"><a href="#cb12-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-281"><a href="#cb12-281" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Leider ist @fig-mario-3d nicht sehr aufschlussreich. --&gt;</span></span>
+<span id="cb12-282"><a href="#cb12-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-283"><a href="#cb12-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-284"><a href="#cb12-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-285"><a href="#cb12-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-286"><a href="#cb12-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-287"><a href="#cb12-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-288"><a href="#cb12-288" aria-hidden="true" tabindex="-1"></a>xoj</span>
+<span id="cb12-289"><a href="#cb12-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-290"><a href="#cb12-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-291"><a href="#cb12-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-292"><a href="#cb12-292" aria-hidden="true" tabindex="-1"></a><span class="fu">## Nomenklatur von Datendiagrammen</span></span>
+<span id="cb12-293"><a href="#cb12-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-294"><a href="#cb12-294" aria-hidden="true" tabindex="-1"></a>@tbl-nom-plots zeigt eine - sehr kurze Nomenklatur - an Datendigrammen.^<span class="co">[</span><span class="ot">Weitere Nomenklaturen sind möglich, aber wir halten hier die Sache einfach.</span><span class="co">]</span></span>
+<span id="cb12-295"><a href="#cb12-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-298"><a href="#cb12-298" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-299"><a href="#cb12-299" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-300"><a href="#cb12-300" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-nom-plots</span></span>
+<span id="cb12-301"><a href="#cb12-301" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Ein (sehr kurze) Nomenklatur von Datendiagrammen"</span></span>
+<span id="cb12-302"><a href="#cb12-302" aria-hidden="true" tabindex="-1"></a>nom_plots <span class="ot">&lt;-</span></span>
+<span id="cb12-303"><a href="#cb12-303" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tribble</span>(</span>
+<span id="cb12-304"><a href="#cb12-304" aria-hidden="true" tabindex="-1"></a><span class="sc">~</span>Erkenntnisziel, <span class="sc">~</span>qualitativ, <span class="sc">~</span>quantitativ,</span>
+<span id="cb12-305"><a href="#cb12-305" aria-hidden="true" tabindex="-1"></a><span class="st">"Verteilung"</span>, <span class="st">"Balkendiagramm"</span>,<span class="st">" Histogramm und Dichtediagramm"</span>,</span>
+<span id="cb12-306"><a href="#cb12-306" aria-hidden="true" tabindex="-1"></a><span class="st">"Zusammenhang"</span>, <span class="st">"gefülltes Balkendiagramm"</span>, <span class="st">"Streudiagramm"</span>,</span>
+<span id="cb12-307"><a href="#cb12-307" aria-hidden="true" tabindex="-1"></a><span class="st">"Unterschied"</span>, <span class="st">"gefülltes Balkendiagramm"</span>, <span class="st">"Boxplot"</span>)</span>
+<span id="cb12-308"><a href="#cb12-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-309"><a href="#cb12-309" aria-hidden="true" tabindex="-1"></a>nom_plots <span class="sc">|&gt;</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb12-310"><a href="#cb12-310" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-311"><a href="#cb12-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-312"><a href="#cb12-312" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-313"><a href="#cb12-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-314"><a href="#cb12-314" aria-hidden="true" tabindex="-1"></a>:::{.callout-note}</span>
+<span id="cb12-315"><a href="#cb12-315" aria-hidden="true" tabindex="-1"></a>Wir arbeiten hier mit dem Datensatz <span class="in">`mariokart`</span>. </span>
+<span id="cb12-316"><a href="#cb12-316" aria-hidden="true" tabindex="-1"></a>Hilfe bzw. ein Data-Dictionary (Codebook) finden Sie <span class="co">[</span><span class="ot">hier</span><span class="co">](https://www.rdocumentation.org/packages/openintro/versions/2.4.0/topics/mariokart)</span>.</span>
+<span id="cb12-317"><a href="#cb12-317" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-318"><a href="#cb12-318" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-319"><a href="#cb12-319" aria-hidden="true" tabindex="-1"></a><span class="fu">## Verteilungen verbildlichen</span></span>
+<span id="cb12-320"><a href="#cb12-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-321"><a href="#cb12-321" aria-hidden="true" tabindex="-1"></a><span class="fu">### Verteilung: nominale Variable</span></span>
+<span id="cb12-322"><a href="#cb12-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-323"><a href="#cb12-323" aria-hidden="true" tabindex="-1"></a>:::{#def-verteilung}</span>
+<span id="cb12-324"><a href="#cb12-324" aria-hidden="true" tabindex="-1"></a><span class="fu">### Verteilung</span></span>
+<span id="cb12-325"><a href="#cb12-325" aria-hidden="true" tabindex="-1"></a>Eine (Häufigkeits-)Verteilung einer Variablen $X$ schlüsselt auf, </span>
+<span id="cb12-326"><a href="#cb12-326" aria-hidden="true" tabindex="-1"></a>wie häufig jede Ausprägung von $X$ ist.$\square$</span>
+<span id="cb12-327"><a href="#cb12-327" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-328"><a href="#cb12-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-329"><a href="#cb12-329" aria-hidden="true" tabindex="-1"></a>:::{#exm-verteilung1}</span>
+<span id="cb12-330"><a href="#cb12-330" aria-hidden="true" tabindex="-1"></a>@tbl-wheels-n zeigt die Häufigkeitsverteilung von <span class="in">`cond`</span> aus dem Datensatz <span class="in">`mariokart`</span>.</span>
+<span id="cb12-331"><a href="#cb12-331" aria-hidden="true" tabindex="-1"></a>Die Variable hat 5 Ausprägungen; </span>
+<span id="cb12-332"><a href="#cb12-332" aria-hidden="true" tabindex="-1"></a>z.b. kommt die Ausprägung <span class="in">`new`</span>  59 mal vor.$\square$</span>
+<span id="cb12-333"><a href="#cb12-333" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-334"><a href="#cb12-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-335"><a href="#cb12-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-336"><a href="#cb12-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-339"><a href="#cb12-339" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-340"><a href="#cb12-340" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-341"><a href="#cb12-341" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-wheels-n</span></span>
+<span id="cb12-342"><a href="#cb12-342" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Häufigkeitsverteilung von `cond` aus dem Datensatz `mariokart`"</span></span>
+<span id="cb12-343"><a href="#cb12-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-344"><a href="#cb12-344" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">|&gt;</span> </span>
+<span id="cb12-345"><a href="#cb12-345" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(cond)</span>
+<span id="cb12-346"><a href="#cb12-346" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-347"><a href="#cb12-347" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-348"><a href="#cb12-348" aria-hidden="true" tabindex="-1"></a>Zugegeben, das Datendiagramm von <span class="in">`cond`</span> ist nicht so aufregend, s. @fig-mario-n-plot-cond.</span>
+<span id="cb12-349"><a href="#cb12-349" aria-hidden="true" tabindex="-1"></a>Wie man sieht, besteht so ein Diagramm als *Balken*, daher heißt es *Balkendiagramm*.</span>
+<span id="cb12-350"><a href="#cb12-350" aria-hidden="true" tabindex="-1"></a>Man kann so ein Diagramm um 90° drehen, keine Ausrichtung ist unbedingt besser als die andere.</span>
+<span id="cb12-351"><a href="#cb12-351" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-352"><a href="#cb12-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-353"><a href="#cb12-353" aria-hidden="true" tabindex="-1"></a>:::{#def-balken}</span>
+<span id="cb12-354"><a href="#cb12-354" aria-hidden="true" tabindex="-1"></a><span class="fu">### Balkendiagramm</span></span>
+<span id="cb12-355"><a href="#cb12-355" aria-hidden="true" tabindex="-1"></a>Ein Balkendiagramm eignet sich, um Häufigkeiten darzustellen</span>
+<span id="cb12-356"><a href="#cb12-356" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-357"><a href="#cb12-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-358"><a href="#cb12-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-361"><a href="#cb12-361" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-362"><a href="#cb12-362" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-363"><a href="#cb12-363" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-mario-n-plot-cond</span></span>
+<span id="cb12-364"><a href="#cb12-364" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Häufigkeitsverteilung der Variable `cond`"</span></span>
+<span id="cb12-365"><a href="#cb12-365" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-366"><a href="#cb12-366" aria-hidden="true" tabindex="-1"></a>mario_n1 <span class="ot">&lt;-</span></span>
+<span id="cb12-367"><a href="#cb12-367" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">|&gt;</span> </span>
+<span id="cb12-368"><a href="#cb12-368" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(cond) <span class="sc">|&gt;</span> </span>
+<span id="cb12-369"><a href="#cb12-369" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> n, <span class="at">x =</span> cond)) <span class="sc">+</span> </span>
+<span id="cb12-370"><a href="#cb12-370" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb12-371"><a href="#cb12-371" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb12-372"><a href="#cb12-372" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb12-373"><a href="#cb12-373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-374"><a href="#cb12-374" aria-hidden="true" tabindex="-1"></a>mario_n2 <span class="ot">&lt;-</span></span>
+<span id="cb12-375"><a href="#cb12-375" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">|&gt;</span> </span>
+<span id="cb12-376"><a href="#cb12-376" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(cond) <span class="sc">|&gt;</span> </span>
+<span id="cb12-377"><a href="#cb12-377" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> n, <span class="at">x =</span> cond)) <span class="sc">+</span> </span>
+<span id="cb12-378"><a href="#cb12-378" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>()   <span class="sc">+</span></span>
+<span id="cb12-379"><a href="#cb12-379" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb12-380"><a href="#cb12-380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-381"><a href="#cb12-381" aria-hidden="true" tabindex="-1"></a><span class="fu">plots</span>(mario_n1, mario_n2)</span>
+<span id="cb12-382"><a href="#cb12-382" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-383"><a href="#cb12-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-384"><a href="#cb12-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-385"><a href="#cb12-385" aria-hidden="true" tabindex="-1"></a>Es gibt viele Methoden, sich mit R ein Balkendiagramm ausgeben zu lassen.</span>
+<span id="cb12-386"><a href="#cb12-386" aria-hidden="true" tabindex="-1"></a>Eine einfache, komfortable ist die mit dem Paket <span class="in">`DataExplorer`</span>,</span>
+<span id="cb12-387"><a href="#cb12-387" aria-hidden="true" tabindex="-1"></a>s. @fig-de1.</span>
+<span id="cb12-388"><a href="#cb12-388" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-389"><a href="#cb12-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-390"><a href="#cb12-390" aria-hidden="true" tabindex="-1"></a>Zuerst importieren wir die Daten, s. @lst-mariokart.</span>
+<span id="cb12-391"><a href="#cb12-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-392"><a href="#cb12-392" aria-hidden="true" tabindex="-1"></a><span class="in">```{#lst-mariokart .r lst-cap="Mariokart-Daten importieren von einer Webseite"}</span></span>
+<span id="cb12-393"><a href="#cb12-393" aria-hidden="true" tabindex="-1"></a><span class="in">mariokart &lt;- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")</span></span>
+<span id="cb12-394"><a href="#cb12-394" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-395"><a href="#cb12-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-396"><a href="#cb12-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-397"><a href="#cb12-397" aria-hidden="true" tabindex="-1"></a>Außerdem nicht vergessen, das Paket <span class="in">`DataExplorer`</span> zu starten, </span>
+<span id="cb12-398"><a href="#cb12-398" aria-hidden="true" tabindex="-1"></a>s. @lst-dataexplorer.^<span class="co">[</span><span class="ot">Natürlich müssen Sie das Paket einmalig installiert haben, bevor Sie es starten können.</span><span class="co">]</span></span>
+<span id="cb12-399"><a href="#cb12-399" aria-hidden="true" tabindex="-1"></a>In diesem Paket "wohnen" die Befehle, die wir zum Erstellen der Datendiagramme nutzen werden.</span>
+<span id="cb12-400"><a href="#cb12-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-401"><a href="#cb12-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-402"><a href="#cb12-402" aria-hidden="true" tabindex="-1"></a><span class="in">```{#lst-dataexplorer .r lst-cap="Wir starten das R-Paket DataExplorer"}</span></span>
+<span id="cb12-403"><a href="#cb12-403" aria-hidden="true" tabindex="-1"></a><span class="in">library(DataExplorer)</span></span>
+<span id="cb12-404"><a href="#cb12-404" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-405"><a href="#cb12-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-406"><a href="#cb12-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-407"><a href="#cb12-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-408"><a href="#cb12-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-409"><a href="#cb12-409" aria-hidden="true" tabindex="-1"></a><span class="in">```{#lst-de2 .r lst-cap="Syntax zur Erstellung eines Histogramms"}</span></span>
+<span id="cb12-410"><a href="#cb12-410" aria-hidden="true" tabindex="-1"></a><span class="in">mariokart %&gt;% </span></span>
+<span id="cb12-411"><a href="#cb12-411" aria-hidden="true" tabindex="-1"></a><span class="in">  select(total_pr) %&gt;% </span></span>
+<span id="cb12-412"><a href="#cb12-412" aria-hidden="true" tabindex="-1"></a><span class="in">  filter(total_pr &lt; 100) %&gt;%  # ohne Extremwerte</span></span>
+<span id="cb12-413"><a href="#cb12-413" aria-hidden="true" tabindex="-1"></a><span class="in">  plot_histogram()</span></span>
+<span id="cb12-414"><a href="#cb12-414" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-415"><a href="#cb12-415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-416"><a href="#cb12-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-417"><a href="#cb12-417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-418"><a href="#cb12-418" aria-hidden="true" tabindex="-1"></a><span class="in">```{#lst-de1 .r lst-cap="Syntax zur Erstellung eines Balkendiagramms"}</span></span>
+<span id="cb12-419"><a href="#cb12-419" aria-hidden="true" tabindex="-1"></a><span class="in">mariokart %&gt;% </span></span>
+<span id="cb12-420"><a href="#cb12-420" aria-hidden="true" tabindex="-1"></a><span class="in">  select(cond) %&gt;% </span></span>
+<span id="cb12-421"><a href="#cb12-421" aria-hidden="true" tabindex="-1"></a><span class="in">  plot_bar()</span></span>
+<span id="cb12-422"><a href="#cb12-422" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-423"><a href="#cb12-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-424"><a href="#cb12-424" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-425"><a href="#cb12-425" aria-hidden="true" tabindex="-1"></a>Die Syntax ist in @lst-de1 abgedruckt. Übersetzen wir die Syntax ins Deutsche:</span>
+<span id="cb12-426"><a href="#cb12-426" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-427"><a href="#cb12-427" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-428"><a href="#cb12-428" aria-hidden="true" tabindex="-1"></a><span class="in">Nimm den Datensatz mariokart *und dann*</span></span>
+<span id="cb12-429"><a href="#cb12-429" aria-hidden="true" tabindex="-1"></a><span class="in">  wähle die Spalte cond *und dann*</span></span>
+<span id="cb12-430"><a href="#cb12-430" aria-hidden="true" tabindex="-1"></a><span class="in">  zeichne ein Balkendiagramm.</span></span>
+<span id="cb12-431"><a href="#cb12-431" aria-hidden="true" tabindex="-1"></a><span class="in">```</span>  </span>
+<span id="cb12-432"><a href="#cb12-432" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-433"><a href="#cb12-433" aria-hidden="true" tabindex="-1"></a>:::{#exr-de1}</span>
+<span id="cb12-434"><a href="#cb12-434" aria-hidden="true" tabindex="-1"></a><span class="fu">### Spalten wählen für das Balkendiagramm</span></span>
+<span id="cb12-435"><a href="#cb12-435" aria-hidden="true" tabindex="-1"></a>Hätten wir andere Spalten ausgewählt, so würde das Balkendiagramm die Verteilung jener Variablen zeigen. Ja, Sie können auch mehrere Variablen auf einmal auswählen. Probieren Sie das doch mal aus!</span>
+<span id="cb12-436"><a href="#cb12-436" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-437"><a href="#cb12-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-438"><a href="#cb12-438" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-441"><a href="#cb12-441" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-442"><a href="#cb12-442" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-de1</span></span>
+<span id="cb12-443"><a href="#cb12-443" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-444"><a href="#cb12-444" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Balkendiagramm mit dem R-Paket `DataExplorer`"</span></span>
+<span id="cb12-445"><a href="#cb12-445" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer)</span>
+<span id="cb12-446"><a href="#cb12-446" aria-hidden="true" tabindex="-1"></a>mariokart <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span>)</span>
+<span id="cb12-447"><a href="#cb12-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-448"><a href="#cb12-448" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-449"><a href="#cb12-449" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(cond) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-450"><a href="#cb12-450" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_bar</span>()</span>
+<span id="cb12-451"><a href="#cb12-451" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-452"><a href="#cb12-452" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-453"><a href="#cb12-453" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- So können Sie  --&gt;</span></span>
+<span id="cb12-454"><a href="#cb12-454" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-455"><a href="#cb12-455" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-456"><a href="#cb12-456" aria-hidden="true" tabindex="-1"></a><span class="fu">### Verteilung: quantitative Variable</span></span>
+<span id="cb12-457"><a href="#cb12-457" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-458"><a href="#cb12-458" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Histogramm</span></span>
+<span id="cb12-459"><a href="#cb12-459" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-460"><a href="#cb12-460" aria-hidden="true" tabindex="-1"></a>Bei einer quantitativen Variablen mit vielen Ausprägungen wäre ein Balkendiagramm nicht so aussagekräftig, s. @fig-balken-total-pr. Es gibt einfach zu viele Ausprägungen.</span>
+<span id="cb12-461"><a href="#cb12-461" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-464"><a href="#cb12-464" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-465"><a href="#cb12-465" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-466"><a href="#cb12-466" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Balkendiagramm für `total_pr`"</span></span>
+<span id="cb12-467"><a href="#cb12-467" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-balken-total-pr</span></span>
+<span id="cb12-468"><a href="#cb12-468" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-469"><a href="#cb12-469" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">|&gt;</span> </span>
+<span id="cb12-470"><a href="#cb12-470" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">200</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-471"><a href="#cb12-471" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_pr =</span> <span class="fu">round</span>(total_pr, <span class="at">digits =</span> <span class="dv">1</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb12-472"><a href="#cb12-472" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> total_pr)) <span class="sc">+</span></span>
+<span id="cb12-473"><a href="#cb12-473" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span>
+<span id="cb12-474"><a href="#cb12-474" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-475"><a href="#cb12-475" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-476"><a href="#cb12-476" aria-hidden="true" tabindex="-1"></a>Die Lösung: Wir reduzieren die Anzahl der Ausprägungen, in dem wir auf ganze Dollar runden.</span>
+<span id="cb12-477"><a href="#cb12-477" aria-hidden="true" tabindex="-1"></a>Oder, um noch weniger Ausprägungen zu bekommen, können wir einfach Gruppen definieren, z.B.</span>
+<span id="cb12-478"><a href="#cb12-478" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-479"><a href="#cb12-479" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Gruppe 1: 0-5 Dollar</span>
+<span id="cb12-480"><a href="#cb12-480" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Gruppe 2: 6-10 Dollar</span>
+<span id="cb12-481"><a href="#cb12-481" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Gruppe 2: 11-15 Dollar</span>
+<span id="cb12-482"><a href="#cb12-482" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb12-483"><a href="#cb12-483" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-484"><a href="#cb12-484" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-485"><a href="#cb12-485" aria-hidden="true" tabindex="-1"></a>In @fig-balken-total-pr-hist sind z.B. die Ausprägungen des Verkaufspreis (<span class="in">`total_pr`</span>) in in Gruppen der Breite von 5 Dollar aufgeteilt worden. </span>
+<span id="cb12-486"><a href="#cb12-486" aria-hidden="true" tabindex="-1"></a>Zusätzlich sind noch die einzelnen Werte als schwarze Punkte gezeigt.</span>
+<span id="cb12-487"><a href="#cb12-487" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-490"><a href="#cb12-490" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-491"><a href="#cb12-491" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-492"><a href="#cb12-492" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Balkendiagramm für `total_pr`"</span></span>
+<span id="cb12-493"><a href="#cb12-493" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-balken-total-pr-hist</span></span>
+<span id="cb12-494"><a href="#cb12-494" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-495"><a href="#cb12-495" aria-hidden="true" tabindex="-1"></a>m1a <span class="ot">&lt;-</span> </span>
+<span id="cb12-496"><a href="#cb12-496" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">|&gt;</span> </span>
+<span id="cb12-497"><a href="#cb12-497" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>)</span>
+<span id="cb12-498"><a href="#cb12-498" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-499"><a href="#cb12-499" aria-hidden="true" tabindex="-1"></a>m1a <span class="sc">|&gt;</span> </span>
+<span id="cb12-500"><a href="#cb12-500" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> total_pr)) <span class="sc">+</span></span>
+<span id="cb12-501"><a href="#cb12-501" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>, <span class="at">alpha =</span> .<span class="dv">7</span>, <span class="at">center =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"white"</span>)  <span class="sc">+</span></span>
+<span id="cb12-502"><a href="#cb12-502" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dotplot</span>(<span class="at">binwidth =</span> <span class="dv">1</span>, <span class="at">method =</span> <span class="st">"histodot"</span>) <span class="sc">+</span></span>
+<span id="cb12-503"><a href="#cb12-503" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption =</span> <span class="fu">paste0</span>(<span class="st">"n = "</span>, <span class="fu">nrow</span>(m1a))) <span class="sc">+</span></span>
+<span id="cb12-504"><a href="#cb12-504" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb12-505"><a href="#cb12-505" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Anzahl"</span>,</span>
+<span id="cb12-506"><a href="#cb12-506" aria-hidden="true" tabindex="-1"></a>    <span class="at">sec.axis =</span> <span class="fu">sec_axis</span>(<span class="at">trans =</span> <span class="sc">~</span>. <span class="sc">/</span> <span class="dv">141</span>, <span class="at">name =</span> <span class="st">"Anteil"</span>))</span>
+<span id="cb12-507"><a href="#cb12-507" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-508"><a href="#cb12-508" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-509"><a href="#cb12-509" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-510"><a href="#cb12-510" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-511"><a href="#cb12-511" aria-hidden="true" tabindex="-1"></a>:::{#def-histogramm}</span>
+<span id="cb12-512"><a href="#cb12-512" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Histogramm</span></span>
+<span id="cb12-513"><a href="#cb12-513" aria-hidden="true" tabindex="-1"></a>Ein Histogramm ist ein Diagramm zur Darstellung der Häufigkeitsverteilung einer quantitativen Variablen. Die Daten werden in Gruppen (Klassen) eingeteilt, die dann durch einen Balken (pro Klasse) dargestellt sind.</span>
+<span id="cb12-514"><a href="#cb12-514" aria-hidden="true" tabindex="-1"></a>Die Höhe der Balken zeigt die Häufigkeit der Daten in dieser Gruppe/in diesem Balken^<span class="co">[</span><span class="ot">bei konstanter Balkenbreite</span><span class="co">]</span>.</span>
+<span id="cb12-515"><a href="#cb12-515" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-516"><a href="#cb12-516" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-517"><a href="#cb12-517" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-518"><a href="#cb12-518" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-519"><a href="#cb12-519" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-520"><a href="#cb12-520" aria-hidden="true" tabindex="-1"></a>Es gibt keine klare Regel, in wie viele Balken ein Histogramm gegliedert sein sollte.</span>
+<span id="cb12-521"><a href="#cb12-521" aria-hidden="true" tabindex="-1"></a>Nur: Es sollten nicht sehr viele und nicht sehr wenig sein, </span>
+<span id="cb12-522"><a href="#cb12-522" aria-hidden="true" tabindex="-1"></a>s. @fig-zu-wenig-viele links bzw. @fig-zu-wenig-viele, rechts.</span>
+<span id="cb12-523"><a href="#cb12-523" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-524"><a href="#cb12-524" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-527"><a href="#cb12-527" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-528"><a href="#cb12-528" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-529"><a href="#cb12-529" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-zu-wenig-viele</span></span>
+<span id="cb12-530"><a href="#cb12-530" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb12-531"><a href="#cb12-531" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Nicht zu wenig und nicht zu viele Balken im Balkendiagramm"</span></span>
+<span id="cb12-532"><a href="#cb12-532" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
+<span id="cb12-533"><a href="#cb12-533" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Zu viele Gruppen (Balken)"</span></span>
+<span id="cb12-534"><a href="#cb12-534" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Zu wenige Gruppen (Balken)"</span></span>
+<span id="cb12-535"><a href="#cb12-535" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-536"><a href="#cb12-536" aria-hidden="true" tabindex="-1"></a>p_mario_zu_viele <span class="ot">&lt;-</span> </span>
+<span id="cb12-537"><a href="#cb12-537" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">|&gt;</span> </span>
+<span id="cb12-538"><a href="#cb12-538" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-539"><a href="#cb12-539" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> total_pr)) <span class="sc">+</span></span>
+<span id="cb12-540"><a href="#cb12-540" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>) </span>
+<span id="cb12-541"><a href="#cb12-541" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-542"><a href="#cb12-542" aria-hidden="true" tabindex="-1"></a>p_mario_zu_viele</span>
+<span id="cb12-543"><a href="#cb12-543" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-544"><a href="#cb12-544" aria-hidden="true" tabindex="-1"></a>p_mario_zu_wenige <span class="ot">&lt;-</span> </span>
+<span id="cb12-545"><a href="#cb12-545" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">|&gt;</span> </span>
+<span id="cb12-546"><a href="#cb12-546" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-547"><a href="#cb12-547" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> total_pr)) <span class="sc">+</span></span>
+<span id="cb12-548"><a href="#cb12-548" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">2</span>) </span>
+<span id="cb12-549"><a href="#cb12-549" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-550"><a href="#cb12-550" aria-hidden="true" tabindex="-1"></a>p_mario_zu_wenige</span>
+<span id="cb12-551"><a href="#cb12-551" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-552"><a href="#cb12-552" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-553"><a href="#cb12-553" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-554"><a href="#cb12-554" aria-hidden="true" tabindex="-1"></a>Zur Erstellung eines Histogramms können Sie die Syntax @lst-de2 nützen, vgl. @fig-de-hist-density, links. </span>
+<span id="cb12-555"><a href="#cb12-555" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-556"><a href="#cb12-556" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-557"><a href="#cb12-557" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-558"><a href="#cb12-558" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-559"><a href="#cb12-559" aria-hidden="true" tabindex="-1"></a><span class="in">```{#lst-de2 .r lst-cap="Syntax zur Erstellung eines Histogramms"}</span></span>
+<span id="cb12-560"><a href="#cb12-560" aria-hidden="true" tabindex="-1"></a><span class="in">mariokart %&gt;% </span></span>
+<span id="cb12-561"><a href="#cb12-561" aria-hidden="true" tabindex="-1"></a><span class="in">  select(total_pr) %&gt;% </span></span>
+<span id="cb12-562"><a href="#cb12-562" aria-hidden="true" tabindex="-1"></a><span class="in">  filter(total_pr &lt; 100) %&gt;%  # ohne Extremwerte</span></span>
+<span id="cb12-563"><a href="#cb12-563" aria-hidden="true" tabindex="-1"></a><span class="in">  plot_histogram()</span></span>
+<span id="cb12-564"><a href="#cb12-564" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-565"><a href="#cb12-565" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-566"><a href="#cb12-566" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-569"><a href="#cb12-569" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-570"><a href="#cb12-570" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-571"><a href="#cb12-571" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-de-hist-density</span></span>
+<span id="cb12-572"><a href="#cb12-572" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb12-573"><a href="#cb12-573" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Eine stetige Verteilung verbildlichen"</span></span>
+<span id="cb12-574"><a href="#cb12-574" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap:</span></span>
+<span id="cb12-575"><a href="#cb12-575" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - Histogramm</span></span>
+<span id="cb12-576"><a href="#cb12-576" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - Dichtediagramm </span></span>
+<span id="cb12-577"><a href="#cb12-577" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-578"><a href="#cb12-578" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-579"><a href="#cb12-579" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-580"><a href="#cb12-580" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span>  <span class="co"># ohne Extremwerte</span></span>
+<span id="cb12-581"><a href="#cb12-581" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_histogram</span>(<span class="at">ggtheme =</span> <span class="fu">theme_minimal</span>())</span>
+<span id="cb12-582"><a href="#cb12-582" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-583"><a href="#cb12-583" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-584"><a href="#cb12-584" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-585"><a href="#cb12-585" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span>  <span class="co"># ohne Extremwerte</span></span>
+<span id="cb12-586"><a href="#cb12-586" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_density</span>(<span class="at">ggtheme =</span> <span class="fu">theme_minimal</span>())</span>
+<span id="cb12-587"><a href="#cb12-587" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-588"><a href="#cb12-588" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-589"><a href="#cb12-589" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-590"><a href="#cb12-590" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-591"><a href="#cb12-591" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Dichtediagramm</span></span>
+<span id="cb12-592"><a href="#cb12-592" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-593"><a href="#cb12-593" aria-hidden="true" tabindex="-1"></a>@fig-balken-total-pr-hist-dens fügt zu @fig-balken-total-pr-hist ein *Dichtediagramm* hinzu (rote Linie). Ein Dichtediagramm ähnelt einem "glattgeschmirgeltem" Histogramm.</span>
+<span id="cb12-594"><a href="#cb12-594" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-595"><a href="#cb12-595" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-596"><a href="#cb12-596" aria-hidden="true" tabindex="-1"></a>:::{#def-dichtediagramm}</span>
+<span id="cb12-597"><a href="#cb12-597" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Dichtediagramm</span></span>
+<span id="cb12-598"><a href="#cb12-598" aria-hidden="true" tabindex="-1"></a>Ein Dichtediagramm visualisiert die Verteilung einer stetigen Variablen.</span>
+<span id="cb12-599"><a href="#cb12-599" aria-hidden="true" tabindex="-1"></a>Im Gegensatz zum Histogramm wird der Verlauf der Kurve geglättet,</span>
+<span id="cb12-600"><a href="#cb12-600" aria-hidden="true" tabindex="-1"></a>so kann Rauschen (Zufallsschwankung) besser ausgeblendet werden.^<span class="co">[</span><span class="ot">Mit *Dichte* ist die Anzahl der Beobachtungen pro Einheit der Variablen auf der X-Achse gemeint.</span><span class="co">]</span></span>
+<span id="cb12-601"><a href="#cb12-601" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-602"><a href="#cb12-602" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-603"><a href="#cb12-603" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-604"><a href="#cb12-604" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-607"><a href="#cb12-607" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-608"><a href="#cb12-608" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-609"><a href="#cb12-609" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Balkendiagramm für `total_pr`"</span></span>
+<span id="cb12-610"><a href="#cb12-610" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-balken-total-pr-hist-dens</span></span>
+<span id="cb12-611"><a href="#cb12-611" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-612"><a href="#cb12-612" aria-hidden="true" tabindex="-1"></a>m1a <span class="sc">|&gt;</span> </span>
+<span id="cb12-613"><a href="#cb12-613" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> total_pr, <span class="at">y =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb12-614"><a href="#cb12-614" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>, <span class="at">alpha =</span> .<span class="dv">7</span>, <span class="at">center =</span> <span class="dv">0</span>)  <span class="sc">+</span></span>
+<span id="cb12-615"><a href="#cb12-615" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_dotplot(binwidth = 1, method = "histodot") +</span></span>
+<span id="cb12-616"><a href="#cb12-616" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb12-617"><a href="#cb12-617" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_dotplot(binwidth = 1, method = "histodot")</span></span>
+<span id="cb12-618"><a href="#cb12-618" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-619"><a href="#cb12-619" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-620"><a href="#cb12-620" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-621"><a href="#cb12-621" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-622"><a href="#cb12-622" aria-hidden="true" tabindex="-1"></a>:::{#exr-plot-density}</span>
+<span id="cb12-623"><a href="#cb12-623" aria-hidden="true" tabindex="-1"></a>Erstellen Sie das Diagramm @fig-de-hist-density, rechtes Teildiagramm!^<span class="co">[</span><span class="ot">Grob gesagt: `mariokart %&gt;% plot_density()`.</span><span class="co">]</span>$\square$</span>
+<span id="cb12-624"><a href="#cb12-624" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-625"><a href="#cb12-625" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-626"><a href="#cb12-626" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-627"><a href="#cb12-627" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-628"><a href="#cb12-628" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Eigenschaften von Verteilungen</span></span>
+<span id="cb12-629"><a href="#cb12-629" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-630"><a href="#cb12-630" aria-hidden="true" tabindex="-1"></a>Verteilungen unterscheiden sich z.B. einerseits in ihrem "typischen" oder "mittleren" Wert^<span class="co">[</span><span class="ot">vgl. @sec-lage</span><span class="co">]</span> und anderseits in ihrer Streuung^<span class="co">[</span><span class="ot">vgl. </span><span class="co">]</span></span>
+<span id="cb12-631"><a href="#cb12-631" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-632"><a href="#cb12-632" aria-hidden="true" tabindex="-1"></a>(Diagramme von) Verteilungen können symmetrisch oder schief (nicht symmetrisch) sein, s. @fig-symm-schief.</span>
+<span id="cb12-633"><a href="#cb12-633" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-634"><a href="#cb12-634" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-637"><a href="#cb12-637" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-638"><a href="#cb12-638" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-639"><a href="#cb12-639" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-symm-schief</span></span>
+<span id="cb12-640"><a href="#cb12-640" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb12-641"><a href="#cb12-641" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Symmetrische vs. schiefe Verteilung, verbildlicht"</span></span>
+<span id="cb12-642"><a href="#cb12-642" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap:</span></span>
+<span id="cb12-643"><a href="#cb12-643" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Symmetrisch (Normal)"</span></span>
+<span id="cb12-644"><a href="#cb12-644" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Schief"</span></span>
+<span id="cb12-645"><a href="#cb12-645" aria-hidden="true" tabindex="-1"></a>p_norm <span class="ot">&lt;-</span> </span>
+<span id="cb12-646"><a href="#cb12-646" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb12-647"><a href="#cb12-647" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb12-648"><a href="#cb12-648" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>))</span>
+<span id="cb12-649"><a href="#cb12-649" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-650"><a href="#cb12-650" aria-hidden="true" tabindex="-1"></a>p_norm</span>
+<span id="cb12-651"><a href="#cb12-651" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-652"><a href="#cb12-652" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb12-653"><a href="#cb12-653" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dgamma, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">shape =</span> <span class="dv">2</span>, <span class="at">rate =</span> <span class="dv">3</span>))  <span class="sc">+</span></span>
+<span id="cb12-654"><a href="#cb12-654" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>))</span>
+<span id="cb12-655"><a href="#cb12-655" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-656"><a href="#cb12-656" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-657"><a href="#cb12-657" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-658"><a href="#cb12-658" aria-hidden="true" tabindex="-1"></a>@fig-plot-distribs zeigt verschiedene Formen von Verteilungen.</span>
+<span id="cb12-659"><a href="#cb12-659" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-662"><a href="#cb12-662" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-663"><a href="#cb12-663" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-664"><a href="#cb12-664" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-plot-distribs</span></span>
+<span id="cb12-665"><a href="#cb12-665" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Verschiedene Verteilungsformen"</span></span>
+<span id="cb12-666"><a href="#cb12-666" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"funs/plot-distribs.R"</span>)</span>
+<span id="cb12-667"><a href="#cb12-667" aria-hidden="true" tabindex="-1"></a>p_distribs <span class="ot">&lt;-</span> <span class="fu">plot_distribs</span>()</span>
+<span id="cb12-668"><a href="#cb12-668" aria-hidden="true" tabindex="-1"></a>p_distribs</span>
+<span id="cb12-669"><a href="#cb12-669" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-670"><a href="#cb12-670" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-671"><a href="#cb12-671" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-672"><a href="#cb12-672" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Quelle: ifes/FOM Hochschule</span><span class="co">](https://github.com/FOM-ifes/VL-Vorlesungsfolien)</span></span>
+<span id="cb12-673"><a href="#cb12-673" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-674"><a href="#cb12-674" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-675"><a href="#cb12-675" aria-hidden="true" tabindex="-1"></a><span class="fu">### Normalverteilung</span></span>
+<span id="cb12-676"><a href="#cb12-676" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-677"><a href="#cb12-677" aria-hidden="true" tabindex="-1"></a>Eine Normalverteilung ist eine bestimmte Art von Verteilung einer quantitativen Variablen.</span>
+<span id="cb12-678"><a href="#cb12-678" aria-hidden="true" tabindex="-1"></a>Aber sie ist besonders wichtig, und daher hier herausgestellt.</span>
+<span id="cb12-679"><a href="#cb12-679" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-680"><a href="#cb12-680" aria-hidden="true" tabindex="-1"></a>Eine Normalverteilung sehen Sie in @fig-symm-schief, links. </span>
+<span id="cb12-681"><a href="#cb12-681" aria-hidden="true" tabindex="-1"></a>Sie hat u.a. folgende Eigenschaften:</span>
+<span id="cb12-682"><a href="#cb12-682" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-683"><a href="#cb12-683" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>symmetrisch</span>
+<span id="cb12-684"><a href="#cb12-684" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>glockenförmig</span>
+<span id="cb12-685"><a href="#cb12-685" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>stetig</span>
+<span id="cb12-686"><a href="#cb12-686" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>eingipflig (unimodal)</span>
+<span id="cb12-687"><a href="#cb12-687" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Mittelwert, Median und Modus sind identisch</span>
+<span id="cb12-688"><a href="#cb12-688" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-689"><a href="#cb12-689" aria-hidden="true" tabindex="-1"></a>:::{#exm-norm}</span>
+<span id="cb12-690"><a href="#cb12-690" aria-hidden="true" tabindex="-1"></a>Beispiele für normalverteilte Variablen sind Körpergröße von Männern oder Frauen, IQ-Werte, Prüfungsergebnisse, Messfehler, Lebensdauer von Glühbirnen, Gewichte von Brotlaiben, Milchproduktion von Kühen, Brustumfang schottischer Soldaten <span class="co">[</span><span class="ot">@lyon_why_2014</span><span class="co">]</span>.$\square$</span>
+<span id="cb12-691"><a href="#cb12-691" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-692"><a href="#cb12-692" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-693"><a href="#cb12-693" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-694"><a href="#cb12-694" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-695"><a href="#cb12-695" aria-hidden="true" tabindex="-1"></a>Die Normalverteilung ist von hoher Bedeutung, da  diese Verteilung unter (recht häufigen) Bedingungen zwangsläufig ergeben muss. Wenn sich eine Variable als Summe mehrerer, unabhängiger, etwa gleich starker Summanden, dann kann man erwarten, dass sich diese Variable normalverteilt.</span>
+<span id="cb12-696"><a href="#cb12-696" aria-hidden="true" tabindex="-1"></a>Dieses Phänomen kann man gut anhand des <span class="co">[</span><span class="ot">Galton-Bretts</span><span class="co">](https://www.youtube.com/watch?v=3m4bxse2JEQ)</span> veranschaulichen.</span>
+<span id="cb12-697"><a href="#cb12-697" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-698"><a href="#cb12-698" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-699"><a href="#cb12-699" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-700"><a href="#cb12-700" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-701"><a href="#cb12-701" aria-hidden="true" tabindex="-1"></a>::: {.content-visible unless-format="pdf"}</span>
+<span id="cb12-702"><a href="#cb12-702" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-703"><a href="#cb12-703" aria-hidden="true" tabindex="-1"></a>{{&lt; video https://youtu.be/3m4bxse2JEQ &gt;}}</span>
+<span id="cb12-704"><a href="#cb12-704" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-705"><a href="#cb12-705" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-706"><a href="#cb12-706" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-707"><a href="#cb12-707" aria-hidden="true" tabindex="-1"></a>Eine Normalverteilung lässt sich exakt beschreiben anhand zweier Parameter: ihres zentralen Werts (Mittelwerts), $\mu$ und ihrer Streuung (Standardabweichung), $\sigma$.</span>
+<span id="cb12-708"><a href="#cb12-708" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-709"><a href="#cb12-709" aria-hidden="true" tabindex="-1"></a>Kennt man diese beiden Parameter, so kann man einfach angeben, welcher Anteil der Fläche sich in einem bestimmten Bereich befindet, s. @fig-norm-perc.</span>
+<span id="cb12-710"><a href="#cb12-710" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-711"><a href="#cb12-711" aria-hidden="true" tabindex="-1"></a>Davon leitet sich die "68-95-99-Prozentregel" ab:</span>
+<span id="cb12-712"><a href="#cb12-712" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-713"><a href="#cb12-713" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$68\,\%$ der Werte im Bereich $\mu\pm 1 \cdot \sigma$ </span>
+<span id="cb12-714"><a href="#cb12-714" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$95\,\%$ der Werte im Bereich $\mu\pm 2 \cdot \sigma$ </span>
+<span id="cb12-715"><a href="#cb12-715" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$99{,}7\,\%$ der Werte im Bereich $\mu\pm 3 \cdot \sigma$ </span>
+<span id="cb12-716"><a href="#cb12-716" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-717"><a href="#cb12-717" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-718"><a href="#cb12-718" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-719"><a href="#cb12-719" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-720"><a href="#cb12-720" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-721"><a href="#cb12-721" aria-hidden="true" tabindex="-1"></a><span class="al">![Die Flächeninhalte (Wahrscheinlichkeitsmasse) einer Normalverteilung in Abhängigkeit der SD-Einheiten](img/Standard_deviation_diagram_micro.svg.png)</span>{#fig-norm-perc}</span>
+<span id="cb12-722"><a href="#cb12-722" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-723"><a href="#cb12-723" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">By Ainali - Own work, CC BY-SA 3.0</span><span class="co">](https://commons.wikimedia.org/w/index.php?curid=3141713)</span></span>
+<span id="cb12-724"><a href="#cb12-724" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-725"><a href="#cb12-725" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-726"><a href="#cb12-726" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-727"><a href="#cb12-727" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-728"><a href="#cb12-728" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-729"><a href="#cb12-729" aria-hidden="true" tabindex="-1"></a><span class="fu">## Zusammenhänge verbildlichen</span></span>
+<span id="cb12-730"><a href="#cb12-730" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-731"><a href="#cb12-731" aria-hidden="true" tabindex="-1"></a><span class="fu">### Zusammenhang: nominale Variablen</span></span>
+<span id="cb12-732"><a href="#cb12-732" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-733"><a href="#cb12-733" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-734"><a href="#cb12-734" aria-hidden="true" tabindex="-1"></a>:::{#exm-nom-zshg}</span>
+<span id="cb12-735"><a href="#cb12-735" aria-hidden="true" tabindex="-1"></a><span class="fu">### Beispiele für Zusammenhänge bei nominalen Variablen</span></span>
+<span id="cb12-736"><a href="#cb12-736" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-737"><a href="#cb12-737" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Hängt Berufserfolg (Führungskraft ja/nein) mit dem Geschlecht zusammen?</span>
+<span id="cb12-738"><a href="#cb12-738" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Hängt der Beruf des Vaters mit dem Schulabschluss des Kindes (Abitur, Realschule, Mittelschule) zusammen?</span>
+<span id="cb12-739"><a href="#cb12-739" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Gibt es einen Zusammenhang zwischen Automarke und politische Präferenz einer Partei?</span>
+<span id="cb12-740"><a href="#cb12-740" aria-hidden="true" tabindex="-1"></a>$\square$</span>
+<span id="cb12-741"><a href="#cb12-741" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-742"><a href="#cb12-742" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-743"><a href="#cb12-743" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-744"><a href="#cb12-744" aria-hidden="true" tabindex="-1"></a>Sagen wir, Sie arbeiten immer noch beim Online-Auktionshaus und Sie fragen sich,</span>
+<span id="cb12-745"><a href="#cb12-745" aria-hidden="true" tabindex="-1"></a>ob ein Produktfoto wohl primär bei neuwertigen Produkten beiliegt, aber nicht bei gebrauchten?</span>
+<span id="cb12-746"><a href="#cb12-746" aria-hidden="true" tabindex="-1"></a>Dazu betrachten Sie wieder die <span class="in">`mariokart`</span>-Daten, s. @fig-zshg-nom1.</span>
+<span id="cb12-747"><a href="#cb12-747" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-748"><a href="#cb12-748" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-749"><a href="#cb12-749" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-752"><a href="#cb12-752" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-753"><a href="#cb12-753" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-754"><a href="#cb12-754" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-zshg-nom1</span></span>
+<span id="cb12-755"><a href="#cb12-755" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Zusammenhang zwischen nominalskalierten Variablen verbildlichen"</span></span>
+<span id="cb12-756"><a href="#cb12-756" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
+<span id="cb12-757"><a href="#cb12-757" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Es findet sich ein Zusammenhang von Foto und Zustand in den Daten"</span></span>
+<span id="cb12-758"><a href="#cb12-758" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Es findet sich (fast) kein Zusammenhang von `wheel` und Foto in den Daten"</span></span>
+<span id="cb12-759"><a href="#cb12-759" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb12-760"><a href="#cb12-760" aria-hidden="true" tabindex="-1"></a><span class="co">#| </span></span>
+<span id="cb12-761"><a href="#cb12-761" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-762"><a href="#cb12-762" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> cond, <span class="at">fill =</span> stock_photo)) <span class="sc">+</span></span>
+<span id="cb12-763"><a href="#cb12-763" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb12-764"><a href="#cb12-764" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>() <span class="sc">+</span></span>
+<span id="cb12-765"><a href="#cb12-765" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb12-766"><a href="#cb12-766" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb12-767"><a href="#cb12-767" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-768"><a href="#cb12-768" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-769"><a href="#cb12-769" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> wheels <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="at">fill =</span> stock_photo)) <span class="sc">+</span></span>
+<span id="cb12-770"><a href="#cb12-770" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb12-771"><a href="#cb12-771" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>() <span class="sc">+</span></span>
+<span id="cb12-772"><a href="#cb12-772" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb12-773"><a href="#cb12-773" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb12-774"><a href="#cb12-774" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-775"><a href="#cb12-775" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-776"><a href="#cb12-776" aria-hidden="true" tabindex="-1"></a>Tatsächlich: Es findet sich ein Zusammenhang zwischen der Tatsache, ob dem versteigerten Produkt ein Foto bei lag und ob es neuwertig oder gebraucht war (@fig-zshg-nom1, links).</span>
+<span id="cb12-777"><a href="#cb12-777" aria-hidden="true" tabindex="-1"></a>Bei neuen Spielen war fast immer (ca. 90%) ein Foto dabei. Bei</span>
+<span id="cb12-778"><a href="#cb12-778" aria-hidden="true" tabindex="-1"></a>gebrauchten Spiel immerhin bei gut der Hälfte der Fälle.</span>
+<span id="cb12-779"><a href="#cb12-779" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-780"><a href="#cb12-780" aria-hidden="true" tabindex="-1"></a>Anders sieht es aus für die Frage, ob ein (oder mehrere) Lenkräder dem Spiel beilagen (oder nicht) in Zusammenhang mit der Fotofrage Hier gab es fast keinen Unterschied zwischen neuen und alten Spielen, was die Frage nach "Foto des Produkts dabei" betraf (@fig-zshg-nom1, rechts),</span>
+<span id="cb12-781"><a href="#cb12-781" aria-hidden="true" tabindex="-1"></a>der Anteil betrug jeweils ca. 70%.</span>
+<span id="cb12-782"><a href="#cb12-782" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-783"><a href="#cb12-783" aria-hidden="true" tabindex="-1"></a>Anders gesagt: Unterscheiden sich die "Füllhöhe" in den Diagrammen, so gibt es einen Unterschied hinsichtlich "Foto ist dabei" zwischen den beiden Gruppen (linker vs. rechter Balken).</span>
+<span id="cb12-784"><a href="#cb12-784" aria-hidden="true" tabindex="-1"></a>Unterscheiden sich die Anteile in den Gruppen (neuwertige vs. gebrauchte Spiele), so spielt z.B. die Variable "Foto dabei" offenbar eine Rolle. Dann hängen Neuwertigkeit und "Foto dabei" also zusammen!</span>
+<span id="cb12-785"><a href="#cb12-785" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-786"><a href="#cb12-786" aria-hidden="true" tabindex="-1"></a>So können Sie sich in R ein gefülltes Balkendiagramm ausgeben lassen,</span>
+<span id="cb12-787"><a href="#cb12-787" aria-hidden="true" tabindex="-1"></a>s. @fig-de-bar-filled.</span>
+<span id="cb12-788"><a href="#cb12-788" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-791"><a href="#cb12-791" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-792"><a href="#cb12-792" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-de-bar-filled</span></span>
+<span id="cb12-793"><a href="#cb12-793" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Ein gefülltes Balkendiagramm zur Untersuchung eines Zusammenhangs zwischen nominalskalierter Variablen"</span></span>
+<span id="cb12-794"><a href="#cb12-794" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-795"><a href="#cb12-795" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(cond, stock_photo) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-796"><a href="#cb12-796" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_bar</span>(<span class="at">by =</span> <span class="st">"cond"</span>)</span>
+<span id="cb12-797"><a href="#cb12-797" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-798"><a href="#cb12-798" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-799"><a href="#cb12-799" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-800"><a href="#cb12-800" aria-hidden="true" tabindex="-1"></a>:::{.callout-note}</span>
+<span id="cb12-801"><a href="#cb12-801" aria-hidden="true" tabindex="-1"></a>*Gefüllte Balkendiagramme* eignen sich zur Analyse eines Zusammenhangs zwischen nominalskalierten Variablen. Allerdings sollte eine der beiden Variablen nur zwei Ausprägungen aufweisen,</span>
+<span id="cb12-802"><a href="#cb12-802" aria-hidden="true" tabindex="-1"></a>sonst sind die Zusammenhänge nicht mehr so gut zu erkennen.$\square$</span>
+<span id="cb12-803"><a href="#cb12-803" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-804"><a href="#cb12-804" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-805"><a href="#cb12-805" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-806"><a href="#cb12-806" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-807"><a href="#cb12-807" aria-hidden="true" tabindex="-1"></a><span class="fu">### Zusammenhang: metrisch {#sec-zshg-metr}</span></span>
+<span id="cb12-808"><a href="#cb12-808" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-809"><a href="#cb12-809" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-810"><a href="#cb12-810" aria-hidden="true" tabindex="-1"></a>Den (etwaigen) Zusammenhang zweier metrischer Variablen kann man mit einem *Streudiagramm* visualisieren (engl. scatterplot). </span>
+<span id="cb12-811"><a href="#cb12-811" aria-hidden="true" tabindex="-1"></a>@fig-streu1 links untersucht den Zusammenhang des Einstiegpreises (X-Achse) und Abschlusspreises (Y-Achse) von Geboten bei Versteigerungen des Computerspiels Mariokart.</span>
+<span id="cb12-812"><a href="#cb12-812" aria-hidden="true" tabindex="-1"></a>In dem Diagramm ist eine Ellipse ergänzt, um die Art des Zusammenangs besser zu verdeutlichen: Es handelt sich um einen *gleichsinnigen* (positiven) Zusammenhang:</span>
+<span id="cb12-813"><a href="#cb12-813" aria-hidden="true" tabindex="-1"></a>Je höher der Startpreis, desto *höher* der Abschlusspreis, zumindest tendenziell.</span>
+<span id="cb12-814"><a href="#cb12-814" aria-hidden="true" tabindex="-1"></a>Außerdem ist eine "Trendgerade" (Regressionsgerade) in blau eingezeichnet.</span>
+<span id="cb12-815"><a href="#cb12-815" aria-hidden="true" tabindex="-1"></a>Diese Gerade liegt "mittig" in den Daten (wir definieren dies später genauer).</span>
+<span id="cb12-816"><a href="#cb12-816" aria-hidden="true" tabindex="-1"></a>Diese Trendgerade gibt Aufschluss über "typische" Werte: Welcher Y-Wert ist "typisch" für einen bestimmten X-Wert?</span>
+<span id="cb12-817"><a href="#cb12-817" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-818"><a href="#cb12-818" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-819"><a href="#cb12-819" aria-hidden="true" tabindex="-1"></a>@fig-streu1 rechts untersucht den Zusammenhang zwischen Anzahl der Gebote (X-Achse) und Abschlusspreises (Y-Achse).</span>
+<span id="cb12-820"><a href="#cb12-820" aria-hidden="true" tabindex="-1"></a>Es handelt sich um einen negativen Zusammenhang: Je mehr Gebote, desto *geringer* der Abschlusspreis.</span>
+<span id="cb12-821"><a href="#cb12-821" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-822"><a href="#cb12-822" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-823"><a href="#cb12-823" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-826"><a href="#cb12-826" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-827"><a href="#cb12-827" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb12-828"><a href="#cb12-828" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-829"><a href="#cb12-829" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Streudiagramm zur Darstellung eines Zusammenhangs zweier metrischer Variablen"</span></span>
+<span id="cb12-830"><a href="#cb12-830" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-streu1</span></span>
+<span id="cb12-831"><a href="#cb12-831" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap:</span></span>
+<span id="cb12-832"><a href="#cb12-832" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "positiver, mittelstarker Zusammenhang"</span></span>
+<span id="cb12-833"><a href="#cb12-833" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "negativer, eher schwacher Zusammenhang"</span></span>
+<span id="cb12-834"><a href="#cb12-834" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb12-835"><a href="#cb12-835" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-836"><a href="#cb12-836" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb12-837"><a href="#cb12-837" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-838"><a href="#cb12-838" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr, start_pr) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-839"><a href="#cb12-839" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-840"><a href="#cb12-840" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(start_pr <span class="sc">&gt;</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-841"><a href="#cb12-841" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggscatter</span>(<span class="at">x =</span> <span class="st">"start_pr"</span>, </span>
+<span id="cb12-842"><a href="#cb12-842" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="st">"total_pr"</span>,</span>
+<span id="cb12-843"><a href="#cb12-843" aria-hidden="true" tabindex="-1"></a>            <span class="at">add =</span> <span class="st">"reg.line"</span>,</span>
+<span id="cb12-844"><a href="#cb12-844" aria-hidden="true" tabindex="-1"></a>            <span class="at">add.params =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="st">"blue"</span>),</span>
+<span id="cb12-845"><a href="#cb12-845" aria-hidden="true" tabindex="-1"></a>            <span class="at">ellipse =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-846"><a href="#cb12-846" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-847"><a href="#cb12-847" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-848"><a href="#cb12-848" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-849"><a href="#cb12-849" aria-hidden="true" tabindex="-1"></a>  <span class="co">#select(total_pr, start_pr) %&gt;% </span></span>
+<span id="cb12-850"><a href="#cb12-850" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-851"><a href="#cb12-851" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(start_pr <span class="sc">&gt;</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-852"><a href="#cb12-852" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggscatter</span>(<span class="at">x =</span> <span class="st">"n_bids"</span>, </span>
+<span id="cb12-853"><a href="#cb12-853" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="st">"total_pr"</span>,</span>
+<span id="cb12-854"><a href="#cb12-854" aria-hidden="true" tabindex="-1"></a>            <span class="at">add =</span> <span class="st">"reg.line"</span>,</span>
+<span id="cb12-855"><a href="#cb12-855" aria-hidden="true" tabindex="-1"></a>            <span class="at">add.params =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="st">"blue"</span>),</span>
+<span id="cb12-856"><a href="#cb12-856" aria-hidden="true" tabindex="-1"></a>            <span class="at">ellipse =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-857"><a href="#cb12-857" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-858"><a href="#cb12-858" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-859"><a href="#cb12-859" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-860"><a href="#cb12-860" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-861"><a href="#cb12-861" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-862"><a href="#cb12-862" aria-hidden="true" tabindex="-1"></a>@fig-cors bietet einen Überblick über verschiedene Beispiele von Richtung und Stärke von Zusammenhängen.</span>
+<span id="cb12-863"><a href="#cb12-863" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-866"><a href="#cb12-866" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-867"><a href="#cb12-867" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb12-868"><a href="#cb12-868" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-869"><a href="#cb12-869" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-cors</span></span>
+<span id="cb12-870"><a href="#cb12-870" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Überblick über verschiedene Beispiele von Streudiagrammen"</span></span>
+<span id="cb12-871"><a href="#cb12-871" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "100%"</span></span>
+<span id="cb12-872"><a href="#cb12-872" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"funs/plot-different-cors.R"</span>)</span>
+<span id="cb12-873"><a href="#cb12-873" aria-hidden="true" tabindex="-1"></a>fig_cors <span class="ot">&lt;-</span> <span class="fu">plot_different_cors</span>(<span class="at">plot_it =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb12-874"><a href="#cb12-874" aria-hidden="true" tabindex="-1"></a>fig_cors</span>
+<span id="cb12-875"><a href="#cb12-875" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-876"><a href="#cb12-876" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-877"><a href="#cb12-877" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-878"><a href="#cb12-878" aria-hidden="true" tabindex="-1"></a>:::{.xsmall}</span>
+<span id="cb12-879"><a href="#cb12-879" aria-hidden="true" tabindex="-1"></a>Quelle: Aufbauend auf FOM/ifes, Norman Markgraf</span>
+<span id="cb12-880"><a href="#cb12-880" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-881"><a href="#cb12-881" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-882"><a href="#cb12-882" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-883"><a href="#cb12-883" aria-hidden="true" tabindex="-1"></a>In @fig-cors ist für jedes Teildiagramm eine Zahl angegeben: der *Korrelationskoeffizient*.</span>
+<span id="cb12-884"><a href="#cb12-884" aria-hidden="true" tabindex="-1"></a>Diese Statistik quantifiziert Richtung und Stärke des Zusammenhangs (mehr dazu in Kap. @sec-zusammenhaenge).</span>
+<span id="cb12-885"><a href="#cb12-885" aria-hidden="true" tabindex="-1"></a>Ein positives Vorzeichen steht für einen positiven Zusammenhang, ein negatives Vorzeichen für einen negativen Zusammenhang.</span>
+<span id="cb12-886"><a href="#cb12-886" aria-hidden="true" tabindex="-1"></a>Der (Absolut-)Wert gibt die Stärke des linearen Zusammenhangs an <span class="co">[</span><span class="ot">@cohen_power_1992</span><span class="co">]</span>:</span>
+<span id="cb12-887"><a href="#cb12-887" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-888"><a href="#cb12-888" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>±0: Kein Zusammenhang</span>
+<span id="cb12-889"><a href="#cb12-889" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>±0.1: schwacher Zusammenhang</span>
+<span id="cb12-890"><a href="#cb12-890" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>±0.3: mittlerer Zusammenhang</span>
+<span id="cb12-891"><a href="#cb12-891" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>±0.5: starker Zusammenhang</span>
+<span id="cb12-892"><a href="#cb12-892" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>±1: perfekter Zusammenhang</span>
+<span id="cb12-893"><a href="#cb12-893" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-894"><a href="#cb12-894" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-895"><a href="#cb12-895" aria-hidden="true" tabindex="-1"></a>@fig-cors2 hat die gleiche Aussage, ist aber plakativer, </span>
+<span id="cb12-896"><a href="#cb12-896" aria-hidden="true" tabindex="-1"></a>indem *Stärke* (schwach, stark) und *Richtung* (positiv, negativ) gegenübergestellt sind.</span>
+<span id="cb12-897"><a href="#cb12-897" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-900"><a href="#cb12-900" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-901"><a href="#cb12-901" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb12-902"><a href="#cb12-902" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-903"><a href="#cb12-903" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-cors2</span></span>
+<span id="cb12-904"><a href="#cb12-904" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Überblick über starke vs. schwache bzw. positive vs. negative Zusammenhänge"</span></span>
+<span id="cb12-905"><a href="#cb12-905" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "100%"</span></span>
+<span id="cb12-906"><a href="#cb12-906" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"funs/plot-different-cors.R"</span>)</span>
+<span id="cb12-907"><a href="#cb12-907" aria-hidden="true" tabindex="-1"></a>fig_cors2 <span class="ot">&lt;-</span> <span class="fu">plot_different_cors</span>(<span class="at">plot_it =</span> <span class="cn">FALSE</span>, <span class="at">short =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-908"><a href="#cb12-908" aria-hidden="true" tabindex="-1"></a>fig_cors2</span>
+<span id="cb12-909"><a href="#cb12-909" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-910"><a href="#cb12-910" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-911"><a href="#cb12-911" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-912"><a href="#cb12-912" aria-hidden="true" tabindex="-1"></a>Man sieht in @fig-cors und @fig-cors2, dass ein *negativer* Korrelationskoeffizient mit einer *absinkenden* Trendgerade ^<span class="co">[</span><span class="ot">synonym: Regressionsgerade</span><span class="co">]</span> (blaue Linie) einhergeht.</span>
+<span id="cb12-913"><a href="#cb12-913" aria-hidden="true" tabindex="-1"></a>Umgekehrt geht ein *positiver* Trend mit einer *ansteigenden* Trendgerade einher.</span>
+<span id="cb12-914"><a href="#cb12-914" aria-hidden="true" tabindex="-1"></a>Zweitens erkennt man, dass *starke* Zusammenhänge mit einer *schmaler* Ellipse einhergehen</span>
+<span id="cb12-915"><a href="#cb12-915" aria-hidden="true" tabindex="-1"></a>und *schwache* Zusammenhänge mit einer *breiten* Ellipse einhergehen.</span>
+<span id="cb12-916"><a href="#cb12-916" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-917"><a href="#cb12-917" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-918"><a href="#cb12-918" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-919"><a href="#cb12-919" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-920"><a href="#cb12-920" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-921"><a href="#cb12-921" aria-hidden="true" tabindex="-1"></a>:::{#def-zshg}</span>
+<span id="cb12-922"><a href="#cb12-922" aria-hidden="true" tabindex="-1"></a><span class="fu">### Richtig und Stärke eines Zusammenhang</span></span>
+<span id="cb12-923"><a href="#cb12-923" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-924"><a href="#cb12-924" aria-hidden="true" tabindex="-1"></a>Gleichsinnige (positive) Zusammenhänge erkennt man an aufsteigenden Trendgeraden;</span>
+<span id="cb12-925"><a href="#cb12-925" aria-hidden="true" tabindex="-1"></a>gegensinnigen (negative) Zusammenhänge an absteigenden Trendgeraden:</span>
+<span id="cb12-926"><a href="#cb12-926" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-927"><a href="#cb12-927" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>➕  : ⬆️</span>
+<span id="cb12-928"><a href="#cb12-928" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>➖ :   ⬇️</span>
+<span id="cb12-929"><a href="#cb12-929" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-930"><a href="#cb12-930" aria-hidden="true" tabindex="-1"></a>Starke Zusammenhänge erkennt man an schmalen Ellipsen ("Baguette");</span>
+<span id="cb12-931"><a href="#cb12-931" aria-hidden="true" tabindex="-1"></a>schwache Zusammenhänge an breiten Ellipsen ("Torte"):</span>
+<span id="cb12-932"><a href="#cb12-932" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-933"><a href="#cb12-933" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>schwach: 🥮 </span>
+<span id="cb12-934"><a href="#cb12-934" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>stark: 🥖</span>
+<span id="cb12-935"><a href="#cb12-935" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-936"><a href="#cb12-936" aria-hidden="true" tabindex="-1"></a>$\square$</span>
+<span id="cb12-937"><a href="#cb12-937" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-938"><a href="#cb12-938" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-939"><a href="#cb12-939" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-940"><a href="#cb12-940" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-941"><a href="#cb12-941" aria-hidden="true" tabindex="-1"></a>:::{.callout-caution}</span>
+<span id="cb12-942"><a href="#cb12-942" aria-hidden="true" tabindex="-1"></a>Ein Zusammenhang der Art "je mehr X, desto mehr Y" ist *linear*. </span>
+<span id="cb12-943"><a href="#cb12-943" aria-hidden="true" tabindex="-1"></a>Lineare Zusammenhänge erkennt man im Diagramm an einer Geraden bzw. inwieweit sich die Punkte an einer Geraden "anschmiegen".</span>
+<span id="cb12-944"><a href="#cb12-944" aria-hidden="true" tabindex="-1"></a>Natürlich könnte man auch nicht-lineare Zusammenhänge untersuchen,</span>
+<span id="cb12-945"><a href="#cb12-945" aria-hidden="true" tabindex="-1"></a>aber der Einfachheit halber begnügen wir uns mit linearen.$\square$</span>
+<span id="cb12-946"><a href="#cb12-946" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-947"><a href="#cb12-947" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-948"><a href="#cb12-948" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-949"><a href="#cb12-949" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-950"><a href="#cb12-950" aria-hidden="true" tabindex="-1"></a>:::{#exm-scatter}</span>
+<span id="cb12-951"><a href="#cb12-951" aria-hidden="true" tabindex="-1"></a>Sie arbeiten nach wie vor bei einem Online-Auktionshaus, und machmal gehört Datenanalyse zu Ihren Aufgaben.</span>
+<span id="cb12-952"><a href="#cb12-952" aria-hidden="true" tabindex="-1"></a>Daher interessiert Sie, ob welche Variablen mit dem Abschlusspreis (<span class="in">`total_pr`</span>) im Datensatz <span class="in">`mariokart`</span> zusammenhängen.</span>
+<span id="cb12-953"><a href="#cb12-953" aria-hidden="true" tabindex="-1"></a>Sie verbildlichen die Daten mit R, und zwar nutzen Sie das Paket <span class="in">`DataExplorer`</span>.</span>
+<span id="cb12-954"><a href="#cb12-954" aria-hidden="true" tabindex="-1"></a>Starten Sie dieses Paket, s. @lst-dataexplorer.</span>
+<span id="cb12-955"><a href="#cb12-955" aria-hidden="true" tabindex="-1"></a>Außerdem müssen wir noch die Daten importieren, falls noch nicht getan, s. @lst-mariokart.</span>
+<span id="cb12-956"><a href="#cb12-956" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-957"><a href="#cb12-957" aria-hidden="true" tabindex="-1"></a>So, jetzt kann die eigentliche Arbeit losgehen.</span>
+<span id="cb12-958"><a href="#cb12-958" aria-hidden="true" tabindex="-1"></a>Da Sie sich nur auf metrische Variablen konzentrieren wollen, </span>
+<span id="cb12-959"><a href="#cb12-959" aria-hidden="true" tabindex="-1"></a>wählen Sie (mit <span class="in">`select`</span>) nur diese Variablen aus.</span>
+<span id="cb12-960"><a href="#cb12-960" aria-hidden="true" tabindex="-1"></a>Dann weisen Sie R an, einen Scatterplot zu malen (<span class="in">`plot_scatterplot`</span>) und zwar</span>
+<span id="cb12-961"><a href="#cb12-961" aria-hidden="true" tabindex="-1"></a>jeweils den Zusammenhang einer der gewählten Variablen mit dem Abschlusspreis (<span class="in">`total_pr`</span>),</span>
+<span id="cb12-962"><a href="#cb12-962" aria-hidden="true" tabindex="-1"></a>da das die Variable ist, die Sie primär interessiert.</span>
+<span id="cb12-963"><a href="#cb12-963" aria-hidden="true" tabindex="-1"></a>Das Ergebnis sieht man in @fig-mario-scatter.</span>
+<span id="cb12-964"><a href="#cb12-964" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-965"><a href="#cb12-965" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-968"><a href="#cb12-968" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-969"><a href="#cb12-969" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-mario-scatter</span></span>
+<span id="cb12-970"><a href="#cb12-970" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Der Zusammenhang metrischer Variablen mit Abschlusspreis</span></span>
+<span id="cb12-971"><a href="#cb12-971" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-972"><a href="#cb12-972" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-973"><a href="#cb12-973" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_scatterplot</span>(<span class="at">by =</span> <span class="st">"total_pr"</span>)</span>
+<span id="cb12-974"><a href="#cb12-974" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-975"><a href="#cb12-975" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-976"><a href="#cb12-976" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-977"><a href="#cb12-977" aria-hidden="true" tabindex="-1"></a>Aha... Was sagt uns das Bild? Hm. Es scheint einige Extremwerte zu geben, die </span>
+<span id="cb12-978"><a href="#cb12-978" aria-hidden="true" tabindex="-1"></a>dafür sorgen, dass der Rest der Daten recht zusammengequetscht auf dem Bild erscheint.</span>
+<span id="cb12-979"><a href="#cb12-979" aria-hidden="true" tabindex="-1"></a>Vielleicht sollten Sie solche Extremwerte lieber entfernen?</span>
+<span id="cb12-980"><a href="#cb12-980" aria-hidden="true" tabindex="-1"></a>Sie entscheiden sich, nur Verkäufe mit einem Abschlusspreis von weniger als 100 Dollar anzuschauen (<span class="in">`total_pr &lt; 100`</span>).</span>
+<span id="cb12-981"><a href="#cb12-981" aria-hidden="true" tabindex="-1"></a>Das Ergebnis ist in @fig-mario-scatter2 zu sehen.</span>
+<span id="cb12-982"><a href="#cb12-982" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-983"><a href="#cb12-983" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-984"><a href="#cb12-984" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-987"><a href="#cb12-987" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-988"><a href="#cb12-988" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-mario-scatter2</span></span>
+<span id="cb12-989"><a href="#cb12-989" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Der Zusammenhang metrischer Variablen mit Abschlusspreis</span></span>
+<span id="cb12-990"><a href="#cb12-990" aria-hidden="true" tabindex="-1"></a>mariokart2 <span class="ot">&lt;-</span></span>
+<span id="cb12-991"><a href="#cb12-991" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-992"><a href="#cb12-992" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>)</span>
+<span id="cb12-993"><a href="#cb12-993" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-994"><a href="#cb12-994" aria-hidden="true" tabindex="-1"></a>mariokart2 <span class="sc">%&gt;%</span> </span>
+<span id="cb12-995"><a href="#cb12-995" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-996"><a href="#cb12-996" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_scatterplot</span>(<span class="at">by =</span> <span class="st">"total_pr"</span>)</span>
+<span id="cb12-997"><a href="#cb12-997" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-998"><a href="#cb12-998" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-999"><a href="#cb12-999" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1000"><a href="#cb12-1000" aria-hidden="true" tabindex="-1"></a>Ohne Extremwerte schält sich ein deutlicheres Bild (@fig-mario-scatter2) hervor: Startpreis (<span class="in">`start_pr`</span>) und Anzahl  der Räder (<span class="in">`wheels`</span>) scheinen am stärksten mit dem Abschlusspreis zusammenzuhängen.</span>
+<span id="cb12-1001"><a href="#cb12-1001" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1002"><a href="#cb12-1002" aria-hidden="true" tabindex="-1"></a>Das Argument <span class="in">`by = "total_pr"`</span> bei <span class="in">`plot_scatterplot`</span> weist R an, als Y-Variable stets <span class="in">`total_pr`</span> zu verwenden. Alle übrigen Variablen kommen jeweils einmal als X-Variable vor.$\square$</span>
+<span id="cb12-1003"><a href="#cb12-1003" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1004"><a href="#cb12-1004" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-1005"><a href="#cb12-1005" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1006"><a href="#cb12-1006" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1007"><a href="#cb12-1007" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1008"><a href="#cb12-1008" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1009"><a href="#cb12-1009" aria-hidden="true" tabindex="-1"></a><span class="fu">## Unterschiede verbildlichen</span></span>
+<span id="cb12-1010"><a href="#cb12-1010" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1011"><a href="#cb12-1011" aria-hidden="true" tabindex="-1"></a><span class="fu">### Unterschied: nominale Variablen</span></span>
+<span id="cb12-1012"><a href="#cb12-1012" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1013"><a href="#cb12-1013" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1014"><a href="#cb12-1014" aria-hidden="true" tabindex="-1"></a>Gute Nachrichten: Für nominale Variablen bieten sich Balkendiagramme sowohl zur Darstellung von Zusammenhängen als auch von Unterschieden an. </span>
+<span id="cb12-1015"><a href="#cb12-1015" aria-hidden="true" tabindex="-1"></a>Genau genommen zeigt ja @fig-zshg-nom1 (links) den *Unterschied* zwischen neuen und gebrauchten Spielen hinsichtlich der Frage, ob Photos beiliegen. </span>
+<span id="cb12-1016"><a href="#cb12-1016" aria-hidden="true" tabindex="-1"></a>Und wie man in @fig-zshg-nom1 sieht, ist der Anteil der Spiele mit Foto bei den neuen Spielen höher als bei gebrauchten Spielen.^<span class="co">[</span><span class="ot">Aber [Freunde lassen Freunde keine Tortendiagramme verwenden](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart).</span><span class="co">]</span></span>
+<span id="cb12-1017"><a href="#cb12-1017" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1018"><a href="#cb12-1018" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1019"><a href="#cb12-1019" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1020"><a href="#cb12-1020" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1021"><a href="#cb12-1021" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1022"><a href="#cb12-1022" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1023"><a href="#cb12-1023" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1024"><a href="#cb12-1024" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1025"><a href="#cb12-1025" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1026"><a href="#cb12-1026" aria-hidden="true" tabindex="-1"></a><span class="fu">### Unterschied: quantitative Variablen</span></span>
+<span id="cb12-1027"><a href="#cb12-1027" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1028"><a href="#cb12-1028" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1029"><a href="#cb12-1029" aria-hidden="true" tabindex="-1"></a>Eine typische Analysefrage ist, ob sich zwei Gruppen hinsichtlich einer metrischen Zielvariablen deutlich unterscheiden. </span>
+<span id="cb12-1030"><a href="#cb12-1030" aria-hidden="true" tabindex="-1"></a>Genauer gesagt untersucht man z.B. oft, ob sich die Mittelwerte der beiden Gruppen zwischen der Zielvariablen deutlich unterscheiden. </span>
+<span id="cb12-1031"><a href="#cb12-1031" aria-hidden="true" tabindex="-1"></a>Das hört sich abstrakt an? </span>
+<span id="cb12-1032"><a href="#cb12-1032" aria-hidden="true" tabindex="-1"></a>Am besten wir schauen uns einige Beispiele an, s. @fig-compare-groups1.</span>
+<span id="cb12-1033"><a href="#cb12-1033" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1034"><a href="#cb12-1034" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1037"><a href="#cb12-1037" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-1038"><a href="#cb12-1038" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-1039"><a href="#cb12-1039" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Unterschiede zwischen zwei Gruppen: Metrische Y-Variable, nominale X-Variable"</span></span>
+<span id="cb12-1040"><a href="#cb12-1040" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap:</span></span>
+<span id="cb12-1041"><a href="#cb12-1041" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Histogramm pro Gruppe"</span></span>
+<span id="cb12-1042"><a href="#cb12-1042" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Boxplot pro Gruppe"</span></span>
+<span id="cb12-1043"><a href="#cb12-1043" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-compare-groups1</span></span>
+<span id="cb12-1044"><a href="#cb12-1044" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb12-1045"><a href="#cb12-1045" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb12-1046"><a href="#cb12-1046" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1047"><a href="#cb12-1047" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mariokart2, <span class="fu">aes</span>(<span class="at">x =</span> cond, <span class="at">y =</span> total_pr)) <span class="sc">+</span></span>
+<span id="cb12-1048"><a href="#cb12-1048" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violinhalf</span>() <span class="sc">+</span></span>
+<span id="cb12-1049"><a href="#cb12-1049" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb12-1050"><a href="#cb12-1050" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1051"><a href="#cb12-1051" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1052"><a href="#cb12-1052" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mariokart2, <span class="fu">aes</span>(<span class="at">x =</span> cond, <span class="at">y =</span> total_pr)) <span class="sc">+</span></span>
+<span id="cb12-1053"><a href="#cb12-1053" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb12-1054"><a href="#cb12-1054" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb12-1055"><a href="#cb12-1055" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-1056"><a href="#cb12-1056" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1057"><a href="#cb12-1057" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1058"><a href="#cb12-1058" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1059"><a href="#cb12-1059" aria-hidden="true" tabindex="-1"></a>Das linke Teildiagramm von @fig-compare-groups1 zeigt das Histogramm von <span class="in">`total_pr`</span>, getrennt für neue und gebrauchte Spiele, vgl. @fig-de-hist-density.</span>
+<span id="cb12-1060"><a href="#cb12-1060" aria-hidden="true" tabindex="-1"></a>Das rechte Teildiagramm zeigt die gleichen Verteilungen, aber mit einer vereinfachten, groberen Darstellungsfrom, den *Boxplot*.^<span class="co">[</span><span class="ot">Übrigens: [Freunde lassen Freunde nicht Balkendiagramme verwenden, um Mittelwerte darzustellen](https://github.com/cxli233/FriendsDontLetFriends#1-friends-dont-let-friends-make-bar-plots-for-means-separation).</span><span class="co">]</span></span>
+<span id="cb12-1061"><a href="#cb12-1061" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1062"><a href="#cb12-1062" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1065"><a href="#cb12-1065" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-1066"><a href="#cb12-1066" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-1067"><a href="#cb12-1067" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Unterschiede zwischen zwei Gruppen: Metrische Y-Variable, nominale X-Variable"</span></span>
+<span id="cb12-1068"><a href="#cb12-1068" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap:</span></span>
+<span id="cb12-1069"><a href="#cb12-1069" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Y: Abschlusspreis, X: Zustand"</span></span>
+<span id="cb12-1070"><a href="#cb12-1070" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Y: Abschlusspreis, X: Photo dabei?"</span></span>
+<span id="cb12-1071"><a href="#cb12-1071" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-compare-groups</span></span>
+<span id="cb12-1072"><a href="#cb12-1072" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb12-1073"><a href="#cb12-1073" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1074"><a href="#cb12-1074" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1075"><a href="#cb12-1075" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">ggboxplot</span>(., <span class="at">x =</span> <span class="st">"cond"</span>, <span class="at">y =</span> <span class="st">"total_pr"</span>)</span>
+<span id="cb12-1076"><a href="#cb12-1076" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1077"><a href="#cb12-1077" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1078"><a href="#cb12-1078" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1079"><a href="#cb12-1079" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">ggboxplot</span>(., <span class="at">x =</span> <span class="st">"stock_photo"</span>, <span class="at">y =</span> <span class="st">"total_pr"</span>)</span>
+<span id="cb12-1080"><a href="#cb12-1080" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1081"><a href="#cb12-1081" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-1082"><a href="#cb12-1082" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1083"><a href="#cb12-1083" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1084"><a href="#cb12-1084" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1085"><a href="#cb12-1085" aria-hidden="true" tabindex="-1"></a>Das linke Teildiagramm von @fig-compare-groups zeigt den Unterschied in den Verteilungen von <span class="in">`total_pr`</span>, einmal für die neuen Computerspiele (<span class="in">`cond == new`</span>) und einmal für gebrauchte Spiele (<span class="in">`cond == used`</span>).</span>
+<span id="cb12-1086"><a href="#cb12-1086" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1087"><a href="#cb12-1087" aria-hidden="true" tabindex="-1"></a>Was ein "deutlicher"^<span class="co">[</span><span class="ot">"substanzieller", "bedeutsamer", "relevanter" oder "(inhaltlich) signifikanter"</span><span class="co">]</span> Zusammenhang ist, ist keine statistische, sondern inhaltliche Frage, die man mit Sachverstand zum Forschungsgegenstand beantworten muss.</span>
+<span id="cb12-1088"><a href="#cb12-1088" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1089"><a href="#cb12-1089" aria-hidden="true" tabindex="-1"></a>:::{#def-boxplot}</span>
+<span id="cb12-1090"><a href="#cb12-1090" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1091"><a href="#cb12-1091" aria-hidden="true" tabindex="-1"></a><span class="fu">### Boxplot</span></span>
+<span id="cb12-1092"><a href="#cb12-1092" aria-hidden="true" tabindex="-1"></a>Der Boxplot ist eine Vereinfachung bzw. eine Zusammenfassung eines Histograms.^<span class="co">[</span><span class="ot">Ob der Boxplot horizontal oder vertikal steht, ist Ihrem Geschmack überlassen.</span><span class="co">]</span></span>
+<span id="cb12-1093"><a href="#cb12-1093" aria-hidden="true" tabindex="-1"></a>Damit stellt der Boxplot auch eine Verteilung (einer metrischen Variablen) dar.$\square$</span>
+<span id="cb12-1094"><a href="#cb12-1094" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-1095"><a href="#cb12-1095" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1096"><a href="#cb12-1096" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1097"><a href="#cb12-1097" aria-hidden="true" tabindex="-1"></a>In @fig-hist-to-box sieht man die "Übersetzung" von Histogramm (oben) zu einem Boxplot (unten).</span>
+<span id="cb12-1098"><a href="#cb12-1098" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1099"><a href="#cb12-1099" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1100"><a href="#cb12-1100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1103"><a href="#cb12-1103" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-1104"><a href="#cb12-1104" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-hist-to-box</span></span>
+<span id="cb12-1105"><a href="#cb12-1105" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Übersetzung eines Histogramms zu einem Boxplot"</span></span>
+<span id="cb12-1106"><a href="#cb12-1106" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb12-1107"><a href="#cb12-1107" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-1108"><a href="#cb12-1108" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"funs/histogram-to-boxplot.R"</span>)</span>
+<span id="cb12-1109"><a href="#cb12-1109" aria-hidden="true" tabindex="-1"></a>hist_to_box <span class="ot">&lt;-</span> <span class="fu">histogram_to_boxplot</span>(mariokart2, <span class="st">"total_pr"</span>, <span class="at">plot_it =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb12-1110"><a href="#cb12-1110" aria-hidden="true" tabindex="-1"></a>hist_to_box</span>
+<span id="cb12-1111"><a href="#cb12-1111" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-1112"><a href="#cb12-1112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1113"><a href="#cb12-1113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1114"><a href="#cb12-1114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1115"><a href="#cb12-1115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1116"><a href="#cb12-1116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1117"><a href="#cb12-1117" aria-hidden="true" tabindex="-1"></a>Schauen wir uns die "Anatomie" des Boxplots näher an:</span>
+<span id="cb12-1118"><a href="#cb12-1118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1119"><a href="#cb12-1119" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Der *dicke Strich* in der Box zeigt den Median der Verteilung </span>
+<span id="cb12-1120"><a href="#cb12-1120" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Die *Enden der Box* zeigen das 1. Quartil bzw. das 3. Quartil. Damit zeigt die Breite der Box die Streuung der Verteilung an, genauer gesagt die Streuung der inneren 50% der Beobachtungen. Je breiter die Box, desto größer die Streuung. Die Breite der Box nennt man auch den *Interquartilsabstand* (IQR), da er die Strecke zwischen den Quartilen bemisst.</span>
+<span id="cb12-1121"><a href="#cb12-1121" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Die "*Antennen*" des Boxplots zeigen die Streuung in den kleinsten 25% der Werte (linke Antenne) bzw. die Streuung der größten 25% der Werte (rechte Antennen). Je länger die Antenne, desto größer die Streuung.</span>
+<span id="cb12-1122"><a href="#cb12-1122" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Falls es aber *Extremwerte* gibt, so sollten die lieber einzeln, separat, außerhalb der Antennen gezeigt werden. Daher ist die Antennenlänge auf die 1,5-fache Länge der Box beschränkt. Werte die außerhalb dieses Bereichs liegen (also mehr als das 1,5-fache der Boxlänge von Q3 entfernt sind) werden mittels eines Punktes dargestellt.</span>
+<span id="cb12-1123"><a href="#cb12-1123" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>Liegt der Median-Strich in der Mitte der Box, so ist die Verteilung *symmetrisch* (bezogen auf die inneren 50% der Werte), liegt der Median-Strich nicht in der Mitte der Box, so ist die Verteilung nicht symmetrisch (*schief*). Gleiches gilt für die Antennenlängen: Sind die Antennen gleich lang, so ist der äußere Teil der Verteilung symmetrisch, andernfalls schief.</span>
+<span id="cb12-1124"><a href="#cb12-1124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1125"><a href="#cb12-1125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1126"><a href="#cb12-1126" aria-hidden="true" tabindex="-1"></a>:::{#exm-Boxplots}</span>
+<span id="cb12-1127"><a href="#cb12-1127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1128"><a href="#cb12-1128" aria-hidden="true" tabindex="-1"></a>In einer vorherigen Analyse haben Sie den Zusammenhang von Abschlusspreis und der Anzahl der Lenkräder untersucht.</span>
+<span id="cb12-1129"><a href="#cb12-1129" aria-hidden="true" tabindex="-1"></a>Jetzt möchten Sie eine sehr ähnliche Fragestellung betrachten:</span>
+<span id="cb12-1130"><a href="#cb12-1130" aria-hidden="true" tabindex="-1"></a>Wie *unterscheiden* sich die Verkaufspreise je nach Anzahl der beigelegten Lenkräder?</span>
+<span id="cb12-1131"><a href="#cb12-1131" aria-hidden="true" tabindex="-1"></a>Flink erstellen Sie dazu folgendes Diagramm, @fig-box-wheels1, links.</span>
+<span id="cb12-1132"><a href="#cb12-1132" aria-hidden="true" tabindex="-1"></a>Es zeigt die Verteilung des Abschlusspreises, aufgebrochen nach Anzahl Lenkräder (<span class="in">`by = "wheels`</span>).</span>
+<span id="cb12-1133"><a href="#cb12-1133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1134"><a href="#cb12-1134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1135"><a href="#cb12-1135" aria-hidden="true" tabindex="-1"></a>Aber ganz glücklich sind Sie mit dem Diagramm nicht: </span>
+<span id="cb12-1136"><a href="#cb12-1136" aria-hidden="true" tabindex="-1"></a>R hat die Variable <span class="in">`wheels`</span> komisch aufgeteilt. Es wäre eigentlich ganz einfach,</span>
+<span id="cb12-1137"><a href="#cb12-1137" aria-hidden="true" tabindex="-1"></a>wenn R die Gruppen <span class="in">`0`</span>, <span class="in">`1`</span>, <span class="in">`2`</span>, <span class="in">`3`</span> und <span class="in">`4`</span> aufteilen würde.</span>
+<span id="cb12-1138"><a href="#cb12-1138" aria-hidden="true" tabindex="-1"></a>Aber schaut man sich die Y-Achse (im linken Teildiagramm von @fig-box-wheels1) an,</span>
+<span id="cb12-1139"><a href="#cb12-1139" aria-hidden="true" tabindex="-1"></a>so erkennt man, dass R <span class="in">`wheels`</span> als stetige Zahl betrachtet und nicht in ganze Zahlen gruppiert.^<span class="co">[</span><span class="ot">Vielleicht so, dass in jeder Gruppe gleich viele Wert sind?</span><span class="co">]</span> </span>
+<span id="cb12-1140"><a href="#cb12-1140" aria-hidden="true" tabindex="-1"></a>Aber wir möchten jeden einzelnen Wert von <span class="in">`wheels`</span> (0, 1, 2, 3, 4) als *Gruppe* verstehen.</span>
+<span id="cb12-1141"><a href="#cb12-1141" aria-hidden="true" tabindex="-1"></a>Mit anderen Worten, wir möchten <span class="in">`wheels`</span> als nominale Variable definieren.</span>
+<span id="cb12-1142"><a href="#cb12-1142" aria-hidden="true" tabindex="-1"></a>Das kann man mit dem Befehle <span class="in">`factor(wheels)`</span> erreichen (verpackt in <span class="in">`mutate`</span>), s.</span>
+<span id="cb12-1143"><a href="#cb12-1143" aria-hidden="true" tabindex="-1"></a>@fig-box-wheels1, rechts.</span>
+<span id="cb12-1144"><a href="#cb12-1144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1147"><a href="#cb12-1147" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-1148"><a href="#cb12-1148" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-box-wheels1</span></span>
+<span id="cb12-1149"><a href="#cb12-1149" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Abschlusspreis nach Anzahl von beigelegten Lenkrädern"</span></span>
+<span id="cb12-1150"><a href="#cb12-1150" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
+<span id="cb12-1151"><a href="#cb12-1151" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "wheels als metrische Variable"</span></span>
+<span id="cb12-1152"><a href="#cb12-1152" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "wheels als nominale Variable"</span></span>
+<span id="cb12-1153"><a href="#cb12-1153" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb12-1154"><a href="#cb12-1154" aria-hidden="true" tabindex="-1"></a>mariokart2 <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1155"><a href="#cb12-1155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr, wheels) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1156"><a href="#cb12-1156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_boxplot</span>(<span class="at">by =</span> <span class="st">"wheels"</span>)</span>
+<span id="cb12-1157"><a href="#cb12-1157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1158"><a href="#cb12-1158" aria-hidden="true" tabindex="-1"></a>mariokart2 <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1159"><a href="#cb12-1159" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr, wheels) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1160"><a href="#cb12-1160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">wheels =</span> <span class="fu">factor</span>(wheels)) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1161"><a href="#cb12-1161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_boxplot</span>(<span class="at">by =</span> <span class="st">"wheels"</span>)</span>
+<span id="cb12-1162"><a href="#cb12-1162" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-1163"><a href="#cb12-1163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1164"><a href="#cb12-1164" aria-hidden="true" tabindex="-1"></a>Sie schlißen aus dem Bild, dass Lenkräder und Preis (positiv) zusammenhängen.</span>
+<span id="cb12-1165"><a href="#cb12-1165" aria-hidden="true" tabindex="-1"></a>Allerdings scheint es wenig Daten für <span class="in">`wheels == 4`</span> zu geben.</span>
+<span id="cb12-1166"><a href="#cb12-1166" aria-hidden="true" tabindex="-1"></a>Das prüfen Sie nach:</span>
+<span id="cb12-1167"><a href="#cb12-1167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1170"><a href="#cb12-1170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-1171"><a href="#cb12-1171" aria-hidden="true" tabindex="-1"></a>mariokart2 <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1172"><a href="#cb12-1172" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(wheels)</span>
+<span id="cb12-1173"><a href="#cb12-1173" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-1174"><a href="#cb12-1174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1175"><a href="#cb12-1175" aria-hidden="true" tabindex="-1"></a>Tatsächlich gibt es (in <span class="in">`mariokart2`</span>) auch für 3 Lenkräder schon wenig Daten,</span>
+<span id="cb12-1176"><a href="#cb12-1176" aria-hidden="true" tabindex="-1"></a>so dass wir die Belastbarkeit dieses Ergebnisses skeptisch betrachten sollten.$\square$</span>
+<span id="cb12-1177"><a href="#cb12-1177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1178"><a href="#cb12-1178" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-1179"><a href="#cb12-1179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1180"><a href="#cb12-1180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1181"><a href="#cb12-1181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1182"><a href="#cb12-1182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1183"><a href="#cb12-1183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1184"><a href="#cb12-1184" aria-hidden="true" tabindex="-1"></a><span class="fu">## So lügt man mit Statistik</span></span>
+<span id="cb12-1185"><a href="#cb12-1185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1186"><a href="#cb12-1186" aria-hidden="true" tabindex="-1"></a>Diagramme werden häufig eingesetzt, um die Wahrheit "aufzuhübschen". </span>
+<span id="cb12-1187"><a href="#cb12-1187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1188"><a href="#cb12-1188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1189"><a href="#cb12-1189" aria-hidden="true" tabindex="-1"></a><span class="fu">### Achsen manipulieren</span></span>
+<span id="cb12-1190"><a href="#cb12-1190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1191"><a href="#cb12-1191" aria-hidden="true" tabindex="-1"></a>Achsen zu stauchen ist ein einfacher Trick, s. @fig-lie1.</span>
+<span id="cb12-1192"><a href="#cb12-1192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1193"><a href="#cb12-1193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1196"><a href="#cb12-1196" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-1197"><a href="#cb12-1197" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-1198"><a href="#cb12-1198" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-lie1</span></span>
+<span id="cb12-1199"><a href="#cb12-1199" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Stauchen der Y-Achse, um mit Statistik zu lügen"</span></span>
+<span id="cb12-1200"><a href="#cb12-1200" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
+<span id="cb12-1201"><a href="#cb12-1201" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Oh nein, dramatischer Einbruch des Umsatzes!"</span></span>
+<span id="cb12-1202"><a href="#cb12-1202" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Kaum der Rede wert, ist nur ein bisschen Schwankung!"</span></span>
+<span id="cb12-1203"><a href="#cb12-1203" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb12-1204"><a href="#cb12-1204" aria-hidden="true" tabindex="-1"></a><span class="co">#| </span></span>
+<span id="cb12-1205"><a href="#cb12-1205" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb12-1206"><a href="#cb12-1206" aria-hidden="true" tabindex="-1"></a>  <span class="at">Jahr =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>),</span>
+<span id="cb12-1207"><a href="#cb12-1207" aria-hidden="true" tabindex="-1"></a>  <span class="at">Umsatz =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">98</span>, <span class="dv">94</span>, <span class="dv">93</span>, <span class="dv">70</span>)</span>
+<span id="cb12-1208"><a href="#cb12-1208" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-1209"><a href="#cb12-1209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1210"><a href="#cb12-1210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1211"><a href="#cb12-1211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1212"><a href="#cb12-1212" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(Jahr, Umsatz)) <span class="sc">+</span></span>
+<span id="cb12-1213"><a href="#cb12-1213" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> .<span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb12-1214"><a href="#cb12-1214" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb12-1215"><a href="#cb12-1215" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb12-1216"><a href="#cb12-1216" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb12-1217"><a href="#cb12-1217" aria-hidden="true" tabindex="-1"></a>   <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> .<span class="dv">10</span>)</span>
+<span id="cb12-1218"><a href="#cb12-1218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1219"><a href="#cb12-1219" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(Jahr, Umsatz)) <span class="sc">+</span></span>
+<span id="cb12-1220"><a href="#cb12-1220" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> .<span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb12-1221"><a href="#cb12-1221" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb12-1222"><a href="#cb12-1222" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb12-1223"><a href="#cb12-1223" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb12-1224"><a href="#cb12-1224" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> .<span class="dv">010</span>)</span>
+<span id="cb12-1225"><a href="#cb12-1225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1226"><a href="#cb12-1226" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-1227"><a href="#cb12-1227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1228"><a href="#cb12-1228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1229"><a href="#cb12-1229" aria-hidden="true" tabindex="-1"></a>Natürlich kann man auch durch "Abschneiden" der Y-Achse einen eindrucksvollen Effekt erzielen, s. @fig-lie2.</span>
+<span id="cb12-1230"><a href="#cb12-1230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1231"><a href="#cb12-1231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1232"><a href="#cb12-1232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1233"><a href="#cb12-1233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1236"><a href="#cb12-1236" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-1237"><a href="#cb12-1237" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-1238"><a href="#cb12-1238" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-lie2</span></span>
+<span id="cb12-1239"><a href="#cb12-1239" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Abschneiden der Y-Achse, um mit Statistik zu lügen"</span></span>
+<span id="cb12-1240"><a href="#cb12-1240" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
+<span id="cb12-1241"><a href="#cb12-1241" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Oh nein, dramatischer Einbruch des Umsatzes!"</span></span>
+<span id="cb12-1242"><a href="#cb12-1242" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - "Kaum der Rede wert, ist nur ein bisschen Schwankung!"</span></span>
+<span id="cb12-1243"><a href="#cb12-1243" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb12-1244"><a href="#cb12-1244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1245"><a href="#cb12-1245" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb12-1246"><a href="#cb12-1246" aria-hidden="true" tabindex="-1"></a>  <span class="at">Jahr =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>),</span>
+<span id="cb12-1247"><a href="#cb12-1247" aria-hidden="true" tabindex="-1"></a>  <span class="at">Umsatz =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">98</span>, <span class="dv">94</span>, <span class="dv">93</span>, <span class="dv">70</span>)</span>
+<span id="cb12-1248"><a href="#cb12-1248" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-1249"><a href="#cb12-1249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1250"><a href="#cb12-1250" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(Jahr, Umsatz)) <span class="sc">+</span></span>
+<span id="cb12-1251"><a href="#cb12-1251" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> .<span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb12-1252"><a href="#cb12-1252" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb12-1253"><a href="#cb12-1253" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb12-1254"><a href="#cb12-1254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1255"><a href="#cb12-1255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1256"><a href="#cb12-1256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1257"><a href="#cb12-1257" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(Jahr, Umsatz)) <span class="sc">+</span></span>
+<span id="cb12-1258"><a href="#cb12-1258" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> .<span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb12-1259"><a href="#cb12-1259" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb12-1260"><a href="#cb12-1260" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb12-1261"><a href="#cb12-1261" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span>
+<span id="cb12-1262"><a href="#cb12-1262" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-1263"><a href="#cb12-1263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1264"><a href="#cb12-1264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1265"><a href="#cb12-1265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1266"><a href="#cb12-1266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1267"><a href="#cb12-1267" aria-hidden="true" tabindex="-1"></a><span class="fu">### Scheinkorrelation</span></span>
+<span id="cb12-1268"><a href="#cb12-1268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1269"><a href="#cb12-1269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1270"><a href="#cb12-1270" aria-hidden="true" tabindex="-1"></a>@messerli_chocolate_2012 berichtet von einem Zusammenhang von Schokoloadenkonsum und Anzahl von Nobelpreisen (Beobachtungseinheit: Länder), s. @fig-choc.</span>
+<span id="cb12-1271"><a href="#cb12-1271" aria-hidden="true" tabindex="-1"></a>Das ist doch ganz klar: Schoki futtern macht schlau und Nobelpreise! (?)</span>
+<span id="cb12-1272"><a href="#cb12-1272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1273"><a href="#cb12-1273" aria-hidden="true" tabindex="-1"></a><span class="al">![Schokolodenkonsum und Nobelpreise](img/choc.jpeg)</span>{#fig-choc width="75%"}</span>
+<span id="cb12-1274"><a href="#cb12-1274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1275"><a href="#cb12-1275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1276"><a href="#cb12-1276" aria-hidden="true" tabindex="-1"></a>Leider ist hier von einer *Scheinkorrelation* auszugehen: Auch wenn die beiden Variablen *Schokoladenkonsum* und *Nobelpreise* zusammenhängen, heißt das *nicht*, dass die Variable die Ursache und die andere die Wirkung sein muss. </span>
+<span id="cb12-1277"><a href="#cb12-1277" aria-hidden="true" tabindex="-1"></a>So könnte auch eine Drittvariable im Hintergrund die gleichzeitige Ursache von Schokoladenkonsum und Nobelpreise sein, etwa der *allgemeine Entwicklungsstand* des Landes: In höher entwickelten Ländern wird mehr Schokoloade konsumiert und es werden mehr Nobelpreise gewonnen im Vergleich zu Ländern mit geringerem Entwicklungsstand.</span>
+<span id="cb12-1278"><a href="#cb12-1278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1279"><a href="#cb12-1279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1280"><a href="#cb12-1280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1281"><a href="#cb12-1281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1282"><a href="#cb12-1282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1283"><a href="#cb12-1283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1284"><a href="#cb12-1284" aria-hidden="true" tabindex="-1"></a><span class="fu">## Praxisbezug</span></span>
+<span id="cb12-1285"><a href="#cb12-1285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1286"><a href="#cb12-1286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1287"><a href="#cb12-1287" aria-hidden="true" tabindex="-1"></a>Ein, wie ich finde schlagendes Beispiel zur Stärke von Datendiagrammen ist @fig-vaccine.</span>
+<span id="cb12-1288"><a href="#cb12-1288" aria-hidden="true" tabindex="-1"></a>Das Diagramm zeigt die Häufigkeit von Masern, vor und nach der Einführung der Impfung.</span>
+<span id="cb12-1289"><a href="#cb12-1289" aria-hidden="true" tabindex="-1"></a>Die Daten und die Idee zur Visualisierung gehen auf @van_panhuis_contagious_2013 zurück.</span>
+<span id="cb12-1290"><a href="#cb12-1290" aria-hidden="true" tabindex="-1"></a>Das Diagramm und weitere finden sich in ähnlicher Form imn <span class="co">[</span><span class="ot">Wall Street Journal</span><span class="co">](http://graphics.wsj.com/infectious-diseases-and-vaccines/)</span>.</span>
+<span id="cb12-1291"><a href="#cb12-1291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1292"><a href="#cb12-1292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1293"><a href="#cb12-1293" aria-hidden="true" tabindex="-1"></a><span class="al">![Häufigkeit von Masern und Impfung in den USA, Lizenz: MIT](img/vaccine.jpg)</span>{#fig-vaccine width=75%}</span>
+<span id="cb12-1294"><a href="#cb12-1294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1295"><a href="#cb12-1295" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Quellcode</span><span class="co">](https://github.com/blmoore/blogR/blob/master/R/measles_incidence_heatmap.R)</span></span>
+<span id="cb12-1296"><a href="#cb12-1296" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Datenquelle</span><span class="co">](https://www.tycho.pitt.edu)</span></span>
+<span id="cb12-1297"><a href="#cb12-1297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1298"><a href="#cb12-1298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1299"><a href="#cb12-1299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1300"><a href="#cb12-1300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1301"><a href="#cb12-1301" aria-hidden="true" tabindex="-1"></a>In der "freien Wildbahn" findet man häufig sog. "Tortendiagramme".</span>
+<span id="cb12-1302"><a href="#cb12-1302" aria-hidden="true" tabindex="-1"></a>Zwar sind sie beliebt, doch ist <span class="co">[</span><span class="ot">von ihrer Verwendung abzuraten</span><span class="co">](https://www.data-to-viz.com/caveat/pie.html)</span>; vgl. auch <span class="co">[</span><span class="ot">hier</span><span class="co">](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart)</span>.</span>
+<span id="cb12-1303"><a href="#cb12-1303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1304"><a href="#cb12-1304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1305"><a href="#cb12-1305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1306"><a href="#cb12-1306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1307"><a href="#cb12-1307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1308"><a href="#cb12-1308" aria-hidden="true" tabindex="-1"></a><span class="fu">## Vertiefung</span></span>
+<span id="cb12-1309"><a href="#cb12-1309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1310"><a href="#cb12-1310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1311"><a href="#cb12-1311" aria-hidden="true" tabindex="-1"></a>Mehr Informationen zu <span class="in">`{DataExplorer}`</span> finden Sie <span class="co">[</span><span class="ot">hier</span><span class="co">](https://boxuancui.github.io/DataExplorer/index.html)</span>.</span>
+<span id="cb12-1312"><a href="#cb12-1312" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1313"><a href="#cb12-1313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1314"><a href="#cb12-1314" aria-hidden="true" tabindex="-1"></a>Einen Überblick über verschiedene Typen an Diagrammen, sogar in Form einer systematischen Nomenklatur findet sich bei <span class="co">[</span><span class="ot">data-to-vis</span><span class="co">](https://www.data-to-viz.com/)</span>.</span>
+<span id="cb12-1315"><a href="#cb12-1315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1316"><a href="#cb12-1316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1317"><a href="#cb12-1317" aria-hidden="true" tabindex="-1"></a><span class="fu">### Animation</span></span>
+<span id="cb12-1318"><a href="#cb12-1318" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1319"><a href="#cb12-1319" aria-hidden="true" tabindex="-1"></a>::: {.content-visible unless-format="pdf"}</span>
+<span id="cb12-1320"><a href="#cb12-1320" aria-hidden="true" tabindex="-1"></a>Eine weitere nützliche Art von Visualisierung sind *Karten* und *Animationen.* So zeigt z.B. @fig-le-world die Veränderung der Lebenserwartung (in Jahren) über die letzten Dekaden.</span>
+<span id="cb12-1321"><a href="#cb12-1321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1322"><a href="#cb12-1322" aria-hidden="true" tabindex="-1"></a><span class="al">![Animation zur Veränderung der Lebenserwartung](img/life-exp-world.gif)</span>{#fig-le-world width="75%"}</span>
+<span id="cb12-1323"><a href="#cb12-1323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1324"><a href="#cb12-1324" aria-hidden="true" tabindex="-1"></a>Der Quellcode der Animation ist <span class="co">[</span><span class="ot">hier</span><span class="co">](https://gist.github.com/rafapereirabr/0d68f7ccfc3af1680c4c8353cf9ab345)</span> zu finden.</span>
+<span id="cb12-1325"><a href="#cb12-1325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1326"><a href="#cb12-1326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1327"><a href="#cb12-1327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1328"><a href="#cb12-1328" aria-hidden="true" tabindex="-1"></a>In einigen Situation können Animationen zweckdienlich sein.</span>
+<span id="cb12-1329"><a href="#cb12-1329" aria-hidden="true" tabindex="-1"></a>Außerdem sind sie mitunter nett anzuschauen, s. @fig-anim1.</span>
+<span id="cb12-1330"><a href="#cb12-1330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1331"><a href="#cb12-1331" aria-hidden="true" tabindex="-1"></a><span class="al">![Veränderung des Zusammenhangs von Lebenswertung und Bruttosozialprodukt pro Land, gegliedert nach Kontinenten](img/animate1.gif)</span>{#fig-anim1 width="75%"}</span>
+<span id="cb12-1332"><a href="#cb12-1332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1333"><a href="#cb12-1333" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-1334"><a href="#cb12-1334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1335"><a href="#cb12-1335" aria-hidden="true" tabindex="-1"></a>Natürlich sind der Fantasie keine Grenzen beim Visualisieren gesetzt, so ist etwa <span class="co">[</span><span class="ot">diese Animationen</span><span class="co">](https://www.tylermw.com/wp-content/uploads/2019/06/featuredmeasles.mp4)</span> ziemlich atemberaubend.</span>
+<span id="cb12-1336"><a href="#cb12-1336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1337"><a href="#cb12-1337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1338"><a href="#cb12-1338" aria-hidden="true" tabindex="-1"></a><span class="fu">### Schicke Diagramme</span></span>
+<span id="cb12-1339"><a href="#cb12-1339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1340"><a href="#cb12-1340" aria-hidden="true" tabindex="-1"></a>Ein Teil der Diagramm dieses Kapitels wurden mit dem R-Paket <span class="co">[</span><span class="ot">ggpubr</span><span class="co">](https://rpkgs.datanovia.com/ggpubr/)</span> erstellt.</span>
+<span id="cb12-1341"><a href="#cb12-1341" aria-hidden="true" tabindex="-1"></a>Mit diesem Paket lassen sich einfach ansprechende Datendiagramme erstellen,</span>
+<span id="cb12-1342"><a href="#cb12-1342" aria-hidden="true" tabindex="-1"></a>so lautet die etwa die Syntax von @fig-compare-groups wie folgt.</span>
+<span id="cb12-1343"><a href="#cb12-1343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1344"><a href="#cb12-1344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1345"><a href="#cb12-1345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1346"><a href="#cb12-1346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1349"><a href="#cb12-1349" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-1350"><a href="#cb12-1350" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb12-1351"><a href="#cb12-1351" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)  <span class="co"># einmalig instalieren nicht vergessen</span></span>
+<span id="cb12-1352"><a href="#cb12-1352" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1353"><a href="#cb12-1353" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1354"><a href="#cb12-1354" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggboxplot</span>(<span class="at">x =</span> <span class="st">"cond"</span>, <span class="at">y =</span> <span class="st">"total_pr"</span>)</span>
+<span id="cb12-1355"><a href="#cb12-1355" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-1356"><a href="#cb12-1356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1357"><a href="#cb12-1357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1358"><a href="#cb12-1358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1359"><a href="#cb12-1359" aria-hidden="true" tabindex="-1"></a>Möchte man Mittelwerte vergleichen, so sind Boxplots nicht ideal, </span>
+<span id="cb12-1360"><a href="#cb12-1360" aria-hidden="true" tabindex="-1"></a>da diese ja nicht den Mittelwert, sondern den *Median* heraustellen.</span>
+<span id="cb12-1361"><a href="#cb12-1361" aria-hidden="true" tabindex="-1"></a>Eine Abhilfe (also eine Darstellung des Mittelwerts) schafft man (z.B.) mit <span class="in">`ggpubr`</span>,</span>
+<span id="cb12-1362"><a href="#cb12-1362" aria-hidden="true" tabindex="-1"></a>s. @fig-comp-means-ggpubr.</span>
+<span id="cb12-1363"><a href="#cb12-1363" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1364"><a href="#cb12-1364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1367"><a href="#cb12-1367" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-1368"><a href="#cb12-1368" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-comp-means-ggpubr</span></span>
+<span id="cb12-1369"><a href="#cb12-1369" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Vergleich der Verteilungen zweier Gruppen mit Mittelwert und Standardabweichung pro Gruppe hervorgehoben</span></span>
+<span id="cb12-1370"><a href="#cb12-1370" aria-hidden="true" tabindex="-1"></a><span class="fu">ggviolin</span>(mariokart2, <span class="at">x =</span> <span class="st">"cond"</span>, <span class="at">y =</span> <span class="st">"total_pr"</span>,</span>
+<span id="cb12-1371"><a href="#cb12-1371" aria-hidden="true" tabindex="-1"></a>         <span class="at">add =</span> <span class="st">"mean_sd"</span>) </span>
+<span id="cb12-1372"><a href="#cb12-1372" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-1373"><a href="#cb12-1373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1374"><a href="#cb12-1374" aria-hidden="true" tabindex="-1"></a>Ein "Violinenplot" hat die gleiche Aussage wie ein Dichtediagramm:</span>
+<span id="cb12-1375"><a href="#cb12-1375" aria-hidden="true" tabindex="-1"></a>Je breiter die "Violine", desto mehr Beobachtungen gibt es an dieser Stelle.</span>
+<span id="cb12-1376"><a href="#cb12-1376" aria-hidden="true" tabindex="-1"></a>Weitere Varianten zum Violinenplot mit ggpubr finden sich <span class="co">[</span><span class="ot">hier</span><span class="co">](https://rpkgs.datanovia.com/ggpubr/reference/ggviolin.html)</span>.</span>
+<span id="cb12-1377"><a href="#cb12-1377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1378"><a href="#cb12-1378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1379"><a href="#cb12-1379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1380"><a href="#cb12-1380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1381"><a href="#cb12-1381" aria-hidden="true" tabindex="-1"></a>Sowohl <span class="in">`ggpubr`</span> als auch <span class="in">`DataExplorer`</span> (und viele andere R-Pakete) bauen auf dem R-Paket <span class="in">`ggplot2`</span> auf.</span>
+<span id="cb12-1382"><a href="#cb12-1382" aria-hidden="true" tabindex="-1"></a><span class="in">`ggplot2`</span> ist eines der am weitesten ausgearbeiteten Softwarepakete zur Erstellung von Datendiagrammen.</span>
+<span id="cb12-1383"><a href="#cb12-1383" aria-hidden="true" tabindex="-1"></a>Das Buch zur Software (vom Autor von <span class="in">`ggplot2`</span>) ist empfehlenswert <span class="co">[</span><span class="ot">@wickham_ggplot2_2009</span><span class="co">]</span>.</span>
+<span id="cb12-1384"><a href="#cb12-1384" aria-hidden="true" tabindex="-1"></a>Eine neue, gute Einführung in Datenvisualisierung findet sich bei @wilke_fundamentals_2019.</span>
+<span id="cb12-1385"><a href="#cb12-1385" aria-hidden="true" tabindex="-1"></a>Beide Bücher sind kostenfrei online lesbar.</span>
+<span id="cb12-1386"><a href="#cb12-1386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1387"><a href="#cb12-1387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1388"><a href="#cb12-1388" aria-hidden="true" tabindex="-1"></a>Übrigens sind Modelle - und Diagramme sind Modelle - immer eine Vereinfachung,</span>
+<span id="cb12-1389"><a href="#cb12-1389" aria-hidden="true" tabindex="-1"></a>lassen also Informationen weg.</span>
+<span id="cb12-1390"><a href="#cb12-1390" aria-hidden="true" tabindex="-1"></a>Manchmal auch wichtige Informationen. <span class="co">[</span><span class="ot">Dieses Beispiel</span><span class="co">](https://www.autodesk.com/research/publications/same-stats-different-graphs)</span> zeigt, wie etwa Histogramme wichtige Informationen unter den Tisch fallen lassen.</span>
+<span id="cb12-1391"><a href="#cb12-1391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1392"><a href="#cb12-1392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1393"><a href="#cb12-1393" aria-hidden="true" tabindex="-1"></a>Ein weiteres R-Paket zur Erstellung ansprechender Datenvisualisierung heißt <span class="co">[</span><span class="ot">`ggstatsplot`</span><span class="co">](https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md)</span>.</span>
+<span id="cb12-1394"><a href="#cb12-1394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1395"><a href="#cb12-1395" aria-hidden="true" tabindex="-1"></a>@fig-ggstatsplot zeigt ein <span class="co">[</span><span class="ot">Histogramm</span><span class="co">](https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md#gghistostats)</span>, das mit <span class="in">`ggstatsplot`</span> erstellt wurde.</span>
+<span id="cb12-1396"><a href="#cb12-1396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1397"><a href="#cb12-1397" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1400"><a href="#cb12-1400" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-1401"><a href="#cb12-1401" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-ggstatsplot</span></span>
+<span id="cb12-1402"><a href="#cb12-1402" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Ein Histogramm mit ggstatsplot</span></span>
+<span id="cb12-1403"><a href="#cb12-1403" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggstatsplot)</span>
+<span id="cb12-1404"><a href="#cb12-1404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1405"><a href="#cb12-1405" aria-hidden="true" tabindex="-1"></a><span class="fu">gghistostats</span>(</span>
+<span id="cb12-1406"><a href="#cb12-1406" aria-hidden="true" tabindex="-1"></a>  <span class="at">data       =</span> mariokart2,</span>
+<span id="cb12-1407"><a href="#cb12-1407" aria-hidden="true" tabindex="-1"></a>  <span class="at">x          =</span> total_pr,</span>
+<span id="cb12-1408"><a href="#cb12-1408" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab       =</span> <span class="st">"Verkaufspreis"</span> </span>
+<span id="cb12-1409"><a href="#cb12-1409" aria-hidden="true" tabindex="-1"></a>  <span class="co"># results.subtitle = FALSE   # unterdrückt statistische Kennzahlen</span></span>
+<span id="cb12-1410"><a href="#cb12-1410" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-1411"><a href="#cb12-1411" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-1412"><a href="#cb12-1412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1413"><a href="#cb12-1413" aria-hidden="true" tabindex="-1"></a>Die Menge der statistischen Kennzahlen bei <span class="in">`ggstatsplot`</span> schindet ordentlich Eindruck. </span>
+<span id="cb12-1414"><a href="#cb12-1414" aria-hidden="true" tabindex="-1"></a>Möchte man auf die Kennzahlen verzichten, so nutzt man den Schalter <span class="in">`results.subtitle = FALSE`</span>.^<span class="co">[</span><span class="ot">Weitere Hinweise finden sich [auf der Hilfeseite der Funktion](https://indrajeetpatil.github.io/ggstatsplot/articles/web_only/gghistostats.html)</span><span class="co">]</span>.</span>
+<span id="cb12-1415"><a href="#cb12-1415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1416"><a href="#cb12-1416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1417"><a href="#cb12-1417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1418"><a href="#cb12-1418" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1419"><a href="#cb12-1419" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1420"><a href="#cb12-1420" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1421"><a href="#cb12-1421" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1422"><a href="#cb12-1422" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;   🧑‍🎓 Ich würde gerne mal Beispiele von *schlechten* Datendiagrammen sehen.</span></span>
+<span id="cb12-1423"><a href="#cb12-1423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1424"><a href="#cb12-1424" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;   👨‍🏫 Auf der Seite von </span><span class="co">[</span><span class="ot">Flowingdata</span><span class="co">](https://flowingdata.com/category/visualization/ugly-visualization/)</span><span class="at"> findet sich eine nette Liste mit schlechten Datendiagrammen.</span></span>
+<span id="cb12-1425"><a href="#cb12-1425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1426"><a href="#cb12-1426" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1427"><a href="#cb12-1427" aria-hidden="true" tabindex="-1"></a><span class="fu">### Farbwahl {#sec-farbwahl}</span></span>
+<span id="cb12-1428"><a href="#cb12-1428" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1429"><a href="#cb12-1429" aria-hidden="true" tabindex="-1"></a>Einige Überlegungen zur Farbwahl findet sich <span class="co">[</span><span class="ot">in diesem Post</span><span class="co">](https://data-se.netlify.app/2023/06/30/farbpaletten/)</span>; ausführlichere Erläuterung bietet @wilke_fundamentals_2019, s. <span class="co">[</span><span class="ot">Kap. 4</span><span class="co">](https://clauswilke.com/dataviz/color-basics.html)</span>.</span>
+<span id="cb12-1430"><a href="#cb12-1430" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1431"><a href="#cb12-1431" aria-hidden="true" tabindex="-1"></a>So ist die Farbpalette von <span class="co">[</span><span class="ot">@okabeito</span><span class="co">]</span> empfehlenswert, da sie auch bei Schwarz-Weiß-Druck und bei Sehschwächen die Farben noch recht gut unterscheiden lässt.</span>
+<span id="cb12-1432"><a href="#cb12-1432" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1435"><a href="#cb12-1435" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-1436"><a href="#cb12-1436" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggokabeito)  <span class="co"># installieren nicht vergessen</span></span>
+<span id="cb12-1437"><a href="#cb12-1437" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1438"><a href="#cb12-1438" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-1439"><a href="#cb12-1439" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggboxplot</span>(<span class="at">x =</span> <span class="st">"cond"</span>, <span class="at">y =</span> <span class="st">"total_pr"</span>, <span class="at">fill =</span> <span class="st">"cond"</span>) <span class="sc">+</span></span>
+<span id="cb12-1440"><a href="#cb12-1440" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_okabe_ito</span>()</span>
+<span id="cb12-1441"><a href="#cb12-1441" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-1442"><a href="#cb12-1442" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1443"><a href="#cb12-1443" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1444"><a href="#cb12-1444" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1445"><a href="#cb12-1445" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1446"><a href="#cb12-1446" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1447"><a href="#cb12-1447" aria-hidden="true" tabindex="-1"></a><span class="fu">## Aufgaben</span></span>
+<span id="cb12-1448"><a href="#cb12-1448" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1449"><a href="#cb12-1449" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1450"><a href="#cb12-1450" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span><span class="co">[</span><span class="ot">boxhist</span><span class="co">](https://datenwerk.netlify.app/posts/boxhist/boxhist.html)</span></span>
+<span id="cb12-1451"><a href="#cb12-1451" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span><span class="co">[</span><span class="ot">max-corr1</span><span class="co">](https://datenwerk.netlify.app/posts/max-corr1/max-corr1.html)</span></span>
+<span id="cb12-1452"><a href="#cb12-1452" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span><span class="co">[</span><span class="ot">max-corr2</span><span class="co">](https://datenwerk.netlify.app/posts/max-corr2/max-corr2.html)</span></span>
+<span id="cb12-1453"><a href="#cb12-1453" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span><span class="co">[</span><span class="ot">Histogramm-in-Boxplot</span><span class="co">](https://datenwerk.netlify.app/posts/histogramm-in-boxplot/histogramm-in-boxplot)</span></span>
+<span id="cb12-1454"><a href="#cb12-1454" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span><span class="co">[</span><span class="ot">Diamonds-Histogramm-Vergleich2</span><span class="co">](https://datenwerk.netlify.app/posts/diamonds-histogramm-vergleich2/diamonds-histogramm-vergleich2)</span></span>
+<span id="cb12-1455"><a href="#cb12-1455" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span><span class="co">[</span><span class="ot">Boxplot-Aussagen</span><span class="co">](https://datenwerk.netlify.app/posts/boxplot-aussagen/boxplot-aussagen)</span></span>
+<span id="cb12-1456"><a href="#cb12-1456" aria-hidden="true" tabindex="-1"></a><span class="ss">7. </span><span class="co">[</span><span class="ot">boxplots-de1a</span><span class="co">](https://datenwerk.netlify.app/posts/boxplots-de1a/boxplots-de1a.html)</span></span>
+<span id="cb12-1457"><a href="#cb12-1457" aria-hidden="true" tabindex="-1"></a><span class="ss">9. </span><span class="co">[</span><span class="ot">movies-vis1</span><span class="co">](https://datenwerk.netlify.app/posts/movies-vis1/movies-vis1.html)</span></span>
+<span id="cb12-1458"><a href="#cb12-1458" aria-hidden="true" tabindex="-1"></a><span class="ss">10. </span><span class="co">[</span><span class="ot">movies-vis2</span><span class="co">](https://datenwerk.netlify.app/posts/movies-vis2/movies-vis2.html)</span></span>
+<span id="cb12-1459"><a href="#cb12-1459" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1460"><a href="#cb12-1460" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1461"><a href="#cb12-1461" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1462"><a href="#cb12-1462" aria-hidden="true" tabindex="-1"></a><span class="fu">## Literatur</span></span>
+<span id="cb12-1463"><a href="#cb12-1463" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1464"><a href="#cb12-1464" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-1465"><a href="#cb12-1465" aria-hidden="true" tabindex="-1"></a></span>
+</code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 

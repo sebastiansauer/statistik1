@@ -58,6 +58,13 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 ```
 
 
+:::{#exr-los}
+Importieren Sie den Datensatz `mariokart`. 
+Probieren Sie alle vorgestellten Verben des Datenjudos aus,
+zunächst in dem Sie einfach den R-Code kopieren und selber ausführen.$\square$
+:::
+
+
 
 ### Frag den Bot
 
@@ -152,6 +159,7 @@ das hat irgendwie Eindruck geschindet...
 Naja, jedenfalls müssen Sie jetzt mal zeigen, dass Sie nicht nur schlaue Sprüche draufhaben, sondern auch die Daten ordentlich abbürsten können.
 Sie analysieren dafür im Folgenden den Datensatz `mariokart`. Na, dann los.$\square$
 :::
+
 
 ## Die Verben des Datenjudos
 
@@ -268,6 +276,9 @@ mario_sortiert <- arrange(mariokart, -total_pr)
 ```
 
 
+:::{#exr-arrange2}
+Sortierne Sie die Mariokart-Daten absteigend nach der Anzahl der beigelegten Lenkräder.$\square$
+:::
 
 ### Zeilen filtern: `filter`
 
@@ -332,7 +343,6 @@ welche ein Photo haben,
 mit anderen Worten, Auktionen (Beobachtungen) bei denen gilt: `stock_photo == TRUE`.$\square$
 :::
 
-:::{#exm-filter2}
 
 ### Komplexeres Filtern
 
@@ -356,6 +366,20 @@ mario_filter2
 
 Hier könnte man noch viele interessante Hypothesen prüfen, denken Sie sich und tun das auch ... $\square$
 :::
+
+
+
+:::{#exr-filter2}
+Filtern Sie die Spiele mit nur einem Lenkrad und ohne Versandkosten.$\square$
+:::
+
+
+
+:::{#exr-filter3}
+Filtern Sie die Spiele mit nur einem Lenkrad mit überdurchschnittlichen Verkaufspreis. 
+Tipp: Nutzen Sie die Funtion `describe_distribution(name_der_tabelle)`, um den Mittelwert einer Variable des Datensatzes zu erfahren.$\square$
+:::
+
 
 ### Spalten auswählen mit `select`
 
@@ -477,7 +501,7 @@ p_summ
 mariokart_neu <- summarise(mariokart, preis_mw = mean(total_pr))
 mariokart_neu
 ```
-Aha! Etwa 50$ erzielt so eine Auktion im Schnitt.$\square$
+Aha! Etwa 50€ erzielt so eine Auktion im Schnitt.$\square$
 :::
 
 
@@ -879,6 +903,13 @@ Allgemeiner: `d |> f(x)` = `f(d, x)`.
 
 ## Fallbeispiel
 
+:::{#exr-fallbsps}
+Bevor Sie die Lösungen der folgenden Fallbeispiele lesen, versuchen Sie die Aufgaben selber zu lösen.
+Ja, ich weiß, es ist hart, nicht gleich auf die Lösungen zu schauen!
+Protipp: Am besten scrollen Sie so, dass Sie die Lösungen nicht gleich sehen.$\square$
+:::
+
+
 
 ### Forschungsfrage 1
 
@@ -1003,6 +1034,79 @@ Der gewichtete Mittelwert würde wiederum zum korrekten Ergebnis, 50 Euro, führ
 ## Fallstudie
 
 ![Possierlich: Die Pinguine](img/penguins.png){#fig-penguins width="50%"}
+
+:::{#exr-peng-start}
+Machen Sie sich zunächst mit dem Pinguin-Datensatz vertraut. Fokussieren Sie sich auf die Zielvariable *Gewicht*.
+Die folgende Datenapp ermöglicht Ihnen, die Verteilung des Körpergewichts zu betrachten, wobei sie die Pinguin-Spezies filtern können sowie eine Mindestlänge des Schnabels verlangen können.
+$\square$
+:::
+
+
+
+
+```{ojs}
+//| panel: input
+//| echo: false
+viewof bill_length_min = Inputs.range(
+  [32, 50], 
+  {value: 35, step: 1, label: "Bill length (min):"}
+)
+viewof islands = Inputs.checkbox(
+  ["Torgersen", "Biscoe", "Dream"], 
+  { value: ["Torgersen", "Biscoe"], 
+    label: "Islands:"
+  }
+)
+```
+
+::: {.panel-tabset}
+
+## Plot
+
+```{ojs}
+//| echo: false
+Plot.rectY(filtered, 
+  Plot.binX(
+    {y: "count"}, 
+    {x: "body_mass_g", fill: "species", thresholds: 20}
+  ))
+  .plot({
+    facet: {
+      data: filtered,
+      x: "sex",
+      y: "species",
+      marginRight: 80
+    },
+    marks: [
+      Plot.frame(),
+    ]
+  }
+)
+```
+
+## Data
+
+```{ojs}
+//| echo: false
+Inputs.table(filtered)
+```
+
+:::
+
+```{ojs}
+//| echo: false
+data = FileAttachment("daten/penguins.csv").csv({ typed: true })
+```
+
+```{ojs}
+//| echo: false
+filtered = data.filter(function(penguin) {
+  return bill_length_min < penguin.bill_length_mm &&
+         islands.includes(penguin.island);
+})
+```
+
+
 
 Bearbeiten Sie die [Fallstudie zu Pinguinen](https://allisonhorst.shinyapps.io/dplyr-learnr/#section-welcome) von Allison Horst.
 Sie können die Teile auslassen, die Themen beinhalten,

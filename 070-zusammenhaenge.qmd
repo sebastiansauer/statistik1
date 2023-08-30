@@ -123,6 +123,7 @@ d <- tibble::tribble(
 
 # cor(d$punkte, d$lernzeit)
 #plot(d$lernzeit, d$punkte)
+cov_xy <- cov(d$y, d$x)
 ```
 
 
@@ -144,7 +145,7 @@ d %>%
   kable()
 ```
 
-Zeichner wir uns die Daten als Streudiagramm, s. @fig-delta-rect.
+Zeichnen wir uns die Daten als Streudiagramm, s. @fig-delta-rect.
 Dabei zeichnen wir noch *Abweichungsrechtecke* ein.
 
 
@@ -158,11 +159,11 @@ Wir bezeichnen mit $dx_i$ die Distanz (Abweichung) vom Mittelwert $\bar{x}$ bis 
 #| echo: false
 #| label: fig-delta-rect
 #| fig-cap: "Die Kovarianz als mittleres Abweichungsrechteck. In jedem der vier Quadranten (Q1, Q2, Q3, Q4) ist das Vorzeichen der Abweichungsrechtecke dargestellt. Die Farben der Abweichungsrechtecke spiegeln das Vorzeichen wider."
+p_cov <- 
 ggplot(d) +
   aes(x = x, y = y) +
   geom_vline(xintercept = mean(d$x), linetype = "dashed") +
   geom_hline(yintercept = mean(d$y), linetype = "dashed") +
-  geom_point(size = 2, color = "blue") +
   geom_rect(aes(xmin = x, xmax = x_avg, ymin = y, ymax = y_avg,
                 fill = factor(cov_sign)),
             alpha = .5) +
@@ -173,9 +174,13 @@ ggplot(d) +
   annotate("label", x = Inf, y = Inf, label = "Q1: +", hjust = "right", vjust = "top") +
   annotate("label", x = Inf, y = -Inf, label = "Q2: -", hjust = "right", vjust = "bottom") +
   annotate("label", x = -Inf, y = -Inf, label = "Q3: +", hjust = "left", vjust = "bottom") +
-  annotate("label", x = -Inf, y = Inf, label = "Q4: -", hjust = "left", vjust = "top") 
+  annotate("label", x = -Inf, y = Inf, label = "Q4: -", hjust = "left", vjust = "top") +
+    geom_point(size = 2, color = "black") +
+  scale_fill_okabeito()
 
+p_cov
 ```
+
 
 
 Stellen Sie sich vor, wir legen alle Rechtecke zusammen aus @fig-delta-rect.
@@ -218,7 +223,34 @@ aber der Mittelwert hat gegenüber der Summe den Vorteil, dass er unabhängig is
 Das resultierende Rechteck nennen wir das *mittlere Abweichungsrechteck*.
 
 
-Ein Maß für den Zusammenhang von Lernzeit und Klausurpunkte ist also die *Größe des mittleren Abweichungsrechtecks*.
+Ein Maß für den Zusammenhang von Lernzeit und Klausurpunkte ist also die *Fläche des mittleren Abweichungsrechtecks*, s. @fig-cov2.
+
+
+```{r}
+#| echo: false
+#| label: fig-cov2
+#| fig-cap: "Die Kovarianz als mittleres Abweichungsrechteck. Die Fläche der Rechteckts entspricht dem Wert der Kovarianz."
+p_cov2 <- 
+p_cov +
+  geom_rect(aes(xmin = -Inf, 
+                xmax = Inf, 
+                ymin = -Inf, 
+                ymax = Inf), 
+            fill = "gray", 
+            alpha = 0.2, 
+            inherit.aes = FALSE) +
+  geom_rect(aes(xmin = mean(d$x) - sqrt(cov_xy)/2, 
+                xmax = mean(d$x) + sqrt(cov_xy)/2,
+                ymin = mean(d$y) - sqrt(cov_xy)/2, 
+                ymax = mean(d$y) + sqrt(cov_xy)/2)) +
+  geom_text(aes(x = mean(d$x), y = mean(d$y), label = "Kovarianz"),
+            color = "white")
+
+p_cov2
+```
+
+
+
 
 
 ### Kovarianz {#sec-kov}
@@ -226,7 +258,7 @@ Ein Maß für den Zusammenhang von Lernzeit und Klausurpunkte ist also die *Grö
 :::{#def-kov}
 ### Kovarianz
 Die Kovarianz ist definiert als die Fläche des mittleren Abweichungsrechtecks.
-Sie ist ein Maß für die Stärke und Richtung des linearen Zusammenhangs zweier metrischer Variablen.$\square$
+Sie ist ein Maß für die Stärke und Richtung des linearen Zusammenhangs zweier metrischer Variablen, s. fig-cov2.$\square$
 :::
 
 

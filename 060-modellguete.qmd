@@ -517,6 +517,8 @@ d <-
          pos = ifelse(delta > 0, "positiv", "negativ"),
          delta_sq = delta^2)
 
+var_smpl <- mean(d$delta_sq)
+
 p_deltas <- 
 d %>%   
   ggplot(aes(x = id, y = y)) +
@@ -548,7 +550,7 @@ d %>%
   labs(linetype = "",
        x = "",
        y = "")  +
-  scale_y_continuous(limits = c(-.3, .2)) +
+  scale_y_continuous(limits = c(-.3, .1)) +
   scale_x_continuous(limits = c(0, 5)) +
   theme_minimal()
 
@@ -561,15 +563,20 @@ p_var <-
              hjust = 0,
              y = mean(d$y), 
              label = paste0("MW = ", round(mean(d$y), 2))) +
-    annotate("rect", xmin =  5, ymin = 0, xmax = 5.2, ymax = .2, fill = "#56B4E9FF") +
-    scale_y_continuous(limits = c(-.3, .2)) +
+    annotate("rect", 
+             xmin =  5, ymin = 0, xmax = 5.2, ymax = var_smpl, 
+             fill = "#56B4E9FF") +
+    scale_y_continuous(limits = c(-.3, .1)) +
     scale_x_continuous(limits = c(0, 6)) +
     annotate(geom = "label",
                   x = 5,
                   hjust = 0.5,
                   y = -0.01,
                   label = "Varianz") +
-  theme_minimal()
+  theme_minimal() +
+  annotate("label", x = 1, y = -0.1,
+           hjust = 0,
+           label = "0.3 = (0.01 + 0.01 + 0.01 + 0.09)*4")
 
 p_deltas
 p_var
@@ -693,7 +700,7 @@ Um die Standardabweichung zu berechnen, berechnet man zunächst die *Varianz*, $
 Als Formel ausgedrückt, lautet die Definition der Varianz^[sog. unkorrigierte Stichprobenvarianz] einer Stichprobe:
 
 
-$${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\bar {y}}\right)^{2}.}$$
+$${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{n}}\sum _{i=1}^{n}dy_i^{2}.}$$
 
 
 :::{#def-var}

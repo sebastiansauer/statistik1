@@ -580,7 +580,7 @@ Hinweis
 <p>Die Varianz ist also ein Maß, das die typische Abweichung der Beobachtungen vom Mittelwert in eine Zahl fasst.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
-<div id="fig-mse" class="cell quarto-layout-panel" data-hash="060-modellguete_cache/html/fig-mse_46d295440824a2fc491d9151d83f9017">
+<div id="fig-mse" class="cell quarto-layout-panel" data-hash="060-modellguete_cache/html/fig-mse_d3729cea669905b328816662e291c989">
 <figure class="figure"><div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-mse-1" class="quarto-figure quarto-figure-center anchored">
@@ -669,7 +669,7 @@ Hinweis
 <li>Teile durch die Anzahl <span class="math inline">\(N\)</span> der Werte</li>
 </ol>
 <p>Als Formel ausgedrückt, lautet die Definition der Varianz<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> einer Stichprobe:</p>
-<p><span class="math display">\[{\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\bar {y}}\right)^{2}.}\]</span></p>
+<p><span class="math display">\[{\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{n}}\sum _{i=1}^{n}dy_i^{2}.}\]</span></p>
 <div id="def-var" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 8.2 (Varianz) </strong></span>Die Varianz (<span class="math inline">\(s^2, \sigma^2\)</span>) ist definiert als der Mittelwert der quadradrierten Abweichungen (vom Mittelwert).<span class="math inline">\(\square\)</span></p>
 </div>
@@ -1713,331 +1713,338 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb12-527"><a href="#cb12-527" aria-hidden="true" tabindex="-1"></a>         <span class="at">pos =</span> <span class="fu">ifelse</span>(delta <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">"positiv"</span>, <span class="st">"negativ"</span>),</span>
 <span id="cb12-528"><a href="#cb12-528" aria-hidden="true" tabindex="-1"></a>         <span class="at">delta_sq =</span> delta<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb12-529"><a href="#cb12-529" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-530"><a href="#cb12-530" aria-hidden="true" tabindex="-1"></a>p_deltas <span class="ot">&lt;-</span> </span>
-<span id="cb12-531"><a href="#cb12-531" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span>   </span>
-<span id="cb12-532"><a href="#cb12-532" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> id, <span class="at">y =</span> y)) <span class="sc">+</span></span>
-<span id="cb12-533"><a href="#cb12-533" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">mean</span>(d<span class="sc">$</span>y), <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb12-534"><a href="#cb12-534" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">mean</span>(d<span class="sc">$</span>y),</span>
-<span id="cb12-535"><a href="#cb12-535" aria-hidden="true" tabindex="-1"></a>                   <span class="at">yend =</span> y,</span>
-<span id="cb12-536"><a href="#cb12-536" aria-hidden="true" tabindex="-1"></a>                   <span class="at">x =</span> id,</span>
-<span id="cb12-537"><a href="#cb12-537" aria-hidden="true" tabindex="-1"></a>                   <span class="at">xend =</span> id,</span>
-<span id="cb12-538"><a href="#cb12-538" aria-hidden="true" tabindex="-1"></a>                   <span class="at">linetype =</span> pos), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb12-539"><a href="#cb12-539" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"label"</span>,</span>
-<span id="cb12-540"><a href="#cb12-540" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="dv">0</span>,</span>
-<span id="cb12-541"><a href="#cb12-541" aria-hidden="true" tabindex="-1"></a>           <span class="at">hjust =</span> <span class="dv">0</span>,</span>
-<span id="cb12-542"><a href="#cb12-542" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="fu">mean</span>(d<span class="sc">$</span>y), </span>
-<span id="cb12-543"><a href="#cb12-543" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"MW = "</span>, <span class="fu">round</span>(<span class="fu">mean</span>(d<span class="sc">$</span>y), <span class="dv">2</span>)), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb12-544"><a href="#cb12-544" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> y_avg,</span>
-<span id="cb12-545"><a href="#cb12-545" aria-hidden="true" tabindex="-1"></a>                <span class="at">ymax =</span> y,</span>
-<span id="cb12-546"><a href="#cb12-546" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> id,</span>
-<span id="cb12-547"><a href="#cb12-547" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmax =</span> id<span class="sc">+</span>delta_abs),</span>
-<span id="cb12-548"><a href="#cb12-548" aria-hidden="true" tabindex="-1"></a>            <span class="at">fill =</span> <span class="st">"#E69F00FF"</span> ,</span>
-<span id="cb12-549"><a href="#cb12-549" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb12-550"><a href="#cb12-550" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(delta_sq,<span class="dv">3</span>)),</span>
-<span id="cb12-551"><a href="#cb12-551" aria-hidden="true" tabindex="-1"></a>            <span class="at">hjust =</span> <span class="st">"left"</span>, </span>
-<span id="cb12-552"><a href="#cb12-552" aria-hidden="true" tabindex="-1"></a>            <span class="at">nudge_x =</span> <span class="fl">0.05</span>,</span>
-<span id="cb12-553"><a href="#cb12-553" aria-hidden="true" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="fu">ifelse</span>(d<span class="sc">$</span>pos <span class="sc">==</span> <span class="st">"positiv"</span>, <span class="st">"top"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb12-554"><a href="#cb12-554" aria-hidden="true" tabindex="-1"></a>            <span class="at">nudge_y =</span> <span class="fu">ifelse</span>(d<span class="sc">$</span>pos <span class="sc">==</span> <span class="st">"positiv"</span>, <span class="sc">-</span><span class="fl">0.05</span>, <span class="fl">0.05</span>),</span>
-<span id="cb12-555"><a href="#cb12-555" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">"#E69F00FF"</span>,</span>
-<span id="cb12-556"><a href="#cb12-556" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">6</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb12-557"><a href="#cb12-557" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">5</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb12-558"><a href="#cb12-558" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">linetype =</span> <span class="st">""</span>,</span>
-<span id="cb12-559"><a href="#cb12-559" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">""</span>,</span>
-<span id="cb12-560"><a href="#cb12-560" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">""</span>)  <span class="sc">+</span></span>
-<span id="cb12-561"><a href="#cb12-561" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span>.<span class="dv">3</span>, .<span class="dv">2</span>)) <span class="sc">+</span></span>
-<span id="cb12-562"><a href="#cb12-562" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
-<span id="cb12-563"><a href="#cb12-563" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb12-564"><a href="#cb12-564" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-565"><a href="#cb12-565" aria-hidden="true" tabindex="-1"></a>p_var <span class="ot">&lt;-</span> </span>
-<span id="cb12-566"><a href="#cb12-566" aria-hidden="true" tabindex="-1"></a>  d <span class="sc">%&gt;%</span>   </span>
-<span id="cb12-567"><a href="#cb12-567" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> id, <span class="at">y =</span> y)) <span class="sc">+</span> </span>
-<span id="cb12-568"><a href="#cb12-568" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">mean</span>(d<span class="sc">$</span>y), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb12-569"><a href="#cb12-569" aria-hidden="true" tabindex="-1"></a>     <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"label"</span>,</span>
-<span id="cb12-570"><a href="#cb12-570" aria-hidden="true" tabindex="-1"></a>             <span class="at">x =</span> <span class="dv">0</span>,</span>
-<span id="cb12-571"><a href="#cb12-571" aria-hidden="true" tabindex="-1"></a>             <span class="at">hjust =</span> <span class="dv">0</span>,</span>
-<span id="cb12-572"><a href="#cb12-572" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> <span class="fu">mean</span>(d<span class="sc">$</span>y), </span>
-<span id="cb12-573"><a href="#cb12-573" aria-hidden="true" tabindex="-1"></a>             <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"MW = "</span>, <span class="fu">round</span>(<span class="fu">mean</span>(d<span class="sc">$</span>y), <span class="dv">2</span>))) <span class="sc">+</span></span>
-<span id="cb12-574"><a href="#cb12-574" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">"rect"</span>, <span class="at">xmin =</span>  <span class="dv">5</span>, <span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">xmax =</span> <span class="fl">5.2</span>, <span class="at">ymax =</span> .<span class="dv">2</span>, <span class="at">fill =</span> <span class="st">"#56B4E9FF"</span>) <span class="sc">+</span></span>
-<span id="cb12-575"><a href="#cb12-575" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span>.<span class="dv">3</span>, .<span class="dv">2</span>)) <span class="sc">+</span></span>
-<span id="cb12-576"><a href="#cb12-576" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">6</span>)) <span class="sc">+</span></span>
-<span id="cb12-577"><a href="#cb12-577" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"label"</span>,</span>
-<span id="cb12-578"><a href="#cb12-578" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> <span class="dv">5</span>,</span>
-<span id="cb12-579"><a href="#cb12-579" aria-hidden="true" tabindex="-1"></a>                  <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
-<span id="cb12-580"><a href="#cb12-580" aria-hidden="true" tabindex="-1"></a>                  <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.01</span>,</span>
-<span id="cb12-581"><a href="#cb12-581" aria-hidden="true" tabindex="-1"></a>                  <span class="at">label =</span> <span class="st">"Varianz"</span>) <span class="sc">+</span></span>
-<span id="cb12-582"><a href="#cb12-582" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb12-583"><a href="#cb12-583" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-584"><a href="#cb12-584" aria-hidden="true" tabindex="-1"></a>p_deltas</span>
-<span id="cb12-585"><a href="#cb12-585" aria-hidden="true" tabindex="-1"></a>p_var</span>
-<span id="cb12-586"><a href="#cb12-586" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-587"><a href="#cb12-587" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-588"><a href="#cb12-588" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-589"><a href="#cb12-589" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-530"><a href="#cb12-530" aria-hidden="true" tabindex="-1"></a>var_smpl <span class="ot">&lt;-</span> <span class="fu">mean</span>(d<span class="sc">$</span>delta_sq)</span>
+<span id="cb12-531"><a href="#cb12-531" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-532"><a href="#cb12-532" aria-hidden="true" tabindex="-1"></a>p_deltas <span class="ot">&lt;-</span> </span>
+<span id="cb12-533"><a href="#cb12-533" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span>   </span>
+<span id="cb12-534"><a href="#cb12-534" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> id, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb12-535"><a href="#cb12-535" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">mean</span>(d<span class="sc">$</span>y), <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-536"><a href="#cb12-536" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">mean</span>(d<span class="sc">$</span>y),</span>
+<span id="cb12-537"><a href="#cb12-537" aria-hidden="true" tabindex="-1"></a>                   <span class="at">yend =</span> y,</span>
+<span id="cb12-538"><a href="#cb12-538" aria-hidden="true" tabindex="-1"></a>                   <span class="at">x =</span> id,</span>
+<span id="cb12-539"><a href="#cb12-539" aria-hidden="true" tabindex="-1"></a>                   <span class="at">xend =</span> id,</span>
+<span id="cb12-540"><a href="#cb12-540" aria-hidden="true" tabindex="-1"></a>                   <span class="at">linetype =</span> pos), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-541"><a href="#cb12-541" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"label"</span>,</span>
+<span id="cb12-542"><a href="#cb12-542" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="dv">0</span>,</span>
+<span id="cb12-543"><a href="#cb12-543" aria-hidden="true" tabindex="-1"></a>           <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb12-544"><a href="#cb12-544" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="fu">mean</span>(d<span class="sc">$</span>y), </span>
+<span id="cb12-545"><a href="#cb12-545" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"MW = "</span>, <span class="fu">round</span>(<span class="fu">mean</span>(d<span class="sc">$</span>y), <span class="dv">2</span>)), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-546"><a href="#cb12-546" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> y_avg,</span>
+<span id="cb12-547"><a href="#cb12-547" aria-hidden="true" tabindex="-1"></a>                <span class="at">ymax =</span> y,</span>
+<span id="cb12-548"><a href="#cb12-548" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> id,</span>
+<span id="cb12-549"><a href="#cb12-549" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmax =</span> id<span class="sc">+</span>delta_abs),</span>
+<span id="cb12-550"><a href="#cb12-550" aria-hidden="true" tabindex="-1"></a>            <span class="at">fill =</span> <span class="st">"#E69F00FF"</span> ,</span>
+<span id="cb12-551"><a href="#cb12-551" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-552"><a href="#cb12-552" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(delta_sq,<span class="dv">3</span>)),</span>
+<span id="cb12-553"><a href="#cb12-553" aria-hidden="true" tabindex="-1"></a>            <span class="at">hjust =</span> <span class="st">"left"</span>, </span>
+<span id="cb12-554"><a href="#cb12-554" aria-hidden="true" tabindex="-1"></a>            <span class="at">nudge_x =</span> <span class="fl">0.05</span>,</span>
+<span id="cb12-555"><a href="#cb12-555" aria-hidden="true" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="fu">ifelse</span>(d<span class="sc">$</span>pos <span class="sc">==</span> <span class="st">"positiv"</span>, <span class="st">"top"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb12-556"><a href="#cb12-556" aria-hidden="true" tabindex="-1"></a>            <span class="at">nudge_y =</span> <span class="fu">ifelse</span>(d<span class="sc">$</span>pos <span class="sc">==</span> <span class="st">"positiv"</span>, <span class="sc">-</span><span class="fl">0.05</span>, <span class="fl">0.05</span>),</span>
+<span id="cb12-557"><a href="#cb12-557" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">"#E69F00FF"</span>,</span>
+<span id="cb12-558"><a href="#cb12-558" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">6</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-559"><a href="#cb12-559" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">5</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-560"><a href="#cb12-560" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">linetype =</span> <span class="st">""</span>,</span>
+<span id="cb12-561"><a href="#cb12-561" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">""</span>,</span>
+<span id="cb12-562"><a href="#cb12-562" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">""</span>)  <span class="sc">+</span></span>
+<span id="cb12-563"><a href="#cb12-563" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span>.<span class="dv">3</span>, .<span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb12-564"><a href="#cb12-564" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb12-565"><a href="#cb12-565" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb12-566"><a href="#cb12-566" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-567"><a href="#cb12-567" aria-hidden="true" tabindex="-1"></a>p_var <span class="ot">&lt;-</span> </span>
+<span id="cb12-568"><a href="#cb12-568" aria-hidden="true" tabindex="-1"></a>  d <span class="sc">%&gt;%</span>   </span>
+<span id="cb12-569"><a href="#cb12-569" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> id, <span class="at">y =</span> y)) <span class="sc">+</span> </span>
+<span id="cb12-570"><a href="#cb12-570" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">mean</span>(d<span class="sc">$</span>y), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb12-571"><a href="#cb12-571" aria-hidden="true" tabindex="-1"></a>     <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"label"</span>,</span>
+<span id="cb12-572"><a href="#cb12-572" aria-hidden="true" tabindex="-1"></a>             <span class="at">x =</span> <span class="dv">0</span>,</span>
+<span id="cb12-573"><a href="#cb12-573" aria-hidden="true" tabindex="-1"></a>             <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb12-574"><a href="#cb12-574" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> <span class="fu">mean</span>(d<span class="sc">$</span>y), </span>
+<span id="cb12-575"><a href="#cb12-575" aria-hidden="true" tabindex="-1"></a>             <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"MW = "</span>, <span class="fu">round</span>(<span class="fu">mean</span>(d<span class="sc">$</span>y), <span class="dv">2</span>))) <span class="sc">+</span></span>
+<span id="cb12-576"><a href="#cb12-576" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">"rect"</span>, </span>
+<span id="cb12-577"><a href="#cb12-577" aria-hidden="true" tabindex="-1"></a>             <span class="at">xmin =</span>  <span class="dv">5</span>, <span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">xmax =</span> <span class="fl">5.2</span>, <span class="at">ymax =</span> var_smpl, </span>
+<span id="cb12-578"><a href="#cb12-578" aria-hidden="true" tabindex="-1"></a>             <span class="at">fill =</span> <span class="st">"#56B4E9FF"</span>) <span class="sc">+</span></span>
+<span id="cb12-579"><a href="#cb12-579" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span>.<span class="dv">3</span>, .<span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb12-580"><a href="#cb12-580" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">6</span>)) <span class="sc">+</span></span>
+<span id="cb12-581"><a href="#cb12-581" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"label"</span>,</span>
+<span id="cb12-582"><a href="#cb12-582" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> <span class="dv">5</span>,</span>
+<span id="cb12-583"><a href="#cb12-583" aria-hidden="true" tabindex="-1"></a>                  <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb12-584"><a href="#cb12-584" aria-hidden="true" tabindex="-1"></a>                  <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.01</span>,</span>
+<span id="cb12-585"><a href="#cb12-585" aria-hidden="true" tabindex="-1"></a>                  <span class="at">label =</span> <span class="st">"Varianz"</span>) <span class="sc">+</span></span>
+<span id="cb12-586"><a href="#cb12-586" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb12-587"><a href="#cb12-587" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"label"</span>, <span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.1</span>,</span>
+<span id="cb12-588"><a href="#cb12-588" aria-hidden="true" tabindex="-1"></a>           <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb12-589"><a href="#cb12-589" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="st">"0.3 = (0.01 + 0.01 + 0.01 + 0.09)*4"</span>)</span>
 <span id="cb12-590"><a href="#cb12-590" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-591"><a href="#cb12-591" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-592"><a href="#cb12-592" aria-hidden="true" tabindex="-1"></a>Bildquelle: FOM-ifes</span>
-<span id="cb12-593"><a href="#cb12-593" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-591"><a href="#cb12-591" aria-hidden="true" tabindex="-1"></a>p_deltas</span>
+<span id="cb12-592"><a href="#cb12-592" aria-hidden="true" tabindex="-1"></a>p_var</span>
+<span id="cb12-593"><a href="#cb12-593" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-594"><a href="#cb12-594" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-595"><a href="#cb12-595" aria-hidden="true" tabindex="-1"></a>:::{#exm-var}</span>
-<span id="cb12-596"><a href="#cb12-596" aria-hidden="true" tabindex="-1"></a>Sie arbeiten immer noch bei einem Online-Auktionshaus und untersuchen den Verkauf von Videospielen.</span>
-<span id="cb12-597"><a href="#cb12-597" aria-hidden="true" tabindex="-1"></a>Natürlich mit dem Ziel, dass Ihre Firma mehr von dem Zeug verkaufen kann.</span>
+<span id="cb12-595"><a href="#cb12-595" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-596"><a href="#cb12-596" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-597"><a href="#cb12-597" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-598"><a href="#cb12-598" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-599"><a href="#cb12-599" aria-hidden="true" tabindex="-1"></a>Zunächst betrachten Sie die Streuung in den Verkaufspreisen:</span>
+<span id="cb12-599"><a href="#cb12-599" aria-hidden="true" tabindex="-1"></a>Bildquelle: FOM-ifes</span>
 <span id="cb12-600"><a href="#cb12-600" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-603"><a href="#cb12-603" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb12-604"><a href="#cb12-604" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)  <span class="co"># Das Paket muss installiert sein</span></span>
-<span id="cb12-605"><a href="#cb12-605" aria-hidden="true" tabindex="-1"></a>mariokart <span class="ot">&lt;-</span> <span class="fu">data_read</span>(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span>)</span>
-<span id="cb12-606"><a href="#cb12-606" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-607"><a href="#cb12-607" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span></span>
-<span id="cb12-608"><a href="#cb12-608" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">%&gt;%</span></span>
-<span id="cb12-609"><a href="#cb12-609" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>)  <span class="co"># ohne Extremwerte</span></span>
-<span id="cb12-610"><a href="#cb12-610" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-611"><a href="#cb12-611" aria-hidden="true" tabindex="-1"></a>m_summ <span class="ot">&lt;-</span> </span>
-<span id="cb12-612"><a href="#cb12-612" aria-hidden="true" tabindex="-1"></a>  m <span class="sc">%&gt;%</span> </span>
-<span id="cb12-613"><a href="#cb12-613" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb12-614"><a href="#cb12-614" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_mw =</span> <span class="fu">mean</span>(total_pr),</span>
-<span id="cb12-615"><a href="#cb12-615" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_iqr =</span> <span class="fu">IQR</span>(total_pr),</span>
-<span id="cb12-616"><a href="#cb12-616" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_maa =</span> <span class="fu">mean</span>(<span class="fu">abs</span>(total_pr <span class="sc">-</span> <span class="fu">mean</span>(total_pr))),</span>
-<span id="cb12-617"><a href="#cb12-617" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_var =</span> <span class="fu">var</span>(total_pr),</span>
-<span id="cb12-618"><a href="#cb12-618" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_sd =</span> <span class="fu">sd</span>(total_pr))</span>
-<span id="cb12-619"><a href="#cb12-619" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-620"><a href="#cb12-620" aria-hidden="true" tabindex="-1"></a>m_summ</span>
-<span id="cb12-621"><a href="#cb12-621" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-622"><a href="#cb12-622" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-623"><a href="#cb12-623" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-624"><a href="#cb12-624" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-625"><a href="#cb12-625" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-601"><a href="#cb12-601" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-602"><a href="#cb12-602" aria-hidden="true" tabindex="-1"></a>:::{#exm-var}</span>
+<span id="cb12-603"><a href="#cb12-603" aria-hidden="true" tabindex="-1"></a>Sie arbeiten immer noch bei einem Online-Auktionshaus und untersuchen den Verkauf von Videospielen.</span>
+<span id="cb12-604"><a href="#cb12-604" aria-hidden="true" tabindex="-1"></a>Natürlich mit dem Ziel, dass Ihre Firma mehr von dem Zeug verkaufen kann.</span>
+<span id="cb12-605"><a href="#cb12-605" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-606"><a href="#cb12-606" aria-hidden="true" tabindex="-1"></a>Zunächst betrachten Sie die Streuung in den Verkaufspreisen:</span>
+<span id="cb12-607"><a href="#cb12-607" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-610"><a href="#cb12-610" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-611"><a href="#cb12-611" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)  <span class="co"># Das Paket muss installiert sein</span></span>
+<span id="cb12-612"><a href="#cb12-612" aria-hidden="true" tabindex="-1"></a>mariokart <span class="ot">&lt;-</span> <span class="fu">data_read</span>(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span>)</span>
+<span id="cb12-613"><a href="#cb12-613" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-614"><a href="#cb12-614" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span></span>
+<span id="cb12-615"><a href="#cb12-615" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">%&gt;%</span></span>
+<span id="cb12-616"><a href="#cb12-616" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>)  <span class="co"># ohne Extremwerte</span></span>
+<span id="cb12-617"><a href="#cb12-617" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-618"><a href="#cb12-618" aria-hidden="true" tabindex="-1"></a>m_summ <span class="ot">&lt;-</span> </span>
+<span id="cb12-619"><a href="#cb12-619" aria-hidden="true" tabindex="-1"></a>  m <span class="sc">%&gt;%</span> </span>
+<span id="cb12-620"><a href="#cb12-620" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb12-621"><a href="#cb12-621" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_mw =</span> <span class="fu">mean</span>(total_pr),</span>
+<span id="cb12-622"><a href="#cb12-622" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_iqr =</span> <span class="fu">IQR</span>(total_pr),</span>
+<span id="cb12-623"><a href="#cb12-623" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_maa =</span> <span class="fu">mean</span>(<span class="fu">abs</span>(total_pr <span class="sc">-</span> <span class="fu">mean</span>(total_pr))),</span>
+<span id="cb12-624"><a href="#cb12-624" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_var =</span> <span class="fu">var</span>(total_pr),</span>
+<span id="cb12-625"><a href="#cb12-625" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_sd =</span> <span class="fu">sd</span>(total_pr))</span>
 <span id="cb12-626"><a href="#cb12-626" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-627"><a href="#cb12-627" aria-hidden="true" tabindex="-1"></a>Statistiken sind ja schön ... aber Bilder sind auch gut, s. @fig-var.</span>
-<span id="cb12-628"><a href="#cb12-628" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-627"><a href="#cb12-627" aria-hidden="true" tabindex="-1"></a>m_summ</span>
+<span id="cb12-628"><a href="#cb12-628" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-629"><a href="#cb12-629" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-632"><a href="#cb12-632" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb12-633"><a href="#cb12-633" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb12-634"><a href="#cb12-634" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
-<span id="cb12-635"><a href="#cb12-635" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">%&gt;%</span> </span>
-<span id="cb12-636"><a href="#cb12-636" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-637"><a href="#cb12-637" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span>  <span class="co"># ohne Extremwerte</span></span>
-<span id="cb12-638"><a href="#cb12-638" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_density</span>()</span>
-<span id="cb12-639"><a href="#cb12-639" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-640"><a href="#cb12-640" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-641"><a href="#cb12-641" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-642"><a href="#cb12-642" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-645"><a href="#cb12-645" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb12-646"><a href="#cb12-646" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb12-647"><a href="#cb12-647" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Die Verteilung des Verkaufspreises von Mariokart-Spielen </span></span>
-<span id="cb12-648"><a href="#cb12-648" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-var</span></span>
-<span id="cb12-649"><a href="#cb12-649" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
-<span id="cb12-650"><a href="#cb12-650" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
-<span id="cb12-651"><a href="#cb12-651" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - Dichtediagramm mit MW±SD in roter Farbe</span></span>
-<span id="cb12-652"><a href="#cb12-652" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - Violindiagramm mit MW±SD in roter Farbe</span></span>
-<span id="cb12-653"><a href="#cb12-653" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
-<span id="cb12-654"><a href="#cb12-654" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-655"><a href="#cb12-655" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span>  <span class="co"># ohne Extremwerte</span></span>
-<span id="cb12-656"><a href="#cb12-656" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb12-657"><a href="#cb12-657" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> total_pr)) <span class="sc">+</span></span>
-<span id="cb12-658"><a href="#cb12-658" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(<span class="at">data =</span> m_summ, </span>
-<span id="cb12-659"><a href="#cb12-659" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(</span>
-<span id="cb12-660"><a href="#cb12-660" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xmin =</span> pr_mw <span class="sc">-</span> <span class="fl">0.5</span><span class="sc">*</span>(pr_sd),</span>
-<span id="cb12-661"><a href="#cb12-661" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xmax =</span> pr_mw <span class="sc">+</span> <span class="fl">0.5</span><span class="sc">*</span>(pr_sd),</span>
-<span id="cb12-662"><a href="#cb12-662" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ymin =</span> <span class="dv">0</span>,</span>
-<span id="cb12-663"><a href="#cb12-663" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ymax =</span> <span class="cn">Inf</span></span>
-<span id="cb12-664"><a href="#cb12-664" aria-hidden="true" tabindex="-1"></a>               ),</span>
-<span id="cb12-665"><a href="#cb12-665" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> .<span class="dv">5</span>,</span>
-<span id="cb12-666"><a href="#cb12-666" aria-hidden="true" tabindex="-1"></a>            <span class="at">fill =</span> <span class="st">"red"</span>)</span>
-<span id="cb12-667"><a href="#cb12-667" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-668"><a href="#cb12-668" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
-<span id="cb12-669"><a href="#cb12-669" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-670"><a href="#cb12-670" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span>  <span class="co"># ohne Extremwerte</span></span>
-<span id="cb12-671"><a href="#cb12-671" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb12-672"><a href="#cb12-672" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="fu">aes</span>(</span>
-<span id="cb12-673"><a href="#cb12-673" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="dv">1</span>,</span>
-<span id="cb12-674"><a href="#cb12-674" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> total_pr)) <span class="sc">+</span></span>
-<span id="cb12-675"><a href="#cb12-675" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(</span>
-<span id="cb12-676"><a href="#cb12-676" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="dv">1</span>,</span>
-<span id="cb12-677"><a href="#cb12-677" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> total_pr),</span>
-<span id="cb12-678"><a href="#cb12-678" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
-<span id="cb12-679"><a href="#cb12-679" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>)) <span class="sc">+</span></span>
-<span id="cb12-680"><a href="#cb12-680" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(<span class="at">data =</span> m_summ, </span>
-<span id="cb12-681"><a href="#cb12-681" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(</span>
-<span id="cb12-682"><a href="#cb12-682" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ymin =</span> pr_mw <span class="sc">-</span> <span class="fl">0.5</span><span class="sc">*</span>(pr_sd),</span>
-<span id="cb12-683"><a href="#cb12-683" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ymax =</span> pr_mw <span class="sc">+</span> <span class="fl">0.5</span><span class="sc">*</span>(pr_sd),</span>
-<span id="cb12-684"><a href="#cb12-684" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xmin =</span> <span class="sc">-</span><span class="cn">Inf</span>,</span>
-<span id="cb12-685"><a href="#cb12-685" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xmax =</span> <span class="cn">Inf</span></span>
-<span id="cb12-686"><a href="#cb12-686" aria-hidden="true" tabindex="-1"></a>               ),</span>
-<span id="cb12-687"><a href="#cb12-687" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> .<span class="dv">5</span>,</span>
-<span id="cb12-688"><a href="#cb12-688" aria-hidden="true" tabindex="-1"></a>            <span class="at">fill =</span> <span class="st">"red"</span>)</span>
-<span id="cb12-689"><a href="#cb12-689" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-690"><a href="#cb12-690" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-691"><a href="#cb12-691" aria-hidden="true" tabindex="-1"></a>$\square$</span>
-<span id="cb12-692"><a href="#cb12-692" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb12-693"><a href="#cb12-693" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-694"><a href="#cb12-694" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-695"><a href="#cb12-695" aria-hidden="true" tabindex="-1"></a>Wer sich die Berechnung von Hand für <span class="in">`pr_maa`</span> sparen möchte, kann die <span class="co">[</span><span class="ot">Funktion `MeanAD` aus dem Paket `DescTools`</span><span class="co">](https://rdrr.io/cran/DescTools/man/MeanAD.html)</span> nutzen.</span>
-<span id="cb12-696"><a href="#cb12-696" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-630"><a href="#cb12-630" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-631"><a href="#cb12-631" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-632"><a href="#cb12-632" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-633"><a href="#cb12-633" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-634"><a href="#cb12-634" aria-hidden="true" tabindex="-1"></a>Statistiken sind ja schön ... aber Bilder sind auch gut, s. @fig-var.</span>
+<span id="cb12-635"><a href="#cb12-635" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-636"><a href="#cb12-636" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-639"><a href="#cb12-639" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-640"><a href="#cb12-640" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb12-641"><a href="#cb12-641" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-642"><a href="#cb12-642" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-643"><a href="#cb12-643" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-644"><a href="#cb12-644" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span>  <span class="co"># ohne Extremwerte</span></span>
+<span id="cb12-645"><a href="#cb12-645" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_density</span>()</span>
+<span id="cb12-646"><a href="#cb12-646" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-647"><a href="#cb12-647" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-648"><a href="#cb12-648" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-649"><a href="#cb12-649" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-652"><a href="#cb12-652" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-653"><a href="#cb12-653" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-654"><a href="#cb12-654" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Die Verteilung des Verkaufspreises von Mariokart-Spielen </span></span>
+<span id="cb12-655"><a href="#cb12-655" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-var</span></span>
+<span id="cb12-656"><a href="#cb12-656" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb12-657"><a href="#cb12-657" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
+<span id="cb12-658"><a href="#cb12-658" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - Dichtediagramm mit MW±SD in roter Farbe</span></span>
+<span id="cb12-659"><a href="#cb12-659" aria-hidden="true" tabindex="-1"></a><span class="co">#|   - Violindiagramm mit MW±SD in roter Farbe</span></span>
+<span id="cb12-660"><a href="#cb12-660" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-661"><a href="#cb12-661" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-662"><a href="#cb12-662" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span>  <span class="co"># ohne Extremwerte</span></span>
+<span id="cb12-663"><a href="#cb12-663" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb12-664"><a href="#cb12-664" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> total_pr)) <span class="sc">+</span></span>
+<span id="cb12-665"><a href="#cb12-665" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(<span class="at">data =</span> m_summ, </span>
+<span id="cb12-666"><a href="#cb12-666" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(</span>
+<span id="cb12-667"><a href="#cb12-667" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xmin =</span> pr_mw <span class="sc">-</span> <span class="fl">0.5</span><span class="sc">*</span>(pr_sd),</span>
+<span id="cb12-668"><a href="#cb12-668" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xmax =</span> pr_mw <span class="sc">+</span> <span class="fl">0.5</span><span class="sc">*</span>(pr_sd),</span>
+<span id="cb12-669"><a href="#cb12-669" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ymin =</span> <span class="dv">0</span>,</span>
+<span id="cb12-670"><a href="#cb12-670" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ymax =</span> <span class="cn">Inf</span></span>
+<span id="cb12-671"><a href="#cb12-671" aria-hidden="true" tabindex="-1"></a>               ),</span>
+<span id="cb12-672"><a href="#cb12-672" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> .<span class="dv">5</span>,</span>
+<span id="cb12-673"><a href="#cb12-673" aria-hidden="true" tabindex="-1"></a>            <span class="at">fill =</span> <span class="st">"red"</span>)</span>
+<span id="cb12-674"><a href="#cb12-674" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-675"><a href="#cb12-675" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-676"><a href="#cb12-676" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-677"><a href="#cb12-677" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span>  <span class="co"># ohne Extremwerte</span></span>
+<span id="cb12-678"><a href="#cb12-678" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb12-679"><a href="#cb12-679" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="fu">aes</span>(</span>
+<span id="cb12-680"><a href="#cb12-680" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="dv">1</span>,</span>
+<span id="cb12-681"><a href="#cb12-681" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> total_pr)) <span class="sc">+</span></span>
+<span id="cb12-682"><a href="#cb12-682" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(</span>
+<span id="cb12-683"><a href="#cb12-683" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="dv">1</span>,</span>
+<span id="cb12-684"><a href="#cb12-684" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> total_pr),</span>
+<span id="cb12-685"><a href="#cb12-685" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb12-686"><a href="#cb12-686" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb12-687"><a href="#cb12-687" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(<span class="at">data =</span> m_summ, </span>
+<span id="cb12-688"><a href="#cb12-688" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(</span>
+<span id="cb12-689"><a href="#cb12-689" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ymin =</span> pr_mw <span class="sc">-</span> <span class="fl">0.5</span><span class="sc">*</span>(pr_sd),</span>
+<span id="cb12-690"><a href="#cb12-690" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ymax =</span> pr_mw <span class="sc">+</span> <span class="fl">0.5</span><span class="sc">*</span>(pr_sd),</span>
+<span id="cb12-691"><a href="#cb12-691" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xmin =</span> <span class="sc">-</span><span class="cn">Inf</span>,</span>
+<span id="cb12-692"><a href="#cb12-692" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xmax =</span> <span class="cn">Inf</span></span>
+<span id="cb12-693"><a href="#cb12-693" aria-hidden="true" tabindex="-1"></a>               ),</span>
+<span id="cb12-694"><a href="#cb12-694" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> .<span class="dv">5</span>,</span>
+<span id="cb12-695"><a href="#cb12-695" aria-hidden="true" tabindex="-1"></a>            <span class="at">fill =</span> <span class="st">"red"</span>)</span>
+<span id="cb12-696"><a href="#cb12-696" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-697"><a href="#cb12-697" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-698"><a href="#cb12-698" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Definition</span></span>
-<span id="cb12-699"><a href="#cb12-699" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-698"><a href="#cb12-698" aria-hidden="true" tabindex="-1"></a>$\square$</span>
+<span id="cb12-699"><a href="#cb12-699" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb12-700"><a href="#cb12-700" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-701"><a href="#cb12-701" aria-hidden="true" tabindex="-1"></a>Um die Standardabweichung zu berechnen, berechnet man zunächst die *Varianz*, $s^2$ abgekürzt. Hier ist ein "Kochrezept"^<span class="co">[</span><span class="ot">Algorithmus</span><span class="co">]</span> zur Berechnung der Varianz:</span>
-<span id="cb12-702"><a href="#cb12-702" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-703"><a href="#cb12-703" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Für alle Datenpunkte $x_i$: Berechne die Abweichungen vom Mittelwert, $\bar{x}$</span>
-<span id="cb12-704"><a href="#cb12-704" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Quadriere diese Werte</span>
-<span id="cb12-705"><a href="#cb12-705" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Summiere dann auf</span>
-<span id="cb12-706"><a href="#cb12-706" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Teile durch die Anzahl $N$ der Werte</span>
+<span id="cb12-701"><a href="#cb12-701" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-702"><a href="#cb12-702" aria-hidden="true" tabindex="-1"></a>Wer sich die Berechnung von Hand für <span class="in">`pr_maa`</span> sparen möchte, kann die <span class="co">[</span><span class="ot">Funktion `MeanAD` aus dem Paket `DescTools`</span><span class="co">](https://rdrr.io/cran/DescTools/man/MeanAD.html)</span> nutzen.</span>
+<span id="cb12-703"><a href="#cb12-703" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-704"><a href="#cb12-704" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-705"><a href="#cb12-705" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Definition</span></span>
+<span id="cb12-706"><a href="#cb12-706" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-707"><a href="#cb12-707" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-708"><a href="#cb12-708" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-709"><a href="#cb12-709" aria-hidden="true" tabindex="-1"></a>Als Formel ausgedrückt, lautet die Definition der Varianz^<span class="co">[</span><span class="ot">sog. unkorrigierte Stichprobenvarianz</span><span class="co">]</span> einer Stichprobe:</span>
-<span id="cb12-710"><a href="#cb12-710" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-711"><a href="#cb12-711" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-712"><a href="#cb12-712" aria-hidden="true" tabindex="-1"></a>$${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\bar {y}}\right)^{2}.}$$</span>
-<span id="cb12-713"><a href="#cb12-713" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-708"><a href="#cb12-708" aria-hidden="true" tabindex="-1"></a>Um die Standardabweichung zu berechnen, berechnet man zunächst die *Varianz*, $s^2$ abgekürzt. Hier ist ein "Kochrezept"^<span class="co">[</span><span class="ot">Algorithmus</span><span class="co">]</span> zur Berechnung der Varianz:</span>
+<span id="cb12-709"><a href="#cb12-709" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-710"><a href="#cb12-710" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Für alle Datenpunkte $x_i$: Berechne die Abweichungen vom Mittelwert, $\bar{x}$</span>
+<span id="cb12-711"><a href="#cb12-711" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Quadriere diese Werte</span>
+<span id="cb12-712"><a href="#cb12-712" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Summiere dann auf</span>
+<span id="cb12-713"><a href="#cb12-713" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Teile durch die Anzahl $N$ der Werte</span>
 <span id="cb12-714"><a href="#cb12-714" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-715"><a href="#cb12-715" aria-hidden="true" tabindex="-1"></a>:::{#def-var}</span>
-<span id="cb12-716"><a href="#cb12-716" aria-hidden="true" tabindex="-1"></a><span class="fu">### Varianz</span></span>
-<span id="cb12-717"><a href="#cb12-717" aria-hidden="true" tabindex="-1"></a>Die Varianz ($s^2, \sigma^2$) ist definiert als der Mittelwert der quadradrierten Abweichungen (vom Mittelwert).$\square$</span>
-<span id="cb12-718"><a href="#cb12-718" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb12-719"><a href="#cb12-719" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-715"><a href="#cb12-715" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-716"><a href="#cb12-716" aria-hidden="true" tabindex="-1"></a>Als Formel ausgedrückt, lautet die Definition der Varianz^<span class="co">[</span><span class="ot">sog. unkorrigierte Stichprobenvarianz</span><span class="co">]</span> einer Stichprobe:</span>
+<span id="cb12-717"><a href="#cb12-717" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-718"><a href="#cb12-718" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-719"><a href="#cb12-719" aria-hidden="true" tabindex="-1"></a>$${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{n}}\sum _{i=1}^{n}dy_i^{2}.}$$</span>
 <span id="cb12-720"><a href="#cb12-720" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-721"><a href="#cb12-721" aria-hidden="true" tabindex="-1"></a>Die Varianz steht im engen Verhältnis zur Kovarianz, s. @sec-cov.</span>
-<span id="cb12-722"><a href="#cb12-722" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-723"><a href="#cb12-723" aria-hidden="true" tabindex="-1"></a>Die Varianz kann auch verstehen als den mittleren Quadratfehler (Mean Squared Error, MSE) eines Modells.</span>
-<span id="cb12-724"><a href="#cb12-724" aria-hidden="true" tabindex="-1"></a>Im Fall eines Punktmodells ist der Mittelwert der vorhergesagte Wert eines Modells.</span>
-<span id="cb12-725"><a href="#cb12-725" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-721"><a href="#cb12-721" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-722"><a href="#cb12-722" aria-hidden="true" tabindex="-1"></a>:::{#def-var}</span>
+<span id="cb12-723"><a href="#cb12-723" aria-hidden="true" tabindex="-1"></a><span class="fu">### Varianz</span></span>
+<span id="cb12-724"><a href="#cb12-724" aria-hidden="true" tabindex="-1"></a>Die Varianz ($s^2, \sigma^2$) ist definiert als der Mittelwert der quadradrierten Abweichungen (vom Mittelwert).$\square$</span>
+<span id="cb12-725"><a href="#cb12-725" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb12-726"><a href="#cb12-726" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-727"><a href="#cb12-727" aria-hidden="true" tabindex="-1"></a>$${\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\hat {y}}\right)^{2}.}$$</span>
-<span id="cb12-728"><a href="#cb12-728" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-727"><a href="#cb12-727" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-728"><a href="#cb12-728" aria-hidden="true" tabindex="-1"></a>Die Varianz steht im engen Verhältnis zur Kovarianz, s. @sec-cov.</span>
 <span id="cb12-729"><a href="#cb12-729" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-730"><a href="#cb12-730" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-731"><a href="#cb12-731" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-732"><a href="#cb12-732" aria-hidden="true" tabindex="-1"></a><span class="fu">### Die Standardabweichung</span></span>
+<span id="cb12-730"><a href="#cb12-730" aria-hidden="true" tabindex="-1"></a>Die Varianz kann auch verstehen als den mittleren Quadratfehler (Mean Squared Error, MSE) eines Modells.</span>
+<span id="cb12-731"><a href="#cb12-731" aria-hidden="true" tabindex="-1"></a>Im Fall eines Punktmodells ist der Mittelwert der vorhergesagte Wert eines Modells.</span>
+<span id="cb12-732"><a href="#cb12-732" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-733"><a href="#cb12-733" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-734"><a href="#cb12-734" aria-hidden="true" tabindex="-1"></a>Kennt man die Varianz, so lässt sich die Standardabweichung einfach als Quadratwurzel der Varianz berechnen.</span>
+<span id="cb12-734"><a href="#cb12-734" aria-hidden="true" tabindex="-1"></a>$${\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\hat {y}}\right)^{2}.}$$</span>
 <span id="cb12-735"><a href="#cb12-735" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-736"><a href="#cb12-736" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-737"><a href="#cb12-737" aria-hidden="true" tabindex="-1"></a>:::{#def-sd}</span>
-<span id="cb12-738"><a href="#cb12-738" aria-hidden="true" tabindex="-1"></a><span class="fu">### Standardabweichung</span></span>
-<span id="cb12-739"><a href="#cb12-739" aria-hidden="true" tabindex="-1"></a>Die Standardabweichung (SD, s, $\sigma$) ist definiert als die Quadratwurzel der Varianz. </span>
+<span id="cb12-737"><a href="#cb12-737" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-738"><a href="#cb12-738" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-739"><a href="#cb12-739" aria-hidden="true" tabindex="-1"></a><span class="fu">### Die Standardabweichung</span></span>
 <span id="cb12-740"><a href="#cb12-740" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-741"><a href="#cb12-741" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-742"><a href="#cb12-742" aria-hidden="true" tabindex="-1"></a>$$s := \sqrt{s^2}$$</span>
+<span id="cb12-741"><a href="#cb12-741" aria-hidden="true" tabindex="-1"></a>Kennt man die Varianz, so lässt sich die Standardabweichung einfach als Quadratwurzel der Varianz berechnen.</span>
+<span id="cb12-742"><a href="#cb12-742" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-743"><a href="#cb12-743" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-744"><a href="#cb12-744" aria-hidden="true" tabindex="-1"></a>$\square$</span>
-<span id="cb12-745"><a href="#cb12-745" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb12-746"><a href="#cb12-746" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-744"><a href="#cb12-744" aria-hidden="true" tabindex="-1"></a>:::{#def-sd}</span>
+<span id="cb12-745"><a href="#cb12-745" aria-hidden="true" tabindex="-1"></a><span class="fu">### Standardabweichung</span></span>
+<span id="cb12-746"><a href="#cb12-746" aria-hidden="true" tabindex="-1"></a>Die Standardabweichung (SD, s, $\sigma$) ist definiert als die Quadratwurzel der Varianz. </span>
 <span id="cb12-747"><a href="#cb12-747" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-748"><a href="#cb12-748" aria-hidden="true" tabindex="-1"></a>Durch das Wurzelziehen besitzt die Standardabweichung wieder in etwa die gleiche Größenordnung wie die Daten (im Gegensatz zur Varianz, die durch das Quadrieren sehr groß werden kann).</span>
-<span id="cb12-749"><a href="#cb12-749" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-748"><a href="#cb12-748" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-749"><a href="#cb12-749" aria-hidden="true" tabindex="-1"></a>$$s := \sqrt{s^2}$$</span>
 <span id="cb12-750"><a href="#cb12-750" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-751"><a href="#cb12-751" aria-hidden="true" tabindex="-1"></a>Aus einem Modellierungsblickwinkel kann man die SD definieren als die Wurzel von MSE.</span>
-<span id="cb12-752"><a href="#cb12-752" aria-hidden="true" tabindex="-1"></a>Dann nennt man sie *Root Mean Squared Error* (RMSE): $rmse = \sqrt{mse}$.</span>
+<span id="cb12-751"><a href="#cb12-751" aria-hidden="true" tabindex="-1"></a>$\square$</span>
+<span id="cb12-752"><a href="#cb12-752" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb12-753"><a href="#cb12-753" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-754"><a href="#cb12-754" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-755"><a href="#cb12-755" aria-hidden="true" tabindex="-1"></a>:::{.callout-note}</span>
-<span id="cb12-756"><a href="#cb12-756" aria-hidden="true" tabindex="-1"></a>Die SD ist i.d.R. ungleich zur MAE.$\square$</span>
-<span id="cb12-757"><a href="#cb12-757" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb12-758"><a href="#cb12-758" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-759"><a href="#cb12-759" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-760"><a href="#cb12-760" aria-hidden="true" tabindex="-1"></a>:::{#exm-sd-mario}</span>
+<span id="cb12-755"><a href="#cb12-755" aria-hidden="true" tabindex="-1"></a>Durch das Wurzelziehen besitzt die Standardabweichung wieder in etwa die gleiche Größenordnung wie die Daten (im Gegensatz zur Varianz, die durch das Quadrieren sehr groß werden kann).</span>
+<span id="cb12-756"><a href="#cb12-756" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-757"><a href="#cb12-757" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-758"><a href="#cb12-758" aria-hidden="true" tabindex="-1"></a>Aus einem Modellierungsblickwinkel kann man die SD definieren als die Wurzel von MSE.</span>
+<span id="cb12-759"><a href="#cb12-759" aria-hidden="true" tabindex="-1"></a>Dann nennt man sie *Root Mean Squared Error* (RMSE): $rmse = \sqrt{mse}$.</span>
+<span id="cb12-760"><a href="#cb12-760" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-761"><a href="#cb12-761" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-762"><a href="#cb12-762" aria-hidden="true" tabindex="-1"></a>Sie arbeiten weiter an Ihrem Mariokart-Projekt.</span>
-<span id="cb12-763"><a href="#cb12-763" aria-hidden="true" tabindex="-1"></a>Da Sie heute keine Lust auf viel Tippen haben,</span>
-<span id="cb12-764"><a href="#cb12-764" aria-hidden="true" tabindex="-1"></a>nutzen Sie das R-Paket <span class="in">`easystats`</span> mit der Funktion <span class="in">`describe_distribution`</span>.</span>
+<span id="cb12-762"><a href="#cb12-762" aria-hidden="true" tabindex="-1"></a>:::{.callout-note}</span>
+<span id="cb12-763"><a href="#cb12-763" aria-hidden="true" tabindex="-1"></a>Die SD ist i.d.R. ungleich zur MAE.$\square$</span>
+<span id="cb12-764"><a href="#cb12-764" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb12-765"><a href="#cb12-765" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-768"><a href="#cb12-768" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb12-769"><a href="#cb12-769" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span>
-<span id="cb12-770"><a href="#cb12-770" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-771"><a href="#cb12-771" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
-<span id="cb12-772"><a href="#cb12-772" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-773"><a href="#cb12-773" aria-hidden="true" tabindex="-1"></a>  <span class="fu">describe_distribution</span>()</span>
-<span id="cb12-774"><a href="#cb12-774" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-775"><a href="#cb12-775" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-776"><a href="#cb12-776" aria-hidden="true" tabindex="-1"></a>Ah! Das war einfach. Wird auch langsam Zeit für Feierabend.$\square$</span>
-<span id="cb12-777"><a href="#cb12-777" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb12-778"><a href="#cb12-778" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-779"><a href="#cb12-779" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-780"><a href="#cb12-780" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-781"><a href="#cb12-781" aria-hidden="true" tabindex="-1"></a>:::{#exm-gruppen-mw}</span>
+<span id="cb12-766"><a href="#cb12-766" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-767"><a href="#cb12-767" aria-hidden="true" tabindex="-1"></a>:::{#exm-sd-mario}</span>
+<span id="cb12-768"><a href="#cb12-768" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-769"><a href="#cb12-769" aria-hidden="true" tabindex="-1"></a>Sie arbeiten weiter an Ihrem Mariokart-Projekt.</span>
+<span id="cb12-770"><a href="#cb12-770" aria-hidden="true" tabindex="-1"></a>Da Sie heute keine Lust auf viel Tippen haben,</span>
+<span id="cb12-771"><a href="#cb12-771" aria-hidden="true" tabindex="-1"></a>nutzen Sie das R-Paket <span class="in">`easystats`</span> mit der Funktion <span class="in">`describe_distribution`</span>.</span>
+<span id="cb12-772"><a href="#cb12-772" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-775"><a href="#cb12-775" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-776"><a href="#cb12-776" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span>
+<span id="cb12-777"><a href="#cb12-777" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-778"><a href="#cb12-778" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-779"><a href="#cb12-779" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-780"><a href="#cb12-780" aria-hidden="true" tabindex="-1"></a>  <span class="fu">describe_distribution</span>()</span>
+<span id="cb12-781"><a href="#cb12-781" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-782"><a href="#cb12-782" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-783"><a href="#cb12-783" aria-hidden="true" tabindex="-1"></a>Ihr Job als Datenanalyst ist anstrengend, aber auch mitunter interessant. So auch heute. </span>
-<span id="cb12-784"><a href="#cb12-784" aria-hidden="true" tabindex="-1"></a>Bevor Sie nach Hause gehen, möchten Sie noch eine Sache anschauen.</span>
-<span id="cb12-785"><a href="#cb12-785" aria-hidden="true" tabindex="-1"></a>In einer früheren Analyse (s. @fig-fehler-red) fanden Sie heraus,</span>
-<span id="cb12-786"><a href="#cb12-786" aria-hidden="true" tabindex="-1"></a>dass die Fehlerbalken kürzer werden, wenn man ein geschickteres und komplexeres Modell findet. </span>
+<span id="cb12-783"><a href="#cb12-783" aria-hidden="true" tabindex="-1"></a>Ah! Das war einfach. Wird auch langsam Zeit für Feierabend.$\square$</span>
+<span id="cb12-784"><a href="#cb12-784" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-785"><a href="#cb12-785" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-786"><a href="#cb12-786" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-787"><a href="#cb12-787" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-788"><a href="#cb12-788" aria-hidden="true" tabindex="-1"></a>Das wollen Sie natürlich prüfen.</span>
-<span id="cb12-789"><a href="#cb12-789" aria-hidden="true" tabindex="-1"></a>Sie überlegen: "Okay, ich will ein einfaches Modell, in dem der Mittelwert das Modell des Verkaufpreis sein soll."</span>
-<span id="cb12-790"><a href="#cb12-790" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-791"><a href="#cb12-791" aria-hidden="true" tabindex="-1"></a>Das spezifizieren Sie so:</span>
-<span id="cb12-792"><a href="#cb12-792" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-795"><a href="#cb12-795" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb12-796"><a href="#cb12-796" aria-hidden="true" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> mariokart)</span>
-<span id="cb12-797"><a href="#cb12-797" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(lm1)</span>
-<span id="cb12-798"><a href="#cb12-798" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-788"><a href="#cb12-788" aria-hidden="true" tabindex="-1"></a>:::{#exm-gruppen-mw}</span>
+<span id="cb12-789"><a href="#cb12-789" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-790"><a href="#cb12-790" aria-hidden="true" tabindex="-1"></a>Ihr Job als Datenanalyst ist anstrengend, aber auch mitunter interessant. So auch heute. </span>
+<span id="cb12-791"><a href="#cb12-791" aria-hidden="true" tabindex="-1"></a>Bevor Sie nach Hause gehen, möchten Sie noch eine Sache anschauen.</span>
+<span id="cb12-792"><a href="#cb12-792" aria-hidden="true" tabindex="-1"></a>In einer früheren Analyse (s. @fig-fehler-red) fanden Sie heraus,</span>
+<span id="cb12-793"><a href="#cb12-793" aria-hidden="true" tabindex="-1"></a>dass die Fehlerbalken kürzer werden, wenn man ein geschickteres und komplexeres Modell findet. </span>
+<span id="cb12-794"><a href="#cb12-794" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-795"><a href="#cb12-795" aria-hidden="true" tabindex="-1"></a>Das wollen Sie natürlich prüfen.</span>
+<span id="cb12-796"><a href="#cb12-796" aria-hidden="true" tabindex="-1"></a>Sie überlegen: "Okay, ich will ein einfaches Modell, in dem der Mittelwert das Modell des Verkaufpreis sein soll."</span>
+<span id="cb12-797"><a href="#cb12-797" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-798"><a href="#cb12-798" aria-hidden="true" tabindex="-1"></a>Das spezifizieren Sie so:</span>
 <span id="cb12-799"><a href="#cb12-799" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-800"><a href="#cb12-800" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-801"><a href="#cb12-801" aria-hidden="true" tabindex="-1"></a>Im nächsten Schritt spezifizieren Sie ein Modell,</span>
-<span id="cb12-802"><a href="#cb12-802" aria-hidden="true" tabindex="-1"></a>in dem der Verkaufpreis eine Funktion der Anzahl der Lenkräder ist (ähnlich wie in @fig-fehler-red):</span>
-<span id="cb12-803"><a href="#cb12-803" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-806"><a href="#cb12-806" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb12-807"><a href="#cb12-807" aria-hidden="true" tabindex="-1"></a>lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> wheels, <span class="at">data =</span> mariokart)</span>
-<span id="cb12-808"><a href="#cb12-808" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(lm2)</span>
-<span id="cb12-809"><a href="#cb12-809" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-802"><a href="#cb12-802" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-803"><a href="#cb12-803" aria-hidden="true" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> mariokart)</span>
+<span id="cb12-804"><a href="#cb12-804" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(lm1)</span>
+<span id="cb12-805"><a href="#cb12-805" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-806"><a href="#cb12-806" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-807"><a href="#cb12-807" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-808"><a href="#cb12-808" aria-hidden="true" tabindex="-1"></a>Im nächsten Schritt spezifizieren Sie ein Modell,</span>
+<span id="cb12-809"><a href="#cb12-809" aria-hidden="true" tabindex="-1"></a>in dem der Verkaufpreis eine Funktion der Anzahl der Lenkräder ist (ähnlich wie in @fig-fehler-red):</span>
 <span id="cb12-810"><a href="#cb12-810" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-811"><a href="#cb12-811" aria-hidden="true" tabindex="-1"></a>Ah! Sehr schön, Sie haben mit <span class="in">`lm2`</span> ein besseres Modell als einfach nur den Mittelwert gefunden. Ab nach hause!$\square$</span>
-<span id="cb12-812"><a href="#cb12-812" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb12-813"><a href="#cb12-813" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-814"><a href="#cb12-814" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-815"><a href="#cb12-815" aria-hidden="true" tabindex="-1"></a><span class="fu">## Streuung als Modellfehler</span></span>
-<span id="cb12-816"><a href="#cb12-816" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-817"><a href="#cb12-817" aria-hidden="true" tabindex="-1"></a>Wenn wir den Mittelwert als Punktmodell des Verkaufpreises auffassen, so kann man die verschiedenen Kennwerte der Streuung als verschiedene Kennwerte der Modellgüte auffassen.</span>
-<span id="cb12-818"><a href="#cb12-818" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-819"><a href="#cb12-819" aria-hidden="true" tabindex="-1"></a>Definieren wir zunächst als Punktmodell auf Errisch:</span>
+<span id="cb12-813"><a href="#cb12-813" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-814"><a href="#cb12-814" aria-hidden="true" tabindex="-1"></a>lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> wheels, <span class="at">data =</span> mariokart)</span>
+<span id="cb12-815"><a href="#cb12-815" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(lm2)</span>
+<span id="cb12-816"><a href="#cb12-816" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-817"><a href="#cb12-817" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-818"><a href="#cb12-818" aria-hidden="true" tabindex="-1"></a>Ah! Sehr schön, Sie haben mit <span class="in">`lm2`</span> ein besseres Modell als einfach nur den Mittelwert gefunden. Ab nach hause!$\square$</span>
+<span id="cb12-819"><a href="#cb12-819" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb12-820"><a href="#cb12-820" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-823"><a href="#cb12-823" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb12-824"><a href="#cb12-824" aria-hidden="true" tabindex="-1"></a>lm_mario1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> m)</span>
-<span id="cb12-825"><a href="#cb12-825" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-826"><a href="#cb12-826" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-827"><a href="#cb12-827" aria-hidden="true" tabindex="-1"></a>Zur Erinnerung: Wir modellieren <span class="in">`total_pr`</span> ohne Prädiktoren, sondern als Punktmodell,</span>
-<span id="cb12-828"><a href="#cb12-828" aria-hidden="true" tabindex="-1"></a>und zwar schätzen wir den Mittelwert mit den Daten <span class="in">`m`</span>.</span>
-<span id="cb12-829"><a href="#cb12-829" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-830"><a href="#cb12-830" aria-hidden="true" tabindex="-1"></a>Das (Meta-)Paket <span class="in">`easystats`</span> bietet komfortable Befehle, um die Modellgüte zu berechnen:</span>
-<span id="cb12-831"><a href="#cb12-831" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-834"><a href="#cb12-834" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb12-835"><a href="#cb12-835" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(lm_mario1)  <span class="co"># Mean absolute error</span></span>
-<span id="cb12-836"><a href="#cb12-836" aria-hidden="true" tabindex="-1"></a><span class="fu">mse</span>(lm_mario1)  <span class="co"># Mean squared error</span></span>
-<span id="cb12-837"><a href="#cb12-837" aria-hidden="true" tabindex="-1"></a><span class="fu">rmse</span>(lm_mario1)  <span class="co"># Root mean squared error</span></span>
-<span id="cb12-838"><a href="#cb12-838" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-839"><a href="#cb12-839" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-840"><a href="#cb12-840" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-841"><a href="#cb12-841" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-842"><a href="#cb12-842" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-843"><a href="#cb12-843" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-844"><a href="#cb12-844" aria-hidden="true" tabindex="-1"></a><span class="fu">## Fazit</span></span>
-<span id="cb12-845"><a href="#cb12-845" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-846"><a href="#cb12-846" aria-hidden="true" tabindex="-1"></a>Der „gesunde Menschenverstand“ würde spontan den mittleren Absolutabstand (MAA oder MAE) der Varianz (oder der Standardabweichung, SD) vorziehen. </span>
-<span id="cb12-847"><a href="#cb12-847" aria-hidden="true" tabindex="-1"></a>Das ist vernünftig, denn die MAA ist anschaulicher und damit nützlicher als die Varianz und die SD.</span>
+<span id="cb12-821"><a href="#cb12-821" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-822"><a href="#cb12-822" aria-hidden="true" tabindex="-1"></a><span class="fu">## Streuung als Modellfehler</span></span>
+<span id="cb12-823"><a href="#cb12-823" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-824"><a href="#cb12-824" aria-hidden="true" tabindex="-1"></a>Wenn wir den Mittelwert als Punktmodell des Verkaufpreises auffassen, so kann man die verschiedenen Kennwerte der Streuung als verschiedene Kennwerte der Modellgüte auffassen.</span>
+<span id="cb12-825"><a href="#cb12-825" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-826"><a href="#cb12-826" aria-hidden="true" tabindex="-1"></a>Definieren wir zunächst als Punktmodell auf Errisch:</span>
+<span id="cb12-827"><a href="#cb12-827" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-830"><a href="#cb12-830" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-831"><a href="#cb12-831" aria-hidden="true" tabindex="-1"></a>lm_mario1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> m)</span>
+<span id="cb12-832"><a href="#cb12-832" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-833"><a href="#cb12-833" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-834"><a href="#cb12-834" aria-hidden="true" tabindex="-1"></a>Zur Erinnerung: Wir modellieren <span class="in">`total_pr`</span> ohne Prädiktoren, sondern als Punktmodell,</span>
+<span id="cb12-835"><a href="#cb12-835" aria-hidden="true" tabindex="-1"></a>und zwar schätzen wir den Mittelwert mit den Daten <span class="in">`m`</span>.</span>
+<span id="cb12-836"><a href="#cb12-836" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-837"><a href="#cb12-837" aria-hidden="true" tabindex="-1"></a>Das (Meta-)Paket <span class="in">`easystats`</span> bietet komfortable Befehle, um die Modellgüte zu berechnen:</span>
+<span id="cb12-838"><a href="#cb12-838" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-841"><a href="#cb12-841" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-842"><a href="#cb12-842" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(lm_mario1)  <span class="co"># Mean absolute error</span></span>
+<span id="cb12-843"><a href="#cb12-843" aria-hidden="true" tabindex="-1"></a><span class="fu">mse</span>(lm_mario1)  <span class="co"># Mean squared error</span></span>
+<span id="cb12-844"><a href="#cb12-844" aria-hidden="true" tabindex="-1"></a><span class="fu">rmse</span>(lm_mario1)  <span class="co"># Root mean squared error</span></span>
+<span id="cb12-845"><a href="#cb12-845" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-846"><a href="#cb12-846" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-847"><a href="#cb12-847" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-848"><a href="#cb12-848" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-849"><a href="#cb12-849" aria-hidden="true" tabindex="-1"></a>Warum sollte man überhaupt ein unanschauliches Maß wie die Varianz verwenden? </span>
-<span id="cb12-850"><a href="#cb12-850" aria-hidden="true" tabindex="-1"></a>Wenn es nur um deskriptive Statistik geht, braucht man die Varianz (oder die SD) nicht unbedingt.</span>
-<span id="cb12-851"><a href="#cb12-851" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-852"><a href="#cb12-852" aria-hidden="true" tabindex="-1"></a>Gründe, warum Sie die Varianz (bzw. SD) kennen und nutzen sollten, sind:^<span class="co">[</span><span class="ot">Ich wollte noch hinzufügen, dass die Varianz eng verknüpft mit der linearen Algebra, aber ich war nicht sicher, ob das Argument allgemein überzeugen würde.</span><span class="co">]</span></span>
-<span id="cb12-853"><a href="#cb12-853" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-854"><a href="#cb12-854" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Die SD ist sehr nützlich zur Beschreibung der Normalverteilung</span>
-<span id="cb12-855"><a href="#cb12-855" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Die Varianz wird häufig verwendet bzw. in Forschungsarbeiten berichtet, also müssen Sie die Varianz kennen.</span>
-<span id="cb12-856"><a href="#cb12-856" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-857"><a href="#cb12-857" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-858"><a href="#cb12-858" aria-hidden="true" tabindex="-1"></a>Liegen Exremwerte vor, kann es vorteilhafter sein, den IQR vorzuziehen gegenüber Mittelwert basierten Streuungsmaßen (MAA, Varianz, SD).</span>
-<span id="cb12-859"><a href="#cb12-859" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-849"><a href="#cb12-849" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-850"><a href="#cb12-850" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-851"><a href="#cb12-851" aria-hidden="true" tabindex="-1"></a><span class="fu">## Fazit</span></span>
+<span id="cb12-852"><a href="#cb12-852" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-853"><a href="#cb12-853" aria-hidden="true" tabindex="-1"></a>Der „gesunde Menschenverstand“ würde spontan den mittleren Absolutabstand (MAA oder MAE) der Varianz (oder der Standardabweichung, SD) vorziehen. </span>
+<span id="cb12-854"><a href="#cb12-854" aria-hidden="true" tabindex="-1"></a>Das ist vernünftig, denn die MAA ist anschaulicher und damit nützlicher als die Varianz und die SD.</span>
+<span id="cb12-855"><a href="#cb12-855" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-856"><a href="#cb12-856" aria-hidden="true" tabindex="-1"></a>Warum sollte man überhaupt ein unanschauliches Maß wie die Varianz verwenden? </span>
+<span id="cb12-857"><a href="#cb12-857" aria-hidden="true" tabindex="-1"></a>Wenn es nur um deskriptive Statistik geht, braucht man die Varianz (oder die SD) nicht unbedingt.</span>
+<span id="cb12-858"><a href="#cb12-858" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-859"><a href="#cb12-859" aria-hidden="true" tabindex="-1"></a>Gründe, warum Sie die Varianz (bzw. SD) kennen und nutzen sollten, sind:^<span class="co">[</span><span class="ot">Ich wollte noch hinzufügen, dass die Varianz eng verknüpft mit der linearen Algebra, aber ich war nicht sicher, ob das Argument allgemein überzeugen würde.</span><span class="co">]</span></span>
 <span id="cb12-860"><a href="#cb12-860" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-861"><a href="#cb12-861" aria-hidden="true" tabindex="-1"></a><span class="fu">## Aufgaben</span></span>
-<span id="cb12-862"><a href="#cb12-862" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-861"><a href="#cb12-861" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Die SD ist sehr nützlich zur Beschreibung der Normalverteilung</span>
+<span id="cb12-862"><a href="#cb12-862" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Die Varianz wird häufig verwendet bzw. in Forschungsarbeiten berichtet, also müssen Sie die Varianz kennen.</span>
 <span id="cb12-863"><a href="#cb12-863" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-864"><a href="#cb12-864" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-865"><a href="#cb12-865" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-866"><a href="#cb12-866" aria-hidden="true" tabindex="-1"></a>Schauen Sie sich auch mal auf <span class="co">[</span><span class="ot">Datenwerk</span><span class="co">](https://datenwerk.netlify.app/)</span> die Aufgaben zu  dem Tag <span class="co">[</span><span class="ot">variability</span><span class="co">](https://datenwerk.netlify.app/#category=variability)</span> an.</span>
+<span id="cb12-865"><a href="#cb12-865" aria-hidden="true" tabindex="-1"></a>Liegen Exremwerte vor, kann es vorteilhafter sein, den IQR vorzuziehen gegenüber Mittelwert basierten Streuungsmaßen (MAA, Varianz, SD).</span>
+<span id="cb12-866"><a href="#cb12-866" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-867"><a href="#cb12-867" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-868"><a href="#cb12-868" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-868"><a href="#cb12-868" aria-hidden="true" tabindex="-1"></a><span class="fu">## Aufgaben</span></span>
 <span id="cb12-869"><a href="#cb12-869" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-870"><a href="#cb12-870" aria-hidden="true" tabindex="-1"></a><span class="fu">## Literatur</span></span>
+<span id="cb12-870"><a href="#cb12-870" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-871"><a href="#cb12-871" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-872"><a href="#cb12-872" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-873"><a href="#cb12-873" aria-hidden="true" tabindex="-1"></a>Schauen Sie sich auch mal auf <span class="co">[</span><span class="ot">Datenwerk</span><span class="co">](https://datenwerk.netlify.app/)</span> die Aufgaben zu  dem Tag <span class="co">[</span><span class="ot">variability</span><span class="co">](https://datenwerk.netlify.app/#category=variability)</span> an.</span>
+<span id="cb12-874"><a href="#cb12-874" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-875"><a href="#cb12-875" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-876"><a href="#cb12-876" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-877"><a href="#cb12-877" aria-hidden="true" tabindex="-1"></a><span class="fu">## Literatur</span></span>
 </code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

@@ -315,8 +315,8 @@ In R kann man das mittlere Einkommen (präziser: das arithmetische Mittel des Ei
 
 ```{r}
 set.seed(42)  # Zufallszahlen festlegen, hier nicht so wichtig
-einkommen_studis <- rep(x = 1000, times = 100)  # rep wie "repeat": wiederhole 1000 USD 100 Mal
-einkommen <- c(einkommen_studis, 120*1e6)  # 100 Studis mit 1000E, 1 Mbappé mit 120 Mio
+einkommen_studis <- rep(x = 1000, times = 100)  # "rep" wie "repeat": wiederhole 1000 USD 100 Mal
+einkommen <- c(einkommen_studis, 120*1e6)  # 100 Studis mit 1000, 1 Mbappé mit 120 Mio
 einkommen_mw <- mean(einkommen)
 ```
 
@@ -340,7 +340,7 @@ Insofern kann man vom Mittelwert auch als *lineares Modell* sprechen.
 
 :::{#def-lm}
 ### Lineares Modell
-Ein lineares Modell verwendet eine Gerade als Modell von Daten.$\square$
+Ein lineares Modell verwendet eine Gerade als Modell der Daten.$\square$
 :::
 
 
@@ -353,11 +353,26 @@ Ein lineares Modell verwendet eine Gerade als Modell von Daten.$\square$
 #| echo: false
 #| layout-ncol: 2
 
+mariokart$X <- 1:nrow(mariokart)
+
+mariokart <-
+  mariokart %>% 
+  mutate(is_extreme = total_pr > 100)
+
+mariokart_extreme <-
+  mariokart %>% 
+  filter(is_extreme)
+
 ggplot(mariokart) +
   aes(x = X, y = total_pr) +
+    geom_hline(yintercept = mean(mariokart$total_pr),
+             color = "blue", 
+             linewidth = 2) +
   geom_point(alpha = .7) +
-  geom_hline(yintercept = mean(mariokart$total_pr),
-             color = "red", size = 2) +
+  geom_point(data = mariokart_extreme, 
+             color = "red",
+             alpha = .7,
+             size = 5) +
   labs(caption = paste0("MW: ", round(mean(mariokart$total_pr), 2)),
        x = "Nr. des Spiel") +
   scale_y_continuous(limits = c(0, 400))
@@ -368,9 +383,10 @@ mariokart %>%
   
 ggplot(mariokart2) +
   aes(x = X, y = total_pr) +
-  geom_point(alpha = .7) +
   geom_hline(yintercept = mean(mariokart2$total_pr),
-             color = "red", size = 2) +
+             color = "blue", 
+             size = 2) +
+  geom_point(alpha = .7) +
   labs(caption = paste0("MW: ", round(mean(mariokart2$total_pr), 2)),
        x = "Nr. des Spiel") +
   scale_y_continuous(limits = c(0, 400))
@@ -433,7 +449,12 @@ p1 <- ggplot(d) +
   geom_vline(xintercept = c(mean(einkommen)), color = "red") +
   geom_vline(xintercept = c(median(einkommen)), color = "blue") +
   annotate("label", x = median(einkommen), y = 100, label = "Median", color = "blue") +
-  annotate("label", x = mean(einkommen), y = 0, label = "MW", color = "red") 
+  annotate("label", x = mean(einkommen), y = 0, label = "MW", color = "red") +
+  annotate("label", 
+           x = Inf, 
+           y = -10, 
+           hjust = 1,
+           label = "Extremwert")
 
 p1
 

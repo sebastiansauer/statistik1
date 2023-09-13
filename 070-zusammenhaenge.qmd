@@ -171,12 +171,20 @@ ggplot(d) +
        y = "Punkte (0-100)",
        fill = "Vorzeichen") + 
   theme_minimal() +
-  annotate("label", x = Inf, y = Inf, label = "Q1: +", hjust = "right", vjust = "top") +
-  annotate("label", x = Inf, y = -Inf, label = "Q2: -", hjust = "right", vjust = "bottom") +
-  annotate("label", x = -Inf, y = -Inf, label = "Q3: +", hjust = "left", vjust = "bottom") +
-  annotate("label", x = -Inf, y = Inf, label = "Q4: -", hjust = "left", vjust = "top") +
+  annotate("label", x = Inf, y = Inf, 
+           label = "Q1: +", hjust = "right", vjust = "top") +
+  annotate("label", x = Inf, y = -Inf, 
+           label = "Q2: -", hjust = "right", vjust = "bottom") +
+  annotate("label", x = -Inf, y = -Inf, 
+           label = "Q3: +", hjust = "left", vjust = "bottom") +
+  annotate("label", x = -Inf, y = Inf, 
+           label = "Q4: -", hjust = "left", vjust = "top") +
     geom_point(size = 2, color = "black") +
-  scale_fill_okabeito()
+  scale_fill_okabeito() +
+  theme(
+    legend.position = c(0.95, 0.05),  # Adjust these values to position the legend
+    legend.justification = c(1, 0)    # 1 = right, 0 = bottom
+  )
 
 p_cov
 ```
@@ -244,7 +252,10 @@ p_cov +
                 ymin = mean(d$y) - sqrt(cov_xy)/2, 
                 ymax = mean(d$y) + sqrt(cov_xy)/2)) +
   geom_text(aes(x = mean(d$x), y = mean(d$y), label = "Kovarianz"),
-            color = "white")
+            color = "white") +
+  theme(
+    legend.position = c(0.95, 0.05),  # Adjust these values to position the legend
+    legend.justification = c(1, 0))
 
 p_cov2
 ```
@@ -289,9 +300,9 @@ d %>%
   summarise(kovarianz = mean(xy_area))
 ```
 
-Die Formel der Kovarianz lautet (@eq-cov4): 
+Die Formel der Kovarianz lautet, s. @eq-cov4: 
 
-$$\text{cov(xy)} = s_{xy}:=\frac{1}{n}\sum_{i=1}^n (x_i-\bar{x})(y_i-\bar{y}) = \frac{1}{n}\sum_{i=1}^n dx_i\cdot dy_i$${#eq-cov4}.
+$$\text{cov(xy)} = s_{xy}:=\frac{1}{n}\sum_{i=1}^n (x_i-\bar{x})(y_i-\bar{y}) = \frac{1}{n}\sum_{i=1}^n dx_i\cdot dy_i$$ {#eq-cov4}.
 
 In Worten:
 

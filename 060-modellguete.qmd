@@ -282,10 +282,10 @@ so erhalten wir wir den "mittleren Abweichungsbalken",
 den wir mit $\varnothing e$ bezeichnen könnten.
 Diesen Kennwert bezeichnet man als *Mean Absolute Error* (MAE) 
 bzw. als *Mittlere Absolutabweichung* (MAA).
-Er ist so definiert:
+Er ist so definiert, s. @eq-mae.
 
 
-${\displaystyle \mathrm {MAE} ={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}.}$
+${\displaystyle \mathrm {MAE} ={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}.}$ {#eq-mae}
 
 :::{#def-mae}
 ### Mittlere Absolutabweichung
@@ -354,12 +354,14 @@ mae(lm1)
 ### Der Interquartilsabstand
 
 
-Der Interquartilsabstand (engl. inter quartile range, IQR) ist ein Streuungsmaß, das nicht auf dem Mittelwert aufbaut.
+Der Interquartilsabstand (IQA; engl. inter quartile range, IQR) ist ein Streuungsmaß, das nicht auf dem Mittelwert aufbaut.
 Der IQR ist robuster als z.B. der MAA oder die Varianz und die Standardabweichung.
 
 :::{#def-iqr}
 ### Interquartilsabstand
-Der Interquartilsabstand (IRR) ist definiert als der die Differenz vom 3. Quartil und 1. Quartil.$\square$
+Der Interquartilsabstand ist definiert als der die (absolute) Differenz vom 3. Quartil und 1. Quartil.$\square$
+:::
+
 
 :::{#exm-iqr}
 ### IQR im Hörsaal
@@ -576,7 +578,7 @@ p_var <-
   theme_minimal() +
   annotate("label", x = 1, y = -0.1,
            hjust = 0,
-           label = paste0(var_smpl, " = (0.01 + 0.01 + 0.01 + 0.09)*4"))
+           label = paste0(var_smpl, " = (0.01 + 0.01 + 0.01 + 0.09)/4"))
 
 p_deltas
 p_var
@@ -611,11 +613,13 @@ m_summ <-
     pr_maa = mean(abs(total_pr - mean(total_pr))),
     pr_var = var(total_pr),
     pr_sd = sd(total_pr))
-
-m_summ
 ```
 
 
+```{r}
+#| echo: false
+m_summ %>% print_md()
+```
 
 
 
@@ -697,26 +701,26 @@ Um die Standardabweichung zu berechnen, berechnet man zunächst die *Varianz*, $
 4. Teile durch die Anzahl $N$ der Werte
 
 
-Als Formel ausgedrückt, lautet die Definition der Varianz^[sog. unkorrigierte Stichprobenvarianz] einer Stichprobe:
+Als Formel ausgedrückt, lautet die Definition der Varianz^[sog. unkorrigierte Stichprobenvarianz] einer Stichprobe wie folgt, s. @eq-var.
 
 
-$${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{n}}\sum _{i=1}^{n}dy_i^{2}.}$$
+$${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{N}}\sum _{i=1}^{n}dy_i^{2}.}$$ {#eq-var}
 
 
 :::{#def-var}
 ### Varianz
-Die Varianz ($s^2, \sigma^2$) ist definiert als der Mittelwert der quadradrierten Abweichungen (vom Mittelwert).$\square$
+Die Varianz ($s^2, \sigma^2$) ist definiert als der Mittelwert der quadrierten Abweichungen (vom Mittelwert).$\square$
 :::
 
 
 Die Varianz steht im engen Verhältnis zur Kovarianz, s. @sec-cov.
+Die Varianz kann auch verstehen als den *mittleren Quadratfehler* (Mean Squared Error, MSE) eines Modells, s. @eq-mse.
 
-Die Varianz kann auch verstehen als den mittleren Quadratfehler (Mean Squared Error, MSE) eines Modells.
+
+
+$${\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\hat {y}}\right)^{2}.}$$ {#eq-mse}
+
 Im Fall eines Punktmodells ist der Mittelwert der vorhergesagte Wert eines Modells.
-
-
-$${\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\hat {y}}\right)^{2}.}$$
-
 
 
 
@@ -727,10 +731,10 @@ Kennt man die Varianz, so lässt sich die Standardabweichung einfach als Quadrat
 
 :::{#def-sd}
 ### Standardabweichung
-Die Standardabweichung (SD, s, $\sigma$) ist definiert als die Quadratwurzel der Varianz. 
+Die Standardabweichung (SD, s, $\sigma$) ist definiert als die Quadratwurzel der Varianz, s. @eq-sd.
 
 
-$$s := \sqrt{s^2}$$
+$$s := \sqrt{s^2}$$ {#eq-sd}
 
 $\square$
 :::

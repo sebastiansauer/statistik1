@@ -1096,6 +1096,7 @@ Man weiß also nicht, ob die Modellkoeffizienten belastbar, robust, stichhaltig 
 #| fig-subcap: 
 #|   - "Modell: `y ~ x`, starker Zusammenhang; b1 ist stark positiv"
 #|   - "Modell: `y ~ x + g`, in jeder der beiden Gruppen ist der Zusammenhang praktisch Null, b1 = 0"
+
 n <- 100
 
 set.seed(42)
@@ -1113,13 +1114,17 @@ d_sim <-
       group = "B")
   )
 
-
+p_super_korr <- 
 d_sim %>%
   ggplot(aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(method = "lm") +
   labs(title = "Oh yeah, super Korrelation!") +
-  theme_minimal()
+  theme_minimal() 
+
+p_super_korr
+
+
 
 d_sim %>%
   ggplot(aes(x = x, y = y, color = group)) +
@@ -1128,14 +1133,18 @@ d_sim %>%
   labs(title = "Oh nein, in beiden Gruppen keine Korrelation!") +
   theme(legend.position = "bottom") +
   theme_minimal() +
-  scale_color_okabeito()
+  scale_color_okabeito() +
+  theme(
+    legend.position = c(0.97, 0.05),  # Adjust these values to position the legend
+    legend.justification = c(1, 0)) 
 ```
 
 
-Man könnte höchstens sagen, dass man (wenn man die Kausalstruktur nicht kennt) die Modellkoeffizienten nur *deskriptiv* interpretiert, z.B. "Dort wo es viele Störche gibt, gibt es auch viele Babies".^[Das Störche-Babies-Beispiel passt auch zu @fig-confounder.]
+Man könnte höchstens sagen, dass man (wenn man die Kausalstruktur nicht kennt) die Modellkoeffizienten nur *deskriptiv* interpretiert,
+z.B. "Dort wo es viele Störche gibt, gibt es auch viele Babies".^[Das Störche-Babies-Beispiel passt auch zu @fig-confounder.]
 Leider ist unser Gehirn auf kausale Zusammenhänge geprägt: 
 Es fällt uns schwer, Zusammenhänge nicht kausal zu interpretieren.
-Daher werden deskriptive Befunde immer wieder unzulässig kausal interpretiert - von Laien und Wissenschaftlis auch.
+Daher werden deskriptive Befunde immer wieder unzulässig kausal interpretiert - von Laien und Wissenschaftlern auch.
 
 
 ## Modelle mit vielen Variablen
@@ -1147,7 +1156,7 @@ Grundsätzlich kann man viele Prädiktoren in ein (lineares) Modell aufnehmen.
 data(mariokart, package = "openintro")
 ```
 
-Betrachten wir z.B. folgendes lineares Modell mit zwei UV.
+Betrachten wir z.&thinsp;B. folgendes lineares Modell mit zwei UV.
 
 ```{r}
 lm_mario_2uv <- lm(total_pr ~ start_pr + ship_pr, data = mariokart %>% filter(total_pr < 100))
@@ -1188,14 +1197,14 @@ plot_ly(x = ~ start_seq,
 <!-- d.h. die Steigung für `start_pr` bzw. die Steigung für `ship_pr`. -->
 
 
-Wir könnten im Prinzip alle Variablen unserer Datentabelle als Prädiktoren in das Regressionsmodellaufnehmen.
+Wir könnten im Prinzip alle Variablen unserer Datentabelle als Prädiktoren in das Regressionsmodell aufnehmen.
 Die Frage ist nur: macht es Sinn?
 
 Hier sind einige Richtlinien, die helfen, welche Prädiktoren (und wie viele) man in ein Modell aufnehmen sollte [@gelman_regression_2021, S. 199f]:
 
-1. Alle Prädiktoren aufnehmen, von denen anzunehmen ist, dass Sie Ursachen für die Zielvariablen sind
-2. Bei Prädiktoren mit starken Effekten kann es Sinn machen, ihre Interaktionseffekte auch mit in das Modell aufzunehmen
-3. Prädiktoren mit kleinem Schätzbereich (`95 CI`) sollten eher im Modell belassen werden, da sie die Modellgüte verbessern
+1. Man sollte alle Prädiktoren aufnehmen, von denen anzunehmen ist, dass Sie Ursachen für die Zielvariablen sind
+2. Bei Prädiktoren mit starken (absolunte) Effekten kann es Sinn machen, ihre Interaktionseffekte auch mit in das Modell aufzunehmen
+3. Prädiktoren mit kleinem Schätzbereich (`95 CI`) sollten tendenziell im Modell belassen werden, da sie die Modellgüte verbessern
 
 
 
@@ -1420,7 +1429,7 @@ Wie ist es um das R-Quadrat Ihrer Vorhersagen bestellt?
 
 
 ```{r}
-# auch aus dem Paket yardstick:
+# `rsq ` ist auch aus dem Paket yardstick:
 rsq(data = mariokart_test,
     truth = total_pr,  # echter Verkaufspreis
     estimate = lm_allin_predictions)  # Ihre Vorhersage

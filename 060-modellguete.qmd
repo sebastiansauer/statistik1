@@ -25,8 +25,13 @@ In diesem Kapitel benötigen Sie folgende R-Pakete.
 ```{r}
 library(tidyverse)
 library(easystats)
+library(ggpubr)
 ```
 
+```{r libs-hideen}
+#| echo: false
+library(patchwork)
+```
 
 
 
@@ -84,7 +89,7 @@ Würden Sie die Pille von Prof. Weiss-Ois nehmen?
 a) ja
 b) nein
 c) Nur wenn ich 100 Euro bekomme
-d) Okay, für 1000 Euro\square$
+d) Okay, für 1000 Euro$\square$
 :::
 
 
@@ -748,7 +753,7 @@ Dann nennt man sie *Root Mean Squared Error* (RMSE): $rmse = \sqrt{mse}$.
 
 
 :::{.callout-note}
-Die SD ist i.d.R. ungleich zur MAE.$\square$
+Die SD ist i.d.R. ungleich zur MAE, aber (fast) gleich zur RMSE. Entsprechend ist die Varianz (fast) gleich zur MSE.$\square$
 :::
 
 
@@ -808,11 +813,11 @@ Wenn wir den Mittelwert als Punktmodell des Verkaufpreises auffassen, so kann ma
 Definieren wir zunächst als Punktmodell auf Errisch:
 
 ```{r}
-lm_mario1 <- lm(total_pr ~ 1, data = m)
+lm_mario1 <- lm(total_pr ~ 1, data = mariokart)
 ```
 
 Zur Erinnerung: Wir modellieren `total_pr` ohne Prädiktoren, sondern als Punktmodell,
-und zwar schätzen wir den Mittelwert mit den Daten `m`.
+und zwar schätzen wir den Mittelwert mit den Daten `mariokoart`.
 
 Das (Meta-)Paket `easystats` bietet komfortable Befehle, um die Modellgüte zu berechnen:
 
@@ -824,6 +829,136 @@ rmse(lm_mario1)  # Root mean squared error
 
 
 
+## z-Transformation
+
+Sie arbeiten immer noch als Datenknecht, Moment, *Datenhecht* bei dem Online-Auktionshaus.
+Heute untersuchen Sie die Frage, wie gut sich die Verkaufspreise mit einer einzeigen Zahl, dem mittleren Verkaufspreis, beschreiben lassen.
+Einige widerspenstige Werte haben Sie dabei einfach des Datensatzes verwiesen.
+Schon ist das Leben leichter, s. `mariokart2`.
+
+```{r}
+mariokart2 <- 
+  mariokart %>% 
+  filter(total_pr < 100)
+```
+
+
+```{r}
+#| echo: false
+mariokart2 <-
+  mariokart2 %>% 
+  mutate(abw = 47.4 - total_pr)
+```
+
+
+Mit dem R-Paket `ggpubr` (Funktion `gghistogram`) lässt sich die Verteilung leicht visualisieren, s. @fig-mariokart2, links. 
+
+```{r}
+#| label: fig-mariokart2
+#| fig-cap: Verteilung von `mariokart2`
+#| layout-ncol: 2
+#| echo: false
+#| fig-subcap:
+#|   - Wie nah drängen sich die Verkaufspreise um ihren Mittelwert?
+#|   - Abweichungen vom Mittelwert
+
+
+gghistogram(mariokart2, x = "total_pr", 
+            add = "mean",  # Mittelwert wird hinzugefügt
+            add.params = list(color = "blue", size = 3)) # Schnickschnack zur Verschönerung
+
+gghistogram(mariokart2, x = "abw",
+            add = "mean",  # Mittelwert wird hinzugefügt
+            add.params = list(color = "blue", size = 3))
+```
+
+
+
+Tja, das ist doch etwas Streuung um den Mittelwert herum.
+
+:::callout-important
+Je weniger Streuung um den Mittelwert (ca. 47 Euro) herum, desto besser eignet sich der Mittelwert als Modell für die Daten, bzw. desto höher die Modellgüte.$\square$
+:::
+
+Ja, es ist *etwas* Streuung, aber wie viel? Kann man das genau angeben?
+Sie überlegen ... und überlegen. Da! Eine Idee!
+
+Man könnte vielleicht angeben, wie viel Euro jedes Spiel vom Mittelwert entfernt ist.
+Je größer diese Abweichung, desto schlechter die Modellgüte!
+Also rechnen Sie diese Abweichung aus.
+
+```{r}
+mariokart2 <-
+  mariokart2 %>% 
+  mutate(abw = 47.4 - total_pr)
+```
+
+Anders gesagt: Wir haben die Verkaufspreise zentriert.
+Aber irgendwie sind Sie noch nicht am Ziel Ihrer Überlegungen:
+Woher weiß man, ob 10 Euro oder 20 Euro "viel" Abweichung vom Verkaufspreis ist?
+Man müsste die Abweichung eines Verkaufpreis zu irgendetwas in Bezug setzen.
+Wieder! Ein Geistesblitz!
+Man könnte doch die jeweilige Abweichung  in Bezug setzen zur *mittleren (absoluten) Abweichung* (MAA)!
+Ein alternativer, ähnlicher Kennwert zur mittlerer absolute Abweichung ist die SD.
+Sie haben gehört, dass die SD gebräuchlicher ist als die MAA. 
+Um sich als Checker zu präsentieren, berechnen Sie also auch die SD; die beiden Koeffizienten sind ja ähnlich.
+
+Also: Wenn ein Spiel 10 Euro vom Mittelwert abweicht und die SD 10 Euro betragen sollte,
+dann hätten wir eine "standardisierte"^[abgekürzt manchmal mit `std`] Abweichung von 1, weil 10/10=1.
+
+Begeistert über Ihre Schlauheit machen Sie sich ans Werk.
+
+```{r}
+mariokart2 <-
+  mariokart2 %>% 
+  mutate(abw_std = abw / sd(abw),  # std wie "standardisiert"
+         abw_std2 = abw / mean(abs(abw)))  
+```
+
+Zufrieden betrachten Sie Ihr Werk, s. @fig-z-transf. 
+In @fig-z-transf sieht man oben die Rohwerte und unten die transformierten Werte,
+die wir hier als *standardisiert* bezeichnen, da wir sie in Bezug zur "typischen Abweichung", der SD, gesetzt haben.
+
+```{r}
+#| warning: false
+#| echo: false
+#| label: fig-z-transf
+#| fig-cap: Standardisierung von Abweichungswerten bzw. einer Verteilung
+p1 <- gghistogram(mariokart2, x = "abw",
+            add = "mean",  # Mittelwert wird hinzugefügt
+            add.params = list(color = "blue", size = 3)) +
+  labs(title = "Rohwerte")
+
+p2 <-  gghistogram(mariokart2, x = "abw_std",
+            add = "mean",  # Mittelwert wird hinzugefügt
+            add.params = list(color = "blue", size = 3)) +
+  labs(title = "Standardisierte Werte")
+
+arrow_down <- png::readPNG("img/arrow-down.png", native = TRUE)
+p_ad <- ggplot() + inset_element(arrow_down, 0, 0, 1, 1)
+
+plots(p1, p_ad, p2, n_rows = 3)
+```
+
+
+Wir fassen unsere Schritte unserer Umrechnung ("Transformation") zusammen:
+
+1. Nimm die Verteilung der Verkaufspreise
+2. Berechne die Abweichungen vom mittleren Verkaufspreis (Differenz Mittelwert und jeweiliger Verkaufspreis)
+4. Teile die Abweichungen (Schritt 2) durch die SD
+
+
+Diese Art von Transformation bezeichnet man als *z-Transformation* und die resultierenden Werte als *z-Werte*.
+
+:::{#def-z-werte}
+### z-Werte
+z-Werte sind das Resultat der z-Transformation.
+Für die Variable $X$ berechnet sich der z-Wert der $i$-ten Beobachtung so: $z_i = \frac{x_i - \bar{x}}{sd_x}.\square$
+:::
+
+z-Werte sind nützlich, weil sie die "relative" Abweichung einzelner Beobachtungen vom Mittelwert anzeigen.
+
+Nach einer *Faustregel* spricht man von extremen Abweichungen (Extremwerten, Ausreißern), wenn $z_i > 2$ oder $z_i > 3$.
 
 
 ## Fazit

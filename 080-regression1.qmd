@@ -32,6 +32,10 @@ Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt dam
 #| message: false
 library(tidyverse)
 library(easystats)
+
+theme_set(theme_minimal())
+scale_colour_discrete <- function(...) 
+  scale_color_okabeito()
 ```
 
 
@@ -250,8 +254,57 @@ In der Statistik wird folgende Nomenklatur bevorzugt: $f(x)=\hat{y} = \color{red
 ![Achsenabschnitt und Steigung einer Regressionsgeraden](img/regr.png){#fig-regrtex width="70%"}
 
 
-[Basierend auf diesem Diagramm von Henri Menke](https://texample.net/tikz/examples/linear-regression/)
+[Bildquelle: Basierend auf diesem Diagramm von Henri Menke](https://texample.net/tikz/examples/linear-regression/)
 
+
+Je nach Datenlage können sich Regressionsgerade in Steigung oder Achsenabschnitt unterscheiden, s. @fig-regr-div.
+
+```{r}
+#| echo: false
+
+set.seed(42)
+d1 <- tibble(
+  x = rnorm(50),
+  y1 = x + rnorm(50, mean = 0, sd = .5)
+)
+
+set.seed(3141)
+d2 <- tibble(
+  x = rnorm(50),
+  y1 = x + rnorm(50, mean = 0, sd = .5)
+)
+
+lm1 <- lm(y1 ~ x, data = d1)
+lm1_coef <- coef(lm1)
+lm2 <- lm(y1 ~ x, data = d2)
+lm2_coef <- coef(lm2)
+
+cap1 <- paste0("Datensatz 1: b0 = ", round(lm1_coef[1], 2), "; b1 = ", round(lm1_coef[2]), 2)
+cap2 <- paste0("Datensatz 2: b0 = ", round(lm2_coef[1], 2), "; b1 = ", round(lm2_coef[2]), 2)
+```
+
+
+```{r}
+#| echo: false
+#| fig-cap: "Regressionsanalysen mit verschiedenen Koeffizienten, aber gleicher Modellgüte"
+#| label: fig-regr-div
+#| layout-ncol: 2
+#| fig-subcap: 
+#|   - Datensatz 1
+#|   - Datensatz 2
+
+ggplot(d1, aes(x, y1)) + 
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  scale_y_continuous(limits = c(-4, 4)) +
+  labs(title = paste0("b0 = ",round(lm1_coef[1], 2), "; b1 = ", round(lm1_coef[2]), 2))
+
+ggplot(d2, aes(x, y1)) + 
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  scale_y_continuous(limits = c(-4, 4)) +
+  labs(title = paste0("b0 = ",round(lm2_coef[1], 2), "; b1 = ", round(lm2_coef[2]), 2))
+```
 
 
 
@@ -369,7 +422,7 @@ tonis_lernzeit2 <- tibble(x = 73)
 ```{r}
 predict(lm1, newdata = tonis_lernzeit2)
 ```
-:::
+
 
 
 Die Syntax von `predict` lautet:
@@ -585,8 +638,8 @@ Je größer R-Quadrat, desto besser erklärt das Modell die Daten (desto besser 
 ### Modellgüte
 
 Die Residuen (Vorhersagefehler) bestimmen die Modellgüte:
-Sind die Residuen im Schnitt groß, so ist die Modellgüte gering (schlecht), und umgekerht.
-Verschiedenen Koeffizienten stehen zur Verfügung: R-Quadrat, r^[als Korrelation von tatsächlichem $y$ und vorhergesaten $\hat{y}], MSE, RMSE, MAE, ...
+Sind die Residuen im Schnitt groß, so ist die Modellgüte gering (schlecht), und umgekehrt.
+Verschiedenen Koeffizienten stehen zur Verfügung: R-Quadrat, r^[als Korrelation von tatsächlichem $y$ und vorhergesagten $\hat{y}%], MSE, RMSE, MAE, ...
 
 
 ### Koeffizienten

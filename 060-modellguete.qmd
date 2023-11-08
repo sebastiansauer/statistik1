@@ -290,7 +290,7 @@ bzw. als *Mittlere Absolutabweichung* (MAA).
 Er ist so definiert, s. @eq-mae.
 
 
-${\displaystyle \mathrm {MAE} ={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}.}$ {#eq-mae}
+$${\displaystyle \mathrm {MAE} ={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}.}$$ {#eq-mae}
 
 :::{#def-mae}
 ### Mittlere Absolutabweichung
@@ -374,76 +374,21 @@ In einem Statistikkurs betragen die Quartile der Körpergröße: Q1: 1.65m, Q2 (
 :::
 
 
-### Der mittlere Quadratfehler
+### Streuungsmaße für Normalverteilungen
+
+Normalverteilungen sind recht häufig anzutreffen in der Praxis der Datenanalyse.
+Daher lohnt es sich, zu überlegen,
+wie man diese Verteilungen gut zusammenfasst.
+Man kann zeigen, dass eine Normalverteilung sich komplett über ihren *Mittelwert* sowie ihre *Standardabweichung* beschreiben lässt.
+Außerdem gilbt: Sind Ihre Daten normalverteilt, dann sind die Abweichungen vom Mittelwert auch normalverteilt.
 
 
-
-Sagen wir, wir möchten die Körpergröße erwachsener (deutscher) Männer modellieren.
-Einfach gesagt: Wir möchten wissen, wie groß typischerweise ein deutscher Mann ist.
-Wir verwenden den Mittelwert, um diese Frage zu beantworten.
-Aus der Literatur erfahren wir, dass die mittlere Körpergröße belgischer Männer bei 179 cm liegt und normalverteilt ist [@Garcia:2007aa].^[Das sind Daten für Belgien; Daten zur Standardabweichung für Deutschland habe ich nicht gefunden.]
+Denn wenn man eine Konstante zu einer Verteilung addiert (bzw. subtrahiert), "verschiebt man den Berg" ja nur zur Seite, ohne seine Form zu verändern, s. @fig-norm-dev.
 
 
-Sind Ihre Daten normalverteilt, dann sind die Abweichungen vom Mittelwert auch normalverteilt.
-Denn wenn man eine Konstante zu einer Verteilung addiert, "verschiebt man den Berg" ja nur zur Seite, ohne seine Form zu verändern, s. @fig-norm-dev.
-
-
-```{r fig-norm-verschieb-pfeil}
-#| echo: false
-#| label: fig-norm-dev
-#| fig-cap: Die Abweichungen zum Mittelwert einer normalverteilten Variable sind selber normalverteilt
-#| fig-asp: 0.5
-
-
-d <- 
-  tibble(groesse = rnorm(1e5, 178.6, 6.6),
-         groesse_zentriert = groesse - mean(groesse))
-
-d_sum <-
-  d %>% 
-  pivot_longer(everything()) %>%
-  group_by(name) %>% 
-  summarise(MW = mean(value))
-  
-
-d %>% 
-  ggplot() +
-  geom_density(aes(x = groesse), color = "red") +
-  geom_density(aes(x = groesse_zentriert), color = "blue") +
-  theme_minimal() +
-  geom_vline(data = d_sum,
-             aes(xintercept = MW)) +
-  geom_label(data = d_sum,
-             aes(label = paste0("MW: ", round(MW, 0)), x = MW),
-             y = 0) +
-  labs(x = "(zentrierte) Körpergröße", 
-       y = "") +
-  annotate("segment", x = 125, xend = 75, y = 0.01, yend = 0.01,
-           arrow = arrow(type = "closed", length = unit(0.02, "npc")))
-
-
-
-# d %>% 
-#   pivot_longer(everything()) %>% 
-#   ggplot() +
-#   aes(x = value) +
-#   geom_density() +
-#   facet_wrap(~ name) +
-#   theme_minimal() +
-#   geom_vline(data = d_sum,
-#              aes(xintercept = MW), color = "red") +
-#   geom_label(data = d_sum,
-#              aes(label = paste0("MW: ", round(MW, 0)), x = MW),
-#              y = 0) +
-#   labs(x = "(zentrierte) Körpergröße", 
-#        y = "")
-```
-
-Hat man normalverteilte Residuen, so ist die *Standardabweichung* (engl. standard deviation, SD, $\sigma$, $s$) eine komfortable Maßeinheit der Streuung,
-denn damit lässt sich die Streuung (Abweichung vom Mittelwert, Residuen) der Normalverteilung gut beschreiben.
-
-:::{.callout-note}
-Normalverteilte Residuen lassen sich gut mit der Standardabweichung beschreiben.$\square$
+:::callout-note
+Hat man normalverteilte Variablen/Abweichungen/Residuen, so ist die *Standardabweichung* (engl. standard deviation, SD, $\sigma$, $s$) eine komfortable Maßeinheit der Streuung,
+denn damit lässt sich die Streuung (Abweichung vom Mittelwert, Residuen) der Normalverteilung gut beschreiben.$\square$
 :::
 
 
@@ -695,7 +640,7 @@ $\square$
 Wer sich die Berechnung von Hand für `pr_maa` sparen möchte, kann die [Funktion `MeanAD` aus dem Paket `DescTools`](https://rdrr.io/cran/DescTools/man/MeanAD.html) nutzen.
 
 
-#### Definition
+#### Kochrezept für die Varianz
 
 
 Um die Standardabweichung zu berechnen, berechnet man zunächst die *Varianz*, $s^2$ abgekürzt. Hier ist ein "Kochrezept"^[Algorithmus] zur Berechnung der Varianz:
@@ -893,7 +838,71 @@ mariokart2 <-
   mutate(abw = 47.4 - total_pr)
 ```
 
-Anders gesagt: Wir haben die Verkaufspreise zentriert.
+Anders gesagt: Wir haben die Verkaufspreise *zentriert.*
+
+:::{#def-zentrieren}
+### Zentrieren 
+Zentrieren bedeutet, von jedem Wert einer Verteilung $X$ den Mittelwert abzuziehen.
+Daher ist der neue Mittelwert (der zentrierten Verteilung) gleich Null. $\square$
+:::
+
+
+```{r fig-norm-verschieb-pfeil}
+#| echo: false
+#| label: fig-norm-dev
+#| fig-cap: Die Abweichungen zum Mittelwert einer normalverteilten Variable sind selber normalverteilt
+#| fig-asp: 0.5
+
+mw <- 47.4
+streuung <- 9.11
+
+d <- 
+  tibble(groesse = rnorm(1e5, mw, streuung),
+         groesse_zentriert = groesse - mean(groesse))
+
+d_sum <-
+  d %>% 
+  pivot_longer(everything()) %>%
+  group_by(name) %>% 
+  summarise(MW = mean(value))
+  
+
+d %>% 
+  ggplot() +
+  geom_density(aes(x = groesse), color = "#E69F00FF") +
+  geom_density(aes(x = groesse_zentriert), color = "#56B4E9FF") +
+  theme_minimal() +
+  geom_vline(data = d_sum,
+             aes(xintercept = MW),
+             color = "grey") +
+  geom_label(data = d_sum,
+             aes(label = paste0("MW: ", round(MW, 0)), x = MW),
+             y = 0) +
+  labs(x = "(zentrierte) Variable", 
+       y = "") +
+  annotate("segment", x = mw, xend = 0, y = 0.01, yend = 0.01,
+           arrow = arrow(type = "closed", length = unit(0.02, "npc")))
+
+
+
+# d %>% 
+#   pivot_longer(everything()) %>% 
+#   ggplot() +
+#   aes(x = value) +
+#   geom_density() +
+#   facet_wrap(~ name) +
+#   theme_minimal() +
+#   geom_vline(data = d_sum,
+#              aes(xintercept = MW), color = "red") +
+#   geom_label(data = d_sum,
+#              aes(label = paste0("MW: ", round(MW, 0)), x = MW),
+#              y = 0) +
+#   labs(x = "(zentrierte) Körpergröße", 
+#        y = "")
+```
+
+
+
 Aber irgendwie sind Sie noch nicht am Ziel Ihrer Überlegungen:
 Woher weiß man, ob 10 Euro oder 20 Euro "viel" Abweichung vom Verkaufspreis ist?
 Man müsste die Abweichung eines Verkaufpreis zu irgendetwas in Bezug setzen.
@@ -980,6 +989,14 @@ Liegen Exremwerte vor, kann es vorteilhafter sein, den IQR vorzuziehen gegenübe
 
 ## Aufgaben
 
+
+
+<!-- :::{#exr-koerpergroesse} -->
+<!-- Sagen wir, wir möchten die Körpergröße erwachsener (deutscher) Männer modellieren. -->
+<!-- Einfach gesagt: Wir möchten wissen, wie groß typischerweise ein deutscher Mann ist. -->
+<!-- Wir verwenden den Mittelwert, um diese Frage zu beantworten. -->
+<!-- Aus der Literatur erfahren wir, dass die mittlere Körpergröße belgischer Männer bei 179 cm liegt und normalverteilt ist [@Garcia:2007aa].^[Das sind Daten für Belgien; Daten zur Standardabweichung für Deutschland habe ich nicht gefunden.] -->
+<!-- ::: -->
 
 
 

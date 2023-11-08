@@ -164,16 +164,12 @@ Lies: "Der Modellwert $\hat{y}$ ist eine Funktion des Modells (m) ".
 Der Kringel "~"^[die sog. "Tilde"] soll also hier heißen "... ist eine Funktion von ...".
 
 Mit $\hat{y}$ sind die vorhergesagten bzw. die zu erklärende Variable^[AV, Output-Variable, Zielvariable] gemeint.
-
 Das "Dach"  über dem $y$ bedeutet "vorhergesager Y-Wert" oder "Y-Wert laut dem Modell".
-
 Der tatsächliche, beobachtete Wert $y$ setzt sich zusammen aus dem Modellwert (m) plus einem Fehler (e wie error):
 
 $$y = m + e$$
 
 Anstelle von $m$ schreibt ma nauch $\hat{y}$ ("y-Dach"). \hat{y} bedeutet der "vorhergesagte y-Wert laut einem Modell".
-
-
 In diesem Fall ist das Modell einfach gleich dem Mittelwert (und nicht irgendeiner Funktion des Mittelwerts), so dass wir schreiben können:
 
 
@@ -226,8 +222,8 @@ d <- d %>%
          delta_sq = delta^2)
 
 
-
-d %>%
+p_mean_deltas <- 
+  d %>%
   ggplot(aes(x = id, 
              y = note)) +
   geom_hline(yintercept = mean(d$note), 
@@ -240,7 +236,7 @@ d %>%
                ) +
   geom_point(size = 5) + 
   labs(linetype = "Richtung der Abweichung") +
-  theme(legend.position =  c(1, 1),
+  theme(legend.position =  c(0, 1),
         legend.justification = c(1, 1)) +
   annotate(geom = "label",
            x = 0,
@@ -250,9 +246,7 @@ d %>%
   scale_y_continuous(limits = c(1, 4)) +
   labs(x = "",
        y = "") +
-  scale_x_continuous(breaks = 1:4) +
-  theme(legend.position = "bottom") +
-  theme_minimal() -> p_mean_deltas
+  scale_x_continuous(breaks = 1:4) 
 
 p_mean_deltas
 ```
@@ -375,7 +369,8 @@ ggplot(mariokart) +
              size = 5) +
   labs(caption = paste0("MW: ", round(mean(mariokart$total_pr), 2)),
        x = "Nr. des Spiel") +
-  scale_y_continuous(limits = c(0, 400))
+  scale_y_continuous(limits = c(0, 400)) +
+  theme_minimal()
 
 mariokart2 <- 
 mariokart %>% 
@@ -388,8 +383,9 @@ ggplot(mariokart2) +
              size = 2) +
   geom_point(alpha = .7) +
   labs(caption = paste0("MW: ", round(mean(mariokart2$total_pr), 2)),
-       x = "Nr. des Spiel") +
-  scale_y_continuous(limits = c(0, 400))
+       x = "Nr. des Spiel") + 
+  scale_y_continuous(limits = c(0, 400)) +
+  theme_minimal()
 
 
 ```
@@ -634,7 +630,7 @@ Bei schiefen Verteilungen ist der Median dem Mittelwert als Modell für den "typ
 
 
 :::{#exr-mw-wealthmd}
-Was schätzen Sie, wie hoch das *mediane* Vermögen des Haushalte in Deutschland in etwa ist?^[Quelle:  [WSI](https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.htm), Abruf 2023-04-19])
+Was schätzen Sie, wie hoch das *mediane* Vermögen des Haushalte in Deutschland in etwa ist (Stand 2016)?^[Quelle:  [WSI](https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.htm), Abruf 2023-04-19. Die Antwort lautet: ca. 60 Tsd Euro laut der angegebenen Quelle])
 
 a) 50.000 Euro
 b) 100.000 Euro
@@ -656,7 +652,7 @@ e) 5.000 Euro$\square$
 
 
 
-## Quartile
+## Quantile
 
 
 Der Median teilt eine Verteilung in eine untere und ein obere Hälfte.
@@ -695,7 +691,16 @@ Entsprechend heißt der Wert, der die drei Viertel kleinsten Werte vom oberen Vi
 
 
 Jetzt könnte man sagen, hey, warum nur in 25%-Stücke die Verteilung aufteilen?
-Warum nicht in 10%-Schritten? Oder in 1%-Schritten oder in sonstigen Schnitten?
+Warum nicht in 10%-Schritten? 
+
+:::{#def-dezile}
+### Dezile
+Die neun Quantile $p= 0.1, 0.2, \ldots, 1$, die die Verteilung in 10 gleiche Teile unterteilen, nennt man Dezile. $\square$
+:::
+
+
+
+Oder vielleicht in 1%-Schritten oder in sonstigen Schnitten?
 Wo die Quartile in 25%-Schritten aufteilen, teilt in *Quantil* in $p$-Prozent-Schritten auf.
 
 
@@ -703,6 +708,8 @@ Wo die Quartile in 25%-Schritten aufteilen, teilt in *Quantil* in $p$-Prozent-Sc
 ### Quantile
 Ein p-Quantil ist der Wert, der von $p$ Prozent der Werte nicht überschritten wird.$\square$
 :::
+
+Ein Quantil ist also ein Oberbegriff für Quantile, Dezile, etc.
 
 
 ```{r}
@@ -743,6 +750,143 @@ mariokart %>%
 ```
 
 
+
+:::{.panel-tabset}
+
+### 25%-Schritte: Quartile
+
+```{r quarts-mario}
+#| echo: false
+#| eval: false
+k <- 0:10
+d_anim_decile <- 
+  mariokart |> 
+  select(total_pr) |> 
+  mutate(quart = cut(total_pr,
+                     breaks = quantile(mariokart$total_pr, probs = k * .1),
+                     include.lowest = TRUE, 
+                     labels = 1:10)) |> 
+  group_by(quart) |> 
+  mutate(total_pr_max = max(total_pr))
+
+
+d_anim2 <-
+  d_anim |> 
+  ungroup() |> 
+  select(total_pr)
+
+p_quartiles  <- 
+d_anim |> 
+  ggplot(aes(x = total_pr)) +
+  geom_density(data = d_anim2) + 
+  geom_vline(aes(xintercept = total_pr_max)) +
+  geom_label(aes(label = quart, x = total_pr_max), y = 0)
+
+library(gganimate)
+p_quantiles_anim <-
+  p_quartiles +
+  transition_states(quart, transition_length = 2, state_length = 1) +
+  ggtitle("Quartil: {closest_state}") +
+  enter_fade() +
+  exit_fade()
+
+anim_save("img/p_quartiles_anim.gif", p_quantiles_anim, renderer = gifski_renderer())
+```
+
+![Quartile](img/p_quartiles_anim.gif)
+
+### 10%-Schritte: Dezile
+
+
+```{r deciles-mario}
+#| echo: false
+#| eval: false
+k <- 0:10
+d_anim_decile <- 
+  mariokart |> 
+  select(total_pr) |> 
+  mutate(decile = cut(total_pr,
+                      breaks = quantile(mariokart$total_pr, probs = k * .1),
+                      include.lowest = TRUE, 
+                      labels = 1:10)) |> 
+  group_by(decile) |> 
+  mutate(total_pr_max = max(total_pr))
+
+d_anim_decile2 <-
+  d_anim |> 
+  ungroup() |> 
+  select(total_pr)
+
+p_decile  <- 
+d_anim_decile |> 
+  ggplot(aes(x = total_pr)) +
+  geom_density(data = d_anim_decile2) + 
+  geom_vline(aes(xintercept = total_pr_max)) +
+  geom_label(aes(label = decile, x = total_pr_max), y = 0)
+
+library(gganimate)
+p_decile_anim <-
+  p_decile +
+  transition_states(decile, transition_length = 2, state_length = 1) +
+  ggtitle("Dezil: {closest_state}") +
+  enter_fade() +
+  exit_fade()
+
+anim_save("img/p_deciles_anim.gif", p_decile_anim, renderer = gifski_renderer())
+```
+
+![Dezile](img/p_deciles_anim.gif)
+
+### Percentile: 1%-Schritte
+
+
+```{r percentiles-mario}
+#| echo: false
+#| eval: false
+k <- 1:100
+breaks_percentiles <- quantile(mariokart$total_pr, probs = k * .01) 
+
+breaks_percentiles <- breaks_percentiles + runif(n = length(breaks_percentiles), min = -.01, max = .01)
+
+cuts_percentiles <- cut(mariokart$total_pr,
+                      breaks = breaks_percentiles,
+                      include.lowest = TRUE,
+                      labels = 1:99)
+
+d_anim_percentile <-
+  mariokart |> 
+  select(total_pr) |> 
+    mutate(perc = cuts_percentiles) |> 
+    group_by(perc) |> 
+    mutate(total_pr_max = max(total_pr))
+
+
+d_anim_percentile2 <-
+  d_anim_percentile |> 
+  ungroup() |> 
+  select(total_pr)
+
+p_percentile  <- 
+d_anim_percentile |> 
+  ggplot(aes(x = total_pr)) +
+  geom_density(data = d_anim_percentile2) + 
+  geom_vline(aes(xintercept = total_pr_max)) +
+  geom_label(aes(label = perc, x = total_pr_max), y = 0)
+
+library(gganimate)
+p_percentile_anim <-
+  p_percentile +
+  transition_states(perc, transition_length = 2, state_length = 1) +
+  ggtitle("Perzentil: {closest_state}") +
+  enter_fade() +
+  exit_fade()
+
+anim_save("img/p_percentile_anim.gif", p_percentile_anim, renderer = gifski_renderer())
+```
+
+![Perzentile](img/p_percentile_anim.gif)    
+:::
+
 ## Lagemaße {#sec-lage}
 
 >    🧑‍🎓 Was ist der Oberbegriff für Median, Mittelwert und so weiter?
@@ -754,7 +898,7 @@ mariokart %>%
 :::{#def-lage}
 
 ### Lagemaß
-Ein Lagemaß oder *Maß der zentralen Tendenz* gibt einen Vorschlag, welchen Wert wir als typisch, normal, zu erwarten, repräsentativ oder mittel ansehen sollten.$\square$
+Ein Lagemaß oder *Maß der zentralen Tendenz* gibt einen Vorschlag, welchen Wert wir als typisch, normal, zu erwarten, repräsentativ oder mittel  ansehen sollten.$\square$
 :::
 
 Typische Lagemaße:

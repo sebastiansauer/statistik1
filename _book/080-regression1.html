@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.478">
+<meta name="generator" content="quarto-1.4.513">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Ein Einführungskurs in die Statistik mit einem Schwerpunkt auf Prognosemodellierung">
 <title>Statistik1 - 10&nbsp; Geradenmodelle 1</title>
@@ -540,7 +540,7 @@ Abbildung&nbsp;10.3: Achsenabschnitt und Steigung einer Regressionsgeraden
 Abbildung&nbsp;10.4: Regressionsanalysen mit verschiedenen Koeffizienten, aber gleicher Modellgüte
 </figcaption></figure>
 </div>
-<p><a href="#fig-linfun" class="quarto-xref">Abbildung&nbsp;<span>10.5</span></a> zeigt ein interaktives Beispiel einer linearen Funktion.</p>
+<p><a href="#fig-linfun" class="quarto-xref">Abbildung&nbsp;<span>10.5</span></a> zeigt ein interaktives Beispiel einer linearen Funktion (<a href="https://www.geogebra.org/m/vfjW1dZt">Quelle: Geogebra, Georg Wengler</a>.</p>
 <div id="fig-linfun" class="quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-linfun-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="figure-content">
@@ -1872,8 +1872,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
         typesetMath(container);
         return container.innerHTML

@@ -497,7 +497,7 @@ Eine Skriptdatei können Sie in typischer Manier öffnen:
 3. Menü: `File > Open File...`
 
 
-## Errische für Einsteiger
+## Errisch für Einsteiger
 
 :::{.callout-note}
 R ist penibel: So sind `name` und `Name` zwei verschiedene Variablen für R. 
@@ -630,10 +630,16 @@ Vielleicht hat sich die befragte Person geweigert, ihr Alter anzugeben^[Datensch
 
 Das, was R kann, ist in "Funktionen" hinterlegt.
 Ein Beispiel für eine solche Funktion könnte sein: 
-"Berechne den Mittelwert" (schauen wir uns gleich an). 
+"Berechne den Mittelwert dieser Datenreihe" (schauen wir uns gleich an). 
 
-Ein weiteres Beispiel für eine Funktion ist:
-"Erstelle eine Liste (Vektor) von Werten".
+
+:::{#exm-funs}
+Weitere Beispiel für Funktionen sind:
+
+- "Erstelle eine Liste (Vektor) von Werten".
+- "Lade dieses R-Paket."
+- "Gib den größten Wert dieser Datenreihe aus." $\square$
+:::
 
 Das geht so:
 
@@ -648,7 +654,7 @@ Der Befehl `c` (c wie *c*ombine) fügt mehrere Werte zusammen zu einer "Liste" (
 
 :::{#def-vektor}
 Als *Vektor* bezeichnen wir eine geordnete Folge von Werten.
-In R kann man sie mit dem Befehl `c()` erstellen.
+In R kann man sie mit der Funktion `c()` erstellen.
 Die Werte eines Vektors bezeichnet man auch als *Elemente*.$\square$
 :::
 
@@ -681,7 +687,7 @@ und Texvektoren, in R auch als *String* oder *character* bezeichnet.
 
 
 Jetzt wird's ernst. 
-Jetzt kommt die Statistik.
+Jetzt kommt die Statistik. 🧟 
 Berechnen wir also unsere erste statistische Funktion:
 Den Mittelwert. Puh.
 
@@ -728,6 +734,8 @@ image_write(p_trimmed, "img/function-schema.png")
 
 
 
+#### Argumente einer Funktion
+
 
 Eine Funktion hat einen oder mehrere *Inputs*,
 das sind Daten oder Verarbeitungshinweise, die man in die Funktion `fun` *eingibt*, bevor sie loslegt.
@@ -760,35 +768,6 @@ brauchen Sie dieses Argument nicht zu befüllen.
 In dem Fall wird auf den Wert der Voreinstellung zurückgegriffen.
 Argumente ohne Voreinstellung - wie `x` bei `mean()` - müssen Sie aber auf jeden Fall mit einem Wert befüllen.$\square$
 :::
-
-Sagen wir, wir haben einen fehlenden Wert in unseren Daten:
-
-
-```{r echo = TRUE}
-Antworten <- c(42, 43, NA)
-Antworten
-```
-
-Wenn wir jetzt den Mittelwert berechnen wollen,
-quittiert R das mit einem schnöden `NA`:
-
-```{r}
-mean(Antworten)
-```
-
-R meint es gut mit Ihnen^[>   🤖 Naja, manchmal.]. Stellen Sie sich vor, 
-dass R Sie auf dieses Problem aufmerksam machen möchte: 
-
->   🤖 Achtung, lieber Herr und Gebieter, du hast nicht mehr alle Latten am Zaun, will sagen, alle Daten im Vektor!
-
-(Danke, R.)
-
-
-Möchten Sie aber lieber R dieses Verhalten austreiben, so befüllen Sie das Argument `na.rm` mit dem Wert `TRUE`.
-
-```{r}
-mean(Antworten, na.rm = TRUE)
-```
 
 
 Bei jedem R-Befehl haben die Argumente eine bestimmte Reihenfolge,
@@ -823,6 +802,53 @@ In diesen Fällen sind Leerzeichen nicht erlaubt:
 - `<-`
 - `<=` etc.
 - Variablennamen
+
+
+
+#### Achtung bei fehlenden Werten
+
+Sagen wir, wir haben einen fehlenden Wert in unseren Daten:
+
+
+```{r echo = TRUE}
+Antworten <- c(42, 43, NA)
+Antworten
+```
+
+Wenn wir jetzt den Mittelwert berechnen wollen,
+quittiert R das mit einem schnöden `NA`.
+`NA` steht für *not available*, ist also ein Hinweis, dass Werte fehlen.
+
+```{r}
+mean(Antworten)
+```
+
+R meint es gut mit Ihnen^[>   🤖 Naja, manchmal.]. Stellen Sie sich vor, 
+dass R Sie auf dieses Problem aufmerksam machen möchte: 
+
+>   🤖 Achtung, lieber Herr und Gebieter, du hast nicht mehr alle Latten am Zaun, will sagen, alle Daten im Vektor!
+
+(Danke, R.)
+
+
+Möchten Sie aber lieber R dieses Verhalten austreiben, so befüllen Sie das Argument `na.rm` mit dem Wert `TRUE`.^[`na.rm` steht für *r*e*m*ove die NA, also fehlenden Werte]
+
+```{r}
+mean(Antworten, na.rm = TRUE)
+```
+
+
+:::{#exr-na}
+### Geben Sie lustige Bedeutungen an, was "NA" noch bedeuten könnte!
+
+>   🤖 Wie wäre es mit "nebulöse Anomalie" oder "nix-checkender Angeber" oder "nölender Automat".
+
+>   🧑‍🎓 Hm...
+
+$\square$
+:::
+
+
 
 
 ### Vektorielles Rechnen {#sec-veccalc}
@@ -1099,13 +1125,14 @@ Der Vorteil von `read.csv` ist, dass Sie kein Extra-Paket installiert bzw. gesta
 
 ### Dataframes
 
-Eine in R importierte Tabelle heißt *Dataframe*.^[Etwas vereinfach ausgedrückt.]
+Eine in R importierte Tabelle (mit bestimmten Eigenschaften) heißt *Dataframe*.
+Dataframes sind in der Datenanalyse von großer Bedeutung.
 
 :::{#def-dataframe}
 
 ### Dataframe
 
-Ein Dataframe (data frame; auch "Tibble" genannt^[von "tbl" wie Table]) ist ein Datenojbekt in R zur Darstellung von Tabellen.
+Ein Dataframe (data frame; auch "Tibble" genannt^[von "tbl" wie Table]) ist ein Datenobjekt in R zur Darstellung von Tabellen.
 Dataframes bestehen aus einer oder mehreren Spalten. Spalten haben einen Namen, sozusagen einen "Spaltenkopf". 
 Alle Spalten müssen die gleiche Länge haben;
 anschaulich gesprochen ist eine Tabelle (in R) rechteckig.

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.478">
+<meta name="generator" content="quarto-1.4.544">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Ein Einführungskurs in die Statistik mit einem Schwerpunkt auf Prognosemodellierung">
 <title>Statistik1 - 5&nbsp; Daten umformen</title>
@@ -115,6 +115,7 @@ div.csl-indent {
     "search-more-match-text": "weitere Treffer in diesem Dokument",
     "search-more-matches-text": "weitere Treffer in diesem Dokument",
     "search-clear-button-title": "Zurücksetzen",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Abbrechen",
     "search-submit-button-title": "Abschicken",
     "search-label": "Suchen"
@@ -123,7 +124,32 @@ div.csl-indent {
 <meta name="mermaid-theme" content="default">
 <script src="site_libs/quarto-diagram/mermaid.min.js"></script><script src="site_libs/quarto-diagram/mermaid-init.js"></script><link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><link rel="stylesheet" href="styles.css">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="styles.css">
 </head>
 <body class="nav-sidebar floating">
 
@@ -147,7 +173,7 @@ div.csl-indent {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Statistik1</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/sebastiansauer/statistik1" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/sebastiansauer/statistik1" title="Quellcode" class="quarto-navigation-tool px-1" aria-label="Quellcode"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
 </div>
     </div>
@@ -375,7 +401,7 @@ q {
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="exr-los" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 5.1 </strong></span>Importieren Sie den Datensatz <code>mariokart</code>. Probieren Sie alle vorgestellten Verben des Datenjudos aus, zunächst in dem Sie einfach den R-Code kopieren und selber ausführen.<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 5.1</strong></span> Importieren Sie den Datensatz <code>mariokart</code>. Probieren Sie alle vorgestellten Verben des Datenjudos aus, zunächst in dem Sie einfach den R-Code kopieren und selber ausführen.<span class="math inline">\(\square\)</span></p>
 </div>
 </section><section id="frag-den-bot" class="level3" data-number="5.1.5"><h3 data-number="5.1.5" class="anchored" data-anchor-id="frag-den-bot">
 <span class="header-section-number">5.1.5</span> Frag den Bot</h3>
@@ -396,7 +422,7 @@ q {
 <p>Laut dem <a href="https://hbr.org/2018/08/what-data-scientists-really-do-according-to-35-data-scientists">Harvard Business Review</a> allerdings, verbringen diese Leute “80%” ihrer Zeit mit dem <em>Aufbereiten</em> von Daten <span class="citation" data-cites="bowne-anderson_what_2018">(<a href="#ref-bowne-anderson_what_2018" role="doc-biblioref">Bowne-Anderson 2018</a>)</span>. Ja: mit uncoolen Tätigkeiten wie Tippfehler aus Datensätzen entfernen oder die Daten überhaupt nutzbar und verständlich zu machen.</p>
 <p>Das zeigt zumindest, dass das Aufbereiten von Daten a) wichtig ist und b) dass man allein damit schon weit kommt. Eine gute Nachricht ist (vielleicht), dass das Aufbereiten von Daten keine aufwändige Mathematik verlangt, stattdessen muss man ein paar Handgriffe und Kniffe kennen. Daher passt der Begriff <em>Datenjudo</em> vielleicht ganz gut. Kümmern wir uns also um das Aufbereiten bzw. Umformen von Daten, um das Datenjudo.<span class="math inline">\(\square\)</span></p>
 </section><div id="exm-datenjudo" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 5.1 </strong></span>Beispiele für typische Tätigkeiten des Datenjudos sind:</p>
+<p><span class="theorem-title"><strong>Beispiel 5.1</strong></span> Beispiele für typische Tätigkeiten des Datenjudos sind:</p>
 <ul>
 <li>Zeilen <em>filtern</em> (z. B. nur Studentis des Studiengangs X)</li>
 <li>Zeilen <em>sortieren</em> (z. B. Studenten mit guten Noten in den oberen Zeilen)</li>
@@ -411,20 +437,20 @@ q {
 <section id="machs-einfach" class="level3" data-number="5.2.3"><h3 data-number="5.2.3" class="anchored" data-anchor-id="machs-einfach">
 <span class="header-section-number">5.2.3</span> Mach’s einfach</h3>
 <p>Es gibt einen (einfachen) Trick, wie man umfangreiche Datenaufbereitung elegant geregelt kriegt, klingt fast zu schön, um wahr zu sein (s. <a href="#fig-that-would-be-great" class="quarto-xref">Abbildung&nbsp;<span>5.1</span></a>).</p>
-<div id="fig-that-would-be-great" class="quarto-figure quarto-figure-center anchored" width="50%">
+<div id="fig-that-would-be-great" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-that-would-be-great-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="img/thatwouldbegreat.jpg" class="img-fluid figure-img" style="width:50.0%">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-that-would-be-great-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-that-would-be-great-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;5.1: Mach’s einfach. Made at imgflip.com, Meme Generator
 </figcaption></figure>
 </div>
 <p>Der Trick besteht darin, komplexe Operationen in mehrere einfache Teilschritte zu zergliedern<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Man könnte vom “Lego-Prinzip” sprechen, s. <a href="#fig-lego" class="quarto-xref">Abbildung&nbsp;<span>5.2</span></a>. Im linken Teil von <a href="#fig-lego" class="quarto-xref">Abbildung&nbsp;<span>5.2</span></a> sieht man ein (recht) komplexes Gebilde. Zerlegt man es aber in seine Einzelteile, so sind es deutlich einfachere geometrische Objekte wie Dreiecke oder Quadrate (rechter Teil des Diagramms).</p>
-<div id="fig-lego" class="quarto-figure quarto-figure-center anchored" width="75%">
+<div id="fig-lego" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-lego-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="img/Bausteine_dplyr_crop.png" class="img-fluid figure-img" style="width:75.0%">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-lego-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-lego-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;5.2: Das Lego-Prinzip
 </figcaption></figure>
 </div>
@@ -451,15 +477,15 @@ Abbildung&nbsp;5.2: Das Lego-Prinzip
 <span><span class="co">## $ title       &lt;chr&gt; "~~ Wii MARIO KART &amp;amp; WHEEL ~ NINTENDO Wii ~ BRAND NEW …</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="exm-datenjudo" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 5.2 </strong></span>Sie arbeiten immer noch bei dem großen Online-Auktionshaus. Mittlerweile haben Sie sich den Ruf des “Datenguru” erworben. Vielleicht weil Sie behauptet haben, Data Science sei zu 80% Datenjudo, das hat irgendwie Eindruck geschindet… Naja, jedenfalls müssen Sie jetzt mal zeigen, dass Sie nicht nur schlaue Sprüche draufhaben, sondern auch die Daten ordentlich abbürsten können. Sie analysieren dafür im Folgenden den Datensatz <code>mariokart</code>. Na, dann los.<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Beispiel 5.2</strong></span> Sie arbeiten immer noch bei dem großen Online-Auktionshaus. Mittlerweile haben Sie sich den Ruf des “Datenguru” erworben. Vielleicht weil Sie behauptet haben, Data Science sei zu 80% Datenjudo, das hat irgendwie Eindruck geschindet… Naja, jedenfalls müssen Sie jetzt mal zeigen, dass Sie nicht nur schlaue Sprüche draufhaben, sondern auch die Daten ordentlich abbürsten können. Sie analysieren dafür im Folgenden den Datensatz <code>mariokart</code>. Na, dann los.<span class="math inline">\(\square\)</span></p>
 </div>
 </section></section><section id="die-verben-des-datenjudos" class="level2" data-number="5.3"><h2 data-number="5.3" class="anchored" data-anchor-id="die-verben-des-datenjudos">
 <span class="header-section-number">5.3</span> Die Verben des Datenjudos</h2>
 <p>Im R-Paket <a href="https://dplyr.tidyverse.org">dplyr</a>, das wiederum Teil des R-Pakets <a href="https://tidyverse.tidyverse.org">tidyverse</a> ist, gibt es eine Reihe von R-Befehlen, die das Datenjudo in eine Handvoll einfacher Verben runterbrechen.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Die wichtigsten Verben des Datenjudos schauen wir uns im Folgenden an.</p>
 <p>Wir betrachten dazu im Folgenden einen einfachen (Spielzeug-)Datensatz, an dem wir zunächst die Verben des Datenjudos vorstellen, s. <a href="#tbl-datenjudo" class="quarto-xref">Tabelle&nbsp;<span>5.1</span></a>.</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/tbl-datenjudo_5d2bfaddfb174e65ebe4902dd5a57bc4">
-<div id="tbl-datenjudo" class="cell anchored" data-hash="030-aufbereiten_cache/html/tbl-datenjudo_5d2bfaddfb174e65ebe4902dd5a57bc4">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="table quarto-float-caption quarto-float-tbl" id="tbl-datenjudo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="tbl-datenjudo" class="cell quarto-float anchored" data-hash="030-aufbereiten_cache/html/tbl-datenjudo_5d2bfaddfb174e65ebe4902dd5a57bc4">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-datenjudo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;5.1: Ein einfacher Datensatz von schlichtem Gemüt
 </figcaption><div aria-describedby="tbl-datenjudo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -492,18 +518,18 @@ Wichtig
 <p><em>Sortieren</em> der Zeilen ist eine einfache, aber häufige Tätigkeit des Datenjudos, s. <a href="#fig-arrange" class="quarto-xref">Abbildung&nbsp;<span>5.3</span></a>.</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/fig-arrange_165deff55b9b494c1d8d6247560ad010">
 <div class="cell-output-display">
-<div id="fig-arrange" class="quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-arrange" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-arrange-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="030-aufbereiten_files/figure-html/fig-arrange-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-arrange-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arrange-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;5.3: Sinnbild für das Sortieren einer Tabelle mit <code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code>
 </figcaption></figure>
 </div>
 </div>
 </div>
 <div id="exm-arrange1" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 5.3 (Was sind die höchsten Preise?) </strong></span>Sie wollen mal locker anfangen. Was sind denn eigentlich die höchsten Preise, für die das Spiel Mariokart über den Online-Ladentisch geht. Die entsprechende Spalte heißt offenbar <code>total_pr</code>. In Excel kann die Spalte, nach der man die Tabelle sortieren möchte, einfach anklicken. Ob das in R auch so einfach geht?</p>
+<p><span class="theorem-title"><strong>Beispiel 5.3 (Was sind die höchsten Preise?)</strong></span> Sie wollen mal locker anfangen. Was sind denn eigentlich die höchsten Preise, für die das Spiel Mariokart über den Online-Ladentisch geht. Die entsprechende Spalte heißt offenbar <code>total_pr</code>. In Excel kann die Spalte, nach der man die Tabelle sortieren möchte, einfach anklicken. Ob das in R auch so einfach geht?</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/unnamed-chunk-8_7711f99e7accb67ae9b4ba323b8187db">
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_neu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">mariokart</span>, <span class="va">total_pr</span><span class="op">)</span></span>
 <span><span class="va">mariokart_neu</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -525,7 +551,7 @@ arrangiere (sortiere) `mariokart` nach der Spalte `total_pr`</code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mario_sortiert</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">mariokart</span>, <span class="op">-</span><span class="va">total_pr</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="exr-arrange2" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 5.2 </strong></span>Sortierne Sie die Mariokart-Daten absteigend nach der Anzahl der beigelegten Lenkräder.<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 5.2</strong></span> Sortierne Sie die Mariokart-Daten absteigend nach der Anzahl der beigelegten Lenkräder.<span class="math inline">\(\square\)</span></p>
 </div>
 </section><section id="zeilen-filtern-filter" class="level3" data-number="5.3.2"><h3 data-number="5.3.2" class="anchored" data-anchor-id="zeilen-filtern-filter">
 <span class="header-section-number">5.3.2</span> Zeilen filtern: <code>filter</code>
@@ -533,18 +559,18 @@ arrangiere (sortiere) `mariokart` nach der Spalte `total_pr`</code></pre>
 <p><em>Zeilen filtern</em> bedeutet, dass man nur <em>bestimmte</em> Zeilen (Beobachtungen) behalten möchte, die restlichen Zeilen brauchen wir nicht, weg mit ihnen. Wir haben also ein Filterkriterium im Kopf, anhand dessen wir die Tabelle filern, s. <a href="#fig-filter" class="quarto-xref">Abbildung&nbsp;<span>5.4</span></a>.</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/fig-filter_da77370030d0ad1f9d354db595062a70">
 <div class="cell-output-display">
-<div id="fig-filter" class="quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-filter" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-filter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="030-aufbereiten_files/figure-html/fig-filter-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-filter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-filter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;5.4: Sinnbild für das Filtern einer Tabelle mit <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code>
 </figcaption></figure>
 </div>
 </div>
 </div>
 <div id="exm-filter" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 5.4 (Ob ein Foto für den Verkaufspreis nützlich ist?) </strong></span>Als nächstes kommt Ihnen die Idee, mal zu schauen, ob Auktionen mit Photo der Ware einen höheren Verkaufspreis erzielen als Auktionen ohne Photo.</p>
+<p><span class="theorem-title"><strong>Beispiel 5.4 (Ob ein Foto für den Verkaufspreis nützlich ist?)</strong></span> Als nächstes kommt Ihnen die Idee, mal zu schauen, ob Auktionen mit Photo der Ware einen höheren Verkaufspreis erzielen als Auktionen ohne Photo.</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/unnamed-chunk-10_2a5b77f01644ba023b7faa847cd093dc">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_neu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">mariokart</span>, <span class="va">stock_photo</span> <span class="op">==</span> <span class="st">"yes"</span><span class="op">)</span></span>
 <span><span class="va">mariokart_neu</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -587,10 +613,10 @@ Abbildung&nbsp;5.4: Sinnbild für das Filtern einer Tabelle mit <code><a href="h
 </div>
 <p>Hier könnte man noch viele interessante Hypothesen prüfen, denken Sie sich und tun das auch … <span class="math inline">\(\square\)</span> :::</p>
 <div id="exr-filter2" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 5.3 </strong></span>Filtern Sie die Spiele mit nur einem Lenkrad und ohne Versandkosten.<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 5.3</strong></span> Filtern Sie die Spiele mit nur einem Lenkrad und ohne Versandkosten.<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exr-filter3" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 5.4 </strong></span>Filtern Sie die Spiele mit nur einem Lenkrad mit überdurchschnittlichen Verkaufspreis. Tipp: Nutzen Sie die Funtion <code>describe_distribution(name_der_tabelle)</code>, um den Mittelwert einer Variable des Datensatzes zu erfahren.<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 5.4</strong></span> Filtern Sie die Spiele mit nur einem Lenkrad mit überdurchschnittlichen Verkaufspreis. Tipp: Nutzen Sie die Funtion <code>describe_distribution(name_der_tabelle)</code>, um den Mittelwert einer Variable des Datensatzes zu erfahren.<span class="math inline">\(\square\)</span></p>
 </div>
 </section><section id="spalten-auswählen-mit-select" class="level3" data-number="5.3.4"><h3 data-number="5.3.4" class="anchored" data-anchor-id="spalten-auswählen-mit-select">
 <span class="header-section-number">5.3.4</span> Spalten auswählen mit <code>select</code>
@@ -598,18 +624,18 @@ Abbildung&nbsp;5.4: Sinnbild für das Filtern einer Tabelle mit <code><a href="h
 <p>Eine Tabelle mit vielen Spalten kann schnell unübersichtlich werden. Da lohnt es sich, eine alte goldene Regel zu beachten: Mache die Dinge so einfach wie möglich, aber nicht einfacher. Wählen wir also <em>nur</em> die Spalten aus, die uns interessieren und entfernen wir die restlichen, s. <a href="#fig-select" class="quarto-xref">Abbildung&nbsp;<span>5.5</span></a>.</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/fig-select_68f52cc92b2b0eae39f355553358126a">
 <div class="cell-output-display">
-<div id="fig-select" class="quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-select" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-select-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="030-aufbereiten_files/figure-html/fig-select-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-select-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-select-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;5.5: Sinnbild für das Auswählen von Spalten mit <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code>
 </figcaption></figure>
 </div>
 </div>
 </div>
 <div id="exm-select" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 5.5 (Fokus auf nur zwei Spalten) </strong></span>Ob wohl gebrauchte Spiele deutlich geringere Preise erzielen im Vergleich zu neuwertigen Spielen? Sie entschließen sich, mal ein Stündchen auf die relevanten Daten zu starren.</p>
+<p><span class="theorem-title"><strong>Beispiel 5.5 (Fokus auf nur zwei Spalten)</strong></span> Ob wohl gebrauchte Spiele deutlich geringere Preise erzielen im Vergleich zu neuwertigen Spielen? Sie entschließen sich, mal ein Stündchen auf die relevanten Daten zu starren.</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/unnamed-chunk-13_bd664a1f55058b84f64bf495ef8a66ff">
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mario_select1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">mariokart</span>, <span class="va">cond</span>, <span class="va">total_pr</span><span class="op">)</span></span>
 <span><span class="va">mario_select1</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -637,18 +663,18 @@ Abbildung&nbsp;5.5: Sinnbild für das Auswählen von Spalten mit <code><a href="
 <p>So eine lange Spalte mit Zahlen – mal ehrlich: wer blickt da schon durch? Viel besser wäre es doch, die Spalte <code>total_pr</code> zu einer Zahl zusammenzufassen, das ist doch viel handlicher. Kurz entschlossen fassen Sie die Spalte <code>total_pr</code>, den Verkaufspreis, zum Mittelwert zusammen, s. <a href="#fig-summarise" class="quarto-xref">Abbildung&nbsp;<span>5.6</span></a>.</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/fig-summarise_c77cdbabdda3aa6d21f83b10ceee4748">
 <div class="cell-output-display">
-<div id="fig-summarise" class="quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-summarise" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-summarise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="030-aufbereiten_files/figure-html/fig-summarise-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-summarise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-summarise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;5.6: Spalten zu einer einzelnen Zahl zusammenfassen mit <code>summaris()</code>
 </figcaption></figure>
 </div>
 </div>
 </div>
 <div id="exm-summarise" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 5.6 (Was ist der mittlere Verkaufspreis?) </strong></span>&nbsp;</p>
+<p><span class="theorem-title"><strong>Beispiel 5.6 (Was ist der mittlere Verkaufspreis?)</strong></span> &nbsp;</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/unnamed-chunk-15_cd506e3eb55200b1606806361b262bb9">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_neu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span><span class="va">mariokart</span>, preis_mw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mariokart_neu</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -673,11 +699,11 @@ Abbildung&nbsp;5.6: Spalten zu einer einzelnen Zahl zusammenfassen mit <code>sum
 <p>Also gut, R, dann gruppiere die Tabelle, s. <a href="#fig-group" class="quarto-xref">Abbildung&nbsp;<span>5.7</span></a>.</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/fig-group_df62cf7b246bd8a87120ea0725682b87">
 <div class="cell-output-display">
-<div id="fig-group" class="quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-group" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-group-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="030-aufbereiten_files/figure-html/fig-group-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-group-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-group-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;5.7: Gruppieren von Datensätzen mit <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code>
 </figcaption></figure>
 </div>
@@ -685,7 +711,7 @@ Abbildung&nbsp;5.7: Gruppieren von Datensätzen mit <code><a href="https://dplyr
 </div>
 <p>Durch das Gruppieren wird die Tabelle in “Teiltabellen” - entsprechend der Gruppen - aufgeteilt. Das sieht man der Tabelle aber nicht wirklich an. Aber alle nachfolgenden Berechnungen werden <em>für jede Teiltabelle</em> einzeln ausgeführt.</p>
 <div id="exm-groupby" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 5.7 (Mittlerer Preis pro Gruppe) </strong></span>Gruppieren alleine liefert Ihnen zwei (oder mehrere) Teiltabellen, etwa neue Spiele (Gruppe 1, <code>new</code>) vs.&nbsp;gebrauchte Spiele (Gruppe 2, <code>used</code>). Mit anderen Worten: Wir gruppieren anhand der Variable <code>cond</code>.</p>
+<p><span class="theorem-title"><strong>Beispiel 5.7 (Mittlerer Preis pro Gruppe)</strong></span> Gruppieren alleine liefert Ihnen zwei (oder mehrere) Teiltabellen, etwa neue Spiele (Gruppe 1, <code>new</code>) vs.&nbsp;gebrauchte Spiele (Gruppe 2, <code>used</code>). Mit anderen Worten: Wir gruppieren anhand der Variable <code>cond</code>.</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/unnamed-chunk-16_5dbacda975952972bf5799b573efc928">
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_gruppiert</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">mariokart</span>, <span class="va">cond</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -709,18 +735,18 @@ Abbildung&nbsp;5.7: Gruppieren von Datensätzen mit <code><a href="https://dplyr
 <p>Immer mal wieder möchte man <em>Spalten verändern</em>, bzw. deren Werte umrechnen, s. <a href="#fig-mutate" class="quarto-xref">Abbildung&nbsp;<span>5.8</span></a>.</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/fig-mutate_5ca451d329e0eda497d7976d392926f4">
 <div class="cell-output-display">
-<div id="fig-mutate" class="quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-mutate" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-mutate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="030-aufbereiten_files/figure-html/fig-mutate-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-mutate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mutate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;5.8: Spalten verändern/neu berechnen mit <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code>
 </figcaption></figure>
 </div>
 </div>
 </div>
 <div id="exm-mutate" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 5.8 </strong></span>Der Hersteller des Computerspiels <em>Mariokart</em> kommt aus Japan; daher erscheint es Ihnen opportun für ein anstehendes Meeting mit dem Hersteller die Verkaufspreise von Dollar in japanische Yen umzurechnen. Nach etwas Googeln finden Sie einen Umrechnungskurs von 1:133.</p>
+<p><span class="theorem-title"><strong>Beispiel 5.8</strong></span> Der Hersteller des Computerspiels <em>Mariokart</em> kommt aus Japan; daher erscheint es Ihnen opportun für ein anstehendes Meeting mit dem Hersteller die Verkaufspreise von Dollar in japanische Yen umzurechnen. Nach etwas Googeln finden Sie einen Umrechnungskurs von 1:133.</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/unnamed-chunk-18_7b829fdab5fc64eefdae69f8d6cd9cff">
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">mariokart</span>, total_pr_yen <span class="op">=</span> <span class="va">total_pr</span> <span class="op">*</span> <span class="fl">133</span><span class="op">)</span></span>
 <span><span class="va">mariokart2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">mariokart2</span>, <span class="va">total_pr_yen</span>, <span class="va">total_pr</span><span class="op">)</span></span>
@@ -741,7 +767,7 @@ Abbildung&nbsp;5.8: Spalten verändern/neu berechnen mit <code><a href="https://
 <p>Arbeitet man mit nominalskalierten Daten, ist (fast) alles, was man tun kann, das Zeilen zählen.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
 <p>Man könnte z.B. fragen, wie viele neue und wie viele alte Spiele in der Tabelle (Dataframe) <code>mariokart</code> vorhanden sind.</p>
 <div id="exm-count" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 5.9 </strong></span>Nach der letzten Präsentation Ihrer Analyse hat Ihre Chefin gestöhnt: Oh nein, alles so kompliziert. Statistik! Himmel hilf! Kann man das niht einfacher machen? Anstelle von irgendwelchen komplizierten Berechnungen (Mittelwert?) möchten Sie beim nächsten Treffen nur zeigen, wie viele Computerspiele neu und wie viele gebraucht sind (in Ihrem Datensatz). Schlichte Häufigkeiten! Hoffentlich ist Ihre Chefin nicht wieder überfordert…</p>
+<p><span class="theorem-title"><strong>Beispiel 5.9</strong></span> Nach der letzten Präsentation Ihrer Analyse hat Ihre Chefin gestöhnt: Oh nein, alles so kompliziert. Statistik! Himmel hilf! Kann man das niht einfacher machen? Anstelle von irgendwelchen komplizierten Berechnungen (Mittelwert?) möchten Sie beim nächsten Treffen nur zeigen, wie viele Computerspiele neu und wie viele gebraucht sind (in Ihrem Datensatz). Schlichte Häufigkeiten! Hoffentlich ist Ihre Chefin nicht wieder überfordert…</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/unnamed-chunk-19_b723b669d4989f28cc7876278b780edc">
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariocart_counted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">mariokart</span>, <span class="va">cond</span><span class="op">)</span></span>
 <span><span class="va">mariocart_counted</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -771,9 +797,9 @@ Abbildung&nbsp;5.8: Spalten verändern/neu berechnen mit <code><a href="https://
 <span class="header-section-number">5.3.9</span> Fazit</h3>
 <p>die Befehle (“Verben”) des Tidyverse sind jeweils für einzelne, typische Aufgaben des Datenaufbereitens (“Datenjudo”) zuständig.</p>
 <p>Typischerweise erwarten diese Befehle eine Tabelle (▥) als Input und liefern eine Tabelle aus Output zurück, s. <a href="#fig-tbl-in-out" class="quarto-xref">Abbildung&nbsp;<span>5.9</span></a>.</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-tbl-in-out" class="quarto-figure quarto-figure-center anchored">
+<div id="fig-tbl-in-out" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-tbl-in-out-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
 <pre class="mermaid mermaid-js" data-label="fig-tbl-in-out">flowchart LR
@@ -781,7 +807,7 @@ Abbildung&nbsp;5.8: Spalten verändern/neu berechnen mit <code><a href="https://
 </pre>
 </div>
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-tbl-in-out-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tbl-in-out-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;5.9: Tidyverse-Befehle erwarten normalerweise eine Tabelle (tibble) als Input und geben auch eine Tabelle zurück als Output
 </figcaption></figure>
 </div>
@@ -792,11 +818,11 @@ Abbildung&nbsp;5.9: Tidyverse-Befehle erwarten normalerweise eine Tabelle (tibbl
 <p>🚬 👈 Das ist keine Pfeife, wie René Magritte 1929 in seinem <a href="https://en.wikipedia.org/wiki/File:MagrittePipe.jpg">berühmten Bild</a> schrieb, s. <a href="#fig-pfeife" class="quarto-xref">Abbildung&nbsp;<span>5.11</span></a>.</p>
 <div class="columns">
 <div class="column" style="width:30%;">
-<div id="fig-pfeife" class="quarto-figure quarto-figure-center anchored" width="50%">
+<div id="fig-pfeife" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="img/800px-Pipa_savinelli.jpg" class="img-fluid figure-img" style="width:50.0%">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;5.10: Das ist keine Pfeife. Sondern ein Bild einer Pfeife.
 </figcaption></figure>
 </div>
@@ -815,7 +841,7 @@ Abbildung&nbsp;5.10: Das ist keine Pfeife. Sondern ein Bild einer Pfeife.
 <p>So sieht die Pfeife in R aus<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. Links: Ein Bild einer Pfeife. Mitte und Rechts: Die R-Symbole für eine “Pfeife” (pipe).</p>
 <section id="russische-puppen" class="level3" data-number="5.4.1"><h3 data-number="5.4.1" class="anchored" data-anchor-id="russische-puppen">
 <span class="header-section-number">5.4.1</span> Russische Puppen</h3>
-<p>Computerbefehle, und im Speziellen R-Befehle kann man “aufeinander” - oder vielmehr: ineinander - stapeln, so ähnlich wie eine russische Puppe (vgl. <a href="020-R.html#sec-first-fun" class="quarto-xref"><span>Kapitel&nbsp;4.4.3</span></a>).</p>
+<p>Computerbefehle, und im Speziellen R-Befehle kann man “aufeinander” - oder vielmehr: ineinander - stapeln, so ähnlich wie eine russische Puppe (vgl. <a href="020-R.html#sec-first-fun" class="quarto-xref"><span>Kapitel 4.4.3</span></a>).</p>
 <p>Definieren wir zuerst einen Vektor <code>x</code> aus drei Zahlen:</p>
 <div class="cell" data-hash="030-aufbereiten_cache/html/unnamed-chunk-22_895890458097a21a6e5ab0a2a02e085e">
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -834,8 +860,8 @@ Abbildung&nbsp;5.10: Das ist keine Pfeife. Sondern ein Bild einer Pfeife.
 <pre><code>  ⬇️ </code></pre>
 <p>Schritt 3: <code>0</code>. Fertig. Puh.</p>
 <p>Soweit kann man noch einigermaßen folgen. Aber das Verschachteln kann man noch extremer machen, dann wird’s wild. Schauen Sie sich mal folgende (Pseudo-)Syntax an:<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
-<div id="lst-schachtel" class="r listing">
-<figure class="quarto-float quarto-float-lst figure"><figcaption class="listing quarto-float-caption quarto-float-lst" id="lst-schachtel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="lst-schachtel" class="r listing quarto-float">
+<figure class="quarto-float quarto-float-lst figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-schachtel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;5.1: Eine wild verschachtelte Sequenz von R-Befehlen
 </figcaption><div aria-describedby="lst-schachtel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="sourceCode" id="lst-schachtel"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">fasse_zusammen</span><span class="op">(</span><span class="fu">gruppiere</span><span class="op">(</span><span class="fu">wähle_spalten</span><span class="op">(</span><span class="fu">filter_zeilen</span><span class="op">(</span><span class="va">meine_daten</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -866,9 +892,9 @@ Hinweis
 <p>Mittlerweile<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> ist auch im Standard-R eine Pfeife eingebaut. die sieht so aus: <code>|&gt;</code>. Die eingebaute Pfeife funktioniert praktisch gleich zur anderen Pfeife <code>%&gt;%</code>, hat aber den Vorteil, dass Sie nicht <a href="https://tidyverse.tidyverse.org">tidyverse</a> starten müssen. Da wir <a href="https://tidyverse.tidyverse.org">tidyverse</a> aber sowieso praktisch immer starten werden, bringt es uns keinen Vorteil, die neuere Pfeife des Standard-R <code>|&gt;</code> zu verwenden.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-out-width="100%">
+<div class="cell" data-out-width="100%" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-pfeife" class="quarto-figure quarto-figure-center anchored">
+<div id="fig-pfeife" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
 <pre class="mermaid mermaid-js" data-label="fig-pfeife">flowchart TD
@@ -880,7 +906,7 @@ Hinweis
 </pre>
 </div>
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;5.11: Illustration für eine Pfeifensequenz
 </figcaption></figure>
 </div>
@@ -888,8 +914,8 @@ Abbildung&nbsp;5.11: Illustration für eine Pfeifensequenz
 </div>
 </div><div class="column" style="width:50%;">
 <p>Und jetzt kommt’s: So eine Art von Befehls-Verkettung gibt es in R. Schauen Sie sich mal <a href="#lst-pfeife" class="quarto-xref">Listing&nbsp;<span>5.2</span></a> an:</p>
-<div id="lst-pfeife" class="r listing">
-<figure class="quarto-float quarto-float-lst figure"><figcaption class="listing quarto-float-caption quarto-float-lst" id="lst-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="lst-pfeife" class="r listing quarto-float">
+<figure class="quarto-float quarto-float-lst figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;5.2: Eine Pfeifen-Befehlssequenz (Pseudo-Syntax)
 </figcaption><div aria-describedby="lst-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="sourceCode" id="lst-pfeife"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">meine_daten</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
@@ -946,7 +972,7 @@ Hinweis
 </section></section><section id="fallbeispiel" class="level2" data-number="5.5"><h2 data-number="5.5" class="anchored" data-anchor-id="fallbeispiel">
 <span class="header-section-number">5.5</span> Fallbeispiel</h2>
 <div id="exr-fallbsps" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 5.5 </strong></span>Bevor Sie die Lösungen der folgenden Fallbeispiele lesen, versuchen Sie die Aufgaben selber zu lösen. Ja, ich weiß, es ist hart, nicht gleich auf die Lösungen zu schauen! Protipp: Am besten scrollen Sie so, dass Sie die Lösungen nicht gleich sehen.<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 5.5</strong></span> Bevor Sie die Lösungen der folgenden Fallbeispiele lesen, versuchen Sie die Aufgaben selber zu lösen. Ja, ich weiß, es ist hart, nicht gleich auf die Lösungen zu schauen! Protipp: Am besten scrollen Sie so, dass Sie die Lösungen nicht gleich sehen.<span class="math inline">\(\square\)</span></p>
 </div>
 <section id="forschungsfrage-1" class="level3" data-number="5.5.1"><h3 data-number="5.5.1" class="anchored" data-anchor-id="forschungsfrage-1">
 <span class="header-section-number">5.5.1</span> Forschungsfrage 1</h3>
@@ -1035,7 +1061,7 @@ Hinweis
 <span class="header-section-number">5.7</span> Wie man mit Statistik lügt</h2>
 <p>Ein (leider) immer mal wieder zu beobachtender “Trick”, um Daten zu frisieren ist, nur die Daten zu berichten, die einem in den Kram passen.</p>
 <div id="exm-luege-filter" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 5.10 </strong></span>Ei Analysti 🧑‍🦰 möchte zeigen, dass der Verkaufspreis von Mariokart-Spielen “viel zu niedrig” ist. Es muss ein höherer Wert rauskommen, findet dis Analysti. Der mittlere Verkaufspreis (im Datensatz <code>mariokart</code>) liegt bei 50 Euro.</p>
+<p><span class="theorem-title"><strong>Beispiel 5.10</strong></span> Ei Analysti 🧑‍🦰 möchte zeigen, dass der Verkaufspreis von Mariokart-Spielen “viel zu niedrig” ist. Es muss ein höherer Wert rauskommen, findet dis Analysti. Der mittlere Verkaufspreis (im Datensatz <code>mariokart</code>) liegt bei 50 Euro.</p>
 <blockquote class="blockquote">
 <p>‍🦰 Kann man den Wert nicht … “kreativ verbessern”? Ein paar Statistik-Tricks anwenden?</p>
 </blockquote>
@@ -1073,16 +1099,16 @@ Hinweis
 </div>
 </section><section id="fallstudie" class="level2" data-number="5.8"><h2 data-number="5.8" class="anchored" data-anchor-id="fallstudie">
 <span class="header-section-number">5.8</span> Fallstudie</h2>
-<div id="fig-penguins" class="quarto-figure quarto-figure-center anchored" width="50%">
+<div id="fig-penguins" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-penguins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="img/penguins.png" class="img-fluid figure-img" style="width:50.0%">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-penguins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-penguins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;5.12: Possierlich: Die Pinguine
 </figcaption></figure>
 </div>
 <div id="exr-peng-start" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 5.6 </strong></span>Machen Sie sich zunächst mit dem Pinguin-Datensatz vertraut. Fokussieren Sie sich auf die Zielvariable <em>Gewicht</em>. Die folgende Datenapp ermöglicht Ihnen, die Verteilung des Körpergewichts zu betrachten, wobei sie die Pinguin-Spezies filtern können sowie eine Mindestlänge des Schnabels verlangen können. <span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 5.6</strong></span> Machen Sie sich zunächst mit dem Pinguin-Datensatz vertraut. Fokussieren Sie sich auf die Zielvariable <em>Gewicht</em>. Die folgende Datenapp ermöglicht Ihnen, die Verteilung des Körpergewichts zu betrachten, wobei sie die Pinguin-Spezies filtern können sowie eine Mindestlänge des Schnabels verlangen können. <span class="math inline">\(\square\)</span></p>
 </div>
 <div class="cell panel-input card bg-light p-2">
 <div class="sourceCode cell-code hidden" id="cb32" data-startfrom="1050" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1049;"><span id="cb32-1050"><a href="#cb32-1050" aria-hidden="true" tabindex="-1"></a>viewof bill_length_min <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>(</span>
@@ -1237,11 +1263,11 @@ Hinweis
 <blockquote class="blockquote">
 <p>🤖 … s. <a href="#fig-mix-rob-prof" class="quarto-xref">Abbildung&nbsp;<span>5.13</span></a></p>
 </blockquote>
-<div id="fig-mix-rob-prof" class="quarto-figure quarto-figure-center anchored" width="50%">
+<div id="fig-mix-rob-prof" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-mix-rob-prof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="img/mix-prof-robot.png" class="img-fluid figure-img" style="width:50.0%">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-mix-rob-prof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mix-rob-prof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;5.13: Bild erzeugt von künstlicher Intelligenz, Quelle: DALL-E 2, 2023-02-09
 </figcaption></figure>
 </div>
@@ -1277,7 +1303,7 @@ Sauer, Sebastian. 2019. <em>Moderne <span>Datenanalyse</span> Mit <span>R</span>
 Wickham, Hadley, und Garrett Grolemund. 2018. <em>R Für Data Science: <span>Daten</span> Importieren, Bereinigen, Umformen, Modellieren Und Visualisieren</em>. Übersetzt von Frank Langenau. 1. Auflage. <span>Heidelberg</span>: <span>O’Reilly</span>. <a href="https://r4ds.had.co.nz/index.html">https://r4ds.had.co.nz/index.html</a>.
 </div>
 </div>
-</section><aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
+</section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
 <ol>
 <li id="fn1"><p>Genau darin besteht das Wesen einer Analyse: die Zerlegung eines Objekts in seine Bestandteile.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Falls Sie das R-Paket <a href="https://tidyverse.tidyverse.org">tidyverse</a> noch nicht installiert haben sollten, wäre jetzt ein guter Zeitpunkt dafür.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1288,8 +1314,8 @@ Wickham, Hadley, und Garrett Grolemund. 2018. <em>R Für Data Science: <span>Dat
 <li id="fn7"><p>Genauer gesagt im Paket <a href="https://magrittr.tidyverse.org">magrittr</a>, welches aber under the hood von <a href="https://tidyverse.tidyverse.org">tidyverse</a> geladen wird. Also nichts, um dass Sie sich kümmern müssten.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn8"><p>Seit R 4.1<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn9"><p>Aber auch keinen Nachteil. Unter <em>Tools &gt; Global Options…</em> können Sie einstellen, dass der Shortcut Strg-Shift-M die eingebaute Pfeife verwendet.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol></aside></main><!-- /main --><script type="ojs-module-contents">
-{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"viewof bill_length_min = Inputs.range(\n  [32, 50], \n  {value: 35, step: 1, label: \"Bill length (min):\"}\n)\nviewof islands = Inputs.checkbox(\n  [\"Torgersen\", \"Biscoe\", \"Dream\"], \n  { value: [\"Torgersen\", \"Biscoe\"], \n    label: \"Islands:\"\n  }\n)\n"},{"methodName":"interpret","cellName":"ojs-cell-2","inline":false,"source":"Plot.rectY(filtered, \n  Plot.binX(\n    {y: \"count\"}, \n    {x: \"body_mass_g\", fill: \"species\", thresholds: 20}\n  ))\n  .plot({\n    facet: {\n      data: filtered,\n      x: \"sex\",\n      y: \"species\",\n      marginRight: 80\n    },\n    marks: [\n      Plot.frame(),\n    ]\n  }\n)\n"},{"methodName":"interpret","cellName":"ojs-cell-3","inline":false,"source":"Inputs.table(filtered)\n"},{"methodName":"interpret","cellName":"ojs-cell-4","inline":false,"source":"data = FileAttachment(\"daten/penguins.csv\").csv({ typed: true })\n"},{"methodName":"interpret","cellName":"ojs-cell-5","inline":false,"source":"filtered = data.filter(function(penguin) {\n  return bill_length_min < penguin.bill_length_mm &&\n         islands.includes(penguin.island);\n})\n"},{"methodName":"interpretQuiet","source":"shinyInput('bill_length_min')"},{"methodName":"interpretQuiet","source":"shinyInput('islands')"}]}
+</ol></section></main><!-- /main --><script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBiaWxsX2xlbmd0aF9taW4gPSBJbnB1dHMucmFuZ2UoXG4gIFszMiwgNTBdLCBcbiAge3ZhbHVlOiAzNSwgc3RlcDogMSwgbGFiZWw6IFwiQmlsbCBsZW5ndGggKG1pbik6XCJ9XG4pXG52aWV3b2YgaXNsYW5kcyA9IElucHV0cy5jaGVja2JveChcbiAgW1wiVG9yZ2Vyc2VuXCIsIFwiQmlzY29lXCIsIFwiRHJlYW1cIl0sIFxuICB7IHZhbHVlOiBbXCJUb3JnZXJzZW5cIiwgXCJCaXNjb2VcIl0sIFxuICAgIGxhYmVsOiBcIklzbGFuZHM6XCJcbiAgfVxuKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0yIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiUGxvdC5yZWN0WShmaWx0ZXJlZCwgXG4gIFBsb3QuYmluWChcbiAgICB7eTogXCJjb3VudFwifSwgXG4gICAge3g6IFwiYm9keV9tYXNzX2dcIiwgZmlsbDogXCJzcGVjaWVzXCIsIHRocmVzaG9sZHM6IDIwfVxuICApKVxuICAucGxvdCh7XG4gICAgZmFjZXQ6IHtcbiAgICAgIGRhdGE6IGZpbHRlcmVkLFxuICAgICAgeDogXCJzZXhcIixcbiAgICAgIHk6IFwic3BlY2llc1wiLFxuICAgICAgbWFyZ2luUmlnaHQ6IDgwXG4gICAgfSxcbiAgICBtYXJrczogW1xuICAgICAgUGxvdC5mcmFtZSgpLFxuICAgIF1cbiAgfVxuKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0zIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiSW5wdXRzLnRhYmxlKGZpbHRlcmVkKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC00IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZGF0YSA9IEZpbGVBdHRhY2htZW50KFwiZGF0ZW4vcGVuZ3VpbnMuY3N2XCIpLmNzdih7IHR5cGVkOiB0cnVlIH0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTUiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJmaWx0ZXJlZCA9IGRhdGEuZmlsdGVyKGZ1bmN0aW9uKHBlbmd1aW4pIHtcbiAgcmV0dXJuIGJpbGxfbGVuZ3RoX21pbiA8IHBlbmd1aW4uYmlsbF9sZW5ndGhfbW0gJiZcbiAgICAgICAgIGlzbGFuZHMuaW5jbHVkZXMocGVuZ3Vpbi5pc2xhbmQpO1xufSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnYmlsbF9sZW5ndGhfbWluJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ2lzbGFuZHMnKSJ9XX0=
 </script><script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
 window._ojs.paths.runtimeToDoc = "../..";
@@ -1569,38 +1595,28 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    const typesetMath = (el) => {
-      if (window.MathJax) {
-        // MathJax Typeset
-        window.MathJax.typeset([el]);
-      } else if (window.katex) {
-        // KaTeX Render
-        var mathElements = el.getElementsByClassName("math");
-        var macros = [];
-        for (var i = 0; i < mathElements.length; i++) {
-          var texText = mathElements[i].firstChild;
-          if (mathElements[i].tagName == "SPAN") {
-            window.katex.render(texText.data, mathElements[i], {
-              displayMode: mathElements[i].classList.contains('display'),
-              throwOnError: false,
-              macros: macros,
-              fleqn: false
-            });
-          }
-        }
-      }
-    }
     if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
-        typesetMath(container);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
         return container.innerHTML
       } else {
-        typesetMath(note);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
         return note.innerHTML;
       }
     } else {
@@ -1609,8 +1625,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
-      typesetMath(note);
-      return note.innerHTML;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {

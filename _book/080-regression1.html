@@ -2,10 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.513">
+<meta name="generator" content="quarto-1.4.544">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Ein Einführungskurs in die Statistik mit einem Schwerpunkt auf Prognosemodellierung">
-<title>Statistik1 - 10&nbsp; Geradenmodelle 1</title>
+<title>Statistik1 - 9&nbsp; Geradenmodelle 1</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -115,12 +115,38 @@ div.csl-indent {
     "search-more-match-text": "weitere Treffer in diesem Dokument",
     "search-more-matches-text": "weitere Treffer in diesem Dokument",
     "search-clear-button-title": "Zurücksetzen",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Abbrechen",
     "search-submit-button-title": "Abschicken",
     "search-label": "Suchen"
   }
 }</script><link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><link rel="stylesheet" href="styles.css">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="styles.css">
 </head>
 <body class="nav-sidebar floating">
 
@@ -129,7 +155,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Modellieren</a></li><li class="breadcrumb-item"><a href="./080-regression1.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Modellieren</a></li><li class="breadcrumb-item"><a href="./080-regression1.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -144,7 +170,7 @@ div.csl-indent {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Statistik1</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/sebastiansauer/statistik1" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/sebastiansauer/statistik1" title="Quellcode" class="quarto-navigation-tool px-1" aria-label="Quellcode"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
 </div>
     </div>
@@ -171,12 +197,6 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Willkommen!</span></span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./005-pruefung.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Prüfung</span></span></a>
-  </div>
-</li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -191,19 +211,19 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-rahmen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rahmen</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rahmen</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./020-R.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Daten einlesen</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Daten einlesen</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./030-aufbereiten.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Daten umformen</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Daten umformen</span></span></a>
   </div>
 </li>
       </ul>
@@ -220,43 +240,43 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./040-verbildlichen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Daten verbildlichen</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Daten verbildlichen</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./050-zusammenfassen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Punktmodelle 1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Punktmodelle 1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./060-modellguete.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modellgüte</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modellgüte</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./070-zusammenhaenge.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./080-regression1.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./090-regression2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Geradenmodelle 2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Geradenmodelle 2</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./100-abschluss.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Abschluss</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Abschluss</span></span></a>
   </div>
 </li>
       </ul>
@@ -270,67 +290,67 @@ div.csl-indent {
    
   <ul>
 <li>
-<a href="#lernsteuerung" id="toc-lernsteuerung" class="nav-link active" data-scroll-target="#lernsteuerung"><span class="header-section-number">10.1</span> Lernsteuerung</a>
+<a href="#lernsteuerung" id="toc-lernsteuerung" class="nav-link active" data-scroll-target="#lernsteuerung"><span class="header-section-number">9.1</span> Lernsteuerung</a>
   <ul class="collapse">
-<li><a href="#standort-im-lernpfad" id="toc-standort-im-lernpfad" class="nav-link" data-scroll-target="#standort-im-lernpfad"><span class="header-section-number">10.1.1</span> Standort im Lernpfad</a></li>
-  <li><a href="#lernziele" id="toc-lernziele" class="nav-link" data-scroll-target="#lernziele"><span class="header-section-number">10.1.2</span> Lernziele</a></li>
-  <li><a href="#ben%C3%B6tigte-r-pakete" id="toc-benötigte-r-pakete" class="nav-link" data-scroll-target="#ben%C3%B6tigte-r-pakete"><span class="header-section-number">10.1.3</span> Benötigte R-Pakete</a></li>
-  <li><a href="#ben%C3%B6tigte-daten" id="toc-benötigte-daten" class="nav-link" data-scroll-target="#ben%C3%B6tigte-daten"><span class="header-section-number">10.1.4</span> Benötigte Daten</a></li>
+<li><a href="#standort-im-lernpfad" id="toc-standort-im-lernpfad" class="nav-link" data-scroll-target="#standort-im-lernpfad"><span class="header-section-number">9.1.1</span> Standort im Lernpfad</a></li>
+  <li><a href="#lernziele" id="toc-lernziele" class="nav-link" data-scroll-target="#lernziele"><span class="header-section-number">9.1.2</span> Lernziele</a></li>
+  <li><a href="#ben%C3%B6tigte-r-pakete" id="toc-benötigte-r-pakete" class="nav-link" data-scroll-target="#ben%C3%B6tigte-r-pakete"><span class="header-section-number">9.1.3</span> Benötigte R-Pakete</a></li>
+  <li><a href="#ben%C3%B6tigte-daten" id="toc-benötigte-daten" class="nav-link" data-scroll-target="#ben%C3%B6tigte-daten"><span class="header-section-number">9.1.4</span> Benötigte Daten</a></li>
   </ul>
 </li>
   <li>
-<a href="#vorhersagen" id="toc-vorhersagen" class="nav-link" data-scroll-target="#vorhersagen"><span class="header-section-number">10.2</span> Vorhersagen</a>
+<a href="#vorhersagen" id="toc-vorhersagen" class="nav-link" data-scroll-target="#vorhersagen"><span class="header-section-number">9.2</span> Vorhersagen</a>
   <ul class="collapse">
-<li><a href="#vorhersagen-ohne-pr%C3%A4diktor" id="toc-vorhersagen-ohne-prädiktor" class="nav-link" data-scroll-target="#vorhersagen-ohne-pr%C3%A4diktor"><span class="header-section-number">10.2.1</span> Vorhersagen ohne Prädiktor</a></li>
-  <li><a href="#nullmodell" id="toc-nullmodell" class="nav-link" data-scroll-target="#nullmodell"><span class="header-section-number">10.2.2</span> Nullmodell</a></li>
-  <li><a href="#vorhersagen-mit-pr%C3%A4diktor" id="toc-vorhersagen-mit-prädiktor" class="nav-link" data-scroll-target="#vorhersagen-mit-pr%C3%A4diktor"><span class="header-section-number">10.2.3</span> Vorhersagen mit Prädiktor</a></li>
+<li><a href="#vorhersagen-ohne-pr%C3%A4diktor" id="toc-vorhersagen-ohne-prädiktor" class="nav-link" data-scroll-target="#vorhersagen-ohne-pr%C3%A4diktor"><span class="header-section-number">9.2.1</span> Vorhersagen ohne Prädiktor</a></li>
+  <li><a href="#nullmodell" id="toc-nullmodell" class="nav-link" data-scroll-target="#nullmodell"><span class="header-section-number">9.2.2</span> Nullmodell</a></li>
+  <li><a href="#vorhersagen-mit-pr%C3%A4diktor" id="toc-vorhersagen-mit-prädiktor" class="nav-link" data-scroll-target="#vorhersagen-mit-pr%C3%A4diktor"><span class="header-section-number">9.2.3</span> Vorhersagen mit Prädiktor</a></li>
   </ul>
 </li>
   <li>
-<a href="#geradenmodelle" id="toc-geradenmodelle" class="nav-link" data-scroll-target="#geradenmodelle"><span class="header-section-number">10.3</span> Geradenmodelle</a>
+<a href="#geradenmodelle" id="toc-geradenmodelle" class="nav-link" data-scroll-target="#geradenmodelle"><span class="header-section-number">9.3</span> Geradenmodelle</a>
   <ul class="collapse">
-<li><a href="#achsenabschnitt-und-steigung-definieren-eine-gerade" id="toc-achsenabschnitt-und-steigung-definieren-eine-gerade" class="nav-link" data-scroll-target="#achsenabschnitt-und-steigung-definieren-eine-gerade"><span class="header-section-number">10.3.1</span> Achsenabschnitt und Steigung definieren eine Gerade</a></li>
-  <li><a href="#spezifikation-eines-geradenmodells" id="toc-spezifikation-eines-geradenmodells" class="nav-link" data-scroll-target="#spezifikation-eines-geradenmodells"><span class="header-section-number">10.3.2</span> Spezifikation eines Geradenmodells</a></li>
-  <li><a href="#vorhersagefehler" id="toc-vorhersagefehler" class="nav-link" data-scroll-target="#vorhersagefehler"><span class="header-section-number">10.3.3</span> Vorhersagefehler</a></li>
-  <li><a href="#berechnung-der-modellkoeffizienten" id="toc-berechnung-der-modellkoeffizienten" class="nav-link" data-scroll-target="#berechnung-der-modellkoeffizienten"><span class="header-section-number">10.3.4</span> Berechnung der Modellkoeffizienten</a></li>
+<li><a href="#achsenabschnitt-und-steigung-definieren-eine-gerade" id="toc-achsenabschnitt-und-steigung-definieren-eine-gerade" class="nav-link" data-scroll-target="#achsenabschnitt-und-steigung-definieren-eine-gerade"><span class="header-section-number">9.3.1</span> Achsenabschnitt und Steigung definieren eine Gerade</a></li>
+  <li><a href="#spezifikation-eines-geradenmodells" id="toc-spezifikation-eines-geradenmodells" class="nav-link" data-scroll-target="#spezifikation-eines-geradenmodells"><span class="header-section-number">9.3.2</span> Spezifikation eines Geradenmodells</a></li>
+  <li><a href="#vorhersagefehler" id="toc-vorhersagefehler" class="nav-link" data-scroll-target="#vorhersagefehler"><span class="header-section-number">9.3.3</span> Vorhersagefehler</a></li>
+  <li><a href="#berechnung-der-modellkoeffizienten" id="toc-berechnung-der-modellkoeffizienten" class="nav-link" data-scroll-target="#berechnung-der-modellkoeffizienten"><span class="header-section-number">9.3.4</span> Berechnung der Modellkoeffizienten</a></li>
   </ul>
 </li>
   <li>
-<a href="#r-quadrat" id="toc-r-quadrat" class="nav-link" data-scroll-target="#r-quadrat"><span class="header-section-number">10.4</span> R-Quadrat</a>
+<a href="#r-quadrat" id="toc-r-quadrat" class="nav-link" data-scroll-target="#r-quadrat"><span class="header-section-number">9.4</span> R-Quadrat</a>
   <ul class="collapse">
-<li><a href="#r-quadrat-als-verringerung-der-fehlerstreuung" id="toc-r-quadrat-als-verringerung-der-fehlerstreuung" class="nav-link" data-scroll-target="#r-quadrat-als-verringerung-der-fehlerstreuung"><span class="header-section-number">10.4.1</span> R-Quadrat als Verringerung der Fehlerstreuung</a></li>
+<li><a href="#r-quadrat-als-verringerung-der-fehlerstreuung" id="toc-r-quadrat-als-verringerung-der-fehlerstreuung" class="nav-link" data-scroll-target="#r-quadrat-als-verringerung-der-fehlerstreuung"><span class="header-section-number">9.4.1</span> R-Quadrat als Verringerung der Fehlerstreuung</a></li>
   </ul>
 </li>
   <li>
-<a href="#interpretation-eines-regressionsmodells" id="toc-interpretation-eines-regressionsmodells" class="nav-link" data-scroll-target="#interpretation-eines-regressionsmodells"><span class="header-section-number">10.5</span> Interpretation eines Regressionsmodells</a>
+<a href="#interpretation-eines-regressionsmodells" id="toc-interpretation-eines-regressionsmodells" class="nav-link" data-scroll-target="#interpretation-eines-regressionsmodells"><span class="header-section-number">9.5</span> Interpretation eines Regressionsmodells</a>
   <ul class="collapse">
-<li><a href="#modellg%C3%BCte" id="toc-modellgüte" class="nav-link" data-scroll-target="#modellg%C3%BCte"><span class="header-section-number">10.5.1</span> Modellgüte</a></li>
-  <li><a href="#koeffizienten" id="toc-koeffizienten" class="nav-link" data-scroll-target="#koeffizienten"><span class="header-section-number">10.5.2</span> Koeffizienten</a></li>
+<li><a href="#modellg%C3%BCte" id="toc-modellgüte" class="nav-link" data-scroll-target="#modellg%C3%BCte"><span class="header-section-number">9.5.1</span> Modellgüte</a></li>
+  <li><a href="#koeffizienten" id="toc-koeffizienten" class="nav-link" data-scroll-target="#koeffizienten"><span class="header-section-number">9.5.2</span> Koeffizienten</a></li>
   </ul>
 </li>
-  <li><a href="#fallbeispiel-mariokart" id="toc-fallbeispiel-mariokart" class="nav-link" data-scroll-target="#fallbeispiel-mariokart"><span class="header-section-number">10.6</span> Fallbeispiel Mariokart</a></li>
+  <li><a href="#fallbeispiel-mariokart" id="toc-fallbeispiel-mariokart" class="nav-link" data-scroll-target="#fallbeispiel-mariokart"><span class="header-section-number">9.6</span> Fallbeispiel Mariokart</a></li>
   <li>
-<a href="#fallstudie-immobilienpreise" id="toc-fallstudie-immobilienpreise" class="nav-link" data-scroll-target="#fallstudie-immobilienpreise"><span class="header-section-number">10.7</span> Fallstudie Immobilienpreise</a>
+<a href="#fallstudie-immobilienpreise" id="toc-fallstudie-immobilienpreise" class="nav-link" data-scroll-target="#fallstudie-immobilienpreise"><span class="header-section-number">9.7</span> Fallstudie Immobilienpreise</a>
   <ul class="collapse">
-<li><a href="#hintergrund" id="toc-hintergrund" class="nav-link" data-scroll-target="#hintergrund"><span class="header-section-number">10.7.1</span> Hintergrund</a></li>
-  <li><a href="#ben%C3%B6tigte-r-pakete-1" id="toc-benötigte-r-pakete-1" class="nav-link" data-scroll-target="#ben%C3%B6tigte-r-pakete-1"><span class="header-section-number">10.7.2</span> Benötigte R-Pakete</a></li>
-  <li><a href="#daten" id="toc-daten" class="nav-link" data-scroll-target="#daten"><span class="header-section-number">10.7.3</span> Daten</a></li>
-  <li><a href="#prognosedatei" id="toc-prognosedatei" class="nav-link" data-scroll-target="#prognosedatei"><span class="header-section-number">10.7.4</span> Prognosedatei</a></li>
-  <li><a href="#daten-importieren" id="toc-daten-importieren" class="nav-link" data-scroll-target="#daten-importieren"><span class="header-section-number">10.7.5</span> Daten importieren</a></li>
-  <li><a href="#ein-erster-blick-in-die-daten" id="toc-ein-erster-blick-in-die-daten" class="nav-link" data-scroll-target="#ein-erster-blick-in-die-daten"><span class="header-section-number">10.7.6</span> Ein erster Blick in die Daten</a></li>
-  <li><a href="#ein-erstes-vorhersagemodell" id="toc-ein-erstes-vorhersagemodell" class="nav-link" data-scroll-target="#ein-erstes-vorhersagemodell"><span class="header-section-number">10.7.7</span> Ein erstes Vorhersagemodell</a></li>
-  <li><a href="#vorhersagen-im-test-datensatz" id="toc-vorhersagen-im-test-datensatz" class="nav-link" data-scroll-target="#vorhersagen-im-test-datensatz"><span class="header-section-number">10.7.8</span> Vorhersagen im Test-Datensatz</a></li>
-  <li><a href="#einreichen" id="toc-einreichen" class="nav-link" data-scroll-target="#einreichen"><span class="header-section-number">10.7.9</span> Einreichen!</a></li>
-  <li><a href="#debrief" id="toc-debrief" class="nav-link" data-scroll-target="#debrief"><span class="header-section-number">10.7.10</span> Debrief</a></li>
+<li><a href="#hintergrund" id="toc-hintergrund" class="nav-link" data-scroll-target="#hintergrund"><span class="header-section-number">9.7.1</span> Hintergrund</a></li>
+  <li><a href="#ben%C3%B6tigte-r-pakete-1" id="toc-benötigte-r-pakete-1" class="nav-link" data-scroll-target="#ben%C3%B6tigte-r-pakete-1"><span class="header-section-number">9.7.2</span> Benötigte R-Pakete</a></li>
+  <li><a href="#daten" id="toc-daten" class="nav-link" data-scroll-target="#daten"><span class="header-section-number">9.7.3</span> Daten</a></li>
+  <li><a href="#prognosedatei" id="toc-prognosedatei" class="nav-link" data-scroll-target="#prognosedatei"><span class="header-section-number">9.7.4</span> Prognosedatei</a></li>
+  <li><a href="#daten-importieren" id="toc-daten-importieren" class="nav-link" data-scroll-target="#daten-importieren"><span class="header-section-number">9.7.5</span> Daten importieren</a></li>
+  <li><a href="#ein-erster-blick-in-die-daten" id="toc-ein-erster-blick-in-die-daten" class="nav-link" data-scroll-target="#ein-erster-blick-in-die-daten"><span class="header-section-number">9.7.6</span> Ein erster Blick in die Daten</a></li>
+  <li><a href="#ein-erstes-vorhersagemodell" id="toc-ein-erstes-vorhersagemodell" class="nav-link" data-scroll-target="#ein-erstes-vorhersagemodell"><span class="header-section-number">9.7.7</span> Ein erstes Vorhersagemodell</a></li>
+  <li><a href="#vorhersagen-im-test-datensatz" id="toc-vorhersagen-im-test-datensatz" class="nav-link" data-scroll-target="#vorhersagen-im-test-datensatz"><span class="header-section-number">9.7.8</span> Vorhersagen im Test-Datensatz</a></li>
+  <li><a href="#einreichen" id="toc-einreichen" class="nav-link" data-scroll-target="#einreichen"><span class="header-section-number">9.7.9</span> Einreichen!</a></li>
+  <li><a href="#debrief" id="toc-debrief" class="nav-link" data-scroll-target="#debrief"><span class="header-section-number">9.7.10</span> Debrief</a></li>
   </ul>
 </li>
-  <li><a href="#aufgaben" id="toc-aufgaben" class="nav-link" data-scroll-target="#aufgaben"><span class="header-section-number">10.8</span> Aufgaben</a></li>
-  <li><a href="#literatur" id="toc-literatur" class="nav-link" data-scroll-target="#literatur"><span class="header-section-number">10.9</span> Literatur</a></li>
+  <li><a href="#aufgaben" id="toc-aufgaben" class="nav-link" data-scroll-target="#aufgaben"><span class="header-section-number">9.8</span> Aufgaben</a></li>
+  <li><a href="#literatur" id="toc-literatur" class="nav-link" data-scroll-target="#literatur"><span class="header-section-number">9.9</span> Literatur</a></li>
   </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Modellieren</a></li><li class="breadcrumb-item"><a href="./080-regression1.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-gerade1" class="quarto-section-identifier"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Modellieren</a></li><li class="breadcrumb-item"><a href="./080-regression1.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-gerade1" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></span></h1>
 </div>
 
 
@@ -344,20 +364,20 @@ div.csl-indent {
   
 
 
-</header><section id="lernsteuerung" class="level2" data-number="10.1"><h2 data-number="10.1" class="anchored" data-anchor-id="lernsteuerung">
-<span class="header-section-number">10.1</span> Lernsteuerung</h2>
-<section id="standort-im-lernpfad" class="level3" data-number="10.1.1"><h3 data-number="10.1.1" class="anchored" data-anchor-id="standort-im-lernpfad">
-<span class="header-section-number">10.1.1</span> Standort im Lernpfad</h3>
+</header><section id="lernsteuerung" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="lernsteuerung">
+<span class="header-section-number">9.1</span> Lernsteuerung</h2>
+<section id="standort-im-lernpfad" class="level3" data-number="9.1.1"><h3 data-number="9.1.1" class="anchored" data-anchor-id="standort-im-lernpfad">
+<span class="header-section-number">9.1.1</span> Standort im Lernpfad</h3>
 <p>Abb. <a href="index.html#fig-ueberblick" class="quarto-xref">Abbildung&nbsp;<span>1.2</span></a> zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.</p>
-</section><section id="lernziele" class="level3" data-number="10.1.2"><h3 data-number="10.1.2" class="anchored" data-anchor-id="lernziele">
-<span class="header-section-number">10.1.2</span> Lernziele</h3>
+</section><section id="lernziele" class="level3" data-number="9.1.2"><h3 data-number="9.1.2" class="anchored" data-anchor-id="lernziele">
+<span class="header-section-number">9.1.2</span> Lernziele</h3>
 <ul>
 <li>Sie können ein Punktmodell von einem Geradenmodell begrifflich unterscheiden.</li>
 <li>Sie können die Bestandteile eines Geradenmodells aufzählen und erläutern.</li>
 <li>Sie können die Güte eines Geradenmodells anhand von Kennzahlen bestimmen.</li>
 <li>Sie können Geradenmodelle sowie ihre Modellgüte in R berechnen.</li>
-</ul></section><section id="benötigte-r-pakete" class="level3" data-number="10.1.3"><h3 data-number="10.1.3" class="anchored" data-anchor-id="benötigte-r-pakete">
-<span class="header-section-number">10.1.3</span> Benötigte R-Pakete</h3>
+</ul></section><section id="benötigte-r-pakete" class="level3" data-number="9.1.3"><h3 data-number="9.1.3" class="anchored" data-anchor-id="benötigte-r-pakete">
+<span class="header-section-number">9.1.3</span> Benötigte R-Pakete</h3>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-1_5f326e590d3e2138c49d95a1c842c7c9">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/easystats/">easystats</a></span><span class="op">)</span></span>
@@ -366,13 +386,13 @@ div.csl-indent {
 <span><span class="va">scale_colour_discrete</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> </span>
 <span>  <span class="fu">scale_color_okabeito</span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="benötigte-daten" class="level3" data-number="10.1.4"><h3 data-number="10.1.4" class="anchored" data-anchor-id="benötigte-daten">
-<span class="header-section-number">10.1.4</span> Benötigte Daten</h3>
+</section><section id="benötigte-daten" class="level3" data-number="9.1.4"><h3 data-number="9.1.4" class="anchored" data-anchor-id="benötigte-daten">
+<span class="header-section-number">9.1.4</span> Benötigte Daten</h3>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-2_24fccd164953d4d1baad45781eb27a7f">
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section></section><section id="vorhersagen" class="level2" data-number="10.2"><h2 data-number="10.2" class="anchored" data-anchor-id="vorhersagen">
-<span class="header-section-number">10.2</span> Vorhersagen</h2>
+</section></section><section id="vorhersagen" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="vorhersagen">
+<span class="header-section-number">9.2</span> Vorhersagen</h2>
 <p>Vorhersagen sind eine nützlich Sache, unter (mindestens) folgenden Voraussetzungen:</p>
 <ol type="1">
 <li>Sie sind präzise</li>
@@ -380,10 +400,10 @@ div.csl-indent {
 <li>Jemand interessiert sich für die Vorhersage</li>
 </ol>
 <p>Die Methode des Vorhersagens, die wir hier betrachten, nennt man auch <em>lineare Regression</em>.</p>
-<section id="vorhersagen-ohne-prädiktor" class="level3" data-number="10.2.1"><h3 data-number="10.2.1" class="anchored" data-anchor-id="vorhersagen-ohne-prädiktor">
-<span class="header-section-number">10.2.1</span> Vorhersagen ohne Prädiktor</h3>
+<section id="vorhersagen-ohne-prädiktor" class="level3" data-number="9.2.1"><h3 data-number="9.2.1" class="anchored" data-anchor-id="vorhersagen-ohne-prädiktor">
+<span class="header-section-number">9.2.1</span> Vorhersagen ohne Prädiktor</h3>
 <div id="exm-noten-prognose" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 10.1 </strong></span>Nach intensiver Beschäftigung mit Statistik sind Sie allgemein als Checker bekannt. Viele jüngere Studentis fragen Sie um Rat. eines Tages kommt ei Studenti, Toni, und fragt: “Welche Statistiknote kann ich in der Klausur erwarten?” Sie entgegnen: “Wie viel hast du denn gelernt?”. Die Antwort: “Sag ich nicht.”</p>
+<p><span class="theorem-title"><strong>Beispiel 9.1</strong></span> Nach intensiver Beschäftigung mit Statistik sind Sie allgemein als Checker bekannt. Viele jüngere Studentis fragen Sie um Rat. eines Tages kommt ei Studenti, Toni, und fragt: “Welche Statistiknote kann ich in der Klausur erwarten?” Sie entgegnen: “Wie viel hast du denn gelernt?”. Die Antwort: “Sag ich nicht.”</p>
 <p>Nach kurzem Überlegen geben sie den Notenschnitt der letzten Klausur als Prognose für dis Studenti. Dazu rechnen Sie schnell den Notenschnitt (Mittelwert aus).</p>
 <p>Zuerst importieren Sie die Daten der letzten Klausur<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-4_ee4e439ee06d09fa3262482ea8451d40">
@@ -413,23 +433,23 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Ohne Kenntnis eines Prädiktors (UV) (wie z.B. Lernzeit) ist der Mittelwert ein geeigneter Vorhersagewert für jede Beobachtung, s. <a href="#fig-noten3" class="quarto-xref">Abbildung&nbsp;<span>10.1</span></a>. Wir nutzen den Mittelwert als Punktmodell für den Klausurerfolg.<span class="math inline">\(\square\)</span></p>
+<p>Ohne Kenntnis eines Prädiktors (UV) (wie z.B. Lernzeit) ist der Mittelwert ein geeigneter Vorhersagewert für jede Beobachtung, s. <a href="#fig-noten3" class="quarto-xref">Abbildung&nbsp;<span>9.1</span></a>. Wir nutzen den Mittelwert als Punktmodell für den Klausurerfolg.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <div class="cell" data-hash="080-regression1_cache/html/fig-noten3_fe45ff22be96af24290683fc20dfedb8">
 <div class="cell-output-display">
-<div id="fig-noten3" class="quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-noten3" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-noten3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="080-regression1_files/figure-html/fig-noten3-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-noten3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;10.1: Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmodell
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-noten3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;9.1: Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmodell
 </figcaption></figure>
 </div>
 </div>
 </div>
-</section><section id="nullmodell" class="level3 {def-nullmodell}" data-number="10.2.2"><h3 data-number="10.2.2" class="anchored" data-anchor-id="nullmodell">
-<span class="header-section-number">10.2.2</span> Nullmodell</h3>
+</section><section id="nullmodell" class="level3 {def-nullmodell}" data-number="9.2.2"><h3 data-number="9.2.2" class="anchored" data-anchor-id="nullmodell">
+<span class="header-section-number">9.2.2</span> Nullmodell</h3>
 <p>Modelle ohne Prädiktor, Punktmodelle also, kann man so bezeichnen: <code>y ~ 1</code>. Da es null Prädiktoren hat, nennt man es auch manchmal “Nullmodell”.</p>
 </section><p>Auf Errisch kann man dieses Nullmodell so spezifizieren:</p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-7_e33cb08305bfeff3b12e46a3e28968db">
@@ -445,129 +465,129 @@ Abbildung&nbsp;10.1: Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmod
 </div>
 <p><code>lm</code> steht für “lineares Modell”, die <code>0</code> sagt, dass es keine Prädiktoren gibt. In dem Fall wird der Mittelwert als Gerade verwendet. Der zurückgemeldete Koeffizient <code>(Intercept)</code> ist hier der Modell des Punktmodells. Da es ein Punktmodell ist, sagt es für alle Beobachtungen (hier Studentis) den gleichen Wert vorher.</p>
 <p>Die Regressionsgleichung lautet demnach: <code>y_pred = 71.08</code>. In Worten: “Wir sagen von jede Beobachtung einen Wert von ca. 71 vorher”.</p>
-<section id="vorhersagen-mit-prädiktor" class="level3" data-number="10.2.3"><h3 data-number="10.2.3" class="anchored" data-anchor-id="vorhersagen-mit-prädiktor">
-<span class="header-section-number">10.2.3</span> Vorhersagen mit Prädiktor</h3>
+<section id="vorhersagen-mit-prädiktor" class="level3" data-number="9.2.3"><h3 data-number="9.2.3" class="anchored" data-anchor-id="vorhersagen-mit-prädiktor">
+<span class="header-section-number">9.2.3</span> Vorhersagen mit Prädiktor</h3>
 <div id="exm-noten3" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 10.2 (Toni verrät die Lernzeit) </strong></span>Dis Studenti, Toni, entschließt sich dann doch noch, die Lernzeit zu verraten: “Okay, also ich hab insgesamt 42 Stunden gelernt, insgesamt.” Jetzt müssen Sie erstmal nachdenken: “Wie viele Klausurpunkte sag ich vorher, wenn Toni 42 gelernt hat?”</p>
-<p>Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. <a href="#fig-noten4" class="quarto-xref">Abbildung&nbsp;<span>10.2</span></a>, links.</p>
+<p><span class="theorem-title"><strong>Beispiel 9.2 (Toni verrät die Lernzeit)</strong></span> Dis Studenti, Toni, entschließt sich dann doch noch, die Lernzeit zu verraten: “Okay, also ich hab insgesamt 42 Stunden gelernt, insgesamt.” Jetzt müssen Sie erstmal nachdenken: “Wie viele Klausurpunkte sag ich vorher, wenn Toni 42 gelernt hat?”</p>
+<p>Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. <a href="#fig-noten4" class="quarto-xref">Abbildung&nbsp;<span>9.2</span></a>, links.</p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-8_78e6a96ad771b8d3fe9b5940a2c6ee06">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">noten2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="va">noten2</span>, <span class="st">"daten/noten2.csv"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://boxuancui.github.io/DataExplorer/">DataExplorer</a></span><span class="op">)</span></span>
 <span><span class="va">noten2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="http://boxuancui.github.io/DataExplorer/reference/plot_scatterplot.html">plot_scatterplot</a></span><span class="op">(</span>by <span class="op">=</span> <span class="st">"y"</span><span class="op">)</span>  <span class="co"># Y-Variable muss angegeben werden</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/DataExplorer/man/plot_scatterplot.html">plot_scatterplot</a></span><span class="op">(</span>by <span class="op">=</span> <span class="st">"y"</span><span class="op">)</span>  <span class="co"># Y-Variable muss angegeben werden</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Auf dieser Basis antworten Sie Toni: “Bei 42 Stunden Lernzeit solltest du so 46 Punkte bekommen. Könnte mit dem Bestehen eng werden.” Toni ist nicht begeistert von Ihrer Prognose und zieht von dannen.<span class="math inline">\(\square\)</span></p>
 </div>
-<p>Der Trend (im Sinne eines linearen Zusammenhangs) von Lernzeiten und Klausurpunkte ist deutlich zu erkennen. Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einzeichnen, s. <a href="#fig-noten4" class="quarto-xref">Abbildung&nbsp;<span>10.2</span></a>.</p>
+<p>Der Trend (im Sinne eines linearen Zusammenhangs) von Lernzeiten und Klausurpunkte ist deutlich zu erkennen. Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einzeichnen, s. <a href="#fig-noten4" class="quarto-xref">Abbildung&nbsp;<span>9.2</span></a>.</p>
 <div id="fig-noten4" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-noten4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-noten4" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-noten4-1" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-noten4" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-noten4-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-noten4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="080-regression1_files/figure-html/fig-noten4-1.png" class="img-fluid figure-img" data-ref-parent="fig-noten4" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-noten4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-noten4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Gemeinsame Verteilung (Zusammenhang) von Lernzeit (X) und Noten (Y)
 </figcaption></figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-noten4" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-noten4-2" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-noten4" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-noten4-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-noten4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="080-regression1_files/figure-html/fig-noten4-2.png" class="img-fluid figure-img" data-ref-parent="fig-noten4" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-noten4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-noten4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Eine ‘Trendgerade’ (blau) im Datensatz noten2. Mittelwerte sind mit gestrichelten Linien eingezeichnet. Tonis Vorhersage ist mit einem roten Punkt gekennzeichnet.
 </figcaption></figure>
 </div>
 </div>
 </div>
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-noten4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;10.2: Noten und Lernzeit: Rohdaten und Modell
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-noten4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;9.2: Noten und Lernzeit: Rohdaten und Modell
 </figcaption></figure>
 </div>
 <p>Eine Gerade eignet sich, um einen linearen Trend zusammenzufassen.</p>
-</section></section><section id="geradenmodelle" class="level2" data-number="10.3"><h2 data-number="10.3" class="anchored" data-anchor-id="geradenmodelle">
-<span class="header-section-number">10.3</span> Geradenmodelle</h2>
-<section id="achsenabschnitt-und-steigung-definieren-eine-gerade" class="level3" data-number="10.3.1"><h3 data-number="10.3.1" class="anchored" data-anchor-id="achsenabschnitt-und-steigung-definieren-eine-gerade">
-<span class="header-section-number">10.3.1</span> Achsenabschnitt und Steigung definieren eine Gerade</h3>
-<p>Wir verwenden eine Gerade als Modell für die Daten, s. <a href="#fig-noten4" class="quarto-xref">Abbildung&nbsp;<span>10.2</span></a>, rechts. Anders gesagt: Wir modellieren die X-Y-Daten (bzw. ihren Zusammenhang) mit einem Geradenmodell.</p>
-<p>Ein Geradenmodell ist eine Verallgemeinerung des Punktmodells: Ein Punktmodell sagt für alle Beobachtungen den gleichen Wert vorher. <a href="#fig-noten3" class="quarto-xref">Abbildung&nbsp;<span>10.1</span></a> und <a href="#fig-noten4" class="quarto-xref">Abbildung&nbsp;<span>10.2</span></a> stellen ein Punktmodell einem Geradenmodell gegenüber.</p>
+</section></section><section id="geradenmodelle" class="level2" data-number="9.3"><h2 data-number="9.3" class="anchored" data-anchor-id="geradenmodelle">
+<span class="header-section-number">9.3</span> Geradenmodelle</h2>
+<section id="achsenabschnitt-und-steigung-definieren-eine-gerade" class="level3" data-number="9.3.1"><h3 data-number="9.3.1" class="anchored" data-anchor-id="achsenabschnitt-und-steigung-definieren-eine-gerade">
+<span class="header-section-number">9.3.1</span> Achsenabschnitt und Steigung definieren eine Gerade</h3>
+<p>Wir verwenden eine Gerade als Modell für die Daten, s. <a href="#fig-noten4" class="quarto-xref">Abbildung&nbsp;<span>9.2</span></a>, rechts. Anders gesagt: Wir modellieren die X-Y-Daten (bzw. ihren Zusammenhang) mit einem Geradenmodell.</p>
+<p>Ein Geradenmodell ist eine Verallgemeinerung des Punktmodells: Ein Punktmodell sagt für alle Beobachtungen den gleichen Wert vorher. <a href="#fig-noten3" class="quarto-xref">Abbildung&nbsp;<span>9.1</span></a> und <a href="#fig-noten4" class="quarto-xref">Abbildung&nbsp;<span>9.2</span></a> stellen ein Punktmodell einem Geradenmodell gegenüber.</p>
 <p>In einem Geradenmodell wird nicht mehr (notwendig) für jede Beobachtung die gleiche Vorhersage <span class="math inline">\(\hat{y}\)</span> gemacht (wie das bei einem Punktmodell der Fall ist).</p>
 <div id="def-gerade" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 10.1 </strong></span>Eine Gerade das, was man bekommt, wenn man eine lineare Funktion in ein Koordinationsystem einzeichnet. Sie ist definiert durch zwei <em>Koeffizienten</em>: Achsenabschnitt (engl. intercept), und Steigung (engl. slope). Häufig wird (z.B. im Schulunterricht) der Achsenabschnitt mit <span class="math inline">\(t\)</span> und die Steigung mit <span class="math inline">\(m\)</span> bezeichnet: <span class="math inline">\(f(x)=y=\color{blue}[m]x + \color{red}[t]\)</span>. In der Statistik wird folgende Nomenklatur bevorzugt: <span class="math inline">\(f(x)=\hat{y} = \color{red}{b_0} + \color{blue}{b_1}x\)</span> oder <span class="math inline">\(y = \color{red}{\beta_0} + \color{blue}{\beta_1}x\)</span> .<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Definition 9.1</strong></span> Eine Gerade das, was man bekommt, wenn man eine lineare Funktion in ein Koordinationsystem einzeichnet. Sie ist definiert durch zwei <em>Koeffizienten</em>: Achsenabschnitt (engl. intercept), und Steigung (engl. slope). Häufig wird (z.B. im Schulunterricht) der Achsenabschnitt mit <span class="math inline">\(t\)</span> und die Steigung mit <span class="math inline">\(m\)</span> bezeichnet: <span class="math inline">\(f(x)=y=\color{blue}[m]x + \color{red}[t]\)</span>. In der Statistik wird folgende Nomenklatur bevorzugt: <span class="math inline">\(f(x)=\hat{y} = \color{red}{b_0} + \color{blue}{b_1}x\)</span> oder <span class="math inline">\(y = \color{red}{\beta_0} + \color{blue}{\beta_1}x\)</span> .<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <span class="math inline">\(\square\)</span></p>
 </div>
-<p><a href="#fig-regrtex" class="quarto-xref">Abbildung&nbsp;<span>10.3</span></a> skizziert die Elemente einer Regression.</p>
-<div id="fig-regrtex" class="quarto-figure quarto-figure-center anchored" width="70%">
+<p><a href="#fig-regrtex" class="quarto-xref">Abbildung&nbsp;<span>9.3</span></a> skizziert die Elemente einer Regression.</p>
+<div id="fig-regrtex" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-regrtex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="img/regr.png" class="img-fluid figure-img" style="width:70.0%">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-regrtex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;10.3: Achsenabschnitt und Steigung einer Regressionsgeraden
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-regrtex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;9.3: Achsenabschnitt und Steigung einer Regressionsgeraden
 </figcaption></figure>
 </div>
 <p><a href="https://texample.net/tikz/examples/linear-regression/">Bildquelle: Basierend auf diesem Diagramm von Henri Menke</a></p>
-<p>Je nach Datenlage können sich Regressionsgerade in Steigung oder Achsenabschnitt unterscheiden, s. <a href="#fig-regr-div" class="quarto-xref">Abbildung&nbsp;<span>10.4</span></a>.</p>
+<p>Je nach Datenlage können sich Regressionsgerade in Steigung oder Achsenabschnitt unterscheiden, s. <a href="#fig-regr-div" class="quarto-xref">Abbildung&nbsp;<span>9.4</span></a>.</p>
 <div id="fig-regr-div" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-regr-div-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-regr-div" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-regr-div-1" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-regr-div" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-regr-div-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-regr-div-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="080-regression1_files/figure-html/fig-regr-div-1.png" class="img-fluid figure-img" data-ref-parent="fig-regr-div" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-regr-div-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-regr-div-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Datensatz 1
 </figcaption></figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-regr-div" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-regr-div-2" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-regr-div" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-regr-div-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-regr-div-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="080-regression1_files/figure-html/fig-regr-div-2.png" class="img-fluid figure-img" data-ref-parent="fig-regr-div" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-regr-div-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-regr-div-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Datensatz 2
 </figcaption></figure>
 </div>
 </div>
 </div>
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-regr-div-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;10.4: Regressionsanalysen mit verschiedenen Koeffizienten, aber gleicher Modellgüte
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-regr-div-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;9.4: Regressionsanalysen mit verschiedenen Koeffizienten, aber gleicher Modellgüte
 </figcaption></figure>
 </div>
-<p><a href="#fig-linfun" class="quarto-xref">Abbildung&nbsp;<span>10.5</span></a> zeigt ein interaktives Beispiel einer linearen Funktion (<a href="https://www.geogebra.org/m/vfjW1dZt">Quelle: Geogebra, Georg Wengler</a>.</p>
-<div id="fig-linfun" class="quarto-figure quarto-figure-center anchored">
+<p><a href="#fig-linfun" class="quarto-xref">Abbildung&nbsp;<span>9.5</span></a> zeigt ein interaktives Beispiel einer linearen Funktion (<a href="https://www.geogebra.org/m/vfjW1dZt">Quelle: Geogebra, Georg Wengler</a>.</p>
+<div id="fig-linfun" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-linfun-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="figure-content">
 <iframe width="500" height="400" src="https://www.geogebra.org/m/vfjW1dZt" title="Visualisierung eines Geradenmodells"></iframe>
 </div>
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-linfun-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;10.5: Interaktives Beispiel für eines lineares Modell.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-linfun-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;9.5: Interaktives Beispiel für eines lineares Modell.
 </figcaption></figure>
 </div>
 <div id="exm-noten5" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 10.3 (Toni will es genau wissen) </strong></span>Da Toni Sie als Statistik-Profi abgespeichert hat, werden Sie wieder konsultiert. “Okay, ich hab noch zwei Fragen. Erstens: Wie viele Punkte bekomme ich, wenn ich gar nicht lerne? Zweitens, wie viele Punkte bekomme ich pro gelernte Stunde? Ist immerhin meine Lebenszeit, krieg ich nicht zurück!”</p>
-<p>Das sind gute Fragen. Den Y-Wert (Klausurpunkte) bei <span class="math inline">\(X=0\)</span> gibt der Achsenabschnitt zurück. Schnell skizzieren Sie dazu ein Diagramm, s. <a href="#fig-beta0" class="quarto-xref">Abbildung&nbsp;<span>10.6</span></a>. Puh, die Antwort wird Toni nicht gefallen …<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Beispiel 9.3 (Toni will es genau wissen)</strong></span> Da Toni Sie als Statistik-Profi abgespeichert hat, werden Sie wieder konsultiert. “Okay, ich hab noch zwei Fragen. Erstens: Wie viele Punkte bekomme ich, wenn ich gar nicht lerne? Zweitens, wie viele Punkte bekomme ich pro gelernte Stunde? Ist immerhin meine Lebenszeit, krieg ich nicht zurück!”</p>
+<p>Das sind gute Fragen. Den Y-Wert (Klausurpunkte) bei <span class="math inline">\(X=0\)</span> gibt der Achsenabschnitt zurück. Schnell skizzieren Sie dazu ein Diagramm, s. <a href="#fig-beta0" class="quarto-xref">Abbildung&nbsp;<span>9.6</span></a>. Puh, die Antwort wird Toni nicht gefallen …<span class="math inline">\(\square\)</span></p>
 </div>
 <div class="cell" data-hash="080-regression1_cache/html/fig-beta0_4e3e17d6b19eab0f554401bf2187186b">
 <div class="cell-output-display">
-<div id="fig-beta0" class="quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-beta0" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-beta0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="080-regression1_files/figure-html/fig-beta0-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-beta0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;10.6: Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei 0 Lernstunden? (roter Punkt bei x=0)
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-beta0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;9.6: Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei 0 Lernstunden? (roter Punkt bei x=0)
 </figcaption></figure>
 </div>
 </div>
 </div>
-<p>Anstelle auf <a href="#fig-beta0" class="quarto-xref">Abbildung&nbsp;<span>10.6</span></a> zu schauen, können Sie sich auch von R Tonis Klausurerfolg vorhersagen (to predict) lassen:</p>
+<p>Anstelle auf <a href="#fig-beta0" class="quarto-xref">Abbildung&nbsp;<span>9.6</span></a> zu schauen, können Sie sich auch von R Tonis Klausurerfolg vorhersagen (to predict) lassen:</p>
 <blockquote class="blockquote">
 <p>🧑‍🎓 Hey R, predicte mir mal auf Basis vom Modell “lm1” den Lernerfolg für Toni, wenn der x=0 Stunden lernt.</p>
 </blockquote>
@@ -590,18 +610,18 @@ Abbildung&nbsp;10.6: Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei
 <span><span class="co">##          1 </span></span>
 <span><span class="co">## 0.04692592</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="spezifikation-eines-geradenmodells" class="level3" data-number="10.3.2"><h3 data-number="10.3.2" class="anchored" data-anchor-id="spezifikation-eines-geradenmodells">
-<span class="header-section-number">10.3.2</span> Spezifikation eines Geradenmodells</h3>
-<p>Ein Geradenmodell kann man im einfachsten Fall so spezifizieren, s. <a href="#eq-mod1" class="quarto-xref">Gleichung&nbsp;<span>10.1</span></a>:</p>
-<p><span id="eq-mod1"><span class="math display">\[\hat{y} \sim x \tag{10.1}\]</span></span></p>
+</section><section id="spezifikation-eines-geradenmodells" class="level3" data-number="9.3.2"><h3 data-number="9.3.2" class="anchored" data-anchor-id="spezifikation-eines-geradenmodells">
+<span class="header-section-number">9.3.2</span> Spezifikation eines Geradenmodells</h3>
+<p>Ein Geradenmodell kann man im einfachsten Fall so spezifizieren, s. <a href="#eq-mod1" class="quarto-xref">Gleichung&nbsp;<span>9.1</span></a>:</p>
+<p><span id="eq-mod1"><span class="math display">\[\hat{y} \sim x \tag{9.1}\]</span></span></p>
 <p>Lies: “Laut meinem Modell ist <span class="math inline">\(\hat{y}\)</span> irgendeine Funktion von <span class="math inline">\(y\)</span>”. Wir werden als Funktion (erstmal) nur Geraden verwenden. Die genauen Werte der Gerade lassen wir uns (erstmal) vom Computer ausrechnen.</p>
-<p><a href="#eq-mod1" class="quarto-xref">Gleichung&nbsp;<span>10.1</span></a> können Sie so ins Errische übersetzen:</p>
+<p><a href="#eq-mod1" class="quarto-xref">Gleichung&nbsp;<span>9.1</span></a> können Sie so ins Errische übersetzen:</p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-16_19add5c23b9a6391e54d82d479ed5f4b">
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data <span class="op">=</span> <span class="va">meine_daten</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>lm</code> steht für “lineares Modell”, also eine Gerade als Modell. Die Gerade nennt man auch <em>Regressionsgerade</em><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
 <div id="exm-noten5" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 10.4 (Zahlen für Toni) </strong></span>Toni ist nicht zufrieden mit Ihren Vorhersagen: “Jetzt hör mal auf mit deinem Lineal hier herum zu malen. Ich will es genau wissen, sag mir präzise Zahlen!”.</p>
+<p><span class="theorem-title"><strong>Beispiel 9.4 (Zahlen für Toni)</strong></span> Toni ist nicht zufrieden mit Ihren Vorhersagen: “Jetzt hör mal auf mit deinem Lineal hier herum zu malen. Ich will es genau wissen, sag mir präzise Zahlen!”.</p>
 </div>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-17_c02a69c5272fcb3b61cc95305648137b">
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data <span class="op">=</span> <span class="va">noten2</span><span class="op">)</span></span>
@@ -625,7 +645,7 @@ Abbildung&nbsp;10.6: Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei
 <span><span class="co">## [1] 17.4</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="exm-noten6" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 10.5 (Vorhersage für Klausurerfolg, nächster Versuch) </strong></span>Sie versuchen, noch etwas Gutes für Toni zu tun. R hilft Ihnen dabei und rechnet die erwartete Punktzahl aus, wenn Toni 73 Stunden lernt. Sie dürfen es aber auch selber rechnen, wenn Ihnen das lieber ist.</p>
+<p><span class="theorem-title"><strong>Beispiel 9.5 (Vorhersage für Klausurerfolg, nächster Versuch)</strong></span> Sie versuchen, noch etwas Gutes für Toni zu tun. R hilft Ihnen dabei und rechnet die erwartete Punktzahl aus, wenn Toni 73 Stunden lernt. Sie dürfen es aber auch selber rechnen, wenn Ihnen das lieber ist.</p>
 </div>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-19_806a1b1ec7cf192ea5994a203d4d63bf">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tonis_lernzeit2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">73</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -650,36 +670,36 @@ Hinweis
 <p>Mit <code>predict</code> bekommt man eine Vorhersage; im Standard eine “Punkt-Vorhersage”, eine einzelne Zahl.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
-</section><section id="vorhersagefehler" class="level3" data-number="10.3.3"><h3 data-number="10.3.3" class="anchored" data-anchor-id="vorhersagefehler">
-<span class="header-section-number">10.3.3</span> Vorhersagefehler</h3>
+</section><section id="vorhersagefehler" class="level3" data-number="9.3.3"><h3 data-number="9.3.3" class="anchored" data-anchor-id="vorhersagefehler">
+<span class="header-section-number">9.3.3</span> Vorhersagefehler</h3>
 <p>Die Differenz zwischen vorhergesagten Wert für eine (neue) Beobachtung, <span class="math inline">\(\hat{y_0}\)</span> und ihrem tatsächlichen Wert nennt man Vorhersagefehler (error, <span class="math inline">\(e_i\)</span>) oder <em>Residuum</em>: <span class="math inline">\(e_i = y_i - \hat{y}_i\)</span>.</p>
 <div id="fig-resid" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-resid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-resid" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-resid-1" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-resid" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-resid-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-resid-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="080-regression1_files/figure-html/fig-resid-1.png" class="img-fluid figure-img" data-ref-parent="fig-resid" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-resid-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-resid-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Residuen beim Geradenmodell (lm1)
 </figcaption></figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-resid" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-resid-2" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-resid" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-resid-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-resid-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="080-regression1_files/figure-html/fig-resid-2.png" class="img-fluid figure-img" data-ref-parent="fig-resid" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-resid-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-resid-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Residuen beim Punktmodell (lm0)
 </figcaption></figure>
 </div>
 </div>
 </div>
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-resid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;10.7: Vorhersagefehler als Abweichungsbalken
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-resid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;9.7: Vorhersagefehler als Abweichungsbalken
 </figcaption></figure>
 </div>
 <p>Wie ist es mit den Vorhersagefehlern von beiden Modellen bestellt?</p>
@@ -698,7 +718,7 @@ Abbildung&nbsp;10.7: Vorhersagefehler als Abweichungsbalken
 </div>
 <p>Ah! Das Geradenmodell ist viel besser: Von <code>lm0</code> zu <code>lm1</code> haben die mittlere (Absolut-)Länge des Fehlerbalkens auf 71 Prozent verbessert. Nicht schlecht!</p>
 <div id="def-fehlerstreung" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 10.2 (Fehlerstreuung) </strong></span>Als Fehlerstreuung bezeichnen wir die Gesamtheit der Abweichungen der beobachteten Werte (<span class="math inline">\(y_i\)</span>) vom vorhergesagten Wert (<span class="math inline">\(\hat{y}_i\)</span>).<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Definition 9.2 (Fehlerstreuung)</strong></span> Als Fehlerstreuung bezeichnen wir die Gesamtheit der Abweichungen der beobachteten Werte (<span class="math inline">\(y_i\)</span>) vom vorhergesagten Wert (<span class="math inline">\(\hat{y}_i\)</span>).<span class="math inline">\(\square\)</span></p>
 </div>
 <p>Zur Berechnung der Fehlerstreuung gibt es mehrere Kenngrößen wie MAE oder MSE.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -726,22 +746,22 @@ Hinweis
 <span><span class="va">verhaeltnis_fehler_gerade_zu_punkt_mse</span></span>
 <span><span class="co">## [1] 0.5521755</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="berechnung-der-modellkoeffizienten" class="level3" data-number="10.3.4"><h3 data-number="10.3.4" class="anchored" data-anchor-id="berechnung-der-modellkoeffizienten">
-<span class="header-section-number">10.3.4</span> Berechnung der Modellkoeffizienten</h3>
+</section><section id="berechnung-der-modellkoeffizienten" class="level3" data-number="9.3.4"><h3 data-number="9.3.4" class="anchored" data-anchor-id="berechnung-der-modellkoeffizienten">
+<span class="header-section-number">9.3.4</span> Berechnung der Modellkoeffizienten</h3>
 <p>Aber wie legt man die Regressionsgerade in das Streudiagramm, bildlich gesprochen?</p>
 <p>Die Regressionskoeffizienten<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> b0 und b1 wählt man so, dass die Residuen minimal sind. Es gibt verschiedene Algorithmen, um dies zu berechnen<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>. Eine schöne Darstellung dazu findet sich bei <span class="citation" data-cites="kaplan_statistical_2009">Kaplan (<a href="#ref-kaplan_statistical_2009" role="doc-biblioref">2009</a>)</span>.</p>
 <p>“Von Hand” können Sie die Optimierung von b0 und b1 in <a href="https://fomshinyapps.shinyapps.io/KleinsteQuadrate/">dieser App der FOM-Hochschule</a> ausprobieren.</p>
-</section></section><section id="r-quadrat" class="level2" data-number="10.4"><h2 data-number="10.4" class="anchored" data-anchor-id="r-quadrat">
-<span class="header-section-number">10.4</span> R-Quadrat</h2>
-<section id="r-quadrat-als-verringerung-der-fehlerstreuung" class="level3" data-number="10.4.1"><h3 data-number="10.4.1" class="anchored" data-anchor-id="r-quadrat-als-verringerung-der-fehlerstreuung">
-<span class="header-section-number">10.4.1</span> R-Quadrat als Verringerung der Fehlerstreuung</h3>
+</section></section><section id="r-quadrat" class="level2" data-number="9.4"><h2 data-number="9.4" class="anchored" data-anchor-id="r-quadrat">
+<span class="header-section-number">9.4</span> R-Quadrat</h2>
+<section id="r-quadrat-als-verringerung-der-fehlerstreuung" class="level3" data-number="9.4.1"><h3 data-number="9.4.1" class="anchored" data-anchor-id="r-quadrat-als-verringerung-der-fehlerstreuung">
+<span class="header-section-number">9.4.1</span> R-Quadrat als Verringerung der Fehlerstreuung</h3>
 <p>Anders gesagt, wir haben uns um <span class="math inline">\(1 - 0.55\)</span> verbessert:</p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-26_8d48c50d623fdb932454fd05a03446dd">
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fl">1</span> <span class="op">-</span> <span class="va">verhaeltnis_fehler_gerade_zu_punkt_mse</span></span>
 <span><span class="co">## [1] 0.4478245</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="def-r2" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 10.3 (R-Quadrat) </strong></span>Die Verringerung (als Anteil) der Fehlerstreuung der Zielvariablen von <code>lm0</code> zum gerade untersuchten Modell nennt man <em>R-Quadrat</em> (<span class="math inline">\(R^2\)</span>). R-Quadrat (<span class="math inline">\(R^2\)</span>) eines Modells <span class="math inline">\(m\)</span> ist definiert als die Verringerung der Streuung, wenn man das Modell <span class="math inline">\(m\)</span> mit dem Nullmodell <span class="math inline">\(m_0\)</span> vergleicht: <span class="math inline">\(R^2 =1- \frac{\text{MSE}_{m}}{\text{MSE}_{m0}}\)</span>. R-Quadrat ist ein Maß der <em>Modellgüte</em>: Je größer <span class="math inline">\(R^2\)</span>, desto besser die Vorhersage. Da es ein Anteilsmaß<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> ist, liegt der Wertebereich zwischen 0 uns 1. Im Nullmodell liegt R-Quadrat per Definition bei 0. Im Fall von Modellen des Typs <span class="math inline">\(y\sim x\)</span> gilt: <span class="math inline">\(R^2 = r_{xy}^2\)</span>. <span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Definition 9.3 (R-Quadrat)</strong></span> Die Verringerung (als Anteil) der Fehlerstreuung der Zielvariablen von <code>lm0</code> zum gerade untersuchten Modell nennt man <em>R-Quadrat</em> (<span class="math inline">\(R^2\)</span>). R-Quadrat (<span class="math inline">\(R^2\)</span>) eines Modells <span class="math inline">\(m\)</span> ist definiert als die Verringerung der Streuung, wenn man das Modell <span class="math inline">\(m\)</span> mit dem Nullmodell <span class="math inline">\(m_0\)</span> vergleicht: <span class="math inline">\(R^2 =1-  \frac{\text{MSE}_{m}}{\text{MSE}_{m0}}\)</span>. R-Quadrat ist ein Maß der <em>Modellgüte</em>: Je größer <span class="math inline">\(R^2\)</span>, desto besser die Vorhersage. Da es ein Anteilsmaß<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> ist, liegt der Wertebereich zwischen 0 uns 1. Im Nullmodell liegt R-Quadrat per Definition bei 0. Im Fall von Modellen des Typs <span class="math inline">\(y\sim x\)</span> gilt: <span class="math inline">\(R^2 = r_{xy}^2\)</span>. <span class="math inline">\(\square\)</span></p>
 </div>
 <p>Wir können R-Quadrat (<span class="math inline">\(R^2\)</span>) uns von R z.B. so ausgeben lassen:</p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-27_e6d5c20aa3e972eec22dcdba9c087818">
@@ -750,34 +770,34 @@ Hinweis
 <span><span class="co">##        R2: 0.448</span></span>
 <span><span class="co">##   adj. R2: 0.442</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Bei einer perfekten Korrelation ist <span class="math inline">\(r=1\)</span>, daher ist dann auch <span class="math inline">\(R^2 = 1\)</span><a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>, s. <a href="#fig-r2-extreme" class="quarto-xref">Abbildung&nbsp;<span>10.8</span></a>.</p>
+<p>Bei einer perfekten Korrelation ist <span class="math inline">\(r=1\)</span>, daher ist dann auch <span class="math inline">\(R^2 = 1\)</span><a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>, s. <a href="#fig-r2-extreme" class="quarto-xref">Abbildung&nbsp;<span>9.8</span></a>.</p>
 <div id="fig-r2-extreme" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-r2-extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-r2-extreme" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-r2-extreme-1" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-r2-extreme" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-r2-extreme-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-r2-extreme-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="080-regression1_files/figure-html/fig-r2-extreme-1.png" class="img-fluid figure-img" data-ref-parent="fig-r2-extreme" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-r2-extreme-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-r2-extreme-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Keine Korrelation, r = 0 und R2 = 0. Prognose durch Mittelwert
 </figcaption></figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-r2-extreme" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-r2-extreme-2" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-r2-extreme" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-r2-extreme-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-r2-extreme-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="080-regression1_files/figure-html/fig-r2-extreme-2.png" class="img-fluid figure-img" data-ref-parent="fig-r2-extreme" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-r2-extreme-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-r2-extreme-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Perfekte Korrelation, r = 1 und R2 = 1. Prognose gleich beobachtetem Wert
 </figcaption></figure>
 </div>
 </div>
 </div>
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-r2-extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;10.8: Extremfälle von R-Quadrat: 0 und 1
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-r2-extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;9.8: Extremfälle von R-Quadrat: 0 und 1
 </figcaption></figure>
 </div>
 <p>Bei einer perfekten Korrelation <span class="math inline">\(R^2=1\)</span> liegen die Punkte auf der Geraden. Im gegenteiligen Extremfall von <span class="math inline">\(R^2=0\)</span> ist die Vorhersage genauso gut, wie wenn man für jedes <span class="math inline">\(y\)</span> den Mittelwert, <span class="math inline">\(\bar{y}\)</span>, vorhersagen würde.</p>
@@ -807,22 +827,22 @@ Hinweis
 <!-- s2_m -->
 <!-- ``` -->
 <!-- Die Varianzanteile addieren sich. Mit anderen Kennzahlen der Streuung (SD, MAE) funktioniert das nicht. -->
-</section></section><section id="interpretation-eines-regressionsmodells" class="level2" data-number="10.5"><h2 data-number="10.5" class="anchored" data-anchor-id="interpretation-eines-regressionsmodells">
-<span class="header-section-number">10.5</span> Interpretation eines Regressionsmodells</h2>
-<section id="modellgüte" class="level3" data-number="10.5.1"><h3 data-number="10.5.1" class="anchored" data-anchor-id="modellgüte">
-<span class="header-section-number">10.5.1</span> Modellgüte</h3>
+</section></section><section id="interpretation-eines-regressionsmodells" class="level2" data-number="9.5"><h2 data-number="9.5" class="anchored" data-anchor-id="interpretation-eines-regressionsmodells">
+<span class="header-section-number">9.5</span> Interpretation eines Regressionsmodells</h2>
+<section id="modellgüte" class="level3" data-number="9.5.1"><h3 data-number="9.5.1" class="anchored" data-anchor-id="modellgüte">
+<span class="header-section-number">9.5.1</span> Modellgüte</h3>
 <p>Die Residuen (Vorhersagefehler) bestimmen die Modellgüte: Sind die Residuen im Schnitt groß, so ist die Modellgüte gering (schlecht), und umgekehrt. Verschiedenen Koeffizienten stehen zur Verfügung: R-Quadrat, r<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>, MSE, RMSE, MAE, …</p>
-</section><section id="koeffizienten" class="level3" data-number="10.5.2"><h3 data-number="10.5.2" class="anchored" data-anchor-id="koeffizienten">
-<span class="header-section-number">10.5.2</span> Koeffizienten</h3>
+</section><section id="koeffizienten" class="level3" data-number="9.5.2"><h3 data-number="9.5.2" class="anchored" data-anchor-id="koeffizienten">
+<span class="header-section-number">9.5.2</span> Koeffizienten</h3>
 <p>Die Modellkoeffizienten, also Achsenabschnitt (<span class="math inline">\(b_0\)</span>) und Steigung (<span class="math inline">\(b_1\)</span>) sind nur eingeschränkt zu interpretieren, wenn man die zugrundeliegenden kausalen Abhängigkeiten nicht kennt. Nur aufgrund eines Zusammenhangs darf man keine kausalen Abhängigkeiten annehmen. Ohne eine guten Grund für eine Kausalbehauptung kann man kann nur <em>deskriptiv</em> argumentieren. Oder sich mit der Modellgüte und den Vorhersagen begnügen. Was auch was wert ist.</p>
-<section id="achsenabschnitt-b0" class="level4" data-number="10.5.2.1"><h4 data-number="10.5.2.1" class="anchored" data-anchor-id="achsenabschnitt-b0">
-<span class="header-section-number">10.5.2.1</span> Achsenabschnitt (b0)</h4>
+<section id="achsenabschnitt-b0" class="level4" data-number="9.5.2.1"><h4 data-number="9.5.2.1" class="anchored" data-anchor-id="achsenabschnitt-b0">
+<span class="header-section-number">9.5.2.1</span> Achsenabschnitt (b0)</h4>
 <p>“Im Modell <code>lm1</code> liegt der Achsenabschnitt bei <span class="math inline">\(y=8.6\)</span>. Beobachtungen mit <span class="math inline">\(x=0\)</span> können also diesen Y-Wert erwarten.” Leider ist es häufig so, dass Prädiktorwerte von 0 in der Praxis nicht realistisch sind, so dass der Achsenabschnitt dann wenig nützt.</p>
 <div id="exm-groesse" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 10.6 (Regression Größe und Gewicht) </strong></span>Nutzt man Körpergröße umd das Gewicht von Menschen vorherzusagen, ist der Achsenabschnitt von Körpergröße wenig nützlich, da es keine Menschen gibt der Größe 0.<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Beispiel 9.6 (Regression Größe und Gewicht)</strong></span> Nutzt man Körpergröße umd das Gewicht von Menschen vorherzusagen, ist der Achsenabschnitt von Körpergröße wenig nützlich, da es keine Menschen gibt der Größe 0.<span class="math inline">\(\square\)</span></p>
 </div>
-</section><section id="geradensteigung-b1" class="level4" data-number="10.5.2.2"><h4 data-number="10.5.2.2" class="anchored" data-anchor-id="geradensteigung-b1">
-<span class="header-section-number">10.5.2.2</span> Geradensteigung (b1)</h4>
+</section><section id="geradensteigung-b1" class="level4" data-number="9.5.2.2"><h4 data-number="9.5.2.2" class="anchored" data-anchor-id="geradensteigung-b1">
+<span class="header-section-number">9.5.2.2</span> Geradensteigung (b1)</h4>
 <p>“Im Modell <code>lm1</code> beträgt der Regressionskoeffizient <code>b1</code> <span class="math inline">\(0.88\)</span>. Zwei Studenti, deren Lernzeit sich um eine Stunde unterscheidet, unterscheiden sich <em>laut Modell</em> um den Wert von b1.”</p>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -837,8 +857,8 @@ Vorsicht
 <p>Häufig liest man, der “Effekt des Prädiktors” auf die AV betrage z.B. <span class="math inline">\(0.88\)</span>. “Effekt” ist aber ein Wort, dass man kausal verstehen kann. Ohne weitere Absicherung kann man aber Regressionskoeffizienten nicht kausal verstehen. Daher sollte man das Wort “Effekt” mit Vorsicht genießen. Manche sprechen daher auch von einem “statistischen Effekt”.<span class="math inline">\(\square\)</span>.</p>
 </div>
 </div>
-</section></section></section><section id="fallbeispiel-mariokart" class="level2" data-number="10.6"><h2 data-number="10.6" class="anchored" data-anchor-id="fallbeispiel-mariokart">
-<span class="header-section-number">10.6</span> Fallbeispiel Mariokart</h2>
+</section></section></section><section id="fallbeispiel-mariokart" class="level2" data-number="9.6"><h2 data-number="9.6" class="anchored" data-anchor-id="fallbeispiel-mariokart">
+<span class="header-section-number">9.6</span> Fallbeispiel Mariokart</h2>
 <p>Als mittlerweile anerkannter Extrem-Datenanalyst in dem Online-Auktionshaus, in dem Sie arbeiten, haben Sie sich neue Ziele gesetzt. Sie möchten eine genaue Vorhersage von Verkaufspreisen erzielen. Als Sie von diesem Plan berichteten, leuchteten die Augen Ihres Chefs. Genaue Vorhersagen, das ist etwas von hoher betriebswirtschaftlicher Relevanz. Auf geht’s!</p>
 <p>Daten laden:<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-30_ce3f1c63f1fe3e9c2c639b96819d9cd4">
@@ -851,18 +871,18 @@ Vorsicht
 <span><span class="co">##        R2: 0.005</span></span>
 <span><span class="co">##   adj. R2: -0.002</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Oh nein! Unterirdisch schlecht. Anstelle von bloßen Rumprobieren überlegen Sie und schauen dann in <a href="070-zusammenhaenge.html#fig-mario-corr" class="quarto-xref">Abbildung&nbsp;<span>9.9</span></a> nach, welche Variable am stärksten korreliert mit <code>total_pr</code>, es resultiert <code>lm3</code>:</p>
+<p>Oh nein! Unterirdisch schlecht. Anstelle von bloßen Rumprobieren überlegen Sie und schauen dann in <a href="070-zusammenhaenge.html#fig-mario-corr" class="quarto-xref">Abbildung&nbsp;<span>8.9</span></a> nach, welche Variable am stärksten korreliert mit <code>total_pr</code>, es resultiert <code>lm3</code>:</p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-32_7f3bcc50790af674e1e7036938ee248d">
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">ship_pr</span>, data <span class="op">=</span> <span class="va">mariokart</span><span class="op">)</span></span>
 <span><span class="fu">parameters</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-hash="080-regression1_cache/html/tbl-lm3_87c262d3d41e57a7bff3b35b9f642b71">
-<div id="tbl-lm3" class="cell anchored" data-hash="080-regression1_cache/html/tbl-lm3_87c262d3d41e57a7bff3b35b9f642b71">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="table quarto-float-caption quarto-float-tbl" id="tbl-lm3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabelle&nbsp;10.1: Modellparameter von lm3
+<div id="tbl-lm3" class="cell quarto-float anchored" data-hash="080-regression1_cache/html/tbl-lm3_87c262d3d41e57a7bff3b35b9f642b71">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lm3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabelle&nbsp;9.1: Modellparameter von lm3
 </figcaption><div aria-describedby="tbl-lm3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell table table-sm table-striped small">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead><tr class="header">
 <th style="text-align: left;">Parameter</th>
 <th style="text-align: center;">Coefficient</th>
@@ -895,7 +915,7 @@ Tabelle&nbsp;10.1: Modellparameter von lm3
 </figure>
 </div>
 </div>
-<p>Der Achsenabschnitt liegt bei ca. 36 Euro, wie man in <a href="#tbl-lm3" class="quarto-xref">Tabelle&nbsp;<span>10.1</span></a> sieht: Ein Spiel, das mit Null Euro Preis startet, kann laut <code>lm3</code> etwa 36 Euro finaler Verkaufspreis erwarten. <em>Pro Euro an Versandkosten</em> (<code>ship_pr</code>) steigt der zu erwartende finale Verkaufspreis um ca. 4 Euro.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a>.</p>
+<p>Der Achsenabschnitt liegt bei ca. 36 Euro, wie man in <a href="#tbl-lm3" class="quarto-xref">Tabelle&nbsp;<span>9.1</span></a> sieht: Ein Spiel, das mit Null Euro Preis startet, kann laut <code>lm3</code> etwa 36 Euro finaler Verkaufspreis erwarten. <em>Pro Euro an Versandkosten</em> (<code>ship_pr</code>) steigt der zu erwartende finale Verkaufspreis um ca. 4 Euro.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a>.</p>
 <p>Die Regressionsgleichung von <code>lm3</code> lautet demnach:</p>
 <p><code>total_pr_pred = 36.25 + 4.34*ship_pr</code>.</p>
 <p>In Worten:</p>
@@ -933,16 +953,16 @@ Tabelle&nbsp;10.1: Modellparameter von lm3
 <span><span class="co">##        1        2 </span></span>
 <span><span class="co">## 40.58276 53.59442</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Aber nützlich wäre noch, das Modell (bzw. die Schätzung der erwarteten Werte) als Diagramm zu bekommen. Das erreicht man z.B. so, s. <a href="090-regression2.html#fig-lm3" class="quarto-xref">Abbildung&nbsp;<span>11.11</span></a>.</p>
+<p>Aber nützlich wäre noch, das Modell (bzw. die Schätzung der erwarteten Werte) als Diagramm zu bekommen. Das erreicht man z.B. so, s. <a href="090-regression2.html#fig-lm3" class="quarto-xref">Abbildung&nbsp;<span>10.11</span></a>.</p>
 <div class="cell" data-hash="080-regression1_cache/html/fig-lm3_17f8189000bddf21176bab82ce066444">
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">estimate_expectation</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-lm3" class="quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-lm3" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-lm3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="080-regression1_files/figure-html/fig-lm3-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-lm3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;10.9: Verbildlichung der erwarteteten Werte laut lm3
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-lm3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;9.9: Verbildlichung der erwarteteten Werte laut lm3
 </figcaption></figure>
 </div>
 </div>
@@ -959,8 +979,8 @@ Abbildung&nbsp;10.9: Verbildlichung der erwarteteten Werte laut lm3
 <span><span class="co">## [1] 13.0632</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Im nächsten Meeting erzählen Sie Ihrem Chef “Ich kann den Verkaufspreis von Mariokart-Spielen im Schnitt auf 13 Dollar genau vorhersagen!”. Hört sich gut an. Allerdings hätte ihr Chef es gerne genauer. Kann man da noch was machen?</p>
-</section><section id="fallstudie-immobilienpreise" class="level2" data-number="10.7"><h2 data-number="10.7" class="anchored" data-anchor-id="fallstudie-immobilienpreise">
-<span class="header-section-number">10.7</span> Fallstudie Immobilienpreise</h2>
+</section><section id="fallstudie-immobilienpreise" class="level2" data-number="9.7"><h2 data-number="9.7" class="anchored" data-anchor-id="fallstudie-immobilienpreise">
+<span class="header-section-number">9.7</span> Fallstudie Immobilienpreise</h2>
 <!-- ## Fallstudie Immobilienpreise -->
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -975,8 +995,8 @@ Vorsicht
 <p>Diese Fallstudie stellt die Prüfungsleistung “Prognosewettbewerb” einführend dar. Es empfiehlt sich für Sie, diese Fallstudie sorgsam zu bearbeiten.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
-<section id="hintergrund" class="level3" data-number="10.7.1"><h3 data-number="10.7.1" class="anchored" data-anchor-id="hintergrund">
-<span class="header-section-number">10.7.1</span> Hintergrund</h3>
+<section id="hintergrund" class="level3" data-number="9.7.1"><h3 data-number="9.7.1" class="anchored" data-anchor-id="hintergrund">
+<span class="header-section-number">9.7.1</span> Hintergrund</h3>
 <p>In dieser Fallstudie geht es darum, die Preise von Immobilien vorherzusagen. Kurz gesagt: Sagen Sie die Hauspreise vorher, und reichen Sie Ihre Vorhersagen als CSV bei <a href="https://www.kaggle.com/">Kaggle</a> ein.</p>
 <p>Kaggle ist eine Webseite, die Prognosewettbewerbe veranstaltet.</p>
 <p>In dieser Fallstudie nehmen Sie teil an der Kaggle-Competition <a href="https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview">Ames House Prices</a>.</p>
@@ -984,14 +1004,14 @@ Vorsicht
 <li><a href="https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/description">Beschreibung</a></li>
 <li><a href="https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/evaluation">Ziel/Aufgabe</a></li>
 <li><a href="https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/rules">Spielregeln</a></li>
-</ul></section><section id="benötigte-r-pakete-1" class="level3" data-number="10.7.2"><h3 data-number="10.7.2" class="anchored" data-anchor-id="benötigte-r-pakete-1">
-<span class="header-section-number">10.7.2</span> Benötigte R-Pakete</h3>
+</ul></section><section id="benötigte-r-pakete-1" class="level3" data-number="9.7.2"><h3 data-number="9.7.2" class="anchored" data-anchor-id="benötigte-r-pakete-1">
+<span class="header-section-number">9.7.2</span> Benötigte R-Pakete</h3>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-41_2a4e4ff1ad8cffd229e9d504cff42fee">
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/easystats/">easystats</a></span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="daten" class="level3" data-number="10.7.3"><h3 data-number="10.7.3" class="anchored" data-anchor-id="daten">
-<span class="header-section-number">10.7.3</span> Daten</h3>
+</section><section id="daten" class="level3" data-number="9.7.3"><h3 data-number="9.7.3" class="anchored" data-anchor-id="daten">
+<span class="header-section-number">9.7.3</span> Daten</h3>
 <p>Wenn Sie sich bei Kaggle einloggen möchten, können Sie die Daten von Kaggle herunterladen und zwar <a href="https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data">hier</a>.</p>
 <p>Im Einzelnen müssen Sie folgende Dateien herunterladen:</p>
 <ul>
@@ -1014,8 +1034,8 @@ Vorsicht
 </div>
 <p>Laden Sie diese Daten am besten herunter und speichern Sie sie in einem passenden Unterverzeichnis (Ihres Projektordners in RStudio) ab.</p>
 <p>Das Code Book können Sie <a href="https://github.com/sebastiansauer/Lehre/blob/main/data/ames-kaggle/data_description.txt">hier einsehen und herunterladen</a>.</p>
-</section><section id="prognosedatei" class="level3" data-number="10.7.4"><h3 data-number="10.7.4" class="anchored" data-anchor-id="prognosedatei">
-<span class="header-section-number">10.7.4</span> Prognosedatei</h3>
+</section><section id="prognosedatei" class="level3" data-number="9.7.4"><h3 data-number="9.7.4" class="anchored" data-anchor-id="prognosedatei">
+<span class="header-section-number">9.7.4</span> Prognosedatei</h3>
 <p>Die Prognosedatei soll prinzipiell so aussehen:</p>
 <div class="cell" data-hash="080-regression1_cache/html/read-data-ames_1a4e593c8baa59dfd15d8c3822a9f0bf">
 <div class="cell-output-display">
@@ -1029,8 +1049,8 @@ Vorsicht
 <p>Die Prognosedatei besteht also aus zwei Spalten: der Spalte <code>id</code> und der Spalte <code>Saleprice</code>. Die Spalte <code>id</code> gibt an, welches Haus in einer bestimmten Zeile Ihrer Prognosedatei gemeint ist - für welches Haus Sie also gerade einen Kaufpreis vorhersagen. die Spalte <code>SalePrice</code> ist Ihre Vorhersage für den Kaufpreis das Hauses mit der Id, die in der betreffenden Zeile steht. Insgesamt soll die Prognosedatei genau so viele Zeilen haben wie der Test-Datensatz, also die Tabelle, die die vorherzusagenden Werte angibt.</p>
 <p>Alles klar?</p>
 <p>Los geht’s!</p>
-</section><section id="daten-importieren" class="level3" data-number="10.7.5"><h3 data-number="10.7.5" class="anchored" data-anchor-id="daten-importieren">
-<span class="header-section-number">10.7.5</span> Daten importieren</h3>
+</section><section id="daten-importieren" class="level3" data-number="9.7.5"><h3 data-number="9.7.5" class="anchored" data-anchor-id="daten-importieren">
+<span class="header-section-number">9.7.5</span> Daten importieren</h3>
 <p>Wir starten die üblichen R-Pakete und importieren die Daten (<code>d</code>):</p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-43_a08108dfc7027d064cff155008ff6a8f">
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
@@ -1072,14 +1092,14 @@ Vorsicht
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="va">d_train_path_online</span><span class="op">)</span></span>
 <span><span class="va">d_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="va">d_test_path_online</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="ein-erster-blick-in-die-daten" class="level3" data-number="10.7.6"><h3 data-number="10.7.6" class="anchored" data-anchor-id="ein-erster-blick-in-die-daten">
-<span class="header-section-number">10.7.6</span> Ein erster Blick in die Daten</h3>
-<p>Schauen wir uns einmal die Verteilung der metrischen Variablen an, <a href="#tbl-ames1" class="quarto-xref">Tabelle&nbsp;<span>10.2</span></a>.</p>
+</section><section id="ein-erster-blick-in-die-daten" class="level3" data-number="9.7.6"><h3 data-number="9.7.6" class="anchored" data-anchor-id="ein-erster-blick-in-die-daten">
+<span class="header-section-number">9.7.6</span> Ein erster Blick in die Daten</h3>
+<p>Schauen wir uns einmal die Verteilung der metrischen Variablen an, <a href="#tbl-ames1" class="quarto-xref">Tabelle&nbsp;<span>9.2</span></a>.</p>
 <div class="cell" data-hash="080-regression1_cache/html/tbl-ames1_2c7f7885ade6a448172fb868a46d5872">
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">describe_distribution</span><span class="op">(</span><span class="va">d_train</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-ames1" class="cell anchored" data-hash="080-regression1_cache/html/tbl-ames1_2c7f7885ade6a448172fb868a46d5872">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="table quarto-float-caption quarto-float-tbl" id="tbl-ames1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabelle&nbsp;10.2: Verteilung der metrischen Variablen im ames-Datensatz
+<div id="tbl-ames1" class="cell quarto-float anchored" data-hash="080-regression1_cache/html/tbl-ames1_2c7f7885ade6a448172fb868a46d5872">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ames1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabelle&nbsp;9.2: Verteilung der metrischen Variablen im ames-Datensatz
 </figcaption><div aria-describedby="tbl-ames1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -1092,11 +1112,11 @@ Tabelle&nbsp;10.2: Verteilung der metrischen Variablen im ames-Datensatz
 </figure>
 </div>
 </div>
-</section><section id="ein-erstes-vorhersagemodell" class="level3" data-number="10.7.7"><h3 data-number="10.7.7" class="anchored" data-anchor-id="ein-erstes-vorhersagemodell">
-<span class="header-section-number">10.7.7</span> Ein erstes Vorhersagemodell</h3>
-<section id="welche-variablen-eignen-sich-zur-vorhersage" class="level4" data-number="10.7.7.1"><h4 data-number="10.7.7.1" class="anchored" data-anchor-id="welche-variablen-eignen-sich-zur-vorhersage">
-<span class="header-section-number">10.7.7.1</span> Welche Variablen eignen sich zur Vorhersage?</h4>
-<p>Eine einfache Antwort auf die Frage, welche Variablen sich zur Vorhersage eignen, ist, die Korrelation aller Prädiktoren mit der abhängigen Variablen<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a> zu berechnen, s. <a href="#tbl-d_train_corr" class="quarto-xref">Tabelle&nbsp;<span>10.3</span></a>.</p>
+</section><section id="ein-erstes-vorhersagemodell" class="level3" data-number="9.7.7"><h3 data-number="9.7.7" class="anchored" data-anchor-id="ein-erstes-vorhersagemodell">
+<span class="header-section-number">9.7.7</span> Ein erstes Vorhersagemodell</h3>
+<section id="welche-variablen-eignen-sich-zur-vorhersage" class="level4" data-number="9.7.7.1"><h4 data-number="9.7.7.1" class="anchored" data-anchor-id="welche-variablen-eignen-sich-zur-vorhersage">
+<span class="header-section-number">9.7.7.1</span> Welche Variablen eignen sich zur Vorhersage?</h4>
+<p>Eine einfache Antwort auf die Frage, welche Variablen sich zur Vorhersage eignen, ist, die Korrelation aller Prädiktoren mit der abhängigen Variablen<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a> zu berechnen, s. <a href="#tbl-d_train_corr" class="quarto-xref">Tabelle&nbsp;<span>9.3</span></a>.</p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-46_84943d4e4d97c9bf9b214ecfed69450e">
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d_train</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">Id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
@@ -1106,12 +1126,12 @@ Tabelle&nbsp;10.2: Verteilung der metrischen Variablen im ames-Datensatz
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">.3</span><span class="op">)</span>  <span class="co"># nur |r| &gt; 3.</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-hash="080-regression1_cache/html/tbl-d_train_corr_cf8dd6ba478cf52d56dfc263e9e13ac7">
-<div id="tbl-d_train_corr" class="cell anchored" data-hash="080-regression1_cache/html/tbl-d_train_corr_cf8dd6ba478cf52d56dfc263e9e13ac7">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="table quarto-float-caption quarto-float-tbl" id="tbl-d_train_corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabelle&nbsp;10.3: Korrelation der Prädiktoren (UV) mit der AV
+<div id="tbl-d_train_corr" class="cell quarto-float anchored" data-hash="080-regression1_cache/html/tbl-d_train_corr_cf8dd6ba478cf52d56dfc263e9e13ac7">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-d_train_corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabelle&nbsp;9.3: Korrelation der Prädiktoren (UV) mit der AV
 </figcaption><div aria-describedby="tbl-d_train_corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell table table-sm table-striped small">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <caption>Correlation Matrix (pearson-method)</caption>
 <colgroup>
 <col style="width: 18%">
@@ -1304,20 +1324,20 @@ Tabelle&nbsp;10.3: Korrelation der Prädiktoren (UV) mit der AV
 </div>
 <p>Aha! Ein Menge Information.<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a></p>
 <p>Diese Variablen sind einigermaßen stark mit unserer Zielvariablen <code>SalePrice</code> korreliert. Nutzen wir also diese Variablen (oder einige von ihnen) zur Vorhersage.</p>
-</section><section id="model-1" class="level4" data-number="10.7.7.2"><h4 data-number="10.7.7.2" class="anchored" data-anchor-id="model-1">
-<span class="header-section-number">10.7.7.2</span> Model 1</h4>
-<p>Berechnen wir ein erstes Modell für diese Forschungsfrage, s. <a href="#tbl-m1-params" class="quarto-xref">Tabelle&nbsp;<span>10.4</span></a>.</p>
+</section><section id="model-1" class="level4" data-number="9.7.7.2"><h4 data-number="9.7.7.2" class="anchored" data-anchor-id="model-1">
+<span class="header-section-number">9.7.7.2</span> Model 1</h4>
+<p>Berechnen wir ein erstes Modell für diese Forschungsfrage, s. <a href="#tbl-m1-params" class="quarto-xref">Tabelle&nbsp;<span>9.4</span></a>.</p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-48_dd77c0f1585d6fc6e351a76da0be8795">
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">SalePrice</span> <span class="op">~</span> <span class="va">OverallQual</span> <span class="op">+</span> <span class="va">GrLivArea</span> <span class="op">+</span> <span class="va">GarageCars</span>, data <span class="op">=</span> <span class="va">d_train</span><span class="op">)</span></span>
 <span><span class="fu">parameters</span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-hash="080-regression1_cache/html/tbl-m1-params_aa56f48ce4832a5a7aa2bee1ff56e732">
-<div id="tbl-m1-params" class="cell anchored" data-hash="080-regression1_cache/html/tbl-m1-params_aa56f48ce4832a5a7aa2bee1ff56e732">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="table quarto-float-caption quarto-float-tbl" id="tbl-m1-params-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabelle&nbsp;10.4: Modellparameter von m1
+<div id="tbl-m1-params" class="cell quarto-float anchored" data-hash="080-regression1_cache/html/tbl-m1-params_aa56f48ce4832a5a7aa2bee1ff56e732">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-m1-params-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabelle&nbsp;9.4: Modellparameter von m1
 </figcaption><div aria-describedby="tbl-m1-params-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell table table-sm table-striped small">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <colgroup>
 <col style="width: 16%">
 <col style="width: 17%">
@@ -1387,8 +1407,8 @@ Tabelle&nbsp;10.4: Modellparameter von m1
 <span><span class="co">##   adj. R2: 0.739</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ob das R-Quadrat “gut” oder “hoch” ist, beantwortet man am besten <em>relativ</em>, also im Vergleich zu anderen Modellen.</p>
-</section><section id="nullmodell-1" class="level4" data-number="10.7.7.3"><h4 data-number="10.7.7.3" class="anchored" data-anchor-id="nullmodell-1">
-<span class="header-section-number">10.7.7.3</span> Nullmodell</h4>
+</section><section id="nullmodell-1" class="level4" data-number="9.7.7.3"><h4 data-number="9.7.7.3" class="anchored" data-anchor-id="nullmodell-1">
+<span class="header-section-number">9.7.7.3</span> Nullmodell</h4>
 <p>Zum Vergleich berechnen wir das maximal einfache Modell: ohne Prädiktoren. Man nennt es das “Nullmodell”. In diesem Modell sagen wir für jedes Haus einfach den mittleren Preis aller Häuser vorher.</p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-52_07f3f195f31029b7aeb2fa3dac8a1bde">
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">SalePrice</span> <span class="op">~</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">d_train</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1405,8 +1425,8 @@ Tabelle&nbsp;10.4: Modellparameter von m1
 <span><span class="co">##        R2: 0.000</span></span>
 <span><span class="co">##   adj. R2: 0.000</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section></section><section id="vorhersagen-im-test-datensatz" class="level3" data-number="10.7.8"><h3 data-number="10.7.8" class="anchored" data-anchor-id="vorhersagen-im-test-datensatz">
-<span class="header-section-number">10.7.8</span> Vorhersagen im Test-Datensatz</h3>
+</section></section><section id="vorhersagen-im-test-datensatz" class="level3" data-number="9.7.8"><h3 data-number="9.7.8" class="anchored" data-anchor-id="vorhersagen-im-test-datensatz">
+<span class="header-section-number">9.7.8</span> Vorhersagen im Test-Datensatz</h3>
 <p>Wir haben jetzt unseren Champion, <code>m1</code>. Alle Hoffnung ruht auf diesem Modell. Ob die Vorhersagen im Test-Sample präzise sein werden? Oder himmelweit daneben? Bitte, enttäusche uns nicht!</p>
 <p>Hier sind die Vorhersagen:</p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-55_e422ffee342eb22b59d615d29204536c">
@@ -1433,8 +1453,8 @@ Tabelle&nbsp;10.4: Modellparameter von m1
 <span>  <span class="va">d_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>SalePrice <span class="op">=</span> <span class="va">m1_pred</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="einreichen" class="level3" data-number="10.7.9"><h3 data-number="10.7.9" class="anchored" data-anchor-id="einreichen">
-<span class="header-section-number">10.7.9</span> Einreichen!</h3>
+</section><section id="einreichen" class="level3" data-number="9.7.9"><h3 data-number="9.7.9" class="anchored" data-anchor-id="einreichen">
+<span class="header-section-number">9.7.9</span> Einreichen!</h3>
 <p>So, wir haben unsere Vorhersagen! Jetzt reichen wir diese Vorhesagen ein.</p>
 <p>Für die Prognosedatei (submission file) zum Einreichen brauchen wir nur die Spalten <code>id</code> und <code>SalePrice</code>:</p>
 <div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-57_24476aeef27f2404c4ac2ffb6f7ff43f">
@@ -1512,8 +1532,8 @@ Tabelle&nbsp;10.4: Modellparameter von m1
 </div>
 <p>Und dann laden Sie diese Datei, <code>m1_subm.csv</code> bei Kaggle hoch und hoffen auf einen Hauptgewinn.</p>
 <p>Das Modell erzielte einen Score von <em>0.55521</em>.</p>
-</section><section id="debrief" class="level3" data-number="10.7.10"><h3 data-number="10.7.10" class="anchored" data-anchor-id="debrief">
-<span class="header-section-number">10.7.10</span> Debrief</h3>
+</section><section id="debrief" class="level3" data-number="9.7.10"><h3 data-number="9.7.10" class="anchored" data-anchor-id="debrief">
+<span class="header-section-number">9.7.10</span> Debrief</h3>
 <p>Diese Fallstudie hat ein einfaches Prognosemodell vorgestellt. Sicherlich gibt es viele Ansätze, dieses Modell zu verbessern.</p>
 <p>Hier sind einige Fragen, die Sie sich dazu stellen können:</p>
 <ul>
@@ -1527,8 +1547,8 @@ Tabelle&nbsp;10.4: Modellparameter von m1
 <p>Viel Spielraum für Ihre Kreativität!</p>
 <!-- ## Fazit -->
 <!-- TODO  -->
-</section></section><section id="aufgaben" class="level2" data-number="10.8"><h2 data-number="10.8" class="anchored" data-anchor-id="aufgaben">
-<span class="header-section-number">10.8</span> Aufgaben</h2>
+</section></section><section id="aufgaben" class="level2" data-number="9.8"><h2 data-number="9.8" class="anchored" data-anchor-id="aufgaben">
+<span class="header-section-number">9.8</span> Aufgaben</h2>
 <p>Eine Aufgabe, die eine Einführung zum [Kaggle-Wettbewerb Ames House Prices]((https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview) bietet, finden Sie <a href="https://datenwerk.netlify.app/posts/ames-kaggle1/ames-kaggle1.html">hier im Datenwerk</a>.</p>
 <p>Suchen Sie beim <a href="https://datenwerk.netlify.app/">Datenwerk</a> nach diesen Aufgaben</p>
 <pre><code>- Aussagen-einfache-Regr
@@ -1548,8 +1568,8 @@ Tabelle&nbsp;10.4: Modellparameter von m1
 <p>Schauen Sie sich die Aufgaben beim <a href="https://datenwerk.netlify.app/">Datenwerk</a> an, vor allem die Tags <a href="https://datenwerk.netlify.app/#category=regression">regression</a> und <a href="https://datenwerk.netlify.app/#category=lm">lm</a>.</p>
 <p><em>Nicht alle Aufgaben</em> aus dieser Sammlung passen zum Stoff; vielleicht können Sie einige Aufgaben nicht lösen. Ignorieren Sie einfach diese Aufgaben.</p>
 <p>Beachten Sie die <a href="https://datenwerk.netlify.app/hinweise">Hinweise zu den Aufgaben</a>.</p>
-</section><section id="literatur" class="level2" data-number="10.9"><h2 data-number="10.9" class="anchored" data-anchor-id="literatur">
-<span class="header-section-number">10.9</span> Literatur</h2>
+</section><section id="literatur" class="level2" data-number="9.9"><h2 data-number="9.9" class="anchored" data-anchor-id="literatur">
+<span class="header-section-number">9.9</span> Literatur</h2>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
@@ -1557,7 +1577,7 @@ Tabelle&nbsp;10.4: Modellparameter von m1
 Kaplan, Daniel T. 2009. <em>Statistical Modeling: A Fresh Approach</em>. <span>Scotts Valley, Calif.</span>: <span>CreateSpace</span>. <a href="https://dtkaplan.github.io/SM2-bookdown/">https://dtkaplan.github.io/SM2-bookdown/</a>.
 </div>
 </div>
-</section><aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
+</section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
 <ol>
 <li id="fn1"><p>Diese Syntax wird bei Ihnen nur funktionieren, wenn auf <em>Ihrem Computer</em> dieser Ordner mit dieser Datei existiert. Andernfalls müssen Sie die Daten erst herunterladen: https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Die Nomenklatur mit <span class="math inline">\(b_0, b_1\)</span> hat den Vorteil, dass man das Modell einfach erweitern kann: <span class="math inline">\(b_2, b_3, ...\)</span>. Anstelle von <span class="math inline">\(b\)</span> liest man auch oft <span class="math inline">\(\beta\)</span>. Griechische Buchstaben werden meist verwendet, um zu zeigen, dass man an einer Aussage über eine Population, nicht nur über eine Stichprobe, machen möchte.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1575,7 +1595,7 @@ Kaplan, Daniel T. 2009. <em>Statistical Modeling: A Fresh Approach</em>. <span>S
 <li id="fn14"><p>die vorherzusagende Variable, auch Ziel- oder Outcome-Variable genannt<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn15"><p>Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: Im Zweifel einfach ignorieren. Wenn Sie die R-Syntax nicht verstehen: Führen Sie die Syntax schrittweise aus. Zuerst <code>d_train</code> ausführen und das Ergebnis betrachten. Dann <code>d_train %&gt;% select(-Id)</code> ausführen, wieder die Ausgabe betrachten, usw.<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn16"><p>Es bietet sich an <code>write_csv</code> zu verwenden, da <code>write.csv</code> automatisch (ungefragt) noch eine Id-Spalte ohne Namen einfügt (mit den Zeilennummern), das mag aber Kaggle nicht. Kaggle erwartet exakt zwei Spalten und zwar mit den Namen <code>Id</code> und <code>SalePrice</code><a href="#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol></aside></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</ol></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1847,27 +1867,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    const typesetMath = (el) => {
-      if (window.MathJax) {
-        // MathJax Typeset
-        window.MathJax.typeset([el]);
-      } else if (window.katex) {
-        // KaTeX Render
-        var mathElements = el.getElementsByClassName("math");
-        var macros = [];
-        for (var i = 0; i < mathElements.length; i++) {
-          var texText = mathElements[i].firstChild;
-          if (mathElements[i].tagName == "SPAN") {
-            window.katex.render(texText.data, mathElements[i], {
-              displayMode: mathElements[i].classList.contains('display'),
-              throwOnError: false,
-              macros: macros,
-              fleqn: false
-            });
-          }
-        }
-      }
-    }
     if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
@@ -1882,10 +1881,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             break;
           }
         }
-        typesetMath(container);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
         return container.innerHTML
       } else {
-        typesetMath(note);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
         return note.innerHTML;
       }
     } else {
@@ -1894,8 +1897,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
-      typesetMath(note);
-      return note.innerHTML;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
@@ -2117,12 +2127,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="./070-zusammenhaenge.html" class="pagination-link  aria-label=">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./090-regression2.html" class="pagination-link" aria-label="<span class='chapter-number'>11</span>&nbsp; <span class='chapter-title'>Geradenmodelle 2</span>">
-        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Geradenmodelle 2</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./090-regression2.html" class="pagination-link" aria-label="<span class='chapter-number'>10</span>&nbsp; <span class='chapter-title'>Geradenmodelle 2</span>">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Geradenmodelle 2</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

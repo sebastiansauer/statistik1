@@ -2,10 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.478">
+<meta name="generator" content="quarto-1.4.544">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Ein Einführungskurs in die Statistik mit einem Schwerpunkt auf Prognosemodellierung">
-<title>Statistik1 - 9&nbsp; Punktmodelle 2</title>
+<title>Statistik1 - 8&nbsp; Punktmodelle 2</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -115,12 +115,38 @@ div.csl-indent {
     "search-more-match-text": "weitere Treffer in diesem Dokument",
     "search-more-matches-text": "weitere Treffer in diesem Dokument",
     "search-clear-button-title": "Zurücksetzen",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Abbrechen",
     "search-submit-button-title": "Abschicken",
     "search-label": "Suchen"
   }
 }</script><link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><link rel="stylesheet" href="styles.css">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="styles.css">
 </head>
 <body class="nav-sidebar floating">
 
@@ -129,7 +155,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Modellieren</a></li><li class="breadcrumb-item"><a href="./070-zusammenhaenge.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Modellieren</a></li><li class="breadcrumb-item"><a href="./070-zusammenhaenge.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -144,7 +170,7 @@ div.csl-indent {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Statistik1</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/sebastiansauer/statistik1" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/sebastiansauer/statistik1" title="Quellcode" class="quarto-navigation-tool px-1" aria-label="Quellcode"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
 </div>
     </div>
@@ -171,12 +197,6 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Willkommen!</span></span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./005-pruefung.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Prüfung</span></span></a>
-  </div>
-</li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -191,19 +211,19 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-rahmen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rahmen</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rahmen</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./020-R.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Daten einlesen</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Daten einlesen</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./030-aufbereiten.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Daten umformen</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Daten umformen</span></span></a>
   </div>
 </li>
       </ul>
@@ -220,43 +240,43 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./040-verbildlichen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Daten verbildlichen</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Daten verbildlichen</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./050-zusammenfassen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Punktmodelle 1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Punktmodelle 1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./060-modellguete.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modellgüte</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modellgüte</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./070-zusammenhaenge.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./080-regression1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./090-regression2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Geradenmodelle 2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Geradenmodelle 2</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./100-abschluss.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Abschluss</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Abschluss</span></span></a>
   </div>
 </li>
       </ul>
@@ -270,40 +290,40 @@ div.csl-indent {
    
   <ul>
 <li>
-<a href="#lernsteuerung" id="toc-lernsteuerung" class="nav-link active" data-scroll-target="#lernsteuerung"><span class="header-section-number">9.1</span> Lernsteuerung</a>
+<a href="#lernsteuerung" id="toc-lernsteuerung" class="nav-link active" data-scroll-target="#lernsteuerung"><span class="header-section-number">8.1</span> Lernsteuerung</a>
   <ul class="collapse">
-<li><a href="#standort-im-lernpfad" id="toc-standort-im-lernpfad" class="nav-link" data-scroll-target="#standort-im-lernpfad"><span class="header-section-number">9.1.1</span> Standort im Lernpfad</a></li>
-  <li><a href="#lernziele" id="toc-lernziele" class="nav-link" data-scroll-target="#lernziele"><span class="header-section-number">9.1.2</span> Lernziele</a></li>
-  <li><a href="#ben%C3%B6tigte-r-pakete" id="toc-benötigte-r-pakete" class="nav-link" data-scroll-target="#ben%C3%B6tigte-r-pakete"><span class="header-section-number">9.1.3</span> Benötigte R-Pakete</a></li>
-  <li><a href="#ben%C3%B6tigte-daten" id="toc-benötigte-daten" class="nav-link" data-scroll-target="#ben%C3%B6tigte-daten"><span class="header-section-number">9.1.4</span> Benötigte Daten</a></li>
+<li><a href="#standort-im-lernpfad" id="toc-standort-im-lernpfad" class="nav-link" data-scroll-target="#standort-im-lernpfad"><span class="header-section-number">8.1.1</span> Standort im Lernpfad</a></li>
+  <li><a href="#lernziele" id="toc-lernziele" class="nav-link" data-scroll-target="#lernziele"><span class="header-section-number">8.1.2</span> Lernziele</a></li>
+  <li><a href="#ben%C3%B6tigte-r-pakete" id="toc-benötigte-r-pakete" class="nav-link" data-scroll-target="#ben%C3%B6tigte-r-pakete"><span class="header-section-number">8.1.3</span> Benötigte R-Pakete</a></li>
+  <li><a href="#ben%C3%B6tigte-daten" id="toc-benötigte-daten" class="nav-link" data-scroll-target="#ben%C3%B6tigte-daten"><span class="header-section-number">8.1.4</span> Benötigte Daten</a></li>
   </ul>
 </li>
-  <li><a href="#zusammenfassen-zum-zusammenhang" id="toc-zusammenfassen-zum-zusammenhang" class="nav-link" data-scroll-target="#zusammenfassen-zum-zusammenhang"><span class="header-section-number">9.2</span> Zusammenfassen zum Zusammenhang</a></li>
+  <li><a href="#zusammenfassen-zum-zusammenhang" id="toc-zusammenfassen-zum-zusammenhang" class="nav-link" data-scroll-target="#zusammenfassen-zum-zusammenhang"><span class="header-section-number">8.2</span> Zusammenfassen zum Zusammenhang</a></li>
   <li>
-<a href="#sec-cov" id="toc-sec-cov" class="nav-link" data-scroll-target="#sec-cov"><span class="header-section-number">9.3</span> Abweichungsrechtecke</a>
+<a href="#sec-cov" id="toc-sec-cov" class="nav-link" data-scroll-target="#sec-cov"><span class="header-section-number">8.3</span> Abweichungsrechtecke</a>
   <ul class="collapse">
-<li><a href="#noten-und-abweichungsrechtecke" id="toc-noten-und-abweichungsrechtecke" class="nav-link" data-scroll-target="#noten-und-abweichungsrechtecke"><span class="header-section-number">9.3.1</span> Noten und Abweichungsrechtecke</a></li>
-  <li><a href="#sec-kov" id="toc-sec-kov" class="nav-link" data-scroll-target="#sec-kov"><span class="header-section-number">9.3.2</span> Kovarianz</a></li>
-  <li><a href="#die-kovarianz-ist-schwer-zu-interpretieren" id="toc-die-kovarianz-ist-schwer-zu-interpretieren" class="nav-link" data-scroll-target="#die-kovarianz-ist-schwer-zu-interpretieren"><span class="header-section-number">9.3.3</span> Die Kovarianz ist schwer zu interpretieren</a></li>
+<li><a href="#noten-und-abweichungsrechtecke" id="toc-noten-und-abweichungsrechtecke" class="nav-link" data-scroll-target="#noten-und-abweichungsrechtecke"><span class="header-section-number">8.3.1</span> Noten und Abweichungsrechtecke</a></li>
+  <li><a href="#sec-kov" id="toc-sec-kov" class="nav-link" data-scroll-target="#sec-kov"><span class="header-section-number">8.3.2</span> Kovarianz</a></li>
+  <li><a href="#die-kovarianz-ist-schwer-zu-interpretieren" id="toc-die-kovarianz-ist-schwer-zu-interpretieren" class="nav-link" data-scroll-target="#die-kovarianz-ist-schwer-zu-interpretieren"><span class="header-section-number">8.3.3</span> Die Kovarianz ist schwer zu interpretieren</a></li>
   </ul>
 </li>
   <li>
-<a href="#korrelation" id="toc-korrelation" class="nav-link" data-scroll-target="#korrelation"><span class="header-section-number">9.4</span> Korrelation</a>
+<a href="#korrelation" id="toc-korrelation" class="nav-link" data-scroll-target="#korrelation"><span class="header-section-number">8.4</span> Korrelation</a>
   <ul class="collapse">
-<li><a href="#korrelation-kausation" id="toc-korrelation-kausation" class="nav-link" data-scroll-target="#korrelation-kausation"><span class="header-section-number">9.4.1</span> Korrelation ≠ Kausation</a></li>
-  <li><a href="#korrelation-misst-nur-linearen-zusammenhang" id="toc-korrelation-misst-nur-linearen-zusammenhang" class="nav-link" data-scroll-target="#korrelation-misst-nur-linearen-zusammenhang"><span class="header-section-number">9.4.2</span> Korrelation misst nur linearen Zusammenhang</a></li>
+<li><a href="#korrelation-kausation" id="toc-korrelation-kausation" class="nav-link" data-scroll-target="#korrelation-kausation"><span class="header-section-number">8.4.1</span> Korrelation ≠ Kausation</a></li>
+  <li><a href="#korrelation-misst-nur-linearen-zusammenhang" id="toc-korrelation-misst-nur-linearen-zusammenhang" class="nav-link" data-scroll-target="#korrelation-misst-nur-linearen-zusammenhang"><span class="header-section-number">8.4.2</span> Korrelation misst nur linearen Zusammenhang</a></li>
   </ul>
 </li>
-  <li><a href="#fallbeispiel" id="toc-fallbeispiel" class="nav-link" data-scroll-target="#fallbeispiel"><span class="header-section-number">9.5</span> Fallbeispiel</a></li>
-  <li><a href="#vertiefung" id="toc-vertiefung" class="nav-link" data-scroll-target="#vertiefung"><span class="header-section-number">9.6</span> Vertiefung</a></li>
-  <li><a href="#aufgaben" id="toc-aufgaben" class="nav-link" data-scroll-target="#aufgaben"><span class="header-section-number">9.7</span> Aufgaben</a></li>
-  <li><a href="#fallstudien" id="toc-fallstudien" class="nav-link" data-scroll-target="#fallstudien"><span class="header-section-number">9.8</span> Fallstudien</a></li>
-  <li><a href="#literatur" id="toc-literatur" class="nav-link" data-scroll-target="#literatur"><span class="header-section-number">9.9</span> Literatur</a></li>
+  <li><a href="#fallbeispiel" id="toc-fallbeispiel" class="nav-link" data-scroll-target="#fallbeispiel"><span class="header-section-number">8.5</span> Fallbeispiel</a></li>
+  <li><a href="#vertiefung" id="toc-vertiefung" class="nav-link" data-scroll-target="#vertiefung"><span class="header-section-number">8.6</span> Vertiefung</a></li>
+  <li><a href="#aufgaben" id="toc-aufgaben" class="nav-link" data-scroll-target="#aufgaben"><span class="header-section-number">8.7</span> Aufgaben</a></li>
+  <li><a href="#fallstudien" id="toc-fallstudien" class="nav-link" data-scroll-target="#fallstudien"><span class="header-section-number">8.8</span> Fallstudien</a></li>
+  <li><a href="#literatur" id="toc-literatur" class="nav-link" data-scroll-target="#literatur"><span class="header-section-number">8.9</span> Literatur</a></li>
   </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Modellieren</a></li><li class="breadcrumb-item"><a href="./070-zusammenhaenge.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-zusammenhaenge" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Modellieren</a></li><li class="breadcrumb-item"><a href="./070-zusammenhaenge.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-zusammenhaenge" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></span></h1>
 </div>
 
 
@@ -317,74 +337,74 @@ div.csl-indent {
   
 
 
-</header><section id="lernsteuerung" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="lernsteuerung">
-<span class="header-section-number">9.1</span> Lernsteuerung</h2>
-<section id="standort-im-lernpfad" class="level3" data-number="9.1.1"><h3 data-number="9.1.1" class="anchored" data-anchor-id="standort-im-lernpfad">
-<span class="header-section-number">9.1.1</span> Standort im Lernpfad</h3>
+</header><section id="lernsteuerung" class="level2" data-number="8.1"><h2 data-number="8.1" class="anchored" data-anchor-id="lernsteuerung">
+<span class="header-section-number">8.1</span> Lernsteuerung</h2>
+<section id="standort-im-lernpfad" class="level3" data-number="8.1.1"><h3 data-number="8.1.1" class="anchored" data-anchor-id="standort-im-lernpfad">
+<span class="header-section-number">8.1.1</span> Standort im Lernpfad</h3>
 <p><a href="index.html#fig-ueberblick" class="quarto-xref">Abbildung&nbsp;<span>1.2</span></a> zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.</p>
-</section><section id="lernziele" class="level3" data-number="9.1.2"><h3 data-number="9.1.2" class="anchored" data-anchor-id="lernziele">
-<span class="header-section-number">9.1.2</span> Lernziele</h3>
+</section><section id="lernziele" class="level3" data-number="8.1.2"><h3 data-number="8.1.2" class="anchored" data-anchor-id="lernziele">
+<span class="header-section-number">8.1.2</span> Lernziele</h3>
 <ul>
 <li>Sie können die Begriffe Kovarianz und Korrelation definieren und ihren Zusammenhäng erläutern.</li>
 <li>Sie können die Stärke einer Korrelation einschätzen.</li>
-</ul></section><section id="benötigte-r-pakete" class="level3" data-number="9.1.3"><h3 data-number="9.1.3" class="anchored" data-anchor-id="benötigte-r-pakete">
-<span class="header-section-number">9.1.3</span> Benötigte R-Pakete</h3>
+</ul></section><section id="benötigte-r-pakete" class="level3" data-number="8.1.3"><h3 data-number="8.1.3" class="anchored" data-anchor-id="benötigte-r-pakete">
+<span class="header-section-number">8.1.3</span> Benötigte R-Pakete</h3>
 <p>In diesem Kapitel benötigen Sie folgende R-Pakete.</p>
-</section><section id="benötigte-daten" class="level3" data-number="9.1.4"><h3 data-number="9.1.4" class="anchored" data-anchor-id="benötigte-daten">
-<span class="header-section-number">9.1.4</span> Benötigte Daten</h3>
+</section><section id="benötigte-daten" class="level3" data-number="8.1.4"><h3 data-number="8.1.4" class="anchored" data-anchor-id="benötigte-daten">
+<span class="header-section-number">8.1.4</span> Benötigte Daten</h3>
 <div class="cell" data-hash="070-zusammenhaenge_cache/html/unnamed-chunk-3_efab9318610896af44b08f7aaaf76982">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section></section><section id="zusammenfassen-zum-zusammenhang" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="zusammenfassen-zum-zusammenhang">
-<span class="header-section-number">9.2</span> Zusammenfassen zum Zusammenhang</h2>
-<p>In <a href="050-zusammenfassen.html" class="quarto-xref"><span>Kapitel&nbsp;7</span></a> haben wir gelernt, dass das Wesen eines Punktmodells als Zusammenfassung <em>einer</em> Spalte (eines Vektors) zu einer einzelnen Zahl<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, zu einem “Punkt” sozusagen, zusammengefasst werden kann.</p>
-<p>In diesem Kapitel fassen wir <em>zwei</em> Spalten zusammen, wieder zu <em>einer</em> Zahl, s. <a href="#eq-desk2" class="quarto-xref">Gleichung&nbsp;<span>9.1</span></a>.</p>
-<p><span id="eq-desk2"><span class="math display">\[\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} + \begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarrow \qquad \begin{array}{|c|} \hline \\ \hline  \hline \end{array} \tag{9.1}\]</span></span></p>
-<p>Wo wir in <a href="050-zusammenfassen.html" class="quarto-xref"><span>Kapitel&nbsp;7</span></a> eine Variable mit Hilfe eines Lagemaßes beschrieben/dargestellt/zusammengefasst/modelliert haben, tun wir hier das Gleich für zwei Variablen. Beschreibt man aber zwei Variablen, so geht es um die Frage, was die beiden Variablen miteinander zu tun haben: Wie die beiden Variablen von einander abhängen bzw. miteinander (irgendwie) zusammenhängen. Wir begrenzen auf <em>metrische</em> Variablen.</p>
-<p>Die Verbildlichung<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> zweier metrischer Variablen haben wir bereits in <a href="040-verbildlichen.html#sec-zshg-metr" class="quarto-xref"><span>Kapitel&nbsp;6.5.2</span></a> kennengelernt. Zur Verdeutlichung, wie ein Zusammenhang zweier metrischer Variablen aussehen kann, helfe noch einmal <a href="#fig-zshg" class="quarto-xref">Abbildung&nbsp;<span>9.1</span></a>.</p>
+</section></section><section id="zusammenfassen-zum-zusammenhang" class="level2" data-number="8.2"><h2 data-number="8.2" class="anchored" data-anchor-id="zusammenfassen-zum-zusammenhang">
+<span class="header-section-number">8.2</span> Zusammenfassen zum Zusammenhang</h2>
+<p>In <a href="050-zusammenfassen.html" class="quarto-xref"><span>Kapitel 6</span></a> haben wir gelernt, dass das Wesen eines Punktmodells als Zusammenfassung <em>einer</em> Spalte (eines Vektors) zu einer einzelnen Zahl<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, zu einem “Punkt” sozusagen, zusammengefasst werden kann.</p>
+<p>In diesem Kapitel fassen wir <em>zwei</em> Spalten zusammen, wieder zu <em>einer</em> Zahl, s. <a href="#eq-desk2" class="quarto-xref">Gleichung&nbsp;<span>8.1</span></a>.</p>
+<p><span id="eq-desk2"><span class="math display">\[\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} + \begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarrow \qquad \begin{array}{|c|} \hline \\ \hline  \hline \end{array} \tag{8.1}\]</span></span></p>
+<p>Wo wir in <a href="050-zusammenfassen.html" class="quarto-xref"><span>Kapitel 6</span></a> eine Variable mit Hilfe eines Lagemaßes beschrieben/dargestellt/zusammengefasst/modelliert haben, tun wir hier das Gleich für zwei Variablen. Beschreibt man aber zwei Variablen, so geht es um die Frage, was die beiden Variablen miteinander zu tun haben: Wie die beiden Variablen von einander abhängen bzw. miteinander (irgendwie) zusammenhängen. Wir begrenzen auf <em>metrische</em> Variablen.</p>
+<p>Die Verbildlichung<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> zweier metrischer Variablen haben wir bereits in <a href="040-verbildlichen.html#sec-zshg-metr" class="quarto-xref"><span>Kapitel 5.5.2</span></a> kennengelernt. Zur Verdeutlichung, wie ein Zusammenhang zweier metrischer Variablen aussehen kann, helfe noch einmal <a href="#fig-zshg" class="quarto-xref">Abbildung&nbsp;<span>8.1</span></a>.</p>
 <div id="fig-zshg" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-zshg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-zshg" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-zshg-1" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-zshg" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-zshg-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-zshg-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="070-zusammenhaenge_files/figure-html/fig-zshg-1.png" class="img-fluid figure-img" data-ref-parent="fig-zshg" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-zshg-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-zshg-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Streudiagramm mit Trendlinie (und Ellipse zur Verdeutlichung)
 </figcaption></figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-zshg" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-zshg-2" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-zshg" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-zshg-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-zshg-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="070-zusammenhaenge_files/figure-html/fig-zshg-2.png" class="img-fluid figure-img" data-ref-parent="fig-zshg" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-zshg-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-zshg-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) ‘Verwackeltes’ Streudiagramm, um die einzelnen Punkte besser zu erkennen
 </figcaption></figure>
 </div>
 </div>
 </div>
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-zshg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;9.1: Visualisierung des Zusammenhangs von wheels und total_pr
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-zshg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;8.1: Visualisierung des Zusammenhangs von wheels und total_pr
 </figcaption></figure>
 </div>
-</section><section id="sec-cov" class="level2" data-number="9.3"><h2 data-number="9.3" class="anchored" data-anchor-id="sec-cov">
-<span class="header-section-number">9.3</span> Abweichungsrechtecke</h2>
-<section id="noten-und-abweichungsrechtecke" class="level3" data-number="9.3.1"><h3 data-number="9.3.1" class="anchored" data-anchor-id="noten-und-abweichungsrechtecke">
-<span class="header-section-number">9.3.1</span> Noten und Abweichungsrechtecke</h3>
+</section><section id="sec-cov" class="level2" data-number="8.3"><h2 data-number="8.3" class="anchored" data-anchor-id="sec-cov">
+<span class="header-section-number">8.3</span> Abweichungsrechtecke</h2>
+<section id="noten-und-abweichungsrechtecke" class="level3" data-number="8.3.1"><h3 data-number="8.3.1" class="anchored" data-anchor-id="noten-und-abweichungsrechtecke">
+<span class="header-section-number">8.3.1</span> Noten und Abweichungsrechtecke</h3>
 <div id="exm-noten2" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 9.1 (Wieder Statistiknoten) </strong></span>Anton, Bert, Carl und Daniel haben ihre Statistikklausur zurückbekommen. Die Lernzeit <span class="math inline">\(X\)</span> scheint mit der erreichten Punktzahl <span class="math inline">\(Y\)</span> (0-100, je mehr desto besser) zusammenzuhängen.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> Gar nicht so schlecht ausgefallen, s. <a href="#tbl-noten2" class="quarto-xref">Tabelle&nbsp;<span>9.1</span></a>.<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Beispiel 8.1 (Wieder Statistiknoten)</strong></span> Anton, Bert, Carl und Daniel haben ihre Statistikklausur zurückbekommen. Die Lernzeit <span class="math inline">\(X\)</span> scheint mit der erreichten Punktzahl <span class="math inline">\(Y\)</span> (0-100, je mehr desto besser) zusammenzuhängen.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> Gar nicht so schlecht ausgefallen, s. <a href="#tbl-noten2" class="quarto-xref">Tabelle&nbsp;<span>8.1</span></a>.<span class="math inline">\(\square\)</span></p>
 </div>
 <div class="cell" data-hash="070-zusammenhaenge_cache/html/tbl-noten2_25c0011282ee9acd5110dfc7f8613e87">
-<div id="tbl-noten2" class="cell anchored" data-hash="070-zusammenhaenge_cache/html/tbl-noten2_25c0011282ee9acd5110dfc7f8613e87">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="table quarto-float-caption quarto-float-tbl" id="tbl-noten2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabelle&nbsp;9.1: Statistiknoten und Lernzeit
+<div id="tbl-noten2" class="cell quarto-float anchored" data-hash="070-zusammenhaenge_cache/html/tbl-noten2_25c0011282ee9acd5110dfc7f8613e87">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-noten2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabelle&nbsp;8.1: Statistiknoten und Lernzeit
 </figcaption><div aria-describedby="tbl-noten2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell table table-sm table-striped small">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead><tr class="header">
 <th style="text-align: right;">id</th>
 <th style="text-align: right;">y</th>
@@ -418,73 +438,73 @@ Tabelle&nbsp;9.1: Statistiknoten und Lernzeit
 </figure>
 </div>
 </div>
-<p>Zeichnen wir uns die Daten als Streudiagramm, s. <a href="#fig-delta-rect" class="quarto-xref">Abbildung&nbsp;<span>9.2</span></a>. Dabei zeichnen wir noch <em>Abweichungsrechtecke</em> ein.</p>
+<p>Zeichnen wir uns die Daten als Streudiagramm, s. <a href="#fig-delta-rect" class="quarto-xref">Abbildung&nbsp;<span>8.2</span></a>. Dabei zeichnen wir noch <em>Abweichungsrechtecke</em> ein.</p>
 <div id="def-abweichungsrechteck" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 9.1 (Abweichungsrechteck) </strong></span>Im zweidimensionalen Fall spannt sich ein Abweichungsrechteck vom Mittelwert <span class="math inline">\(\bar{x}\)</span> bis zum Messwert <span class="math inline">\(x_i\)</span> und genauso für <span class="math inline">\(Y\)</span>. Wir bezeichnen mit <span class="math inline">\(dx_i\)</span> die Distanz (Abweichung) vom Mittelwert <span class="math inline">\(\bar{x}\)</span> bis zum Messwert <span class="math inline">\(x_i\)</span> (und analog <span class="math inline">\(dy_i\)</span>), also <span class="math inline">\(dx_i = x_i - \bar{x}\)</span>. Die Fläche des Abweichungsrechtecks ist dann das Produkt der Abweichungen: <span class="math inline">\(dx_i \cdot dy_i\)</span>.<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Definition 8.1 (Abweichungsrechteck)</strong></span> Im zweidimensionalen Fall spannt sich ein Abweichungsrechteck vom Mittelwert <span class="math inline">\(\bar{x}\)</span> bis zum Messwert <span class="math inline">\(x_i\)</span> und genauso für <span class="math inline">\(Y\)</span>. Wir bezeichnen mit <span class="math inline">\(dx_i\)</span> die Distanz (Abweichung) vom Mittelwert <span class="math inline">\(\bar{x}\)</span> bis zum Messwert <span class="math inline">\(x_i\)</span> (und analog <span class="math inline">\(dy_i\)</span>), also <span class="math inline">\(dx_i = x_i - \bar{x}\)</span>. Die Fläche des Abweichungsrechtecks ist dann das Produkt der Abweichungen: <span class="math inline">\(dx_i \cdot dy_i\)</span>.<span class="math inline">\(\square\)</span></p>
 </div>
 <div class="cell" data-hash="070-zusammenhaenge_cache/html/fig-delta-rect_b8f8c6cbac0035ab7e61ae1cc652e560">
 <div class="cell-output-display">
-<div id="fig-delta-rect" class="quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-delta-rect" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-delta-rect-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="070-zusammenhaenge_files/figure-html/fig-delta-rect-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-delta-rect-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;9.2: Die Kovarianz als mittleres Abweichungsrechteck. In jedem der vier Quadranten (Q1, Q2, Q3, Q4) ist das Vorzeichen der Abweichungsrechtecke dargestellt. Die Farben der Abweichungsrechtecke spiegeln das Vorzeichen wider.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-delta-rect-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;8.2: Die Kovarianz als mittleres Abweichungsrechteck. In jedem der vier Quadranten (Q1, Q2, Q3, Q4) ist das Vorzeichen der Abweichungsrechtecke dargestellt. Die Farben der Abweichungsrechtecke spiegeln das Vorzeichen wider.
 </figcaption></figure>
 </div>
 </div>
 </div>
-<p>Stellen Sie sich vor, wir legen alle Rechtecke zusammen aus <a href="#fig-delta-rect" class="quarto-xref">Abbildung&nbsp;<span>9.2</span></a>. Nennen wir das resultierende Rechteck das “Summenrechteck”. Ja, ich weiß, ich strapaziere mal wieder Ihre Phantasie<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Jetzt kommt’s: Je größer die Fläche des Summenrechtecks, desto stärker der (lineare) Zusammenhang.</p>
-<p>Beachten Sie, dass die Flächen Vorzeichen haben, positiv oder negativ (Plus oder Minus), je nach dem, in welchem der vier Quadranten sie stehen. Die Füllfarben der Rechtecke verdeutlichen dies, s. <a href="#fig-delta-rect" class="quarto-xref">Abbildung&nbsp;<span>9.2</span></a>.</p>
+<p>Stellen Sie sich vor, wir legen alle Rechtecke zusammen aus <a href="#fig-delta-rect" class="quarto-xref">Abbildung&nbsp;<span>8.2</span></a>. Nennen wir das resultierende Rechteck das “Summenrechteck”. Ja, ich weiß, ich strapaziere mal wieder Ihre Phantasie<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Jetzt kommt’s: Je größer die Fläche des Summenrechtecks, desto stärker der (lineare) Zusammenhang.</p>
+<p>Beachten Sie, dass die Flächen Vorzeichen haben, positiv oder negativ (Plus oder Minus), je nach dem, in welchem der vier Quadranten sie stehen. Die Füllfarben der Rechtecke verdeutlichen dies, s. <a href="#fig-delta-rect" class="quarto-xref">Abbildung&nbsp;<span>8.2</span></a>.</p>
 <p>Das <em>Vorzeichen</em> der Summe zeigt an, ob der Zusammenhang positiv (gleichsinnig, ansteigende Trendlinie) oder negativ (gegensinnig, absinkende Trendlinie) ist.</p>
-<p>So zeigt <a href="#fig-kov" class="quarto-xref">Abbildung&nbsp;<span>9.3</span></a> links eine positive Summe der Abweichungsrechtecke und rechts eine negative Summe. Man sieht im linken Diagramme, dass die Summe der Rechtecke mit positivem Vorzeigen (rot) überwiegt; im rechten Diagramm ist es umgekehrt (blau, negativ überwiegt).</p>
+<p>So zeigt <a href="#fig-kov" class="quarto-xref">Abbildung&nbsp;<span>8.3</span></a> links eine positive Summe der Abweichungsrechtecke und rechts eine negative Summe. Man sieht im linken Diagramme, dass die Summe der Rechtecke mit positivem Vorzeigen (rot) überwiegt; im rechten Diagramm ist es umgekehrt (blau, negativ überwiegt).</p>
 <div id="fig-kov" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-kov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-kov" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-kov-1" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-kov" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-kov-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-kov-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="070-zusammenhaenge_files/figure-html/fig-kov-1.png" class="img-fluid figure-img" data-ref-parent="fig-kov" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-kov-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-kov-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Positive Vorzeichen (Quadranten 1 und 3) überweigen, was in einer positiven Kovarianz resultiert - Negative Vorzeichen (Quadranten 2 und 4) überweigen, was in einer negativen Kovarianz resultiert
 </figcaption></figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-kov" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-kov-2" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-kov" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-kov-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-kov-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="070-zusammenhaenge_files/figure-html/fig-kov-2.png" class="img-fluid figure-img" data-ref-parent="fig-kov" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-kov-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-kov-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Positive Vorzeichen (Quadranten 1 und 3) überweigen, was in einer positiven Kovarianz resultiert - Negative Vorzeichen (Quadranten 2 und 4) überweigen, was in einer negativen Kovarianz resultiert
 </figcaption></figure>
 </div>
 </div>
 </div>
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-kov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;9.3: Positive und negative Kovarianz: Einmal resultiert eine positive Summe, einmal eine negative Summe, wenn man die Flächen der Abweichungsrechtecke addiert.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-kov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;8.3: Positive und negative Kovarianz: Einmal resultiert eine positive Summe, einmal eine negative Summe, wenn man die Flächen der Abweichungsrechtecke addiert.
 </figcaption></figure>
 </div>
 <p>Wir können das Summenrechteck noch durch die Anzahl der Datenpunkte teilen, das ändert nichts an der Aussage, aber der Mittelwert hat gegenüber der Summe den Vorteil, dass er unabhängig ist in seiner Aussage von der Anzahl der eingegangenen Datenpunkte. Das resultierende Rechteck nennen wir das <em>mittlere Abweichungsrechteck</em>.</p>
-<p>Ein Maß für den Zusammenhang von Lernzeit und Klausurpunkte ist also die <em>Fläche des mittleren Abweichungsrechtecks</em>, s. <a href="#fig-cov2" class="quarto-xref">Abbildung&nbsp;<span>9.4</span></a>.</p>
+<p>Ein Maß für den Zusammenhang von Lernzeit und Klausurpunkte ist also die <em>Fläche des mittleren Abweichungsrechtecks</em>, s. <a href="#fig-cov2" class="quarto-xref">Abbildung&nbsp;<span>8.4</span></a>.</p>
 <div class="cell" data-hash="070-zusammenhaenge_cache/html/fig-cov2_1a7c26b1a875c9d9060f02a57dd3085e">
 <div class="cell-output-display">
-<div id="fig-cov2" class="quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-cov2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-cov2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="070-zusammenhaenge_files/figure-html/fig-cov2-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-cov2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;9.4: Die Kovarianz als mittleres Abweichungsrechteck. Die Fläche der Rechteckts entspricht dem Wert der Kovarianz.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cov2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;8.4: Die Kovarianz als mittleres Abweichungsrechteck. Die Fläche der Rechteckts entspricht dem Wert der Kovarianz.
 </figcaption></figure>
 </div>
 </div>
 </div>
-</section><section id="sec-kov" class="level3" data-number="9.3.2"><h3 data-number="9.3.2" class="anchored" data-anchor-id="sec-kov">
-<span class="header-section-number">9.3.2</span> Kovarianz</h3>
+</section><section id="sec-kov" class="level3" data-number="8.3.2"><h3 data-number="8.3.2" class="anchored" data-anchor-id="sec-kov">
+<span class="header-section-number">8.3.2</span> Kovarianz</h3>
 <div id="def-kov" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 9.2 (Kovarianz) </strong></span>Die Kovarianz ist definiert als die Fläche des mittleren Abweichungsrechtecks. Sie ist ein Maß für die Stärke und Richtung des linearen Zusammenhangs zweier metrischer Variablen, s. <a href="#fig-cov2" class="quarto-xref">Abbildung&nbsp;<span>9.4</span></a>.<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Definition 8.2 (Kovarianz)</strong></span> Die Kovarianz ist definiert als die Fläche des mittleren Abweichungsrechtecks. Sie ist ein Maß für die Stärke und Richtung des linearen Zusammenhangs zweier metrischer Variablen, s. <a href="#fig-cov2" class="quarto-xref">Abbildung&nbsp;<span>8.4</span></a>.<span class="math inline">\(\square\)</span></p>
 </div>
 <blockquote class="blockquote">
 <p>👩‍🎓 Zu viele Bilder! Ich brauch Zahlen.</p>
@@ -492,14 +512,14 @@ Abbildung&nbsp;9.4: Die Kovarianz als mittleres Abweichungsrechteck. Die Fläche
 <blockquote class="blockquote">
 <p>👩‍🏫 Kommen schon!</p>
 </blockquote>
-<p><a href="#tbl-kov2" class="quarto-xref">Tabelle&nbsp;<span>9.2</span></a> zeigt die Werte für die X- und Y-Abweichung und die resultierenden Flächen der Abweichungsrechtecke. Wenn Sie die Werte selber nachrechnen wollen, finden Sie den Noten-Datensatz in der Datei <a href="https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv">noten.csv</a>.</p>
+<p><a href="#tbl-kov2" class="quarto-xref">Tabelle&nbsp;<span>8.2</span></a> zeigt die Werte für die X- und Y-Abweichung und die resultierenden Flächen der Abweichungsrechtecke. Wenn Sie die Werte selber nachrechnen wollen, finden Sie den Noten-Datensatz in der Datei <a href="https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv">noten.csv</a>.</p>
 <div class="cell" data-hash="070-zusammenhaenge_cache/html/tbl-kov2_afe53178027229aaf291c8040aaf6052">
-<div id="tbl-kov2" class="cell anchored" data-hash="070-zusammenhaenge_cache/html/tbl-kov2_afe53178027229aaf291c8040aaf6052">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="table quarto-float-caption quarto-float-tbl" id="tbl-kov2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabelle&nbsp;9.2: Werte der Abweichungsrechtecke
+<div id="tbl-kov2" class="cell quarto-float anchored" data-hash="070-zusammenhaenge_cache/html/tbl-kov2_afe53178027229aaf291c8040aaf6052">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-kov2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabelle&nbsp;8.2: Werte der Abweichungsrechtecke
 </figcaption><div aria-describedby="tbl-kov2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell table table-sm table-striped small">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <colgroup>
 <col style="width: 4%">
 <col style="width: 4%">
@@ -598,8 +618,8 @@ Tabelle&nbsp;9.2: Werte der Abweichungsrechtecke
 </div>
 </div>
 </div>
-<p>Die Formel der Kovarianz lautet, s. <a href="#eq-cov4" class="quarto-xref">Gleichung&nbsp;<span>9.2</span></a>:</p>
-<p><span id="eq-cov4"><span class="math display">\[\text{cov(xy)} = s_{xy}:=\frac{1}{n}\sum_{i=1}^n (x_i-\bar{x})(y_i-\bar{y}) = \frac{1}{n}\sum_{i=1}^n dx_i\cdot dy_i \tag{9.2}\]</span></span></p>
+<p>Die Formel der Kovarianz lautet, s. <a href="#eq-cov4" class="quarto-xref">Gleichung&nbsp;<span>8.2</span></a>:</p>
+<p><span id="eq-cov4"><span class="math display">\[\text{cov(xy)} = s_{xy}:=\frac{1}{n}\sum_{i=1}^n (x_i-\bar{x})(y_i-\bar{y}) = \frac{1}{n}\sum_{i=1}^n dx_i\cdot dy_i \tag{8.2}\]</span></span></p>
 <p>In Worten:</p>
 <ol type="1">
 <li>Rechne für jedes <span class="math inline">\(x_i\)</span> die Abweichung vom Mittelwert, <span class="math inline">\(\bar{x}\)</span>, aus, <span class="math inline">\(dx_i\)</span>
@@ -612,7 +632,7 @@ Tabelle&nbsp;9.2: Werte der Abweichungsrechtecke
 </li>
 </ol>
 <div id="exm-pos-kov" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 9.2 (Variablen mit positiver Kovarianz) </strong></span>&nbsp;</p>
+<p><span class="theorem-title"><strong>Beispiel 8.2 (Variablen mit positiver Kovarianz)</strong></span> &nbsp;</p>
 <ul>
 <li>Größe und Gewicht</li>
 <li>Lernzeit und Klausurerfolg</li>
@@ -622,7 +642,7 @@ Tabelle&nbsp;9.2: Werte der Abweichungsrechtecke
 </ul>
 </div>
 <div id="exm-neg-kov" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 9.3 (Variablen mit negativer Kovarianz) </strong></span>&nbsp;</p>
+<p><span class="theorem-title"><strong>Beispiel 8.3 (Variablen mit negativer Kovarianz)</strong></span> &nbsp;</p>
 <ul>
 <li>Lernzeit und Freizeit</li>
 <li>Alter und Restlebenszeit</li>
@@ -631,47 +651,47 @@ Tabelle&nbsp;9.2: Werte der Abweichungsrechtecke
 </li>
 </ul>
 </div>
-<p>Drei Extrembeispiele für Kovarianz-Werte sind in <a href="#fig-demos-cov" class="quarto-xref">Abbildung&nbsp;<span>9.5</span></a> dargestellt.</p>
+<p>Drei Extrembeispiele für Kovarianz-Werte sind in <a href="#fig-demos-cov" class="quarto-xref">Abbildung&nbsp;<span>8.5</span></a> dargestellt.</p>
 <div id="fig-demos-cov" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-demos-cov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-demos-cov" style="flex-basis: 33.3%;justify-content: center;">
-<div id="fig-demos-cov-1" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-demos-cov" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-demos-cov-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-demos-cov-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="070-zusammenhaenge_files/figure-html/fig-demos-cov-1.png" class="img-fluid figure-img" data-ref-parent="fig-demos-cov" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-demos-cov-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-demos-cov-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) kein Zusammenhang
 </figcaption></figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-demos-cov" style="flex-basis: 33.3%;justify-content: center;">
-<div id="fig-demos-cov-2" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-demos-cov" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-demos-cov-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-demos-cov-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="070-zusammenhaenge_files/figure-html/fig-demos-cov-2.png" class="img-fluid figure-img" data-ref-parent="fig-demos-cov" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-demos-cov-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-demos-cov-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) perfekter (positiver) Zusammenhang
 </figcaption></figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-demos-cov" style="flex-basis: 33.3%;justify-content: center;">
-<div id="fig-demos-cov-3" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-demos-cov" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-demos-cov-3" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-demos-cov-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="070-zusammenhaenge_files/figure-html/fig-demos-cov-3.png" class="img-fluid figure-img" data-ref-parent="fig-demos-cov" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-demos-cov-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-demos-cov-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (c) negativer Zusammenhang
 </figcaption></figure>
 </div>
 </div>
 </div>
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-demos-cov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;9.5: Verschiedene Werte der Kovarianz
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-demos-cov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;8.5: Verschiedene Werte der Kovarianz
 </figcaption></figure>
 </div>
-<p>Bei einer Kovarianz von 0 ist die Fläche der Abweichungsrechtecke<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, wenn man sie pro Quadrant aufsummiert, etwa gleich groß, s. <a href="#fig-covnull" class="quarto-xref">Abbildung&nbsp;<span>9.6</span></a>. Addiert man die Abweichungsrechtecke (unter Beachtung der Vorzeichen: rot = positiv; blau = negativ), so beträgt die Summe in etwa (oder genau) Null.</p>
+<p>Bei einer Kovarianz von 0 ist die Fläche der Abweichungsrechtecke<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, wenn man sie pro Quadrant aufsummiert, etwa gleich groß, s. <a href="#fig-covnull" class="quarto-xref">Abbildung&nbsp;<span>8.6</span></a>. Addiert man die Abweichungsrechtecke (unter Beachtung der Vorzeichen: rot = positiv; blau = negativ), so beträgt die Summe in etwa (oder genau) Null.</p>
 <p>Damit ist die Kovarianz in diesem Fall etwa (bzw. genau) Null:</p>
 <p><span class="math display">\[\begin{align}
 \sum \left(dX \cdot dY \right) &amp;= 0\\
@@ -680,39 +700,39 @@ Abbildung&nbsp;9.5: Verschiedene Werte der Kovarianz
 \end{align}\]</span></p>
 <div id="fig-covnull" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-covnull-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-covnull" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-covnull-1" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-covnull" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-covnull-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-covnull-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="070-zusammenhaenge_files/figure-html/fig-covnull-1.png" class="img-fluid figure-img" data-ref-parent="fig-covnull" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-covnull-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-covnull-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) 4 Abweichungsrechtecke, deren Fläche sich zu 0 addiert
 </figcaption></figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-covnull" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-covnull-2" class="quarto-figure quarto-figure-center anchored" width="672">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-covnull" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-covnull-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-covnull-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="070-zusammenhaenge_files/figure-html/fig-covnull-2.png" class="img-fluid figure-img" data-ref-parent="fig-covnull" width="672">
 </div>
-<figcaption class="figure quarto-subfloat-caption quarto-subfloat-fig" id="fig-covnull-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-covnull-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) 200 Abweichungsrechtecke, deren Fläche sich zu 0 addiert
 </figcaption></figure>
 </div>
 </div>
 </div>
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-covnull-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;9.6: Wenn die Kovarianz 0 ist, gleichen sich die Abweichungsrechtecke auf 0 aus
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-covnull-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;8.6: Wenn die Kovarianz 0 ist, gleichen sich die Abweichungsrechtecke auf 0 aus
 </figcaption></figure>
 </div>
-</section><section id="die-kovarianz-ist-schwer-zu-interpretieren" class="level3" data-number="9.3.3"><h3 data-number="9.3.3" class="anchored" data-anchor-id="die-kovarianz-ist-schwer-zu-interpretieren">
-<span class="header-section-number">9.3.3</span> Die Kovarianz ist schwer zu interpretieren</h3>
+</section><section id="die-kovarianz-ist-schwer-zu-interpretieren" class="level3" data-number="8.3.3"><h3 data-number="8.3.3" class="anchored" data-anchor-id="die-kovarianz-ist-schwer-zu-interpretieren">
+<span class="header-section-number">8.3.3</span> Die Kovarianz ist schwer zu interpretieren</h3>
 <p>Die Kovarianz hat den Nachteil, dass sie abhängig ist von der Skalierung. So steigt die Kovarianz z.B. um den Faktor 100, wenn man eine Variable (z.B. Einkommen) anstelle von Euro in Cent bemisst. Das ist nicht wünschenswert, denn der Zusammenhang zwischen z.B. Einkommen und Lebenszufriedenheit ist unabhängig davon, ob man Einkommen in Euro, Cent oder Dollar misst. Außerdem hat die Kovarianz keinen Maximalwert, der einen perfekten Zusammenhang anzeigt.</p>
 <p>Insgesamt ist die Kovarianz schwer zu interpretieren und wird in der praktischen Anwendung nur wenig verwendet.</p>
-</section></section><section id="korrelation" class="level2" data-number="9.4"><h2 data-number="9.4" class="anchored" data-anchor-id="korrelation">
-<span class="header-section-number">9.4</span> Korrelation</h2>
+</section></section><section id="korrelation" class="level2" data-number="8.4"><h2 data-number="8.4" class="anchored" data-anchor-id="korrelation">
+<span class="header-section-number">8.4</span> Korrelation</h2>
 <p>Der Korrelationskoeffizient <span class="math inline">\(r\)</span> nach Karl Pearson löst das Problem, dass die Kovarianz schwer interpretierbar ist. Der Wertebereich von <span class="math inline">\(r\)</span> reicht von -1 (perfekte negative lineare Korrelation) bis +1 (perfekte positive lineare Korrelation). Eine Korrelation von <span class="math inline">\(r = 0\)</span> bedeutet kein linearer Zusammenhang.</p>
 <p>Die Korrelation berechnet sich wie folgt:</p>
 <ol type="1">
@@ -724,7 +744,7 @@ Abbildung&nbsp;9.6: Wenn die Kovarianz 0 ist, gleichen sich die Abweichungsrecht
 </ol>
 <p>Teilt man nämlich alle <span class="math inline">\(x_i\)</span> bzw. <span class="math inline">\(y_i\)</span> durch ihre Standardabweichung, so führt man mit <span class="math inline">\(X\)</span> bzw. <span class="math inline">\(Y\)</span> eine z-Transformation durch. Daher kann man den Korrelationskoeffizienten <span class="math inline">\(r\)</span> so definieren:</p>
 <div id="def-r" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 9.3 (Korrelationskoeffizient r) </strong></span>Der Korrelationskoeffizient <span class="math inline">\(r\)</span> ist definiert als das mittlere Produkt der z-Wert-Paare: <span class="math inline">\(r_{xy}=\frac{1}{n}\sum_{i=1}^n z^x_i z^y_i\)</span>.<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Definition 8.3 (Korrelationskoeffizient r)</strong></span> Der Korrelationskoeffizient <span class="math inline">\(r\)</span> ist definiert als das mittlere Produkt der z-Wert-Paare: <span class="math inline">\(r_{xy}=\frac{1}{n}\sum_{i=1}^n z^x_i z^y_i\)</span>.<span class="math inline">\(\square\)</span></p>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -752,30 +772,30 @@ Hinweis
 </ul>
 </div>
 </div>
-<p>Eine Zuordnung des Korrelationskoeffizienten zum Profil des Streudiagramms zeigt <a href="#fig-corr-wiki" class="quarto-xref">Abbildung&nbsp;<span>9.7</span></a>.</p>
-<div id="fig-corr-wiki" class="quarto-figure quarto-figure-center anchored">
+<p>Eine Zuordnung des Korrelationskoeffizienten zum Profil des Streudiagramms zeigt <a href="#fig-corr-wiki" class="quarto-xref">Abbildung&nbsp;<span>8.7</span></a>.</p>
+<div id="fig-corr-wiki" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-corr-wiki-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="img/Correlation_examples2.svg" class="img-fluid figure-img">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-corr-wiki-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;9.7: Verschiedene Streudiagramme, die sich in ihrem Korrelationskoeffizienten unterscheiden. Quelle: Wikipedia, By DenisBoigelot, original uploader was Imagecreator, CC0, https://commons.wikimedia.org/w/index.php?curid=15165296 CC0
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-corr-wiki-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;8.7: Verschiedene Streudiagramme, die sich in ihrem Korrelationskoeffizienten unterscheiden. Quelle: Wikipedia, By DenisBoigelot, original uploader was Imagecreator, CC0, https://commons.wikimedia.org/w/index.php?curid=15165296 CC0
 </figcaption></figure>
 </div>
 <div id="exr-corrgame" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 9.1 (Korrelationsspiel) </strong></span>Spielen Sie das <a href="https://gallery.shinyapps.io/correlation_game/">Korrelationsspiel</a>: Sie Sehen ein Streudiagramm und müssen den richtigen Korrelationskoeffizienten eingeben.<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 8.1 (Korrelationsspiel)</strong></span> Spielen Sie das <a href="https://gallery.shinyapps.io/correlation_game/">Korrelationsspiel</a>: Sie Sehen ein Streudiagramm und müssen den richtigen Korrelationskoeffizienten eingeben.<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exr-corrvis" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 9.2 (Interaktive Visualisierung der Korrelation) </strong></span>Auf der Seite von <a href="https://rpsychologist.com/correlation/">RPsychologist</a> findet sich eine ansprechende dynamische Visualisierung der Korrelation. Nutzen Sie sie, um Ihr Gefühl für die Stärke des Korrelationskoeffizienten zu entwickeln.<span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 8.2 (Interaktive Visualisierung der Korrelation)</strong></span> Auf der Seite von <a href="https://rpsychologist.com/correlation/">RPsychologist</a> findet sich eine ansprechende dynamische Visualisierung der Korrelation. Nutzen Sie sie, um Ihr Gefühl für die Stärke des Korrelationskoeffizienten zu entwickeln.<span class="math inline">\(\square\)</span></p>
 </div>
-<section id="korrelation-kausation" class="level3" data-number="9.4.1"><h3 data-number="9.4.1" class="anchored" data-anchor-id="korrelation-kausation">
-<span class="header-section-number">9.4.1</span> Korrelation ≠ Kausation</h3>
-<p>Eine Studie fand eine starke Korrelation, zwischen der (Höhe des) Schokoladenkonsums eines Landes und (Anzahl der) Nobelpreise eines Landes <span class="citation" data-cites="messerli_chocolate_2012">(<a href="#ref-messerli_chocolate_2012" role="doc-biblioref">Messerli 2012</a>)</span>, s. <a href="#fig-schoki" class="quarto-xref">Abbildung&nbsp;<span>9.8</span></a>.</p>
-<div id="fig-schoki" class="quarto-figure quarto-figure-center anchored">
+<section id="korrelation-kausation" class="level3" data-number="8.4.1"><h3 data-number="8.4.1" class="anchored" data-anchor-id="korrelation-kausation">
+<span class="header-section-number">8.4.1</span> Korrelation ≠ Kausation</h3>
+<p>Eine Studie fand eine starke Korrelation, zwischen der (Höhe des) Schokoladenkonsums eines Landes und (Anzahl der) Nobelpreise eines Landes <span class="citation" data-cites="messerli_chocolate_2012">(<a href="#ref-messerli_chocolate_2012" role="doc-biblioref">Messerli 2012</a>)</span>, s. <a href="#fig-schoki" class="quarto-xref">Abbildung&nbsp;<span>8.8</span></a>.</p>
+<div id="fig-schoki" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-schoki-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="img/correlation_550.png" class="img-fluid figure-img">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-schoki-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;9.8: Schoki futtern macht schlau?
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-schoki-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;8.8: Schoki futtern macht schlau?
 </figcaption></figure>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled">
@@ -791,17 +811,17 @@ Vorsicht
 <p>Korrelation (bzw. Zusammenhang) ungleich Kausation! Korrelation kann bedeuten, dass eine Kausation vorliegt, aber es muss auch nicht sein, dass Kausation vorliegt. Liegt Korrelation ohne Kausation vor, so spricht man von einer Scheinkorrelation.</p>
 </div>
 </div>
-</section><section id="korrelation-misst-nur-linearen-zusammenhang" class="level3" data-number="9.4.2"><h3 data-number="9.4.2" class="anchored" data-anchor-id="korrelation-misst-nur-linearen-zusammenhang">
-<span class="header-section-number">9.4.2</span> Korrelation misst nur linearen Zusammenhang</h3>
+</section><section id="korrelation-misst-nur-linearen-zusammenhang" class="level3" data-number="8.4.2"><h3 data-number="8.4.2" class="anchored" data-anchor-id="korrelation-misst-nur-linearen-zusammenhang">
+<span class="header-section-number">8.4.2</span> Korrelation misst nur linearen Zusammenhang</h3>
 <div id="exm-scheinkorr" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 9.4 (Scheinkorrelation) </strong></span>Eine Urban Myth besagt: Die Anzahl der Störche pro Landkreis korreliert mit der Anzahl der Babies in diesem Landkreis.</p>
+<p><span class="theorem-title"><strong>Beispiel 8.4 (Scheinkorrelation)</strong></span> Eine Urban Myth besagt: Die Anzahl der Störche pro Landkreis korreliert mit der Anzahl der Babies in diesem Landkreis.</p>
 <blockquote class="blockquote">
 <p>Bald men at higher risk of severe case of Covid-19, research finds<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
 </blockquote>
 <p>Macht die Glatze krank? Männer mit Glatze bekommen häufiger Corona <span class="citation" data-cites="goren_preliminary_2020">(<a href="#ref-goren_preliminary_2020" role="doc-biblioref">Goren u.&nbsp;a. 2020</a>)</span>.<span class="math inline">\(\square\)</span></p>
 </div>
-</section></section><section id="fallbeispiel" class="level2" data-number="9.5"><h2 data-number="9.5" class="anchored" data-anchor-id="fallbeispiel">
-<span class="header-section-number">9.5</span> Fallbeispiel</h2>
+</section></section><section id="fallbeispiel" class="level2" data-number="8.5"><h2 data-number="8.5" class="anchored" data-anchor-id="fallbeispiel">
+<span class="header-section-number">8.5</span> Fallbeispiel</h2>
 <p>In Ihrer Arbeit beim Online-Auktionshaus analysieren Sie, welche Variablen mit dem Verkaufspreis von Computerspielen zusammenhängen.</p>
 <p>Falls der Datensatz auf Ihrem Computer (am besten in Ihrem Projektverzeichnis in RStudio) abgelegt ist, können Sie die Daten so (in mittlerweile gewohnter Manier) importieren:</p>
 <div class="cell" data-hash="070-zusammenhaenge_cache/html/unnamed-chunk-14_ea0207004c958780fdaa350efa29f3ef">
@@ -844,14 +864,14 @@ Namensverwechslung (name clash)
 <p>Es kann vorkommen, dass Sie zwei R-Pakete geladen haben, in denen es jeweils z.B. eine Funktion mit Namen <code>select</code> gibt. R wird in dem Fall diejenige Funktion verwenden, deren Paket Sie als letztes gestartet haben. Das kann dann das falsche <code>select</code> sein, wie es mir oben in der Syntax passiert ist. In dem Fall resultiert eine verwirrende Fehlermeldung, die sinngemäß sagt: “Hey Mensch, du hast Argumente in der Funktion verwendet, die du gar nicht verwenden darfst, da es sie nicht gibt.” Auf Errisch: <code>Error in select(., duration, n_bids, start_pr, ship_pr, total_pr, seller_rate,  : unused arguments (duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels)</code>. Eine einfache Abhilfe ist es, R zu sagen: “Hey R, nimm gefälligst <code>select</code> aus dem Paket <code>dplyr</code>, dort”wohnt” nämlich <code>select</code>. Auf Errisch spricht sich das so: <code>dplyr::select(...)</code>.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
-<p>Etwas schöner sieht die Ausgabe mit dem Befehl <code>correlation</code> aus <a href="https://easystats.github.io/easystats/">easystats</a> aus, s. <a href="#tbl-mario-corr" class="quarto-xref">Tabelle&nbsp;<span>9.3</span></a>.</p>
+<p>Etwas schöner sieht die Ausgabe mit dem Befehl <code>correlation</code> aus <a href="https://easystats.github.io/easystats/">easystats</a> aus, s. <a href="#tbl-mario-corr" class="quarto-xref">Tabelle&nbsp;<span>8.3</span></a>.</p>
 <div class="cell" data-hash="070-zusammenhaenge_cache/html/tbl-mario-corr_2c446b672d54d91ece749446536fe80b">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">duration</span>, <span class="va">n_bids</span>, <span class="va">start_pr</span>, <span class="va">ship_pr</span>, <span class="va">total_pr</span>, <span class="va">seller_rate</span>, <span class="va">wheels</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">correlation</span><span class="op">(</span><span class="op">)</span> </span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-mario-corr" class="cell anchored" data-hash="070-zusammenhaenge_cache/html/tbl-mario-corr_2c446b672d54d91ece749446536fe80b">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="table quarto-float-caption quarto-float-tbl" id="tbl-mario-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabelle&nbsp;9.3: Korrelationstabelle (tidy) im Datensatz mariokart
+<div id="tbl-mario-corr" class="cell quarto-float anchored" data-hash="070-zusammenhaenge_cache/html/tbl-mario-corr_2c446b672d54d91ece749446536fe80b">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mario-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabelle&nbsp;8.3: Korrelationstabelle (tidy) im Datensatz mariokart
 </figcaption><div aria-describedby="tbl-mario-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -865,7 +885,7 @@ Tabelle&nbsp;9.3: Korrelationstabelle (tidy) im Datensatz mariokart
 </div>
 </div>
 <p>Neben einigen Statistiken, die wir einfach geflissentlich ausblenden (<code>t</code> und <code>p</code>) beinhaltet die Tabelle eine interessante Information: den Schätzbereich für die Korrelation, gekennzeichnet als <code>95% CI</code>. <em>Grob</em> gesagt können wir diese Information so interpretieren: “Mit 95% Wahrscheinlichkeit liegt der echte Wert der Korrelation in folgendem Bereich.”<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></p>
-<p>Möchte man nur einzelne Korrelationskoeffizienten ausrechnen, können wir die Idee des Zusammenfassens, s. <a href="#eq-desk2" class="quarto-xref">Gleichung&nbsp;<span>9.1</span></a>, nutzen:</p>
+<p>Möchte man nur einzelne Korrelationskoeffizienten ausrechnen, können wir die Idee des Zusammenfassens, s. <a href="#eq-desk2" class="quarto-xref">Gleichung&nbsp;<span>8.1</span></a>, nutzen:</p>
 <div class="cell" data-hash="070-zusammenhaenge_cache/html/unnamed-chunk-19_7ff8eda09c491fd8829002743a0bd67e">
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>cor_super_wichtig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">total_pr</span>, <span class="va">wheels</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -904,33 +924,33 @@ Vorsicht
 <blockquote class="blockquote">
 <p>🧑‍🎓 Immer so viele Zahlen! Ich brauch Bilder.</p>
 </blockquote>
-<p>Mit dem Befehl <code>plot_correlation</code> aus dem R-Paket <code>{dataExplorer}</code> bekommt man eine ansehnliche Heatmap zur Verdeutlichung der Korrelationswerte, s. <a href="#fig-mario-corr" class="quarto-xref">Abbildung&nbsp;<span>9.9</span></a>.</p>
+<p>Mit dem Befehl <code>plot_correlation</code> aus dem R-Paket <code>{dataExplorer}</code> bekommt man eine ansehnliche Heatmap zur Verdeutlichung der Korrelationswerte, s. <a href="#fig-mario-corr" class="quarto-xref">Abbildung&nbsp;<span>8.9</span></a>.</p>
 <div class="cell" data-hash="070-zusammenhaenge_cache/html/fig-mario-corr_551c1da0f83df0845124a3e1c2c3ab39">
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://boxuancui.github.io/DataExplorer/">DataExplorer</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mariokart</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">duration</span>, <span class="va">n_bids</span>, <span class="va">start_pr</span>, <span class="va">ship_pr</span>, <span class="va">total_pr</span>, <span class="va">seller_rate</span>, <span class="va">wheels</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="http://boxuancui.github.io/DataExplorer/reference/plot_correlation.html">plot_correlation</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/DataExplorer/man/plot_correlation.html">plot_correlation</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-mario-corr" class="quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-mario-corr" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-mario-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="070-zusammenhaenge_files/figure-html/fig-mario-corr-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-mario-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;9.9: Heatmap zu den Korrelationen im Datensatz mariokart.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mario-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;8.9: Heatmap zu den Korrelationen im Datensatz mariokart.
 </figcaption></figure>
 </div>
 </div>
 </div>
-</section><section id="vertiefung" class="level2" data-number="9.6"><h2 data-number="9.6" class="anchored" data-anchor-id="vertiefung">
-<span class="header-section-number">9.6</span> Vertiefung</h2>
+</section><section id="vertiefung" class="level2" data-number="8.6"><h2 data-number="8.6" class="anchored" data-anchor-id="vertiefung">
+<span class="header-section-number">8.6</span> Vertiefung</h2>
 <p><a href="https://www.youtube.com/watch?v=8B271L3NtAw">TED-Vortrag</a> zum Thema Scheinkorrelation.</p>
 <p><a href="https://scheinkorrelation.jimdofree.com/">Hier</a> finden Sie weitere Beispiele für Scheinkorrelationen.</p>
-</section><section id="aufgaben" class="level2" data-number="9.7"><h2 data-number="9.7" class="anchored" data-anchor-id="aufgaben">
-<span class="header-section-number">9.7</span> Aufgaben</h2>
+</section><section id="aufgaben" class="level2" data-number="8.7"><h2 data-number="8.7" class="anchored" data-anchor-id="aufgaben">
+<span class="header-section-number">8.7</span> Aufgaben</h2>
 <p>Schauen Sie sich auch mal auf <a href="https://datenwerk.netlify.app/">Datenwerk</a> die Aufgaben zu dem Tag <a href="https://datenwerk.netlify.app/#category=association">association</a> an.</p>
-</section><section id="fallstudien" class="level2" data-number="9.8"><h2 data-number="9.8" class="anchored" data-anchor-id="fallstudien">
-<span class="header-section-number">9.8</span> Fallstudien</h2>
+</section><section id="fallstudien" class="level2" data-number="8.8"><h2 data-number="8.8" class="anchored" data-anchor-id="fallstudien">
+<span class="header-section-number">8.8</span> Fallstudien</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -963,8 +983,8 @@ Hinweis
 <li><a href="https://data-se.netlify.app/2021/02/11/explorative-datenanalyse-zum-datensatz-oecd-wellbeing/">Explorative Datenanalyse zum Datensatz “OECD Wellbeing”</a></li>
 <li><a href="https://data-se.netlify.app/2021/05/27/datensatz-flights-finde-den-tag-mit-den-meisten-abfl%C3%BCgen/">Datensatz flights: Finde den Tag mit den meisten Abflügen</a></li>
 <li><a href="https://www.njtierney.com/post/2017/11/07/tidyverse-billboard/">Tidyverse Case Study: Exploring the Billboard Charts</a></li>
-</ol></section><section id="literatur" class="level2" data-number="9.9"><h2 data-number="9.9" class="anchored" data-anchor-id="literatur">
-<span class="header-section-number">9.9</span> Literatur</h2>
+</ol></section><section id="literatur" class="level2" data-number="8.9"><h2 data-number="8.9" class="anchored" data-anchor-id="literatur">
+<span class="header-section-number">8.9</span> Literatur</h2>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
@@ -975,7 +995,7 @@ Goren, Andy, Sergio Vaño-Galván, Carlos Gustavo Wambier, John McCoy, Alba Gome
 Messerli, Franz H. 2012. <span>„Chocolate Consumption, Cognitive Function, and Nobel Laureates“</span>. <em>New England Journal of Medicine</em> 367 (16): 1562–64. <a href="https://doi.org/10.1056/NEJMon1211064">https://doi.org/10.1056/NEJMon1211064</a>.
 </div>
 </div>
-</section><aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
+</section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
 <ol>
 <li id="fn1"><p>auch Skalar genannt<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Visualisierung<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -984,7 +1004,7 @@ Messerli, Franz H. 2012. <span>„Chocolate Consumption, Cognitive Function, and
 <li id="fn5"><p>Bei der Varianz waren es Quadrate, bei der Kovarianz sind es Rechtecke.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn6"><p>https://www.telegraph.co.uk/global-health/science-and-disease/bald-men-higher-risk-severe-case-covid-19-research-finds/, Abruf 2023-03-24<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn7"><p>Bayesianische Interpretation<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol></aside></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</ol></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1256,38 +1276,28 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    const typesetMath = (el) => {
-      if (window.MathJax) {
-        // MathJax Typeset
-        window.MathJax.typeset([el]);
-      } else if (window.katex) {
-        // KaTeX Render
-        var mathElements = el.getElementsByClassName("math");
-        var macros = [];
-        for (var i = 0; i < mathElements.length; i++) {
-          var texText = mathElements[i].firstChild;
-          if (mathElements[i].tagName == "SPAN") {
-            window.katex.render(texText.data, mathElements[i], {
-              displayMode: mathElements[i].classList.contains('display'),
-              throwOnError: false,
-              macros: macros,
-              fleqn: false
-            });
-          }
-        }
-      }
-    }
     if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
-        typesetMath(container);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
         return container.innerHTML
       } else {
-        typesetMath(note);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
         return note.innerHTML;
       }
     } else {
@@ -1296,8 +1306,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
-      typesetMath(note);
-      return note.innerHTML;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
@@ -1519,12 +1536,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="./060-modellguete.html" class="pagination-link  aria-label=">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modellgüte</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modellgüte</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./080-regression1.html" class="pagination-link" aria-label="<span class='chapter-number'>10</span>&nbsp; <span class='chapter-title'>Geradenmodelle 1</span>">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./080-regression1.html" class="pagination-link" aria-label="<span class='chapter-number'>9</span>&nbsp; <span class='chapter-title'>Geradenmodelle 1</span>">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

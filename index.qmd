@@ -2,10 +2,14 @@
 
 
 
-```{r}
-#| echo: false
-#| message: false
-library(tidyverse)
+
+```{r libs-hidden}
+#| include: false
+library("tidyverse")
+library("ganttrify")
+library("googlesheets4")
+
+theme_set(theme_minimal())
 ```
 
 
@@ -176,13 +180,25 @@ Natürlich kann man sich auch andere sinnvolle Darstellungen dieses Ablaufs vors
 
 
 
-### Modulzeitplan
+<!-- ### Modulzeitplan -->
 
 
 
 
+```{r gsheet-timetable}
+#| echo: false
+#| message: false
+#| eval: false
+#library(googlesheets4)
+timetable_file <- "https://docs.google.com/spreadsheets/d/1I18LiGrTnciJ-_wlw2VIrxm0f4MKuUCQFV425dYVUXo/edit?usp=sharing"
 
-```{r source-timetable, echo = FALSE, cache=FALSE}
+timetable <- read_sheet(timetable_file)
+```
+
+<!-- @tbl-zeitplan stellt den Modulverlauf tabellarisch dar. -->
+
+```{r timetable, echo = FALSE, cache=FALSE}
+#| eval: false
 timetable_file <- "specifics/QM1-23-SoSe-Modulverlauf.xlsx"
 stopifnot(file.exists(timetable_file))
 timetable <- readxl::read_xlsx(timetable_file)
@@ -196,7 +212,6 @@ gt::gt(timetable) |>
     4 ~ gt::pct(45)
   )
 ```
-
 
 
 
@@ -284,6 +299,17 @@ Der Besuch des Tutoriums ist zu empfehlen. Arbeiten Sie auch das Materials auf d
 
 
 
+## Prüfung
+
+[Hier](https://hinweisbuch.netlify.app/hinweise-pruefung-prognosewettbewerb-frame) finden Sie Hinweise zur Prüfung.
+
+
+## Zum Autor
+
+
+Nähere Hinweise zum Autor dieses Buch, Sebastian Sauer, finden Sie [hier](https://sebastiansauer-academic.netlify.app/).
+
+
 
 
 <!-- ## Zitation -->
@@ -291,7 +317,7 @@ Der Besuch des Tutoriums ist zu empfehlen. Arbeiten Sie auch das Materials auf d
 
 
 
-## Reroduzierbarkeit
+## Reproduzierbarkeit
 
 Hier sind einige technische Details zur Reproduzierbarkeit des Buchs. 
 

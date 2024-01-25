@@ -1,0 +1,130 @@
+
+
+```{ojs selector}
+//| echo: false
+
+viewof cor_type = select({
+  title: "Correlation type",
+  options: [
+    "A perfect linear relationship",
+    "A close to linear relationship",
+    "A close to linear, but negative, relationship",
+    "A weaker relationship",
+    "A nonlinear relationship",
+    "No relationship"
+  ],
+  value: "A perfect linear relationship"
+})
+```
+
+
+```{ojs redo-button}
+//| echo: false
+viewof redo = Inputs.button("Redo")
+```
+
+
+```{ojs pic}
+//| echo: false
+
+pic = (redo, graph_from_type(cor_type))
+```
+
+
+
+```{ojs main-fun}
+//| echo: false
+ 
+function graph_from_type(s) {
+  if (s == "A perfect linear relationship") {
+    let a = jstat.uniform.sample(1 / 3, 2 / 3);
+    let b = jstat.uniform.sample(-6, 6);
+    return make_perturbed_graph(
+      (x) => a * x + b,
+      (x) => 0,
+      -10,
+      10,
+      100
+    );
+  } else if (s == "A close to linear relationship") {
+    let a = jstat.uniform.sample(1 / 3, 2 / 3);
+    let b = jstat.uniform.sample(-6, 6);
+    return make_perturbed_graph(
+      (x) => a * x + b,
+      (x) => jstat.randn(),
+      -10,
+      10,
+      100
+    );
+  } else if (s == "A close to linear, but negative, relationship") {
+    let a = jstat.uniform.sample(1 / 3, 2 / 3);
+    let b = jstat.uniform.sample(-6, 6);
+    return make_perturbed_graph(
+      (x) => -a * x + b,
+      (x) => jstat.randn(),
+      -10,
+      10,
+      100
+    );
+  } else if (s == "A weaker relationship") {
+    let a = jstat.uniform.sample(-2 / 3, 2 / 3);
+    let b = jstat.uniform.sample(-6, 6);
+    return make_perturbed_graph(
+      (x) => a * x + b,
+      (x) => 4 * jstat.randn(),
+      -10,
+      10,
+      100
+    );
+  } else if (s == "A nonlinear relationship") {
+    let a = jstat.uniform.sample(-3, 1);
+    let b = jstat.uniform.sample(1, 3);
+    return make_perturbed_graph(
+      (x) => (x - a) * (x - b),
+      (x) => 0.6 * jstat.randn(),
+      -10,
+      10,
+      100
+    );
+  } else if (s == "No relationship") {
+    let a = jstat.uniform.sample(-3, 1);
+    let b = jstat.uniform.sample(1, 3);
+    return make_perturbed_graph(
+      (x) => 0,
+      (x) => jstat.uniform.sample(-10, 10),
+      -10,
+      10,
+      100
+    );
+  }
+}
+```
+
+
+
+```{ojs perturbed-graph}
+//| echo: false
+function make_perturbed_graph(f, r, a, b, n) {
+  let xs = jstat.arange(n).map(() => jstat.uniform.sample(a, b));
+  let ys = xs.map((x) => f(x) + r());
+  let plot = plotter({ width: 500, height: 400, grid: false });
+  jstat.arange(n).forEach((_, i) => plot.point(xs[i], ys[i]));
+
+  let R = jstat.corrcoeff(xs, ys);
+
+  return html`<div style="text-align:center; width:500px">R = ${d3.format(
+    "0.4f"
+  )(R)}</div>${plot.node}`;
+}
+```
+
+
+```{ojs import}
+//| echo: false
+import {select} from "@jashkenas/inputs"
+jstat = require('jstat')
+import { plotter } from '50dadfdec01c15a8'
+import { rk4 } from '@mcmcclur/runge-kutta-for-systems-of-odes'
+import { slider } from "@jashkenas/inputs"
+```
+

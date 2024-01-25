@@ -1,0 +1,198 @@
+
+
+```{ojs}
+//| echo: false
+sliders = {
+  let div = d3.create("div");
+
+  let m0 = d3.mean(pts);
+  let s0 = d3.deviation(pts);
+  let mu = Inputs.range([1, 8], {
+    value: m0,
+    step: 0.001,
+    format: d3.format("0.3f"),
+    label: tex`\large\pmb\mu:`
+  });
+  let sigma = Inputs.range([0.2, 4], {
+    value: s0,
+    step: 0.001,
+    format: d3.format("0.3f"),
+    label: tex`\large\pmb\sigma:`
+  });
+
+  d3.select(mu).on("input", redraw).select("label").style("width", "30px");
+  d3.select(sigma).on("input", redraw).select("label").style("width", "30px");
+
+  div.append(() => mu);
+  div.append(() => sigma);
+
+  return div.node();
+
+  function redraw() {
+    let m = mu.value;
+    let s = sigma.value;
+    d3.select(normal_model).select("svg").remove();
+    let standardized = pts.map((x) => (x - m0) / s0);
+    let new_pts = standardized.map((z) => z * s + m);
+    let new_plot = create_plot(new_pts);
+    d3.select(normal_model).append(() => new_plot);
+  }
+}
+```
+
+```{ojs}
+//| echo: false
+viewof steely_dan_says = Inputs.button("Neuer Zufallsversuch")
+```
+
+```{ojs}
+//| echo: false
+normal_model = {
+  let div = d3.create("div");
+  let plot = create_plot(pts);
+
+  d3.select(plot).selectAll("circle").attr("opacity", 0);
+
+  let initials = d3
+    .select(plot)
+    .selectAll("rect")
+    .nodes()
+    .map((r) => ({ height: r.getAttribute("height"), y: r.getAttribute("y") }));
+  let y_scale = plot.scale("y");
+  d3.select(plot)
+    .selectAll("rect")
+    .attr("height", 0)
+    .attr("y", y_scale.apply(0));
+  d3.select(plot).select("path").attr("opacity", 0);
+  Promises.delay(500).then(function () {
+    d3.select(plot)
+      .selectAll("circle")
+      .attr("opacity", 0)
+      .transition()
+      .duration(1000)
+      .attr("opacity", 0.0);
+  });
+  Promises.delay(1500).then(function () {
+    d3.select(plot)
+      .selectAll("rect")
+      .attr("height", 0)
+      .attr("y", y_scale.apply(0))
+      .transition()
+      .duration(850)
+      .attr("height", (d, i) => initials[i].height)
+      .attr("y", (d, i) => initials[i].y);
+  });
+  if (show_curve) {
+    Promises.delay(1500).then(function () {
+      d3.select(plot)
+        .selectAll("path")
+        .attr("opacity", 0)
+        .transition()
+        .duration(1000)
+        .attr("opacity", 0.8);
+    });
+  }
+
+  div.append(() => plot);
+
+  return div.node();
+}
+```
+
+```{ojs}
+//| echo: false
+pts = {
+  steely_dan_says;
+  let n = 1000;
+  let m0 = d3.randomUniform(1, 8)();
+  let s0 = d3.randomUniform(1 / 2, 2)();
+  let pts = d3.range(n).map(d3.randomNormal(m0, s0));
+
+  return pts;
+}
+```
+
+```{ojs}
+//| echo: false
+create_plot = function (pts) {
+  let m = d3.mean(pts);
+  let s = d3.deviation(pts);
+
+  let w = 800;
+  let h = 0.4 * w;
+
+  let f = (x) =>
+    Math.exp((-(x - m) * (x - m)) / (2 * s * s)) / (Math.sqrt(2 * Math.PI) * s);
+
+  let marks = [
+    Plot.rectY(
+      pts,
+      Plot.binX(
+        {
+          y: (a, bin) => {
+            return a.length / pts.length / (bin.x2 - bin.x1);
+          },
+          title: "proportion"
+        },
+        { x: (pt) => pt, fill: "#b00" }
+      )
+    ),
+    Plot.dot(pts, {
+      x: (x) => x,
+      y: (_) => 0,
+      stroke: "black",
+      fill: "black",
+      opacity: 0.2
+    }),
+    Plot.ruleX([0]),
+    Plot.ruleY([0])
+  ];
+  if (show_curve) {
+    marks.push(
+      Plot.line(build_samples(f, -1, 12, { N: 100 }), {
+        strokeWidth: 5,
+        stroke: "#111",
+        opacity: 0
+      })
+    );
+  }
+
+  let plot = Plot.plot({
+    x: { domain: [0, 11] },
+    y: { domain: [0, 1] },
+    width: w,
+    height: h,
+    marks: marks
+  });
+
+  d3.select(plot)
+    .selectAll("rect")
+    .on("pointerenter", function () {
+      d3.select(this).attr("opacity", 0.5);
+    })
+    .on("pointerleave", function () {
+      d3.select(this).attr("stroke", null).attr("opacity", null);
+    })
+    .nodes()
+    .forEach((bar) =>
+      tippy(bar, { content: d3.select(bar).select("title").text() })
+    );
+  d3.select(plot).selectAll("rect").select("title").remove();
+  return plot;
+}
+```
+
+```{ojs}
+//| echo: false
+show_curve = true
+```
+
+```{ojs}
+//| echo: false
+import { build_samples } from '@mcmcclur/adaptive-plotter'
+```
+
+```{ojs}
+//| echo: false
+tippy = require("tippy.js@6")
+```

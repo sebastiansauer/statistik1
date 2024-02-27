@@ -14,6 +14,7 @@ library(ggpubr)
 library(png)
 library(grid)
 library(patchwork)
+library(gt)
 ```
 
 
@@ -37,9 +38,8 @@ ggplot2::theme_set(theme_minimal())
 ### Lernziele
 
 
-- Sie können folgende Verben des Datenjudo anwenden: `arrange`, `filter`,  `select`, `summarise`, `group_by`, `mutate`
-- Sie können Daten in R importieren
-- Sie können R-Befehle mit der "Pfeife" verketten
+- Sie können folgende Verben des Datenjudo anwenden: `arrange`, `filter`,  `select`, `summarise`, `group_by`, `mutate`.
+- Sie können R-Befehle mit der "Pfeife" verketten.
 
 
 ### Benötigte R-Pakete
@@ -73,7 +73,7 @@ zunächst in dem Sie einfach den R-Code kopieren und selber ausführen.$\square$
 
 >   🤖 Okay, hör zu. Stell dir vor, du hast viele Spielzeugautos und du willst herausfinden, welches Auto am meisten bespielt wird. Du kannst jeden Tag zählen, wie oft du jedes Auto benutzt hast. Aber das wäre sehr mühsam und könnte schnell durcheinander gebracht werden. Stattdessen kannst du mit Statistik eine einfachere Methode finden. Du kannst zum Beispiel eine Liste machen und jedes Auto mit einer bestimmten Farbe markieren. Dann kannst du jeden Tag einfach zählen, wie oft du jede Farbe verwendet hast. Am Ende kannst du herausfinden, welches Auto am meisten bespielt wurde, indem du siehst, welche Farbe am meisten verwendet wurde. Das ist ein Beispiel dafür, wie Statistik uns dabei helfen kann, Muster in großen Datensätzen zu finden und Entscheidungen zu treffen, ohne alles einzeln zu zählen.
 
-Quelle: ChatGTP, 2023-02-09
+Quelle: ChatGTP 3.5, 2023-02-09
 
 
 
@@ -93,12 +93,12 @@ Laut dem [Harvard Business Review](https://hbr.org/2018/08/what-data-scientists-
 verbringen diese Leute "80%" ihrer Zeit mit dem *Aufbereiten* von Daten [@bowne-anderson_what_2018].
 Ja: mit uncoolen Tätigkeiten wie Tippfehler aus Datensätzen entfernen oder die Daten überhaupt nutzbar und verständlich zu machen.
 
-Das zeigt zumindest, dass das Aufbereiten von Daten a) wichtig ist und b) dass man allein damit schon weit kommt. 
+Das zeigt zumindest, dass das Aufbereiten von Daten a) wichtig ist und b) dass man allein damit schon weit kommen kann. 
 Eine gute Nachricht ist (vielleicht),
 dass das Aufbereiten von Daten keine aufwändige Mathematik verlangt,
 stattdessen muss man ein paar Handgriffe und Kniffe kennen.
 Daher passt der Begriff *Datenjudo* vielleicht ganz gut. 
-Kümmern wir uns also um das Aufbereiten bzw. Umformen von Daten, um das Datenjudo.$\square$
+Kümmern wir uns also um das Aufbereiten bzw. Umformen von Daten, um das Datenjudo. 🔢🤹 $\square$
 
 :::
 
@@ -137,8 +137,7 @@ Importieren Sie daher den Datensatz `mariokart`, z.B. so:
 
 
 ```{r}
-library(easystats)  # Das Paket muss installiert sein
-mariokart <- data_read("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 
 glimpse(mariokart)
 ```
@@ -190,14 +189,18 @@ p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1)
 #| echo: false
 #| tbl-cap: "Ein einfacher Datensatz von schlichtem Gemüt"
 #| label: tbl-datenjudo
-d
+d |> gt()
 ```
 
 
 :::{.callout-important}
 Die Verben des Datenjudos wohnen im Paket `{dyplr}`,
 welches gestartet wird, wenn Sie `library(tidyverse)` eingeben.
-Vergessen Sie, `{tidyverse}` zu starten, dann funktionieren diese Befehle nicht.$\square$
+Falls Sie vergessen , das Paket `{tidyverse}` zu starten, dann funktionieren diese Befehle nicht.$\square$
+:::
+
+:::{.callout-note}
+Zur Erinnerung: In RStudio können Sie per Klick auf das kleine Tabellen-Icon im Bereich *Environment* die Tabellenansicht einer Tabelle öffnen, s. @sec-viewtab. $\square$
 :::
 
 
@@ -208,6 +211,7 @@ Vergessen Sie, `{tidyverse}` zu starten, dann funktionieren diese Befehle nicht.
 ```{r plot-arrange}
 #| echo: false
 #| label: fig-arrange
+#| fig-asp: .5
 #| fig-cap: "Sinnbild für das Sortieren einer Tabelle mit `arrange()`"
 d_arranged <-
   d %>% 
@@ -229,13 +233,16 @@ ACD
 A#D
 "
 
-p_arrange <- wrap_plots(A= p_d1, 
+p_arrange <- wrap_plots(A = p_d1, 
                         B = p_text , 
                         C = p_ra, 
                         D = p_d_arranged, 
            widths = c(4,1,4),
            design = design) 
-p_arrange
+p_arrange +
+  theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 5, unit = "pt")) # Adjust top, right, bottom, and left margins
+
+
 ```
 
 
@@ -243,8 +250,8 @@ p_arrange
 
 ### Was sind die höchsten Preise?
 
-Sie wollen mal locker anfangen. Was sind denn eigentlich die höchsten Preise, für die das Spiel Mariokart über den Online-Ladentisch geht.
-Die entsprechende Spalte heißt offenbar `total_pr`.
+Sie wollen mal locker anfangen. Daher stellen Sie sich folgende Frage: Was sind denn eigentlich die höchsten Preise, für die das Spiel *Mariokart* über den Online-Ladentisch geht?
+Die Spalte des Verkaufspreis heißt offenbar `total_pr` (s. Tabelle `mariokart`).
 In Excel kann die Spalte, nach der man die Tabelle sortieren möchte,
 einfach anklicken. Ob das in R auch so einfach geht?
 
@@ -364,8 +371,7 @@ mario_filter2 <- filter(mariokart, stock_photo == "yes" | cond == "new")
 mario_filter2
 ```
 
-Hier könnte man noch viele interessante Hypothesen prüfen, denken Sie sich und tun das auch ... $\square$
-:::
+Hier könnte man noch viele interessante Hypothesen prüfen, denken Sie sich und tun das auch ... 
 
 
 
@@ -377,7 +383,7 @@ Filtern Sie die Spiele mit nur einem Lenkrad und ohne Versandkosten.$\square$
 
 :::{#exr-filter3}
 Filtern Sie die Spiele mit nur einem Lenkrad mit überdurchschnittlichen Verkaufspreis. 
-Tipp: Nutzen Sie die Funtion `describe_distribution(name_der_tabelle)`, um den Mittelwert einer Variable des Datensatzes zu erfahren.$\square$
+Tipp: Nutzen Sie die Funtion `describe_distribution(name_der_tabelle)`, um den Mittelwert einer Variable des Datensatzes zu erfahren (diese Funktion wohnt im R-Paket `easystats`. $\square$
 :::
 
 
@@ -390,6 +396,7 @@ Wählen wir also *nur* die Spalten aus, die uns interessieren und entfernen wir 
 ```{r select}
 #| echo: false
 #| label: fig-select
+#| fig-asp: 0.5
 #| fig-cap: "Sinnbild für das Auswählen von Spalten mit `select()`"
 d_select <-
   d %>% 
@@ -430,9 +437,13 @@ Ob wohl gebrauchte Spiele deutlich geringere Preise erzielen im Vergleich zu neu
 Sie entschließen sich, mal ein Stündchen auf die relevanten Daten zu starren.
 
 ```{r}
+#| eval: false
 mario_select1 <- select(mariokart, cond, total_pr)
 mario_select1
 ```
+
+
+
 
 Aha (?)$\square$
 :::
@@ -448,7 +459,7 @@ z.B.
 #| eval: false
 select(mariokart, 1, 2)  # Spalte 1 und 2
 select(mariokart, 2:5)  #  Spalten 2 *bis* 5 
-select(mariokart, -1)  # Alle Spalte *bis auf* Spalte 1
+select(mariokart, -1)  # Alle Spalte *aber nicht* Spalte 1
 ```
 
 Vertiefte Informationen zum Auswählen von Spalten mit `select` findet sich [hier](https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html).
@@ -463,6 +474,7 @@ Kurz entschlossen fassen Sie die Spalte `total_pr`, den Verkaufspreis, zum Mitte
 ```{r plot-summarise}
 #| echo: false
 #| label: fig-summarise
+#| fig-asp: 0.5
 #| fig-cap: "Spalten zu einer einzelnen Zahl zusammenfassen mit `summaris()`"
 d_summ <-
   d %>% 
@@ -497,12 +509,22 @@ p_summ
 
 ### Was ist der mittlere Verkaufspreis?
 
-```{r}
+Mit `summarise`, s. @lst-summarise, können wir den mittleren Verkaufspreis der Mariokart-Spiele berechnen.
+
+```{r lst-summarise, lst-cap: "Die R-Funktion summarise fasst einen Vektor z u einer Zahl zusammen"}
 mariokart_neu <- summarise(mariokart, preis_mw = mean(total_pr))
 mariokart_neu
 ```
+
 Aha! Etwa 50€ erzielt so eine Auktion im Schnitt.$\square$
+
 :::
+
+
+Übersetzen wir @lst-summarise vom Errischen ins Deutsche:
+
+>   🧑‍🎓  Hey R, fasse die Zeilen von `total_pr` aus `mariokart` zu einer Zahl zusammen, und zwar mit Hilfe des Mittelwerts. Die resultierende Tabelle nennen wir `mariokart_neu, sehr kreativ. Und die resultierende Spalte, die einzige in `mariokart_neu`, nennen wir `preis_mw`.
+
 
 
 Ein bisschen abstrakter gesprochen, fasst `summarise` also eine *Spalte* zu einer (einzelnen) *Zahl* zusammen, s. @eq-desk-summ.^[Eine Alternative, um eine Spalte zu einer Zahl zusammenzufassen, bietet der "Dollar-Operator" (`$`):  `mean(mariokart$total_pr)`.
@@ -581,7 +603,7 @@ p_group
 ```
 
 Durch das Gruppieren wird die Tabelle in "Teiltabellen" - entsprechend der Gruppen - aufgeteilt.
-Das sieht man der Tabelle aber nicht wirklich an.
+Das sieht man der R-Tabelle aber nicht wirklich an.
 Aber alle nachfolgenden Berechnungen werden *für jede Teiltabelle* einzeln ausgeführt.
 
 
@@ -598,7 +620,6 @@ mariokart_gruppiert <- group_by(mariokart, cond)
 ```
 
 Wenn Sie die neue Tabelle betrachte, sehen Sie wenig Aufregendes, nur einen Hinweis, dass die Tabelle gruppiert ist.
-
 Jetzt können Sie an jeder Teiltabelle Ihre weiteren Berechnungen vornehmen, etwa die Berechnung des mittleren Verkaufspreises.
 
 
@@ -606,7 +627,7 @@ Jetzt können Sie an jeder Teiltabelle Ihre weiteren Berechnungen vornehmen, etw
 summarise(mariokart_gruppiert, preis_mw = mean(total_pr))
 ```
 
-Langsam fühlen Sie sich als Datenchecker.. 🥷 🦹‍♀️. $\square$.
+Langsam fühlen Sie sich als Datenchecker ... 🥷 🦹‍♀️. $\square$.
 :::
 
 
@@ -617,6 +638,7 @@ Immer mal wieder möchte man *Spalten verändern*, bzw. deren Werte umrechnen, s
 ```{r plot-mutate}
 #| echo: false
 #| label: fig-mutate
+#| fig-asp: 0.5
 #| fig-cap: "Spalten verändern/neu berechnen mit `mutate()`"
 d_mutate <-
   d %>% 
@@ -664,6 +686,21 @@ Sicherlich werden Sie Ihre Gesprächspartner schwer beeindrucken.$\square$
 :::
 
 
+Mit  `mutate` berechnen Sie eine Spalte `x` (in einer Tabelle) neu.
+Die Funktion, die Sie in `mutate` benennen wird für jede Zeile der Spalte `x` angewendet.
+
+:::{#exm-mutate2}
+### Beispiele für Funktionen für `mutate`
+`mutate` eignet sich, z.B. um Spalten zu addieren, zu multiplizieren oder sonstwie zu transformieren (z.B. den Logarithmus anwenden oder den Mittelwert der Spalte von jeder Zeile abziehen). $\square$
+:::
+
+
+>    🧟‍♀️ Statistik, wann braucht man schon sowas!?
+
+>    👨‍🏫 Eigentlich nur dann, wenn man die Fakten gut verstehen will, sonst nicht.
+
+
+
 ### Zeilen zählen mit `count`
 
 
@@ -673,10 +710,11 @@ das Zeilen zählen.^[Ja, das ist traurig.]
 Man könnte z.B. fragen, wie viele neue und wie viele alte Spiele in der Tabelle (Dataframe) `mariokart` vorhanden sind.
 
 :::{#exm-count}
-Nach der letzten Präsentation Ihrer Analyse hat Ihre Chefin gestöhnt: Oh nein, 
-alles so kompliziert. Statistik! Himmel hilf! Kann man das niht einfacher machen?
-Anstelle von irgendwelchen komplizierten Berechnungen (Mittelwert?) möchten Sie beim nächsten Treffen nur zeigen, wie viele Computerspiele neu und wie viele gebraucht sind (in Ihrem Datensatz).
-Schlichte Häufigkeiten! Hoffentlich ist Ihre Chefin nicht wieder überfordert...
+Nach der letzten Präsentation Ihrer Analyse hat Ihre Chefin gestöhnt: 
+"Oh nein, alles so kompliziert. Statistik! Himmel hilf! 
+Kann man das nicht einfacher machen?"
+Anstelle von irgendwelchen komplizierten Berechnungen (Mittelwert?) möchten Sie ihr beim nächsten Treffen nur zeigen, wie viele Computerspiele neu und wie viele gebraucht sind (in Ihrem Datensatz).
+Schlichte Häufigkeiten also. Hoffentlich ist Ihre Chefin nicht wieder überfordert...
 
 ```{r}
 mariocart_counted <- count(mariokart, cond)
@@ -687,7 +725,7 @@ mariocart_counted
 Aha! Es gibt mehr gebrauchte als neue Spiele.$\square$
 :::
 
-Jetzt könnte man noch den *Anteil* ergänzen:
+Jetzt könnte man noch den *Anteil* (engl. *proportion*) ergänzen:
 Welcher *Anteil* (der 143 Spiele in `mariokart`) ist neu, welcher gebraucht?
 
 ```{r}
@@ -698,7 +736,7 @@ mariocart_counted %>%
 
 
 
-### Fazit
+### Fazit: Verben am Fließband
 
 die Befehle ("Verben") des Tidyverse sind jeweils für einzelne, typische Aufgaben des Datenaufbereitens ("Datenjudo") zuständig.
 
@@ -713,7 +751,7 @@ flowchart LR
 ```
 
 
-## Die Pfeife
+## Die Pfeife {#sec-pipe}
 
 🚬 👈 Das ist keine Pfeife, wie René Magritte 1929 in seinem [berühmten Bild](https://en.wikipedia.org/wiki/File:MagrittePipe.jpg) schrieb, s. @fig-pfeife [@m7_savinellis_2004-1].
 
@@ -747,14 +785,14 @@ flowchart LR
 
 ::::
 
-So sieht die Pfeife in R aus^[Jaja, das ist keine Pfeife, sondern ein Symbol einer Pfeife...]. Links: Ein Bild einer Pfeife. Mitte und Rechts: Die R-Symbole für eine "Pfeife" (pipe).
+So sieht die Pfeife in R aus^[Jaja, das ist keine Pfeife, sondern ein Symbol einer Pfeife...]. Links: Ein Bild einer Pfeife. Mitte und Rechts: Die zwei R-Symbole für eine "Pfeife" (pipe).
 
 
 ### Russische Puppen
 
-Computerbefehle, und im Speziellen R-Befehle kann man "aufeinander" - oder vielmehr: ineinander - stapeln, so ähnlich wie eine russische Puppe (vgl. @sec-first-fun).
-
-Definieren wir zuerst einen Vektor `x` aus drei Zahlen:
+Computerbefehle, und im Speziellen R-Befehle kann man "aufeinander" -- oder vielmehr: ineinander -- stapeln, so ähnlich wie eine russische Puppe (vgl. @sec-first-fun).
+Schauen wir uns das in einem Beispiel an.
+Dazu definieren wir zuerst einen Vektor `x` aus drei Zahlen:
 
 ```{r}
 x <- c(1, 2, 3)
@@ -781,7 +819,7 @@ Schritt 2: `sum(-1, 0, 1)`
 
       ⬇️ 
 
-Schritt 3: `0`. Fertig. Puh. 
+Schritt 3: `0`. Fertig. Puh. Kompliziert.
 
 
 Soweit kann man noch einigermaßen folgen. 
@@ -794,6 +832,8 @@ Schauen Sie sich mal folgende (Pseudo-)Syntax an:^[Ein beliebter Fehler ist es �
 fasse_zusammen(gruppiere(wähle_spalten(filter_zeilen(meine_daten))))
 ```
 
+
+🤯 
 
 ### Die Pfeife zur Rettung
 
@@ -809,9 +849,14 @@ Nimm "meine_daten" *und dann*
   fasse sie zusammen.
 ```
 
+:::{#def-pipe}
+### Pfeife
+"Und dann" heißt auf Errisch ` %>% ` oder ` |> `.
+Man nennt diesen Befehl "Pfeife" (engl. *pipe*). $\square$
+:::
 
 :::{.callout-note}
-Der Befehl ` %>% ` verknüpft Befehle, man nennt ihn "Pfeife" (pipe).
+Der Befehl ` %>% ` *verknüpft* Befehle.
 Der Shortcut für diesen Befehl ist Strg-Shift-M.
 Die Pfeife `%>%` "wohnt" im Paket `{tidyverse}`.^[Genauer gesagt im Paket `{magrittr}`,
 welches aber under the hood von `{tidyverse}` geladen wird. 
@@ -830,7 +875,7 @@ bringt es uns keinen Vorteil, die neuere Pfeife des Standard-R `|>` zu verwenden
 :::{.column width="50%"}
 
 ```{mermaid}
-%%| fig-cap: Illustration für eine Pfeifensequenz
+%%| fig-cap: Illustration für eine Pfeifensequenz, es geht vorwärts wie am Fließband.
 %%| label: fig-pfeife
 %%| out-width: "100%"
 flowchart TD
@@ -910,10 +955,13 @@ Protipp: Am besten scrollen Sie so, dass Sie die Lösungen nicht gleich sehen.$\
 :::
 
 
+Sie arbeiten als ~~Diener~~ strategischer Assistent der Geschäftsführerin und sind für Faktenchecks und andere Daten-Aufgaben zuständig. 
+Heute sollen Sie zeigen, was Sie können (Schluck).
+
 
 ### Forschungsfrage 1
 
->   🧔‍♂️ Ich würde gerne wissen, was das teuerste Spiel ist, aber jeweils für neue und gebrauchte Spiele. Aber nur für Spiele, die mit Foto verkauft wurden!
+>   ️👩 Ich würde von Ihnen  gerne wissen, was das teuerste Spiel ist, aber jeweils für neue und gebrauchte Spiele. Aber nur für Spiele, die mit Foto verkauft wurden!
 
 
 ```{r}
@@ -934,7 +982,7 @@ max(x)
 ### Forschungsfrage 2
 
 
->    🧔‍♂️ Ich würde gerne die mittlere Versandpauschale wissen, aber getrennt nach Anzahl der Lenkräder, die dem Spiel beigelegt sind. Und ich will nur Gruppen berücksichtigen, die aus mindestens 10 Spielen bestehen!
+>    ️👩️ Ich würde gerne die mittlere Versandpauschale wissen, aber getrennt nach Anzahl der Lenkräder, die dem Spiel beigelegt sind. Und ich will nur Gruppen berücksichtigen, die aus mindestens 10 Spielen bestehen!
 
 
 Wenn wir die Anzahl der Spiele zählen in Abhängigkeit der beigelegten Lenkräder (`wheels`), bekommen wir eine Tabelle mit zwei Spalten: `wheels` und `n`.
@@ -960,7 +1008,7 @@ Die Funktion `n()` gibt die Anzahl der Zeilen pro Teiltabelle zurück.
 ### Forschungsfrage 3
 
 
->   🧔‍♂️ Ich würde gerne den Verkaufspreis in Yen wissen, nicht in Euro. Dann rechne mal den mittleren Verkaufspreis aus und ziehe 10% ab, die wir als Provision unseren Verkäufern zahlen müssen.
+>   ️👩️ Ich würde gerne den Verkaufspreis in Yen wissen, nicht in Euro. Dann rechne mal den mittleren Verkaufspreis aus und ziehe 10% ab, die wir als Provision unseren Verkäufern zahlen müssen.
 
 
 ```{r}
@@ -974,17 +1022,22 @@ mariokart %>%
 Wie man sieht kann man in `summarise` auch mehr als eine Berechnung einstellen.
 In diesem Fall haben wir zwei Berechnungen angestellt: Einmal den Mittelwert und einmal den Mittelwert minus 10% (des Mittelwerts).
 
+
+:::{#exr-dyi}
+### DYI
+Denken Sie sich selber ähnliche Forschungsfragen aus.
+Stellen Sie diese einer vertrauenswürdigen Kommilitonen bzw. einem vertrauenswürdigen Kommilitonen. 
+Schauen Sie, ob Ihre Aufgabe richtig gelöst wird. $\square$
+:::
+
 ## Praxisbezug
 
 
 Die Covid19-Epidemie hatte weltweit massive Auswirkungen; auch psychologischer Art wie Vereinsamung, Angst oder Depression.
-
 Eine Studie, die die psychologischen Auswirkungen von @mulukom_psychological_2020,
 die [unter diesem Projekt bei der Open Science Foundation (OSF) angemeldet ist](https://osf.io/tsjnb/).
-
 Die Daten wurden mit R ausgewertet. Beispielhaft ist [hier](https://osf.io/4b9p2) die R-Syntax zu sehen, die die Autoren zur Datenaufbereitung verwendet haben. 
 Einen guten Teil dieser Syntax kennen Sie aus diesem Kapitel.
-
 Diese Studie ist, neben einigen vergleichbaren, ein schönes Beispiel, wie Forschung und Praxis ineinander  greifen können: Angewandte Forschung als Beitrag zur Lösung eines akuten Problems, der Corona-Pandemie.
 
 
@@ -1117,6 +1170,11 @@ Die Verben des Datenjudos werden [hier](https://tidydatatutor.com/) anschaulich 
 
 ## Aufgaben
 
+:::{.callout-tip}
+### ChatGPT
+Nutzen Sie einen Chat-Bot wie ChatGPT, um sich Hilfe für die R-Syntax geben zu lassen. $\square$
+:::
+
 
 1. [wrangle3](https://datenwerk.netlify.app/posts/wrangle3/wrangle3.html)
 1. [wrangle4](https://datenwerk.netlify.app/posts/wrangle4/wrangle4.html)
@@ -1214,10 +1272,16 @@ Der Nutzen künstlicher Intelligenz für die Datenanalyse ist natürlich breiter
 Wenn Sie sich z.B. über die Syntax eines bestimmten Befehls (oder allgemeiner: Vorhabens) nicht sicher sind, fragen Sie sich doch mal einen Bot wie ChatGPT.
 ::: 
 
-## Literatur
+## Literaturhinweise
 
 
 @sauer_moderne_2019, Kap. 7 gibt eine Einführung in die Datenaufbereitung (mit Hilfe von R), ähnlich zu den Inhalten dieses Kapitels.
+Mehr in die Tiefe des "Datenjudo" führen @wickham_r_2018;
+der Autor Hadley Wickham ist die Leitfigur in der R-Community schlechthin.
+Er ist einer der Hauptautoren von den beliebten R-Paketen `dplyr` und `ggplot2`.
+
+
+## Literatur
 
 
 

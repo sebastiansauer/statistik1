@@ -34,7 +34,7 @@ library(easystats)
 
 ### Daten
 
-Wenn Sie sich bei Kaggle einloggen möchten, können Sie die Daten von Kaggle herunterladen und zwar [hier](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data).
+Wenn Sie sich nicht bei Kaggle einloggen möchten, können Sie die Daten von Kaggle herunterladen und zwar [hier](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data).
 
 Im Einzelnen müssen Sie folgende Dateien herunterladen:
 
@@ -178,30 +178,75 @@ Diese Variablen sind einigermaßen stark mit unserer Zielvariablen `SalePrice` k
 Nutzen wir also diese Variablen (oder einige von ihnen) zur Vorhersage.
 
 
-#### Model 1
 
-Berechnen wir ein erstes Modell für diese Forschungsfrage, s. @tbl-m1-params.
+
+#### Modell 1
+
+Im ersten Modell gehen wir davon aus, dass der Verkaufspreis im Großen und Ganzen durch den Zustand der Immobilie (`OverallQual`) vorhergesagt werden kann.
+Diese Variable ist am stärksten mit der Zielvariable korreliert und ist daher ein guter Kandidat für die Vorhersage.
+
+
+```{r}
+m1 <- lm(SalePrice ~ OverallQual, data = d_train)
+parameters(m1)  # aus easystats
+```
+
+Wie gut ist das Modell?
+
+```{r}
+rmse(m1)  # aus easystats
+```
+
+Im Schnitt liegen wir ca. 56 Tausend Dollar daneben. 
+Ob das viel oder weniger ist, wird sich im Vergleich mit anderen Modellen zeigen.
+
+R-Quadrat liefert einen anderen Blick auf die Modellgüte:
+
+
+```{r}
+r2(m1)  # aus easystats
+```
+
+
+
+#### Model 2
+
+Berechnen wir als nächstes ein Modell mit mehreren UV, `m2`.
+
+:::{.callout-note}
+Mann kann mehrere UV (Prädiktorvariablen) in ein Regressionsmodell aufnehmen. Dazu trennt man sie mit einem Pluszeichen in `lm()`:
+
+```{r}
+#| eval: false
+mein_modell <- lm(av ~ uv1 + uv2 + ... + uv_n, data = meine_daten)
+```
+
+Dabei ist das Pluszeichen kein arithmetischer Operator, sondern sagt nur "als UV nimm UV1 und UV2 und ...". $\square$
+:::
+
 
 ```{r}
 #| results: hide
-m1 <- lm(SalePrice ~ OverallQual + GrLivArea + GarageCars, data = d_train)
-parameters(m1)
+m2 <- lm(SalePrice ~ OverallQual + GrLivArea + GarageCars, data = d_train)
+parameters(m2)
 ```
 
+
+@tbl-m2-params zeigt die Koeffizienten von `m2`. 
 
 ```{r}
 #| echo: false
-#| label: tbl-m1-params
+#| label: tbl-m2-params
 #| tbl-cap: "Modellparameter von m1"
-parameters(m1) %>% print_md()
+parameters(m2) %>% print_md()
 ```
 
 
-Wie gut sind die Vorhersagen des Modells für die Daten von `d_train`?
+Wie gut sind die Vorhersagen des Modells `m2` für die Daten von `d_train`?
 
 
 ```{r}
-rmse(m1)
+rmse(m2)
 ```
 
 
@@ -212,7 +257,7 @@ Im Schnitt liegen unsere Vorhersagen ca. 40 Tausend Dollar daneben. Ist das gut?
 r2(m1)
 ```
 
-Ob das R-Quadrat "gut" oder "hoch" ist, beantwortet man am besten *relativ*, 
+Ob die Modellgüte (R-Quadrat, RMSE, etc.) "gut" oder "hoch" ist, beantwortet man am besten *relativ*, 
 also im Vergleich zu anderen Modellen.
 
 
@@ -236,6 +281,11 @@ rmse(m0)
 ```
 
 
+
+Beim Nullmodell liegen wir ca. 80 Tausend Dollar daneben.
+
+
+
 Das R-Quadrat der Nullmodells ist per Definition Null:
 
 
@@ -250,7 +300,7 @@ Wir haben jetzt unseren Champion, `m1`.
 Alle Hoffnung ruht auf diesem Modell.
 Ob die Vorhersagen im Test-Sample präzise sein werden?
 Oder himmelweit daneben?
-Bitte, enttäusche uns nicht!
+Enttäusche uns nicht!
 
 
 Hier sind die Vorhersagen:

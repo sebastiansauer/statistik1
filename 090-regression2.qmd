@@ -48,15 +48,19 @@ library(openintro)  # dataset mariokart
 ### Benötigte Daten
 
 ```{r}
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+mariokart_path <- "https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"
+mariokart <- read.csv(mariokart_path)
+
+wetter_path <- "https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/precip_temp_DWD.csv"
+wetter <- read.csv(wetter_path)
 ```
 
 
-## Mighty Regression
+## Forschungsbezug: Wie man Ihre Persönlichkeit durch Ihr Facebook-Profil vorhersagen kann
 
 
 Lineare Modelle^[synonym: Regressionsanalysen] sind ein altes, aber mächtiges Werkzeug.
-Sie gehören immernoch zum Standard-Repertoire moderner Analysten.
+Sie gehören immernoch zum Standard-Repertoire moderner Analystis.
 
 :::{#exm-kosinski}
 ### Wie gut kann man Ihre Persönlchkeit auf Basis des Facebook-Profils vorhersagen?
@@ -83,7 +87,7 @@ Das eingesetzte statistische Modell beruht auf einem linearen Modell, also ähnl
 ### Wetterdaten
 Nachdem Sie einige Zeit als Datenanalyst bei dem Online-Auktionshaus gearbeitet haben, stand Ihnen der Sinn nach ewtas Abwechslung. 
 Viel Geld verdienen und Ruhm und Anerkennung sind ja schon ganz nett,
-aber Ihnen viel ein, dass Sie ja zu Generation Z gehören, 
+aber dann fiel Ihnen ein, dass Sie ja zu Generation Z gehören, 
 und daher den schnöden Mammon nicht so hoch schätzen sollten.
 Sie entschließen sich, Ihre hochgeschätzten Analyse-Skills für etwas einzusetzen,
 das Ihnen sinnvoll erscheint: Die Analyse des Klimawandels.
@@ -185,6 +189,8 @@ An die Arbeit 💪
 
 ### metrische UV
 
+#### Modell Wetter1
+
 Sie stellen sich nun folgende Forschungsfrage:
 
 >   🧑‍🎓 Um wieviel ist die Temperatur in Deutschland pro Jahr gestiegen, wenn man die letzten ca. 100 Jahre betrachtet?
@@ -212,7 +218,21 @@ Laut Ihrem Modell wurde es pro Jahr um 0.01 Grad wärmer, pro Jahrzehnt also 0.1
 
 >   👨‍🏫 Mit der Ruhe, das schauen Sie sich später an.
 
-Das Modell, bzw. die Schätzungen zu den erwarteten Werten, kann mich sich so ausgeben lassen, s. @fig-wetter1, links.
+
+
+#### Punkt- vs. Bereichsschätzung
+
+In tbl-lm-wetter1 finden sich zwei Arten von Information für den Wert des Achsenabschnitts (b0) und des Regressionsgewichts von `year`(b1):
+
+1. *Punktschätzungen* In der Spalte `Coefficient` sehen Sie den "Best-Guess" für den entsprechenden Koeffizienten in der Population. Das is sozusagen der Wert für den sich das Modell festlegen würde, wenn es sonst nichts sagen dürfte.
+
+2. *Bereichschätzungen* Cleverer als Punktschätzungen sind Bereichsschätzungen (Intervallschätzungen): Hier wird ein Bereich plausibler Werte für den entsprechenden Wert angegeben. Der "Bereich plausibler Werte" wird auch als Konfidenzintervall (engl. confidence intervall, CI) bezeichnet. Entsprechend gibt `CI_low` die Untergrenze des Bereichs plausibler Werte und `CI_high` die Obergrenze aus. So können wir ablesen, dass das Regressionsgewicht von `year` irgendwo zwischen praktisch Null (0.009) und ca. 0.01 Grad geschätzt wird.
+
+💡 Merke: Je schmaler das Konfidenzintervall, desto genauer wird der Effekt geschätzt.
+
+#### Modell Wetter1a
+
+Das Modell `lm_wetter1`, bzw. die Schätzungen zu den erwarteten Werten, kann mich sich so ausgeben lassen, s. @fig-wetter1, links.
 Allerdings sind das zu viele Datenpunkte. Wir sollten es vielleicht anders visualisieren, s. @fig-wetter1, rechts.
 Dazu aggregieren wir die Messwerte eines Jahres zu jeweils einem Mittelwert.
 
@@ -222,7 +242,7 @@ wetter_summ <-
   wetter %>% 
   group_by(year) %>% 
   summarise(temp = mean(temp),
-            precip = mean(precip))
+            precip = mean(precip))  # precipitation: engl. für Niederschlag
 ```
 
 Auf dieser Basis erstellen wir ein neues lineares Modell, s. @tbl-lm-wetter1a.
@@ -258,9 +278,8 @@ plot(estimate_relation(lm_wetter1a))
 
 ### UV zentrieren
 
-:::{#def-beta0}
-Der Achsenabschnitt ($\beta_0$; engl. Intercept) ist definiert als der Y-Wert an der Stelle X=0.$\square$
-:::
+Zur Erinnerung: Der Achsenabschnitt ($\beta_0$; engl. *intercept*) ist definiert als der Y-Wert an der Stelle X=0, s. @sec-interpret-reg-mod.
+
 
 In den Wetterdaten wäre Jahr=0 Christi Geburt. 
 Da unsere Wetteraufzeichnung gerade mal ca. 150 Jahre in die Vergangenheit reicht,
@@ -276,7 +295,7 @@ Damit bezöge sich der Achsenabschnitt auf das Jahr 1950,
 was Sinn macht, denn für dieses Jahr haben wir Daten.
 
 Hat man nicht einen bestimmten Wert, der sich als Referenzwert anbietet,
-so ist es üblich, z.B. den Mittelwert als Referenzwert zu nehmen.
+so ist es üblich, z.B. den Mittelwert (der UV) als Referenzwert zu nehmen.
 Diese Transformation bezeichnet man als *Zentrierung* (engl. centering) der Daten.
 
 So zentriert man eine Verteilung:
@@ -325,7 +344,7 @@ Der Referenzwert bzw. die Referenzgruppe entspricht dem Wert x=0 im Regressionsm
 Wie gut erklärt unser Modell die Daten?
 
 ```{r}
-r2(lm_wetter1_zentriert)  # aus `{easystat}`
+r2(lm_wetter1_zentriert)  # aus `{easystats}`
 ```
 
 Viel Varianz des Wetters erklärt das Modell mit `year_c`^[`year` und `year_c` sind gleich stark mit `temp` korreliert, daher wird sich die Modellgüte nicht unterscheiden.] aber nicht.
@@ -387,11 +406,11 @@ Nach einigem Überlegen kommen Sie auf die Idee, das vektorisierte Rechnen von R
 
 ```{r}
 year <- c(1940, 1950, 1960)
-after_1950 <- year > 1950
+after_1950 <- year > 1950  # prüfe ob as Jahr größer als 1950 ist
 after_1950
 ```
 
-
+Die ersten zwei Jahre  von `year` sind nicht größer als 1950, das dritte schon.
 
 Ja, so könnte das klappen! Diese Syntax übertragen Sie auf Ihre `wetter`-Daten:
 
@@ -405,7 +424,7 @@ wetter <-
 
 Scheint zu klappen!
 
-Jetzt ein lineares Modell dazu
+Jetzt ein lineares Modell dazu berechnen:
 
 ```{r}
 lm_wetter_bin_uv <- lm(temp ~ after_1950, data = wetter)
@@ -419,12 +438,12 @@ Die Parameter des Modells lassen darauf schließen, dass es tatsächlich wärmer
 #| layout-ncol: 2
 #| fig-subcap:
 #|   - Der Schätzbereich für den Parameter reicht von ca. 0.5 bis 0.8 Grad Unterschied
-#|   - Wie man sieht, überlappen die Temperaturen dennoch beträchtlich; aufgrund des starken "Overplotting" ist dieses Diagramm nict ideal
+#|   - Wie man sieht, überlappen die Temperaturen dennoch beträchtlich; aufgrund des starken "Overplotting" ist dieses Diagramm alles andere als ideal
 plot(parameters(lm_wetter_bin_uv))
 plot(estimate_expectation(lm_wetter_bin_uv))
 ```
 
-Leider zeigt ein Blick zum `r2`, dass die Vorhersagegüte des Modells zu wünschen übrig lässt^[`r2(lm_wetter_bin_uv)`].$\square$
+Leider zeigt ein Blick zum `r2`, dass die Vorhersagegüte des Modells zu wünschen übrig lässt^[`r2(lm_wetter_bin_uv)`]. $\square$
 
 
 
@@ -565,15 +584,15 @@ wetter %>%
   theme_minimal() +
   geom_abline(slope =  coef(lm_wetter1)[2], intercept =  coef(lm_wetter1)[1], color = "grey20") +
   stat_summary(fun = "mean", color = "grey20") + 
-  geom_hline(yintercept = coef(lm_wetter1)[1], linetype = "dashed", color = "blue") +
+  geom_hline(yintercept = coef(lm_wetter1)[1], linetype = "dashed", color =okabeito_colors()[2]) +
   coord_cartesian(ylim = c(7, 9))  +
   annotate("label", x = Inf, y = coef(lm_wetter1)[1], 
-           hjust = "right", label = paste0("b0"), color = "blue") +
+           hjust = "right", label = paste0("b0"), color =okabeito_colors()[2]) +
   geom_segment(x = 1, y = coef(lm_wetter1)[1], xend = 1, 
                yend = coef(lm_wetter1)[1] + coef(lm_wetter1)[2], 
-               color = "red", arrow = arrow()) +
+               color = okabeito_colors()[1], arrow = arrow()) +
   annotate("label", x = 1 , y = coef(lm_wetter1)[1] + (coef(lm_wetter1)[2] / 2), 
-           hjust = "right", label = paste0("b1"), color = "red")  +
+           hjust = "right", label = paste0("b1"), color = okabeito_colors()[1])  +
   annotate("text", x = 0.5, y = coef(lm_wetter1)[1] + (coef(lm_wetter1)[2] / 2.3),
            color = "grey20", label = "Regressionsgerade", angle = 11, hjust = "bottom") +
   scale_x_continuous(breaks = c(0, 1))
@@ -664,7 +683,7 @@ Auch im Fall mehrerer Ausprägungen einer nominalen Variablen gilt die gleiche L
 3. Mittelwert der 2. Gruppe: Achsenabschnitt (b0) + Steigung der  2. Regressionsgeraden (b2)
 4. usw.
 
-Am Anfang kann es nervig sein, dass das Bundesland, 
+Es kann nervig sein, dass das Bundesland, 
 welches als *Referenzgruppe* (sprich als Gruppe des Achsenabschnitts ausgewählt wurde) nicht explizit in der Ausgabe angegeben ist.
 Der Wert der Referenzgruppe findet seinen Niederschlag im Achsenabschnitt.
 
@@ -703,19 +722,37 @@ wetter_summ <-
 
 wetter_summ %>%  
 # filter(region != "Deutschland") %>% 
-  ggplot(aes(x = region, y = temp)) +
+  ggplot(aes(y = region, x = temp)) +
   theme_minimal() +
   geom_label(aes(label = paste0("b", id),
-                 y = grandmean + delta), color = "red", vjust = 1) +
-  stat_summary(fun = "mean", color = "grey20") + 
-  geom_hline(yintercept = coef(lm_wetter_region)[1], linetype = "dashed", color = "blue") +
-  coord_cartesian(ylim = c(7, 9))  +
-  coord_flip() +
-  annotate("label", x = -Inf, y = coef(lm_wetter_region)[1], 
-           hjust = "top", label = paste0("b0"), color = "blue") +
-  annotate("point", x = 1, y = coef(lm_wetter_region)[1], color = "blue", size = 4) +
-  geom_segment(aes(xend = region, yend = temp), y = coef(lm_wetter_region)[1], color = "red") 
-
+                 x = grandmean + delta), 
+             vjust = 1,
+             size = 2,
+             color = okabeito_colors()[1]) +
+  #stat_summary(fun = "mean", color = "grey20") + 
+  geom_vline(xintercept = coef(lm_wetter_region)[1], linetype = "dashed", color = okabeito_colors()[2]) +
+  coord_cartesian(xlim = c(7, 10), ylim = c(0, 16))  +
+  
+  #coord_flip() +
+  annotate("label",
+           y = 1,
+           x = coef(lm_wetter_region)[1],
+           vjust = 1,
+           label = paste0("b0"),
+           #size = 6,
+           color = okabeito_colors()[2]) +
+  annotate("point", 
+           y = 1, 
+           x = coef(lm_wetter_region)[1], 
+           color = okabeito_colors()[2],
+           #vjust = 1,
+           size = 4) +
+  geom_segment(aes(yend = region, xend = temp), 
+               x = coef(lm_wetter_region)[1], 
+               color = okabeito_colors()[1])  +
+    geom_point() +
+  labs(y = "",
+       x = "Temperatur")
 ```
 
 
@@ -739,7 +776,7 @@ parameters(lm_wetter_month)
 ```{r}
 #| echo: false
 #| label: tbl-lm_wetter-month
-#| tbl-cap: Modellparameter für lm_wetter-month"
+#| tbl-cap: Modellparameter für lm_wetter_month
 parameters(lm_wetter_month) %>% print_md()
 ```
 
@@ -751,7 +788,7 @@ Aber "Monat" bzw. "Jahreszeit" sollte nominal sein.
 
 >   🤖 Aber `month` ist als Zahl in der Tabelle hinterlegt. Jede ehrliche Maschine verarbeitet eine Zahl als Zahl, ist doch klar!
 
-Okay, R, wir müssen  `month` in eine nominale Zahl transformieren.
+>    👩 Okay, R, wir müssen  `month` in eine nominale Zahl transformieren. Wie geht das?
 
 
 >    🤖 Dazu kannst du den Befehl `factor` nehmen. Damit wandelst du eine numerische Variable in eine nominalskalierte Variable (Faktorvariable) um. Faktisch heißt das, dass dann eine Zahl als Text gesehen wird.
@@ -759,7 +796,7 @@ Okay, R, wir müssen  `month` in eine nominale Zahl transformieren.
 
 :::{#exm-factor}
 Transformiert man `42` mit `factor`, so wird aus `42` `"42"`. Aus der Zahl wird ein Text.
-Alle metrischen Eigenschaften gehen verloren.$\square$
+Alle metrischen Eigenschaften gehen verloren; die Variable ist jetzt auf nominalen Niveau.$\square$
 :::
 
 ```{r}
@@ -809,7 +846,7 @@ wetter <-
   mutate(month_factor = relevel(month_factor, ref = "7"))
 ```
 
-So sieht dann die geänderte Reihenfolge aus:
+So sieht dann die geänderte Reihenfolge aus:^[Zum Dollar-Operator s. @dollar-op]:
 
 ```{r}
 levels(wetter$month_factor)
@@ -839,7 +876,7 @@ wetter_month_1_7 <-
 Eine Faktorvariable ist einer der beiden Datentypen in R, die sich für nominalskalierte Variablen anbieten: Textvariablen (`character`) und Faktor-Variablen (`factor`).
 Ein wichtiger Unterschied ist, dass die erlaubten Ausprägungen ("Faktorstufen") bei einer Faktor-Variable mitgespeichert werden, bei der Text-Variable nicht.
 
-Das kann praktisch sein, denn dann ist immer klar, welche Ausprägungen in Ihrer Variable möglich sind.$\square$
+Das kann praktisch sein, denn bei einer Faktorvariable ist immer klar, welche Ausprägungen in Ihrer Variable möglich sind.$\square$
 :::
 
 :::{#exm-factor1}
@@ -975,7 +1012,7 @@ Visualisieren wir uns die geschätzten Erwartungswert pro Prädiktorwert, s. @fi
 #| fig-cap: Temperaturverlauf über die Jahre für zwei Monate. Man beachte, dass die Regressionsgeraden parallel sind.
 plot(estimate_expectation((lm_year_month))) +
   scale_color_okabeito() +
-  scale_fill_okabeito()
+  scale_fill_okabeito()  # schönes Farbschema
 ```
 
 Mit `scale_color_okabeito` haben wir die Standard-Farbpalette durch die von  [@okabeito] ersetzt (s. [Hinweise hier](https://malcolmbarrett.github.io/ggokabeito/reference/palette_okabe_ito.html)).
@@ -1006,6 +1043,9 @@ lm_year_month_interaktion <- lm(
 plot(estimate_expectation(lm_year_month_interaktion)) +
   scale_color_okabeito()
 ```
+
+
+Der *Doppelpunkt-Operator* `:` fügt der Regressionsgleichung einen Interaktionseffekt hinzu, in diesem Fall die Interaktion von Jahr (`year_c`) und Monat (`month_factor`).
 
 
 Wie man in @fig-wetter-interakt sieht, sind die beiden Regressionsgeraden *nicht parallel*.
@@ -1039,7 +1079,7 @@ parameters(lm_year_month_interaktion) %>% print_md()
 
 Neu bei der Ausgabe zu diesem Modell ist die Zeile `year c × month factor [7]`.
 Sie gibt die Stärke des Interaktionseffekts an.
-Da die Null nicht im Schätzbereich (`95 CI`) liegt, ist der Interaktionseffekt offenbar nicht Null, also vorhanden (zumindest laut unserem Modell^[unser Modell könnte ja auch falsch sein.].
+<!-- Da die Null nicht im Schätzbereich (`95 CI`) liegt, ist der Interaktionseffekt offenbar nicht Null, also vorhanden (zumindest laut unserem Modell^[unser Modell könnte ja auch falsch sein.]. -->
 Die Zeile zeigt, wie unterschiedlich sich die die Niederschlagsmenge zwischen den beiden Monaten im Verlauf der Jahre ändert: Im Monat `"7"` ist der Effekt von `year_c` um 0.20 mm geringer: Die Regressionsgerade neigt sich mehr nach "unten" im Monat Juli, da der Koeffizient kleiner als Null ist.
 
 Die Regressionsgleichung lautet:
@@ -1047,7 +1087,8 @@ Die Regressionsgleichung lautet:
 
 
 :::{.callout-important}
-Der Achsenabschnitt gibt den Wert für Y an unter der Annahme, dass alle Prädiktoren den Wert Null aufweisen.
+Der Achsenabschnitt gibt den Wert für Y an unter der Annahme, dass alle Prädiktoren den Wert Null aufweisen. 
+In diesem Fall gibt der Achsenabschnitt also den Niederschlag für den Janur des Jahres 1951 an.
 Die Regressionskoeffizienten geben die Zunahme in Y an, wenn der jeweilige Prädiktorwert um 1 steigt, die übrigen Prädiktoren aber den Wert 0 aufweisen.$\square$
 :::
 
@@ -1055,7 +1096,7 @@ Die Regressionskoeffizienten geben die Zunahme in Y an, wenn der jeweilige Präd
 Das R-Quadrat von `lm_year_month_interaktion` beträgt übrigens:
 
 ```{r}
-r2(lm_year_month_interaktion)[["R2"]]  # aus `{easystats}`
+r2(lm_year_month_interaktion)  # aus `{easystats}`
 ```
 
 
@@ -1071,7 +1112,6 @@ Nur wenn man die Ursache-Wirkungs-Beziehungen in einem System kennt,
 macht es Sinn, die Modellkoeffizienten kausal zu interpretieren.
 Andernfalls lässt man besser die Finger von der Interpretation der Modellkoeffizienten und
 begnügt sich mit der Beschreibung der Modellgüte und mit Vorhersage^[synonym: Prognose].
-
 Wer das nicht glaubt, der betrachte @fig-confounder, links.^[[Quelle](https://data-se.netlify.app/2021/12/01/simulation-on-controlling-confounders/)]
 Ei Forschi stellt das Modell `m1: y ~ x` auf und  interpretiert dann `b1`: "Ist ja klar, X hat einen starken positiven Effekt auf Y!".
 
@@ -1080,8 +1120,8 @@ Oh Schreck! Jetzt ist `b1` auf einmal nicht mehr stark positiv, sondern praktisc
 
 Dieses Umschwenken der Regressionskoeffizienten kann *nicht* passieren,
 wenn der Effekt "echt", also kausal, ist. 
-Handelt es sich aber um "nicht echte", also nicht-kausale Zusammenhänge,
-so können sich die Modellkoeffizienten dramatisch verändern (auch das Vorzeichen ändern^[das nennt man dann *Simpsons Paradox*]),
+Handelt es sich aber um "nicht echte", also nicht-kausale Zusammenhänge, um Scheinzusammenhänge also,
+so können sich die Modellkoeffizienten dramatisch verändern (sogar das Vorzeichen kann wechseln^[das nennt man dann *Simpsons Paradox*]),
 wenn man das Modell verändert, also Variablen hinzufügt oder wegnimmt.
 
 Wenn man die kausalen Abhängigkeiten nicht kennt,
@@ -1203,7 +1243,7 @@ Die Frage ist nur: macht es Sinn?
 Hier sind einige Richtlinien, die helfen, welche Prädiktoren (und wie viele) man in ein Modell aufnehmen sollte [@gelman_regression_2021, S. 199f]:
 
 1. Man sollte alle Prädiktoren aufnehmen, von denen anzunehmen ist, dass Sie Ursachen für die Zielvariablen sind
-2. Bei Prädiktoren mit starken (absolunte) Effekten kann es Sinn machen, ihre Interaktionseffekte auch mit in das Modell aufzunehmen
+2. Bei Prädiktoren mit starken (absolute) Effekten kann es Sinn machen, ihre Interaktionseffekte auch mit in das Modell aufzunehmen
 3. Prädiktoren mit kleinem Schätzbereich (`95 CI`) sollten tendenziell im Modell belassen werden, da sie die Modellgüte verbessern
 
 
@@ -1225,7 +1265,7 @@ Also gut, das Honorar ist phantastisch, Sie sind jung und brauchen das Geld.$\sq
 Um die Güte Ihrer Vorhersagen zu prüfen, teilt Ihr Chef den Datensatz in zwei zufällige Teile.
 
 
->    🧔‍♂️ Ich teile den Datensatz `mariokart` zufällig in zwei Teile. Den ersten Teil kannst du nutzehn, um Modelle zu berechnen ("trainieren") und ihre Güte zu prüfen. Den Teil nenne ich "Trainingssample", hört sich cool an, oder? Im Train-Sample ist ein Anteil (`frac`tion) von 70% der Daten, okay? Die restlichen Daten behalte ich. Wenn du ein gutes Modell hast, kommst du und wir berechnen die Güte deiner Vorhersagen.
+>    🧔‍♂️ Ich teile den Datensatz `mariokart` zufällig in zwei Teile. Den ersten Teil kannst du nutzehn, um Modelle zu berechnen ("trainieren") und ihre Güte zu prüfen. Den Teil nenne ich "Trainingssample", hört sich cool an, oder? Im Train-Sample ist ein Anteil (`frac`tion) von 70% der Daten, okay? Die restlichen Daten behalte ich. Wenn du ein gutes Modell hast, kommst du und wir berechnen die Güte deiner Vorhersagen in dem verbleibenden Teil, die übrigen 30% der Daten. Diesen Teil nennen wir Test-Sample, alles klar?
 
 
 ```{r mariokart-train-test}
@@ -1250,7 +1290,7 @@ Alternativ können Sie sie auch von diesem Pfad von einem Rechner in der Cloud h
 mariokart_train <- read.csv("https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/mariokart_train.csv")
 ```
 
-Dann importieren wir auf gleiche Wiese Test-Sample in R:
+Dann importieren wir auf gleiche Weise Test-Sample in R:
 
 ```{r}
 mariokart_test <- read.csv("https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/mariokart_test.csv")
@@ -1354,7 +1394,7 @@ Da sind Probleme vorprogrammiert.
 Das ist so als würde die Lehrerin rufen: "Schorsch, komm her!". 
 Dabei gibt es zwei Schorsche in der Klasse: Den Müllers Schorsch und den Meiers Schorsch.
 Sonst kommen beide, was die Lehrerin nicht will.
-Die Lehrerin müsste also rufen: "Schorsch Müller (oder Meier), komm her!".
+Die Lehrerin müsste also rufen: "Müller Schorsch, komm her!".
 Genau dasselbe machen wir, wenn wir das R-Paket eines Befehls mitschreiben, sozusagen den "Nachnamen" des Befehls:
 `paketname::funktion` ist wie `Müller::Schorsch`. 
 In unserem Fall also: `performance::rmse`
@@ -1435,7 +1475,7 @@ rsq(data = mariokart_test,
     estimate = lm_allin_predictions)  # Ihre Vorhersage
 ```
 
->   🧔‍♂️ Nicht berauschend, aber immerhin!
+>   🧔‍♂️ 17%, nicht berauschend, aber immerhin!
 
 
 :::{.callout-note}
@@ -1457,8 +1497,28 @@ bietet es sich, die Modellgüte in einem neuen Datensatz, als einem Test-Sample,
 Wenn Sie eine robuste Schätzung der Güte Ihres Modells erfahren möchten,
 bietet sich folgendes Vorgehen an.
 
-1. Berechnen Sie Ihr Modell in einem Teil Ihres Datensatzes (dem sog. *Validation-Sample*).
-2. Prüfen Sie die Modellügte in einem zweiten Teil Ihres Datensatzes (dem sog. *Assessment-Sample*)
+
+1. Teilen Sie Ihren Datensatz (das Train-Sample) in zwei Teile: Das sog. Validation-Sample und das sog. Assessment-Sample.
+2. Berechnen Sie Ihr Modell im ersten Teil Ihres Datensatzes (dem *Validation-Sample*).
+3. Prüfen Sie die Modellgüte im zweiten Teil Ihres Datensatzes (dem  *Assessment-Sample*)
+
+<!-- Das ist ein Hauf von "Samples".  -->
+<!-- Zur Verdeutlichung zeigt @fig-samples Ihnen noch mal die Unterteilung dieser Stichproben-Arten. -->
+
+
+
+<!-- ```{mermaid} -->
+<!-- %%| fig-cap: Unterteilung dieser Stichproben-Arten -->
+<!-- %%| label: fig-samples -->
+<!-- graph TD -->
+<!--   D[Daten] --> Train[Train-Sample] -->
+<!--   D[Daten] --> Test[Test-Sample] -->
+<!--   Train --> V[Validation-Sample] -->
+<!--   Train --> A[Assessment-Sample] -->
+<!-- ``` -->
+
+
+
 
 Diese Aufteilung Ihres Datensatzatzes in diese zwei Teile nennt man auch *Validierungsaufteilung* (validation split); Sie können sie z.B. so bewerkstelligen:
 
@@ -1614,5 +1674,12 @@ Nutzen Sie diese Fallstudien, um sich intensiver mit der Entwicklung eines Progn
 - [lm-mario2](https://datenwerk.netlify.app/posts/lm-mario2/lm-mario2.html)
 - [lm-mario3](https://datenwerk.netlify.app/posts/lm-mario3/lm-mario3.html)
 - [ausreisser1](https://datenwerk.netlify.app/posts/ausreisser1/ausreisser1.html)
+
+## Literatur
+
+Wenn es ein Standardwerk für Regressionsanalyse geben könnte, dann vielleicht das neueste Buch von Andrew Gelman, einer der bekanntesten Statistiker [@gelman_regression_2021-1].
+Sein Buch ist für Sozialwissenschaftler geschrieben, also nicht für typische Nerds, hat aber deutlich mehr Anspruch als dieses Kapitel.
+
+
 
 ## Literatur

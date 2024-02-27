@@ -52,14 +52,15 @@ ggplot2::theme_set(theme_minimal())
 
 
 
+## Warum Sie die Streuung Ihrer Daten kennen sollten
 
-## Prof. Weiss-Ois hat eine Idee {#sec-weiss-ois}
+### Prof. Weiss-Ois hat eine Idee {#sec-weiss-ois}
 
 
 :::: {.columns}
 ::: {.column width="45%"}
 
-### Was er sagt
+#### Was er sagt
 
 !["Ich habe eine Schlankheitspille entwickelt, die pro Einnahme das Gewicht im Schnitt um 1kg reduziert!"](img/teacher.png){width="25%"}
 
@@ -72,7 +73,7 @@ ggplot2::theme_set(theme_minimal())
 
 
 ::: {.column width="45%"}
-### Was er NICHT sagt
+#### Was er NICHT sagt
 !["Allerdings streuten die Werte der Gewichtsveränderung um 10kg um den Mittelwert herum."](img/teacher.png){width="25%"}
 
 :::
@@ -84,7 +85,7 @@ ggplot2::theme_set(theme_minimal())
 
 
 :::{exr-weisoiss2}
-Würden Sie die Pille von Prof. Weiss-Ois nehmen?
+Würden Sie die Pille von Prof. I. Ch. Weiss-Ois nehmen?^[Ich auf keinen Fall.]
 
 a) ja
 b) nein
@@ -98,7 +99,25 @@ Wie sehr die Werte eines Modells streuen, ist eine wichtige Information.$\square
 :::
 
 
+### Wie man seine Kuh über den Fluss bringt
 
+Treffen sich zwei Bauern, Fritz Furchenzieher und Karla Kartoffelsack.
+Fritz will mit seiner Kuh einen Fluss überqueren, nur kann die Kuh nicht schwimmen^[ob es Fritz kann, ist nicht überliefert.]. 
+
+
+>    🧑‍🌾 (Fritz): Sag mal, Karl, ist der Fluss tief?
+
+>    👩‍🌾 (Karla): Nö, im Schnitt nur einen Meter.
+
+
+Also führt Fritz seine Kuh durch den Fluss, leider kam die Kuh nicht am anderen Ufer an, s. @fig-fluss-tief.
+
+![Der Fluss ist im Schnitt nur einen Meter tief, trotzdem ist die Kuh ersoffen.](img/fluss-tief.png){#fig-fluss-tief}
+
+
+>    👩‍🌾 (Karla): Übrigens, Lagemaße sagen nicht alles, Fritz.
+
+>    🧑‍🌾 (Fritz): Läuft die Kuh durch den Fluss, kann sie schwimmen oder 's ist Schluss.
 
 
 
@@ -113,6 +132,7 @@ Wie sehr die Werte eines Modells streuen, ist eine wichtige Information.$\square
 
 
 @fig-streuung zeigt ein einfaches Modell (Mittelwert) mit wenig Streuung (links) vs. ein einfaches Modell mit viel Streuung (rechts).
+Links ist die Streuung der Schlankheitspille *Dicktableitin* und rechts von der Schlankheitspille *Pfundafliptan* abgetragen.
 
 ```{r viel-wenig-streuung}
 #| echo: false
@@ -137,8 +157,8 @@ d_sum <-
   summarise(avg = mean(value))
 
 group_names <-
-  c(x1 = "wenig Streuung",
-    x2 = "viel Streuung")
+  c(x1 = "wenig Streuung:\nDiktableibtin",
+    x2 = "viel Streuung:\nPfundafliptan")
 
 d %>% 
   ggplot(aes(x = id, y = value)) +
@@ -166,7 +186,7 @@ Bei einem Modell mit *viel* Streuung ist der Modellfehler $e$ (im Vergleich dazu
 :::{#exm-weiss-ois}
 ### Daten zur Schlankheitskur von Prof. Weiss-Ois
 In @fig-streuung sind die Daten zu der Gewichtsveränderung nach Einnahme von "Schlankheitspillen" zweier verschiedener Präparate. 
-Wie man sieht unterscheidet sich die typische (vorhergersagte) Gewichtsveränderung zwischen den beiden Präparaten kaum. Die Streuung allerdings schon.
+Wie man sieht unterscheidet sich die typische (vorhergesagte) Gewichtsveränderung zwischen den beiden Präparaten kaum. Die Streuung allerdings schon.
 Links sieht man die Gewichtsveränderungen nach Einnahme des Präparats "Dickableibtin extra mild" (c) und rechts das Präparat von Prof. Weiss-Ois "Pfundafliptan Forte".
 Welches Präparat würden Sie lieber einnehmen?$\square$
 :::
@@ -196,7 +216,7 @@ Das sollten wir ausprobieren.
 
 @fig-fehler-red zeigt, dass die Fehlerbalken *kürzer* werden, wenn wir ein (sinnvolles) komplexeres Modell finden.
 Innerhalb jeder der beiden Gruppen (mit 2 Lenkrädern vs. mit 0 Lenkrädern) 
-sind die Fehlerbalken jeweils im Durchschnitt kürzer (rechtes Teildiagramm) als im Modell ohne Gruppierung (linkes Teildaigramm).^[Aus Gründen der Übersichtlichkeit wurden nur Autos mit Verkaufsgebot von weniger als 100 Euros berücksichtigt und nur Spiele mit 0 oder mit 2 Lenkrädern.]
+sind die Fehlerbalken jeweils im Durchschnitt kürzer (rechtes Teildiagramm) als im Modell ohne Gruppierung (linkes Teildiagramm).^[Aus Gründen der Übersichtlichkeit wurden nur Autos mit Verkaufsgebot von weniger als 100 Euros berücksichtigt und nur Spiele mit 0 oder mit 2 Lenkrädern.]
 
 
 
@@ -207,8 +227,8 @@ sind die Fehlerbalken jeweils im Durchschnitt kürzer (rechtes Teildiagramm) als
 #| fig-cap: Fehlerbalken in einem einfachen und komplexeren Modell
 #| layout-ncol: 2
 #| fig-subcap:
-#|   - "Fehlerbalken im einfachen Modell: Ein Mittelwert"
-#|   - "Fehlerbalken im komplexen Modell: Zwei Mittelwerte"
+#|   - "Fehlerbalken im einfachen Modell: Ein Mittelwert; viel Streuung insgesamt"
+#|   - "Fehlerbalken im komplexen Modell: Zwei Mittelwerte; wenig Streuung in jeder Gruppe"
 data(mariokart, package = "openintro")
 m <-
   mariokart %>%
@@ -263,7 +283,8 @@ m %>%
   labs(color = "wheels") +
   theme(legend.position = "none") +
   geom_label(data = m_sum,
-    aes(label = paste0(wheels, "Räder"), y = total_pr, color = factor(wheels)), x = 3)
+    aes(label = paste0(wheels, " Räder"), y = total_pr, color = factor(wheels)), x = 3) +
+  scale_color_okabeito()
 ```
 
 
@@ -318,7 +339,7 @@ ggplot(d) +
   geom_point(size = 5, alpha = .7, color = "red") +
   geom_segment(aes(x = id, xend = id, y = y, yend = mean(y))) +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  annotate("label", x = 1, y = 0, label = "MW") +
+  annotate("label", x = 1, y = 0, label = "Mittelwert") +
   theme_minimal()
 ```
 
@@ -380,9 +401,7 @@ Normalverteilungen sind recht häufig anzutreffen in der Praxis der Datenanalyse
 Daher lohnt es sich, zu überlegen,
 wie man diese Verteilungen gut zusammenfasst.
 Man kann zeigen, dass eine Normalverteilung sich komplett über ihren *Mittelwert* sowie ihre *Standardabweichung* beschreiben lässt.
-Außerdem gilbt: Sind Ihre Daten normalverteilt, dann sind die Abweichungen vom Mittelwert auch normalverteilt.
-
-
+Außerdem gilt: Sind Ihre Daten normalverteilt, dann sind die Abweichungen vom Mittelwert auch normalverteilt.
 Denn wenn man eine Konstante zu einer Verteilung addiert (bzw. subtrahiert), "verschiebt man den Berg" ja nur zur Seite, ohne seine Form zu verändern, s. @fig-norm-dev.
 
 
@@ -416,7 +435,7 @@ Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist, grob gesagt, 
 
 @fig-var illustriert die Varianz:
 
-1. Man gehe von der Häufigkeitverteilung der Daten aus.
+1. Man gehe von der Häufigkeitsverteilung der Daten aus.
 2. Betrachtet man die Daten als Gewichte auf einer Wippe, so ist der Schwerpunkt der Wippe der Mittelwert.
 3. Man bilde Quadrate für jeden Datenpunkt mit der Kantenlänge, die dem Abstand des Punktes zum Mittelwert entspricht.
 4. Die Quadrate quetscht man jetzt wo nötig in rechteckige Formen (ohne dass sich die Fläche ändern darf) und verschiebt sie, bis sich alle Formen zu einem Rechteck mit Seitenlänge $n$ und $\sigma^2$ anordnen.
@@ -441,7 +460,7 @@ Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist, grob gesagt, 
 
 @fig-mse visualisiert die Varianz für @exm-mae.^[Die Abweichungsquadrate wirken optisch nicht quadratisch, da die X-Achse breiter skaliert dargestellt ist als die Y-Achse. Trotzdem sind es Quadrate, nur nicht optisch, wenn Sie wissen, was ich meine...]
 
-Links sind die *Abweichungsqudrate* dargestellt, rechts die Varianz als "*typisches Abweichungsquadrat*".
+Links sind die *Abweichungsquadrate* dargestellt, rechts die Varianz als "*typisches Abweichungsquadrat*".
 
 :::{.callout-note}
 Die Varianz ist also ein Maß, das die typische Abweichung der Beobachtungen  vom Mittelwert in eine Zahl fasst.$\square$
@@ -548,8 +567,7 @@ Natürlich mit dem Ziel, dass Ihre Firma mehr von dem Zeug verkaufen kann.
 Zunächst betrachten Sie die Streuung in den Verkaufspreisen:
 
 ```{r}
-library(easystats)  # Das Paket muss installiert sein
-mariokart <- data_read("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 
 m <-
   mariokart %>%
@@ -573,7 +591,7 @@ m_summ %>% print_md()
 
 
 
-Statistiken sind ja schön ... aber Bilder sind auch gut, s. @fig-var.
+Statistiken sind ja schön ... aber Bilder sind auch gut, s. @fig-var. $\square$
 
 
 ```{r}
@@ -633,7 +651,7 @@ mariokart %>%
             fill = "red")
 ```
 
-$\square$
+
 :::
 
 
@@ -659,7 +677,7 @@ $${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right
 
 :::{#def-var}
 ### Varianz
-Die Varianz ($s^2, \sigma^2$) ist definiert als der Mittelwert der quadrierten Abweichungen (vom Mittelwert).$\square$
+Die Varianz ($s^2, \sigma^2$) ist definiert als der Mittelwert der quadrierten Abweichungen, $dy_i^2$, (vom Mittelwert).$\square$
 :::
 
 
@@ -694,7 +712,7 @@ Durch das Wurzelziehen besitzt die Standardabweichung wieder in etwa die gleiche
 
 
 Aus einem Modellierungsblickwinkel kann man die SD definieren als die Wurzel von MSE.
-Dann nennt man sie *Root Mean Squared Error* (RMSE): $rmse = \sqrt{mse}$.
+Dann nennt man sie *Root Mean Squared Error* (RMSE): $rmse := \sqrt{mse}$.
 
 
 :::{.callout-note}
@@ -727,9 +745,8 @@ Ihr Job als Datenanalyst ist anstrengend, aber auch mitunter interessant. So auc
 Bevor Sie nach Hause gehen, möchten Sie noch eine Sache anschauen.
 In einer früheren Analyse (s. @fig-fehler-red) fanden Sie heraus,
 dass die Fehlerbalken kürzer werden, wenn man ein geschickteres und komplexeres Modell findet. 
-
 Das wollen Sie natürlich prüfen.
-Sie überlegen: "Okay, ich will ein einfaches Modell, in dem der Mittelwert das Modell des Verkaufpreis sein soll."
+Sie überlegen: "Okay, ich will ein einfaches Modell, in dem der Mittelwert das Modell des Verkaufspreis sein soll."
 
 Das spezifizieren Sie so:
 
@@ -810,11 +827,13 @@ Mit dem R-Paket `ggpubr` (Funktion `gghistogram`) lässt sich die Verteilung lei
 
 gghistogram(mariokart2, x = "total_pr", 
             add = "mean",  # Mittelwert wird hinzugefügt
-            add.params = list(color = "blue", size = 3)) # Schnickschnack zur Verschönerung
+            add.params = list(color = okabeito_colors()[1], size = 3))  +# Schnickschnack zur Verschönerung
+  annotate("label", x=47, y = 0, label = "Mittelwert")
 
 gghistogram(mariokart2, x = "abw",
             add = "mean",  # Mittelwert wird hinzugefügt
-            add.params = list(color = "blue", size = 3))
+            add.params = list(color =  okabeito_colors()[1], size = 3))  +# Schnickschnack zur Verschönerung
+  annotate("label", x= 0, y = 0, label = "Mittelwert")
 ```
 
 
@@ -869,8 +888,8 @@ d_sum <-
 
 d %>% 
   ggplot() +
-  geom_density(aes(x = groesse), color = "#E69F00FF") +
-  geom_density(aes(x = groesse_zentriert), color = "#56B4E9FF") +
+  geom_density(aes(x = groesse), color = "#E69F00FF", size = 2) +
+  geom_density(aes(x = groesse_zentriert), color = "#56B4E9FF", size = 2) +
   theme_minimal() +
   geom_vline(data = d_sum,
              aes(xintercept = MW),
@@ -950,7 +969,7 @@ plots(p1, p_ad, p2, n_rows = 3)
 ```
 
 
-Wir fassen unsere Schritte unserer Umrechnung ("Transformation") zusammen:
+Wir fassen die Schritte unserer Umrechnung ("Transformation") zusammen wie in einem Kochrezept:
 
 1. Nimm die Verteilung der Verkaufspreise
 2. Berechne die Abweichungen vom mittleren Verkaufspreis (Differenz Mittelwert und jeweiliger Verkaufspreis)
@@ -977,14 +996,13 @@ Das ist vernünftig, denn die MAA ist anschaulicher und damit nützlicher als di
 
 Warum sollte man überhaupt ein unanschauliches Maß wie die Varianz verwenden? 
 Wenn es nur um deskriptive Statistik geht, braucht man die Varianz (oder die SD) nicht unbedingt.
-
 Gründe, warum Sie die Varianz (bzw. SD) kennen und nutzen sollten, sind:^[Ich wollte noch hinzufügen, dass die Varianz eng verknüpft mit der linearen Algebra, aber ich war nicht sicher, ob das Argument allgemein überzeugen würde.]
 
 - Die SD ist sehr nützlich zur Beschreibung der Normalverteilung
 - Die Varianz wird häufig verwendet bzw. in Forschungsarbeiten berichtet, also müssen Sie die Varianz kennen.
 
 
-Liegen Exremwerte vor, kann es vorteilhafter sein, den IQR vorzuziehen gegenüber Mittelwert basierten Streuungsmaßen (MAA, Varianz, SD).
+Liegen Extremwerte vor, kann es vorteilhafter sein, den IQR vorzuziehen gegenüber Mittelwert basierten Streuungsmaßen (MAA, Varianz, SD).
 
 
 ## Aufgaben
@@ -1002,6 +1020,17 @@ Liegen Exremwerte vor, kann es vorteilhafter sein, den IQR vorzuziehen gegenübe
 
 Schauen Sie sich auch mal auf [Datenwerk](https://datenwerk.netlify.app/) die Aufgaben zu  dem Tag [variability](https://datenwerk.netlify.app/#category=variability) an.
 
+
+## Literaturhinweise
+
+
+Allen Downey [-@downey_probably_2024] stellt in seinem vergnüglich zu lesenden Buch eine kurzweilige Einführung in die Statistik vor;
+auch Streuungsmaße haben dabei einen Auftritt.
+Wer mehr "Lehrbuch-Feeling" sucht, wird bei @cetinkaya-rundel_introduction_2021-1 fündig (das Buch ist online frei verfügbar).
+Es ist kein Geheimnis, dass Streuungsmaße keine ganz neuen Themen in der Statistik sind. Aber hey, Oldie is Goldie, ohne Streuungsmaße geht's nicht.
+Jedenfalls werden Sie in jedem Statistik-Lehrbuch,
+dass Sie in der Bib (oder sonstwo) aus dem Regal ziehen, fündig werden zu diesem Thema.
+Die Bücher unterscheiden sich meist "nur" in ihrem Anspruch bzw. der didaktischen Aufmachung; für alle ist da was dabei.
 
 
 ## Literatur

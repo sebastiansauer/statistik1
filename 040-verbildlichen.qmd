@@ -73,7 +73,7 @@ theme_set(theme_minimal())
 
 :::
 
->   🥷 Wir müssen die Galaxis verteidigen, Kermit
+>   🥷 Wir müssen die Galaxis retten, Kermit.
 
 >   🐸 *Schlock*
 
@@ -109,6 +109,10 @@ Es zeigt 4 Datensätze, in denen die zentralen Statistiken fast identisch sind,
 also Mittelwerte, Streuungen, Korrelationen.
 Aber die Streudiagramme sind grundverschieden.
 Anscombes Beispiel zeigt (zugespitzt): Eine Visualisierung enthüllt, was der Statistik (als Kennzahl) verhüllt bleibt.
+
+:::{.callout-important}
+Statistische Diagramme können Einblicke geben, die sich nicht (leicht) in grundlegenden Statistiken (Kennwerten) abbilden. $\square$
+:::
 
 
 ![Anscombes Quartet: Gleiche statistischen Kennwerte in vier Datensätzen](img/anscombe.png){#fig-dino2}
@@ -350,18 +354,33 @@ mario_n1 <-
   ggplot(aes(y = n, x = cond)) + 
   geom_col() +
   coord_flip() +
-  theme_minimal()
+  theme_minimal() + 
+  labs(title = "horizontale Balekn")
 
 mario_n2 <-
   mariokart |> 
   count(cond) |> 
   ggplot(aes(y = n, x = cond)) + 
   geom_col()   +
-  theme_minimal()
+  theme_minimal() + 
+  labs(title = "vertikale Balekn")
 
 plots(mario_n1, mario_n2)
 ```
 
+
+
+```{r}
+#| label: fig-de1
+#| echo: false
+#| fig-cap: "Balkendiagramm mit dem R-Paket `DataExplorer`"
+library(DataExplorer)
+mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+
+mariokart %>% 
+  select(cond) %>% 
+  plot_bar
+```
 
 Es gibt viele Methoden, sich mit R ein Balkendiagramm ausgeben zu lassen.
 Eine einfache, komfortable ist die mit dem Paket `DataExplorer`,
@@ -403,7 +422,7 @@ mariokart %>%
 ```
 
 
-Die Syntax ist in @lst-de1 abgedruckt. Übersetzen wir die Syntax ins Deutsche:
+Die Syntax ist in @lst-de1 abgedruckt^[Zur Erinnerung: ` %>% ` nennt man die "Pfeife und lässt sich als "und dann" übersetzen, vgl. @sec-pipe.] . Übersetzen wir die Syntax ins Deutsche:
 
 ```
 Nimm den Datensatz mariokart *und dann*
@@ -415,19 +434,6 @@ Nimm den Datensatz mariokart *und dann*
 ### Spalten wählen für das Balkendiagramm
 Hätten wir andere Spalten ausgewählt, so würde das Balkendiagramm die Verteilung jener Variablen zeigen. Ja, Sie können auch mehrere Variablen auf einmal auswählen. Probieren Sie das doch mal aus!
 :::
-
-
-```{r}
-#| label: fig-de1
-#| echo: false
-#| fig-cap: "Balkendiagramm mit dem R-Paket `DataExplorer`"
-library(DataExplorer)
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
-
-mariokart %>% 
-  select(cond) %>% 
-  plot_bar()
-```
 
 <!-- So können Sie  -->
 
@@ -596,7 +602,7 @@ Erstellen Sie das Diagramm @fig-de-hist-density, rechtes Teildiagramm!^[Grob ges
 
 #### Eigenschaften von Verteilungen
 
-Verteilungen unterscheiden sich z.B. einerseits in ihrem "typischen" oder "mittleren" Wert^[vgl. @sec-lage] und anderseits in ihrer Streuung^[vgl. ]
+Verteilungen unterscheiden sich z.B. einerseits in ihrem "typischen" oder "mittleren" Wert^[vgl. @sec-lage] und anderseits in ihrer Streuung^[vgl. @sec-streuung.]
 
 (Diagramme von) Verteilungen können symmetrisch oder schief (nicht symmetrisch) sein, s. @fig-symm-schief.
 
@@ -622,7 +628,7 @@ ggplot(NULL) +
 ```
 
 
-@fig-plot-distribs zeigt verschiedene Formen von Verteilungen.
+@fig-plot-distribs zeigt verschiedene Formen von Verteilungen. "Bimodal" meint "zweigipflig" und "multimodal" entsprechend "mehrgipflig".
 
 ```{r}
 #| echo: false
@@ -657,8 +663,14 @@ Beispiele für normalverteilte Variablen sind Körpergröße von Männern oder F
 
 
 
-Die Normalverteilung ist von hoher Bedeutung, da sich  diese Verteilung unter (recht häufigen) Bedingungen zwangsläufig ergeben muss: 
-Wenn sich eine Variable als Summe mehrerer, unabhängiger, etwa gleich starker Summanden, dann kann man erwarten, dass sich diese Variable normalverteilt.
+Die Normalverteilung ist von hoher Bedeutung, da sich  diese Verteilung unter (recht häufigen) Bedingungen zwangsläufig ergeben muss.
+
+:::{#def-normal}
+### Entstehung einer Normalverteilung
+
+Wenn sich eine Variable $X$ als Summe mehrerer, unabhängiger, etwa gleich starker Summanden, dann kann man erwarten, dass sich diese Variable $X$ tendenziell normalverteilt. $\square$
+:::
+
 Dieses Phänomen kann man gut anhand des [Galton-Bretts](https://www.youtube.com/watch?v=3m4bxse2JEQ) veranschaulichen.
 
 
@@ -680,7 +692,7 @@ Eine Normalverteilung lässt sich exakt beschreiben anhand zweier Parameter: ihr
 
 
 
-@fig-normal-interactive zeigt  interaktive Beispiele für Normalverteilung. Wählen Sie einfach Mittelwert ($\mu$) und Streuung ($\sigma$). [Quelle](https://observablehq.com/@mcmcclur/the-normal-model)
+@fig-normal-interactive zeigt  interaktive Beispiele für Normalverteilung. Wählen Sie einfach Mittelwert ($\mu$) und Streuung ($\sigma$) anhand der Schieberegler. [Quelle](https://observablehq.com/@mcmcclur/the-normal-model)
 
 
 
@@ -779,11 +791,12 @@ mariokart %>%
 ```
 
 Tatsächlich: Es findet sich ein Zusammenhang zwischen der Tatsache, ob dem versteigerten Produkt ein Foto bei lag und ob es neuwertig oder gebraucht war (@fig-zshg-nom1, links).
-Bei neuen Spielen war fast immer (ca. 90%) ein Foto dabei. Bei
-gebrauchten Spiel immerhin bei gut der Hälfte der Fälle.
+Bei neuen Spielen war fast immer (ca. 90%) ein Foto dabei; 
+bei gebrauchten Spielen immerhin bei gut der Hälfte der Fälle.
 
 Anders sieht es aus für die Frage, ob ein (oder mehrere) Lenkräder dem Spiel beilagen (oder nicht) in Zusammenhang mit der Fotofrage Hier gab es fast keinen Unterschied zwischen neuen und alten Spielen, was die Frage nach "Foto des Produkts dabei" betraf (@fig-zshg-nom1, rechts),
 der Anteil betrug jeweils ca. 70%.
+Das zeigt, dass es keinen Zusammenhang zwischen Foto und Neuwertigkeit des Spiels gibt (laut unseren Daten).
 
 Anders gesagt: Unterscheiden sich die "Füllhöhe" in den Diagrammen, so gibt es einen Unterschied hinsichtlich "Foto ist dabei" zwischen den beiden Gruppen (linker vs. rechter Balken).
 Unterscheiden sich die Anteile in den Gruppen (neuwertige vs. gebrauchte Spiele), so spielt z.B. die Variable "Foto dabei" offenbar eine Rolle. Dann hängen Neuwertigkeit und "Foto dabei" also zusammen!
@@ -796,7 +809,7 @@ s. @fig-de-bar-filled.
 #| fig-cap: "Ein gefülltes Balkendiagramm zur Untersuchung eines Zusammenhangs zwischen nominalskalierter Variablen"
 mariokart %>% 
   select(cond, stock_photo) %>% 
-  plot_bar(by = "cond")
+  plot_bar(by = "cond")  # aus dem Paket DataExplorer
 ```
 
 
@@ -812,15 +825,18 @@ sonst sind die Zusammenhänge nicht mehr so gut zu erkennen.$\square$
 
 Den (etwaigen) Zusammenhang zweier metrischer Variablen kann man mit einem *Streudiagramm* visualisieren (engl. scatterplot). 
 @fig-streu1 links untersucht den Zusammenhang des Einstiegpreises (X-Achse) und Abschlusspreises (Y-Achse) von Geboten bei Versteigerungen des Computerspiels Mariokart.
-In dem Diagramm ist eine Ellipse ergänzt, um die Art des Zusammenangs besser zu verdeutlichen: Es handelt sich um einen *gleichsinnigen* (positiven) Zusammenhang:
+In dem Diagramm ist eine "Trendgerade" (Regressionsgerade), um die Art des Zusammenhangs besser zu verdeutlichen.
+Die Trendgerade steigt an (von links nach recht). Daraus kann man schließen: Es handelt sich um einen *gleichsinnigen* (positiven) Zusammenhang:
 Je höher der Startpreis, desto *höher* der Abschlusspreis, zumindest tendenziell.
-Außerdem ist eine "Trendgerade" (Regressionsgerade) in blau eingezeichnet.
 Diese Gerade liegt "mittig" in den Daten (wir definieren dies später genauer).
 Diese Trendgerade gibt Aufschluss über "typische" Werte: Welcher Y-Wert ist "typisch" für einen bestimmten X-Wert?
 
 
 @fig-streu1 rechts untersucht den Zusammenhang zwischen Anzahl der Gebote (X-Achse) und Abschlusspreises (Y-Achse).
 Es handelt sich um einen negativen Zusammenhang: Je mehr Gebote, desto *geringer* der Abschlusspreis.
+Das erkennt man an der sinkenden Trendgeraden.
+
+Die Ellipse zeigt an, wie eng die Daten um die Trendgerade streuen. Daraus kann man ableiten, wie stark der Absolutwert des Zusammenhangs ist, vgl. @fig-cors.
 
 
 
@@ -859,6 +875,61 @@ mariokart %>%
 ```
 
 
+:::{#def-lin-zshg}
+### Linearer Zusammenhang
+
+Lässt sich die Beziehung zwischen zwei Variablen mit einer Gerade visualisieren, so spricht man von einem linearen Zusammenhang.
+Ändert man eine der beiden Variablen um einen bestimmten Wert (z.B. 1), so ändert sich die andere um einen proportionalen Weg (z.B. 0.5). $\square$
+:::
+
+Natürlich könnte man auch nicht-lineare Zusammenhänge untersuchen,
+aber der Einfachheit halber konzentrieren wir uns mit linearen; 
+Beispiele für nicht-lineare Zusammenhänge sind in @fig-nonlinear zu sehen.
+
+
+```{r}
+#| label: fig-nonlinear
+#| fig-cap: "Beispiele nichtlinearer Zusammenhänge"
+#| echo: false
+
+data <- read.csv("daten/nonlinear_datasets.csv")
+
+p1 <- ggplot(data, aes(x=x1, y=y1)) + geom_point() + ggtitle("Quadratischer Zusammenhang") + theme_minimal()
+p2 <- ggplot(data, aes(x=x2, y=y2)) + geom_point() + ggtitle("Exponenzieller Zusammenhang") + theme_minimal()
+p3 <- ggplot(data, aes(x=x3, y=y3)) + geom_point() + ggtitle("Sinus-Zusammenhang") + theme_minimal()
+p4 <- ggplot(data, aes(x=x4, y=y4)) + geom_point() + ggtitle("Logarithmischer Zusammenhang") + theme_minimal()
+
+plots(p1, p2, p3, p4, n_rows = 2, tags = "A")
+```
+
+
+:::{#def-zshg}
+### Richtig und Stärke eines Zusammenhang
+
+Gleichsinnige (positive) Zusammenhänge erkennt man an aufsteigenden Trendgeraden;
+gegensinnigen (negative) Zusammenhänge an absteigenden Trendgeraden:
+
+- ➕  : ⬆️
+- ➖ :   ⬇️
+
+Starke Zusammenhänge erkennt man an schmalen Ellipsen ("Baguette");
+schwache Zusammenhänge an breiten Ellipsen ("Torte"):
+
+- schwach: 🥮 
+- stark: 🥖
+
+$\square$
+:::
+
+
+
+
+
+
+
+
+
+
 
 @fig-cors bietet einen Überblick über verschiedene Beispiele von Richtung und Stärke von Zusammenhängen.
 
@@ -866,7 +937,7 @@ mariokart %>%
 #| message: false
 #| echo: false
 #| label: fig-cors
-#| fig-cap: "Überblick über verschiedene Beispiele von Streudiagrammen"
+#| fig-cap: "Lineare Zusammenhänge verschiedener Stärke und Richtung"
 #| out-width: "100%"
 source("funs/plot-different-cors.R")
 fig_cors <- plot_different_cors(plot_it = FALSE)
@@ -875,7 +946,7 @@ fig_cors
 
 
 :::{.xsmall}
-Quelle: Aufbauend auf FOM/ifes, Norman Markgraf
+Quelle: Aufbauend auf FOM/ifes, Autor: Norman Markgraf
 :::
 
 
@@ -911,36 +982,6 @@ Umgekehrt geht ein *positiver* Trend mit einer *ansteigenden* Trendgerade einher
 Zweitens erkennt man, dass *starke* Zusammenhänge mit einer *schmaler* Ellipse einhergehen
 und *schwache* Zusammenhänge mit einer *breiten* Ellipse einhergehen.
 
-
-
-
-
-:::{#def-zshg}
-### Richtig und Stärke eines Zusammenhang
-
-Gleichsinnige (positive) Zusammenhänge erkennt man an aufsteigenden Trendgeraden;
-gegensinnigen (negative) Zusammenhänge an absteigenden Trendgeraden:
-
-- ➕  : ⬆️
-- ➖ :   ⬇️
-
-Starke Zusammenhänge erkennt man an schmalen Ellipsen ("Baguette");
-schwache Zusammenhänge an breiten Ellipsen ("Torte"):
-
-- schwach: 🥮 
-- stark: 🥖
-
-$\square$
-:::
-
-
-
-:::{.callout-caution}
-Ein Zusammenhang der Art "je mehr X, desto mehr Y" ist *linear*. 
-Lineare Zusammenhänge erkennt man im Diagramm an einer Geraden bzw. inwieweit sich die Punkte an einer Geraden "anschmiegen".
-Natürlich könnte man auch nicht-lineare Zusammenhänge untersuchen,
-aber der Einfachheit halber begnügen wir uns mit linearen.$\square$
-:::
 
 
 
@@ -1103,7 +1144,6 @@ mariokart %>%
 mariokart %>% 
   filter(total_pr < 100) %>% 
   ggpubr::ggboxplot(., x = "stock_photo", y = "total_pr")
-
 ```
 
 
@@ -1140,11 +1180,11 @@ hist_to_box
 
 Schauen wir uns die "Anatomie" des Boxplots näher an:
 
-1. Der *dicke Strich* in der Box zeigt den Median der Verteilung 
-2. Die *Enden der Box* zeigen das 1. Quartil bzw. das 3. Quartil. Damit zeigt die Breite der Box die Streuung der Verteilung an, genauer gesagt die Streuung der inneren 50% der Beobachtungen. Je breiter die Box, desto größer die Streuung. Die Breite der Box nennt man auch den *Interquartilsabstand* (IQR), da er die Strecke zwischen den Quartilen bemisst.
+1. Der *dicke Strich* in der Box zeigt den Median der Verteilung, vgl. @sec-median. 
+2. Die *Enden der Box* zeigen das 1. Quartil (41) bzw. das 3. Quartil (54). Damit zeigt die Breite der Box die Streuung der Verteilung an, genauer gesagt die Streuung der inneren 50% der Beobachtungen. Je breiter die Box, desto größer die Streuung. Die Breite der Box nennt man auch den *Interquartilsabstand* (IQR).
 3. Die "*Antennen*" des Boxplots zeigen die Streuung in den kleinsten 25% der Werte (linke Antenne) bzw. die Streuung der größten 25% der Werte (rechte Antennen). Je länger die Antenne, desto größer die Streuung.
 4. Falls es aber *Extremwerte* gibt, so sollten die lieber einzeln, separat, außerhalb der Antennen gezeigt werden. Daher ist die Antennenlänge auf die 1,5-fache Länge der Box beschränkt. Werte die außerhalb dieses Bereichs liegen (also mehr als das 1,5-fache der Boxlänge von Q3 entfernt sind) werden mittels eines Punktes dargestellt.
-5. Liegt der Median-Strich in der Mitte der Box, so ist die Verteilung *symmetrisch* (bezogen auf die inneren 50% der Werte), liegt der Median-Strich nicht in der Mitte der Box, so ist die Verteilung nicht symmetrisch (*schief*). Gleiches gilt für die Antennenlängen: Sind die Antennen gleich lang, so ist der äußere Teil der Verteilung symmetrisch, andernfalls schief.
+5. Liegt der Median-Strich in der Mitte der Box, so ist die Verteilung *symmetrisch* (bezogen auf die inneren 50% der Werte), liegt der Median-Strich nicht in der Mitte der Box, so ist die Verteilung nicht symmetrisch (d.h. sie ist *schief*). Gleiches gilt für die Antennenlängen: Sind die Antennen gleich lang, so ist der äußere Teil der Verteilung symmetrisch, andernfalls schief.
 
 
 :::{#exm-Boxplots}
@@ -1199,6 +1239,8 @@ so dass wir die Belastbarkeit dieses Ergebnisses skeptisch betrachten sollten.$\
 
 
 
+Übrigens bezeichnet Sie Ihre Chefin nur noch als "Datengott".
+
 
 
 ## So lügt man mit Statistik
@@ -1224,8 +1266,6 @@ d <- tibble(
   Jahr = c(1, 2, 3, 4, 5),
   Umsatz = c(100, 98, 94, 93, 70)
 )
-
-
 
 ggplot(d, aes(Jahr, Umsatz)) +
   geom_point(alpha = .7) +
@@ -1268,8 +1308,6 @@ ggplot(d, aes(Jahr, Umsatz)) +
   geom_line() +
   theme_minimal()
 
-
-
 ggplot(d, aes(Jahr, Umsatz)) +
   geom_point(alpha = .7) +
   geom_line() +
@@ -1283,14 +1321,14 @@ ggplot(d, aes(Jahr, Umsatz)) +
 ### Scheinkorrelation
 
 
-@messerli_chocolate_2012 berichtet von einem Zusammenhang von Schokoloadenkonsum und Anzahl von Nobelpreisen (Beobachtungseinheit: Länder), s. @fig-choc.
+@messerli_chocolate_2012 berichtet von einem Zusammenhang von Schokoladenkonsum und Anzahl von Nobelpreisen (Beobachtungseinheit: Länder), s. @fig-choc.
 Das ist doch ganz klar: Schoki futtern macht schlau und Nobelpreise! (?)
 
 ![Schokolodenkonsum und Nobelpreise](img/choc.jpeg){#fig-choc width="75%"}
 
 
 Leider ist hier von einer *Scheinkorrelation* auszugehen: Auch wenn die beiden Variablen *Schokoladenkonsum* und *Nobelpreise* zusammenhängen, heißt das *nicht*, dass die Variable die Ursache und die andere die Wirkung sein muss. 
-So könnte auch eine Drittvariable im Hintergrund die gleichzeitige Ursache von Schokoladenkonsum und Nobelpreise sein, etwa der *allgemeine Entwicklungsstand* des Landes: In höher entwickelten Ländern wird mehr Schokoloade konsumiert und es werden mehr Nobelpreise gewonnen im Vergleich zu Ländern mit geringerem Entwicklungsstand.
+So könnte auch eine Drittvariable im Hintergrund die gleichzeitige Ursache von Schokoladenkonsum und Nobelpreise sein, etwa der *allgemeine Entwicklungsstand* des Landes: In höher entwickelten Ländern wird mehr Schokolade konsumiert und es werden mehr Nobelpreise gewonnen im Vergleich zu Ländern mit geringerem Entwicklungsstand.
 
 
 
@@ -1303,7 +1341,7 @@ So könnte auch eine Drittvariable im Hintergrund die gleichzeitige Ursache von 
 Ein, wie ich finde schlagendes Beispiel zur Stärke von Datendiagrammen ist @fig-vaccine.
 Das Diagramm zeigt die Häufigkeit von Masern, vor und nach der Einführung der Impfung.
 Die Daten und die Idee zur Visualisierung gehen auf @van_panhuis_contagious_2013 zurück.
-Das Diagramm und weitere finden sich in ähnlicher Form imn [Wall Street Journal](http://graphics.wsj.com/infectious-diseases-and-vaccines/).
+Das Diagramm und weitere finden sich in ähnlicher Form im [Wall Street Journal](http://graphics.wsj.com/infectious-diseases-and-vaccines/).
 
 
 ![Häufigkeit von Masern und Impfung in den USA, Lizenz: MIT](img/vaccine.jpg){#fig-vaccine width=75%}
@@ -1315,7 +1353,7 @@ Das Diagramm und weitere finden sich in ähnlicher Form imn [Wall Street Journal
 
 
 In der "freien Wildbahn" findet man häufig sog. "Tortendiagramme".
-Zwar sind sie beliebt, doch ist [von ihrer Verwendung abzuraten](https://www.data-to-viz.com/caveat/pie.html); vgl. auch [hier](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart).
+Zwar sind sie beliebt, doch ist [von ihrer Verwendung zumeist abzuraten](https://www.data-to-viz.com/caveat/pie.html); vgl. auch [hier](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart).
 
 
 
@@ -1390,11 +1428,6 @@ Weitere Varianten zum Violinenplot mit ggpubr finden sich [hier](https://rpkgs.d
 
 
 
-Sowohl `ggpubr` als auch `DataExplorer` (und viele andere R-Pakete) bauen auf dem R-Paket `ggplot2` auf.
-`ggplot2` ist eines der am weitesten ausgearbeiteten Softwarepakete zur Erstellung von Datendiagrammen.
-Das Buch zur Software (vom Autor von `ggplot2`) ist empfehlenswert [@wickham_ggplot2_2009].
-Eine neue, gute Einführung in Datenvisualisierung findet sich bei @wilke_fundamentals_2019.
-Beide Bücher sind kostenfrei online lesbar.
 
 
 Übrigens sind Modelle - und Diagramme sind Modelle - immer eine Vereinfachung,
@@ -1438,7 +1471,7 @@ Möchte man auf die Kennzahlen verzichten, so nutzt man den Schalter `results.su
 
 Einige Überlegungen zur Farbwahl findet sich [in diesem Post](https://data-se.netlify.app/2023/06/30/farbpaletten/); ausführlichere Erläuterung bietet @wilke_fundamentals_2019, s. [Kap. 4](https://clauswilke.com/dataviz/color-basics.html).
 
-So ist die Farbpalette von [@okabeito] empfehlenswert, da sie auch bei Schwarz-Weiß-Druck und bei Sehschwächen die Farben noch recht gut unterscheiden lässt.
+So ist die Farbpalette von Okabe und Ito [vgl. @ichihara_color_2008] empfehlenswert, da sie auch bei Schwarz-Weiß-Druck und bei Sehschwächen die Farben noch recht gut unterscheiden lässt.
 
 ```{r}
 library(ggokabeito)  # installieren nicht vergessen
@@ -1449,6 +1482,14 @@ mariokart %>%
 ```
 
 
+### Literaturhinweise
+
+
+Sowohl `ggpubr` als auch `DataExplorer` (und viele andere R-Pakete) bauen auf dem R-Paket `ggplot2` auf.
+`ggplot2` ist eines der am weitesten ausgearbeiteten Softwarepakete zur Erstellung von Datendiagrammen.
+Das Buch zur Software (vom Autor von `ggplot2`) ist empfehlenswert [@wickham_ggplot2_2009].
+Eine neue, gute Einführung in Datenvisualisierung findet sich bei @wilke_fundamentals_2019.
+Beide Bücher sind kostenfrei online lesbar.
 
 
 
@@ -1467,7 +1508,7 @@ mariokart %>%
 
 
 
-## Literaturempfehlungen
+## Literaturhinweise
 
 
 @wilke_fundamentals_2019 gibt einen hervorragenden Überblick über praktische Aspekte der Datenvisualisierung; gut geeignet, wenn man mit R arbeitet.

@@ -35,12 +35,20 @@ library(easystats)
 ```
 
 
+```{r libs-hideen}
+library(gt)
+library(ggrepel)
+```
+
+
 ```{r color-theme}
 #| include: false
 theme_set(theme_minimal())
 scale_colour_discrete <- function(...) 
   scale_color_okabeito()
 ```
+
+
 
 
 ### Benötigte Daten
@@ -101,7 +109,7 @@ noten2 %>%
   summarise(mw = mean(y))  # y ist der Punktwert in der Klausur
 ```
 
-Ihre Antwort lautet also: "Im Schnitt haben die Studis bei der letzten Klausur gut 50% der Punkte erzielt. Diesen Wert kannst du erwarten. Solange ich keine genaueren Infos habe, z.B. wieviel du gelernt hast, kann ich dir keine genauere Vorherage machen, sorry!"$\square$
+Ihre Antwort lautet also: "Im Schnitt haben die Studis bei der letzten Klausur gut 70% der Punkte erzielt. Diesen Wert kannst du erwarten. Solange ich keine genaueren Infos habe, z.B. wieviel du gelernt hast, kann ich dir keine genauere Vorhersage machen, sorry!"$\square$
 :::
 
 :::{.callout-note}
@@ -123,9 +131,9 @@ ggplot(noten2) +
 ```
 
 :::{def-nullmodell}
-### Nullmodell
+### Nullmodell (Punktmodell)
 Modelle ohne Prädiktor, Punktmodelle also, kann man so bezeichnen: `y ~ 1`. 
-Da es null Prädiktoren hat, nennt man es auch manchmal "Nullmodell".
+Da das Modell null Prädiktoren hat, nennt man es auch manchmal "Nullmodell".
 :::
 
 Auf Errisch kann man dieses Nullmodell so spezifizieren:
@@ -135,13 +143,13 @@ lm0 <- lm(y ~ 1, data = noten2)
 lm0
 ```
 
-`lm` steht für "lineares Modell", die `0` sagt, dass es keine Prädiktoren gibt.
+`lm` steht für "lineares Modell", die `1` sagt, dass es keine Prädiktoren gibt.
 In dem Fall wird der Mittelwert als Gerade verwendet.
 Der zurückgemeldete Koeffizient `(Intercept)` ist hier der Modell des Punktmodells.
 Da es ein Punktmodell ist, sagt es für alle Beobachtungen (hier Studentis) den gleichen Wert vorher.
 
 Die Regressionsgleichung lautet demnach: `y_pred = 71.08`.
-In Worten: "Wir sagen von jede Beobachtung einen Wert von ca. 71 vorher".
+In Worten: "Wir sagen für jede Beobachtung einen Wert von ca. 71 vorher".
 
 
 ### Vorhersagen mit Prädiktor
@@ -154,9 +162,9 @@ In Worten: "Wir sagen von jede Beobachtung einen Wert von ca. 71 vorher".
 
 Dis Studenti, Toni, entschließt sich dann doch noch, die Lernzeit zu verraten:
 "Okay, also ich hab insgesamt 42 Stunden gelernt, insgesamt."
-Jetzt müssen Sie erstmal nachdenken: "Wie viele Klausurpunkte sag ich vorher, wenn Toni 42 gelernt hat?"
+Jetzt müssen Sie erstmal nachdenken: "Wie viele Klausurpunkte sag ich vorher, wenn Toni 42 Stunden gelernt hat?"
 
-Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. @fig-noten4, links.
+Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. @fig-noten4, a)
 
 
 ```{r}
@@ -184,8 +192,8 @@ Toni ist nicht begeistert von Ihrer Prognose und zieht von dannen.$\square$
 :::
 
 
-Der Trend (im Sinne eines linearen Zusammenhangs) von Lernzeiten und Klausurpunkte ist deutlich zu erkennen.
-Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einzeichnen, s. @fig-noten4.
+Der Trend (im Sinne eines linearen Zusammenhangs) von *Lernzeit* und *Klausurpunkte* ist deutlich zu erkennen.
+Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einzeichnen, s. @fig-noten4, b).
 
 
 ```{r}
@@ -213,14 +221,14 @@ noten2 %>%
   geom_point() +
   geom_vline(xintercept = mean(noten2$x), linetype = "dashed", color = "grey") +  
   geom_hline(yintercept = mean(noten2$y), linetype = "dashed", color = "grey") +   
-  geom_abline(slope = coef(lm1)[2], intercept = coef(lm1)[1], color = "blue", size = 1.5) +
+  geom_abline(slope = coef(lm1)[2], intercept = coef(lm1)[1], color = okabeito_colors()[1], size = 1.5) +
   theme_minimal() +
   annotate("label", x = mean(noten2$x), y = -Inf, 
            label = paste0("MW: ", round(mean(noten2$x))), vjust = "bottom") +
   annotate("label", y = mean(noten2$y), x = -Inf, 
            label = paste0("MW: ", round(mean(noten2$y))), hjust = "left")   +
   annotate("point", x = 42, y = toni_punkte, color = "red",
-           alpha = .7, size = 4) +
+           alpha = .7, size = 5) +
   scale_x_continuous(breaks = c(40, 42, 60, 80, 100)) +
   labs(x = "Lernzeit",
        y = "Klausurpunkte")
@@ -236,9 +244,9 @@ Eine Gerade eignet sich, um einen linearen Trend zusammenzufassen.
 ### Achsenabschnitt und Steigung definieren eine Gerade
 
 Wir verwenden eine Gerade als Modell für die Daten, s. @fig-noten4, rechts.
-Anders gesagt: Wir modellieren die X-Y-Daten (bzw. ihren Zusammenhang) mit einem Geradenmodell.
+Anders gesagt: Wir modellieren die Daten (bzw. deren Zusammenhang) mit einer Geraden.
 
-Ein Geradenmodell ist eine Verallgemeinerung des Punktmodells:
+Ein *Geradenmodell* ist eine Verallgemeinerung des Punktmodells:
 Ein Punktmodell sagt für alle Beobachtungen den gleichen Wert vorher.
 @fig-noten3 und @fig-noten4 stellen ein Punktmodell einem Geradenmodell gegenüber.
 
@@ -246,10 +254,14 @@ In einem Geradenmodell wird nicht mehr (notwendig) für jede Beobachtung die gle
 
 
 :::{#def-gerade}
-Eine Gerade das, was man bekommt, wenn man eine lineare Funktion in ein Koordinationsystem einzeichnet.
-Sie ist definiert durch zwei *Koeffizienten*: Achsenabschnitt (engl. intercept), und Steigung (engl. slope).
+Eine Gerade ist das, was man bekommt, wenn man eine lineare Funktion in ein Koordinatensystem einzeichnet.
+Man kann sie durch durch zwei *Koeffizienten* festlegen: Achsenabschnitt (engl. *intercept*), und Steigung (engl. *slope*).
 Häufig wird (z.B. im Schulunterricht) der Achsenabschnitt mit $t$ und die Steigung mit $m$ bezeichnet: $f(x)=y=\color{blue}[m]x + \color{red}[t]$.
-In der Statistik wird folgende Nomenklatur bevorzugt: $f(x)=\hat{y} = \color{red}{b_0} + \color{blue}{b_1}x$ oder $y = \color{red}{\beta_0} + \color{blue}{\beta_1}x$ .^[Die Nomenklatur mit $b_0, b_1$ hat den Vorteil, dass man das Modell einfach erweitern kann: $b_2, b_3, ...$. Anstelle von $b$ liest man auch oft $\beta$. Griechische Buchstaben werden meist verwendet, um zu zeigen, dass man an einer Aussage über eine Population, nicht nur über eine Stichprobe, machen möchte.] $\square$
+In der Statistik wird folgende Nomenklatur bevorzugt: $f(x)=\hat{y} = \color{red}{b_0} + \color{blue}{b_1}x$ oder $\hat{y}  = \color{red}{\beta_0} + \color{blue}{\beta_1}x$ .^[Die Nomenklatur mit $b_0, b_1$ hat den Vorteil, dass man das Modell einfach erweitern kann: $b_2, b_3, ...$. Anstelle von $b$ liest man auch oft $\beta$. Griechische Buchstaben werden meist verwendet, um zu zeigen, dass man an einer Aussage über eine Population, nicht nur über eine Stichprobe, machen möchte.]
+
+Das "Dach" über y, $\hat{y}$, drückt aus, dass es sich den den geschätzten, bzw. vom Modell vorhergesagten (modellierten) Wert für $y$ handelt, nicht das tatsächliche (empirische) $y$.
+
+$\square$
 :::
 
 
@@ -270,23 +282,23 @@ Je nach Datenlage können sich Regressionsgerade in Steigung oder Achsenabschnit
 
 set.seed(42)
 d1 <- tibble(
-  x = rnorm(50),
-  y1 = x + rnorm(50, mean = 0, sd = .5)
+  x1 = rnorm(50),
+  y1 = 2 * x1 + rnorm(50, mean = 0, sd = .5)
 )
 
 set.seed(3141)
 d2 <- tibble(
-  x = rnorm(50),
-  y1 = x + rnorm(50, mean = 0, sd = .5)
+  x2 = rnorm(50),
+  y2 = -x2 + rnorm(50, mean = 1, sd = .5)
 )
 
-lm1 <- lm(y1 ~ x, data = d1)
+lm1 <- lm(y1 ~ x1, data = d1)
 lm1_coef <- coef(lm1)
-lm2 <- lm(y1 ~ x, data = d2)
+lm2 <- lm(y2 ~ x2, data = d2)
 lm2_coef <- coef(lm2)
 
-cap1 <- paste0("Datensatz 1: b0 = ", round(lm1_coef[1], 2), "; b1 = ", round(lm1_coef[2]), 2)
-cap2 <- paste0("Datensatz 2: b0 = ", round(lm2_coef[1], 2), "; b1 = ", round(lm2_coef[2]), 2)
+cap1 <- paste0("Datensatz 1: b0 = ", round(lm1_coef[1], 2), "; b1 = ", round(lm1_coef[2], 2))
+cap2 <- paste0("Datensatz 2: b0 = ", round(lm2_coef[1], 2), "; b1 = ", round(lm2_coef[2], 2))
 ```
 
 
@@ -299,21 +311,21 @@ cap2 <- paste0("Datensatz 2: b0 = ", round(lm2_coef[1], 2), "; b1 = ", round(lm2
 #|   - Datensatz 1
 #|   - Datensatz 2
 
-ggplot(d1, aes(x, y1)) + 
+ggplot(d1, aes(x1, y1)) + 
   geom_point() +
-  geom_smooth(method = "lm", se = TRUE) +
+  geom_smooth(method = "lm", se = TRUE, color = okabeito_colors()[1]) +
   scale_y_continuous(limits = c(-4, 4)) +
   labs(title = paste0("b0 = ",round(lm1_coef[1], 2), "; b1 = ", round(lm1_coef[2]), 2))
 
-ggplot(d2, aes(x, y1)) + 
+ggplot(d2, aes(x2, y2)) + 
   geom_point() +
-  geom_smooth(method = "lm", se = TRUE) +
+  geom_smooth(method = "lm", se = TRUE, color = okabeito_colors()[1]) +
   scale_y_continuous(limits = c(-4, 4)) +
-  labs(title = paste0("b0 = ",round(lm2_coef[1], 2), "; b1 = ", round(lm2_coef[2]), 2))
+  labs(title = paste0("b0 = ",round(lm2_coef[1], 1), "; b1 = ", round(lm2_coef[2]), 2))
 ```
 
 
-@fig-linfun zeigt ein interaktives Beispiel einer linearen Funktion ([Quelle: Geogebra, Georg Wengler](https://www.geogebra.org/m/vfjW1dZt). Sie können Punkte per Klick/Touch hinzufügen.
+@fig-linfun zeigt ein interaktives Beispiel einer linearen Funktion. Sie können Punkte per Klick/Touch hinzufügen.
 
 
 :::{#fig-linfun}
@@ -350,6 +362,8 @@ Puh, die Antwort wird Toni nicht gefallen ...$\square$
 #| label: fig-beta0
 #| fig-cap: "Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei 0 Lernstunden? (roter Punkt bei x=0)"
 
+lm1 <- lm(y ~ x, data = noten2)
+lm1_b0 <- coef(lm1)[1]
 
 noten2 %>% 
   ggplot(aes(x, y)) +
@@ -360,7 +374,14 @@ noten2 %>%
   theme_minimal() +
   scale_x_continuous(limits = c(0, 100)) +
   scale_y_continuous(limits = c(0, 100)) +
-  annotate("point", x = 0, y = lm1_b0, color = "red", size = 7, alpha = .7)
+  annotate("point", x = 0, y = lm1_b0, color = "red", size = 7, alpha = .7) +
+  annotate("label", x = mean(noten2$x), y = 0, vjust = "bottom",
+           label = "MW Noten") +
+  annotate("label", y = mean(noten2$y), x = 12, vjust = "left",
+           label = "MW Klausurpunkte") +
+  geom_text_repel(data = tibble(x = 0, y = predict(lm1, newdata = tibble(x = 0))), aes(x = x, y = y,), 
+                  label = "Toni",
+                    point.padding = 5)
 ```
 
 
@@ -392,6 +413,11 @@ $$\hat{y} \sim x$$ {#eq-mod1}
 
 
 Lies: "Laut meinem Modell ist $\hat{y}$ irgendeine Funktion von $y$".
+
+Wir erinnern uns, dass $Y$ die AV und $X$ die UV ist:
+
+$$AV \sim UV$$ 
+
 Wir werden als Funktion (erstmal) nur Geraden verwenden. Die genauen Werte der Gerade lassen wir uns (erstmal) vom Computer ausrechnen.
 
 
@@ -423,8 +449,10 @@ Den Namen des Objekts können Sie frei aussuchen, z.B. `mein_erstes_lm`.
 Die Regressionsgleichung lautet demnach:
 `y_pred = 8.6 + 0.88*x`
 
-Mit Kenntnis der beiden Koeffizienten kann man beliebige Y-Werte ausrechnen gegeben bestimmte X-Werte.
+`8.6` ist der Achsenabschnitt, d.h. der Wert von $Y$ wenn $x=0$.
+`0.88` ist das Regressionsgewicht, d.h. die Steigung der Regressionsgeraden: Für jede Stunden Lernzeit steigt der vorhergesagte Klausurerfolg um `0.88` Punkte.
 
+Mit Kenntnis der beiden Koeffizienten kann man beliebige Y-Werte ausrechnen gegeben bestimmte X-Werte.
 Hat jemand zum Beispiel 10 Stunden gelernt, würden wir folgendes Klausurergebnis vorhersagen:
 
 ```{r}
@@ -513,14 +541,14 @@ mae(lm1)
 Vergleichen wir MAE im  Nullmodell mit MAE in `lm1`: 
 
 ```{r}
-verhaeltnis_fehler_gerade_zu_punkt_mae <- mae(lm1) / mae(lm0)
-verhaeltnis_fehler_gerade_zu_punkt_mae
+verhaeltnis_fehler_mae <- mae(lm1) / mae(lm0)
+verhaeltnis_fehler_mae
 ```
 
 
 
 Ah! Das Geradenmodell ist viel besser:
-Von `lm0` zu `lm1` haben die mittlere (Absolut-)Länge des Fehlerbalkens auf `r round(verhaeltnis_fehler_gerade_zu_punkt_mae, 2)*100` Prozent verbessert.
+Von `lm0` zu `lm1` haben die mittlere (Absolut-)Länge des Fehlerbalkens auf `r round(verhaeltnis_fehler_mae, 2)*100` Prozent verbessert.
 Nicht schlecht!
 
 
@@ -533,7 +561,7 @@ Zur Berechnung der Fehlerstreuung gibt es mehrere Kenngrößen wie MAE oder MSE.
 
 
 :::{.callout-note}
-Ein Geradenmodell ist immer besser als ein Punktmodell (im Hinblick auf die Verringerung der Fehlerstreung), solange X mit Y korreliert ist.$\square$
+Ein Geradenmodell ist immer besser als ein Punktmodell (im Hinblick auf die Verringerung der Fehlerstreuung), solange X mit Y korreliert ist.$\square$
 :::
 
 
@@ -546,8 +574,8 @@ mse(lm1)
 
 
 ```{r}
-verhaeltnis_fehler_gerade_zu_punkt_mse <- mse(lm1)/mse(lm0)
-verhaeltnis_fehler_gerade_zu_punkt_mse
+verhaeltnis_fehler_mse <- mse(lm1)/mse(lm0)
+verhaeltnis_fehler_mse
 ```
 
 
@@ -568,10 +596,10 @@ Eine schöne Darstellung dazu findet sich bei @kaplan_statistical_2009.
 
 ### R-Quadrat als Verringerung der Fehlerstreuung
 
-Anders gesagt, wir haben uns um $1 - `r round(verhaeltnis_fehler_gerade_zu_punkt_mse, 2)`$ verbessert:
+Anders gesagt, wir haben uns um $1 - `r round(verhaeltnis_fehler_mse, 2)`$ verbessert:
 
 ```{r}
-1 - verhaeltnis_fehler_gerade_zu_punkt_mse
+1 - verhaeltnis_fehler_mse
 ```
 
 
@@ -604,7 +632,7 @@ s. @fig-r2-extreme.
 #| echo: false
 #| fig-cap: "Extremfälle von R-Quadrat: 0 und 1"
 #| fig-subcap:
-#|   - "Keine Korrelation, r = 0 und R2 = 0. Prognose durch Mittelwert"
+#|   - "Keine Korrelation, r ≅ 0 und R2 ≅ 0. Prognose durch Mittelwert"
 #|   - "Perfekte Korrelation, r = 1 und R2 = 1. Prognose gleich beobachtetem Wert"
 #| label: fig-r2-extreme
 #| layout-ncol: 2
@@ -660,7 +688,7 @@ Je größer R-Quadrat, desto besser erklärt das Modell die Daten (desto besser 
 <!-- Die Varianzanteile addieren sich. Mit anderen Kennzahlen der Streuung (SD, MAE) funktioniert das nicht. -->
 
 
-## Interpretation eines Regressionsmodells
+## Interpretation eines Regressionsmodells {#sec-interpret-reg-mod}
 
 
 ### Modellgüte
@@ -672,8 +700,8 @@ Verschiedenen Koeffizienten stehen zur Verfügung: R-Quadrat, r^[als Korrelation
 
 ### Koeffizienten
 
-Die Modellkoeffizienten, also Achsenabschnitt ($b_0$) und Steigung ($b_1$) sind nur eingeschränkt zu interpretieren, wenn man die zugrundeliegenden kausalen Abhängigkeiten nicht kennt.
-Nur aufgrund eines Zusammenhangs darf man keine kausalen Abhängigkeiten annehmen.
+Die Modellkoeffizienten, also Achsenabschnitt ($\beta_0$^[lies: "beta Null"]) und Steigung ($beta_1$) sind nur eingeschränkt zu interpretieren, wenn man die zugrundeliegenden kausalen Abhängigkeiten nicht kennt.
+Nur aufgrund eines statistischen Zusammenhangs darf man keine kausalen Abhängigkeiten annehmen.
 Ohne eine guten Grund für eine Kausalbehauptung kann man kann nur *deskriptiv* argumentieren.
 Oder sich mit der Modellgüte und den Vorhersagen begnügen. Was auch was wert ist.
 
@@ -684,7 +712,7 @@ Leider ist es häufig so, dass Prädiktorwerte von 0 in der Praxis nicht realist
 
 :::{#exm-groesse}
 ### Regression Größe und Gewicht
-Nutzt man Körpergröße umd das Gewicht von Menschen vorherzusagen, ist der Achsenabschnitt von Körpergröße wenig nützlich, da es keine Menschen gibt der Größe 0.$\square$
+Nutzt man Körpergröße und das Gewicht von Menschen vorherzusagen, ist der Achsenabschnitt von Körpergröße wenig nützlich, da es keine Menschen gibt der Größe 0.$\square$
 :::
 
 
@@ -704,6 +732,8 @@ Häufig liest man, der "Effekt des Prädiktors" auf die AV betrage z.B. $`r lm1_
 
 
 ## Fallbeispiel Mariokart
+
+### Der Datenwahrsager legt los
 
 Als mittlerweile anerkannter Extrem-Datenanalyst in dem Online-Auktionshaus, in dem Sie arbeiten, haben Sie sich neue Ziele gesetzt.
 Sie möchten eine genaue Vorhersage von Verkaufspreisen erzielen.
@@ -755,6 +785,8 @@ In Worten:
 
 >    Der vorhergesagte Gesamptreis eines Spiels liegt bei 36.25€ "Sockelbetrag" plus 4.34 mal die Versandkosten.
 
+
+### Vertiefung
 
 Man kann sich die erwarteten Werte ("expectations") des Verkaufspreises in Abhängigkeit vom Wert der UV (`ship_pr`) auch schätzen ("to estimate") lassen, und zwar so^[Die Funktion stammt aus easystats]: 
 
@@ -871,7 +903,10 @@ Ignorieren Sie einfach diese Aufgaben.
 Beachten Sie die [Hinweise zu den Aufgaben](https://datenwerk.netlify.app/hinweise).
 
 
+## Literaturhinweise
 
+@gelman_regression_2021-1 liefert eine deutlich umfassendere Einführung in die Regressionsanalyse als dieses Kapitel es tut.
+Eine moderne, R-orientierte Einführung in Statistik inklusive der Regressionsanalyse findet sich bei @cetinkaya-rundel_introduction_2021-2.
 
 ## Literatur
 

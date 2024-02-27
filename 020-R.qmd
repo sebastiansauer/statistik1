@@ -6,10 +6,9 @@
 
 ```{r libs}
 #| include: false
-#library(tibble)
 library(tidyverse)
-# library(grid)
-# library(gridExtra)
+library(gt)
+library(ggfittext)
 ```
 
 ```{r}
@@ -59,16 +58,10 @@ ggplot2::theme_set(theme_minimal())
 
 
 - Sie können R und RStudio starten.
-- Sie können R-Pakete installieren und starten
+- Sie können R-Pakete installieren und starten.
 - Sie können Variablen in R zuweisen und auslesen.
 - Sie können Daten in R importieren.
 - Sie können den Begriff *Reproduzierbarkeit* definieren.
-
-
-
-
-
-
 
 
 
@@ -88,6 +81,15 @@ Das ist ganz normal!
 [Quelle](https://github.com/allisonhorst/stats-illustrations)
 :::
 
+
+### Ab diesem Kapitel benötigen Sie R
+
+Bitte stellen Sie sicher, dass Sie R rechtzeitig installiert haben. 
+Weiter unten in diesem Kapitel finden Sie Installationshinweise.
+Falls Sie dieses Kapitel zum ersten Mal bzw. sich noch nicht mir R auskennen, werden Sie vielleicht einigen Inhalten begegnen, 
+die Sie noch nicht gleich verstehen.
+Keine Sorge, das ist normal. 
+Mit etwas Übung wird Ihnen bald alles schnell von der Hand ghen.
 
 ### Benötigte R-Pakete
 
@@ -168,18 +170,28 @@ Ein (wissenschaftlicher) Befunde ist reproduzierbar, wenn andere Analystis mit d
 #| dev: "ragg_png"
 #| echo: false
 #| fig-cap: "Daten + Syntax + genaue Beschreibung der Messungen = reproduzierbar"
-#| label: fig-repro
+#| eval: false 
+#| fig-asp: 0.2
 
-ggplot(tibble(x=c(0,1))) +
+ggplot(tibble(x = c(0,1))) +
   annotate("label", x = 0, y = 0, label = "🔢 + 🤖 + 🔬 = 🤩", 
            size = 20) +
   theme_void() +
-  theme(plot.margin=grid::unit(c(0,0,0,0), "mm")) +
-  coord_fixed(ratio = 1/4) 
+  theme(plot.margin=grid::unit(c(0,0,0,0), "mm"))
 ```
 
 
 
+
+:::{#fig-repro}
+
+:::{.xxlarge}
+🔢 + 🤖 + 🔬 = 🤩   
+:::
+
+Daten + Syntax + genaue Beschreibung der Messungen = reproduzierbar
+
+:::
 
 :::{#exm-repro}
 
@@ -298,22 +310,26 @@ Klicken Sie dazu im Reiter "Files" auf `More > Export ...`.
 
 Lesen Sie [hier](https://data-se.netlify.app/2021/11/30/installation-von-r-und-seiner-freunde/#installation) die Installation von R und seiner Freunde nach.
 
+Kurz gesagt: Laden Sie R von der [R-Homepage, genannt "CRAN"](https://cran.r-project.org/)^[CRAN: Comprehensive R Archive Network] herunter. 
+R wird für alle gängigen Betriebssystem angeboten.
+
 
 
 
 ### R-Pakete
 
 
-Typisch für R ist sein modularer Aufbau: Man kann eine große Zahl an Erweiterungen ("Pakete") installieren, alle kostenlos.
-
-In R Paketen "wohnen" Funktionen, also Dinge, die R kann, "Skills" sozusagen - wenn das Paket verfügbar (gestartet) ist.
+Typisch für R ist sein modularer Aufbau: Man kann eine große Zahl an Erweiterungen ("Pakete", engl. *packages*) installieren, alle kostenlos.
+In R Paketen "wohnen" R-Befehle, also Dinge, die R kann, "Skills" sozusagen.
+Außerdem können in R-Paketen auch Daten bereitgestellt werden.
+Damit man die Inhalte eines R-Pakets nutzen kann, muss man es zuerst installieren und dann starten.
 
 Man kann sich daher ein R-Paket vorstellen wie ein Buch:
 Wenn R es gelesen hat, dann kennt es die Inhalte.
 Diese Inhalte könnten irgendwelche Formeln, also Berechnungen sein.
 Es könnte aber die "Bauanleitung" für ein schönes Diagramm sein.
 
-Ist ein spezielles R-Paket auf Ihrem Computer vorhanden,
+Ist ein spezielles R-Paket auf Ihrem Computer installiert,
 so können Sie diese Funktionalität nutzen.
 
 
@@ -533,7 +549,7 @@ ist_korrekt = TRUE
 Alternativ zum Gleichheitszeichen `=` können Sie auch (synonym) den Zuweisungspfeil `<-` verwenden. 
 Beides führt zum gleichen Ergebnis. 
 Allerdings ist der Zuweisungspfeil präziser, 
-und sollte daher bevorzugt werden.
+und sollte daher *bevorzugt* werden.
 
 Der *Zuweisungspfeil* `<-` bzw. das Gleichheitszeichen `=` definiert eine neue *Variable* (oder überschreibt den Inhalt,
 wenn die Variable schon existiert).
@@ -622,24 +638,25 @@ Vielleicht hat sich die befragte Person geweigert, ihr Alter anzugeben^[Datensch
 
 
 
-### Funktionen - "Befehle"
+### Funktionen ("Befehle")
+
+Das, was R kann, ist in "Funktionen" hinterlegt. 
+Genauer gesagt ist "Befehl" eine Funktion.
+
+:::{#def-fun}
+### Funktion
+Eine Funktion ist eine Regel, die jedem Eingabewert (auch Argument genannt) einen Ausgabewert zuordnet. Man kann sich Funktionen als Maschinen vorstellen, die Eingabedaten in Ausgabedaten umwandeln, vgl. #fig-function-schema. $\square$
+:::
 
 
 
-#### Vektoren erstellen
+#### Eine erste Funktion: Vektoren erstellen
 
-Das, was R kann, ist in "Funktionen" hinterlegt.
+
 Ein Beispiel für eine solche Funktion könnte sein: 
 "Berechne den Mittelwert dieser Datenreihe" (schauen wir uns gleich an). 
 
 
-:::{#exm-funs}
-Weitere Beispiel für Funktionen sind:
-
-- "Erstelle eine Liste (Vektor) von Werten".
-- "Lade dieses R-Paket."
-- "Gib den größten Wert dieser Datenreihe aus." $\square$
-:::
 
 Das geht so:
 
@@ -655,7 +672,7 @@ Der Befehl `c` (c wie *c*ombine) fügt mehrere Werte zusammen zu einer "Liste" (
 :::{#def-vektor}
 Als *Vektor* bezeichnen wir eine geordnete Folge von Werten.
 In R kann man sie mit der Funktion `c()` erstellen.
-Die Werte eines Vektors bezeichnet man auch als *Elemente*.$\square$
+Die Werte eines Vektors bezeichnet man als *Elemente*. $\square$
 :::
 
 
@@ -672,15 +689,25 @@ Vektoren können (praktisch) beliebig lang sein, z.B. drei Elemente.
 
 ```{r}
 x <- c(1, 2, 3)
-y <- c(2, 1, 3)  # x und y sind ungleich!
+y <- c(2, 1, 3)  # x und y sind ungleich (Reihenfolge der Werte)
+z <- c(3.14, 2.71)  
 namen <- c("Anni", "Bert", "Charli") # Text-Vektor
 ```
 
 :::
 
 Zwei wichtige Typen von Vektoren sind numerische Vektoren (reelle Zahlen; in R auch als *numeric* oder *double* bezeichnet)
-und Texvektoren, in R auch als *String* oder *character* bezeichnet.
+und Textvektoren, in R auch als *String* oder *character* bezeichnet.
 
+
+
+:::{#exm-funs}
+Weitere Beispiel für Funktionen sind:
+
+- "Erstelle eine Liste (Vektor) von Werten".
+- "Lade dieses R-Paket."
+- "Gib den größten Wert dieser Datenreihe aus." $\square$
+:::
 
 
 ### Unsere erste statistische Funktion {#sec-first-fun}
@@ -750,23 +777,37 @@ Die "Trichter" einer (R-)Funktion, in denen man die Eingaben "einfüllt",
 nennt man auch *Argumente*.$\square$
 :::
 
-So hat die Funktion `mean()` z.B. folgende Argumente:
+So hat die Funktion `mean()` z.B. folgende Argumente, s. @list-mean.
 
-`mean(x, trim = 0, na.rm = FALSE, ...)`
+:::{#lst-mean}
+
+
+
+```{r}
+#| eval: false
+mean(x, trim = 0, na.rm = FALSE, ...)
+```
+
+Die Argumente der R-Funktion `mean`
+
+:::
+
 
 - `x`: das ist der Vektor, für den der Mittelwert berechnet werden soll
 - `trim = 0`: Sollen die extremsten Werte von `x` lieber "abgeschnitten" werden, also nicht in die Berechnung des Mittelwerts einfließen?
 - `na.rm = FALSE`: Wie soll mit fehlenden Werten `NA` umgegangen werden? Im Standard liefert `mean`^[und viele andere arithmetische Funktionen in R] `NA` zurück. R schwenkt sozusagen die rote Fahne, um zu signalisieren, Achtung, Mensch, hier ist irgendwas nicht in Ordnung. Setzt man aber `na.rm = TRUE`, dann entfernt (remove, rm) R die fehlenden Werte und berechnet den Mittelwert.
-- `...` heißt "sonstiges Zeugs, das manchmal eine Rolle spielen könnte"; darum kümmern wir uns nicht.
+- `...` heißt "sonstiges Zeugs, das manchmal eine Rolle spielen könnte"; darum kümmern wir uns jetzt nicht.
 
-Einige Argumente haben einen *Standardwert* bzw. eine *Voreinstellung* (default).
+Einige Argumente haben einen *Standardwert* bzw. eine *Voreinstellung* (engl. *default*).
 So wird bei der Funktion `mean` im Standard nicht getrimmt (`trim = 0`) und fehlende Werte werden nicht entfernt (`na.rm = FALSE)`.
 
 :::{.callout-note}
 Wenn ein R-Befehl ein Argument mit Voreinstellung hat,
-brauchen Sie dieses Argument nicht zu befüllen. 
+brauchen Sie dieses Argument *nicht* zu befüllen. 
 In dem Fall wird auf den Wert der Voreinstellung zurückgegriffen.
-Argumente ohne Voreinstellung - wie `x` bei `mean()` - müssen Sie aber auf jeden Fall mit einem Wert befüllen.$\square$
+Argumente ohne Voreinstellung - wie `x` bei `mean()` - müssen Sie aber auf jeden Fall mit einem Wert befüllen. 
+Man würde also `mean` zumeist so aufrufen: `mean(x)`.
+$\square$
 :::
 
 
@@ -781,8 +822,11 @@ muss man *nicht* den Namen des Arguments anführen:
 Hält man sic aber nicht an die vorgebene Reihenfolge,
 so weiß R nicht, was zu tun ist und flüchtet sich in eine Fehlermeldung:
 
+
+
 ```{r}
 #| error: true
+#| 
 mean(Antworten, FALSE, 0)  # FALSCH, DON'T DO IT 🙅‍♀️
 ```
 
@@ -790,8 +834,8 @@ Wenn man die Namen der Argumente anspricht, ist die Reihenfolge egal:
 
 ```{r}
 #| eval: false
-mean(na.rm = FALSE, x = Antworten)
-mean(trim = 0, x = Antworten, na.rm = TRUE)
+mean(na.rm = FALSE, x = Antworten)  # ok
+mean(trim = 0, x = Antworten, na.rm = TRUE)  # ok
 ```
 
 Übrigens: 
@@ -853,11 +897,14 @@ $\square$
 
 ### Vektorielles Rechnen {#sec-veccalc}
 
-Das Rechnen mit Vektoren in R bezeichnen wir als *vektorielles Rechnen*.
-Das ist ein praktische Angelegenheit,
+:::{#def-veccalc}
+Das Rechnen mit Vektoren in R bezeichnen wir als *vektorielles Rechnen*. $\square$
+:::
+
+Vektorielles Rechnen ist ein praktische Angelegenheit,
 man kann z.B. folgende Dinge einfach in R ausrechnen.
 
-Gegeben `x` als Vektor `(1, 2, 3)` können wir die Differenz (Abweichung) jedes Elements von `x` zum Mittelwert von `x` komfortabel so ausrechnen:
+Gegeben sei `x` als Vektor `(1, 2, 3)`. Dann können wir die Differenz (Abweichung) jedes Elements von `x` zum Mittelwert von `x` komfortabel so ausrechnen:
 
 ```{r}
 #| echo: false
@@ -901,9 +948,10 @@ ggplot(d_x) +
 
 
 
-### Häufige Fragen {#r-faq}
+### Häufige R-Fragen {#r-faq}
 
 - *Wo finde ich Hilfe zu einer bestimmten Funktion, z.B. `fun()`?* Geben Sie dazu folgenden R-Befehl ein: `help(fun)`.
+- *Wenn ich ein R-Paket installiere, fragt mich R manchmal, ob ich auch Pakete installieren, will, die "kompiliert" werden müssen. Soll ich das machen?*. Nein, das ist nicht nötig; geben Sie "no" ein.
 - *In welchem Paket wohnt meine R-Funktion*? Suchen Sie nach der Funktion [auf dieser Seite](https://www.rdocumentation.org/).
 - *Ich weiß nicht, wie der R-Befehl funktioniert!* Vermutlich haben andere Ihr Problem auch, und meistens hat irgendwer das Problem schon gelöst. Am besten suchen Sie mal auf [Stackoverflow](www.stackoverflow.com).
 - *Ich muss mal grundlegend verstehen, wozu ein bestimmten R-Paket gut ist. Was tun?* Lesen Sie die Dokumenation ("Vignette") eines R-Pakets durch. Für das Paket `dplyr` bekommen Sie so einen Überblick über die verfügbaren Vignetten diese Pakets: `vignette(package = "dplyr")`. Dann suchen Sie sich aus der angezeigten Liste eine Vignette raus; mit `vignette("rowwise")` können Sie sich dann die gewünschte Vignette (z.B. `rowwise`) anzeigen lassen.
@@ -916,14 +964,12 @@ ggplot(d_x) +
 
 
 R will nicht, so wie Sie wollen? Sie haben das Gefühl, R verweigert störrisch den Dienst, vermutlich rein aus Boshaftigkeit, rein um Sie zu ärgern? 
-
 Ausführliches Googeln und ChatGPT befragen hat keine Lösung gebracht?
-
-Kurz, Sie brauchen Hilfe von einem kundigen Menschen?^[<https://www.youtube.com/watch?v=2Q_ZzBGPdqE>]
+Kurz, Sie brauchen die Hilfe eines kundigen Menschens?^[<https://www.youtube.com/watch?v=2Q_ZzBGPdqE>]
 
 [Hier](https://data-se.netlify.app/2022/01/31/erbie-einfache-reproduzierbare-beispiele-ihres-problems-mit-r-syntax/) finden Sie eine Anleitung, wie man seinen Hilfeschrei so formuliert (ruft), dass er nicht nur gehört, sondern auch verstanden wird und einen anderen Menschen veranlasst und ermöglicht Ihnen zu helfen.
 
-Also: Sie müssen Ihr Problem nachvollziehbar aber möglichst prägnant formulieren. 
+Also: Sie müssen Ihr Problem nachvollziehbar aber prägnant formulieren. 
 Das nennt man auch ein *ERBie*, ein *einfaches, reproduzierbare Beispiel* Ihres Problems mit (R-)Syntax:
 
 - einfach: die einfachste Syntax, die Ihr Problem bzw. die Fehlermeldung produziert. Es bietet sich an, einen einfachen, allgemein bekannten Datensatz zu verwenden, etwa `mtcars`
@@ -934,8 +980,11 @@ Das nennt man auch ein *ERBie*, ein *einfaches, reproduzierbare Beispiel* Ihres 
 ### Beispiel für ein Erbie
 
 *Problem:* Ich verstehe nicht, warum eine Fehlermeldung kommt
+
 *Ziel:* Ich möchte die Automatikautos filtern (am = 0)
+
 *Was ich schon versucht habe:* Ich habe folgende Posts gelesen ..., aber ohne Erfolg
+
 *Erbie*:
 
 ```{r}
@@ -972,9 +1021,8 @@ Posten Sie Ihr Erbie bei <https://gist.github.com/> als "public gist". [Hier](ht
 
 Damit Sie eine Datendatei importieren können, müssen Sie wissen, 
 wo die Datei ist.
-
 Schauen wir uns zwei Möglichkeiten an,
-wo eine Datei liegen könnte.
+wo Ihre Datei liegen könnte.
 
 1. Irgendwo im Internet, z.B. [hier](https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv)
 2. Irgendwo auf Ihrem Computer, z.B. in Ihrem Projektordner
@@ -1004,7 +1052,10 @@ Für uns Endverbraucher tut das nichts groß zur Sache, die CSV-Datei beherbergt
 einfach eine brave Tabelle in einer *Textdatei*, sonst nichts.
 
 
-🏋️‍♀️ Öffnen Sie mal eine CSV-Datei mit einem *Texteditor* (nicht mit Word und auch nicht mit Excel). Schauen Sie sich gut an, was Sie dort sehen und erklären Sie die Datenstruktur.
+:::{#exr-texteditor}
+### CSV-Datei von innen
+🏋️‍♀️ Öffnen Sie mal eine CSV-Datei mit einem *Texteditor* (nicht mit Word und auch nicht mit Excel). Schauen Sie sich gut an, was Sie dort sehen und erklären Sie die Datenstruktur. $\square$
+:::
 
 
 
@@ -1027,7 +1078,7 @@ Ein häufiger Fehler ist, dass man vergisst,
 dass man zuerst ein R-Paket installieren muss,
 bevor man es nutzen kann.
 Auf der anderen Seite muss man ein R-Paket (wie andere Software auch)
-nur ein Mal installieren - das Paket muss man ein Paket nach jedem Neustart von RStuio mit `library()` starten.
+nur ein Mal installieren - das Paket muss man ein Paket nach jedem Neustart von RStudio mit `library()` starten.
 :::
 
 
@@ -1054,25 +1105,6 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 ```
 
 
-Hier ist eine weitere Möglichkeit:
-
-```{r}
-#| eval: false
-library(easystats)  # Das Paket muss installiert sein
-d <- data_read("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
-```
-
-
-Der Unterschied ist, dass `data_read` *viele* Formate von Daten (Excel, CSV, SPSS, ...) verkraftet, wohingeben `read.csv` nur Standard-CSV einlesen kann.
-
-Schauen wir uns die letzte R-Syntax en Detail an:
-
-```
-Hey R,
-hol das "Buch" easystats aus der Bücherei und lies es
-definiere als "d" die Tabelle,
-die du unter der angegebenen URL findest.
-```
 
 Es ist egal,
 welchen Namen Sie der Tabelle geben.
@@ -1136,7 +1168,7 @@ Ein Dataframe (data frame; auch "Tibble" genannt^[von "tbl" wie Table]) ist ein 
 Dataframes bestehen aus einer oder mehreren Spalten. Spalten haben einen Namen, sozusagen einen "Spaltenkopf". 
 Alle Spalten müssen die gleiche Länge haben;
 anschaulich gesprochen ist eine Tabelle (in R) rechteckig.
-Jede Spalte einzeln betrachtet kann als Vektor aufgefasst werden.\$square$
+Jede Spalte einzeln betrachtet kann als Vektor aufgefasst werden. $\square$
 :::
 
 
@@ -1147,18 +1179,33 @@ etwas präziser gesprochen ein Dataframe mit Namen `mariokart`.
 :::{.callout-note}
 Geben Sie den Namen eines Dataframes ein,
 um sich den Inhalt anzeigen zu lassen.
-Mit dem Befehl `View(mariokart)` wird eine Excel ähnlich Tabellenansicht in RStudio geöffnet.
-Beachten Sie, dass Sie die Daten auf diese Weise nur anschauen, nicht ändern können.\$square$
+Beachten Sie, dass Sie die Daten auf diese Weise nur anschauen, nicht ändern können. $\square$
 :::
 
 
 ```{r}
-#| tbl-cap: "Der Dataframe 'mariokart'"
-#| label: tbl-mariokart
+#| eval: false
+#| echo: false
 mariokart
 ```
 
 
+<!-- ```{r} -->
+<!-- #| tbl-cap: "Der Dataframe 'mariokart'" -->
+<!-- #| label: tbl-mariokart -->
+<!-- #| echo: false -->
+<!-- mariokart |> gt() -->
+<!-- ``` -->
+
+
+
+### Tabellen in R betrachten {#sec-viewtab}
+
+Wenn Sie in R z.B. die Tabelle `mariokart` in einer Excel-typischen Ansicht betrachten wollen, klicken Sie am besten auf das Tabellen-Icon im Reiter *Environment*, gleich neben dem Namen `mariokart`, s. @fig-view-mariokart.
+
+![Per Klick auf das Tabellen-Icon können Sie eine Tabellenansicht der Tabelle `mariokart` öffnen](img/rstudio-environment-mariokart.png){#fig-view-mariokart width=50%}
+
+Alternativ öffnet der Befehl `View(mariokart)` die gleiche Ansicht.
 
 ## Logikprüfung {#sec-logic}
 
@@ -1190,16 +1237,14 @@ Möchte man mit R prüfen, ob eine Variable `x` einen bestimmten `Wert` ("Inhalt
 `x == Wert`.
 
 :::{.callout-important}
-Man beachte das *doppelte* Gleichheitszeichen! Zur Prüfung auf Gleichheit muss man das doppelte Gleichheitszeichen verwenden.
+Man beachte das *doppelte* Gleichheitszeichen. Zur Prüfung auf Gleichheit muss man das doppelte Gleichheitszeichen verwenden.
 :::
 
 :::{.callout-caution}
 Ein beliebter Fehler ist es, bei der Prüfung auf Gleichheit, nur ein Gleichheitszeichen zu verwenden, z.B. so: `x = 73`.
 Mit einem Gleichheitszeichen prüft man aber *nicht* auf Gleichheit,
-sondern man definiert die Variable, s. @sec-rvars.\$square$
+sondern man definiert die Variable oder bestimmt ein Funktionsargument, s. @sec-rvars. $\square$
 :::
-
-Prüfungen mit dem logischen UND bzw. ODER sind in @sec-logic erläutert.
 
 
 @tbl-lgl gibt einen Überblick über wichtige Logikprüfungen in R.
@@ -1220,7 +1265,7 @@ lgl_df <- tibble::tribble(
             "Logisches ODER", "(x < Wert1) | (x > Wert2)"
   )
 
-lgl_df
+lgl_df |> gt()
 ```
 
 
@@ -1279,6 +1324,13 @@ Berufe mit Bezug zu Daten, Datenanalyse oder, allgemeiner, Künstlicher Intellig
 ## Aufgaben
 
 
+
+:::{#exr-meme}
+### Statistik-Meme
+Suchen Sie ein schönes Meme zum Thema Statistik, Datenanalyse und Data Science. [Hier](https://data-se.netlify.app/2021/02/23/data-science-memes/) ist ein Startpunkt. $\square$
+:::
+
+
 1. [Typ-Fehler-R-01](https://datenwerk.netlify.app/posts/typ-fehler-r-01/typ-fehler-r-01.html)
 1. [Typ-Fehler-R-02](https://datenwerk.netlify.app/posts/typ-fehler-r-02/typ-fehler-r-02.html)
 1. [Typ-Fehler-R-03](https://datenwerk.netlify.app/posts/typ-fehler-r-03/typ-fehler-r-03.html)
@@ -1302,24 +1354,69 @@ Berufe mit Bezug zu Daten, Datenanalyse oder, allgemeiner, Künstlicher Intellig
 ## Vertiefung
 
 
+### Varianten zu `read.csv`
+
+Hier ist eine weitere Möglichkeit, um Daten von einem Ordner (egal ob dieser sich im Internet oder auf Ihrem Computer befinde) einzulesen, stellt die Funktion `data_read` bereit:
+
+```{r}
+#| eval: false
+library(easystats)  # Das Paket muss installiert sein
+d <- data_read("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+```
+
+
+Der Unterschied ist, dass `data_read` *viele* Formate von Daten (Excel, CSV, SPSS, ...) verkraftet, wohingegen `read.csv` nur Standard-CSV einlesen kann.
+
+Schauen wir uns die letzte R-Syntax en Detail an:
+
+```
+Hey R,
+hol das "Buch" easystats aus der Bücherei und lies es
+definiere als "d" die Tabelle,
+die du unter der angegebenen URL findest.
+```
+
 In R gibt es oft viele Möglichkeiten, ein Ziel zu erreichen.
 Zum Beispiel haben wir hier den Befehl `data_read()` verwendet,
 um Daten zu importieren.
 Andere, gebräuchliche Befehle, die CSV-Dateien importieren, heißen `read.csv()` (aus dem Standard-R, kein Extra-Paket nötig) und `read_csv()` (aus dem Meta-Paket `{tidyverse}`).
-`data_read()` (aus dem Meta-Paket `{easystats}`) ist praktisch, da es viele verschiedenen Datenformate lesen kann und selbständig erkennt, 
-um welches Datenformat (CSV, XLSX,...) es sich handelt.
 
 
-:::{.callout-tip}
+### Der Dollar-Operator {#dollar-op}
+
+In @exm-vektoren hatten wir Vektoren definiert.
+Solche Vektoren fliegen sozusagen frei in Ihrem `Environment` herum (Schauen Sie dort nach!)
+Die Spalten einer Tabelle sind aber auch Vektoren, nur eben nicht frei im `Environment`, sondern in eine Tabelle eingebunden.
+
+Möchte man diese Vektoren direkt ansprechen, so kann man das mit dem sog. *Dollar-Operator* `$` tun.
+
+Angenommen, Sie möchten sich die Verkaufspreise (`total_pr`) aus der Tabelle `mariokart` herausziehen, dann können Sie das mit dem Dollar-Operator tun:
+
+```{r}
+mariokart$total_pr
+```
+
+Der Dollar-Operator trennt den Namen der Tabelle vom Namen der Spalte.
+
+Natürlich können Sie mit dem resultierenden Vektor beliebig weiterarbeiten, etwa ihn in einem anderen Vektor speichern oder eine Funktion anwenden:
+
+```{r}
+verkaufspreise <- mariokart$total_pr
+mean(verkaufspreise)
+mean(mariokart$total_pr)  # synonym zur obigen Zeile
+```
+
+
+
+### R-Zertifikat bei LinkedIn
+
+
 Sie können bei [LinkedIn](https://www.linkedin.com/help/linkedin/answer/a510481) ein Zertifikat bekommen, das Ihre R-Kenntnisse dokumentiert.
-Praktischerweise wird das Zertifikat gleich Ihrem Profil zugeordnet.$\square$
-:::
+Praktischerweise wird das Zertifikat gleich Ihrem Profil zugeordnet.
 
 
-:::{#exr-meme}
-### Statistik-Meme
-Suchen Sie ein schönes Meme zum Thema Statistik, Datenanalyse und Data Science. [Hier](https://data-se.netlify.app/2021/02/23/data-science-memes/) ist ein Startpunkt.$\square$
-:::
+### R-Funktionen verschachteln
+
 
 Das Kombinieren von Funktionen kann kompliziert werden:
 
@@ -1330,7 +1427,7 @@ sum(abs(mean(x)-x))
 
 Die Funktion `abs(x)` gibt den (Absolut-)Betrag von `x` zurück (entfernt das Vorzeichen, mit anderen Worten).
 
-
+Hier haben wir die mittlere Absolutabweichung der Elemente von `x` zum Mittelwert ausgerechnet.
 
 
 
@@ -1341,7 +1438,12 @@ Die Funktion `abs(x)` gibt den (Absolut-)Betrag von `x` zurück (entfernt das Vo
 In Kapitel 3 in der gleichen Quelle finden sich viele Hinweise, wie man R startet;
 In Kapitel 4 werden Grundlagen von "Errisch" erläutert;
 Kapitel 5 führt in Datenstrukturen von R ein (schon etwas anspruchsvoller).
-Alternativ bietet [Kapitel 1](https://moderndive.com/1-getting-started.html) von @ismay_statistical_2020 einen guten Überblick.
+Alternativ bietet [Kapitel 1](https://moderndive.com/1-getting-started.html) von @ismay_statistical_2020 einen guten und sehr anwenderfreundlichen Überblick.
+Das Buch hat auch den Vorteil, dass es komplett frei online verfügbar ist.
+Vergleichbar dazu ist @cetinkaya-rundel_introduction_2021-1,
+vielleicht einen Tick formaler; 
+auf jeden Fall genau das richtige Niveau für Bachelor-Statistik in angewandten nicht-technischen Studiengängen.
+
 
 
 

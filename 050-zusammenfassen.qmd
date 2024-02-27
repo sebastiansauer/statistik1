@@ -29,6 +29,13 @@ library(easystats)
 ```
 
 
+```{r}
+#| include: false
+library(gt)
+```
+
+
+
 ### Benötigte Daten
 
 ```{r}
@@ -53,7 +60,10 @@ Der klassische Mittelwert (arithmetisches Mittel) ist ein prototypisches Beispie
 
 
 :::{#exr-mw-md-mod}
-Welche Vorstellung haben Sie, wenn Sie hören, dass der "typische deutsche Mann" 1,80m groß ist [@owidhumanheight]?
+
+
+
+Welche Vorstellung haben Sie, wenn Sie hören, dass der "typische deutsche Mann" 1,80m groß ist [@owidhumanheight]?^[Ihr Vorstellung updatet sich in in @def-mw.] 
 
 a) Die Hälfte der Männer ist größer als 1,80m, die andere Hälfte kleiner.
 b) Das arithmetische Mittel der Männer beträgt 1,80m.
@@ -64,12 +74,27 @@ e) Keine Ahnung!$\square$
 
 :::{#exr-mw2}
 Laut [dieser Quelle](https://en.wikipedia.org/wiki/Average_human_height_by_country) beträgt der Wert der mittleren Größe deutscher Frauen etwa 1,66m, also 14cm weniger als bei Männern.
+
+
+
+:::{.panel-tabet}
+
+### Frage
+
 Ist das viel?
 
 a) ja
 b) nein
 c) kommt drauf an
 d) weiß nicht$\square$
+
+### Antwort
+
+Auf dieser Frage gibt es keine Antwort, zumindest nicht ohne weitere Annahmen. 
+So könnte man z.B. sagen, "mehr als 5&thinsp;cm sind viel". So eine Entscheidung ist aber keine statistische Angelegenheit, sondern eine inhaltliche.
+
+:::
+
 :::
 
 
@@ -80,7 +105,7 @@ d) weiß nicht$\square$
 
 Ein Statistikkurs besteht aus drei Studentinnen: Anna, Berta und Carla.
 Sie haben gerade ihre Noten in der Klausur erfahren. Anna hat eine 1, Berta eine 2 und Carla eine 3.
-Der Durchschnitt ($\varnothing$) beträgt: 2.
+Der Durchschnitt (das arithmetische Mittel, $\varnothing$) beträgt: 2.
 :::
 
 >   🧑‍🎓 Zu easy!
@@ -119,7 +144,7 @@ Er gibt uns eine (mögliche) Vorstellung (ein Modell!), wie wir uns die Werte de
 
 Eine nützliche Anschauung zum Mittelwert ist die Vorstellung des Mittelwerts als eine ausbalancierte Wippe, s. @fig-wippe.
 
-![Mittelwert als ausbalancierte Wippe](img/1280px-Seesaw_with_mean.svg.png){#fig-wippe width="70%"}
+![Mittelwert als ausbalancierte Wippe mit Mittelwert 3](img/1280px-Seesaw_with_mean.svg.png){#fig-wippe width="70%"}
 
 :::{.xsmall}
 [Quelle: Von Maphry - Eigenes Werk, CC BY-SA 4.0]( https://commons.wikimedia.org/w/index.php?curid=79390659)
@@ -133,7 +158,7 @@ $$\bar {x} =\frac{1}{n} \sum_{i=1}^{n}{x_{i}}=\frac {x_{1}+x_{2}+\dotsb +x_{n}} 
 
 :::{#def-mw}
 ### Mittelwert
-Der Mittelwert von $X$, präziser: das arithmetische Mittel, ist definiert als die Summe der Elemente von $X$ geteilt durch deren Anzahl, $n$.\square$
+Der Mittelwert von $X$, präziser: das arithmetische Mittel, ist definiert als die Summe der Elemente von $X$ geteilt durch deren Anzahl, $n. \square$
 :::
 
 Da der Mittelwert eine zentrale Rolle spielt in der Statistik,
@@ -142,11 +167,11 @@ In s. @fig-mw1 sehen wir die Noten von (dieses Mal) vier Studentis.
 Die gestrichelte horizontale Linie zeigt den Mittelwert der vier Noten.
 Die schwarzen Punkte sind die Daten, in dem Fall die einzelnen Noten.
 Die vertikalen Linien zeigen die Abweichungen der Noten zum Mittelwert.
-Bezeichnen wir die Abweichung - auch als "Fehler", "Rest" oder "Residuum" bezeichnet - der $i$-ten Person mit $e_i$ (e wie "Fehler) und die $i$-te Note mit $x_i$, so können wir festhalten:
+Bezeichnen wir die Abweichung - auch als "Fehler", "Rest" oder "Residuum" bezeichnet - der $i$-ten Person mit $e_i$ (*e* wie engl. *error*, "Fehler) und die $i$-te Note mit $x_i$, so können wir festhalten:
 
 $$x_i = \bar{x} + e_i$$
 
-Einfacher ausgedrückt:
+Anders ausgedrückt:
 
 
 $$\text{Daten} = \text{Modell} + \text{Rest}$$
@@ -155,21 +180,21 @@ Der Mittelwert ist hier unser Modell der Daten.
 Wie gesagt: Ein Modell ist eine vereinfachte (zusammengefasste) Beschreibung einer Datenreihe.
 
 
-Um Modelle darzustellen, wird in der Datenanalyse häufig folgende Art von Modellgleichung verwendet:
+Um Modelle darzustellen, wird in der Datenanalyse häufig folgende Art von Modellgleichung verwendet, s. @eq-mean-mod
 
 
-$$\hat{y} \sim m$$
+$$\hat{y} \sim m$$ {#eq-mean-mod}
 
 Lies: "Der Modellwert $\hat{y}$ ist eine Funktion des Modells (m) ". 
-Der Kringel "~"^[die sog. "Tilde"] soll also hier heißen "... ist eine Funktion von ...".
+Der Kringel "~"^[Das "Kringel" oder die "Welle" "~" nennt man auch "Tilde"] soll also hier heißen "... ist eine Funktion von ...".
 
-Mit $\hat{y}$ sind die vorhergesagten bzw. die zu erklärende Variable^[AV, Output-Variable, Zielvariable] gemeint.
-Das "Dach"  über dem $y$ bedeutet "vorhergesager Y-Wert" oder "Y-Wert laut dem Modell".
+Mit $\hat{y}$ ist die vorhergesagte bzw. die zu erklärende Variable^[AV, Output-Variable, Zielvariable] gemeint.
+Das "Dach"  über dem $y$ bedeutet "vorhergesagter Y-Wert" oder "Y-Wert laut dem Modell".
 Der tatsächliche, beobachtete Wert $y$ setzt sich zusammen aus dem Modellwert (m) plus einem Fehler (e wie error):
 
 $$y = m + e$$
 
-Anstelle von $m$ schreibt ma nauch $\hat{y}$ ("y-Dach"). \hat{y} bedeutet der "vorhergesagte y-Wert laut einem Modell".
+Anstelle von $m$ schreibt man auch $\hat{y}$ ("y-Dach"). 
 In diesem Fall ist das Modell einfach gleich dem Mittelwert (und nicht irgendeiner Funktion des Mittelwerts), so dass wir schreiben können:
 
 
@@ -194,8 +219,8 @@ daher steht hier kein Buchstabe, sondern eine einfache $1$.
 :::{#exm-noten}
 ### Noten, Mittelwert und Abweichung
 
-Vier Studentis Anna, Berta, Carl, Dani haben ihre Statistik-Klausur zurückbekommen.
-Die Noten sehen Sie in @fig-mw1.
+Vier Studentis -- Anna, Berta, Carl, Dani -- haben ihre Statistik-Klausur zurückbekommen (Schluck).
+Die Noten sehen Sie in @fig-mw1, gar nicht so schlecht ausgefallen.
 Außerdem ist der Mittelwert (gestrichelte horizontale Linie) sowie die Abweichungen der einzelnen Noten vom Mittelwert eingezeichnet.$\square$
 :::
 
@@ -215,6 +240,8 @@ d <- tibble::tribble(
    4L,   1.5,     2.325, -0.825,  2.325,        1.5
   )
 
+d$names <- c("Anna", "Berta", "Carl", "Dani")
+
 
 d <- d %>% 
   mutate(delta_abs = abs(delta),
@@ -232,7 +259,9 @@ p_mean_deltas <-
                    yend = note,
                    x = id,
                    xend = id,
-                   linetype = pos)
+                   linetype = pos,
+                   color = pos),
+               size = 2
                ) +
   geom_point(size = 5) + 
   labs(linetype = "Richtung der Abweichung") +
@@ -246,16 +275,17 @@ p_mean_deltas <-
   scale_y_continuous(limits = c(1, 4)) +
   labs(x = "",
        y = "") +
-  scale_x_continuous(breaks = 1:4) 
+  scale_x_continuous(breaks = 1:4, labels = d$names) +
+  scale_color_okabeito()
 
 p_mean_deltas
 ```
 
 
 
-Jetzt stellen Sie sich vor, Sie würden die vom Mittelwert nach oben ragenden Balkenlängen aneinanderlegen.
+Jetzt stellen Sie sich vor, Sie würden die vom Mittelwert nach *oben* ragenden Balkenlängen aneinanderlegen (das sind die gestrichelten.
 Sehen Sie das vor Ihrem geistigen Auge? 
-Jetzt legen Sie auch noch die Abweichungsbalken, die nach unten ragen aneinander, aneinander.
+Jetzt legen Sie auch noch die Abweichungsbalken, die nach *unten* ragen, aneinander (die mit den durchgezogenen Linien).
 Wer viel Phantasie hat, erkennt (sieht) jetzt,
 dass die Gesamtlänge der "Balken nach oben" identisch ist zur Gesamtlänge der nach "unten ragenden Balken", vgl. @fig-wippe.
 
@@ -285,7 +315,7 @@ e) 250.000 Euro$\square$
 ### Der reichste Mensch der Welt in Ihrem Hörsaal
 
 Kommt der wertvollste Fußballspieler der Welt in Ihren Hörsaal, sagen wir, es ist Kylian Mbappé^[Quelle: https://www.transfermarkt.de/spieler-statistik/wertvollstespieler/marktwertetop, 2023-03-19].
-Das Jahreseinkommen mit einem Jahreseinkommen von ca. 120 Millionen Euro^[Quelle: https://www.einkommenmagazin.de/kylian-mbappe-einkommen/, 2023-03-19].
+Sein Jahreseinkommen (2023) liegt bei ca. 120 Millionen Euro^[Quelle: https://www.einkommenmagazin.de/kylian-mbappe-einkommen/, 2023-03-19].
 
 >    🦹‍♂️ Hey Leute, wie geht's denn so! Wie viel Kohle verdient ihr eigentlich so?
 
@@ -299,28 +329,35 @@ Aber zumindest verteilt der Fußballspieler Autogramme.
 :::{#exr-elon}
 ### Mittleres Einkommen im Hörsaal, mit Kylian Mbappé
 
-Schätzen Sie - im Kopf - das mittlere Vermögen im Hörsaal, gehen Sie davon aus,
-dass alle der 100 Studentis jeweils 1000 Euro im Jahr verdienen.
+Schätzen Sie -- im Kopf -- das mittlere Vermögen im Hörsaal, gehen Sie davon aus,
+dass alle der 100 Studentis jeweils 1000 Euro im Jahr verdienen. $\square$
 :::
 
 
 
-In R kann man das mittlere Einkommen (präziser: das arithmetische Mittel des Einkommenss) wie folgt berechnen.^[Die Details der Syntax, z.B. der Befehl `rep()` sind von geringer Bedeutung.]
+In R kann man das mittlere Einkommen (präziser: das arithmetische Mittel des Einkommens) wie folgt berechnen.^[Die Details der Syntax, z.B. der Befehl `rep()`, sind von geringer Bedeutung.]
+
+:::{#lst-einkommen}
 
 ```{r}
 set.seed(42)  # Zufallszahlen festlegen, hier nicht so wichtig
 einkommen_studis <- rep(x = 1000, times = 100)  # "rep" wie "repeat": wiederhole 1000 USD 100 Mal
 einkommen <- c(einkommen_studis, 120*1e6)  # 100 Studis mit 1000, 1 Mbappé mit 120 Mio
 einkommen_mw <- mean(einkommen)
+einkommen_mw
 ```
 
 
+Wir simulieren Einkommen von 100 Studis plus Mbappé.
+
+:::
+
 :::{.callout-note}
-1 Million hat 6 Nuller hinter der führenden Eins,
-das ist 1000 mal 1000.
+1 Million hat 6 Nuller hinter der führenden Eins.
+1 Million ist 1000 mal 1000.
 Anders gesagt: 1 Million = $10^6 = 10^3 * 10^3$.
 In Taschenrechner oder Computerschreibweise: 1 Mio = `1e6`,
-das `1e6` ist zu lesen als "1 Mal 10 mit 6 im *E*xponenten".
+das `1e6` ist zu lesen als "1 Mal 10 hoch 6, also mit 6 im *E*xponenten".
 :::
 
 Der Mittelwert im Hörsaal beträgt also `r scales::label_comma()(einkommen_mw)` Euro.
@@ -334,7 +371,8 @@ Insofern kann man vom Mittelwert auch als *lineares Modell* sprechen.
 
 :::{#def-lm}
 ### Lineares Modell
-Ein lineares Modell verwendet eine Gerade als Modell der Daten.$\square$
+Ein lineares Modell verwendet eine Gerade als Modell der Daten.
+Es erklärt die Daten anhand einer Geraden. $\square$
 :::
 
 
@@ -360,11 +398,10 @@ mariokart_extreme <-
 ggplot(mariokart) +
   aes(x = X, y = total_pr) +
     geom_hline(yintercept = mean(mariokart$total_pr),
-             color = "blue", 
              linewidth = 2) +
   geom_point(alpha = .7) +
   geom_point(data = mariokart_extreme, 
-             color = "red",
+             color =  okabeito_colors()[1],
              alpha = .7,
              size = 5) +
   labs(caption = paste0("MW: ", round(mean(mariokart$total_pr), 2)),
@@ -379,7 +416,7 @@ mariokart %>%
 ggplot(mariokart2) +
   aes(x = X, y = total_pr) +
   geom_hline(yintercept = mean(mariokart2$total_pr),
-             color = "blue", 
+             color = okabeito_colors()[2], 
              size = 2) +
   geom_point(alpha = .7) +
   labs(caption = paste0("MW: ", round(mean(mariokart2$total_pr), 2)),
@@ -387,23 +424,32 @@ ggplot(mariokart2) +
   scale_y_continuous(limits = c(0, 400)) +
   theme_minimal()
 
-
 ```
 
 
-Ein lineares Modell kann man in R so berechnen:
+@fig-mw2 zeigt den Mittelwert des Verkaufspreises der Mariokart-Spiele (`total_pr`),
+einmal mit Extremwerte (a) bzw. einmal ohne Extremwerte (b).
+
+:::{#def-extremwert}
+### Extremwert
+Ein Extremwert (engl. outlier) ist eine Beobachtung, dessen Wert  deutlich vom Großteil der anderen Beobachtungen im Datensatz abweicht, z.B. viel größer ist. $\square$
+:::
+
+
+Berechnen wir mal den Mittelwert von `einkommen` mit R (vgl. @lst-einkommen):
 
 
 ```{r}
 lm(einkommen ~ 1)  # lm wie "lineares Modell" oder engl. "linear modell"
 ```
 
-Der Befehl gibt als *Koeffizient* einen Wert zurück und zwar den Mittelwert von `einkommen`, s. oben.
+Der Befehl gibt als *Koeffizient* einen Wert zurück und zwar den Mittelwert von `einkommen`, @lst-einkommen.
 Dieser Wert wird als Achsenabschnitt (engl. *intercept*) bezeichnet,
-das wird verständlich, wenn man z.B. in @fig-mw2 sieht, dass die Gerade genau an diesem Punkt die Y-Achse schneidet.
+das wird verständlich, wenn man z.B. in @fig-mw2 sieht, dass die Gerade (des Mittelwerts) genau an diesem Punkt die Y-Achse schneidet.
 
 Die Syntax des Befehls `lm()` sieht etwas merkwürdig aus.
 Ignorieren Sie das fürs Erste, wir besprechen das später (@sec-gerade1) ausführlich.
+`lm` steht übrigens für "lineares Modell".
 
 
 ## Median als Modell {#sec-median}
@@ -442,10 +488,10 @@ p1 <- ggplot(d) +
   aes(x = einkommen) +
   geom_histogram() +
   theme_minimal() +
-  geom_vline(xintercept = c(mean(einkommen)), color = "red") +
-  geom_vline(xintercept = c(median(einkommen)), color = "blue") +
-  annotate("label", x = median(einkommen), y = 100, label = "Median", color = "blue") +
-  annotate("label", x = mean(einkommen), y = 0, label = "MW", color = "red") +
+  geom_vline(xintercept = c(mean(einkommen)), color = okabeito_colors()[1]) +
+  geom_vline(xintercept = c(median(einkommen)), color = okabeito_colors()[2]) +
+  annotate("label", x = median(einkommen), y = 100, label = "Median", color = okabeito_colors()[2]) +
+  annotate("label", x = mean(einkommen), y = 0, label = "MW", color = okabeito_colors()[1]) +
   annotate("label", 
            x = Inf, 
            y = -10, 
@@ -497,39 +543,41 @@ d <-
 
 d %>% 
   ggplot(aes(x = id, y = einkommen)) +
-  geom_vline(xintercept = 3, color = "red") +
+  geom_vline(xintercept = 3, color = okabeito_colors()[2]) +
   geom_col() +
-  geom_label(aes(label = name)) +
+  #geom_label(aes(label = name)) +
   annotate("label", x = 3, y = 50, label = "Median") +
-  theme_minimal()
+  theme_minimal() +
+  scale_x_continuous(breaks = 1:5, labels = d$name)
 
 
 d %>% 
   ggplot(aes(x = einkommen)) +
   geom_histogram(binwidth = 1, color = "white") +
-  geom_vline(xintercept = median(d$einkommen), color = "red") +
-  annotate("label", x = 3, y = 1, label = "Median", color = "red") +
-  geom_vline(xintercept = mean(d$einkommen), color = "blue") +  
-  annotate("label", x = 22, y = 1, label = "MW", color = "blue")   +
-  theme_minimal()
+  geom_vline(xintercept = median(d$einkommen), color = okabeito_colors()[2]) +
+  annotate("label", x = 3, y = 1, label = "Median", color = okabeito_colors()[2]) +
+  geom_vline(xintercept = mean(d$einkommen), color = okabeito_colors()[1]) +  
+  annotate("label", x = 22, y = 1, label = "MW", color = okabeito_colors()[1])   +
+  theme_minimal() +
+  scale_y_continuous(breaks = c(0, 1)) +
+  annotate("label", x = 100, y = 0, label = "Dora")
 ```
 
 
 
 Wir könnten jetzt behaupten, dass Carla das typische Einkommen (für diese Datenreihe) aufweist,
-da es genauso viele Studentinnen gibt, die mehr verdienen, wie solche, die weniger verdienen.
-
-$\square$
+da es genauso viele Studentinnen gibt, die mehr verdienen, wie solche, die weniger verdienen. $\square$
 
 :::
 
 
 :::{#def-median}
 ### Median
-Merkmalsausprägung, die bei (aufsteigend) sortierten Beobachtungen in der Mitte liegt.
+Merkmalsausprägung, die bei (aufsteigend) sortierten Beobachtungen in der Mitte liegt. $\square$
 :::
 
-Der Median ist robust (gegenüber) Extremwerten: Fügt man Extremwerte zu einer Verteilung hinzu, ändert sich der Median zumeist (deutlich) weniger als der Mittelwert.
+
+Der Median ist *robust* (gegenüber) Extremwerten: Fügt man Extremwerte zu einer Verteilung hinzu, ändert sich der Median zumeist (deutlich) weniger als der Mittelwert.
 
 @fig-median-human stellt den Median schematisch dar.
 
@@ -564,10 +612,9 @@ Bei der Messreihe 1, 2, 3, 4, 5, 6, 8, 9 beträgt der Median 4.5.$\square$
 :::{#exr-md2}
 ### Emma wird reich
 Durch ein geniales Patent wird Emma steinreich. Ihr Einkommen erhöht sich um das Hundertfache.
-Wie verändert sich der Median?^[Er bleibt gleich, verändert sich also nicht.]$\square$
+Wie verändert sich der Median?^[Er bleibt gleich, verändert sich also nicht: Der Median ist *robust*, er verändert sich nicht oder kaum, wenn Extremwerte vorliegen.] $\square$
 :::
 
-Der Median ist *robust*, er verändert sich nicht oder kaum, wenn Extremwerte vorliegen.
 
 
 
@@ -578,7 +625,7 @@ Der Median ist *robust*, er verändert sich nicht oder kaum, wenn Extremwerte vo
 
 >   🧑‍🎓 Das arithmetische Mittel sollte Mittelwert heißen, weil es die Mitte von zwei Messwerten widerspiegelt, also z.B. von 1 und 10 ist die Mitte 5,5 - also genau beim Mittelwert!
 
->   👩‍🎓 Moment! Der Median zeigt den mittleren Messert! Links und rechts sind gleich viele Messwerte, wenn man die Werte der Größe nach sortiert. Also liegt der Median genau in der Mitte!
+>   👩‍🎓 Moment! Der Median und nur der Median zeigt den mittleren Messwert! Links und rechts sind gleich viele Messwerte, wenn man die Werte der Größe nach sortiert. Also liegt der Median genau in der Mitte!
 
 Nehmen Sie Stellung zu dieser Diskussion!$\square$
 :::
@@ -609,10 +656,10 @@ mariokart %>%
   select(start_pr) %>% 
   ggplot(aes(x = start_pr)) +
   geom_histogram() +
-  geom_vline(xintercept = 1, color = "red") +
-  annotate("label", x = 1, y = 0.1, label = "Md: 1", color = "red") +
-  geom_vline(xintercept = 8.7, color = "blue") +
-  annotate("label", x = 8.7, y = 0.1, label = "MW: 8.7", color = "blue") +
+  geom_vline(xintercept = 1, color = okabeito_colors()[1]) +
+  annotate("label", x = 1, y = 0.1, label = "Md: 1", color = okabeito_colors()[1]) +
+  geom_vline(xintercept = 8.7, color = okabeito_colors()[2]) +
+  annotate("label", x = 8.7, y = 0.1, label = "MW: 8.7", color = okabeito_colors()[2]) +
   theme_minimal()
 
 ```
@@ -661,8 +708,9 @@ Betrachten wir einmal nur alle Spiele, die für weniger als 100 Euro verkauft wu
 s. @fig-mario-qs.
 50% aller Spiele wurden für weniger als ca. 46 Euro verkauft;
 50% aller Spiele für mehr als 46 Euro.
+Der Median beträgt als 46 Euro.
 
-Jetzt könnten wir nur die günstigere Hälfte betrachten und wieder nach dem Median fragen.
+Jetzt könnten wir nur die günstigere Hälfte betrachten und wieder nach dem Median fragen (d.h. `total_pr < 46`).
 Dieser "Median der günstigeren Hälfte" grenzt damit das insgesamt günstigste Viertel vom Rest der Verkaufsgebote ab.
 In unserem Datensatz liegt dieser Wert bei ca. 41 Euro.
 Entsprechend kann man nach dem Wert fragen, der das oberste Viertel 
@@ -701,7 +749,7 @@ Die neun Quantile $p= 0.1, 0.2, \ldots, 1$, die die Verteilung in 10 gleiche Tei
 
 
 Oder vielleicht in 1%-Schritten oder in sonstigen Schnitten?
-Wo die Quartile in 25%-Schritten aufteilen, teilt in *Quantil* in $p$-Prozent-Schritten auf.
+Wo die Quartile in 25%-Schritten aufteilen, teilt in *Quantil* in $p$-Prozent-Schritten auf, s. fig-quantile-anim.
 
 
 :::{#def-quantile}
@@ -709,8 +757,12 @@ Wo die Quartile in 25%-Schritten aufteilen, teilt in *Quantil* in $p$-Prozent-Sc
 Ein p-Quantil ist der Wert, der von $p$ Prozent der Werte nicht überschritten wird.$\square$
 :::
 
-Ein Quantil ist also ein Oberbegriff für Quantile, Dezile, etc.
+:::{.callout-note}
+Ein Quantil ist ein Oberbegriff für Quartile, Dezile, etc. $\square$
+:::
 
+
+::: {#fig-quantile-anim}
 
 ```{r}
 #| echo: false
@@ -733,11 +785,16 @@ mariokart %>%
   ggplot(aes(x = total_pr)) +
   geom_histogram() +
   geom_vline(xintercept = mario_quantile$qs) +
-  annotate("label", x =  mario_quantile$qs, y = 0, label =  mario_quantile$qs)
+  annotate("label", x =  mario_quantile$qs, y = 0, label =  mario_quantile$qs) +
+  annotate("label", x =  mario_quantile$qs, y = Inf, label =  c("Q1", "Median", "Q3"), vjust = 2) 
 ```
 
 
-Quantile kann man in R so berechnen:
+Verschiedene Arten von Quantilen animiniert.
+
+:::
+
+*Quantile* kann man in R mit dem Befehl `quantile()` berechnen:
 
 ```{r}
 #| eval: false
@@ -901,7 +958,9 @@ anim_save("img/p_percentile_anim.gif", p_percentile_anim, renderer = gifski_rend
 Ein *Lagemaß* (synonym: Maß der zentralen Tendenz) für eine Verteilung gibt einen Vorschlag, welchen Wert der Verteilung wir als typisch, normal, zu erwarten, repräsentativ oder "mittel" ansehen sollten.$\square$
 :::
 
-Typische Lagemaße:
+
+:::{#exm-lagemaße}
+Typische Lagemaße sind:
 
 - Mittelwert (arithmetisches Mittel)
 - Median
@@ -909,8 +968,14 @@ Typische Lagemaße:
 - Quantile
 - Minimum (kleinster Wert)
 - Maximum (größter Wert)
-- Modus (häufigster Wert)
+- Modus (häufigster Wert) $\square$
+:::
 
+
+Berechnen wir Lagemaße für den Mariokart-Datensatz, s. @lst-mario-lage
+
+
+:::{#lst-mario-lage}
 
 ```{r}
 mariokart_lagemaße_total_pr <-
@@ -925,10 +990,13 @@ mariokart_lagemaße_total_pr <-
 mariokart_lagemaße_total_pr
 ```
 
+Syntax zur Berechnung von Lagemaßen
+
+:::
 
 ### Gruppierte Lagemaße
 
-Häufig möchte man Statistiken wie Lagemaße für mehrere Teilgruppen - z.B. Mittlere Körpergröße von Frauen vs. Mittlere Körpergröße von Männer - berechnen und dann vergleichen.
+Häufig möchte man Statistiken wie Lagemaße für mehrere Teilgruppen -- z.B. Mittlere Körpergröße von Frauen vs. Mittlere Körpergröße von Männer -- berechnen und dann vergleichen.
 Die dahinter stehende *Forschungsfrage* könnte lauten:
 
 
@@ -949,8 +1017,10 @@ Die *Modellformel* könnte also lauten:
 
 $$y \sim G$$
 
-Gruppierte Lagemaße lassen sich in R z.B. so berechnen:
+Gruppierte Lagemaße lassen sich in R z.B. so berechnen, s. @lst-mario-lage-gruppiert, also ähnlich wie in @#lst-mario-lage.
 
+
+::: {#lst-mario-lage-gruppiert}
 
 ```{r}
 mariokart_lagemaße_gruppiert <-
@@ -962,8 +1032,85 @@ mariokart_lagemaße_gruppiert
 ```
 
 
-@fig-mw2 zeigt ein Beispiel für ungruppierte (links) bzw. gruppierte (rechts) Mittelwerte.
-Wie man in dem Diagramm sieht, kann das *Residuum kleiner* werden bei einer Gruppierung (im Vergleich zu einem ungruppierten, "globalen" Mittelwert).
+Gruppierte Lagemaße
+
+:::
+
+@fig-mw3 zeigt ein Beispiel für ungruppierte (links) bzw. gruppierte (rechts) Mittelwerte; vgl. @fig-mw2.
+Wie man in dem Diagramm sieht, kann das *Residuum kleiner* werden bei einer Gruppierung (im Vergleich zu einem ungruppierten, "globalen" Mittelwert):
+Innerhalb der Gruppe ohne Lenkräder und innerhalb der Gruppe mit 2 Lenkrädern sind die Abweichungen zu ihrem Gruppen-Mittelwert relativ gering -- im Vergleich zu den Abweichungen der Preise zum ungruppierten Mittelwert.
+
+
+
+```{r}
+#| label: fig-mw3
+#| fig-cap: Der mittlere Preis von Mariokart-Spielen als Gerade eingezeichnet
+#| fig-subcap: 
+#|   - "Mittelwert für Verkaufspreis (ungruppiert)"
+#|   - "Mittelwert für Verkaufspreis gruppiert nach Anzahl der Lenkräder"
+#| echo: false
+#| layout-ncol: 2
+
+mariokart$X <- 1:nrow(mariokart)
+
+mariokart <-
+  mariokart %>% 
+  mutate(is_extreme = total_pr > 100)
+
+mariokart_extreme <-
+  mariokart %>% 
+  filter(is_extreme)
+
+mariokart2 <- 
+mariokart %>% 
+  filter(total_pr < 100)
+
+
+
+mariokart3 <-
+  mariokart2 |> 
+  filter(wheels == 0 | wheels == 2) 
+
+mariokart3_summ <-
+  mariokart3 |> 
+  group_by(wheels) |> 
+  summarise(total_pr = mean(total_pr, na.rm = TRUE)) |> 
+  mutate(wheels = factor(wheels))
+
+p1 <- ggplot(mariokart2) +
+  aes(x = X, y = total_pr) +
+  geom_hline(yintercept = mean(mariokart2$total_pr),
+             color = okabeito_colors()[1], 
+             size = 2) +
+  geom_point(alpha = .7) +
+  labs(caption = paste0("MW: ", round(mean(mariokart2$total_pr), 2)),
+       x = "Nr. des Spiel") +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, 100))
+
+  
+p2 <- mariokart3 |> 
+  mutate(wheels = factor(wheels)) |> 
+  ggplot(aes(x = X, y = total_pr, group = wheels, color = wheels)) +
+  geom_point2() + # Scatter plot
+  geom_hline(data = mariokart3_summ, aes(yintercept = total_pr,
+                                         color = wheels),
+             size = 2) +
+  scale_color_okabeito() +
+  labs(caption = paste0("MWs: ", round(mariokart3_summ$total_pr, 2)),
+       x = "Nr. des Spiel")  +
+  theme_minimal()  +
+  scale_y_continuous(limits = c(0, 100)) +
+  theme(legend.position = c(.8, .1),
+        legend.background = element_rect(fill = NA, # Background color
+                                           color = "grey40", # Border color
+                                           linewidth = 1, # Border size
+                                           linetype = "solid"))
+
+p1
+p2
+```
+
 
 
 
@@ -984,10 +1131,10 @@ Sie fassen eine Verteilung zu einem einzelnen Wert zusammen und geben uns ein "B
 
 ## Wie man mit Statistik lügt
 
-Mit Statistik kann man vortrefflich lügen, heißt es. Woran liegt das? Der Grund ist, dass die Statistik Freiheitsgrade lässt: Es gibt nicht nur einen richtigen Weg, um eine statistische Analyse durchzuführen. Viele Wege führen nach Rom. 
-
-
-
+Mit Statistik kann man vortrefflich lügen, heißt es. 
+Woran liegt das? Der Grund ist, dass die Statistik Freiheitsgrade lässt:
+Es gibt nicht nur einen richtigen Weg, um eine statistische Analyse durchzuführen. 
+Viele Wege führen nach Rom (aber nicht alle).
 Um Manipulationsversuche abzuwehren oder einfache Fehler und Unschärfen ohne böse Abwehr aufzudecken, gibt es ein probates Gegenmittel: *Transparenz*.
 
 ::::{#callout-important}
@@ -999,7 +1146,7 @@ Hier ist eine (nicht abschließende!) Checkliste, was Sie nachprüfen sollten, u
 ```{r}
 #| echo: false
 checkliste <- tibble::tribble(
-  ~V1,                                                                                       ~V2,
+  ~Nr,                                                                                       ~Check,
    1L,       "Wurde die Art und die Zeitdauer der Datenerhebung vorab festgelegt und berichtet?",
    2L,            "Wurden ausreichend Daten gesammelt (z.B. mind. 20 Beobachtungen pro Gruppe)?",
    3L,                                           "Wurden alle untersuchten Variablen berichtet?",
@@ -1007,7 +1154,8 @@ checkliste <- tibble::tribble(
    5L, "Wurden Daten aus der Analyse entfernt? Wenn ja, gibt es eine (stichhaltige) Begründung?"
   )
 
-checkliste
+checkliste |> 
+  gt()
 ```
 
 
@@ -1019,15 +1167,15 @@ checkliste
 
 Eine Studentin aus dem dem Bachelorstudiengang "Angewandte Medien- und Wirtschaftspsychologie" mit Schwerpunkt *Data Science* berichtet ihre "Survival-Tipps" für Statistik.
 
-1. Wenn man mal nicht weiterkommt hilft es auch mal ein paar Tage Abstand von R und Statistik zu nehmen. 
-2. Sich während des Semesters neue Begriffe und ihre Erklärung zusammenschreiben.
-3. Mit KommilitonInnen austauschen oder in höheren Semestern nach Tipps fragen.$\square$
+1. Wenn man mal nicht weiterkommt, hilft es auch mal ein paar Tage Abstand von R und Statistik zu nehmen. 
+2. Es hilft, sich während des Semesters neue Begriffe und ihre Erklärung zusammenschreiben.
+3. Gut ist auch, sich mit KommilitonInnen auszutauschen oder in höheren Semestern nach Tipps fragen.$\square$
 :::
 
 
 >    👩‍🎓 Irgendwie kann ich mir R-Code so schlecht merken.
 
->    👩‍🏫 Frag doch mal ChatGPT, da bekommt man auch R-Code ausgegegeben.
+>    👩‍🏫 Frag doch mal ChatGPT, oder einen anderen Chatbot, da bekommt man auch R-Code ausgegegeben.
 
 
 
@@ -1046,7 +1194,7 @@ $\square$
 :::
 
 
-## Literaturempfehlungen
+## Literaturhinweise
 
 Es gibt viele Lehrbücher zu den Grundlagen der Statistik; die Inhalte dieses Kapitels gehören zu den Grundlagen der Statistik. 
 Vielleicht ist es am einfachsten, wenn Sie einfach in Ihrer Bibliothek des Vertrauens nach einem typischen Lehrbuch schauen.

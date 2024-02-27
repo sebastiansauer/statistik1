@@ -8,8 +8,8 @@
 #| include: false
 library(tibble)
 library(tidyverse)
-# library(grid)
-# library(gridExtra)
+library(gt)
+library(ggfittext)
 ```
 
 ```{r}
@@ -144,35 +144,38 @@ präziser gesagt: die *Variation zu quantifizieren*. Betrachten wir dazu das Bei
 groesse <- 
   tibble::tribble(
      ~id, ~groesse,        ~team,
-      1L,     197L, "Basketball 🏀",
+      1L,     199L, "Basketball 🏀",
       2L,     203L, "Basketball 🏀",
       3L,     201L, "Basketball 🏀",
-     4L,     194L, "Basketball 🏀",
-     5L,     205L, "Basketball 🏀",
-     1L,     167L,     "Schach ♟️",
+     4L,     199L, "Basketball 🏀",
+     5L,     204L, "Basketball 🏀",
+     1L,     161L,     "Schach ♟️",
      2L,     198L,        "Schach ♟️",
      3L,     177L,      "Schach ♟️",
      4L,     171L,        "Schach ♟️",
-     5L,     189L,    "Schach ♟️",
+     5L,     192L,    "Schach ♟️",
      )
+
+groesse <- groesse %>%
+  mutate(label = if_else(team == "Basketball 🏀", "geringe Variation", "hohe Variation"))
+
 
 
 groesse %>% 
   ggplot(aes(x = id, y = groesse)) +
   geom_col() +
   facet_wrap(~team) +
-  labs(title = "Variation in der Körpergröße")
-
-
-
-  # geom_label(x = 3, y = 200, label = "🏀",
-  #            family = "Apple Color Emoji")
-
+  labs(title = "Variation in der Körpergröße",
+       y = "Körpergröße",
+       x = "Spielernummer") +
+  geom_label(data = distinct(groesse, team, .keep_all = TRUE), 
+            aes(label = label, x = 3, y = 50), 
+            size = 3.5, vjust = 0)
 ```
 
 
-Bei den Basketballern gibt es *wenig* Variation in der Körpergröße - alle sind groß, ähnlich groß.
-Bei den Schachspielenr gibt es (im Verhältnis) *viel* Variation: Einige Personen sind groß, andere klein.
+Bei den Basketballern gibt es *geringe* Variation in der Körpergröße - alle sind groß, ähnlich groß.
+Bei den Schachspielern gibt es (im Verhältnis) *hohe* Variation: Einige Personen sind groß, andere klein.
 
 Die Variation (auch "Variabilität" genannt) kann man auch gut so darstellen wie in s. @fig-variab gezeigt.
 
@@ -205,11 +208,19 @@ groesse %>%
   
 ```
 
-Eine *Abweichung* (auch *Residium*) genannt, zeigt die Differenz von Mittelwert und dem Wert der Körpergröße bei der jeweiligen Person.
+Eine *Abweichung* (auch *Residuum*) genannt, 
+zeigt die Differenz von Mittelwert und dem Wert der Körpergröße bei der jeweiligen Person.
 Wenn wir allgemein von einer Person $i$ sprechen,
 die Körpergröße mit $x$ bezeichnen und den Mittelwert der Körpergröße als $\bar{x}$ ("x quer"),
-dann können wir knapp und präzise das Residuum $r$ so definieren:
-$r_i = x_i - \bar{x}$.
+dann können wir knapp und präzise das Residuum $r$ entsprechend definieren.
+
+
+:::{#def-residuum}
+### Residuum
+Das Residuum der $i$-ten Beobachtung ist definiert als die Differenz vom Wert und Mittelwert:
+
+$r_i = x_i - \bar{x}$. $\square$
+:::
 
 
 
@@ -302,13 +313,13 @@ Ihre Forschungsfrage lautet:
 
 :::{#exm-braindrain}
 
-## Aus der Forschung: Smartphone-Brain-Drain
+## Aus der Forschung: Smartphone-Brain-Drain 📱🧠🚫
 
-@ward_brain_2017 untersuchten die Forschungsfrage, ob die bloße Gegenwart eines Handies (z.B. wenn es vor Ihnen auf dem Tisch dazu führt, dass man abgelenkt wird und daher schlechtere kognitive Leistungen zeigt.
+@ward_brain_2017 untersuchten die Forschungsfrage, ob die bloße Gegenwart eines Handies (z.B. wenn es vor Ihnen auf dem Tisch liegt) dazu führt, dass man abgelenkt wird und daher schlechtere kognitive Leistungen zeigt.
 
 Leider schreiben die Autoren Ihre Hypothese nicht glasklar, aber implizit ist obige Hypothese herauszulesen:
 
->   First, smartphones may redirect the orientation of conscious attention away from the focal task and toward thoughts or behaviors associated with one’s phone. Prior research provides ample evidence that ... that this digital distraction adversely affects both performance ... and enjoyment.
+>   First, smartphones may redirect the orientation of conscious attention away from the focal task and toward thoughts or behaviors associated with one’s phone. Prior research provides ample evidence that ... this digital distraction adversely affects both performance ... and enjoyment.
 
 Später formulieren Sie Ihre Hypothese noch genauer:
 
@@ -348,7 +359,7 @@ Daten kann man als eine geordnete Folge von Zeichen definieren.$\square$
 
 
 Daten kommen häufig in Tabellenform vor; 
-so sind sie am besten zu untersuchen,
+so sind sie (oft) am besten zu untersuchen,
 s. @tbl-daten.
 
 ```{r}
@@ -361,14 +372,15 @@ d <-
           2, "Berta", 2.3,
           3, "Carla", 3)
 
-d
+d |> 
+  kable()
 ```
 
 
 Die erste Spalte `id` ist nur eine laufende Nummer.
 Sie dient dazu, die einzelnen Beobachtungen (hier Studentis) 
 identifizieren zu können und birgt ansonsten keine Information.
-Beispiele für ID-Variablen sind z.B. Matrikulationsnummer, Personalausweisnummern oder Bestellnumern.
+Beispiele für ID-Variablen sind z.B. Matrikulationsnummer, Personalausweisnummern oder Bestellnummern.
 
 
 
@@ -395,11 +407,15 @@ Denn bei so wenig befragten Personen ist die Ungenauigkeit Ihrer Schätzung der 
 :::
 
 @fig-sample-estimate veranschaulicht, dass man einen Mittelwert genauer schätzen kann,
-wenn man auf eine größere Stichprobe zurückgreift.
+wenn man auf eine größere Stichprobe zurückgreift. Das Teilbild links zeigt den Mittelwert einer Stichprobe mit $n=20$ Beobachtungen. Das Teilbild rechts zeigt den Mittelwert einer Stichprobe mit $n=200$ Beobachtungen (jeweils aus der gleichen Grundgesamtheit). Wie man sieht, ist im linken Teilbild die Streuung (Variation) höher als im rechtnen Beilbild:
 
 ![Schätzgenauigkeit als Funktion der Stichprobengröße](img/Estimate.gif){#fig-sample-estimate}
 
 Bildquelle: Karsten Lübke
+
+:::{.callout-important}
+Mehr Daten = genauere Ergebnisse (unter sonst gleichen Umständen) $\square$
+:::
 
 
 
@@ -424,7 +440,8 @@ data("mariokart", package = "openintro")
 
 #mariokart <- as_tibble("mariokart")
 
-head(mariokart)
+head(mariokart) |> 
+  gt()
 
 # if (knitr:::is_html_output()) {
 #   mariokart %>% 
@@ -441,7 +458,12 @@ head(mariokart)
 ```
 
 
-Eine Erklärung aller Variablen findet sich [hier](https://www.openintro.org/data/index.php?data=mariokart). 
+Eine Erklärung aller Variablen des Datensatzes `mariokart` findet sich [hier](https://www.openintro.org/data/index.php?data=mariokart). $\square$
+:::
+
+:::{#def-datadict}
+### Data Dictionary
+
 Eine Erklärung, was die Namen einer Datentabelle bedeuten,
 nennt man *Code Book* or *Data Dictionary*.$\square$
 
@@ -510,7 +532,9 @@ In  @fig-var-zuweisen ist der Wert von `temp` 9.
 In @tbl-daten hat die Variable `name` drei Elemente: Anna, Berta, Carla.
 Der Wert des 2. Elements ist Berta.
 
-Als *Ausprägungen* bezeichnet man die verschiedenen Werte einer Variablen.
+:::{#def-auspraegung}
+Als *Ausprägungen* bezeichnet man die verschiedenen Werte einer Variablen. $\square$
+:::
 
 
 :::{#exm-geschlecht}
@@ -564,7 +588,7 @@ Stay Tidy!
 :::
 
 :::callout-important
-Für eine statistische Analyse ist es fast immer nötig, dass die Daten im Tidy-Format vorliegen.
+Für eine statistische Analyse ist es oft sinnvoll, dass die Daten im Tidy-Format vorliegen.
 :::
 
 Der Vorteil des Tidy-Formats ist es, 
@@ -594,7 +618,7 @@ Das Tidy-Format wird auch als "langes" Format bezeichnet.
 
 ::: {.content-visible unless-format="pdf"}
 
-![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ist tidy.](img/tidyr-pivoting.gif){#fig-long-wide-anim width="50%"}
+![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ("long") ist "tidy".](img/tidyr-pivoting.gif){#fig-long-wide-anim width="50%"}
 :::
 
 
@@ -604,8 +628,10 @@ Das Tidy-Format wird auch als "langes" Format bezeichnet.
 
 
 ::: {.callout-tip}
-In fast allen Organisationen werden Exceltabellen zur Datenverarbeitung verwendet. 
-Dabei wiederholen sich immer wieder die gleichen Fehler bzw. suboptimalen Vorgehensweise zum Aufbau einer Exceltabelle.
+In vielen Organisationen werden Exceltabellen für bestimmte Zwecke der Datenverarbeitung verwendet. 
+Excel^[und ähnliche Programme] hat bestimmte Stärken und Vorteile, aber auch gewisse Nachteile und Schwäche;
+das liegt z.T. daran, dass Excel für bestimmte Aufgaben besser und für andere weniger gut geeignet ist.
+Wenn man mit Excel arbeitet, wiederholen sich erfahrungsgemäß immer wieder die gleichen Fehler bzw. suboptimalen Vorgehensweise zum Aufbau einer Exceltabelle.
 
 [Dieser Artikel](https://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989) von @broman_data_2018 zeigt anhand einiger praktischer Tipps, wie man Exceltabellen so aufbaut, dass Fehler minimiert werden. 
 :::
@@ -622,8 +648,8 @@ Angenommen, Ihre Forschungsfrage lautet:
 
 In dem Fall gilt:
 
-- *Lernen* ist die Inputvariable/X-Variable/Ursache/UV
-- *Prüfungserfolg*  ist die Outputvariable/Y-Variable/Wirkung/AV
+- *Lernen* ist die Inputvariable/X-Variable/Ursache/unabhängig Variable (UV)
+- *Prüfungserfolg*  ist die Outputvariable/Y-Variable/Wirkung/abhängige Variable (AV)
 
 @fig-ueberblick-fragen stellt diese beiden "Positionen" einer Variable dar. Die erste Position ist vor dem Pfeil.
 Die zweite Position ist nach dem Pfeil.
@@ -643,6 +669,10 @@ graph LR
 
 
 ### Nach dem Skalenniveau
+
+:::{#def-skalenniveau}
+Der Begriff *Skalenniveau* wird verwendet, um die Art und Menge der Information, die in Variablen enthalten ist, zu benennen. Diese Klassifikation basiert auf den Eigenschaften der Daten und den mathematischen Operationen, die sinnvoll auf diese Daten angewendet werden können. $\square$
+:::
 
 @fig-skalenniveau gibt einen Überblick über typisch verwendete Skalenniveaus.
 
@@ -718,7 +748,6 @@ skalenniveaus <-
   )
 
 skalenniveaus
-
 ```
 
 
@@ -772,14 +801,15 @@ Man kann aber *nicht* sagen, "Ich mag aber Pizza um 42% mehr als die Spagetthi u
 tibble(x = c(1,2,5), Liebling = c("🥩", "🍝", "🍕")) %>% 
   ggplot()+
   aes(x=x) +
-  geom_label(aes(label = Liebling), y = 0) +
+  geom_label(aes(label = Liebling), y = 1) +
   theme_minimal() +
   labs(x = "Wie sehr ich dieses Essen mag") +
-  theme(axis.text = element_blank())
+  theme(axis.text = element_blank()) +
+  scale_y_continuous(limits = c(0,2))
 ```
 
 
-*Intervallskala*: Das ist vielleicht eine Überraschung für Sie: Wenn es heute 10°C hat und morgen 5°C -- dann ist es heute *nicht* doppelt so warm wie morgen. Ja, 10 ist das Doppelte von 5. Aber *10° Celcius* ist nicht doppelt so warm wie 20° Celcius. Wenn Sie das verwundert: Das ist normal, so geht es den meisten, wenn sie das zum ersten Mal hören.
+*Intervallskala*: Das ist vielleicht eine Überraschung für Sie: Wenn es heute 10°C hat und morgen 5°C -- dann ist es heute *nicht* doppelt so warm wie morgen. Ja, 10 ist das Doppelte von 5. Aber *10° Celcius* ist *nicht* doppelt so warm wie 20° Celcius. Wenn Sie das verwundert: Das ist normal, so geht es vielen Leuten, wenn sie das zum ersten Mal hören.
 Der Grund, dass es nicht erlaubt ist, Verhältnisse (wie doppelt/halb so viel etc.) auf der Celcius-Skala zu bilden,
 ist, dass der Nullpunkt der Skala, 0° C, kein echter, physikalischer Nullpunkt ist. Bei 0° C liegt eben nicht Null Wärmeenergie vor. Stattdessen wurde eine Wärmenergiemenge gewählt, die für uns Menschen ganz praktisch, da augenfällig ist: der Gefrierpunkt von Wasser. Was bei der Intervallskala erlaubt ist, ist das Addieren (und Subtrahieren): heute 10°C, morgen 5°C, das ist ein Unterschied von 5°C. Oder: Im Schnitt waren es 7,5°C, das ist genau in der Mitte von 5 und 10°C. @fig-intervall versinnbildlicht die Intervallskala.
 
@@ -812,19 +842,23 @@ tibble(y = c(10, 20, 30)) %>%
 ```{r}
 #| dev: "ragg_png"
 #| echo: false
-#| fig-asp: 0.3
+#| fig-asp: 0.5
 #| label: fig-verhaeltnis
 #| fig-cap: Puh! Der rote Flitzer ist 10 Mal so teuer wie die blaue Möhre. Kohlen zusammenkratzen."
 tibble(Preis = c(1e4, 1e5),
        id = c(1, 2),
        Auto = c("🚙", "🏎️")  ) %>% 
-  ggplot() +
-  geom_col(aes(y = Preis, x = id)) +
+  ggplot(aes(y = Preis, x = id)) +
+  geom_col() +
   scale_x_discrete() +
-  geom_label(aes(x = id, y = Preis, label = Preis)) +
-  scale_y_continuous(labels = scales::dollar_format()) +
-  geom_label(aes(x = id, label = Auto), y = 0 )
-  
+  geom_bar_text()+
+  #geom_label(aes(x = id, y = Preis, label = Preis)) +
+  scale_y_continuous(labels = scales::dollar_format(),
+                     limits = c(-1000, 1e5),
+                     expand = c(0.1, 0.1)) +
+  geom_label(aes(x = id, label = Auto), y = -1e3,
+                          size = 6,
+             nudge_y = -5000)
 ```
 
 
@@ -908,6 +942,7 @@ zeiten_mw <- mean(zeiten)
 ::: {.centered}
 **`r zeiten_mw`** 
 :::
+</br>
 </br>
 
 ![Yeah, jetzt weiß ich, wie viel die Studis so typischerweise lernen. Viel zu wenig natürlich!](img/teacher.png){width="25%"}
@@ -1010,6 +1045,14 @@ Fassen Sie den Artikel von @broman_data_2018 zusammen.
 Inspiration von einer Praktikerin der Datenanalyse: Caitlin Hudon verrät [in diesem Video](https://www.youtube.com/watch?v=O5lP6XcopdQ&list=PL9HYL-VRX0oQchs7dqFICoxMgnvFO10tC&index=15&t=1s), welche Fehler Sie sie in in den acht Jahren ihrer Berufserfahrung gemacht hat und was sie daraus gelernt hat.
 
 {{< video https://www.youtube.com/watch?v=O5lP6XcopdQ&list=PL9HYL-VRX0oQchs7dqFICoxMgnvFO10tC&index=15&t=1s >}}
+
+
+## Literaturhinweise
+
+Einen Einblick in die  Fundamente statistischer Analyse bietet @stigler_seven_2016. 
+@cetinkaya-rundel_introduction_2021-1, stellen grundlegende Konzepte der Analyse von Daten im Kapitel 1, "Hello data", vor.
+downey_probably_2023 illustriert statistische Überraschungsmoment auf unterhaltsame, und vor allem: sofataugliche Art.
+
 
 
 

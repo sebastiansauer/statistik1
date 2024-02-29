@@ -10,6 +10,7 @@ library(tibble)
 library(tidyverse)
 library(gt)
 library(ggfittext)
+library(see)
 ```
 
 ```{r}
@@ -73,6 +74,9 @@ ggplot2::theme_set(theme_minimal())
 
 ## Was ist Statistik und wozu ist sie gut?
 
+
+### Eine Definition von Statistik
+
 Es gibt mehrere Definition von Statistik;
 hier ist eine.
 
@@ -128,6 +132,12 @@ Gute Antwort, oder?
 :::
 
 
+
+### Unterschiedlichkeit messen 
+
+Eine allgegenwärtige Tatsache ist, dass die Dinge der Welt sich unterscheiden, g
+enauer gesagt, dass Exemplare einer Gattung sich unterscheiden. 
+So sind nicht alle Menschen gleich groß, nicht alle Bücher gleich lang oder nicht alle Tage gleich warm.
 
 
 Ein zentrales Vorgehen bei statistischen Analysen ist es, 
@@ -204,20 +214,25 @@ groesse %>%
   geom_point(aes(x = id, y = groesse), color = "grey60", alpha = .7) +
   facet_wrap(~ team) +
   geom_hline(aes(yintercept = groesse_mw), data = groesse_summ) +
-  labs(title = "Abweichung vom Mittelwert der Körpergröße pro Team")
+  labs(title = "Abweichung vom Mittelwert der Körpergröße pro Team") + 
+  scale_color_okabeito() +
+  geom_label(x = 5, label = "MW",
+            aes(y = groesse_mw),
+            hjust = "right",
+            size = 2 )
   
 ```
 
 Eine *Abweichung* (auch *Residuum*) genannt, 
-zeigt die Differenz von Mittelwert und dem Wert der Körpergröße bei der jeweiligen Person.
+zeigt hier die Differenz von Mittelwert und dem Wert der Körpergröße bei der jeweiligen Person.
 Wenn wir allgemein von einer Person $i$ sprechen,
-die Körpergröße mit $x$ bezeichnen und den Mittelwert der Körpergröße als $\bar{x}$ ("x quer"),
-dann können wir knapp und präzise das Residuum $r$ entsprechend definieren.
+Das Merkmal *Körpergröße* mit $X$ bezeichnen und den Mittelwert der Körpergröße als $\bar{x}$ ("x quer"),
+dann können wir knapp und präzise das Residuum der $i$-ten Person mit $r_i$ bezeichnen und entsprechend definieren.
 
 
 :::{#def-residuum}
 ### Residuum
-Das Residuum der $i$-ten Beobachtung ist definiert als die Differenz vom Wert und Mittelwert:
+Das Residuum des Merkmals $X$ der $i$-ten Beobachtung ist definiert als die Differenz vom Wert $x_i$ und einem Referenzwert, etwa dem Mittelwert, $\bar{x}$:
 
 $r_i = x_i - \bar{x}$. $\square$
 :::
@@ -441,7 +456,8 @@ data("mariokart", package = "openintro")
 #mariokart <- as_tibble("mariokart")
 
 head(mariokart) |> 
-  gt()
+  select(-id) |> 
+  kable()
 
 # if (knitr:::is_html_output()) {
 #   mariokart %>% 
@@ -668,6 +684,10 @@ graph LR
 ```
 
 
+:::{#exr-uvav}
+Überlegen Sie sich eine Forschungsfrage, die eine UV und eine AV enthält. Sagen Sie einer/em Kommilitonen diese Forschungsfrage und fragen Sie, was die UV und die AV ist. Bei richtiger Antwort belohnen Sie großzügig. $\square$
+:::
+
 ### Nach dem Skalenniveau
 
 :::{#def-skalenniveau}
@@ -796,12 +816,12 @@ Man kann aber *nicht* sagen, "Ich mag aber Pizza um 42% mehr als die Spagetthi u
 #| out-width: "100%"
 #| label: fig-ordinal
 #| fig-asp: 0.3
-#| fig-cap: "Die Ordinalskala: Je weiter rechts auf der X-Achse, desto höher lieber esse ich das Gericht."
+#| fig-cap: "Die Ordinalskala: Je weiter rechts auf der X-Achse, desto lieber esse ich das Gericht."
 
 tibble(x = c(1,2,5), Liebling = c("🥩", "🍝", "🍕")) %>% 
   ggplot()+
   aes(x=x) +
-  geom_label(aes(label = Liebling), y = 1) +
+  geom_label(aes(label = Liebling), y = 1, size = 7) +
   theme_minimal() +
   labs(x = "Wie sehr ich dieses Essen mag") +
   theme(axis.text = element_blank()) +
@@ -882,6 +902,10 @@ Außerdem können quantitative Variablen untergliedert werden in:
 Fragen nach Skalenniveaus gehören zu den Lieblingsprüfungsfragen in diesem Themenbereich. Sie sind gut beraten, sich gerade mit dieser Frage intensiver zu beschäftigen. Auch in thematisch angrenzenden Fächern wird immer wieder die Frage nach dem Skalennvieau aufgeworfen. Das zeigt natürlich auch die hohe Relevanz des Themas.
 :::
 
+
+:::{#exr-skalenniveaus}
+Überlegen Sie sich für einige Variablen die Skalenniveaus und befragen Sie dann eine:n Kommilitonen dazu. $\square$
+:::
 
 ## Modelle
 
@@ -1051,7 +1075,7 @@ Inspiration von einer Praktikerin der Datenanalyse: Caitlin Hudon verrät [in di
 
 Einen Einblick in die  Fundamente statistischer Analyse bietet @stigler_seven_2016. 
 @cetinkaya-rundel_introduction_2021-1, stellen grundlegende Konzepte der Analyse von Daten im Kapitel 1, "Hello data", vor.
-downey_probably_2023 illustriert statistische Überraschungsmoment auf unterhaltsame, und vor allem: sofataugliche Art.
+@downey_probably_2023 illustriert statistische Überraschungsmoment auf unterhaltsame, und vor allem: sofataugliche Art.
 
 
 

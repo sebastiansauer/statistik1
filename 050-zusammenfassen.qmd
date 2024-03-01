@@ -32,6 +32,8 @@ library(easystats)
 ```{r}
 #| include: false
 library(gt)
+library(mosaic)
+library(gganimate)
 ```
 
 
@@ -61,18 +63,18 @@ Der klassische Mittelwert (arithmetisches Mittel) ist ein prototypisches Beispie
 
 :::{#exr-mw-md-mod}
 
-
-
 Welche Vorstellung haben Sie, wenn Sie hören, dass der "typische deutsche Mann" 1,80m groß ist [@owidhumanheight]?^[Ihr Vorstellung updatet sich in in @def-mw.] 
 
 a) Die Hälfte der Männer ist größer als 1,80m, die andere Hälfte kleiner.
 b) Das arithmetische Mittel der Männer beträgt 1,80m.
 c) Die meisten Männer sind 1,80m groß.
 d) Etwas anderes.
-e) Keine Ahnung!$\square$
+e) Keine Ahnung! $\square$
+
 :::
 
 :::{#exr-mw2}
+
 Laut [dieser Quelle](https://en.wikipedia.org/wiki/Average_human_height_by_country) beträgt der Wert der mittleren Größe deutscher Frauen etwa 1,66m, also 14cm weniger als bei Männern.
 
 
@@ -105,8 +107,9 @@ So könnte man z.B. sagen, "mehr als 5&thinsp;cm sind viel". So eine Entscheidun
 
 Ein Statistikkurs besteht aus drei Studentinnen: Anna, Berta und Carla.
 Sie haben gerade ihre Noten in der Klausur erfahren. Anna hat eine 1, Berta eine 2 und Carla eine 3.
-Der Durchschnitt (das arithmetische Mittel, $\varnothing$) beträgt: 2.
+Der Durchschnitt (das arithmetische Mittel, $\varnothing$) beträgt: 2. $\square$
 :::
+
 
 >   🧑‍🎓 Zu easy!
 
@@ -167,52 +170,56 @@ In s. @fig-mw1 sehen wir die Noten von (dieses Mal) vier Studentis.
 Die gestrichelte horizontale Linie zeigt den Mittelwert der vier Noten.
 Die schwarzen Punkte sind die Daten, in dem Fall die einzelnen Noten.
 Die vertikalen Linien zeigen die Abweichungen der Noten zum Mittelwert.
-Bezeichnen wir die Abweichung - auch als "Fehler", "Rest" oder "Residuum" bezeichnet - der $i$-ten Person mit $e_i$ (*e* wie engl. *error*, "Fehler) und die $i$-te Note mit $x_i$, so können wir festhalten:
+Bezeichnen wir die Abweichung - auch als "Fehler", "Rest" oder "Residuum" bezeichnet - der $i$-ten Person mit $\textcolor{#009E73}{\text{e}_i}$ (*e* wie engl. *error*, "Fehler) und die $i$-te Note mit $x_i$, so können wir festhalten:
 
-$$x_i = \bar{x} + e_i$$
+$$\textcolor{#E69F00}{\text{y}_i} = 
+  \textcolor{#56B4E9}{\bar{x}} + 
+  \textcolor{#009E73}{\text{e}_i}$$
 
 Anders ausgedrückt:
 
 
-$$\text{Daten} = \text{Modell} + \text{Rest}$$
-
+$$\textcolor{#E69F00}{\text{Daten}} =     \textcolor{#56B4E9}{\text{Modell}} + 
+\textcolor{#009E73}{\text{Rest}}$$
 Der Mittelwert ist hier unser Modell der Daten.
 Wie gesagt: Ein Modell ist eine vereinfachte (zusammengefasste) Beschreibung einer Datenreihe.
 
 
-Um Modelle darzustellen, wird in der Datenanalyse häufig folgende Art von Modellgleichung verwendet, s. @eq-mean-mod
+Um Modelle darzustellen, wird in der Datenanalyse häufig folgende Art von Modellgleichung verwendet, s. @eq-mean-mod.
 
 
-$$\hat{y} \sim m$$ {#eq-mean-mod}
+$$\textcolor{#E69F00}{\hat{y}} \sim \textcolor{#56B4E9}{\text{m}}$$ {#eq-mean-mod}
 
-Lies: "Der Modellwert $\hat{y}$ ist eine Funktion des Modells (m) ". 
+Lies: "Der Modellwert $\textcolor{#E69F00}{\hat{y}}$ ist eine Funktion des Modells $\textcolor{#56B4E9}{\text{m}}$". 
 Der Kringel "~"^[Das "Kringel" oder die "Welle" "~" nennt man auch "Tilde"] soll also hier heißen "... ist eine Funktion von ...".
 
-Mit $\hat{y}$ ist die vorhergesagte bzw. die zu erklärende Variable^[AV, Output-Variable, Zielvariable] gemeint.
-Das "Dach"  über dem $y$ bedeutet "vorhergesagter Y-Wert" oder "Y-Wert laut dem Modell".
-Der tatsächliche, beobachtete Wert $y$ setzt sich zusammen aus dem Modellwert (m) plus einem Fehler (e wie error):
+Mit $\textcolor{#E69F00}{\hat{y}}$ ist die vorhergesagte bzw. die zu erklärende Variable^[AV, Output-Variable, Zielvariable] gemeint.
+Das "Dach"  über dem $\textcolor{#E69F00}{\text{y}}$ bedeutet "vorhergesagter Y-Wert" oder "Y-Wert laut dem Modell".
+Der tatsächliche, beobachtete Wert $\textcolor{#E69F00}{\text{y}}$ setzt sich zusammen aus dem Modellwert $\textcolor{#56B4E9}{\text{m}}$ plus einem Fehler $\textcolor{#009E73}{\text{e}}$.
 
-$$y = m + e$$
+$$\textcolor{#E69F00}{\text{y}}  = \textcolor{#56B4E9}{\text{m}} + \textcolor{#009E73}{\text{e}}$$
 
-Anstelle von $m$ schreibt man auch $\hat{y}$ ("y-Dach"). 
+Anstelle von  $\textcolor{#56B4E9}{\text{m}}$ schreibt man auch $\textcolor{#E69F00}{\hat{y}}$ ("y-Dach"). 
 In diesem Fall ist das Modell einfach gleich dem Mittelwert (und nicht irgendeiner Funktion des Mittelwerts), so dass wir schreiben können:
 
 
-$$y = \bar{x} + e$$
+
+$$\textcolor{#E69F00}{y}  = \textcolor{#56B4E9}{\bar{x}} + \textcolor{#009E73}{e}$$
 
 
-Die Zielvariable $Y$ wird also durch ihren eigenen Mittelwert erklärt, außer gehen wir von einem Fehler $e$ in unseren Modellvorhersagen aus. Nobody is perfect.
+Die Zielvariable $\textcolor{#E69F00}{\text{y}}$ wird also durch ihren eigenen Mittelwert erklärt, außer gehen wir von einem Fehler $e$ in unseren Modellvorhersagen aus. Nobody is perfect.
 In späteren Kapiteln werden wir andere Variablen heranziehen, um die Zielvariable zu erklären.
-Würden wir z.B. sagen wollen, dass wir $Y$ als Funktion einer Variable $X$ erklären,
+Würden wir z.B. sagen wollen, dass wir $\textcolor{#E69F00}{\text{y}}$ als Funktion einer Variable $X$ erklären,
 so würden wir schreiben:
 
-$$\bar{y} \sim x$$
-Da wir im Moment aber keine andere Variablen bemühen, um $Y$ zu erklären schreibt man auch:
+$$\textcolor{#E69F00}{\bar{y}} \sim \textcolor{#56B4E9}{\text{x}} $$
+\textcolor{#E69F00}{\bar{y}}
+Da wir im Moment aber keine andere Variablen bemühen, um $\textcolor{#E69F00}{\text{y}}$ zu erklären schreibt man auch:
 
-$$\bar{y} \sim 1$$
+$$\textcolor{#E69F00}{\bar{y}} \sim 1$$
 
 Diese Schreibweise sieht verwirrend aus. 
-Die $1$ soll aber einfach zeigen, dass wir keine andere Variable zur Erklärung von $Y$ verwenden, 
+Die $1$ soll aber einfach zeigen, dass wir keine andere Variable zur Erklärung von$\textcolor{#E69F00}{\text{y}}$ verwenden, 
 daher steht hier kein Buchstabe, sondern eine einfache $1$.
 
 
@@ -403,7 +410,7 @@ ggplot(mariokart) +
   geom_point(data = mariokart_extreme, 
              color =  okabeito_colors()[1],
              alpha = .7,
-             size = 5) +
+             size = 8) +
   labs(caption = paste0("MW: ", round(mean(mariokart$total_pr), 2)),
        x = "Nr. des Spiel") +
   scale_y_continuous(limits = c(0, 400)) +
@@ -585,17 +592,17 @@ Der Median ist *robust* (gegenüber) Extremwerten: Fügt man Extremwerte zu eine
 
 
 ::: {#fig-median-human layout-ncol=5 width="1%" fig-align="bottom"}
-![1,60m](img/Human_Silhouette.svg.png){width=0.1%}
+![1,60m](img/Human_Silhouette.svg.png){width=10%}
 
-![1,72m](img/Human_Silhouette.svg.png){width=0.13%}
+![1,72m](img/Human_Silhouette.svg.png){width=13%}
 
-![1,79m: Median!](img/human-red.png){width=0.15%}
+![1,79m: Median!](img/human-red.png){width=15%}
 
-![1,94](img/Human_Silhouette.svg.png){width=0.16%}
+![1,94](img/Human_Silhouette.svg.png){width=16%}
 
-![2,12m](img/Human_Silhouette.svg.png){width=0.2%}
+![2,12m](img/Human_Silhouette.svg.png){width=20%}
 
-Der Median als der Wert des "mittleren" Objekts, wenn die Objekte aufsteigend sortiert sind.
+Der Median als der Wert des "mittleren" Objekts, wenn die Objekte aufsteigend sortiert sind. Es gibt genauso viele Objekte mit kleinerem Wert als der Median wie Objekte mit größerem Wert als der Median.
 
 :::
 
@@ -673,6 +680,39 @@ Klaffen Mittelwert und Median auseinander, so liegt eine schiefe Verteilung vor.
 Ist der Mittelwert größer als der Median, so nennt man die Verteilung rechtsschief.
 Bei schiefen Verteilungen ist der Median dem Mittelwert als Modell für den "typischen Wert" vorzuziehen.
 :::
+
+
+:::{#exr-mw-no-extrem}
+### Mariokart ohne Extremwerte
+
+
+Im Datensatz `mariokart` gibt es einige wenige Spiele, die für einen vergleichsweise hohen Preis verkauft wurden. 
+Diese Extremwerte verzerren den mittleren Verkaufspreis möglicherweise über die Gebühr. $\square$
+:::
+
+:::{.panel-tabset}
+### Aufgabe
+Entfernen Sie diese Werte und berechnen Sie dann Mittelwert und Median erneut. Vergleichen Sie die Ergebnisse.
+
+### Lösung
+```{r}
+mariokart2 <- 
+mariokart %>% 
+  filter(total_pr < 100)
+
+# ohne Extremwerte:
+mariokart2 |> 
+  summarise(total_pr_mittelwert = mean(total_pr),
+            total_pr_median = median(total_pr))
+
+# mit Extremwerten:
+mariokart |> 
+  summarise(total_pr_mittelwert = mean(total_pr),
+            total_pr_median = median(total_pr))
+```
+
+:::
+
 
 
 
@@ -762,6 +802,8 @@ Ein Quantil ist ein Oberbegriff für Quartile, Dezile, etc. $\square$
 :::
 
 
+@fig-quantile-anim stellt einige Quantile animiert dar.
+
 ::: {#fig-quantile-anim}
 
 ```{r}
@@ -808,140 +850,76 @@ mariokart %>%
 
 
 
+:::{#fig-quantile-anim}
+
 :::{.panel-tabset}
 
 ### 25%-Schritte: Quartile
 
-```{r quarts-mario}
-#| echo: false
-#| eval: false
-k <- 0:10
-d_anim_decile <- 
-  mariokart |> 
-  select(total_pr) |> 
-  mutate(quart = cut(total_pr,
-                     breaks = quantile(mariokart$total_pr, probs = k * .1),
-                     include.lowest = TRUE, 
-                     labels = 1:10)) |> 
-  group_by(quart) |> 
-  mutate(total_pr_max = max(total_pr))
-
-
-d_anim2 <-
-  d_anim |> 
-  ungroup() |> 
-  select(total_pr)
-
-p_quartiles  <- 
-d_anim |> 
-  ggplot(aes(x = total_pr)) +
-  geom_density(data = d_anim2) + 
-  geom_vline(aes(xintercept = total_pr_max)) +
-  geom_label(aes(label = quart, x = total_pr_max), y = 0)
-
-library(gganimate)
-p_quantiles_anim <-
-  p_quartiles +
-  transition_states(quart, transition_length = 2, state_length = 1) +
-  ggtitle("Quartil: {closest_state}") +
-  enter_fade() +
-  exit_fade()
-
-anim_save("img/p_quartiles_anim.gif", p_quantiles_anim, renderer = gifski_renderer())
-```
 
 ![Quartile](img/p_quartiles_anim.gif)
 
+
+
 ### 10%-Schritte: Dezile
 
-
-```{r deciles-mario}
-#| echo: false
-#| eval: false
-k <- 0:10
-d_anim_decile <- 
-  mariokart |> 
-  select(total_pr) |> 
-  mutate(decile = cut(total_pr,
-                      breaks = quantile(mariokart$total_pr, probs = k * .1),
-                      include.lowest = TRUE, 
-                      labels = 1:10)) |> 
-  group_by(decile) |> 
-  mutate(total_pr_max = max(total_pr))
-
-d_anim_decile2 <-
-  d_anim |> 
-  ungroup() |> 
-  select(total_pr)
-
-p_decile  <- 
-d_anim_decile |> 
-  ggplot(aes(x = total_pr)) +
-  geom_density(data = d_anim_decile2) + 
-  geom_vline(aes(xintercept = total_pr_max)) +
-  geom_label(aes(label = decile, x = total_pr_max), y = 0)
-
-library(gganimate)
-p_decile_anim <-
-  p_decile +
-  transition_states(decile, transition_length = 2, state_length = 1) +
-  ggtitle("Dezil: {closest_state}") +
-  enter_fade() +
-  exit_fade()
-
-anim_save("img/p_deciles_anim.gif", p_decile_anim, renderer = gifski_renderer())
-```
 
 ![Dezile](img/p_deciles_anim.gif)
 
 ### Percentile: 1%-Schritte
 
 
-```{r percentiles-mario}
+![Perzentile](img/p_percentile_anim.gif)    
+:::
+
+Verschiedenen Quantile animiert
+:::
+
+
+@fig-quantile-mosaic visualisiert ebenfalls verschiedene Quantile.
+Man beachte, dass alle Regionen gleiche Flächen (d.h. Wahrscheinlichkeitsmassen) aufweisen.
+
+
+:::{#fig-quantile-mosaic}
+
+
+
+:::{.panel-tabset}
+
+### Quartile
+
+```{r}
 #| echo: false
-#| eval: false
-k <- 1:100
-breaks_percentiles <- quantile(mariokart$total_pr, probs = k * .01) 
-
-breaks_percentiles <- breaks_percentiles + runif(n = length(breaks_percentiles), min = -.01, max = .01)
-
-cuts_percentiles <- cut(mariokart$total_pr,
-                      breaks = breaks_percentiles,
-                      include.lowest = TRUE,
-                      labels = 1:99)
-
-d_anim_percentile <-
-  mariokart |> 
-  select(total_pr) |> 
-    mutate(perc = cuts_percentiles) |> 
-    group_by(perc) |> 
-    mutate(total_pr_max = max(total_pr))
-
-
-d_anim_percentile2 <-
-  d_anim_percentile |> 
-  ungroup() |> 
-  select(total_pr)
-
-p_percentile  <- 
-d_anim_percentile |> 
-  ggplot(aes(x = total_pr)) +
-  geom_density(data = d_anim_percentile2) + 
-  geom_vline(aes(xintercept = total_pr_max)) +
-  geom_label(aes(label = perc, x = total_pr_max), y = 0)
-
-library(gganimate)
-p_percentile_anim <-
-  p_percentile +
-  transition_states(perc, transition_length = 2, state_length = 1) +
-  ggtitle("Perzentil: {closest_state}") +
-  enter_fade() +
-  exit_fade()
-
-anim_save("img/p_percentile_anim.gif", p_percentile_anim, renderer = gifski_renderer())
+xqnorm( p = c(.25, .5, .75), return = "plot") +
+  guides(fill = "none") + 
+  theme_minimal()
 ```
 
-![Perzentile](img/p_percentile_anim.gif)    
+
+### Dezile
+
+```{r}
+#| echo: false
+xqnorm( p = seq(0,1, by = .1), return = "plot") +
+  theme_minimal() +
+  guides(fill = "none") 
+```
+
+
+
+
+### Perzentile
+
+```{r}
+#| echo: false
+xqnorm( p = seq(0,1, by = .01), return = "plot") +
+  theme_minimal() +
+  guides(fill = "none") 
+```
+:::
+
+Verschiedene Quantile visualisiert. In jedem Diagramm sind die Regionen gleich groß, beinhalten also (ungefähr) die gleiche Anzahl von Beobachtungen.
+
 :::
 
 ## Lagemaße {#sec-lage}
@@ -972,7 +950,7 @@ Typische Lagemaße sind:
 :::
 
 
-Berechnen wir Lagemaße für den Mariokart-Datensatz, s. @lst-mario-lage
+Berechnen wir Lagemaße für den Mariokart-Datensatz, s. @lst-mario-lage.^[Es ist übrigens egal, wie sie die Variablen benennen, die Sie berechnen: `mw` oder `mittelwert` oder `mean` oder `mein_krasser_variablenname` -- alles okay!]
 
 
 :::{#lst-mario-lage}
@@ -1010,7 +988,7 @@ Oder vielleicht:
 Anders ausgedrückt:
 
 
->    Körpergröße $y$ ist eine Funktion des Geschlechts $G$.
+>    Körpergröße $\textcolor{#E69F00}{\text{y}}$ ist eine Funktion des Geschlechts $G$.
 
 
 Die *Modellformel* könnte also lauten:

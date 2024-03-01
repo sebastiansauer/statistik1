@@ -56,7 +56,7 @@ wetter <- read.csv(wetter_path)
 ```
 
 
-## Forschungsbezug: Wie man Ihre Persönlichkeit durch Ihr Facebook-Profil vorhersagen kann
+## Forschungsbezug: Gläserne Kunden
 
 
 Lineare Modelle^[synonym: Regressionsanalysen] sind ein altes, aber mächtiges Werkzeug.
@@ -71,7 +71,9 @@ Die Autoren resümieren:
 >   We show that easily accessible digital records of behavior, Facebook Likes, can be used to automatically and accurately predict a range of highly sensitive personal attributes including: sexual orientation, ethnicity, religious and political views, personality traits, intelligence, happiness, use of addictive substances, parental separation, age, and gender.
 
 Die Autoren berichten über hohe Modellgüte ($r$) zwischen den tatsächlichen persönlichen Attributen und den vorhergesagten Werten Ihres Modells, s. @fig-pnas1.
-Das eingesetzte statistische Modell beruht auf einem linearen Modell, also ähnlich zu dem in diesem Kapitel vorgestellten Methoden.$\square$
+Das eingesetzte statistische Modell beruht auf einem linearen Modell, also ähnlich zu dem in diesem Kapitel vorgestellten Methoden.
+
+Neben der analytischen Stärke der Regressionsanalyse zeigt das Beispiel auch, wie gläsern Konsument:innen im Internet sind.$\square$
 :::
 
 
@@ -117,59 +119,28 @@ was die Spalte bedeutet.$\square$
 In @tbl-wetter und @fig-wetter-anim kann man sich die Daten en Detail anschauen (Temperatur und Niederschlag im Zeitverlauf).
 
 
-:::{#fig-wetter-anim layout-ncols=2}
-![Temperatur (Grad Celcius) im Verlauf der Jahre](img/fig-wetter-anim-1.gif)
+:::{#fig-wetter-anim}
 
-![Niederschlage (mm) im Verlauf der Jahre](img/fig-wetter-anim-2.gif)
+:::{.panel-tabset}
 
-Veränderung der Temperatur und Niederschlag (10-Jahres-Mittel) in Deutschland
+### Temperaturverlauf
+
+![Temperatur (Grad Celcius) im Verlauf der Jahre](img/wetter1.gif)
+
+
+### Niederschlagsverlauf
+
+![Niederschlage (mm) im Verlauf der Jahre](img/wetter2.gif)
+
+### Monatstemperaturverlauf
+
+![Veränderung der Temperatur pro Monat in Deutschland im Zeitverlauf (10-Jahres-Mittelwerte](img/wetter3.gif)
+
 :::
 
-```{r}
-#| echo: false
-#| eval: false
+Veränderung der Temperatur und Niederschlag (10-Jahres-Mittel) in Deutschland im Verlauf des 20. Jahrhunderts
 
-
-library(gganimate)
-wetter %>%
-  select(year, temp) %>% 
-  mutate(decade_year = year %% 10,
-         decade = (year %/% 10) * 10) %>% 
-  group_by(decade) %>% 
-  summarise(temp = mean(temp, na.rm = TRUE)) %>% 
-  ggplot(aes(x = decade, y = temp,
-             frame = decade)) +
-  geom_line() +
-  geom_point() +
-  scale_color_viridis_c() +
-  transition_reveal(decade) 
-
-
-wetter %>%
-  select(year, precip) %>% 
-  mutate(decade_year = year %% 10,
-         decade = (year %/% 10) * 10) %>% 
-  group_by(decade) %>% 
-  summarise(precip = mean(precip, na.rm = TRUE)) %>% 
-  ggplot(aes(x = decade, y = precip,
-             frame = decade)) +
-  geom_line() +
-  geom_point() +
-  scale_color_viridis_c() +
-  transition_reveal(decade) 
-
-
-
-# library(gganimate)
-# wetter %>% 
-#   ggplot(aes(x = temp, y = precip, color = month,
-#              frame = year)) +
-#   geom_point() +
-#   scale_color_viridis_c() +
-#   transition_time(year) +
-#   labs(title = "Year: {frame_time}")
-```
-
+:::
 
 
 
@@ -182,7 +153,7 @@ wetter
 
 Hervorragend!
 
-An die Arbeit 💪 
+An die Arbeit! 💪 
 
 :::
 
@@ -266,9 +237,9 @@ parameters(lm_wetter1a) %>% print_md()
 #| fig-cap: "Die Veränderung der mittleren Temperatur in Deutschland im Zeitverlauf (Datenquelle: DWD)"
 #| layout-ncol: 2
 #| fig-subcap:
-#|   - Jeder Punkt ist ein Tag
+#|   - Jeder Punkt ist ein Tag (viel Overplotting, wenig nützlich)
 #|   - Jeder Punkt ist ein Jahr (wetter_summ)
-plot(estimate_relation(lm_wetter1))
+plot(estimate_relation(lm_wetter1)) 
 plot(estimate_relation(lm_wetter1a))
 ```
 
@@ -338,7 +309,7 @@ In Worten: Wir sagen eine Temperatur vorher, die sich als Summe von 8.49 Grad pl
 
 :::{.callout-important}
 ### Referenzwert entspricht Null
-Der Referenzwert bzw. die Referenzgruppe entspricht dem Wert x=0 im Regressionsmodell.$\square$
+Der Referenzwert bzw. der Wert der Referenzgruppe entspricht dem Y-Wert bei x=0 im Regressionsmodell.$\square$
 :::
 
 Wie gut erklärt unser Modell die Daten?
@@ -432,16 +403,16 @@ lm_wetter_bin_uv <- lm(temp ~ after_1950, data = wetter)
 
 Die Parameter des Modells lassen darauf schließen, dass es tatsächlich wärmer war nach 1950, und zwar im Schnitt offenbar ein gutes halbes Grad, s. @fig-wetter2.
 
-```{r}
-#| label: fig-wetter2
-#| fig-cap: "Modell `temp ~ after_1950`"
-#| layout-ncol: 2
-#| fig-subcap:
-#|   - Der Schätzbereich für den Parameter reicht von ca. 0.5 bis 0.8 Grad Unterschied
-#|   - Wie man sieht, überlappen die Temperaturen dennoch beträchtlich; aufgrund des starken "Overplotting" ist dieses Diagramm alles andere als ideal
-plot(parameters(lm_wetter_bin_uv))
-plot(estimate_expectation(lm_wetter_bin_uv))
-```
+:::{#fig-wetter2 layout-ncol=2}
+
+![Der Schätzbereich für den Parameter reicht von ca. 0.5 bis 0.8 Grad Unterschied](img/fig-lm-wetter-bin-uv.png)
+
+![Wie man sieht, überlappen die Temperaturen dennoch beträchtlich; aufgrund des starken Overplotting ist dieses Diagramm alles andere als ideal](img/fig-temp-after1950.png)
+
+Modell `temp ~ after_1950`
+
+:::
+
 
 Leider zeigt ein Blick zum `r2`, dass die Vorhersagegüte des Modells zu wünschen übrig lässt^[`r2(lm_wetter_bin_uv)`]. $\square$
 
@@ -483,7 +454,7 @@ d <- tribble(
   2,  FALSE,       0
 )
 
-d[1:2]
+d[1:2] |> kable()
 ```
 
 :::
@@ -498,7 +469,7 @@ $\qquad \rightarrow$
 ```{r}
 #| echo: false
 
-d[c(1,3)]
+d[c(1,3)] |> kable()
 ```
 :::
 ::::
@@ -570,39 +541,58 @@ wetter %>%
 ```
 
 Die Interpretation eines linearen Modells mit binärer UV veranschaulicht @fig-binvar: Der Achsenabschnitt (b0) entspricht dem Mittelwert der 1. Gruppe.
-Der Mittelwert der 2. Gruppe entspricht der *Summe* aus Achsenabschnitt und dem Koeffizienten der zweiten Gruppe.
+Der Mittelwert der 2. Gruppe entspricht der *Summe* aus Achsenabschnitt und dem Koeffizienten der zweiten Gruppe. (@fig-binvar zeigt nur die Daten für den Monat Juli im Bundesland Bayern, der Einfachheit und Übersichtlichkeit halber.)
 
 ```{r}
 #| echo: false
 #| label: fig-binvar
 #| fig-cap: Sinnbild zur Interpretation eines linearen Modells mit binärer UV (reingezoomt, um den Mittelwertsunterschied hervorzuheben)
 
-wetter %>% 
-  mutate(after1950_TRUE = ifelse(after_1950, 1, 0)) %>% 
+wetter4 <-
+  wetter |> 
+  filter(month == 7, region == "Bayern") |> 
+  mutate(after1950_TRUE = ifelse(after_1950, 1, 0)) 
+
+lm4 <- lm(temp ~ after1950_TRUE, data = wetter4)
+
+wetter4 %>% 
   ggplot(aes(x = after1950_TRUE, y = temp)) +
+  geom_jitter(alpha = .5, width = .2) +
   #geom_violin(alpha = .7) +
   theme_minimal() +
-  geom_abline(slope =  coef(lm_wetter1)[2], intercept =  coef(lm_wetter1)[1], color = "grey20") +
-  stat_summary(fun = "mean", color = "grey20") + 
-  geom_hline(yintercept = coef(lm_wetter1)[1], linetype = "dashed", color =okabeito_colors()[2]) +
-  coord_cartesian(ylim = c(7, 9))  +
-  annotate("label", x = Inf, y = coef(lm_wetter1)[1], 
-           hjust = "right", label = paste0("b0"), color =okabeito_colors()[2]) +
-  geom_segment(x = 1, y = coef(lm_wetter1)[1], xend = 1, 
-               yend = coef(lm_wetter1)[1] + coef(lm_wetter1)[2], 
-               color = okabeito_colors()[1], arrow = arrow()) +
-  annotate("label", x = 1 , y = coef(lm_wetter1)[1] + (coef(lm_wetter1)[2] / 2), 
-           hjust = "right", label = paste0("b1"), color = okabeito_colors()[1])  +
-  annotate("text", x = 0.5, y = coef(lm_wetter1)[1] + (coef(lm_wetter1)[2] / 2.3),
-           color = "grey20", label = "Regressionsgerade", angle = 11, hjust = "bottom") +
-  scale_x_continuous(breaks = c(0, 1))
+  geom_abline(slope =  coef(lm4)[2], intercept =  coef(lm4)[1], color = "grey20") +
+  stat_summary(fun = "mean", color = "grey20") +
+  annotate("point", x = 0, y = coef(lm4)[1], color = okabeito_colors()[3], size = 5) +
+  annotate("label", x = 0, y = coef(lm4)[1], color = okabeito_colors()[3], label = "hat(beta)[0]",
+           parse = TRUE, hjust = "left") +
+  geom_segment(x = 1, y = coef(lm4)[1], yend = coef(lm4)[1] + coef(lm4)[2], color = okabeito_colors()[5],
+               linewidth = 1.2,
+             arrow = arrow(length = unit(0.03, "npc"))) +
+  annotate("label", x = 1, y = coef(lm4)[1] , 
+           color = okabeito_colors()[5], label = "hat(beta)[1]",
+           parse = TRUE, hjust = 2) +
+  scale_x_continuous(breaks = c(0, 1)) +
+  coord_cartesian(ylim = c(16, 18)) +
+  annotate("label", x = c(0, 1), y = 16, label = c("bis 1950", "nach 1950"))
+  
 ```
 
 Fassen wir die Interpretation der Koeffizienten für das Modell mit binärer UV zusammen:
 
-1. Mittelwert der 1. Gruppe: Achsenabschnitt (b0)
-2. Mittelwert der 2. Gruppe: Achsenabschnitt (b0) + Steigung der Regressionsgeraden (b1)
+1. Mittelwert der 1. Gruppe (bis 1950): [Achsenabschnitt (b0)]{.green}
+2. Mittelwert der 2. Gruppe (nach 1950):[Achsenabschnitt (b0)]{.green} + [Steigung der Regressionsgeraden (b1)]{.blue}
 
+Für die Modellwerte $\textcolor{#E69F00}{\hat{y}}$ gilt also:
+
+- $\textcolor{#E69F00}{\hat{\text{temp}}} \textcolor{#56B4E9}{\text{bis 1950}} = \textcolor{#009E73}{\beta_0} = 17.7$ 
+
+- $\textcolor{#E69F00}{\hat{\text{temp}}} \textcolor{#56B4E9}{\text{nach 1950}} = \textcolor{#009E73}{\beta_0} +  \textcolor{#0072B2}{\beta_1}= \textcolor{#009E73}{17.7} + \textcolor{#0072B2}{0.6} = 18.3$ 
+
+
+
+:::{.callout-note}
+Bei *nominalen* (und auch bei *binären*) Variablen ist \textcolor{#0072B2}{\beta_1} ein *Schalter*; bei *metrischen* Variablen ist \textcolor{#0072B2}{\beta_1} ein *Dimmer*.^[Ich danke Karsten Lübke für diese Idee.] $\square$
+:::
 
 
 ### Nominale UV
@@ -728,7 +718,7 @@ wetter_summ %>%
                  x = grandmean + delta), 
              vjust = 1,
              size = 2,
-             color = okabeito_colors()[1]) +
+             color = okabeito_colors()[5]) +
   #stat_summary(fun = "mean", color = "grey20") + 
   geom_vline(xintercept = coef(lm_wetter_region)[1], linetype = "dashed", color = okabeito_colors()[2]) +
   coord_cartesian(xlim = c(7, 10), ylim = c(0, 16))  +
@@ -740,16 +730,16 @@ wetter_summ %>%
            vjust = 1,
            label = paste0("b0"),
            #size = 6,
-           color = okabeito_colors()[2]) +
+           color = okabeito_colors()[3]) +
   annotate("point", 
            y = 1, 
            x = coef(lm_wetter_region)[1], 
-           color = okabeito_colors()[2],
+           color = okabeito_colors()[3],
            #vjust = 1,
            size = 4) +
   geom_segment(aes(yend = region, xend = temp), 
                x = coef(lm_wetter_region)[1], 
-               color = okabeito_colors()[1])  +
+               color = okabeito_colors()[5])  +
     geom_point() +
   labs(y = "",
        x = "Temperatur")
@@ -824,18 +814,17 @@ parameters(lm_wetter_month_factor) %>% print_md()
 
 Sehr schön! Jetzt haben wir eine Referenzgruppe (Monat 1, d.h. Januar) und 11 Unterschiede zum Januar, s. @fig-wetter-month, rechts.
 
-```{r}
-#| echo: false
-#| label: fig-wetter-month
-#| fig-cap: Niederschlagsunterschiede pro Monat (ein Punkt ist ein Jahr); aufgrund der vielen Datenpunkte ist das Diagramm wenig übersichtlich (Overplotting).
-#| layout-ncol: 2
-#| fig-subcap: 
-#|   - Modell `lm_wetter_month`, Monat fälschlich als metrische Variable
-#|   - Modell `lm_wetter_month_text`, Monat korrekt als nominale Variable
 
-plot(estimate_expectation(lm_wetter_month))
-plot(estimate_expectation(lm_wetter_month_factor))
-```
+:::{#fig-wetter-month layout-ncol=2}
+
+![`lm_wetter_month`, Monat fälschlich als metrische Variable](img/fig-precip-month-num.png)
+
+![`lm_wetter_month_text`, Monat korrekt als nominale Variable (aber mit viel Overplotting, das müsste man besser machen)](img/fig-precip-month.png)
+
+
+Niederschlagsunterschiede pro Monat (ein Punkt ist ein Jahr); aufgrund der vielen Datenpunkte ist das Diagramm wenig übersichtlich (Overplotting).
+
+:::
 
 
 Möchte man die Referenzgruppe eines Faktors ändern, kann man dies mit `relevel` tun:
@@ -846,7 +835,7 @@ wetter <-
   mutate(month_factor = relevel(month_factor, ref = "7"))
 ```
 
-So sieht dann die geänderte Reihenfolge aus:^[Zum Dollar-Operator s. @dollar-op]:
+So sieht dann die geänderte Reihenfolge aus:^[Zum Dollar-Operator s. @sec-dollar-op]:
 
 ```{r}
 levels(wetter$month_factor)
@@ -918,27 +907,9 @@ Hat man mehrere Prädiktoren, so trennt man sich mit einem Plus-Zeichen in der R
 `temp ~ year_c + month`.
 
 
-Die Veränderung der monatlichen Temperatur (10-Jahres-Mittel) ist in @fig-temp-monat dargestellt (aber mit allen 12 Monaten, sieht schöner aus).
+Die Veränderung der monatlichen Temperatur (10-Jahres-Mittel) ist in @ffg-wetter-anim, c) dargestellt (aber mit allen 12 Monaten, sieht schöner aus).
 
 
-![Veränderung der Temperatur pro Monat in Deutschland im Zeitverlauf (10-Jahres-Mittelwerte)](img/fig-temp-monat-1.gif){#fig-temp-monat}
-```{r}
-#| echo: false
-#| eval: false
-
-wetter %>%
-  select(year, temp, month) %>% 
-  mutate(decade_year = year %% 10,
-         decade = (year %/% 10) * 10) %>% 
-  group_by(decade, month) %>% 
-  summarise(temp = mean(temp, na.rm = TRUE)) %>% 
-  ggplot(aes(x = decade, y = temp, color = month,
-             group = month,
-             frame = decade)) +
-  geom_line() +
-  scale_color_viridis_c() +
-  transition_reveal(decade) 
-```
 
 
 
@@ -1005,17 +976,19 @@ Alle Regressionskoeffizienten beziehen sich auf den Y-Wert *unter der Annahme, d
 
 
 
-Visualisieren wir uns die geschätzten Erwartungswert pro Prädiktorwert, s. @fig-lm3.
+Visualisieren wir uns die geschätzten Erwartungswert pro Prädiktorwert, s. @fig-lm3: `plot(estimate_expectation(lm_year_month))`
 
 ```{r}
 #| label: fig-lm3
 #| fig-cap: Temperaturverlauf über die Jahre für zwei Monate. Man beachte, dass die Regressionsgeraden parallel sind.
-plot(estimate_expectation((lm_year_month))) +
-  scale_color_okabeito() +
-  scale_fill_okabeito()  # schönes Farbschema
+#| echo: false
+plot(estimate_expectation(lm_year_month)) +
+  scale_color_okabeito() + # schönes Farbschema
+  theme_minimal()
 ```
 
-Mit `scale_color_okabeito` haben wir die Standard-Farbpalette durch die von  [@okabeito] ersetzt (s. [Hinweise hier](https://malcolmbarrett.github.io/ggokabeito/reference/palette_okabe_ito.html)).
+Mit `scale_color_okabeito` haben wir die Standard-Farbpalette durch die von  [@okabeito] ersetzt (s. [Hinweise
+hier](https://malcolmbarrett.github.io/ggokabeito/reference/palette_okabe_ito.html)).
 Das ist nicht unbedingt nötig, aber robuster bei Schwarz-Weiß-Druck und bei Sehschwächen, vgl. @sec-farbwahl.
 
 
@@ -1041,11 +1014,26 @@ lm_year_month_interaktion <- lm(
   data = wetter_month_1_7)
 
 plot(estimate_expectation(lm_year_month_interaktion)) +
-  scale_color_okabeito()
+  scale_color_okabeito()  # schönes Farbschema
 ```
 
 
-Der *Doppelpunkt-Operator* `:` fügt der Regressionsgleichung einen Interaktionseffekt hinzu, in diesem Fall die Interaktion von Jahr (`year_c`) und Monat (`month_factor`).
+Der *Doppelpunkt-Operator* `:` fügt der Regressionsgleichung einen Interaktionseffekt hinzu, in diesem Fall die Interaktion von Jahr (`year_c`) und Monat (`month_factor`):
+
+
+`precip ~ year_c + month_factor + year_c:month_factor`
+
+
+:::{.callout-important}
+Einen Interaktionseffekt von x1 und x2 kennzeichnet mit dem Doppelpunkt-Operator:
+
+`y ~ x1 + x2 + x1:x2` $\square$
+:::
+
+In Worten: 
+
+>   "y wird modelliert als eine Funktion von x1 und x2 und dem Interaktionseffekt von x1 mit x2."
+
 
 
 Wie man in @fig-wetter-interakt sieht, sind die beiden Regressionsgeraden *nicht parallel*.
@@ -1090,6 +1078,8 @@ Die Regressionsgleichung lautet:
 Der Achsenabschnitt gibt den Wert für Y an unter der Annahme, dass alle Prädiktoren den Wert Null aufweisen. 
 In diesem Fall gibt der Achsenabschnitt also den Niederschlag für den Janur des Jahres 1951 an.
 Die Regressionskoeffizienten geben die Zunahme in Y an, wenn der jeweilige Prädiktorwert um 1 steigt, die übrigen Prädiktoren aber den Wert 0 aufweisen.$\square$
+
+
 :::
 
 
@@ -1495,7 +1485,7 @@ bietet es sich, die Modellgüte in einem neuen Datensatz, als einem Test-Sample,
 ### Analyse- und Assessment-Sample
 
 Wenn Sie eine robuste Schätzung der Güte Ihres Modells erfahren möchten,
-bietet sich folgendes Vorgehen an.
+bietet sich folgendes Vorgehen an (vgl. @fig-sample-types):
 
 
 1. Teilen Sie Ihren Datensatz (das Train-Sample) in zwei Teile: Das sog. Validation-Sample und das sog. Assessment-Sample.
@@ -1505,17 +1495,6 @@ bietet sich folgendes Vorgehen an.
 <!-- Das ist ein Hauf von "Samples".  -->
 <!-- Zur Verdeutlichung zeigt @fig-samples Ihnen noch mal die Unterteilung dieser Stichproben-Arten. -->
 
-
-
-<!-- ```{mermaid} -->
-<!-- %%| fig-cap: Unterteilung dieser Stichproben-Arten -->
-<!-- %%| label: fig-samples -->
-<!-- graph TD -->
-<!--   D[Daten] --> Train[Train-Sample] -->
-<!--   D[Daten] --> Test[Test-Sample] -->
-<!--   Train --> V[Validation-Sample] -->
-<!--   Train --> A[Assessment-Sample] -->
-<!-- ``` -->
 
 
 
@@ -1565,15 +1544,17 @@ außerdem Kürze und aussagekräftige Namen.
 
 :::{#def-trainsample}
 ### Train-Sample
-Den Datensatz, für die Sie sowohl UV *als auch AV* vorliegen haben, nennt man Train-Sample.
+Den Datensatz, für die Sie sowohl UV *als auch AV* vorliegen haben, nennt man Train-Sample. $\square$
 :::
+
 
 Das Train-Sample stellt die bekannten Daten dar; aus denen können wir lernen, d.h. unser Modell berechnen.
 
 :::{#def-testsample}
 ### Test-Sample
-Den Datensatz, für den Sie *nur* Daten der UV, aber nicht zu der AV vorliegen haben, nennt man *Test-Sample*.
+Den Datensatz, für den Sie *nur* Daten der UV, aber nicht zu der AV vorliegen haben, nennt man *Test-Sample*. $\square$
 :::
+
 
 Das Test-Sample  stellt das Problem der wirklichen Welt dar: Neue Beobachtungen, von denen man (noch) nicht weiß, was der Wert der AV ist.
 
@@ -1657,6 +1638,11 @@ Nutzen Sie diese Fallstudien, um sich intensiver mit der Entwicklung eines Progn
 
 
 [Vorhersagen von Filmerlösen](https://data-se.netlify.app/2020/11/13/fallstudie-zur-regressionsanalyse-ggplot2movies/)
+
+## Vertiefung
+
+
+[Allison Horst](https://allisonhorst.com/linear-regression-dragons) erklärt die lineare Regression mit Hilfe von Drachen. 🐉  Sehenswert.
 
 
 ## Aufgaben

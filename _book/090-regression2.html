@@ -123,21 +123,7 @@ div.csl-indent {
 }</script><meta name="mermaid-theme" content="default">
 <script src="site_libs/quarto-diagram/mermaid.min.js"></script><script src="site_libs/quarto-diagram/mermaid-init.js"></script><link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script><script>document.addEventListener("DOMContentLoaded", function () {
- var mathElements = document.getElementsByClassName("math");
- var macros = [];
- for (var i = 0; i < mathElements.length; i++) {
-  var texText = mathElements[i].firstChild;
-  if (mathElements[i].tagName == "SPAN") {
-   katex.render(texText.data, mathElements[i], {
-    displayMode: mathElements[i].classList.contains('display'),
-    throwOnError: false,
-    macros: macros,
-    fleqn: false
-   });
-}}});
-  </script><script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
-<script type="text/javascript">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -323,7 +309,8 @@ window.Quarto = {
   <li><a href="#bin%C3%A4re-uv" id="toc-binäre-uv" class="nav-link" data-scroll-target="#bin%C3%A4re-uv"><span class="header-section-number">10.3.3</span> Binäre UV</a></li>
   <li><a href="#nominale-uv" id="toc-nominale-uv" class="nav-link" data-scroll-target="#nominale-uv"><span class="header-section-number">10.3.4</span> Nominale UV</a></li>
   <li><a href="#sec-faktorvar" id="toc-sec-faktorvar" class="nav-link" data-scroll-target="#sec-faktorvar"><span class="header-section-number">10.3.5</span> Binäre plus metrische UV</a></li>
-  <li><a href="#interaktion" id="toc-interaktion" class="nav-link" data-scroll-target="#interaktion"><span class="header-section-number">10.3.6</span> Interaktion</a></li>
+  <li><a href="#multiple-regression" id="toc-multiple-regression" class="nav-link" data-scroll-target="#multiple-regression"><span class="header-section-number">10.3.6</span> Multiple Regression</a></li>
+  <li><a href="#interaktion" id="toc-interaktion" class="nav-link" data-scroll-target="#interaktion"><span class="header-section-number">10.3.7</span> Interaktion</a></li>
   </ul>
 </li>
   <li><a href="#vorsicht-bei-der-interpretation-von-regressionskoeffizienten" id="toc-vorsicht-bei-der-interpretation-von-regressionskoeffizienten" class="nav-link" data-scroll-target="#vorsicht-bei-der-interpretation-von-regressionskoeffizienten"><span class="header-section-number">10.4</span> Vorsicht bei der Interpretation von Regressionskoeffizienten</a></li>
@@ -390,11 +377,19 @@ window.Quarto = {
 <li>Sie können Modelle nutzen, um Vorhersagen anhand neuer Daten zu erstellen.</li>
 </ul></section><section id="benötigte-r-pakete" class="level3" data-number="10.1.3"><h3 data-number="10.1.3" class="anchored" data-anchor-id="benötigte-r-pakete">
 <span class="header-section-number">10.1.3</span> Benötigte R-Pakete</h3>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-1_3d3a789fee33e10e99de03f6b67dbc6b">
+<div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/yardstick">yardstick</a></span><span class="op">)</span>  <span class="co"># für Modellgüte im Test-Sample</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/easystats/">easystats</a></span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p><span class="math display">\[
+\definecolor{ycol}{RGB}{230,159,0}
+\definecolor{modelcol}{RGB}{86,180,233}
+\definecolor{errorcol}{RGB}{0,158,115}
+\definecolor{beta0col}{RGB}{213,94,0}
+\definecolor{beta1col}{RGB}{0,114,178}
+\definecolor{xcol}{RGB}{204,121,167}
+\]</span></p>
 </section><section id="benötigte-daten" class="level3" data-number="10.1.4"><h3 data-number="10.1.4" class="anchored" data-anchor-id="benötigte-daten">
 <span class="header-section-number">10.1.4</span> Benötigte Daten</h3>
 <div class="cell">
@@ -412,8 +407,8 @@ window.Quarto = {
 <blockquote class="blockquote">
 <p>We show that easily accessible digital records of behavior, Facebook Likes, can be used to automatically and accurately predict a range of highly sensitive personal attributes including: sexual orientation, ethnicity, religious and political views, personality traits, intelligence, happiness, use of addictive substances, parental separation, age, and gender.</p>
 </blockquote>
-<p>Die Autoren berichten über hohe Modellgüte (<span class="math inline">r</span>) zwischen den tatsächlichen persönlichen Attributen und den vorhergesagten Werten Ihres Modells, s. <a href="#fig-pnas1" class="quarto-xref">Abbildung&nbsp;<span>10.1</span></a>. Das eingesetzte statistische Modell beruht auf einem linearen Modell, also ähnlich zu dem in diesem Kapitel vorgestellten Methoden.</p>
-<p>Neben der analytischen Stärke der Regressionsanalyse zeigt das Beispiel auch, wie gläsern Konsument:innen im Internet sind.<span class="math inline">\square</span></p>
+<p>Die Autoren berichten über hohe Modellgüte (<span class="math inline">\(r\)</span>) zwischen den tatsächlichen persönlichen Attributen und den vorhergesagten Werten Ihres Modells, s. <a href="#fig-pnas1" class="quarto-xref">Abbildung&nbsp;<span>10.1</span></a>. Das eingesetzte statistische Modell beruht auf einem linearen Modell, also ähnlich zu dem in diesem Kapitel vorgestellten Methoden.</p>
+<p>Neben der analytischen Stärke der Regressionsanalyse zeigt das Beispiel auch, wie gläsern Konsument:innen im Internet sind.<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="fig-pnas1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-pnas1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -428,7 +423,7 @@ Abbildung&nbsp;10.1: Prediction accuracy of regression for numeric attributes an
 <div id="exm-wetterdaten" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 10.2 (Wetterdaten)</strong></span> Nachdem Sie einige Zeit als Datenanalyst bei dem Online-Auktionshaus gearbeitet haben, stand Ihnen der Sinn nach ewtas Abwechslung. Viel Geld verdienen und Ruhm und Anerkennung sind ja schon ganz nett, aber dann fiel Ihnen ein, dass Sie ja zu Generation Z gehören, und d. h.r den schnöden Mammon nicht so hoch schätzen sollten. Sie entschließen sich, Ihre hochgeschätzten Analyse-Skills für etwas einzusetzen, das Ihnen sinnvoll erscheint: Die Analyse des Klimawandels.</p>
 <p>Beim <a href="https://www.dwd.de/DE/Home/home_node.html">Deutschen Wetterdienst, DWD</a> haben Sie sich Wetterdaten von Deutschland heruntergeladen. Nach etwas <a href="https://data-se.netlify.app/2022/07/24/preparing-german-weather-data/">Datenjudo, auf das wir hier nicht eingehen wollen</a> resultiert ein schöner Datensatz, den Sie jetzt analysieren wollen<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
-<div class="cell" data-hash="090-regression2_cache/html/unnamed-chunk-3_cf08d87721f4d2f381aaec948944e696">
+<div class="cell">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">wetter_path</span> <span class="op">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/precip_temp_DWD.csv"</span></span>
 <span><span class="va">wetter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="va">wetter_path</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -443,7 +438,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Ein <em>Data-Dictionary</em> (Codebook) erklärt einen Datensatz. Oft bedeutet das, das für jede Spalte der Datentabelle erklärt wird, was die Spalte bedeutet.<span class="math inline">\square</span></p>
+<p>Ein <em>Data-Dictionary</em> (Codebook) erklärt einen Datensatz. Oft bedeutet das, das für jede Spalte der Datentabelle erklärt wird, was die Spalte bedeutet.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p>In <a href="#tbl-wetter" class="quarto-xref">Tabelle&nbsp;<span>10.1</span></a> und <a href="#fig-wetter-anim" class="quarto-xref">Abbildung&nbsp;<span>10.2</span></a> kann man sich die Daten en Detail anschauen (Temperatur und Niederschlag im Zeitverlauf).</p>
@@ -481,8 +476,8 @@ Hinweis
 Abbildung&nbsp;10.2: Veränderung der Temperatur und Niederschlag (10-Jahres-Mittel) in Deutschland im Verlauf des 20. Jahrhunderts
 </figcaption></figure>
 </div>
-<div class="cell" data-hash="090-regression2_cache/html/tbl-wetter_9bc4c3cdf695e3de13ae4d2f87083462">
-<div id="tbl-wetter" class="cell quarto-float anchored" data-hash="090-regression2_cache/html/tbl-wetter_9bc4c3cdf695e3de13ae4d2f87083462">
+<div class="cell">
+<div id="tbl-wetter" class="cell quarto-float anchored">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-wetter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;10.1: Wetterdaten für Deutschland
 </figcaption><div aria-describedby="tbl-wetter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -513,8 +508,8 @@ Tabelle&nbsp;10.1: Wetterdaten für Deutschland
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_wetter1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="va">year</span>, data <span class="op">=</span> <span class="va">wetter</span><span class="op">)</span></span>
 <span><span class="fu">parameters</span><span class="op">(</span><span class="va">lm_wetter1</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="090-regression2_cache/html/tbl-lm-wetter1_50200ed6d19e10199778b7ca02307f9f">
-<div id="tbl-lm-wetter1" class="cell quarto-float anchored" data-hash="090-regression2_cache/html/tbl-lm-wetter1_50200ed6d19e10199778b7ca02307f9f">
+<div class="cell">
+<div id="tbl-lm-wetter1" class="cell quarto-float anchored">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lm-wetter1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;10.2: Modellparameter von lm_wetter1
 </figcaption><div aria-describedby="tbl-lm-wetter1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -559,8 +554,8 @@ Tabelle&nbsp;10.2: Modellparameter von lm_wetter1
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_wetter1a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="va">year</span>, data <span class="op">=</span> <span class="va">wetter_summ</span><span class="op">)</span></span>
 <span><span class="fu">parameters</span><span class="op">(</span><span class="va">lm_wetter1a</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="090-regression2_cache/html/tbl-lm-wetter1a_c2504aad1c3370c18114dfb7cf987759">
-<div id="tbl-lm-wetter1a" class="cell quarto-float anchored" data-hash="090-regression2_cache/html/tbl-lm-wetter1a_c2504aad1c3370c18114dfb7cf987759">
+<div class="cell">
+<div id="tbl-lm-wetter1a" class="cell quarto-float anchored">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lm-wetter1a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;10.3: Modellparameter von lm_wetter1a
 </figcaption><div aria-describedby="tbl-lm-wetter1a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -642,7 +637,7 @@ Abbildung&nbsp;10.3: Die Veränderung der mittleren Temperatur in Deutschland im
 </blockquote>
 </section></section><section id="uv-zentrieren" class="level3" data-number="10.3.2"><h3 data-number="10.3.2" class="anchored" data-anchor-id="uv-zentrieren">
 <span class="header-section-number">10.3.2</span> UV zentrieren</h3>
-<p>Zur Erinnerung: Der Achsenabschnitt (<span class="math inline">\beta_0</span>; engl. <em>intercept</em>) ist definiert als der Y-Wert an der Stelle X=0, s. <a href="080-regression1.html#sec-interpret-reg-mod" class="quarto-xref"><span>Kapitel 9.5</span></a>.</p>
+<p>Zur Erinnerung: Der Achsenabschnitt (<span class="math inline">\(\beta_0\)</span>; engl. <em>intercept</em>) ist definiert als der Y-Wert an der Stelle X=0, s. <a href="080-regression1.html#sec-interpret-reg-mod" class="quarto-xref"><span>Kapitel 9.5</span></a>.</p>
 <p>In den Wetterdaten wäre Jahr=0 Christi Geburt. Da unsere Wetteraufzeichnung gerade mal ca. 150 Jahre in die Vergangenheit reicht, ist es vollkommen vermessen, dass Modell 2000 Jahre in die Vergangenheit zu extraplieren, ganz ohne dass wir dafür Daten haben, s. <a href="#fig-extrapolation" class="quarto-xref">Abbildung&nbsp;<span>10.4</span></a>.</p>
 <div id="fig-extrapolation" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-extrapolation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -677,8 +672,8 @@ Abbildung&nbsp;10.4: Du sollst nicht ein Modell weit außerhalb seines Datenbere
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_wetter1_zentriert</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="va">year_c</span>, data <span class="op">=</span> <span class="va">wetter</span><span class="op">)</span></span>
 <span><span class="fu">parameters</span><span class="op">(</span><span class="va">lm_wetter1_zentriert</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="090-regression2_cache/html/tbl-lm_wetter1_zentriert_14b0c56f14036731f63e95a8b6116758">
-<div id="tbl-lm_wetter1_zentriert" class="cell quarto-float anchored" data-hash="090-regression2_cache/html/tbl-lm_wetter1_zentriert_14b0c56f14036731f63e95a8b6116758">
+<div class="cell">
+<div id="tbl-lm_wetter1_zentriert" class="cell quarto-float anchored">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lm_wetter1_zentriert-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;10.4: Modellparameter von lm_wetter1_zentriert
 </figcaption><div aria-describedby="tbl-lm_wetter1_zentriert-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -735,7 +730,7 @@ Referenzwert entspricht Null
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Der Referenzwert bzw. der Wert der Referenzgruppe entspricht dem Y-Wert bei x=0 im Regressionsmodell.<span class="math inline">\square</span></p>
+<p>Der Referenzwert bzw. der Wert der Referenzgruppe entspricht dem Y-Wert bei x=0 im Regressionsmodell.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p>Wie gut erklärt unser Modell die Daten?</p>
@@ -775,15 +770,15 @@ Abbildung&nbsp;10.5: <img src="img/legende.png" class="img-fluid figure-img"></f
 </section><section id="binäre-uv" class="level3" data-number="10.3.3"><h3 data-number="10.3.3" class="anchored" data-anchor-id="binäre-uv">
 <span class="header-section-number">10.3.3</span> Binäre UV</h3>
 <div id="def-binvar" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 10.1 (Binäre Variable)</strong></span> Eine <em>binäre</em> UV, auch <em>Indikatorvariable</em> oder <em>Dummyvariable</em> genannt, hat nur zwei Ausprägungen: 0 und 1.<span class="math inline">\square</span></p>
+<p><span class="theorem-title"><strong>Definition 10.1 (Binäre Variable)</strong></span> Eine <em>binäre</em> UV, auch <em>Indikatorvariable</em> oder <em>Dummyvariable</em> genannt, hat nur zwei Ausprägungen: 0 und 1.<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exm-bin" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 10.3 (Binäre Variablen)</strong></span> Das sind zum Beispiel <em>weiblich</em> mit den Ausprägungen <code>0</code> (nein) und <code>1</code> (ja) oder <em>before_1950</em> mit <code>1</code> für Jahre früher als 1950 und <code>0</code> ansonsten.<span class="math inline">\square</span></p>
+<p><span class="theorem-title"><strong>Beispiel 10.3 (Binäre Variablen)</strong></span> Das sind zum Beispiel <em>weiblich</em> mit den Ausprägungen <code>0</code> (nein) und <code>1</code> (ja) oder <em>before_1950</em> mit <code>1</code> für Jahre früher als 1950 und <code>0</code> ansonsten.<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exm-binuv" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 10.4</strong></span> Hier interessiert Sie folgende Forschungsfrage:</p>
 <blockquote class="blockquote">
-<p>🧑‍🎓 Ob es in der zweiten Hälfte des 20. Jahrhunderts wohl wärmer warm, im Durchschnitt, als vorher?<span class="math inline">\square</span></p>
+<p>🧑‍🎓 Ob es in der zweiten Hälfte des 20. Jahrhunderts wohl wärmer warm, im Durchschnitt, als vorher?<span class="math inline">\(\square\)</span></p>
 </blockquote>
 </div>
 <p>Aber wie erstellen Sie eine Variable <code>after_1950</code>, um die zweite Hälfte des 20. Jahrhunderts (und danach) zu fassen? Nach einigem Überlegen kommen Sie auf die Idee, das vektorisierte Rechnen von R (s. <a href="020-R.html#sec-veccalc" class="quarto-xref"><span>Kapitel 3.4.4</span></a>) auszunutzen:</p>
@@ -828,7 +823,7 @@ Abbildung&nbsp;10.5: <img src="img/legende.png" class="img-fluid figure-img"></f
 Abbildung&nbsp;10.6: Modell <code>temp ~ after_1950</code>
 </figcaption></figure>
 </div>
-<p>Leider zeigt ein Blick zum <code>r2</code>, dass die Vorhersagegüte des Modells zu wünschen übrig lässt<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>. <span class="math inline">\square</span></p>
+<p>Leider zeigt ein Blick zum <code>r2</code>, dass die Vorhersagegüte des Modells zu wünschen übrig lässt<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>. <span class="math inline">\(\square\)</span></p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -839,7 +834,7 @@ Lineare Modelle verkraften nur metrische Variablen
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Um die Koeffizienten eines linearen Modells auszurechnen, benötigt man eine metrische X- und eine metrische Y-Variable. Hier haben wir aber keine richtige metrische X-Variable<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>, sondern eine <em>logische</em> Variable mit den Werten <code>TRUE</code> und <code>FALSE</code>.<span class="math inline">\square</span></p>
+<p>Um die Koeffizienten eines linearen Modells auszurechnen, benötigt man eine metrische X- und eine metrische Y-Variable. Hier haben wir aber keine richtige metrische X-Variable<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>, sondern eine <em>logische</em> Variable mit den Werten <code>TRUE</code> und <code>FALSE</code>.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p>Um die X-Variable in eine metrische Variable umzuwandeln, gibt es einen einfachen Trick, den R für uns ohne viel Ankündigung durchführt.</p>
@@ -853,7 +848,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Hat ein nominaler Prädiktor zwei Stufen, so überführt<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> diese Variable in eine binäre Variable. Da eine binäre Variable metrisch ist, kann die Regression in gewohnter Weise durchgeführt werden. Wenn Sie die Ausgabe der Parameter betrachten, so sehen Sie die neu erstellte binäre Variable. Man beachte, dass der ursprüngliche Datensatz nicht geändert wird, nur während der Analyse von <code>lm</code> wird die Umwandlung der Variable <a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> druchgeführt.<span class="math inline">\square</span></p>
+<p>Hat ein nominaler Prädiktor zwei Stufen, so überführt<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> diese Variable in eine binäre Variable. Da eine binäre Variable metrisch ist, kann die Regression in gewohnter Weise durchgeführt werden. Wenn Sie die Ausgabe der Parameter betrachten, so sehen Sie die neu erstellte binäre Variable. Man beachte, dass der ursprüngliche Datensatz nicht geändert wird, nur während der Analyse von <code>lm</code> wird die Umwandlung der Variable <a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> druchgeführt.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <blockquote class="blockquote">
@@ -883,7 +878,7 @@ Hinweis
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\qquad \rightarrow</span></p>
+<p><span class="math inline">\(\qquad \rightarrow\)</span></p>
 </div><div class="column" style="width:40%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -908,7 +903,7 @@ Hinweis
 </div>
 </div>
 <div id="exm-bin-trans" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 10.5 (Beispiel: ‘Geschlecht’ in eine binäre Variable umwandeln.)</strong></span> Angeonmen wir haben eine Variable <code>geschlecht</code> mit den zwei Stufen <code>Frau</code> und <code>Mann</code> und wollen diese in eine Indikatorvariable umgewandeln. Da “Frau” alphabetisch vor “Mann” kommt, nimmt R “Frau” als <em>erste</em> Stufe bzw. als <em>Referenzgruppe</em>. “Mann” ist dann die zweite Stufe, die in der Regression dann in Bezug zur Referenzgruppe gesetzt wird. <code>lm</code> wandelt uns diese Variable in <code>geschlechtMann</code> um mit den zwei Stufen <code>0</code> (kein Mann, also Frau) und <code>1</code> (Mann).<span class="math inline">\square</span></p>
+<p><span class="theorem-title"><strong>Beispiel 10.5 (Beispiel: ‘Geschlecht’ in eine binäre Variable umwandeln.)</strong></span> Angeonmen wir haben eine Variable <code>geschlecht</code> mit den zwei Stufen <code>Frau</code> und <code>Mann</code> und wollen diese in eine Indikatorvariable umgewandeln. Da “Frau” alphabetisch vor “Mann” kommt, nimmt R “Frau” als <em>erste</em> Stufe bzw. als <em>Referenzgruppe</em>. “Mann” ist dann die zweite Stufe, die in der Regression dann in Bezug zur Referenzgruppe gesetzt wird. <code>lm</code> wandelt uns diese Variable in <code>geschlechtMann</code> um mit den zwei Stufen <code>0</code> (kein Mann, also Frau) und <code>1</code> (Mann).<span class="math inline">\(\square\)</span></p>
 </div>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -933,7 +928,7 @@ Hinweis
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\qquad \rightarrow</span></p>
+<p><span class="math inline">\(\qquad \rightarrow\)</span></p>
 </div><div class="column" style="width:40%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -985,15 +980,15 @@ Abbildung&nbsp;10.7: Sinnbild zur Interpretation eines linearen Modells mit bin�
 </div>
 <p>Fassen wir die Interpretation der Koeffizienten für das Modell mit binärer UV zusammen:</p>
 <ol type="1">
-<li>Mittelwert der 1. Gruppe (bis 1950): <span class="green">Achsenabschnitt (b0)</span>
+<li>Mittelwert der 1. Gruppe (bis 1950): <span class="beta0col">Achsenabschnitt (b0)</span>
 </li>
-<li>Mittelwert der 2. Gruppe (nach 1950):<span class="green">Achsenabschnitt (b0)</span> + <span class="blue">Steigung der Regressionsgeraden (b1)</span>
+<li>Mittelwert der 2. Gruppe (nach 1950): <span class="beta0col">Achsenabschnitt (b0)</span> + <span class="beta1col">Steigung der Regressionsgeraden (b1)</span>
 </li>
 </ol>
-<p>Für die Modellwerte <span class="math inline">\textcolor{#E69F00}{\hat{y}}</span> gilt also:</p>
+<p>Für die Modellwerte <span class="math inline">\(\color{modelcol}{\hat{y}}\)</span> gilt also:</p>
 <ul>
-<li><p><span class="math inline">\textcolor{#E69F00}{\hat{\text{temp}}} \textcolor{#56B4E9}{\text{bis 1950}} = \textcolor{#009E73}{\beta_0} = 17.7</span></p></li>
-<li><p><span class="math inline">\textcolor{#E69F00}{\hat{\text{temp}}} \textcolor{#56B4E9}{\text{nach 1950}} = \textcolor{#009E73}{\beta_0} +  \textcolor{#0072B2}{\beta_1}= \textcolor{#009E73}{17.7} + \textcolor{#0072B2}{0.6} = 18.3</span></p></li>
+<li><p>Temperatur laut Modell bis 1950: <span class="math inline">\(\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} = 17.7\)</span></p></li>
+<li><p>Temperatur laut Modell bis 1950: <span class="math inline">\(\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} +  \color{beta1col}{\beta_1}= \color{beta0col}{17.7} + \color{beta1col}{0.6} = 18.3\)</span></p></li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1005,7 +1000,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Bei <em>nominalen</em> (und auch bei <em>binären</em>) Variablen ist ein <em>Schalter</em>; bei <em>metrischen</em> Variablen ist ein <em>Dimmer</em>.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a> <span class="math inline">\square</span></p>
+<p>Bei <em>nominalen</em> (und auch bei <em>binären</em>) Variablen ist <span class="math inline">\(\color{beta1col}{\beta_1}\)</span> ein <em>Schalter</em>; bei <em>metrischen</em> Variablen ein <em>Dimmer</em>.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a> <span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 </section><section id="nominale-uv" class="level3" data-number="10.3.4"><h3 data-number="10.3.4" class="anchored" data-anchor-id="nominale-uv">
@@ -1019,8 +1014,8 @@ Hinweis
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_wetter_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">~</span> <span class="va">region</span>, data <span class="op">=</span> <span class="va">wetter</span><span class="op">)</span></span>
 <span><span class="fu">parameters</span><span class="op">(</span><span class="va">lm_wetter_region</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="090-regression2_cache/html/tbl-lm_wetter_region_b7bfff3482e54801db239353fb0afce5">
-<div id="tbl-lm_wetter_region" class="cell quarto-float anchored" data-hash="090-regression2_cache/html/tbl-lm_wetter_region_b7bfff3482e54801db239353fb0afce5">
+<div class="cell">
+<div id="tbl-lm_wetter_region" class="cell quarto-float anchored">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lm_wetter_region-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;10.5: Modellparameter für lm_wetter_region
 </figcaption><div aria-describedby="tbl-lm_wetter_region-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1207,7 +1202,7 @@ Tabelle&nbsp;10.5: Modellparameter für lm_wetter_region
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\qquad \rightarrow</span></p>
+<p><span class="math inline">\(\qquad \rightarrow\)</span></p>
 </div><div class="column" style="width:40%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -1257,11 +1252,11 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Bei einer Variable vom Typ <code>character</code> wählt R den alphabetisch ersten Wert als Referenzgruppe für ein lineares Modell aus. Bei einer Variable vom Typ <code>factor</code> ist die Reihenfolge bereits festgelegt, vgl. <a href="#sec-faktorvar" class="quarto-xref"><span>Kapitel 10.3.5</span></a>. Der Mittelwert dieser Gruppe entspricht dem Achsenabschnitt. <span class="math inline">\square</span></p>
+<p>Bei einer Variable vom Typ <code>character</code> wählt R den alphabetisch ersten Wert als Referenzgruppe für ein lineares Modell aus. Bei einer Variable vom Typ <code>factor</code> ist die Reihenfolge bereits festgelegt, vgl. <a href="#sec-faktorvar" class="quarto-xref"><span>Kapitel 10.3.5</span></a>. Der Mittelwert dieser Gruppe entspricht dem Achsenabschnitt. <span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <div id="exm-bawü" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 10.7 (Achsenabschnitt in wetter_lm2)</strong></span> Da Baden-Württemberg das alphabetisch erste Bundesland ist, wird es von R als Referenzgruppe ausgewählt, dessen Mittelwert als Achsenabschnitt im linearen Modell hergenommen wird.<span class="math inline">\square</span></p>
+<p><span class="theorem-title"><strong>Beispiel 10.7 (Achsenabschnitt in wetter_lm2)</strong></span> Da Baden-Württemberg das alphabetisch erste Bundesland ist, wird es von R als Referenzgruppe ausgewählt, dessen Mittelwert als Achsenabschnitt im linearen Modell hergenommen wird.<span class="math inline">\(\square\)</span></p>
 </div>
 <p>Am einfachsten verdeutlicht sich <code>lm_wetter_region</code> vielleicht mit einem Diagramm, s. <a href="#fig-bin-nom" class="quarto-xref">Abbildung&nbsp;<span>10.8</span></a>.</p>
 <div class="cell">
@@ -1279,7 +1274,7 @@ Abbildung&nbsp;10.8: Sinnbild zur Interpretation eines linearen Modells mit nomi
 <div id="exm-months" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 10.8 (Niederschlagsmenge im Vergleich der Monate)</strong></span> Eine weitere Forschungsfrage, die Sie nicht außer acht lassen wollen, ist die Frage nach den jahreszeitlichen Unterschieden im Niederschlag (engl. precipitation). Los R, rechnen!</p>
 <blockquote class="blockquote">
-<p>🤖 Endlich geht’s weiter! Ergebnisse in <a href="#tbl-lm_wetter-month" class="quarto-xref">Tabelle&nbsp;<span>10.6</span></a>! <span class="math inline">\square</span></p>
+<p>🤖 Endlich geht’s weiter! Ergebnisse in <a href="#tbl-lm_wetter-month" class="quarto-xref">Tabelle&nbsp;<span>10.6</span></a>! <span class="math inline">\(\square\)</span></p>
 </blockquote>
 </div>
 <div class="cell">
@@ -1336,7 +1331,7 @@ Tabelle&nbsp;10.6: Modellparameter für lm_wetter_month
 <p>🤖 Dazu kannst du den Befehl <code>factor</code> nehmen. Damit wandelst du eine numerische Variable in eine nominalskalierte Variable (Faktorvariable) um. Faktisch heißt das, dass dann eine Zahl als Text gesehen wird.</p>
 </blockquote>
 <div id="exm-factor" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 10.9</strong></span> Transformiert man <code>42</code> mit <code>factor</code>, so wird aus <code>42</code> <code>"42"</code>. Aus der Zahl wird ein Text. Alle metrischen Eigenschaften gehen verloren; die Variable ist jetzt auf nominalen Niveau.<span class="math inline">\square</span></p>
+<p><span class="theorem-title"><strong>Beispiel 10.9</strong></span> Transformiert man <code>42</code> mit <code>factor</code>, so wird aus <code>42</code> <code>"42"</code>. Aus der Zahl wird ein Text. Alle metrischen Eigenschaften gehen verloren; die Variable ist jetzt auf nominalen Niveau.<span class="math inline">\(\square\)</span></p>
 </div>
 <div class="cell">
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">wetter</span> <span class="op">&lt;-</span></span>
@@ -1348,8 +1343,8 @@ Tabelle&nbsp;10.6: Modellparameter für lm_wetter_month
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_wetter_month_factor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">precip</span> <span class="op">~</span> <span class="va">month_factor</span>, data <span class="op">=</span> <span class="va">wetter</span><span class="op">)</span></span>
 <span><span class="fu">parameters</span><span class="op">(</span><span class="va">lm_wetter_month_factor</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="090-regression2_cache/html/tbl-lm_wetter_month_factor_9264be5b3d414afae7271f0a5a54e598">
-<div id="tbl-lm_wetter_month_factor" class="cell quarto-float anchored" data-hash="090-regression2_cache/html/tbl-lm_wetter_month_factor_9264be5b3d414afae7271f0a5a54e598">
+<div class="cell">
+<div id="tbl-lm_wetter_month_factor" class="cell quarto-float anchored">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lm_wetter_month_factor-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;10.7: Modellparameter von lm_wetter_month_factor
 </figcaption><div aria-describedby="tbl-lm_wetter_month_factor-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1532,7 +1527,7 @@ Faktorvariable
 </div>
 <div class="callout-body-container callout-body">
 <p>Eine Faktorvariable ist einer der beiden Datentypen in R, die sich für nominalskalierte Variablen anbieten: Textvariablen (<code>character</code>) und Faktor-Variablen (<code>factor</code>). Ein wichtiger Unterschied ist, dass die erlaubten Ausprägungen (“Faktorstufen”) bei einer Faktor-Variable mitgespeichert werden, bei der Text-Variable nicht.</p>
-<p>Das kann praktisch sein, denn bei einer Faktorvariable ist immer klar, welche Ausprägungen in Ihrer Variable möglich sind.<span class="math inline">\square</span></p>
+<p>Das kann praktisch sein, denn bei einer Faktorvariable ist immer klar, welche Ausprägungen in Ihrer Variable möglich sind.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <div id="exm-factor1" class="theorem example">
@@ -1547,7 +1542,7 @@ Faktorvariable
 </div>
 <div id="exm-factor2" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 10.11 (Filtern verändert die Faktorstufen nicht)</strong></span> Wenn Sie von der Faktorvariablen<a href="#fn19" class="footnote-ref" id="fnref19" role="doc-noteref"><sup>19</sup></a> <code>geschlecht</code> das 3. Element (<code>"m"</code>) herausfiltern, so dass z. B. nur die ersten beiden Elemente übrig bleiben mit allein der Ausprägung <code>"f"</code>, merkt sich R trotzdem, dass es <em>zwei</em> Faktorstufen gibt (<code>"f"</code> und <code>"m"</code>).</p>
-<p>Genaus so ist es, wenn Sie aus <code>wetter</code> nur die Monate <code>"1"</code> und <code>"7"</code> herausfiltern: R merkt sich, dass es 12 Faktorstufen gibt. Möchten Sie die herausgefilterten Faktorstufen “löschen”, so können Sie einfach die Faktorvariable neu berechnen (mit <code>factor</code>).<span class="math inline">\square</span></p>
+<p>Genaus so ist es, wenn Sie aus <code>wetter</code> nur die Monate <code>"1"</code> und <code>"7"</code> herausfiltern: R merkt sich, dass es 12 Faktorstufen gibt. Möchten Sie die herausgefilterten Faktorstufen “löschen”, so können Sie einfach die Faktorvariable neu berechnen (mit <code>factor</code>).<span class="math inline">\(\square\)</span></p>
 </div>
 <div class="cell">
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">wetter_month_1_7</span> <span class="op">&lt;-</span></span>
@@ -1555,11 +1550,14 @@ Faktorvariable
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">month</span> <span class="op">==</span> <span class="fl">1</span>  <span class="op">|</span> <span class="va">month</span> <span class="op">==</span> <span class="fl">7</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>month_factor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">month</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Faktor (und damit die Faktorstufen) neu berechnen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Okay. Wie spezifiziert man jetzt das lineare Modell?<span class="math inline">\square</span></p>
+<p>Okay. Wie spezifiziert man jetzt das lineare Modell?<span class="math inline">\(\square\)</span></p>
 </div>
-<p>Hat man mehrere Prädiktoren, so trennt man sich mit einem Plus-Zeichen in der Regressionsformel:</p>
-<p><code>temp ~ year_c + month</code>.</p>
-<p>Die Veränderung der monatlichen Temperatur (10-Jahres-Mittel) ist in <span class="citation" data-cites="ffg-wetter-anim">(<a href="#ref-ffg-wetter-anim" role="doc-biblioref"><strong>ffg-wetter-anim?</strong></a>)</span>, c) dargestellt (aber mit allen 12 Monaten, sieht schöner aus).</p>
+<p>Hat man mehrere (“multiple”) X-Variablen<a href="#fn20" class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a>, so trennt man sich mit einem Plus-Zeichen in der Regressionsformel, z. B. <code>temp ~ year_c + month</code>.</p>
+</section><section id="multiple-regression" class="level3 {callout-important}" data-number="10.3.6"><h3 data-number="10.3.6" class="anchored" data-anchor-id="multiple-regression">
+<span class="header-section-number">10.3.6</span> Multiple Regression</h3>
+<p>Eine multiple Regression beinhaltet mehr als eine X-Variable. Die Modellformel spezifiziert man so:</p>
+<p><span class="math inline">\(y ~ x_1 + x_2 + \ldots + x_n \qquad \square\)</span></p>
+</section><p>Die Veränderung der monatlichen Temperatur (10-Jahres-Mittel) ist in <a href="#fig-wetter-anim" class="quarto-xref">Abbildung&nbsp;<span>10.2</span></a>, c) dargestellt (aber mit allen 12 Monaten, sieht schöner aus).</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1570,7 +1568,7 @@ Modellgleichung
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Das Pluszeichen hat in der Modellgleichung<a href="#fn20" class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a> <em>keine</em> arithmetische Funktion. Es wird nichts addiert. In der Modellgleichung sagt das Pluszeichen nur “und noch folgende UV…”.<span class="math inline">\square</span></p>
+<p>Das Pluszeichen hat in der Modellgleichung<a href="#fn21" class="footnote-ref" id="fnref21" role="doc-noteref"><sup>21</sup></a> <em>keine</em> arithmetische Funktion. Es wird nichts addiert. In der Modellgleichung sagt das Pluszeichen nur “und noch folgende UV…”.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p>Die obige Modellgleichung liest sich also so:</p>
@@ -1581,8 +1579,8 @@ Modellgleichung
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_year_month</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">precip</span> <span class="op">~</span> <span class="va">year_c</span> <span class="op">+</span> <span class="va">month_factor</span>, data <span class="op">=</span> <span class="va">wetter_month_1_7</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Die Modellparameter sind in <a href="#tbl-lm_year_month" class="quarto-xref">Tabelle&nbsp;<span>10.8</span></a> zu sehen.</p>
-<div class="cell" data-hash="090-regression2_cache/html/tbl-lm_year_month_cfcd1a69a42735965043d7afd63dfa29">
-<div id="tbl-lm_year_month" class="cell quarto-float anchored" data-hash="090-regression2_cache/html/tbl-lm_year_month_cfcd1a69a42735965043d7afd63dfa29">
+<div class="cell">
+<div id="tbl-lm_year_month" class="cell quarto-float anchored">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lm_year_month-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;10.8: Modellparameter von lm_year_month
 </figcaption><div aria-describedby="tbl-lm_year_month-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1670,7 +1668,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Alle Regressionskoeffizienten beziehen sich auf den Y-Wert <em>unter der Annahme, dass alle übrigen Prädiktoren den Wert Null (bzw. Referenzwert) aufweisen</em>.<span class="math inline">\square</span></p>
+<p>Alle Regressionskoeffizienten beziehen sich auf den Y-Wert <em>unter der Annahme, dass alle übrigen Prädiktoren den Wert Null (bzw. Referenzwert) aufweisen</em>.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p>Visualisieren wir uns die geschätzten Erwartungswert pro Prädiktorwert, s. <a href="#fig-lm3" class="quarto-xref">Abbildung&nbsp;<span>10.10</span></a>: <code>plot(estimate_expectation(lm_year_month))</code></p>
@@ -1694,8 +1692,8 @@ Abbildung&nbsp;10.10: Temperaturverlauf über die Jahre für zwei Monate. Man be
 <span><span class="co">##        R2: 0.124</span></span>
 <span><span class="co">##   adj. R2: 0.124</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="interaktion" class="level3" data-number="10.3.6"><h3 data-number="10.3.6" class="anchored" data-anchor-id="interaktion">
-<span class="header-section-number">10.3.6</span> Interaktion</h3>
+<section id="interaktion" class="level3" data-number="10.3.7"><h3 data-number="10.3.7" class="anchored" data-anchor-id="interaktion">
+<span class="header-section-number">10.3.7</span> Interaktion</h3>
 <p>Eine Modellgleichung der Form <code>temp ~ year + month</code> zwingt die Regressionsgeraden dazu, parallel zu verlaufen. Aber vielleicht würden sie besser in die Punktewolken passen, wenn wir ihnen erlauben, auch <em>nicht</em> parallel verlaufen zu dürfen?</p>
 <p>Nicht-parallele Regressionsgeraden erlauben wir, indem wir das Regressionsmodell wie folgt spezifizieren und visualisieren, s. <a href="#fig-wetter-interakt" class="quarto-xref">Abbildung&nbsp;<span>10.11</span></a>.</p>
 <div class="cell">
@@ -1729,7 +1727,7 @@ Wichtig
 </div>
 <div class="callout-body-container callout-body">
 <p>Einen Interaktionseffekt von x1 und x2 kennzeichnet mit dem Doppelpunkt-Operator:</p>
-<p><code>y ~ x1 + x2 + x1:x2</code> <span class="math inline">\square</span></p>
+<p><code>y ~ x1 + x2 + x1:x2</code> <span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p>In Worten:</p>
@@ -1747,16 +1745,16 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Sind die Regressionsgeraden von zwei (oder mehr) Gruppen nicht parallel, so liegt ein Interaktionseffekt vor.<span class="math inline">\square</span></p>
+<p>Sind die Regressionsgeraden von zwei (oder mehr) Gruppen nicht parallel, so liegt ein Interaktionseffekt vor.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <div id="exm-interakt-precip" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 10.14 (Interaktionseffekt von Niederschlag und Monat)</strong></span> Wie ist die Veränderung der Niederschlagsmenge (Y-Achse) im Verlauf der Jahre (X-Achse)? <em>Das kommt darauf an, welchen Monat man betrachtet</em>. Der Effekt der Zeit ist <em>unterschiedlich</em> für die Monate: Im Juli nahm der Niederschlag ab, im Januar zu.<span class="math inline">\square</span></p>
+<p><span class="theorem-title"><strong>Beispiel 10.14 (Interaktionseffekt von Niederschlag und Monat)</strong></span> Wie ist die Veränderung der Niederschlagsmenge (Y-Achse) im Verlauf der Jahre (X-Achse)? <em>Das kommt darauf an, welchen Monat man betrachtet</em>. Der Effekt der Zeit ist <em>unterschiedlich</em> für die Monate: Im Juli nahm der Niederschlag ab, im Januar zu.<span class="math inline">\(\square\)</span></p>
 </div>
-<p>Liegt ein Interaktionseffekt vor, kann man nicht mehr von “dem” (statistischen) Effekt eines Prädiktors (afu die Y-Variable) sprechen. Vielmehr muss man unterscheiden: Je nach Gruppe (z. B. Monat) unterscheidet der Effekt.<a href="#fn21" class="footnote-ref" id="fnref21" role="doc-noteref"><sup>21</sup></a></p>
+<p>Liegt ein Interaktionseffekt vor, kann man nicht mehr von “dem” (statistischen) Effekt eines Prädiktors (afu die Y-Variable) sprechen. Vielmehr muss man unterscheiden: Je nach Gruppe (z. B. Monat) unterscheidet der Effekt.<a href="#fn22" class="footnote-ref" id="fnref22" role="doc-noteref"><sup>22</sup></a></p>
 <p>Betrachten wir die Parameterwerte des Interaktionsmodells (<code>parameters(lm_year_month_interaktion)</code>), s. <a href="#tbl-lm_year_month_interaktion" class="quarto-xref">Tabelle&nbsp;<span>10.9</span></a>.</p>
-<div class="cell" data-hash="090-regression2_cache/html/tbl-lm_year_month_interaktion_f3584f1e74a70d24990f9eb1f21d518f">
-<div id="tbl-lm_year_month_interaktion" class="cell quarto-float anchored" data-hash="090-regression2_cache/html/tbl-lm_year_month_interaktion_f3584f1e74a70d24990f9eb1f21d518f">
+<div class="cell">
+<div id="tbl-lm_year_month_interaktion" class="cell quarto-float anchored">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lm_year_month_interaktion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;10.9: Modellparameter von lm_year_month_interaktion
 </figcaption><div aria-describedby="tbl-lm_year_month_interaktion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1830,7 +1828,7 @@ Wichtig
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Der Achsenabschnitt gibt den Wert für Y an unter der Annahme, dass alle Prädiktoren den Wert Null aufweisen. In diesem Fall gibt der Achsenabschnitt also den Niederschlag für den Janur des Jahres 1951 an. Die Regressionskoeffizienten geben die Zunahme in Y an, wenn der jeweilige Prädiktorwert um 1 steigt, die übrigen Prädiktoren aber den Wert 0 aufweisen.<span class="math inline">\square</span></p>
+<p>Der Achsenabschnitt gibt den Wert für Y an unter der Annahme, dass alle Prädiktoren den Wert Null aufweisen. In diesem Fall gibt der Achsenabschnitt also den Niederschlag für den Janur des Jahres 1951 an. Die Regressionskoeffizienten geben die Zunahme in Y an, wenn der jeweilige Prädiktorwert um 1 steigt, die übrigen Prädiktoren aber den Wert 0 aufweisen.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p>Das R-Quadrat von <code>lm_year_month_interaktion</code> beträgt übrigens:</p>
@@ -1852,12 +1850,12 @@ Wichtig
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Interpretiere nie Modellkoeffizienten ohne ein Kausalmodell.<span class="math inline">\square</span></p>
+<p>Interpretiere nie Modellkoeffizienten ohne ein Kausalmodell.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
-<p>Nur wenn man die Ursache-Wirkungs-Beziehungen in einem System kennt, macht es Sinn, die Modellkoeffizienten kausal zu interpretieren. Andernfalls lässt man besser die Finger von der Interpretation der Modellkoeffizienten und begnügt sich mit der Beschreibung der Modellgüte und mit Vorhersage<a href="#fn22" class="footnote-ref" id="fnref22" role="doc-noteref"><sup>22</sup></a>. Wer das nicht glaubt, der betrachte <a href="#fig-confounder" class="quarto-xref">Abbildung&nbsp;<span>10.12</span></a>, links.<a href="#fn23" class="footnote-ref" id="fnref23" role="doc-noteref"><sup>23</sup></a> Ei Forschi stellt das Modell <code>m1: y ~ x</code> auf und interpretiert dann <code>b1</code>: “Ist ja klar, X hat einen starken positiven Effekt auf Y!”.</p>
+<p>Nur wenn man die Ursache-Wirkungs-Beziehungen in einem System kennt, macht es Sinn, die Modellkoeffizienten kausal zu interpretieren. Andernfalls lässt man besser die Finger von der Interpretation der Modellkoeffizienten und begnügt sich mit der Beschreibung der Modellgüte und mit Vorhersage<a href="#fn23" class="footnote-ref" id="fnref23" role="doc-noteref"><sup>23</sup></a>. Wer das nicht glaubt, der betrachte <a href="#fig-confounder" class="quarto-xref">Abbildung&nbsp;<span>10.12</span></a>, links.<a href="#fn24" class="footnote-ref" id="fnref24" role="doc-noteref"><sup>24</sup></a> Ei Forschi stellt das Modell <code>m1: y ~ x</code> auf und interpretiert dann <code>b1</code>: “Ist ja klar, X hat einen starken positiven Effekt auf Y!”.</p>
 <p>In der nächsten Studie nimmt dis Forschi dann eine zweite Variable, <code>group</code> (z. B. Geschlecht) in das Modell auf: <code>m2: y ~ x + g</code>. Oh Schreck! Jetzt ist <code>b1</code> auf einmal nicht mehr stark positiv, sondern praktisch Null, und zwar in jeder Gruppe, s. <a href="#fig-confounder" class="quarto-xref">Abbildung&nbsp;<span>10.12</span></a>, rechts!</p>
-<p>Dieses Umschwenken der Regressionskoeffizienten kann <em>nicht</em> passieren, wenn der Effekt “echt”, also kausal, ist. Handelt es sich aber um “nicht echte”, also nicht-kausale Zusammenhänge, um Scheinzusammenhänge also, so können sich die Modellkoeffizienten dramatisch verändern (sogar das Vorzeichen kann wechseln<a href="#fn24" class="footnote-ref" id="fnref24" role="doc-noteref"><sup>24</sup></a>), wenn man das Modell verändert, also Variablen hinzufügt oder wegnimmt.</p>
+<p>Dieses Umschwenken der Regressionskoeffizienten kann <em>nicht</em> passieren, wenn der Effekt “echt”, also kausal, ist. Handelt es sich aber um “nicht echte”, also nicht-kausale Zusammenhänge, um Scheinzusammenhänge also, so können sich die Modellkoeffizienten dramatisch verändern (sogar das Vorzeichen kann wechseln<a href="#fn25" class="footnote-ref" id="fnref25" role="doc-noteref"><sup>25</sup></a>), wenn man das Modell verändert, also Variablen hinzufügt oder wegnimmt.</p>
 <p>Wenn man die kausalen Abhängigkeiten nicht kennt, weiß man also nicht, ob die Zusammenhänge kausal oder nicht-kausal sind. Man weiß also nicht, ob die Modellkoeffizienten belastbar, robust, stichhaltig sind oder nicht.</p>
 <div id="fig-confounder" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-confounder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1888,7 +1886,7 @@ Wichtig
 Abbildung&nbsp;10.12: Fügt man in ein Modell eine Variable hinzu, können sich die Koeffizienten massiv ändern. In beiden Diagrammen wurden die gleichen Daten verwendet.
 </figcaption></figure>
 </div>
-<p>Man könnte höchstens sagen, dass man (wenn man die Kausalstruktur nicht kennt) die Modellkoeffizienten nur <em>deskriptiv</em> interpretiert, z. B. “Dort wo es viele Störche gibt, gibt es auch viele Babies”.<a href="#fn25" class="footnote-ref" id="fnref25" role="doc-noteref"><sup>25</sup></a> Leider ist unser Gehirn auf kausale Zusammenhänge geprägt: Es fällt uns schwer, Zusammenhänge nicht kausal zu interpretieren. Daher werden deskriptive Befunde immer wieder unzulässig kausal interpretiert - von Laien und Wissenschaftlern auch.</p>
+<p>Man könnte höchstens sagen, dass man (wenn man die Kausalstruktur nicht kennt) die Modellkoeffizienten nur <em>deskriptiv</em> interpretiert, z. B. “Dort wo es viele Störche gibt, gibt es auch viele Babies”.<a href="#fn26" class="footnote-ref" id="fnref26" role="doc-noteref"><sup>26</sup></a> Leider ist unser Gehirn auf kausale Zusammenhänge geprägt: Es fällt uns schwer, Zusammenhänge nicht kausal zu interpretieren. Daher werden deskriptive Befunde immer wieder unzulässig kausal interpretiert - von Laien und Wissenschaftlern auch.</p>
 </section><section id="modelle-mit-vielen-variablen" class="level2" data-number="10.5"><h2 data-number="10.5" class="anchored" data-anchor-id="modelle-mit-vielen-variablen">
 <span class="header-section-number">10.5</span> Modelle mit vielen Variablen</h2>
 <p>Grundsätzlich kann man viele Prädiktoren in ein (lineares) Modell aufnehmen.</p>
@@ -1908,7 +1906,7 @@ Abbildung&nbsp;10.12: Fügt man in ein Modell eine Variable hinzu, können sich 
 </ol></section><section id="fallbeispiel-zur-prognose" class="level2" data-number="10.6"><h2 data-number="10.6" class="anchored" data-anchor-id="fallbeispiel-zur-prognose">
 <span class="header-section-number">10.6</span> Fallbeispiel zur Prognose</h2>
 <div id="exm-prognose" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 10.15 (Prognose des Verkaufspreis)</strong></span> Ganz können Sie von Business-Welt und ihren Gratifikationen nicht lassen, trotz Ihrer wissenschaftlichen Ambitionen. Sie haben den Auftrag bekommen, den Verkaufspreis von Mariokart-Spielen möglichst exakt vorherzusagen. Also gut, das Honorar ist phantastisch, Sie sind jung und brauchen das Geld.<span class="math inline">\square</span></p>
+<p><span class="theorem-title"><strong>Beispiel 10.15 (Prognose des Verkaufspreis)</strong></span> Ganz können Sie von Business-Welt und ihren Gratifikationen nicht lassen, trotz Ihrer wissenschaftlichen Ambitionen. Sie haben den Auftrag bekommen, den Verkaufspreis von Mariokart-Spielen möglichst exakt vorherzusagen. Also gut, das Honorar ist phantastisch, Sie sind jung und brauchen das Geld.<span class="math inline">\(\square\)</span></p>
 </div>
 <section id="modell-all-in" class="level3" data-number="10.6.1"><h3 data-number="10.6.1" class="anchored" data-anchor-id="modell-all-in">
 <span class="header-section-number">10.6.1</span> Modell “all-in”</h3>
@@ -1953,7 +1951,7 @@ Overfitting
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Der Grund für den fast perfekten Modellfit ist die Spalte <code>Title</code>. Unser Modell hat einfach den Titel jeder Auktion auswendig gelernt. Weiß man, welcher Titel zu welcher Auktion gehört, kann man perfekt die Auktion aufsagen bzw. das Verkaufsgebot perfekt vorhersagen. Leider nützen die Titel der Auktionen im Train-Sample <em>nichts</em> für andere Auktionen. Im Test-Sample werden unsere Vorhersagen also grottenschlecht sein, wenn wir uns auf die Titel der Auktionen im Test-Sample stützen. Merke: Höchst idiografische Informationen wie Namen, Titel etc. sind nicht nützlich, um allgemeine Muster zu erkennen und damit exakte Prognosen zu erstellen.<span class="math inline">\square</span></p>
+<p>Der Grund für den fast perfekten Modellfit ist die Spalte <code>Title</code>. Unser Modell hat einfach den Titel jeder Auktion auswendig gelernt. Weiß man, welcher Titel zu welcher Auktion gehört, kann man perfekt die Auktion aufsagen bzw. das Verkaufsgebot perfekt vorhersagen. Leider nützen die Titel der Auktionen im Train-Sample <em>nichts</em> für andere Auktionen. Im Test-Sample werden unsere Vorhersagen also grottenschlecht sein, wenn wir uns auf die Titel der Auktionen im Test-Sample stützen. Merke: Höchst idiografische Informationen wie Namen, Titel etc. sind nicht nützlich, um allgemeine Muster zu erkennen und damit exakte Prognosen zu erstellen.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p>Probieren wir also die Vorhersage im Test-Sample:</p>
@@ -1972,7 +1970,7 @@ Vorsicht
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Nominalskalierte Prädiktorvariablen mit vielen Ausprägungen, wie <code>title</code> sind problematisch. Kommt eine Ausprägung von <code>title</code> im Test-Sample vor, die es <em>nicht</em> im Train-Sample gab, so resultiert ein Fehler beim <code>predict</code>en. Häufig ist es sinnvoll, auf diese Variable zu verzichten, da diese Variablen oft zu Overfitting führen.<span class="math inline">\square</span></p>
+<p>Nominalskalierte Prädiktorvariablen mit vielen Ausprägungen, wie <code>title</code> sind problematisch. Kommt eine Ausprägung von <code>title</code> im Test-Sample vor, die es <em>nicht</em> im Train-Sample gab, so resultiert ein Fehler beim <code>predict</code>en. Häufig ist es sinnvoll, auf diese Variable zu verzichten, da diese Variablen oft zu Overfitting führen.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 </section><section id="modell-all-in-ohne-titelspalte" class="level3" data-number="10.6.2"><h3 data-number="10.6.2" class="anchored" data-anchor-id="modell-all-in-ohne-titelspalte">
@@ -1984,14 +1982,14 @@ Vorsicht
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">title</span>, <span class="va">V1</span>, <span class="va">id</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Wir entfernen auch die Spalte <code>V1</code> und <code>id</code>, da sie ebenfalls keine Informatione bergen.</p>
-<div class="cell" data-hash="090-regression2_cache/html/lm_allin_no_title_a8e37e271b4b8edc73c7682a0945b463">
+<div class="cell">
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_allin_no_title</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">mariokart_train2</span><span class="op">)</span></span>
 <span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_allin_no_title</span><span class="op">)</span> </span>
 <span><span class="co">## # R2 for Linear Regression</span></span>
 <span><span class="co">##        R2: 0.521</span></span>
 <span><span class="co">##   adj. R2: 0.441</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Das R-Quadrat ist ja durchaus ordentlich. Schauen wir uns noch den <code>rmse</code> (die SD der Vorhersagefehler) an<a href="#fn26" class="footnote-ref" id="fnref26" role="doc-noteref"><sup>26</sup></a>:</p>
+<p>Das R-Quadrat ist ja durchaus ordentlich. Schauen wir uns noch den <code>rmse</code> (die SD der Vorhersagefehler) an<a href="#fn27" class="footnote-ref" id="fnref27" role="doc-noteref"><sup>27</sup></a>:</p>
 <blockquote class="blockquote">
 <p>🤖 Gut gemacht!</p>
 </blockquote>
@@ -2009,7 +2007,7 @@ Name Clash
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Im Paket <code>yardstick</code> gibt es eine Funktion namens <code>rmse</code> und im Paket <code>performance</code>, Teil des Meta-Pakets <code>easystats</code> ebenfalls. Da sind Probleme vorprogrammiert. Das ist so als würde die Lehrerin rufen: “Schorsch, komm her!”. Dabei gibt es zwei Schorsche in der Klasse: Den Müllers Schorsch und den Meiers Schorsch. Sonst kommen beide, was die Lehrerin nicht will. Die Lehrerin müsste also rufen: “Müller Schorsch, komm her!”. Genau dasselbe machen wir, wenn wir das R-Paket eines Befehls mitschreiben, sozusagen den “Nachnamen” des Befehls: <code>paketname::funktion</code> ist wie <code>Müller::Schorsch</code>. In unserem Fall also: <code><a href="https://easystats.github.io/performance/reference/performance_rmse.html">performance::rmse</a></code> Endlich weiß R wieder, was zu tun ist!<span class="math inline">\square</span></p>
+<p>Im Paket <code>yardstick</code> gibt es eine Funktion namens <code>rmse</code> und im Paket <code>performance</code>, Teil des Meta-Pakets <code>easystats</code> ebenfalls. Da sind Probleme vorprogrammiert. Das ist so als würde die Lehrerin rufen: “Schorsch, komm her!”. Dabei gibt es zwei Schorsche in der Klasse: Den Müllers Schorsch und den Meiers Schorsch. Sonst kommen beide, was die Lehrerin nicht will. Die Lehrerin müsste also rufen: “Müller Schorsch, komm her!”. Genau dasselbe machen wir, wenn wir das R-Paket eines Befehls mitschreiben, sozusagen den “Nachnamen” des Befehls: <code>paketname::funktion</code> ist wie <code>Müller::Schorsch</code>. In unserem Fall also: <code><a href="https://easystats.github.io/performance/reference/performance_rmse.html">performance::rmse</a></code> Endlich weiß R wieder, was zu tun ist!<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p>Sie rennen zu Ihrem Chef, der jetzt die Güte Ihrer Vorhersagen in den <em>restlichen</em> Daten bestimmen soll.</p>
@@ -2032,7 +2030,7 @@ Name Clash
 <blockquote class="blockquote">
 <p>🧔‍♂️ Okay, hier sind die ersten paar echten Verkaufspreise. Jetzt mach mal deine Vorhersagen auf Basis deines besten Modells!</p>
 </blockquote>
-<p>Hier sind Ihre Vorhersagen<a href="#fn27" class="footnote-ref" id="fnref27" role="doc-noteref"><sup>27</sup></a>:</p>
+<p>Hier sind Ihre Vorhersagen<a href="#fn28" class="footnote-ref" id="fnref28" role="doc-noteref"><sup>28</sup></a>:</p>
 <div class="cell">
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_allin_predictions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_allin_no_title</span>, newdata <span class="op">=</span> <span class="va">mariokart_test</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -2049,7 +2047,7 @@ Name Clash
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>lm_allin_predictions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_allin_no_title</span>, newdata <span class="op">=</span> <span class="va">mariokart_test</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Okay, was ist jetzt der mittlere Vorhersagefehler?</p>
-<p>Um die Vorhersagegüte im Test-Sample auszurechnen<a href="#fn28" class="footnote-ref" id="fnref28" role="doc-noteref"><sup>28</sup></a>, nutzen wir die Funktionen des R-Paketes <code>yardstick</code><a href="#fn29" class="footnote-ref" id="fnref29" role="doc-noteref"><sup>29</sup></a>:</p>
+<p>Um die Vorhersagegüte im Test-Sample auszurechnen<a href="#fn29" class="footnote-ref" id="fnref29" role="doc-noteref"><sup>29</sup></a>, nutzen wir die Funktionen des R-Paketes <code>yardstick</code><a href="#fn30" class="footnote-ref" id="fnref30" role="doc-noteref"><sup>30</sup></a>:</p>
 <div class="cell">
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/yardstick">yardstick</a></span><span class="op">)</span></span>
 <span></span>
@@ -2074,7 +2072,7 @@ Name Clash
 </div>
 </div>
 </div>
-<p>Ihr mittlerer Vorhersagefehler (MAE) liegt bei ca. 13 Euro.<a href="#fn30" class="footnote-ref" id="fnref30" role="doc-noteref"><sup>30</sup></a></p>
+<p>Ihr mittlerer Vorhersagefehler (MAE) liegt bei ca. 13 Euro.<a href="#fn31" class="footnote-ref" id="fnref31" role="doc-noteref"><sup>31</sup></a></p>
 <blockquote class="blockquote">
 <p>🧔‍♂️ Ganz okay.</p>
 </blockquote>
@@ -2105,7 +2103,7 @@ Modellgüte im Test-Sample meist geringer als im Train-Sample
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Wie das Beispiel zeigt, ist die Modellgüte im Test-Sample (leider) oft <em>geringer</em> als im Train-Sample. Die Modellgüte im Train-Sample ist mitunter übermäßig optimistisch. Dieses Phänomen bezeichnet man als <em>Overfitting</em>.<span class="math inline">\square</span></p>
+<p>Wie das Beispiel zeigt, ist die Modellgüte im Test-Sample (leider) oft <em>geringer</em> als im Train-Sample. Die Modellgüte im Train-Sample ist mitunter übermäßig optimistisch. Dieses Phänomen bezeichnet man als <em>Overfitting</em>.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -2118,7 +2116,7 @@ Tipp
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Bevor man Vorhersagen eines Modells einreicht, bietet es sich, die Modellgüte in einem neuen Datensatz, als einem Test-Sample, zu überprüfen.<span class="math inline">\square</span></p>
+<p>Bevor man Vorhersagen eines Modells einreicht, bietet es sich, die Modellgüte in einem neuen Datensatz, als einem Test-Sample, zu überprüfen.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 </section></section><section id="vertiefung-das-aufteilen-ihrer-daten" class="level2" data-number="10.7"><h2 data-number="10.7" class="anchored" data-anchor-id="vertiefung-das-aufteilen-ihrer-daten">
@@ -2138,8 +2136,8 @@ Tipp
 <span></span>
 <span><span class="va">meine_aufteilung</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">initial_split</a></span><span class="op">(</span><span class="va">mariokart</span>, strata <span class="op">=</span> <span class="va">total_pr</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><code>initial_split</code> <em>bestimmt</em> für jede Zeile (Beobachtung) zufällig aus, ob diese Zeile in das Analyse- oder in das Assessment-Sample kommen soll. Im Standard werden 75% der Daten in das Analyse- und 25% in das Assessment-Sample eingeteilt<a href="#fn31" class="footnote-ref" id="fnref31" role="doc-noteref"><sup>31</sup></a>; das ist eine sinnvolle Aufteilung. Das Argument <code>strata</code> sorgt dafür, dass die Verteilung der AV in beiden Stichproben gleich ist. Es wäre nämlich blöd für Ihr Modell, wenn im Train-Sample z. B. nur die teuren, und im Test-Sample nur die günstigen Spiele landen würde.<a href="#fn32" class="footnote-ref" id="fnref32" role="doc-noteref"><sup>32</sup></a> In so einem Fall würde sich Ihr Modell unnötig schwer tun.</p>
-<p>Im nächsten Schritt können Sie anhand anhand der von <code>initial_split</code> bestimmten Aufteilung die Daten tatsächlich aufteilen.<a href="#fn33" class="footnote-ref" id="fnref33" role="doc-noteref"><sup>33</sup></a></p>
+<p><code>initial_split</code> <em>bestimmt</em> für jede Zeile (Beobachtung) zufällig aus, ob diese Zeile in das Analyse- oder in das Assessment-Sample kommen soll. Im Standard werden 75% der Daten in das Analyse- und 25% in das Assessment-Sample eingeteilt<a href="#fn32" class="footnote-ref" id="fnref32" role="doc-noteref"><sup>32</sup></a>; das ist eine sinnvolle Aufteilung. Das Argument <code>strata</code> sorgt dafür, dass die Verteilung der AV in beiden Stichproben gleich ist. Es wäre nämlich blöd für Ihr Modell, wenn im Train-Sample z. B. nur die teuren, und im Test-Sample nur die günstigen Spiele landen würde.<a href="#fn33" class="footnote-ref" id="fnref33" role="doc-noteref"><sup>33</sup></a> In so einem Fall würde sich Ihr Modell unnötig schwer tun.</p>
+<p>Im nächsten Schritt können Sie anhand anhand der von <code>initial_split</code> bestimmten Aufteilung die Daten tatsächlich aufteilen.<a href="#fn34" class="footnote-ref" id="fnref34" role="doc-noteref"><sup>34</sup></a></p>
 <div class="cell">
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">training</a></span><span class="op">(</span><span class="va">meine_aufteilung</span><span class="op">)</span>  <span class="co"># Analyse-Sample</span></span>
 <span><span class="va">mariokart_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html">testing</a></span><span class="op">(</span><span class="va">meine_aufteilung</span><span class="op">)</span>  <span class="co"># Assessment-Sample</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2148,11 +2146,11 @@ Tipp
 </section><section id="train--vs.-test-sample" class="level3" data-number="10.7.2"><h3 data-number="10.7.2" class="anchored" data-anchor-id="train--vs.-test-sample">
 <span class="header-section-number">10.7.2</span> Train- vs.&nbsp;Test-Sample</h3>
 <div id="def-trainsample" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 10.2 (Train-Sample)</strong></span> Den Datensatz, für die Sie sowohl UV <em>als auch AV</em> vorliegen haben, nennt man Train-Sample. <span class="math inline">\square</span></p>
+<p><span class="theorem-title"><strong>Definition 10.2 (Train-Sample)</strong></span> Den Datensatz, für die Sie sowohl UV <em>als auch AV</em> vorliegen haben, nennt man Train-Sample. <span class="math inline">\(\square\)</span></p>
 </div>
 <p>Das Train-Sample stellt die bekannten Daten dar; aus denen können wir lernen, d. h. unser Modell berechnen.</p>
 <div id="def-testsample" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 10.3 (Test-Sample)</strong></span> Den Datensatz, für den Sie <em>nur</em> Daten der UV, aber nicht zu der AV vorliegen haben, nennt man <em>Test-Sample</em>. <span class="math inline">\square</span></p>
+<p><span class="theorem-title"><strong>Definition 10.3 (Test-Sample)</strong></span> Den Datensatz, für den Sie <em>nur</em> Daten der UV, aber nicht zu der AV vorliegen haben, nennt man <em>Test-Sample</em>. <span class="math inline">\(\square\)</span></p>
 </div>
 <p>Das Test-Sample stellt das Problem der wirklichen Welt dar: Neue Beobachtungen, von denen man (noch) nicht weiß, was der Wert der AV ist.</p>
 <p>Der Zusammenhang dieser verschiedenen, aber zusammengehörigen Arten von Stichproben ist in <a href="#fig-sample-types" class="quarto-xref">Abbildung&nbsp;<span>10.13</span></a> dargestellt.</p>
@@ -2297,20 +2295,21 @@ Okabe, Masataka, und Kei Ito. 2023. <span>„Color <span>Universal Design</span>
 <li id="fn17"><p>Zum Dollar-Operator s. <a href="020-R.html#sec-dollar-op" class="quarto-xref"><span>Kapitel 3.9.2</span></a><a href="#fnref17" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn18"><p>So ein Modell kann auch als <em>Kovarianzanalyse</em> (engl. analysis of covariance, ancova) bezeichnet werden.<a href="#fnref18" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn19"><p>synonym: nominalskalierte Variable<a href="#fnref19" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn20"><p>synonym: Regressionsformel<a href="#fnref20" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn21"><p>Effekt ist hier immer statistisch, nie kausal gemeint.<a href="#fnref21" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn22"><p>synonym: Prognose<a href="#fnref22" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn23"><p><a href="https://data-se.netlify.app/2021/12/01/simulation-on-controlling-confounders/">Quelle</a><a href="#fnref23" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn24"><p>das nennt man dann <em>Simpsons Paradox</em><a href="#fnref24" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn25"><p>Das Störche-Babies-Beispiel passt auch zu <a href="#fig-confounder" class="quarto-xref">Abbildung&nbsp;<span>10.12</span></a>.<a href="#fnref25" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn26"><p>der Befehl wohnt im Paket <code>performance</code>, Teil des Metapakets <code>easystats</code><a href="#fnref26" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn27"><p>engl. predictions; to predict: vorhersagen<a href="#fnref27" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn28"><p>wir verwenden dazu die Funktionen <code>mae</code> und <code>rsq</code><a href="#fnref28" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn29"><p>welches Sie vielleicht noch installieren müssen.<a href="#fnref29" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn30"><p>Wir haben hier <code><a href="https://yardstick.tidymodels.org/reference/mae.html">yardstick::mae</a></code> geschrieben und nicht nur <code>mae</code>, da es sowohl im Paket <code>performance</code> ( Teil des Metapakets <code>easystats</code>) als auch im Paket <code>yardstick</code> (Teil des Metapakets <code>tidymodels</code>) einen Befehl des Namens <code>mae</code> gibt. Name-Clash-Alarm! R könnte d. h.r den anderen <code>mae</code> meinen als Sie, was garantiert zu Verwirrung führt. Entweder bei R oder bei Ihnen.<a href="#fnref30" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn31"><p>vgl. <code><a href="https://rsample.tidymodels.org/reference/initial_split.html">help(initial_split)</a></code><a href="#fnref31" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn32"><p>Anderes Beispiel: In den ersten Zeilen stehen nur Kunden aus Land A und in den unteren Zeilen nur aus Land B.<a href="#fnref32" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn33"><p>initial_split sagt nur, welche Zeile in welche der beiden Stichproben kommen <em>soll</em>. Die eigentliche Aufteilung wird aber noch nicht durchgeführt.<a href="#fnref33" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn20"><p>Prädiktoren, unabhängige Variablen, X-Variablen<a href="#fnref20" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn21"><p>synonym: Regressionsformel<a href="#fnref21" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn22"><p>Effekt ist hier immer statistisch, nie kausal gemeint.<a href="#fnref22" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn23"><p>synonym: Prognose<a href="#fnref23" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn24"><p><a href="https://data-se.netlify.app/2021/12/01/simulation-on-controlling-confounders/">Quelle</a><a href="#fnref24" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn25"><p>das nennt man dann <em>Simpsons Paradox</em><a href="#fnref25" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn26"><p>Das Störche-Babies-Beispiel passt auch zu <a href="#fig-confounder" class="quarto-xref">Abbildung&nbsp;<span>10.12</span></a>.<a href="#fnref26" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn27"><p>der Befehl wohnt im Paket <code>performance</code>, Teil des Metapakets <code>easystats</code><a href="#fnref27" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn28"><p>engl. predictions; to predict: vorhersagen<a href="#fnref28" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn29"><p>wir verwenden dazu die Funktionen <code>mae</code> und <code>rsq</code><a href="#fnref29" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn30"><p>welches Sie vielleicht noch installieren müssen.<a href="#fnref30" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn31"><p>Wir haben hier <code><a href="https://yardstick.tidymodels.org/reference/mae.html">yardstick::mae</a></code> geschrieben und nicht nur <code>mae</code>, da es sowohl im Paket <code>performance</code> ( Teil des Metapakets <code>easystats</code>) als auch im Paket <code>yardstick</code> (Teil des Metapakets <code>tidymodels</code>) einen Befehl des Namens <code>mae</code> gibt. Name-Clash-Alarm! R könnte d. h.r den anderen <code>mae</code> meinen als Sie, was garantiert zu Verwirrung führt. Entweder bei R oder bei Ihnen.<a href="#fnref31" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn32"><p>vgl. <code><a href="https://rsample.tidymodels.org/reference/initial_split.html">help(initial_split)</a></code><a href="#fnref32" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn33"><p>Anderes Beispiel: In den ersten Zeilen stehen nur Kunden aus Land A und in den unteren Zeilen nur aus Land B.<a href="#fnref33" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn34"><p>initial_split sagt nur, welche Zeile in welche der beiden Stichproben kommen <em>soll</em>. Die eigentliche Aufteilung wird aber noch nicht durchgeführt.<a href="#fnref34" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

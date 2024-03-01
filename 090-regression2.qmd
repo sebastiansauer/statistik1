@@ -45,6 +45,12 @@ library(openintro)  # dataset mariokart
 ```
 
 
+{{< include children/colors.qmd >}}
+
+
+
+
+
 ### Benötigte Daten
 
 ```{r}
@@ -562,14 +568,17 @@ wetter4 %>%
   theme_minimal() +
   geom_abline(slope =  coef(lm4)[2], intercept =  coef(lm4)[1], color = "grey20") +
   stat_summary(fun = "mean", color = "grey20") +
-  annotate("point", x = 0, y = coef(lm4)[1], color = okabeito_colors()[3], size = 5) +
-  annotate("label", x = 0, y = coef(lm4)[1], color = okabeito_colors()[3], label = "hat(beta)[0]",
+  annotate("point", x = 0, y = coef(lm4)[1], 
+           color = beta0col, size = 5) +
+  annotate("label", x = 0, y = coef(lm4)[1], 
+           color = beta0col, label = "hat(beta)[0]",
            parse = TRUE, hjust = "left") +
-  geom_segment(x = 1, y = coef(lm4)[1], yend = coef(lm4)[1] + coef(lm4)[2], color = okabeito_colors()[5],
+  geom_segment(x = 1, y = coef(lm4)[1], yend = coef(lm4)[1] + coef(lm4)[2], 
+               color = beta1col,
                linewidth = 1.2,
              arrow = arrow(length = unit(0.03, "npc"))) +
-  annotate("label", x = 1, y = coef(lm4)[1] , 
-           color = okabeito_colors()[5], label = "hat(beta)[1]",
+  annotate("label", x = 1, y = coef(lm4)[1] +  coef(lm4)[2]*0.5, 
+           color = beta1col, label = "hat(beta)[1]",
            parse = TRUE, hjust = 2) +
   scale_x_continuous(breaks = c(0, 1)) +
   coord_cartesian(ylim = c(16, 18)) +
@@ -579,19 +588,20 @@ wetter4 %>%
 
 Fassen wir die Interpretation der Koeffizienten für das Modell mit binärer UV zusammen:
 
-1. Mittelwert der 1. Gruppe (bis 1950): [Achsenabschnitt (b0)]{.green}
-2. Mittelwert der 2. Gruppe (nach 1950):[Achsenabschnitt (b0)]{.green} + [Steigung der Regressionsgeraden (b1)]{.blue}
+1. Mittelwert der 1. Gruppe (bis 1950): [Achsenabschnitt (b0)]{.beta0col}
+2. Mittelwert der 2. Gruppe (nach 1950): [Achsenabschnitt (b0)]{.beta0col} + [Steigung der Regressionsgeraden (b1)]{.beta1col}
 
-Für die Modellwerte $\textcolor{#E69F00}{\hat{y}}$ gilt also:
+Für die Modellwerte $\color{modelcol}{\hat{y}}$ gilt also:
 
-- $\textcolor{#E69F00}{\hat{\text{temp}}} \textcolor{#56B4E9}{\text{bis 1950}} = \textcolor{#009E73}{\beta_0} = 17.7$ 
+- Temperatur laut Modell bis 1950: $\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} = 17.7$ 
 
-- $\textcolor{#E69F00}{\hat{\text{temp}}} \textcolor{#56B4E9}{\text{nach 1950}} = \textcolor{#009E73}{\beta_0} +  \textcolor{#0072B2}{\beta_1}= \textcolor{#009E73}{17.7} + \textcolor{#0072B2}{0.6} = 18.3$ 
+- Temperatur laut Modell bis 1950: $\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} +  \color{beta1col}{\beta_1}= \color{beta0col}{17.7} + \color{beta1col}{0.6} = 18.3$ 
+
 
 
 
 :::{.callout-note}
-Bei *nominalen* (und auch bei *binären*) Variablen ist \textcolor{#0072B2}{\beta_1} ein *Schalter*; bei *metrischen* Variablen ist \textcolor{#0072B2}{\beta_1} ein *Dimmer*.^[Ich danke Karsten Lübke für diese Idee.] $\square$
+Bei *nominalen* (und auch bei *binären*) Variablen ist $\color{beta1col}{\beta_1}$ ein *Schalter*; bei *metrischen* Variablen ein *Dimmer*.^[Ich danke Karsten Lübke für diese Idee.] $\square$
 :::
 
 
@@ -717,8 +727,7 @@ wetter_summ %>%
   geom_label(aes(label = paste0("b", id),
                  x = grandmean + delta), 
              vjust = 1,
-             size = 2,
-             color = okabeito_colors()[5]) +
+             size = 2) +
   #stat_summary(fun = "mean", color = "grey20") + 
   geom_vline(xintercept = coef(lm_wetter_region)[1], linetype = "dashed", color = okabeito_colors()[2]) +
   coord_cartesian(xlim = c(7, 10), ylim = c(0, 16))  +
@@ -730,16 +739,15 @@ wetter_summ %>%
            vjust = 1,
            label = paste0("b0"),
            #size = 6,
-           color = okabeito_colors()[3]) +
+           color = beta0col) +
   annotate("point", 
            y = 1, 
            x = coef(lm_wetter_region)[1], 
-           color = okabeito_colors()[3],
+           color = beta0col,
            #vjust = 1,
            size = 4) +
   geom_segment(aes(yend = region, xend = temp), 
-               x = coef(lm_wetter_region)[1], 
-               color = okabeito_colors()[5])  +
+               x = coef(lm_wetter_region)[1])  +
     geom_point() +
   labs(y = "",
        x = "Temperatur")
@@ -902,12 +910,19 @@ Okay.
 Wie spezifiziert man jetzt das lineare Modell?$\square$
 :::
 
-Hat man mehrere Prädiktoren, so trennt man sich mit einem Plus-Zeichen in der Regressionsformel:
-
-`temp ~ year_c + month`.
+Hat man mehrere ("multiple") X-Variablen^[Prädiktoren, unabhängige Variablen, X-Variablen], so trennt man sich mit einem Plus-Zeichen in der Regressionsformel, z.B. `temp ~ year_c + month`.
 
 
-Die Veränderung der monatlichen Temperatur (10-Jahres-Mittel) ist in @ffg-wetter-anim, c) dargestellt (aber mit allen 12 Monaten, sieht schöner aus).
+:::{callout-important}
+### Multiple Regression
+Eine multiple Regression beinhaltet mehr als eine X-Variable. Die Modellformel spezifiziert man so:
+
+$y ~ x_1 + x_2 + \ldots + x_n \qquad \square$
+
+:::
+
+
+Die Veränderung der monatlichen Temperatur (10-Jahres-Mittel) ist in @fig-wetter-anim, c) dargestellt (aber mit allen 12 Monaten, sieht schöner aus).
 
 
 

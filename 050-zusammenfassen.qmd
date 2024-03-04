@@ -311,13 +311,29 @@ Die Summe der Abweichungen vom Mittelwert ist Null.
 
 
 :::{#exr-mw-wealth1}
-Was schätzen Sie, wie hoch das mittlere Vermögen des Haushalte in Deutschland in etwa ist?^[Quelle:  [WSI](https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.htm), Abruf 2023-04-19])
+Was schätzen Sie, wie hoch das "mittlere" Vermögen des Haushalte in Deutschland in etwa ist?^[Quelle:  [WSI](https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.htm) $\square$, Abruf 2023-04-19])
+
+:::
+
+:::{.panel-tabset}
+
+### Auswahl
 
 a) 50.000 Euro
 b) 100.000 Euro
 c) 150.000 Euro
 d) 200.000 Euro
-e) 250.000 Euro$\square$
+e) 250.000 Euro
+
+### Antwort
+
+a) **50.000 Euro**, ca. 60.000 Euro (laut der o.g. Quelle)
+b) 100.000 Euro
+c) 150.000 Euro
+d) 200.000 Euro
+e) 250.000 Euro
+
+
 :::
 
 
@@ -389,7 +405,7 @@ Es erklärt die Daten anhand einer Geraden. $\square$
 
 ```{r}
 #| label: fig-mw2
-#| fig-cap: Der mittlere Preis von Mariokart-Spielen als Gerade eingezeichnet
+#| fig-cap: Der mittlere Preis von Mariokart-Spielen als horizontale Gerade eingezeichnet
 #| fig-subcap: 
 #|   - "Mit Extremwerten"
 #|   - "Ohne Extremwerte (<100 Euro)"
@@ -415,10 +431,11 @@ ggplot(mariokart) +
              color =  okabeito_colors()[1],
              alpha = .7,
              size = 8) +
-  labs(caption = paste0("MW: ", round(mean(mariokart$total_pr), 2)),
+  labs(caption = paste0("Mittelwert (MW): ", round(mean(mariokart$total_pr), 2)),
        x = "Nr. des Spiel") +
   scale_y_continuous(limits = c(0, 400)) +
-  theme_minimal()
+  theme_minimal() +
+  annotate("label", x = 0, y = 50, label = "MW", hjust = "left")
 
 mariokart2 <- 
 mariokart %>% 
@@ -430,10 +447,11 @@ ggplot(mariokart2) +
              color = okabeito_colors()[2], 
              size = 2) +
   geom_point(alpha = .7) +
-  labs(caption = paste0("MW: ", round(mean(mariokart2$total_pr), 2)),
+  labs(caption = paste0("Mittelwert (MW): ", round(mean(mariokart2$total_pr), 2)),
        x = "Nr. des Spiel") + 
   scale_y_continuous(limits = c(0, 400)) +
-  theme_minimal()
+  theme_minimal()  +
+  annotate("label", x = 0, y = 47, label = "MW", hjust = "left")
 
 ```
 
@@ -443,7 +461,7 @@ einmal mit Extremwerte (a) bzw. einmal ohne Extremwerte (b).
 
 :::{#def-extremwert}
 ### Extremwert
-Ein Extremwert (engl. outlier) ist eine Beobachtung, dessen Wert  deutlich vom Großteil der anderen Beobachtungen im Datensatz abweicht, z.B. viel größer ist. $\square$
+Ein Extremwert (engl. *outlier*) ist eine Beobachtung, dessen Wert  deutlich vom Großteil der anderen Beobachtungen im Datensatz abweicht, z.B. viel größer ist. $\square$
 :::
 
 
@@ -479,7 +497,7 @@ da er nicht mehr "typische" Werte für die Merkmalsträger beschreibt.
 :::
 
 @fig-mbappe stellt die Verteilung einer mit normal skalierter Achse und einmal mit logarithmischer X-Achse.
-Die logarithmische X-Achse stellt den Unterschied von Mittelwert und Median deutlicher heraus als die "normale" (additive) Achse. 
+Die logarithmische X-Achse stellt den Unterschied von Mittelwert (MW) und Median deutlicher heraus als die "normale" (additive) Achse. 
 
 ```{r}
 #| echo: false
@@ -498,7 +516,7 @@ d <-
 p1 <- ggplot(d) +
   aes(x = einkommen) +
   geom_histogram() +
-  theme_minimal() +
+  theme_modern() +
   geom_vline(xintercept = c(mean(einkommen)), color = okabeito_colors()[1]) +
   geom_vline(xintercept = c(median(einkommen)), color = okabeito_colors()[2]) +
   annotate("label", x = median(einkommen), y = 100, label = "Median", color = okabeito_colors()[2]) +
@@ -507,12 +525,16 @@ p1 <- ggplot(d) +
            x = Inf, 
            y = -10, 
            hjust = 1,
-           label = "Extremwert")
+           label = "Extremwert") +
+  labs(caption = "MW: Mittelwert")
 
 p1
 
 p1 +
-  scale_x_continuous(trans = "log10")
+  scale_x_continuous(trans = "log10") +
+  labs(
+    caption = "MW: Mittelwert"
+  )
 ```
 
 
@@ -571,7 +593,8 @@ d %>%
   annotate("label", x = 22, y = 1, label = "MW", color = okabeito_colors()[1])   +
   theme_minimal() +
   scale_y_continuous(breaks = c(0, 1)) +
-  annotate("label", x = 100, y = 0, label = "Dora")
+  annotate("label", x = 100, y = 0, label = "Dora") +
+  labs(caption = "MW: Mittelwert")
 ```
 
 
@@ -671,7 +694,10 @@ mariokart %>%
   annotate("label", x = 1, y = 0.1, label = "Md: 1", color = okabeito_colors()[1]) +
   geom_vline(xintercept = 8.7, color = okabeito_colors()[2]) +
   annotate("label", x = 8.7, y = 0.1, label = "MW: 8.7", color = okabeito_colors()[2]) +
-  theme_minimal()
+  theme_modern() +
+  labs(
+    caption = "MD: Median; MW: Mittelwert"
+  )
 
 ```
 
@@ -806,9 +832,11 @@ Ein Quantil ist ein Oberbegriff für Quartile, Dezile, etc. $\square$
 :::
 
 
-@fig-quantile-anim stellt einige Quantile animiert dar.
+@fig-quantile-mario zeigt das 1. (Q1), das 2. (Median) und das 3. Quartil für den Datensatz `mariokart2`.
 
-::: {#fig-quantile-anim}
+
+
+::: {#fig-quantile-mario}
 
 ```{r}
 #| echo: false
@@ -836,7 +864,7 @@ mariokart %>%
 ```
 
 
-Verschiedene Arten von Quantilen animiniert.
+Verschiedene Arten von Quantilen.
 
 :::
 
@@ -852,6 +880,7 @@ mariokart %>%
             q75 = quantile(total_pr, .75))
 ```
 
+@fig-quantile-anim stellt einige Quantile animiert dar.
 
 
 :::{#fig-quantile-anim}
@@ -992,7 +1021,7 @@ Oder vielleicht:
 Anders ausgedrückt:
 
 
->    Körpergröße $\color{ycol}{\text{y}}$ ist eine Funktion des Geschlechts $G$.
+>    Körpergröße $\color{ycol}{\text{y}}$ ist eine Funktion des Geschlechts $\color{xcol}{G}$.
 
 
 Die *Modellformel* könnte also lauten:
@@ -1026,7 +1055,7 @@ Innerhalb der Gruppe ohne Lenkräder und innerhalb der Gruppe mit 2 Lenkrädern 
 
 ```{r}
 #| label: fig-mw3
-#| fig-cap: Der mittlere Preis von Mariokart-Spielen als Gerade eingezeichnet
+#| fig-cap: Der mittlere Preis von Mariokart-Spielen als horizontale Gerade eingezeichnet
 #| fig-subcap: 
 #|   - "Mittelwert für Verkaufspreis (ungruppiert)"
 #|   - "Mittelwert für Verkaufspreis gruppiert nach Anzahl der Lenkräder"
@@ -1068,7 +1097,8 @@ p1 <- ggplot(mariokart2) +
   labs(caption = paste0("MW: ", round(mean(mariokart2$total_pr), 2)),
        x = "Nr. des Spiel") +
   theme_minimal() +
-  scale_y_continuous(limits = c(0, 100))
+  scale_y_continuous(limits = c(0, 100)) +
+  annotate("label", x = 0, y = 47, label = "MW")
 
   
 p2 <- mariokart3 |> 

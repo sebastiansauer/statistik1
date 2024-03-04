@@ -32,8 +32,8 @@ histogram_to_boxplot <- function(d = mariokart,
     geom_vline(xintercept = var_q1, linetype = "dashed", color = "lightblue") +
     geom_vline(xintercept = var_q3, linetype = "dashed", color = "lightblue") +
     annotate("label", x = var_md, y = -0.1, label = paste0("Md: ", round(var_md, digits))) +
-    annotate("label", x = var_q1, y = -2, label = paste0("Q1: ", round(var_q1, digits))) +
-    annotate("label", x = var_q3, y = -2, label = paste0("Q3: ", round(var_q3, digits))) 
+    annotate("label", x = var_q1, y = -2, label = paste0("Q1: ", round(var_q1, digits)), vjust = "bottom") +
+    annotate("label", x = var_q3, y = -2, label = paste0("Q3: ", round(var_q3, digits)), vjust = "bottom") 
   
   p2 <-
     ggplot(aes(x = 0, .data[[var_chosen]]), data = d) +
@@ -44,8 +44,8 @@ histogram_to_boxplot <- function(d = mariokart,
                        breaks = pretty(d[[var_chosen]], n = 10)) +
     labs(x = "", y = var_chosen)  +
     annotate("label", y = var_md, x = 0 , label = paste0("Md")) +
-    annotate("label", y = var_q1, x = -1 + 0.5 , label = paste0("Q1")) +
-    annotate("label", y = var_q3, x = -1 + 0.5, label = paste0("Q3")) +
+    annotate("label", y = var_q1, x = -1 + 0.5 , label = paste0("Q1"), vjust = "bottom") +
+    annotate("label", y = var_q3, x = -1 + 0.5, label = paste0("Q3"), vjust = "bottom") +
     scale_x_continuous(limits = c(-2,1), breaks = NULL)
   
   

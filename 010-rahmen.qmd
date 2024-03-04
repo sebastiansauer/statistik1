@@ -20,19 +20,19 @@ theme_set(theme_minimal())
 
 
 
-```{css, echo = FALSE}
-.justify {
-  text-align: justify !important
-}
+<!-- ```{css, echo = FALSE} -->
+<!-- .justify { -->
+<!--   text-align: justify !important -->
+<!-- } -->
 
-.centered {
-  text-align-last: center;
-}
+<!-- .centered { -->
+<!--   text-align-last: center; -->
+<!-- } -->
 
-.xlarge {
-  font-size: 300%;
-}
-```
+<!-- .xlarge { -->
+<!--   font-size: 300%; -->
+<!-- } -->
+<!-- ``` -->
 
 
 
@@ -45,7 +45,7 @@ theme_set(theme_minimal())
 
 @fig-tidy5 zeigt, dass unser Vorgehen in diesem Buch einem Fließband gleicht: Schritt für Schritt, in der richtigen Reihenfolge, vom Anfang bis Ende, erarbeiten wir unser "Datenprodukt".
 
-![Datenanalyse als eine Abfolge am Fließband](img/tidydata_5.jpg){#fig-tidy5 width="50%"}
+![Datenanalyse als eine Abfolge am Fließband](img/tidydata_5.jpg){#fig-tidy5 width="75%"}
 
 
 
@@ -86,7 +86,7 @@ hier ist eine.
 
 
 ## Statistik
-Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entnehmen und beschreibt die Ungewissheit unserer Schlüsse @kaplan_statistical_2009, @poldrack_statistical_2023.$\square$
+Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entnehmen und beschreibt die Ungewissheit unserer Schlüsse [@kaplan_statistical_2009, @poldrack_statistical_2023].$\square$
 
 :::
 
@@ -180,8 +180,9 @@ groesse %>%
        x = "Spielernummer") +
   geom_label(data = distinct(groesse, team, .keep_all = TRUE), 
             aes(label = label, x = 3, y = 50), 
-            size = 3.5, vjust = 0) +
-  theme(strip.text = element_text(size = 16))
+            size = 5, vjust = 0) +
+  theme(strip.text = element_text(size = 16)) +
+  theme_modern()
 
 ```
 
@@ -213,7 +214,7 @@ groesse <-
 groesse %>% 
   ggplot(aes(x = id)) +
   geom_segment(aes(x = id, xend = id, y = groesse, yend = groesse_mw, color = vorzeichen)) +
-  geom_point(aes(x = id, y = groesse), color = "grey60", alpha = .7) +
+  geom_point(aes(x = id, y = groesse), color = "grey60", alpha = .7, size = 2) +
   facet_wrap(~ team) +
   geom_hline(aes(yintercept = groesse_mw), data = groesse_summ) +
   labs(title = "Abweichung vom Mittelwert der Körpergröße pro Team",
@@ -222,10 +223,10 @@ groesse %>%
   geom_label(x = 5, label = "MW",
             aes(y = groesse_mw),
             hjust = "right",
-            size = 2 )  +
+            size = 5)  +
   theme(strip.text = element_text(size = 16),
-        legend.position = "bottom") 
-  
+        legend.position = "bottom")  +
+  theme_modern()
 ```
 
 Eine *Abweichung* (auch *Residuum*) genannt, 
@@ -393,7 +394,7 @@ d <-
           3, "Carla", 3)
 
 d |> 
-  kable()
+  gt::gt()
 ```
 
 
@@ -461,7 +462,7 @@ data("mariokart", package = "openintro")
 #mariokart <- as_tibble("mariokart")
 
 head(mariokart) |> 
-  select(-id) |> 
+  select(-id, - title) |> 
   kable()
 
 # if (knitr:::is_html_output()) {
@@ -496,7 +497,7 @@ nennt man *Code Book* or *Data Dictionary*.$\square$
 
 Sie haben ein tolles Experiment durchgeführt, viel Arbeit, viel Stress, endlich geschafft, puh. Von den 20 Variablen (als AV, s. @sec-arten-variablen), die Sie untersucht haben, zeigt nur 1 einen interessanten Effekt, leider. 1 von 20, das hört sich nicht so toll an. Wäre es da nicht "elegant", die 19 Variablen ohne schönen Effekt einfach in der Schublade liegen zu lassen bis zum Sankt-Nimmerleins-Tag? Dann könnten Sie stattdessen als Ergebnis nur die eine Variable mit schönen Ergebnis präsentieren, ganz ohne widersprechende Befunde. 
 
-Dieser Versuchung nicht zu erliegen, kann schwer sein. Es ist aber gefährlich, missliebige Ergebnisse zu verschweigen: Die anderen Menschen bekommen dann ein falsches Bild der Ergebnislage; man spricht von [Publikationsbias](https://de.wikipedia.org/wiki/Publikationsbias). Wer Ergebnisse verschweig, verzerrt die insgesamte Befundlage.
+Dieser Versuchung nicht zu erliegen, kann schwer sein. Es ist aber gefährlich, missliebige Ergebnisse zu verschweigen: Die anderen Menschen bekommen dann ein falsches Bild der Ergebnislage; man spricht von [Publikationsbias](https://de.wikipedia.org/wiki/Publikationsbias). Wer Ergebnisse verschweig, verzerrt die insgesamte Befundlage [@rothstein_publication_2014].
 :::
 
 
@@ -549,7 +550,6 @@ Ein *Wert* ist der Inhalt einer Variablen.$\square$
 
 
 In  @fig-var-zuweisen ist der Wert von `temp` 9.
-
 In @tbl-daten hat die Variable `name` drei Elemente: Anna, Berta, Carla.
 Der Wert des 2. Elements ist Berta.
 
@@ -772,7 +772,8 @@ skalenniveaus <-
   "Verhältnisniveau",         "ja",  "✅",  "✅",  "✅",  "✅"
   )
 
-skalenniveaus
+skalenniveaus |> 
+  kable()
 ```
 
 
@@ -826,7 +827,7 @@ Man kann aber *nicht* sagen, "Ich mag aber Pizza um 42% mehr als die Spagetthi u
 tibble(x = c(1,2,5), Liebling = c("🥩", "🍝", "🍕")) %>% 
   ggplot()+
   aes(x=x) +
-  geom_label(aes(label = Liebling), y = 1, size = 7) +
+  geom_label(aes(label = Liebling), y = 1, size = 10) +
   theme_minimal() +
   labs(x = "Wie sehr ich dieses Essen mag") +
   theme(axis.text = element_blank()) +
@@ -882,8 +883,8 @@ tibble(Preis = c(1e4, 1e5),
                      limits = c(-1000, 1e5),
                      expand = c(0.1, 0.1)) +
   geom_label(aes(x = id, label = Auto), y = -1e3,
-                          size = 6,
-             nudge_y = -5000)
+                          size = 10,
+             nudge_y = -10000)
 ```
 
 

@@ -454,9 +454,11 @@ Insgesamt ist die Kovarianz schwer zu interpretieren und wird in der praktischen
 
 ## Korrelation
 
+### Korrelation als mittleres z-Produkt
+
 Der Korrelationskoeffizient $r$ nach Karl Pearson löst das Problem, dass die Kovarianz schwer interpretierbar ist.
 Der Wertebereich von $r$ reicht von -1 (perfekte negative lineare Korrelation) bis +1 (perfekte positive lineare Korrelation).
-Eine Korrelation von $r = 0$ bedeutet kein linearer Zusammenhang.
+Eine Korrelation von $r = 0$ bedeutet *kein linearer* Zusammenhang.
 
 
 Die Korrelation berechnet sich wie folgt:
@@ -474,7 +476,7 @@ Daher kann man den Korrelationskoeffizienten $r$ so definieren:
 :::{#def-r}
 ### Korrelationskoeffizient r
 
-Der Korrelationskoeffizient $r$ ist definiert als das mittlere Produkt der z-Wert-Paare: $r_{xy}=\frac{1}{n}\sum_{i=1}^n z_{x_i} z_{y_i}$. $\square$
+Der Korrelationskoeffizient $r$ ist definiert als das mittlere Produkt der z-Wert-Paare: $r_{xy}=\frac{1}{n}\sum_{i=1}^n z_{x_i} z_{y_i}$, vgl @cohen_applied_2003. $\square$
 :::
 
 Man beachte, dass eine Korrelation (genauso wie eine Kovarianz) nur für metrische Variablen definiert ist.
@@ -552,6 +554,73 @@ Macht die Glatze krank? Männer mit Glatze bekommen häufiger Corona [@goren_pre
 Eine Erklärung lautet, dass Alter einen Effekt hat auf Glatze (je älter ein Mann, desto wahrscheinlicher ist es, dass er eine Glatz hat) und auf die Schwere des Corona-Verlaufs (ältere Menschen haben deutlich schwerere Corona-Verläufe). $\square$
 
 :::
+
+
+
+## Wie man mit Statistik lügt
+
+### Range-Restriktion
+
+Durch (nicht-randomisierte) Einschränkung (Restriktion) des Ranges einer (oder beider) Variablen sinkt die Stärke (der Absolutwert) einer Korrelation, vgl. @cohen_applied_2003 und @fig-corr-range.
+
+
+Erstellen wir uns dazu zwei Datensätze mit je zwei Variablen, $X$ und $Y$ der Größe $n=100$.
+Ein Datensatz ist ohne Einschränkung des Ranges und einer mit.
+$X$ und $Y$ seien normalverteilt mit $\mu=0$ (Mittelwert) und  $\sigma=1$ (Streuung); s. Datensatz `d` in @lst-corr-range.
+Wir schränken dann den Range von $X$ ein auf, sagen wir, den Bereich von $[-0.5, .5]$ (Datensatz `d_filtered`).
+
+```{r}
+#| echo: true
+#| label: lst-corr-range
+set.seed(42)
+n <- 1e2
+d <-
+  tibble(x = rnorm(n = n, mean = 0, sd = 1),
+         e = rnorm(n = n, mean = 0, sd = .5),
+         y = x + e)
+
+x_min <- -0.5
+x_max <- 0.5
+
+d_filtered <-
+d |> 
+  filter(between(x, x_min, x_max))
+```
+
+
+```{r}
+#| echo: false
+#| label: fig-corr-range
+#| fig-cap: Schränkt man den Range einer (oder beider) Variablen ein, so sinkt die Stärke der Korrelation
+#| layout-ncol: 2
+#| fig-subcap: 
+#|   - "Ohne Einschränkung des Range: Starke Korrelation"
+#|   - "Mit Einschränkung des Range: Schwächere Korrelation"
+
+d |> 
+ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  labs(title = paste0("r: ", round(cor(d$x, d$y), 2))) +
+  theme_modern()
+
+d_filtered |>   
+ggplot(aes(x = x, y = y)) +
+  annotate("rect", xmin = x_min, xmax = x_max, ymin = -Inf, ymax = Inf, fill = okabeito_colors()[1], alpha = .5) +
+  geom_point(data = d, color = "grey80") +
+  geom_point() +
+  labs(title = paste0("r: ", round(cor(d_filtered$x, d_filtered$y), 2))) +
+  theme_modern()
+  
+```
+
+
+:::{#exr-corr-range}
+### Berechnen Sie die Korrelation
+Glauben Sie nicht, prüfen Sie nach! Berechnen Sie die Korrelation von $X$ und $Y$ im Datensatz `d` und `d_filtered`! $\square$
+:::
+
+
+
 
 
 
@@ -661,9 +730,12 @@ mariokart %>%
 
 ## Vertiefung
 
-[TED-Vortrag](https://www.youtube.com/watch?v=8B271L3NtAw) zum Thema Scheinkorrelation.
 
+
+Dieser [TED-Vortrag](https://www.youtube.com/watch?v=8B271L3NtAw) informiert zum Thema Scheinkorrelation.
 [Hier](https://scheinkorrelation.jimdofree.com/) finden Sie weitere Beispiele für Scheinkorrelationen.
+
+
 
 ## Aufgaben
 
@@ -703,6 +775,7 @@ entsprechend wird Ihnen jedes typische Statistik-Buch die Grundlagen erläutern.
 Schauen Sie doch mal, was Ihre Bibliothek Ihnen zu bieten hat.
 Wer eine unorthodoxe (geometrische!) Herangehensweise an die Korrelation (und Regression) sucht, darf sich auf eine Menge Aha-Momente bei @kaplan_statistical_2009 freuen.
 Ein schönes, modernes Statistikbuch bietet der Psychologie-Prof Russel Poldrack von der Princeton University [-@poldrack_statistical_2023]; auch dieses Buch ist frei online verfügbar. Tipp: Nutzen Sie die Übersetzungfunktion Ihres Browsers, wenn Sie das Buch nicht in Englisch lesen wollen.
+Ein Klassiker, wenn auch nicht mehr ganz frisch, ist @cohen_applied_2003; immer noch sehr empfehlenswert, aber etwas höheren Anspruchs.
 
 ## Literatur
 

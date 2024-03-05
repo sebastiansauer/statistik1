@@ -415,22 +415,68 @@ Natürlich unter sonst gleichen Umständen^[Ceteris paribus, auf Latein, hört s
 
 :::{#exm-samplesize}
 
-Um Ihre eigene Lehraktivität zu organisieren, wollen Sie sich ein Bild machen, 
+Um Ihre eigene Lehraktivität zu organisieren, 
+wollen Sie sich ein Bild machen, 
 wie viel Ihre Nebensitzer im Hörsaal so lernen.
 Sie blicken nach links und fragen "wie viel lernst du so?".
 Sie blicken nach recht und wiederholen die Frage gerichtet an den rechtsnebensitzenden Kommilitonen.
 Dann addieren Sie die zwei Zahlen (unter der Annahme, dass Sie zwei Zahlen bekommen haben),
 und teilen durch zwei, um den Mittelwert zu erhalten.
 
-Ein kritischer Geist könnte anmerken, dass Sie besser die Untersuchung nicht gemacht hätten (auch wenn Sie, vielleicht ohne zu wollen, eine statistische Untersuchung angestellt haben).
+Ein kritischer Geist könnte anmerken, 
+dass Sie besser die Untersuchung nicht gemacht hätten 
+(auch wenn Sie, vielleicht ohne zu wollen, eine statistische Untersuchung angestellt haben).
 Denn bei so wenig befragten Personen ist die Ungenauigkeit Ihrer Schätzung der typischen Lernzeit bei Studentis einfach zu hoch.$\square$
 
 :::
 
 @fig-sample-estimate veranschaulicht, dass man einen Mittelwert genauer schätzen kann,
-wenn man auf eine größere Stichprobe zurückgreift. Das Teilbild links zeigt den Mittelwert einer Stichprobe mit $n=20$ Beobachtungen. Das Teilbild rechts zeigt den Mittelwert einer Stichprobe mit $n=200$ Beobachtungen (jeweils aus der gleichen Grundgesamtheit). Wie man sieht, ist im linken Teilbild die Streuung (Variation) höher als im rechtnen Beilbild:
+wenn man auf eine größere Stichprobe zurückgreift. 
+Das Teilbild links zeigt den Mittelwert einer Stichprobe mit $n=20$ Beobachtungen. 
+Das Teilbild rechts zeigt den Mittelwert einer Stichprobe mit $n=200$ Beobachtungen (jeweils aus der gleichen Grundgesamtheit).
+Wie man sieht, ist im linken Teilbild die Streuung (Variation) höher als im rechten Teilbild:
 
+::: {.content-visible when-format="pdf"}
+
+```{r}
+#| label: fig-sample-estimate
+#| fig-cap: "Schätzgenauigkeit als Funktion der Stichprobengröße"
+#| echo: false
+
+d <- tibble(id = 1:20)
+
+d <- d |> 
+  mutate(
+    x1 = map_dbl(id, ~mean(rnorm(n = 20))), 
+    x2 = map_dbl(id, ~mean(rnorm(n = 200)))
+  )
+
+d_long <- d |> 
+  pivot_longer(cols = c(x1, x2), names_to = "variable", values_to = "value")
+
+
+
+custom_labels <- c(x1 = "Kleine Stichproben (n=20)", x2 = "Große Stichproben (n=200)")
+
+
+ggplot(d_long, aes(x = id, y = value)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_point() +
+  facet_wrap(~ variable, labeller = labeller(variable = custom_labels)) +
+  theme_minimal() 
+  labs(
+    x = "Nummer der Stichprobe",
+    y = "Wert"
+  )
+```
+
+:::
+
+
+::: {.content-visible when-format="html"}
 ![Schätzgenauigkeit als Funktion der Stichprobengröße](img/Estimate.gif){#fig-sample-estimate}
+:::
+
 
 Bildquelle: Karsten Lübke
 
@@ -637,13 +683,18 @@ Das Tidy-Format wird auch als "langes" Format bezeichnet.
 
 @fig-long-wide-anim zeigt einen Datensatz in der "langen" Form, also tidy, und den gleichen Datensatz, umformatiert in der "breiten" Form, nicht-tidy.
 
-::: {.content-visible unless-format="pdf"}
 
+::: {.content-visible when-format="pdf"}
+![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ("long") ist "tidy".](img/wide-long.png){#fig-long-wide-anim width="50%"}
+:::
+
+
+::: {.content-visible when-format="html"}
 ![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ("long") ist "tidy".](img/tidyr-pivoting.gif){#fig-long-wide-anim width="50%"}
 :::
 
 
-
+[Quelle: Garrick Aden-Buie, 2018, CC0-1.0 license, https://www.garrickadenbuie.com/project/tidyexplain/]{.small}
 
 
 
@@ -717,11 +768,12 @@ graph TD
 ```
 
 
-:::{exm-skalen}
+:::{.exm-skalen}
 
 ### Beispiele für Skalenniveaus
 
-Beispiele zu den Skalenniveaus sind in @tbl-skalen-bsps aufgeführt.
+Beispiele zu den Skalenniveaus sind in @tbl-skalen-bsps aufgeführt. $\square$
+:::
 
 ```{r}
 #| echo: false
@@ -747,16 +799,18 @@ skalen_bsps <-
                 "Geschwindigkeit", "Verhältnisskala",
                           "Länge", "Verhältnisskala"
   )
-skalen_bsps
+skalen_bsps |> 
+  kable()
 ```
-$\square$
-:::
 
 
 
 Je nach dem, über welches Skalenniveau eine Variable verfügt,
-sind verschiedenen Rechenoperationen erlaubt, s. @tbl-skalenniveaus.
+sind verschiedenen Rechenoperationen erlaubt, s. [tbl-skalenniveaus]{.content-visible when-format="html"}
+[tbl-skalenniveaus-pdf]{.content-visible when-format="pdf"}.
 
+
+::: {.content-visible when-format="html"}
 
 ```{r}
 #| dev: "ragg_png"
@@ -776,44 +830,70 @@ skalenniveaus |>
   kable()
 ```
 
+:::
 
+::: {.content-visible when-format="pdf"}
+
+```{r}
+#| dev: "ragg_png"
+#| echo: false
+#| tbl-cap: "Erlaubte Rechenoperationen nach Skalenniveau"
+#| label: tbl-skalenniveaus-pdf
+skalenniveaus <-
+  tibble::tribble(
+       ~Skalenniveau, ~Quantitativ, ~Gleichheit, ~Reihenfolge, ~Addition, ~Multiplikation,
+     "Nominalniveau",       "nein",  "ja",  "nein",  "nein",  "nein",
+     "Ordinalniveau",       "nein",  "ja",  "ja",  "nein",  "nein",
+   "Intervallniveau",         "ja",  "ja",  "ja",  "ja",  "nein",
+  "Verhältnisniveau",         "ja",  "ja",  "ja",  "ja",  "ja"
+  )
+
+skalenniveaus |> 
+  kable()
+```
+
+:::
 
 Was soll das bedeuten, "Rechenoperationen"?
 
 
 Schauen wir uns für jedes Skalenniveau ein "Rechenbeispiel" an.
 
-*Nominalskala*: Die Variable *Geschlecht* ist nominalskaliert. Das bedeutet, dass ihre Ausprägungen *Frau* und *Mann* z.B. nicht (sinnvoll) addiert oder sonswie "verrechnet" werden können. Man könnte, z.B. um das Eintippen zu erleichtern, Frauen mit `1` kodieren und Männer mit `2`. Damit darf man aber nicht rechnen! Es macht keinen Sinn zu sagen: "Ich habe eine Frau und einen Mann in meiner Tabelle, das ist im Schnitt ein diverses Geschlecht, weil der Mittelwert von 1 und 2 ist 1,5!"
+*Nominalskala*: Die Variable *Geschlecht* ist nominalskaliert. Das bedeutet, dass ihre Ausprägungen *Frau* und *Mann* z.B. nicht (sinnvoll) addiert oder sonstwie "verrechnet" werden können. Man könnte, z.B. um das Eintippen zu erleichtern, Frauen mit `1` kodieren und Männer mit `2`. Damit darf man aber nicht rechnen! Nicht addieren, multiplizieren ... Es macht keinen Sinn zu sagen: "Ich habe eine Frau und einen Mann in meiner Tabelle, das ist im Schnitt ein diverses Geschlecht, weil der Mittelwert von 1 und 2 ist 1,5!"
 
-Die *einzige* "Rechenoperation", die man auf der Nominalskala machen darf, ist die Prüfung auf Gleichheit: Mann kann feststellen, ob ein Objekt gleich zu einem anderen ist oder unterschiedlich. Also ob zwei Personen das gleiche Geschlecht haben oder von unterschiedlichem Geschlecht sind.
-Etwas formaler ausgedrückt:
+Die *einzige* "Rechenoperation", die man auf der Nominalskala machen darf, ist die Prüfung auf *Gleichheit*: Mann kann feststellen, ob ein Objekt gleich zu einem anderen ist oder unterschiedlich. Also ob zwei Personen das gleiche Geschlecht haben oder von unterschiedlichem Geschlecht sind.
+Anders ausgedrückt:
 
+
+::: {.content-visible when-format="html"}
 - 👩 $\ne$ 👨
 - 👩 $=$ 👩
 - 👨 $=$ 👨
+:::
 
-```{r}
-#| dev: "ragg_png"
-#| echo: false
-#| fig-cap: "Gleichheit oder Ungleichheit: Mehr geht nicht bei einer Ordinalskala. Taschenrechner wegpacken."
-#| label: fig-nominal
-#| eval: false
-
-tibble(x=0, y = 0) %>% 
-  ggplot()+
-  aes(x=x, y=y) +
-  geom_label(label = latex2exp::TeX("👨 $\\ne$ 👨")) +
-  theme_void()
-```
+::: {.content-visible when-format="pdf"}
+- FRAU $\ne$ MANN
+- FRAU $=$ FRAU
+- MANN $=$ MANN
+:::
 
 
+*Ordinalskala*: Diese Skala entspricht einer Rangordnung. Eine Rangordnung ist etwa die geordnete Abfolge Ihres Leibgerichte^[1. Pizza, 2. Spagetthi, 3. Schnitzel]. Etwas "formaler" ausgedrückt:
 
-*Ordinalskala*: Diese Skala entspricht einer Rangordnung. Eine Rangordnung ist etwa die geordnete Abfolge Ihres Leibgerichte^[1. Pizza, 2. Spagetthi, 3. Schnitzel]. Etwas formaler ausgedrückt:
-
+::: {.content-visible when-format="html"}
 - 🍕 $\succ$  🍝 $\succ$ 🥩
+:::
+
+::: {.content-visible when-format="pdf"}
+- $\text{Pizza} \succ \text{Spagetthi} \succ \text{Schnitzel}$
+:::
 
 Das komische Zeichen $\succ$ soll heißen: "Ist auf meiner Liste von Leibgerichten weiter oben, mag ich lieber".
-Man kann aber *nicht* sagen, "Ich mag aber Pizza um 42% mehr als die Spagetthi und die wieder um 73% mehr als ein Schnitzel!". Zumindest kann man das nicht ohne weitere Informationen und Annahmen. Es gibt also Dinge auf der Welt, die man leicht in eine Rangordnung bringen kann, aber die man nur schwer in der Größe der Unterschiede bemessen kann. Das ist die Ordinalskala, s. @fig-ordinal.
+Man kann aber *nicht* sagen, "Ich mag aber Pizza um 42% mehr als die Spagetthi und die wieder um 73% mehr als ein Schnitzel!". Zumindest kann man das nicht ohne weitere Informationen und Annahmen. Es gibt also Dinge auf der Welt, die man leicht in eine Rangordnung bringen kann, aber die man nur schwer in der Größe der Unterschiede bemessen kann. Das ist die Ordinalskala.
+
+:::{.callout-important}
+Die Ordinalskale erlaubt, Objekte zu ordnen (hinsichtlich eines Merkmals). Die Abstände zwischen den Objekten können nicht quantifiziert werden. $\square$
+:::
 
 
 ```{r}
@@ -821,6 +901,7 @@ Man kann aber *nicht* sagen, "Ich mag aber Pizza um 42% mehr als die Spagetthi u
 #| echo: false
 #| out-width: "100%"
 #| label: fig-ordinal
+#| eval: false
 #| fig-asp: 0.3
 #| fig-cap: "Die Ordinalskala: Je weiter rechts auf der X-Achse, desto lieber esse ich das Gericht."
 
@@ -870,7 +951,7 @@ tibble(y = c(10, 20, 30)) %>%
 #| echo: false
 #| fig-asp: 0.5
 #| label: fig-verhaeltnis
-#| fig-cap: Puh! Der rote Flitzer ist 10 Mal so teuer wie die blaue Möhre. Kohlen zusammenkratzen."
+#| fig-cap: "Puh! Der rote Flitzer ist 10 Mal so teuer wie die blaue Möhre. Kohlen zusammenkratzen."
 tibble(Preis = c(1e4, 1e5),
        id = c(1, 2),
        Auto = c("🚙", "🏎️")  ) %>% 
@@ -892,14 +973,14 @@ tibble(Preis = c(1e4, 1e5),
 In [diesem Video](https://www.youtube.com/watch?v=_mN3kFe56ng) gibt es noch ausführlichere Erklärung zum Thema Skalenniveaus.
 
 
-
+::: {.content-visible when-format="html"}
 {{< video https://youtu.be/_mN3kFe56ng >}}
-
+:::
 
 
 Außerdem können quantitative Variablen untergliedert werden in:
 
-- *stetige* Variablen, das sind Variablen, bei denen man zwischen zwei Ausprägungen immer noch eine weitere quetschen kann. So gibt es eine Wert für die Köpergröße zwischen 1.60m und 1.61. Und einen Wert zwischen 1.601m und 1.602m, etc.
+- *stetige* Variablen, das sind Variablen, bei denen man zwischen zwei Ausprägungen immer noch eine weitere quetschen kann. So gibt es eine Wert für die Köpergröße zwischen 1.60&#8239;m und 1.61&#8239;m. Und einen Wert zwischen 1.601&#8239;m und 1.602&#8239;m, etc.
 - diskrete Variablen, das sind metrische Variablen, die nur bestimmte Ausprägungen haben, häufig sind das die natürlichen Zahlen: $1,2,...$. Ein Beispiel wäre die Anzahl der Kinder in einer Familie.
 
 
@@ -942,18 +1023,22 @@ Helfen Sie Prof. Weiss-Ois: Er blickt nicht durch.
 Gerne würde er wissen, wie viele Stunden seine Studentis auf die Prüfung lernen. Aber mit so vielen Zahlen kann er nicht umgehen ...
 Geben Sie ihm ein Modell: Sagen Sie ihm, wie lang die Studis typischerweise lernen (sagen Sie ihm ein einfach den Mittelwert der Lernzeiten).
 
-
-:::: {.columns}
-::: {.column width="45%"}
-
-### Vorher
-
 ```{r}
 #| echo: false
 set.seed(42)
 zeiten <- rnorm(30, mean = 10, sd = 2) %>% trunc()
 zeiten_mw <- mean(zeiten)
 ```
+
+
+
+::::: {.content-visible when-format="html"}
+
+:::: {.columns}
+::: {.column width="45%"}
+
+### Vorher
+
 
 `r zeiten`
 
@@ -981,6 +1066,38 @@ zeiten_mw <- mean(zeiten)
 :::
 
 ::::
+:::::
+
+
+::: {.content-visible when-format="pdf"}
+
+
+
+
+:::: {layout="[0.5, 0.5]"}
+
+:::{#firstcol}
+## Vorher
+
+`r zeiten`
+
+![Oh jeh, so viele Zahlen! Ich check nix! Wie viel lernen denn jetzt meine Studis?!](img/teacher.png){width="25%"}
+:::
+
+:::{#secondcol}
+
+## Nachher
+
+**`r zeiten_mw`** 
+
+![Yeah, jetzt weiß ich, wie viel die Studis so typischerweise lernen. Viel zu wenig natürlich!](img/teacher.png){width="25%"}
+:::
+
+::::
+
+
+:::
+
 
 
 [Icon unter Flaticon licence, Autor: iconixar](https://www.flaticon.com/free-icons/professor)

@@ -648,9 +648,9 @@ Eine schöne Darstellung dazu findet sich bei @kaplan_statistical_2009.
 
 
 
-## R-Quadrat
 
-### R-Quadrat als Verringerung der Fehlerstreuung
+
+## R-Quadrat als Maß der Modellgüte
 
 Anders gesagt, wir haben uns um $1 - `r round(verhaeltnis_fehler_mse, 2)`$ verbessert:
 
@@ -672,6 +672,7 @@ $\square$
 :::
 
 
+Einfach gesagt: $R^2$ gibt an, wie gut (zu welchem Anteil) ein Modell die Zielvariable erklärt. 
 
 
 Wir können R-Quadrat ($R^2$) uns von R z.B. so ausgeben lassen:
@@ -786,6 +787,37 @@ lm1_b1 <- coef(lm1)[2] %>% round(2)
 
 :::{.callout-caution}
 Häufig liest man, der "Effekt des Prädiktors" auf die AV betrage z.B. $`r lm1_b1`$. "Effekt" ist aber ein Wort, dass man kausal verstehen kann. Ohne weitere Absicherung kann man aber Regressionskoeffizienten nicht kausal verstehen. Daher sollte man das Wort "Effekt" mit Vorsicht genießen. Manche sprechen daher auch von einem "statistischen Effekt".$\square$.
+:::
+
+
+## Wie man mit Statistik lügt
+
+
+Der Unterschied in Modellgüte zwischen, sagen wir, $r=.1$ und $r=.2$ ist *viel kleiner* als zwischen $r=.7$ und $r=.8$.
+$R^2$ ist ein (lineares) Maß der Modellgüte und da $r = \sqrt{R^2}$, darf $r$ nicht wie $R^2$ als Maß der Modellgüte interpretiert werden. @fig-r-r2 zeigt den Zusammenhang von $r$ und $R^2$.
+
+
+```{r}
+#| echo: false
+#| fig-cap: Zusammenhang von r und R-Quadrat
+#| label: fig-r-r2
+d <-
+  tibble(r = seq(from = -1, to = 1, by = .01))
+
+d <-
+  d |> 
+  mutate(r2 = r^2)
+
+
+d |> 
+  ggplot(aes(x = r, y = r2)) +
+  geom_line() +
+  theme_modern()
+```
+
+
+:::{#callout-caution}
+Unterschiede zwischen Korrelation dürfen nicht linear interpretiert werden. $\square$
 :::
 
 
@@ -965,6 +997,8 @@ Beachten Sie die [Hinweise zu den Aufgaben](https://datenwerk.netlify.app/hinwei
 
 @gelman_regression_2021-1 liefert eine deutlich umfassendere Einführung in die Regressionsanalyse als dieses Kapitel es tut.
 Eine moderne, R-orientierte Einführung in Statistik inklusive der Regressionsanalyse findet sich bei @cetinkaya-rundel_introduction_2021-2.
+Ein Klassiker mit viel Aha-Potenzial ist @cohen_applied_2003.
+
 
 ## Literatur
 

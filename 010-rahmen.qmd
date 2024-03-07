@@ -135,8 +135,8 @@ Gute Antwort, oder?
 
 ### Unterschiedlichkeit messen 
 
-Eine allgegenwärtige Tatsache ist, dass die Dinge der Welt sich unterscheiden, g
-enauer gesagt, dass Exemplare einer Gattung sich unterscheiden. 
+Eine allgegenwärtige Tatsache ist, dass die Dinge der Welt sich unterscheiden, 
+etwa, dass Exemplare einer Gattung sich unterscheiden. 
 So sind nicht alle Menschen gleich groß, nicht alle Bücher gleich lang oder nicht alle Tage gleich warm.
 
 
@@ -406,6 +406,226 @@ Beispiele für ID-Variablen sind z.B. Matrikulationsnummer, Personalausweisnumme
 
 
 
+
+
+
+
+:::{#exm-daten}
+
+### Daten zur Forschungsfrage 2
+
+Hier ist ein Auszug der Daten zur Tabelle `mariokart`, s. @tbl-mariokart.
+
+```{r tbl-mariokart}
+#| echo: false
+#| label: tbl-mariokart
+#| tbl-cap: Auszug aus der Tabelle mariokart
+#library(dplyr)
+#library(DT)
+data("mariokart", package = "openintro")
+
+#mariokart <- as_tibble("mariokart")
+
+head(mariokart) |> 
+  select(-id, - title) |> 
+  kable()
+
+# if (knitr:::is_html_output()) {
+#   mariokart %>% 
+#     select(-title) %>% 
+#     DT::datatable() 
+# }
+# 
+# if (knitr:::is_latex_output()) {
+#   mariokart %>% 
+#     select(-title) %>% 
+#     head() 
+# }
+
+```
+
+
+Eine Erklärung aller Variablen des Datensatzes `mariokart` findet sich [hier](https://www.openintro.org/data/index.php?data=mariokart). $\square$
+:::
+
+:::{#def-datadict}
+### Data Dictionary
+
+Eine Erklärung, was die Namen einer Datentabelle bedeuten,
+nennt man *Code Book* or *Data Dictionary*.$\square$
+
+:::
+
+
+
+### Was ist eine Variable?
+
+:::{#def-var}
+
+### Variable
+
+Eine Variable ist ein Platzhalter, der für ein Merkmal steht, das verschiedene Werte annehmen kann.$\square$
+
+:::
+
+
+Man kann sich eine Variable wie einen Behälter vorstellen,
+auf dem mit einem Stift geschrieben steht, was für eine Art Inhalt darin ist,
+s. @fig-var-zuweisen.
+
+
+![Wir definieren eine Variable "temp" mit dem Inhalt "9"](img/Variablen_zuweisen.png){#fig-var-zuweisen width="25%"}
+
+
+
+
+### Beobachtungseinheit
+
+:::{#def-beobeinheit}
+
+### Beobachtungseinheit
+
+Beobachtungseinheiten sind die Dinge, die wir untersuchen (beobachten).
+Beobachtungseinheiten sind die Träger von Variablen.$\square$
+
+:::
+
+
+In @tbl-daten gibt es drei Variablen: `id`, `Name` und `Note`. 
+Es gibt auch drei Beobachtungseinheiten: *Anna*, *Berta* und *Carla.*
+
+
+### Wert
+
+:::{#def-wert}
+### Wert
+Ein *Wert* ist der Inhalt einer Variablen.$\square$
+
+:::
+
+
+In  @fig-var-zuweisen ist der Wert von `temp` 9.
+In @tbl-daten hat die Variable `name` drei Elemente: Anna, Berta, Carla.
+Der Wert des 2. Elements ist Berta.
+
+:::{#def-auspraegung}
+Als *Ausprägungen* bezeichnet man die verschiedenen Werte einer Variablen. $\square$
+:::
+
+
+:::{#exm-geschlecht}
+
+In einer Studie wurden zehn Probanden untersucht. 
+Die Variable `geschlecht` dokumentiert die Geschlechter der Personen:
+
+```{r}
+geschlecht <- c("Mann", "Frau", "Frau", "Frau", "Mann",
+                "Frau", "Mann", "Mann", "divers", "Frau")
+geschlecht
+```
+
+In dieser Variable (die aus 10 Werten besteht) finden sich drei Ausprägungen:
+divers, Frau, Mann.$\square$
+
+:::
+
+:::{.callout-tip}
+Gerade haben Sie etwas Computer-Syntax gesehen, genauer gesagt, Befehle aus der Programmiersprache *R*. 
+Bisher haben wir diese Befehle nicht kennengelernt. 
+Sie verstehen Sie vermutlich (nicht ganz).
+Ignorieren Sie diese Befehle einfach erstmal. 
+:::
+
+
+
+
+### Tidy-Data
+
+:::{#def-tidy}
+
+Unter *Tidy-Data* (tidy data, "Normalform") versteht man eine Tabelle,
+in der jede Zeile eine Beobachtungseinheit darstellt,
+jede Spalte eine Variable und jede Zelle der Tabelle einen Wert, s. @fig-tidy1.
+(Zusätzlich ist noch eine "Kopfzeile" erlaubt, in der die Namen der Variablen stehen.)$\square$
+
+:::
+
+@tbl-daten ist ein Beispiel für Tidy-Data. 
+@fig-tidy1 zeigt ein Sinnbild für Tidy-Data [@wickham_r_2018]. Und @fig-tidy-hadley erläutert das Tidy-Prinzip genauer.
+
+
+:::{#fig-tidy-all layout-ncol=2}
+![Tidy-Data-Sinnbild. Image Credit: Hadley Wickham](img/tidy-1.png){#fig-tidy1}
+
+![Was ist Tidy-Data?. Image Credit: Allision Horst](img/tidydata_1.jpg){#fig-tidy-hadley}
+
+Stay Tidy!
+
+:::
+
+:::callout-important
+Für eine statistische Analyse ist es oft sinnvoll, dass die Daten im Tidy-Format vorliegen.
+:::
+
+Der Vorteil des Tidy-Formats ist es, 
+dass man weiß, wie die Daten aufgebaut sind. 
+Außerdem können Statistikprogramme oft mit dieser Form am besten umgehen, s. fig-tidy3.
+
+
+
+![Immer schön Ordnung halten... Image credit: Allision Horst](img/tidydata_3.jpg){#fig-tidy3 width="50%"}
+
+
+:::{.small}
+[Quelle](https://github.com/allisonhorst/stats-illustrations)
+:::
+
+
+
+
+
+
+
+
+
+Das Tidy-Format wird auch als "langes" Format bezeichnet.
+
+@fig-long-wide-anim zeigt einen Datensatz in der "langen" Form, also tidy, und den gleichen Datensatz, umformatiert in der "breiten" Form, nicht-tidy.
+
+
+::: {.content-visible when-format="pdf"}
+![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ("long") ist "tidy".](img/wide-long.png){#fig-long-wide-anim width="50%"}
+:::
+
+
+::: {.content-visible when-format="html"}
+![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ("long") ist "tidy".](img/tidyr-pivoting.gif){#fig-long-wide-anim width="50%"}
+:::
+
+
+[Quelle: Garrick Aden-Buie, 2018, CC0-1.0 license, https://www.garrickadenbuie.com/project/tidyexplain/]{.small}
+
+
+
+
+::: {.callout-tip}
+In vielen Organisationen werden Exceltabellen für bestimmte Zwecke der Datenverarbeitung verwendet. 
+Excel^[und ähnliche Programme] hat bestimmte Stärken und Vorteile, aber auch gewisse Nachteile und Schwäche;
+das liegt z.T. daran, dass Excel für bestimmte Aufgaben besser und für andere weniger gut geeignet ist.
+Wenn man mit Excel arbeitet, wiederholen sich erfahrungsgemäß immer wieder die gleichen Fehler bzw. suboptimalen Vorgehensweise zum Aufbau einer Exceltabelle.
+
+[Dieser Artikel](https://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989) von @broman_data_2018 zeigt anhand einiger praktischer Tipps, wie man Exceltabellen so aufbaut, dass Fehler minimiert werden. 
+:::
+
+
+
+:::{#exr-smartphonse}
+### Sind wir süchtig nach dem Handy?
+Sind Sie süchtig nach Ihrem Handy? Lassen Sie uns eine kleine Studie dazu live im Hörsaal durchführen. Füllen Sie [diese Umfrage](https://forms.gle/PP8yb6Ubqq3JU78F9) zum Thema Smartphonse-Sucht aus (anonym und kein Muss). Wir werden die Daten später zusammen aus. $\square$
+:::
+
+
+
 ### Je mehr, desto besser (?)
 
 
@@ -488,225 +708,34 @@ Mehr Daten = genauere Ergebnisse (unter sonst gleichen Umständen) $\square$
 
 
 
+:::{#exr-kleine-grosse-stipro}
+### Live-Experiment zum Effekt der Stichprobengröße
 
+In diesem Live-Experiment untersuchen wir den Effekt der *Stichprobengröße* auf die Streuung des Mittelwerts in der *Stichprobe.* Streuen die Ergebnisse mehr in kleinen Stichproben als in großen? Probieren wir es aus!
 
+In diesem Experiment werfen Sie (in kleinen Gruppen) eine Münze (auf faire Art und Weise) und notieren das Ergebnis (Kopf oder Zahl).
+Uns interessiert dabei die Frage, ob die Ergebnisse bei kleinen Stichproben (n=5 Münzwürfe) anders streuen als in großen Stichproben (n=20 Münzwürfe).
 
-:::{#exm-daten}
+Sie brauchen nur experimentierfreudige Partner (Kleingruppen mit 2-4 Personen), eine faire Münze und dann kann's los gehen! [Klicken Sie hier, um mit dem Experiment zu starten](https://docs.google.com/forms/d/e/1FAIpQLSeAwqNyZtyQwttq5JrQdQ2AO7w5vzcVDXjiejKnyFNxiWtEag/viewform?usp=sf_link)
 
-### Daten zur Forschungsfrage 2
-
-Hier ist ein Auszug der Daten zur Tabelle `mariokart`, s. @tbl-mariokart.
-
-```{r tbl-mariokart}
-#| echo: false
-#| label: tbl-mariokart
-#| tbl-cap: Auszug aus der Tabelle mariokart
-#library(dplyr)
-#library(DT)
-data("mariokart", package = "openintro")
-
-#mariokart <- as_tibble("mariokart")
-
-head(mariokart) |> 
-  select(-id, - title) |> 
-  kable()
-
-# if (knitr:::is_html_output()) {
-#   mariokart %>% 
-#     select(-title) %>% 
-#     DT::datatable() 
-# }
-# 
-# if (knitr:::is_latex_output()) {
-#   mariokart %>% 
-#     select(-title) %>% 
-#     head() 
-# }
-
-```
-
-
-Eine Erklärung aller Variablen des Datensatzes `mariokart` findet sich [hier](https://www.openintro.org/data/index.php?data=mariokart). $\square$
-:::
-
-:::{#def-datadict}
-### Data Dictionary
-
-Eine Erklärung, was die Namen einer Datentabelle bedeuten,
-nennt man *Code Book* or *Data Dictionary*.$\square$
-
-:::
-
-
-:::{.callout-note}
-## Wie man mit Statistik lügt: Das File-Drawer-Problem
-
-Sie haben ein tolles Experiment durchgeführt, viel Arbeit, viel Stress, endlich geschafft, puh. Von den 20 Variablen (als AV, s. @sec-arten-variablen), die Sie untersucht haben, zeigt nur 1 einen interessanten Effekt, leider. 1 von 20, das hört sich nicht so toll an. Wäre es da nicht "elegant", die 19 Variablen ohne schönen Effekt einfach in der Schublade liegen zu lassen bis zum Sankt-Nimmerleins-Tag? Dann könnten Sie stattdessen als Ergebnis nur die eine Variable mit schönen Ergebnis präsentieren, ganz ohne widersprechende Befunde. 
-
-Dieser Versuchung nicht zu erliegen, kann schwer sein. Es ist aber gefährlich, missliebige Ergebnisse zu verschweigen: Die anderen Menschen bekommen dann ein falsches Bild der Ergebnislage; man spricht von [Publikationsbias](https://de.wikipedia.org/wiki/Publikationsbias). Wer Ergebnisse verschweig, verzerrt die insgesamte Befundlage [@rothstein_publication_2014].
+Die Daten aller Versuche können Sie [hier](https://docs.google.com/spreadsheets/d/11mKFFpr-Y1CMPpq4dGA-JA_Z9jRkPbXolo54Y0G_2gE/edit?usp=sharing) einsehen. $\square$
 :::
 
 
 
 
-### Was ist eine Variable?
-
-:::{#def-var}
-
-## Variable
-
-Eine Variable ist ein Platzhalter, der für ein Merkmal steht, das verschiedene Werte annehmen kann.$\square$
-
-:::
-
-
-Man kann sich eine Variable wie einen Behälter vorstellen,
-auf dem mit einem Stift geschrieben steht, was für eine Art Inhalt darin ist,
-s. @fig-var-zuweisen.
-
-
-![Wir definieren eine Variable "temp" mit dem Inhalt "9"](img/Variablen_zuweisen.png){#fig-var-zuweisen width="25%"}
-
-
-
-
-### Beobachtungseinheit
-
-:::{#def-beobeinheit}
-
-## Beobachtungseinheit
-
-Beobachtungseinheiten sind die Dinge, die wir untersuchen (beobachten).
-Beobachtungseinheiten sind die Träger von Variablen.$\square$
-
-:::
-
-
-In @tbl-daten gibt es drei Variablen: `id`, `Name` und `Note`. 
-Es gibt auch drei Beobachtungseinheiten: *Anna*, *Berta* und *Carla.*
-
-
-### Wert
-
-:::{#def-wert}
-
-Ein *Wert* ist der Inhalt einer Variablen.$\square$
-
-:::
-
-
-In  @fig-var-zuweisen ist der Wert von `temp` 9.
-In @tbl-daten hat die Variable `name` drei Elemente: Anna, Berta, Carla.
-Der Wert des 2. Elements ist Berta.
-
-:::{#def-auspraegung}
-Als *Ausprägungen* bezeichnet man die verschiedenen Werte einer Variablen. $\square$
-:::
-
-
-:::{#exm-geschlecht}
-
-In einer Studie wurden zehn Probanden untersucht. 
-Die Variable `geschlecht` dokumentiert die Geschlechter der Personen:
-
-```{r}
-geschlecht <- c("Mann", "Frau", "Frau", "Frau", "Mann",
-                "Frau", "Mann", "Mann", "divers", "Frau")
-geschlecht
-```
-
-In dieser Variable (die aus 10 Werten besteht) finden sich drei Ausprägungen:
-divers, Frau, Mann.$\square$
-
-:::
-
-:::{.callout-tip}
-Gerade haben Sie etwas Computer-Syntax gesehen, genauer gesagt, Befehle aus der Programmiersprache *R*. 
-Bisher haben wir diese Befehle nicht kennengelernt. 
-Sie verstehen Sie vermutlich (nicht ganz).
-Ignorieren Sie diese Befehle einfach erstmal. 
-:::
-
-
-
-
-### Tidy-Data
-
-:::{#def-tidy}
-
-Unter *Tidy-Data* (tidy data, "Normalform") versteht man eine Tabelle,
-in der jede Zeile eine Beobachtungseinheit darstellt,
-jede Spalte eine Variable und jede Zelle der Tabelle einen Wert, s. @fig-tidy1.
-(Zusätzlich ist noch eine "Kopfzeile" erlaubt, in der die Namen der Variablen stehen.)$\square$
-
-:::
-
-@tbl-daten ist ein Beispiel für Tidy-Data. 
-@fig-tidy1 zeigt ein Sinnbild für Tidy-Data [@wickham_r_2018]. Und @fig-tidy-hadley erläutert das Tidy-Prinzip genauer.
-
-
-:::{#fig-tidy-all layout-ncol=2}
-![Tidy-Data-Sinnbild. Image Credit: Hadley Wickham](img/tidy-1.png){#fig-tidy1}
-
-![Was ist Tidy-Data?. Image Credit: Allision Horst](img/tidydata_1.jpg){#fig-tidy-hadley}
-
-Stay Tidy!
-
-:::
-
-:::callout-important
-Für eine statistische Analyse ist es oft sinnvoll, dass die Daten im Tidy-Format vorliegen.
-:::
-
-Der Vorteil des Tidy-Formats ist es, 
-dass man weiß, wie die Daten aufgebaut sind. 
-Außerdem können Statistikprogramme oft mit dieser Form am besten umgehen, s. fig-tidy3.
-
-
-
-![Immer schön Ordnung halten... Image credit: Allision Horst](img/tidydata_3.jpg){#fig-tidy3 width="50%"}
-
-
-:::{.xsmall}
-[Quelle](https://github.com/allisonhorst/stats-illustrations)
+:::{#exm-schule-samplesize}
+### Dorfschulen machen die schlauesten Schüler!
+In einer Pressemitteilung sei zu lesen, dass die besten Schüler in den Dorfschulen zu finden seien^[Das ist eine fiktive Geschichte]. Mit etwas Recherche finden Sie heraus, dass diese Aussage für belastbaren Daten beruht: Tatsächlich sind die Notendurchschnitte auf den kleinen Dorfschulen deutlich besser als in den großen Schulen in der Stadt. Also stimmt die Behauptung der Pressemitteilung? Die gute Landluft lässt das Hirn wachsen?
+Sie recherchieren noch etwas weiter in den Daten. Dann fällt Ihnen auf: Die *schlechtesten* Schüler kommen auch aus den Dorfschulen!
+Eine statistische Erklärung bietet sich an: In den Dorfschulen gibt es nur wenig Kinder und kleine Klassen -- die Stichproben sind also klein.
+Bei kleinen Stichproben gibt es viel Variation um den Mittelwert herum, s. @fig-sample-estimate, und zwar nach oben (guter Notenschnitt) und nach unten (schlechter Notenschnitt). $\square$
 :::
 
 
 
 
 
-
-
-
-
-Das Tidy-Format wird auch als "langes" Format bezeichnet.
-
-@fig-long-wide-anim zeigt einen Datensatz in der "langen" Form, also tidy, und den gleichen Datensatz, umformatiert in der "breiten" Form, nicht-tidy.
-
-
-::: {.content-visible when-format="pdf"}
-![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ("long") ist "tidy".](img/wide-long.png){#fig-long-wide-anim width="50%"}
-:::
-
-
-::: {.content-visible when-format="html"}
-![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ("long") ist "tidy".](img/tidyr-pivoting.gif){#fig-long-wide-anim width="50%"}
-:::
-
-
-[Quelle: Garrick Aden-Buie, 2018, CC0-1.0 license, https://www.garrickadenbuie.com/project/tidyexplain/]{.small}
-
-
-
-
-::: {.callout-tip}
-In vielen Organisationen werden Exceltabellen für bestimmte Zwecke der Datenverarbeitung verwendet. 
-Excel^[und ähnliche Programme] hat bestimmte Stärken und Vorteile, aber auch gewisse Nachteile und Schwäche;
-das liegt z.T. daran, dass Excel für bestimmte Aufgaben besser und für andere weniger gut geeignet ist.
-Wenn man mit Excel arbeitet, wiederholen sich erfahrungsgemäß immer wieder die gleichen Fehler bzw. suboptimalen Vorgehensweise zum Aufbau einer Exceltabelle.
-
-[Dieser Artikel](https://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989) von @broman_data_2018 zeigt anhand einiger praktischer Tipps, wie man Exceltabellen so aufbaut, dass Fehler minimiert werden. 
-:::
 
 
 ## Arten von Variablen  {#sec-arten-variablen}
@@ -1132,6 +1161,16 @@ Laut dem [Gehaltsreporter](https://gehaltsreporter.de/gehaelter-von-a-bis-z/it/d
 
 
 
+
+
+
+
+## Wie man mit Statistik lügt
+
+Das *File-Drawer-Problem*:
+Sie haben ein tolles Experiment durchgeführt, viel Arbeit, viel Stress, endlich geschafft, puh. Von den 20 Variablen (als AV, s. @sec-arten-variablen), die Sie untersucht haben, zeigt nur 1 einen interessanten Effekt, leider. 1 von 20, das hört sich nicht so toll an. Wäre es da nicht "elegant", die 19 Variablen ohne schönen Effekt einfach in der Schublade liegen zu lassen bis zum Sankt-Nimmerleins-Tag? Dann könnten Sie stattdessen als Ergebnis nur die eine Variable mit schönen Ergebnis präsentieren, ganz ohne widersprechende Befunde. 
+
+Dieser Versuchung nicht zu erliegen, kann schwer sein. Es ist aber gefährlich, missliebige Ergebnisse zu verschweigen: Die anderen Menschen bekommen dann ein falsches Bild der Ergebnislage; man spricht von [Publikationsbias](https://de.wikipedia.org/wiki/Publikationsbias). Wer Ergebnisse verschweig, verzerrt die insgesamte Befundlage [@rothstein_publication_2014].
 
 
 

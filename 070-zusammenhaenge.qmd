@@ -22,11 +22,13 @@
 In diesem Kapitel benötigen Sie folgende R-Pakete.
 
 ```{r}
-#| echo: false
 library(tidyverse)
 library(easystats)
-library(ggplot2)
+```
 
+
+```{r}
+#| echo: false
 ggplot2::theme_set(theme_minimal())
 ```
 
@@ -506,6 +508,8 @@ Spielen Sie das [Korrelationsspiel](https://gallery.shinyapps.io/correlation_gam
 :::
 
 
+
+
 :::{#exr-corrvis}
 ### Interaktive Visualisierung der Korrelation
 
@@ -514,7 +518,39 @@ Nutzen Sie sie, um Ihr Gefühl für die Stärke des Korrelationskoeffizienten zu
 :::
 
 
+### Korrelation mit R berechnen
 
+Ob der Verkaufspreis (`total_pr`) wohl mit der Dauer der Auktion (`duration`) oder mit der Anzahl der Gebote (`n_bids)` (linear) zusammenhängt? 
+Schauen wir nach! Die Funktion `correlation()` (aus dem Paket `{easystats}`) erledigt das Rechnen für uns.
+
+```{r}
+mariokart |> 
+  select(total_pr, duration, n_bids) |> 
+  correlation()  # aus `easystats`
+```
+
+
+
+```{r}
+#| eval: false
+mariokart |> 
+  select(total_pr, duration, n_bids) |> 
+  correlation() |> 
+  summary()
+```
+
+
+
+```{r}
+#| echo: false
+mariokart |> 
+  select(total_pr, duration, n_bids) |> 
+  correlation() |> 
+  summary() |> 
+  print_md()
+```
+
+Sie können auch auf die letzte Zeile, also dem Befehl `summary()` verzichten. Dann ist die Ausgabe ausführlicher.
 
 
 ### Korrelation ≠ Kausation
@@ -528,6 +564,10 @@ Eine Studie fand eine starke Korrelation,
 Korrelation (bzw. Zusammenhang) ungleich Kausation! Korrelation kann bedeuten, dass eine Kausation vorliegt, aber es muss auch nicht sein, dass Kausation vorliegt. 
 Liegt Korrelation ohne Kausation vor, so spricht man von einer Scheinkorrelation. 
 :::
+
+
+
+
 
 
 ### Korrelation misst nur linearen Zusammenhang

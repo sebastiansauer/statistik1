@@ -311,8 +311,9 @@ window.Quarto = {
 <a href="#korrelation" id="toc-korrelation" class="nav-link" data-scroll-target="#korrelation"><span class="header-section-number">8.4</span> Korrelation</a>
   <ul class="collapse">
 <li><a href="#korrelation-als-mittleres-z-produkt" id="toc-korrelation-als-mittleres-z-produkt" class="nav-link" data-scroll-target="#korrelation-als-mittleres-z-produkt"><span class="header-section-number">8.4.1</span> Korrelation als mittleres z-Produkt</a></li>
-  <li><a href="#korrelation-kausation" id="toc-korrelation-kausation" class="nav-link" data-scroll-target="#korrelation-kausation"><span class="header-section-number">8.4.2</span> Korrelation ≠ Kausation</a></li>
-  <li><a href="#korrelation-misst-nur-linearen-zusammenhang" id="toc-korrelation-misst-nur-linearen-zusammenhang" class="nav-link" data-scroll-target="#korrelation-misst-nur-linearen-zusammenhang"><span class="header-section-number">8.4.3</span> Korrelation misst nur linearen Zusammenhang</a></li>
+  <li><a href="#korrelation-mit-r-berechnen" id="toc-korrelation-mit-r-berechnen" class="nav-link" data-scroll-target="#korrelation-mit-r-berechnen"><span class="header-section-number">8.4.2</span> Korrelation mit R berechnen</a></li>
+  <li><a href="#korrelation-kausation" id="toc-korrelation-kausation" class="nav-link" data-scroll-target="#korrelation-kausation"><span class="header-section-number">8.4.3</span> Korrelation ≠ Kausation</a></li>
+  <li><a href="#korrelation-misst-nur-linearen-zusammenhang" id="toc-korrelation-misst-nur-linearen-zusammenhang" class="nav-link" data-scroll-target="#korrelation-misst-nur-linearen-zusammenhang"><span class="header-section-number">8.4.4</span> Korrelation misst nur linearen Zusammenhang</a></li>
   </ul>
 </li>
   <li>
@@ -359,10 +360,14 @@ window.Quarto = {
 </ul></section><section id="benötigte-r-pakete" class="level3" data-number="8.1.3"><h3 data-number="8.1.3" class="anchored" data-anchor-id="benötigte-r-pakete">
 <span class="header-section-number">8.1.3</span> Benötigte R-Pakete</h3>
 <p>In diesem Kapitel benötigen Sie folgende R-Pakete.</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/easystats/">easystats</a></span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section><section id="benötigte-daten" class="level3" data-number="8.1.4"><h3 data-number="8.1.4" class="anchored" data-anchor-id="benötigte-daten">
 <span class="header-section-number">8.1.4</span> Benötigte Daten</h3>
-<div class="cell" data-hash="070-zusammenhaenge_cache/html/unnamed-chunk-3_efab9318610896af44b08f7aaaf76982">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="zusammenfassen-zum-zusammenhang" class="level2" data-number="8.2"><h2 data-number="8.2" class="anchored" data-anchor-id="zusammenfassen-zum-zusammenhang">
 <span class="header-section-number">8.2</span> Zusammenfassen zum Zusammenhang</h2>
@@ -610,9 +615,9 @@ Tabelle&nbsp;8.2: Werte der Abweichungsrechtecke
 </div>
 </div>
 <p>Berechnen wir als nächstes das mittlere Abweichungsrechteck, die Kovarianz:</p>
-<div class="cell" data-hash="070-zusammenhaenge_cache/html/unnamed-chunk-11_c2c1b5333bac969907e1c19b6f8db9c1">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">summarise</span><span class="op">(</span>kovarianz <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">xy_area</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>kovarianz <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">xy_area</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -790,8 +795,55 @@ Abbildung&nbsp;8.7: Verschiedene Streudiagramme, die sich in ihrem Korrelationsk
 <div id="exr-corrvis" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 8.2 (Interaktive Visualisierung der Korrelation)</strong></span> Auf der Seite von <a href="https://rpsychologist.com/correlation/">RPsychologist</a> findet sich eine ansprechende dynamische Visualisierung der Korrelation. Nutzen Sie sie, um Ihr Gefühl für die Stärke des Korrelationskoeffizienten zu entwickeln.<span class="math inline">\(\square\)</span></p>
 </div>
-</section><section id="korrelation-kausation" class="level3" data-number="8.4.2"><h3 data-number="8.4.2" class="anchored" data-anchor-id="korrelation-kausation">
-<span class="header-section-number">8.4.2</span> Korrelation ≠ Kausation</h3>
+</section><section id="korrelation-mit-r-berechnen" class="level3" data-number="8.4.2"><h3 data-number="8.4.2" class="anchored" data-anchor-id="korrelation-mit-r-berechnen">
+<span class="header-section-number">8.4.2</span> Korrelation mit R berechnen</h3>
+<p>Ob der Verkaufspreis (<code>total_pr</code>) wohl mit der Dauer der Auktion (<code>duration</code>) oder mit der Anzahl der Gebote (<code>n_bids)</code> (linear) zusammenhängt? Schauen wir nach! Die Funktion <code>correlation()</code> (aus dem Paket <a href="https://easystats.github.io/easystats/">easystats</a>) erledigt das Rechnen für uns.</p>
+<div class="cell">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">total_pr</span>, <span class="va">duration</span>, <span class="va">n_bids</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">correlation</span><span class="op">(</span><span class="op">)</span>  <span class="co"># aus `easystats`</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Parameter1"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Parameter2"],"name":[2],"type":["chr"],"align":["left"]},{"label":["r"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CI"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["CI_low"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CI_high"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["t"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["df_error"],"name":[8],"type":["int"],"align":["right"]},{"label":["p"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["Method"],"name":[10],"type":["chr"],"align":["left"]},{"label":["n_Obs"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"total_pr","2":"duration","3":"-0.04123545","4":"0.95","5":"-0.20400317","6":"0.12375076","7":"-0.4900606","8":"141","9":"0.6248527","10":"Pearson correlation","11":"143","_rn_":"1"},{"1":"total_pr","2":"n_bids","3":"0.12772940","4":"0.95","5":"-0.03719911","6":"0.28588396","7":"1.5292284","8":"141","9":"0.3853445","10":"Pearson correlation","11":"143","_rn_":"2"},{"1":"duration","2":"n_bids","3":"-0.12102397","4":"0.95","5":"-0.27961768","6":"0.04399868","7":"-1.4477213","8":"141","9":"0.3853445","10":"Pearson correlation","11":"143","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">total_pr</span>, <span class="va">duration</span>, <span class="va">n_bids</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">correlation</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Correlation Matrix (pearson-method)</caption>
+<thead><tr class="header">
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: center;">n_bids</th>
+<th style="text-align: center;">duration</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">total_pr</td>
+<td style="text-align: center;">0.13</td>
+<td style="text-align: center;">-0.04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">duration</td>
+<td style="text-align: center;">-0.12</td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p>p-value adjustment method: Holm (1979)</p>
+</div>
+</div>
+<p>Sie können auch auf die letzte Zeile, also dem Befehl <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> verzichten. Dann ist die Ausgabe ausführlicher.</p>
+</section><section id="korrelation-kausation" class="level3" data-number="8.4.3"><h3 data-number="8.4.3" class="anchored" data-anchor-id="korrelation-kausation">
+<span class="header-section-number">8.4.3</span> Korrelation ≠ Kausation</h3>
 <p>Eine Studie fand eine starke Korrelation, zwischen der (Höhe des) Schokoladenkonsums eines Landes und (Anzahl der) Nobelpreise eines Landes <span class="citation" data-cites="messerli_chocolate_2012">(<a href="#ref-messerli_chocolate_2012" role="doc-biblioref">Messerli, 2012</a>)</span>, s. <a href="#fig-schoki" class="quarto-xref">Abbildung&nbsp;<span>8.8</span></a>.</p>
 <div id="fig-schoki" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-schoki-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -814,8 +866,8 @@ Vorsicht
 <p>Korrelation (bzw. Zusammenhang) ungleich Kausation! Korrelation kann bedeuten, dass eine Kausation vorliegt, aber es muss auch nicht sein, dass Kausation vorliegt. Liegt Korrelation ohne Kausation vor, so spricht man von einer Scheinkorrelation.</p>
 </div>
 </div>
-</section><section id="korrelation-misst-nur-linearen-zusammenhang" class="level3" data-number="8.4.3"><h3 data-number="8.4.3" class="anchored" data-anchor-id="korrelation-misst-nur-linearen-zusammenhang">
-<span class="header-section-number">8.4.3</span> Korrelation misst nur linearen Zusammenhang</h3>
+</section><section id="korrelation-misst-nur-linearen-zusammenhang" class="level3" data-number="8.4.4"><h3 data-number="8.4.4" class="anchored" data-anchor-id="korrelation-misst-nur-linearen-zusammenhang">
+<span class="header-section-number">8.4.4</span> Korrelation misst nur linearen Zusammenhang</h3>
 <div id="exm-scheinkorr" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 8.4 (Scheinkorrelation)</strong></span> <em>Störche und Babies</em>: Eine Urban Myth besagt: Die Anzahl der Störche pro Landkreis korreliert mit der Anzahl der Babies in diesem Landkreis.</p>
 <p>Eine Erklärung für dieses (nur scheinbare) Paradoxon ist, dass die “Naturbelassenheit” des Landkreises die gemeinsame Ursache für Störche ist (Störche lieben Natur) und für Babies ist (die dortige Kultur begünstigt, mehr Kinder pro Frau).</p>
@@ -837,10 +889,10 @@ Vorsicht
 Listing&nbsp;8.1
 </figcaption><div aria-describedby="lst-corr-range-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1e2</span></span>
 <span><span class="va">d</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu">tibble</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>         e <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span>,</span>
 <span>         y <span class="op">=</span> <span class="va">x</span> <span class="op">+</span> <span class="va">e</span><span class="op">)</span></span>
 <span></span>
@@ -849,7 +901,7 @@ Listing&nbsp;8.1
 <span></span>
 <span><span class="va">d_filtered</span> <span class="op">&lt;-</span></span>
 <span><span class="va">d</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="fu">between</span><span class="op">(</span><span class="va">x</span>, <span class="va">x_min</span>, <span class="va">x_max</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html">between</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x_min</span>, <span class="va">x_max</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </figure>
@@ -891,22 +943,22 @@ Abbildung&nbsp;8.9: Schränkt man den Range einer (oder beider) Variablen ein, s
 <p>In Ihrer Arbeit beim Online-Auktionshaus analysieren Sie, welche Variablen mit dem Verkaufspreis von Computerspielen zusammenhängen.</p>
 <p>Falls der Datensatz auf Ihrem Computer (am besten in Ihrem Projektverzeichnis in RStudio) abgelegt ist, können Sie die Daten so (in mittlerweile gewohnter Manier) importieren:</p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Falls der Datensatz im Unterordner mit Namen “Mein_Unterordner” liegt, so würden Sie folgenden Pfad eingeben:</p>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"Mein_Unterordner/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"Mein_Unterordner/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Man beachte, dass solche sog. relativen Pfade (relativ zu Ihrem Arbeitsverzeichnis, d.h. Ihr Projektverzeichnis in R-Studio) <em>nicht</em> mit einem Schrägstrich (Slash) beginnen.</p>
 <p>Falls Sie die Daten nicht auf Ihrem Computer haben, können Sie sie komfortable von z.B. der Webseite von <a href="https://vincentarelbundock.github.io/Rdatasets">Vincent Arel-Bundock</a> herunterladen:</p>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Sie wählen die Variablen von <code>mariokart</code>, die Sie in diesem Fall interessieren – natürlich nur die metrischen – und lassen sich mit <code>cor</code> die Korrelation aller Variablen untereinander ausgeben:</p>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">%&gt;%</span>  </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">duration</span>, <span class="va">n_bids</span>, <span class="va">start_pr</span>, <span class="va">ship_pr</span>, <span class="va">total_pr</span>, <span class="va">seller_rate</span>, <span class="va">wheels</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>  </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">duration</span>, <span class="va">n_bids</span>, <span class="va">start_pr</span>, <span class="va">ship_pr</span>, <span class="va">total_pr</span>, <span class="va">seller_rate</span>, <span class="va">wheels</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="co"># Runden auf zwei Dezimalen</span></span>
 <span><span class="co">##             duration n_bids start_pr ship_pr total_pr seller_rate wheels</span></span>
 <span><span class="co">## duration        1.00  -0.12     0.13    0.27    -0.04       -0.15  -0.30</span></span>
@@ -932,8 +984,8 @@ Namensverwechslung (name clash)
 </div>
 <p>Etwas schöner sieht die Ausgabe mit dem Befehl <code>correlation</code> aus <a href="https://easystats.github.io/easystats/">easystats</a> aus, s. <a href="#tbl-mario-corr" class="quarto-xref">Tabelle&nbsp;<span>8.3</span></a>.</p>
 <div class="cell" data-hash="070-zusammenhaenge_cache/html/tbl-mario-corr_2c446b672d54d91ece749446536fe80b">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">duration</span>, <span class="va">n_bids</span>, <span class="va">start_pr</span>, <span class="va">ship_pr</span>, <span class="va">total_pr</span>, <span class="va">seller_rate</span>, <span class="va">wheels</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">duration</span>, <span class="va">n_bids</span>, <span class="va">start_pr</span>, <span class="va">ship_pr</span>, <span class="va">total_pr</span>, <span class="va">seller_rate</span>, <span class="va">wheels</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">correlation</span><span class="op">(</span><span class="op">)</span> </span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="tbl-mario-corr" class="cell quarto-float anchored" data-hash="070-zusammenhaenge_cache/html/tbl-mario-corr_2c446b672d54d91ece749446536fe80b">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mario-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -953,8 +1005,8 @@ Tabelle&nbsp;8.3: Korrelationstabelle (tidy) im Datensatz mariokart
 <p>Neben einigen Statistiken, die wir einfach geflissentlich ausblenden (<code>t</code> und <code>p</code>) beinhaltet die Tabelle eine interessante Information: den Schätzbereich für die Korrelation, gekennzeichnet als <code>95% CI</code>. <em>Grob</em> gesagt können wir diese Information so interpretieren: “Mit 95% Wahrscheinlichkeit liegt der echte Wert der Korrelation in folgendem Bereich.”<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
 <p>Möchte man nur einzelne Korrelationskoeffizienten ausrechnen, können wir die Idee des Zusammenfassens, s. <a href="#eq-desk2" class="quarto-xref">Gleichung&nbsp;<span>8.1</span></a>, nutzen:</p>
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarise</span><span class="op">(</span>cor_super_wichtig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">total_pr</span>, <span class="va">wheels</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>cor_super_wichtig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">total_pr</span>, <span class="va">wheels</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -975,8 +1027,8 @@ Vorsicht
 <div class="callout-body-container callout-body">
 <p>Im Falle von fehlenden Werte müssen Sie R aus seiner schüchternen Vorsicht befreien und ermutigen, trotz fehlender Werte einen Korrelationskoeffizienten auszugeben. Das geht mit dem Argument <code>use = "complete.obs"</code> in <code>cor</code>:</p>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarise</span><span class="op">(</span>cor_super_wichtig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">total_pr</span>, <span class="va">wheels</span>, use <span class="op">=</span> <span class="st">"complete.obs"</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>cor_super_wichtig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">total_pr</span>, <span class="va">wheels</span>, use <span class="op">=</span> <span class="st">"complete.obs"</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -992,10 +1044,10 @@ Vorsicht
 </blockquote>
 <p>Mit dem Befehl <code>plot_correlation</code> aus dem R-Paket <code>{dataExplorer}</code> bekommt man eine ansehnliche Heatmap zur Verdeutlichung der Korrelationswerte, s. <a href="#fig-mario-corr" class="quarto-xref">Abbildung&nbsp;<span>8.10</span></a>.</p>
 <div class="cell" data-hash="070-zusammenhaenge_cache/html/fig-mario-corr_551c1da0f83df0845124a3e1c2c3ab39">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://boxuancui.github.io/DataExplorer/">DataExplorer</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://boxuancui.github.io/DataExplorer/">DataExplorer</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">mariokart</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">duration</span>, <span class="va">n_bids</span>, <span class="va">start_pr</span>, <span class="va">ship_pr</span>, <span class="va">total_pr</span>, <span class="va">seller_rate</span>, <span class="va">wheels</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span><span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">duration</span>, <span class="va">n_bids</span>, <span class="va">start_pr</span>, <span class="va">ship_pr</span>, <span class="va">total_pr</span>, <span class="va">seller_rate</span>, <span class="va">wheels</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="http://boxuancui.github.io/DataExplorer/reference/plot_correlation.html">plot_correlation</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-mario-corr" class="quarto-figure quarto-figure-center quarto-float anchored">

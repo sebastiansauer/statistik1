@@ -62,7 +62,7 @@ wetter <- read.csv(wetter_path)
 ```
 
 
-{{< downloadthis daten/wetter.csv dname = "wetter.csv" }}
+{{< downloadthis daten/wetter.csv dname = "wetter.csv" >}}
 
 Die Wetterdaten stammen vom [DWD](https://opendata.dwd.de/).^[Lizenzhinweis: Datenbasis: Deutscher Wetterdienst, eigene Elemente ergänzt.]
 
@@ -1609,8 +1609,84 @@ Es gibt eine ganze Reihe von Untersuchungen dazu, z.B. die von @lalwani_customer
 Die Forschis versuchen anhand von Daten und u.a. auch der linearen Regression vorherzusagen, welche Kunden abgewandert sein werden. Die Autoren berichten von einer Genauigkeit von über 80% in Ihrem (besten) Vorhersagemodell.
 
 
+## Wie man mit Statistik lügt
+
+Ein Forscher-Team untersucht Pinguine von der [Palmer Station, Antarktis](https://pallter.marine.rutgers.edu/). Das Team ist am Zusammenhang von Schnabellänge (*bill length*) und Schnabeltiefe (*bill depth*) interessiert, s. @fig-peng-bill.
+
+
+![Schnabellänge und Schnabeltiefe](https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png){#fig-peng-bill fig-width="50%}
+
+Das Team hat in ~~schweißtreibender~~ eiszapfentreibender Arbeit $n=344$ Tiere vermessen bei antarktischen Temperaturen. Hier sind die Daten:
+
+```{r}
+penguins <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
+```
+
+
+### Analyse 1: Gesamtdaten
+
+Man untersucht, rechnet und überlegt. Ah! Jetzt haben wir es!
+Klarer Fall: Ein *negativer* Zusammenhang von Schnabellänge und Schnabeltiefe. Das könnte einen Nobelpreis wert sein. Schnell publizieren!
+
+```{r}
+ggscatter(penguins, x = "bill_length_mm", y = "bill_depth_mm", 
+          add = "reg.line")
+```
+
+Hier sind die statistischen Details, s. @tbl-peng-simpson1.
+
+```{r}
+lm1 <- lm(bill_depth_mm ~ bill_length_mm, data = penguins)
+```
+
+```{r}
+#| echo: false
+#| label: tbl-peng-simpson1
+#| tbl-cap: "Koeffizienten des Modells 1: Negativer Effekt von bill_length_mm"
+parameters(lm1) |> print_md()
+```
+
+
+
+### Analyse 2: Aufteilung in Arten (Gruppen)
+
+Kurz darauf veröffentlicht eine verfeindete Forscherin auch einen Aufsatz zum gleichen Thema. Gleiche Daten. Aber mit *gegenteiligem* Ergebnis: 
+Bei *jeder Rasse* von (untersuchten) Pinguinen gilt: Es gibt einen *positiven* Zusammenhang von Schnabelllänge und Schnabeltiefe.
+
+```{r}
+ggscatter(penguins, x = "bill_length_mm", y = "bill_depth_mm", 
+          add = "reg.line", color = "species")
+```
+
+
+Oh nein! Was ist hier nur los? Daten lügen nicht, oder doch?
+
+
+Hier sind die statistischen Details der zweiten Analyse, s. @tbl-peng-simpson2. 
+Im zweiten Modell kam `species` als zweiter Prädiktor neu ins Modell (zusätlich zur Schnabellänge).
+
+```{r}
+lm2 <- lm(bill_depth_mm ~ bill_length_mm + species, data = penguins)
+```
+
+```{r}
+#| echo: false
+#| label: tbl-peng-simpson2
+#| tbl-cap: "Koeffizienten des Modells 2: Positiver Effekt von bill_length_mm"
+parameters(lm2) |> print_md()
+```
+
+
+
+:::{.callout-caution}
+### Daten alleine reichen nicht
+Ohne Hintergrundwissen oder ohne weitere Analysen kann *nicht* entschieden werden, welche Analyse - Gesamtdaten oder Subgruppen - die richtige ist.
+Nicht-exprimentelle Studien können zu grundverschiedenen Ergebnissen führen, jenachdem ob Prädiktoren dem Modell hinzugefügt oder weggenommen werden. $\square$
+:::
 
 ## Fazit
+
+
 
 In diesem Kapitel haben Sie lineare Modelle gelernt, 
 die über einfache Modelle der Art `y ~ x` hinausgehen. 
@@ -1621,10 +1697,11 @@ Das Fallbeispiel zum Schluss war vielleicht erhellend insofern,
 als dass ein gutes Modell im Train-Sample nicht (notwendig) zu guten Vorhersagen im Test-Sample führt.
 
 
-## Dran bleiben
 
 
-Wenn Sie dran bleiben an der Statistik, wird der Erfolg sich einstellen.
+:::{.callout-important}
+Wenn Sie dran bleiben an der Statistik, wird der Erfolg sich einstellen, s. @fig-dranbleiben. $\square$
+:::
 
 
 :::{#fig-dranbleiben layout-ncol=2}

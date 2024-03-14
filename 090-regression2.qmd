@@ -45,13 +45,16 @@ library(openintro)  # dataset mariokart
 ```
 
 
-{{< include children/colors.qmd >}}
+
 
 
 
 
 
 ### Benötigte Daten
+
+{{< include children/colors.qmd >}}
+
 
 ```{r}
 mariokart_path <- "https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"
@@ -858,7 +861,7 @@ levels(wetter$month_factor)
 
 ### Binäre plus metrische UV {#sec-faktorvar}
 
-In diesem Abschnitt untersuchen wir ein lineares Modell mit zwei UV: einer zweistufigen (binären) UV plus einer metrischen UV.^[So ein Modell kann auch als *Kovarianzanalyse* (engl. analysis of covariance, ancova) bezeichnet werden.]
+In diesem Abschnitt untersuchen wir ein lineares Modell mit zwei UV: einer *zweistufigen* (binären) UV plus einer *metrischen* UV.^[So ein Modell kann auch als *Kovarianzanalyse* (engl. analysis of covariance, ancova) bezeichnet werden.]
 
 :::{#exm-rain1}
 Ob sich die Niederschlagsmenge wohl unterschiedlich zwischen den Monaten entwickelt hat in den letzten gut 100 Jahren?
@@ -918,7 +921,7 @@ Wie spezifiziert man jetzt das lineare Modell?$\square$
 Hat man mehrere ("multiple") X-Variablen^[Prädiktoren, unabhängige Variablen, X-Variablen], so trennt man sich mit einem Plus-Zeichen in der Regressionsformel, z.B. `temp ~ year_c + month`.
 
 
-:::{callout-important}
+:::{.callout-important}
 ### Multiple Regression
 Eine multiple Regression beinhaltet mehr als eine X-Variable. Die Modellformel spezifiziert man so:
 
@@ -1112,92 +1115,51 @@ r2(lm_year_month_interaktion)  # aus `{easystats}`
 
 
 
-## Vorsicht bei der Interpretation von Regressionskoeffizienten
+## Modelle mit vielen UV
 
-:::{.callout-important}
-Interpretiere nie Modellkoeffizienten ohne ein Kausalmodell.$\square$
-:::
 
-Nur wenn man die Ursache-Wirkungs-Beziehungen in einem System kennt,
-macht es Sinn, die Modellkoeffizienten kausal zu interpretieren.
-Andernfalls lässt man besser die Finger von der Interpretation der Modellkoeffizienten und
-begnügt sich mit der Beschreibung der Modellgüte und mit Vorhersage^[synonym: Prognose].
-Wer das nicht glaubt, der betrachte @fig-confounder, links.^[[Quelle](https://data-se.netlify.app/2021/12/01/simulation-on-controlling-confounders/)]
-Ei Forschi stellt das Modell `m1: y ~ x` auf und  interpretiert dann `b1`: "Ist ja klar, X hat einen starken positiven Effekt auf Y!".
+### Zwei metrische UV
 
-In der nächsten Studie nimmt dis Forschi dann eine zweite Variable, `group` (z.B. Geschlecht) in das Modell auf: `m2: y ~ x + g`.
-Oh Schreck! Jetzt ist `b1` auf einmal nicht mehr stark positiv, sondern praktisch Null, und zwar in jeder Gruppe, s. @fig-confounder, rechts!
 
-Dieses Umschwenken der Regressionskoeffizienten kann *nicht* passieren,
-wenn der Effekt "echt", also kausal, ist. 
-Handelt es sich aber um "nicht echte", also nicht-kausale Zusammenhänge, um Scheinzusammenhänge also,
-so können sich die Modellkoeffizienten dramatisch verändern (sogar das Vorzeichen kann wechseln^[das nennt man dann *Simpsons Paradox*]),
-wenn man das Modell verändert, also Variablen hinzufügt oder wegnimmt.
+Ein Modell mit zwei metrischen UV kann man sich im 3D-Raum visualisieren, s. @fig-3d-regr.
+Im 3D-Raum wird die Regressionsgerade zu einer *Regressionsebene.*
 
-Wenn man die kausalen Abhängigkeiten nicht kennt,
-weiß man also nicht, ob die Zusammenhänge kausal oder nicht-kausal sind.
-Man weiß also nicht, ob die Modellkoeffizienten belastbar, robust, stichhaltig sind oder nicht.
+:::{#fig-3d-regr}
+
+
+:::{.panel-tabset}
+
+### 3D-Animation
+
+![Animation eines Regeressionsmodells mit zwei metrischen UV, x1 und x2; y wird gut von den beiden UV erklärt](img/regression_plane_rotation.gif)
+
+### Interaktives 3D-Diagramm
+
+
 
 ```{r}
+#| label: Ein interaktives 3D-Diagramm und Regressionsebene
 #| echo: false
-#| label: fig-confounder
-#| fig-cap: "Fügt man in ein Modell eine Variable hinzu, können sich die Koeffizienten massiv ändern. In beiden Diagrammen wurden die gleichen Daten verwendet."
-#| layout-ncol: 2
-#| fig-subcap: 
-#|   - "Modell: `y ~ x`, starker Zusammenhang; b1 ist stark positiv"
-#|   - "Modell: `y ~ x + g`, in jeder der beiden Gruppen ist der Zusammenhang praktisch Null, b1 = 0"
 
-n <- 100
+source("children/3d.R")
+scatterplot_3d_with_trace
+```
 
-set.seed(42)
+### 2D-Diagramm für 3D-Modell
 
-d_sim <-
-  tibble(
-    x = rnorm(n, 0, 0.5),
-    y = rnorm(n, 0, 0.5),
-    group = "A"
-  ) %>%
-  bind_rows(
-    tibble(
-      x = rnorm(n, 1, 0.5),
-      y = rnorm(n, 1, 0.5),
-      group = "B")
-  )
-
-p_super_korr <- 
-d_sim %>%
-  ggplot(aes(x = x, y = y)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  labs(title = "Oh yeah, super Korrelation!") +
-  theme_minimal() 
-
-p_super_korr
-
-
-
-d_sim %>%
-  ggplot(aes(x = x, y = y, color = group)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  labs(title = "Oh nein, in beiden Gruppen keine Korrelation!") +
-  theme(legend.position = "bottom") +
-  theme_minimal() +
-  scale_color_okabeito() +
-  theme(
-    legend.position = c(0.97, 0.05),  # Adjust these values to position the legend
-    legend.justification = c(1, 0)) 
+```{r}
+#| label: 2D-Diagramm für 3D-Modell
+#| echo: false
+lm3d_expect <- estimate_relation(lm3d)
+plot(lm3d_expect)
 ```
 
 
-Man könnte höchstens sagen, dass man (wenn man die Kausalstruktur nicht kennt) die Modellkoeffizienten nur *deskriptiv* interpretiert,
-z.B. "Dort wo es viele Störche gibt, gibt es auch viele Babies".^[Das Störche-Babies-Beispiel passt auch zu @fig-confounder.]
-Leider ist unser Gehirn auf kausale Zusammenhänge geprägt: 
-Es fällt uns schwer, Zusammenhänge nicht kausal zu interpretieren.
-Daher werden deskriptive Befunde immer wieder unzulässig kausal interpretiert - von Laien und Wissenschaftlern auch.
+:::
+
+:::
 
 
-## Modelle mit vielen Variablen
 
 Grundsätzlich kann man viele Prädiktoren in ein (lineares) Modell aufnehmen.
 
@@ -1206,7 +1168,7 @@ Grundsätzlich kann man viele Prädiktoren in ein (lineares) Modell aufnehmen.
 data(mariokart, package = "openintro")
 ```
 
-Betrachten wir z.&thinsp;B. folgendes lineares Modell mit zwei UV.
+Betrachten wir z.&thinsp;B. folgendes lineares Modell mit zwei metrischen UV.
 
 ```{r}
 lm_mario_2uv <- lm(total_pr ~ start_pr + ship_pr, data = mariokart %>% filter(total_pr < 100))
@@ -1217,7 +1179,7 @@ lm_mario_2uv <- lm(total_pr ~ start_pr + ship_pr, data = mariokart %>% filter(to
 
 ```{r fig-mario-2uv}
 #| echo: false
-#| eval: false
+#| eval: true
 #| label: fig-mario-2uv
 #| fig-cap: "Lineares Modell mit 2 metrischen UV (und 1 metrische AV)"
 lm_coefs <- coef(lm_mario_2uv)
@@ -1243,9 +1205,11 @@ plot_ly(x = ~ start_seq,
 
 
 
-<!-- Jedes der beiden Regressionsgewichte in `lm_mario_2uv` entspricht der Steigung in der beiden Achsen in @fig-mario-2uv, -->
-<!-- d.h. die Steigung für `start_pr` bzw. die Steigung für `ship_pr`. -->
+Jedes der beiden Regressionsgewichte in `lm_mario_2uv` entspricht der Steigung in der beiden Achsen in @fig-mario-2uv,
+d.h. die Steigung für `start_pr` bzw. die Steigung für `ship_pr`.
 
+
+### Viele UV ins Modell?
 
 Wir könnten im Prinzip alle Variablen unserer Datentabelle als Prädiktoren in das Regressionsmodell aufnehmen.
 Die Frage ist nur: macht es Sinn?
@@ -1253,7 +1217,7 @@ Die Frage ist nur: macht es Sinn?
 Hier sind einige Richtlinien, die helfen, welche Prädiktoren (und wie viele) man in ein Modell aufnehmen sollte [@gelman_regression_2021, S. 199f]:
 
 1. Man sollte alle Prädiktoren aufnehmen, von denen anzunehmen ist, dass Sie Ursachen für die Zielvariablen sind
-2. Bei Prädiktoren mit starken (absolute) Effekten kann es Sinn machen, ihre Interaktionseffekte auch mit in das Modell aufzunehmen
+2. Bei Prädiktoren mit starken (absoluten) Effekten kann es Sinn machen, ihre Interaktionseffekte auch mit in das Modell aufzunehmen
 3. Prädiktoren mit kleinem Schätzbereich (`95 CI`) sollten tendenziell im Modell belassen werden, da sie die Modellgüte verbessern
 
 
@@ -1611,10 +1575,12 @@ Die Forschis versuchen anhand von Daten und u.a. auch der linearen Regression vo
 
 ## Wie man mit Statistik lügt
 
+### Pinguine drehen durch
+
 Ein Forscher-Team untersucht Pinguine von der [Palmer Station, Antarktis](https://pallter.marine.rutgers.edu/). Das Team ist am Zusammenhang von Schnabellänge (*bill length*) und Schnabeltiefe (*bill depth*) interessiert, s. @fig-peng-bill.
 
 
-![Schnabellänge und Schnabeltiefe](https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png){#fig-peng-bill fig-width="50%"}
+![Schnabellänge und Schnabeltiefe](https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png){#fig-peng-bill width="50%"}
 
 Das Team hat in ~~schweißtreibender~~ eiszapfentreibender Arbeit $n=344$ Tiere vermessen bei antarktischen Temperaturen. Hier sind die Daten:
 
@@ -1683,6 +1649,95 @@ parameters(lm2) |> print_md()
 Ohne Hintergrundwissen oder ohne weitere Analysen kann *nicht* entschieden werden, welche Analyse - Gesamtdaten oder Subgruppen - die richtige ist.
 Nicht-exprimentelle Studien können zu grundverschiedenen Ergebnissen führen, jenachdem ob Prädiktoren dem Modell hinzugefügt oder weggenommen werden. $\square$
 :::
+
+
+
+
+### Vorsicht bei der Interpretation von Regressionskoeffizienten
+
+:::{.callout-important}
+Interpretiere nie Modellkoeffizienten ohne ein Kausalmodell.$\square$
+:::
+
+Nur wenn man die Ursache-Wirkungs-Beziehungen in einem System kennt,
+macht es Sinn, die Modellkoeffizienten kausal zu interpretieren.
+Andernfalls lässt man besser die Finger von der Interpretation der Modellkoeffizienten und
+begnügt sich mit der Beschreibung der Modellgüte und mit Vorhersage^[synonym: Prognose].
+Wer das nicht glaubt, der betrachte @fig-confounder, links.^[[Quelle](https://data-se.netlify.app/2021/12/01/simulation-on-controlling-confounders/)]
+Ei Forschi stellt das Modell `m1: y ~ x` auf und  interpretiert dann `b1`: "Ist ja klar, X hat einen starken positiven Effekt auf Y!".
+
+In der nächsten Studie nimmt dis Forschi dann eine zweite Variable, `group` (z.B. Geschlecht) in das Modell auf: `m2: y ~ x + g`.
+Oh Schreck! Jetzt ist `b1` auf einmal nicht mehr stark positiv, sondern praktisch Null, und zwar in jeder Gruppe, s. @fig-confounder, rechts!
+
+Dieses Umschwenken der Regressionskoeffizienten kann *nicht* passieren,
+wenn der Effekt "echt", also kausal, ist. 
+Handelt es sich aber um "nicht echte", also nicht-kausale Zusammenhänge, um Scheinzusammenhänge also,
+so können sich die Modellkoeffizienten dramatisch verändern (sogar das Vorzeichen kann wechseln^[das nennt man dann *Simpsons Paradox*]),
+wenn man das Modell verändert, also Variablen hinzufügt oder wegnimmt.
+
+Wenn man die kausalen Abhängigkeiten nicht kennt,
+weiß man also nicht, ob die Zusammenhänge kausal oder nicht-kausal sind.
+Man weiß also nicht, ob die Modellkoeffizienten belastbar, robust, stichhaltig sind oder nicht.
+
+```{r}
+#| echo: false
+#| label: fig-confounder
+#| fig-cap: "Fügt man in ein Modell eine Variable hinzu, können sich die Koeffizienten massiv ändern. In beiden Diagrammen wurden die gleichen Daten verwendet."
+#| layout-ncol: 2
+#| fig-subcap: 
+#|   - "Modell: `y ~ x`, starker Zusammenhang; b1 ist stark positiv"
+#|   - "Modell: `y ~ x + g`, in jeder der beiden Gruppen ist der Zusammenhang praktisch Null, b1 = 0"
+
+n <- 100
+
+set.seed(42)
+
+d_sim <-
+  tibble(
+    x = rnorm(n, 0, 0.5),
+    y = rnorm(n, 0, 0.5),
+    group = "A"
+  ) %>%
+  bind_rows(
+    tibble(
+      x = rnorm(n, 1, 0.5),
+      y = rnorm(n, 1, 0.5),
+      group = "B")
+  )
+
+p_super_korr <- 
+d_sim %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(title = "Oh yeah, super Korrelation!") +
+  theme_minimal() 
+
+p_super_korr
+
+
+
+d_sim %>%
+  ggplot(aes(x = x, y = y, color = group)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(title = "Oh nein, in beiden Gruppen keine Korrelation!") +
+  theme(legend.position = "bottom") +
+  theme_minimal() +
+  scale_color_okabeito() +
+  theme(
+    legend.position = c(0.97, 0.05),  # Adjust these values to position the legend
+    legend.justification = c(1, 0)) 
+```
+
+
+Man könnte höchstens sagen, dass man (wenn man die Kausalstruktur nicht kennt) die Modellkoeffizienten nur *deskriptiv* interpretiert,
+z.B. "Dort wo es viele Störche gibt, gibt es auch viele Babies".^[Das Störche-Babies-Beispiel passt auch zu @fig-confounder.]
+Leider ist unser Gehirn auf kausale Zusammenhänge geprägt: 
+Es fällt uns schwer, Zusammenhänge nicht kausal zu interpretieren.
+Daher werden deskriptive Befunde immer wieder unzulässig kausal interpretiert - von Laien und Wissenschaftlern auch.
+
+
 
 ## Fazit
 

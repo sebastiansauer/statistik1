@@ -389,7 +389,15 @@ window.Quarto = {
 </div>
 </section><section id="benötigte-daten" class="level3" data-number="9.1.4"><h3 data-number="9.1.4" class="anchored" data-anchor-id="benötigte-daten">
 <span class="header-section-number">9.1.4</span> Benötigte Daten</h3>
-<div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-2_24fccd164953d4d1baad45781eb27a7f">
+<p><span class="math display">\[
+\definecolor{ycol}{RGB}{230,159,0}
+\definecolor{modelcol}{RGB}{86,180,233}
+\definecolor{errorcol}{RGB}{0,158,115}
+\definecolor{beta0col}{RGB}{213,94,0}
+\definecolor{beta1col}{RGB}{0,114,178}
+\definecolor{xcol}{RGB}{204,121,167}
+\]</span></p>
+<div class="cell">
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="vorhersagen" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="vorhersagen">
@@ -407,10 +415,10 @@ window.Quarto = {
 <p><span class="theorem-title"><strong>Beispiel 9.1</strong></span> Nach intensiver Beschäftigung mit Statistik sind Sie allgemein als Checker bekannt. Viele jüngere Studentis fragen Sie um Rat. eines Tages kommt ei Studenti, Toni, und fragt: “Welche Statistiknote kann ich in der Klausur erwarten?” Sie entgegnen: “Wie viel hast du denn gelernt?”. Die Antwort: “Sag ich nicht.”</p>
 <p>Nach kurzem Überlegen geben sie den Notenschnitt der letzten Klausur als Prognose für dis Studenti. Dazu rechnen Sie schnell den Notenschnitt (Mittelwert aus).</p>
 <p>Zuerst importieren Sie die Daten der letzten Klausur<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
-<div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-4_ee4e439ee06d09fa3262482ea8451d40">
+<div class="cell">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">noten2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"daten/noten2.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><a href="#dnldts41979" onclick="fetch('data:text/csv;base64,IiIsImlkIiwieCIsInkiCiIxIiwxLDYwLjgzODc4ODA3MzA4MzMsNjIuOTgxNzg3MTIxMDQxNQoiMiIsMiw2Ny45ODUwNjYxMzM5MzU2LDY0LjAxNjk5NDU4NTAwMQoiMyIsMyw3NC4yOTc4NDc1MjgwNjEyLDYwLjc1MzA5NzA4NTAzMjcKIjQiLDQsNzAuMTk5MTc1MDU0MjcwNSw1OC44MTUzMDYyNDQwMDE1CiI1Iiw1LDc4LjYxMDY1MDMwNTIwMjMsNTUuNzYwODUwMzg5MjkwOQoiNiIsNiw2MC43NDY2MzA1MDQ4Mjk4LDYxLjY0MzA3ODUwNDgyODQKIjciLDcsNzUuMTAyMTExNDExMjEwNCw4NS42Mzc1Mzg3NjYyMTE0CiI4Iiw4LDczLjcxMDMxMjEwNzIzNzYsNzcuMDMwMzEwNTA1MTM0NgoiOSIsOSw0NS4xNTg5NTA4MTc4NzUxLDQ4LjY1NjgzMTY3NDQzNDMKIjEwIiwxMCw3Mi43Nzk0MzI2ODc5ODc0LDYyLjgzNzcwMTEyNjM5MTIKIjExIiwxMSw3OC41OTEwOTA0OTc3NTA0LDgwLjg5NDcxMTEzMTIzNzYKIjEyIiwxMiw3My41OTI3MjYxMDMwNTc1LDg3LjA0MjQ4ODkwMDQzMgoiMTMiLDEzLDc2Ljc3Nzc4MzMxNzA1NjIsNzguNzgxNDUwODk4NTgyNgoiMTQiLDE0LDY2LjExNDY2ODEwNDA4NDQsMjguODMyMTA5MDA1MjU1MgoiMTUiLDE1LDcxLjYzMTEwNzgxNjY3NzEsNzYuNzU2MDcwNzIyNjM5NAoiMTYiLDE2LDYxLjQwMjY2ODM3MjY5NDUsNTUuNzc1MDgxNTAxODQzNAoiMTciLDE3LDg2LjYyMTg1NzE2NDMzODYsODQuNjk3MjQ3ODgyNTE4NAoiMTgiLDE4LDYzLjA2MzQ3MjA2MjI0MzcsNjMuNzg2MDQ2NTE5NDczNwoiMTkiLDE5LDc5LjQ2NTY2NTQ3NzYzODcsOTAuNjY5Nzc3MjUzOTAxMQoiMjAiLDIwLDU2LjUwODI1NjMwNTQzMjksNTkuNTM1ODkzNDIyNzA1OQoiMjEiLDIxLDY5LjgzNDIzNjM2ODgxMTMsNjYuNDAwMTE5ODU5MDY3NwoiMjIiLDIyLDUzLjY2MzY5MjU2NDMyNjgsNjIuNTc0ODM3MzcxNDE5MwoiMjMiLDIzLDcxLjUzODExNzI1MDc1MzYsNTUuNDI3NTczMzc4OTU0CiIyNCIsMjQsNzAuODQ0NTE2MzMzMTk0Myw3Ni40MTA1NDMyNzcxMzE1CiIyNSIsMjUsNzAuNzY1Nzk0ODQwNjk1MSw5NC4xNjUyMjcxNTUzOTA1CiIyNiIsMjYsNjcuNjU1MjA5MjAyNTEyMSw3My4wODM0Mzk4NzMzNjkKIjI3IiwyNyw0NS45NDg5MTg5NTM0MDM5LDQyLjE1OTc1Nzc1NTU3ODIKIjI4IiwyOCw2Ny44NDgyMzM3NDk1OTQzLDY4LjU5NTM0MTc4NTYzNjkKIjI5IiwyOSw4OS42MzIxODU0NTUwOTM5LDkxLjgyNzkyOTE5NTQ1NTcKIjMwIiwzMCw3Ny44NzYzODU1MTQ5NDQ0LDc3LjUyODAzNTU0Njc4MjUKIjMxIiwzMSw0OS4zMDU0NDE3MzM1NTQyLDY1LjE5MzgzMjA0OTk5MzkKIjMyIiwzMiw3MS40MTU4OTI3MjIzOTAxLDY1LjIwODU0Njk2MTI5NjYKIjMzIiwzMyw3Mi41NzE0NjQ5NDE2ODQ2LDcyLjgxOTQzMTA0MjgxMDkKIjM0IiwzNCw3Ny45MDA5ODk0NTA0NjIzLDY4LjI1MjM1MjI4MjM4NDgKIjM1IiwzNSw2NS44Nzc0MjY2OTQ2NTk2LDczLjYzODM4Njg1NDMyCiIzNiIsMzYsNzUuNDQ3MDM5OTgxODQwMSw3Ni4wMzY1OTgyNTI4NzUzCiIzNyIsMzcsODcuNDk5Mjc0OTY3NDg2Nyw5NC4xMjc1ODMxMDgwNjcyCiIzOCIsMzgsNTkuNDMxNDU0MjA1NzczNCw3MS4wNjY3NzA2NjUzOTEzCiIzOSIsMzksNjAuOTExMTU1OTY2MjA3Niw0My4yMTY5NjM4OTIwOTQ1CiI0MCIsNDAsNzcuNTYzMDA5ODg0NjI3OSw5MS4wMzU5MjMwODI5NTQzCiI0MSIsNDEsODMuMzY4ODQ4MDk3ODAxMyw4Mi4xNTY5ODQ0NzgxODQyCiI0MiIsNDIsODAuMTkyODA2OTQyMzEyMSw2OS44NzE5ODQzMjcwMTU4CiI0MyIsNDMsNjguNjgzNjkzNDg2OTEyNiw3Ni42NzgwOTkyMzQ3NTA4CiI0NCIsNDQsNjUuMzAyMDAyMjEzMTg4OSw1Ny43MTc3NzE1MzExNDQyCiI0NSIsNDUsODAuNjM2MDkwNjM0ODg2OSw3OS42ODM5NzEzMTUxNDU3CiI0NiIsNDYsNjkuMTg2NjY2ODAxODU0MSw1OC41OTk2NzcxNTQ5NjI0CiI0NyIsNDcsNTUuNzI0MzU3NDc5MzcxNiw1OS4zMDgxMzc4Mzk4MTIzCiI0OCIsNDgsNzIuMjE5MjYzOTUyNzAxNSw2OS44OTg0ODYwNjY2Mzc2CiI0OSIsNDksNjQuODkzMTI2NTU3MzczNCw4My40NzMyMjY5OTQzMDgzCiI1MCIsNTAsODYuMjAyMjcxMjExODc1Miw2MC4zNTkyNDgyMTgyMDUKIjUxIiw1MSw4Ni4zOTgyMDEyNzcxMDE2LDc5LjU0MjAwNjEwNjc2MzYKIjUyIiw1Miw4MS4wMTU3MzE5MzMzMDg5LDg4LjY0ODE2MzEzOTYwMDIKIjUzIiw1Myw2OS4xMTIzNjM3NzUyMzgzLDgyLjg5ODc1Mzk4NTQ0MTMKIjU0Iiw1NCw5NC4wMTYxMzYxMjQwODkzLDk1LjkzMjYwNzg3MDMwMjkKIjU1Iiw1NSw3NC4wMTYwMDcyNDM5MzQ3LDY5LjU2MDgwNTUwNjcxNTMKIjU2Iiw1Niw4Ni4wNjI4MjI0MjAwMzg1LDg5LjA3MzI2MzYwMDY3MDkKIjU3Iiw1Nyw4NC42NTUxNzk2MjM5NjI3LDkyLjQ0ODUzMzkzOTQ4MjcKIjU4Iiw1OCw1Ny40OTE1ODMyNDgxMDgxLDczLjgzODY1OTc3NTI4NjEKIjU5Iiw1OSw1OS4wNjAxNjY1Mjk5MDksNzMuOTU1MDA5NjIwMzc2CiI2MCIsNjAsODIuMDgyMTQ1MDE4NTA4NSw4Ni40MzMwNTM4MTYwMDI2CiI2MSIsNjEsNzQuMzA2MDkzNDkzMjc1OSw3My4zMTY5NjcwNTcwOTUzCiI2MiIsNjIsNjQuNjM1MDI1NDY5MzMxOCw1Mi4wNzU4MjQwNzcyNzA2CiI2MyIsNjMsODguMDI4ODUyNzkyNDUxNiw5NS44NTQyODIwOTY5NwoiNjQiLDY0LDY5LjM3NTE4NDg1MTA4NCw2OS4zNzc2MDI2MzEwMjM2CiI2NSIsNjUsNjcuNTI4MTI5OTAwMjA5OCw2Mi4zNDcyNjg4NDAzNDU1CiI2NiIsNjYsNzIuODU0NDMzMzY5ODg1Nyw3OC4xMTczOTIwNzY5MTcxCiI2NyIsNjcsNjMuMTk2NjQ5NDk0NDIwMSw2Mi42MTg0OTUzNDUzMDg5CiI2OCIsNjgsNzYuMjA2MzU1NzcyMTUwNyw3MC4zNzI0OTg5MDgyODExCiI2OSIsNjksNzIuNDAyNjc2ODI3MTgxNyw1NS4yMjI0ODE4NDk2NDgyCiI3MCIsNzAsNjkuMDE3MzI0MDg4NTg1OSw1MC45MjgzMTg1NDMyMjc4CiI3MSIsNzEsNTIuMDU1MTExNDUyMTEyMSw2MS43NDAxNTcxNDM2MTMxCiI3MiIsNzIsODkuMzEwODYxMTQ0NjU4MSw5OC4xODAwOTMyNjE0Mjk0CiI3MyIsNzMsNzUuMzMzODA1Mzk1MTk5OCw3MS4xODk5NTM3NTYwMzE0CiI3NCIsNzQsNjEuOTIyNzA5MzE4MTMxOCw2My42MjA3OTI2MzY2NTEyCiI3NSIsNzUsODAuMDQzMjIzMTgxMjg5OSw5MS45MjM1NjIzNjQxNzYyCiI3NiIsNzYsNTMuMjAxMTE1MjcyMzM2OSw1OC4zOTEyMzQ4Mjk2Nzk2CiI3NyIsNzcsNjIuODM1NDgzMjUxNjIwNSw4NS41NTU3ODkxNzQyNjg2CiI3OCIsNzgsNTguODU2MzU5MzA0NTkyMiw2NC4yMjcxOTIxMDg1ODY5CiI3OSIsNzksNzQuMjAxMDA0NzE5MjYwMSw3Ni44NzM3MjA5NDc4NzE3CiI4MCIsODAsNzguOTQ0NjE4NTM4NzY3Miw2OC43ODkzNTc1MzkxNzg4CiI4MSIsODEsNzEuNDg3NTQ4OTI5MzQ1NSw3My4yMDkxODM0Nzc2NTYxCiI4MiIsODIsNzIuMTgyNDM2MDc2NzM0Niw3Mi40NDczMzY5MTIwMDM3CiI4MyIsODMsNjkuMDYxNjk3ODc4NzM2MSw2MS4yMDkxMzY0ODc1OTgKIjg0Iiw4NCw3Ni4xMzI5OTM3MTExNDM0LDYxLjY1NDQzMTY3MjYxNTIKIjg1Iiw4NSw3OS42MjA5NDU1Mzg2Myw5MC4wMTY4MDI4NDM4ODM1CiI4NiIsODYsNTkuMDk2NzMwMjYzMDE4LDQ3LjI5NTgyNTgwMDk4MjgKIjg3Iiw4Nyw1Ny40ODg5NzkwODY1MTMyLDUzLjk3MTkwODYwMDYwMjYKIjg4Iiw4OCw4NC4xNTIwNzI1NDYxMDY3LDY5Ljc4ODA0NDgzNjM3OTUKIjg5Iiw4OSw2Ni42MTA4NzMwNjYxOTM4LDUwLjU3OTQ5ODQ5Mzg4NjYKIjkwIiw5MCw4Ni4yODM0NjYzMTkxNDg1LDg2LjgyMzQ4MzE5NTk2NzkKIjkxIiw5MSw2NS4zMzc3Mzg5OTUxNTk2LDcwLjkxNzQ3NTQzMTQ3OTIKIjkyIiw5Miw1NC4xMDkxMDQ2MDMwMzcxLDQ2LjY2OTcwODgzNDExMTcKIjkzIiw5Myw4MS4wMDQ2MTczMTcwNzU2LDgyLjg5NTQ5MjIyODQ3NAoiOTQiLDk0LDg0LjU5ODI3MjYwMjk4NjMsNzAuNDQzNjA5NTU3MTYxNgoiOTUiLDk1LDkyLjk3NDcyMDY4NjkzMzMsOTYuNTE3NjcxNDI2MTg0NwoiOTYiLDk2LDYwLjg0NjMwMzcyMTE0MDMsNjMuNDMzODAzNDc4OTM3OAoiOTciLDk3LDYwLjQ1MjYwMjE4MzQ3NTEsNjcuMDQ0NzIzNDA1NDczMgoiOTgiLDk4LDYyLjc5NzYxNjE3NDMzNDEsNjguNTA0MDQwNDEzMTAwNQoiOTkiLDk5LDc3LjcwMjAwMjE2NTkxMzMsODUuMzIxOTYzMTkzNzk4MQoiMTAwIiwxMDAsNjEuMTQ1MjYyMTEyMTQwOCw3NC43NDg0Mjg0MzM2MTUxCg==').then(res => res.blob()).then(blob => {
+<p><a href="#dnldts41858" onclick="fetch('data:text/csv;base64,IiIsImlkIiwieCIsInkiCiIxIiwxLDYwLjgzODc4ODA3MzA4MzMsNjIuOTgxNzg3MTIxMDQxNQoiMiIsMiw2Ny45ODUwNjYxMzM5MzU2LDY0LjAxNjk5NDU4NTAwMQoiMyIsMyw3NC4yOTc4NDc1MjgwNjEyLDYwLjc1MzA5NzA4NTAzMjcKIjQiLDQsNzAuMTk5MTc1MDU0MjcwNSw1OC44MTUzMDYyNDQwMDE1CiI1Iiw1LDc4LjYxMDY1MDMwNTIwMjMsNTUuNzYwODUwMzg5MjkwOQoiNiIsNiw2MC43NDY2MzA1MDQ4Mjk4LDYxLjY0MzA3ODUwNDgyODQKIjciLDcsNzUuMTAyMTExNDExMjEwNCw4NS42Mzc1Mzg3NjYyMTE0CiI4Iiw4LDczLjcxMDMxMjEwNzIzNzYsNzcuMDMwMzEwNTA1MTM0NgoiOSIsOSw0NS4xNTg5NTA4MTc4NzUxLDQ4LjY1NjgzMTY3NDQzNDMKIjEwIiwxMCw3Mi43Nzk0MzI2ODc5ODc0LDYyLjgzNzcwMTEyNjM5MTIKIjExIiwxMSw3OC41OTEwOTA0OTc3NTA0LDgwLjg5NDcxMTEzMTIzNzYKIjEyIiwxMiw3My41OTI3MjYxMDMwNTc1LDg3LjA0MjQ4ODkwMDQzMgoiMTMiLDEzLDc2Ljc3Nzc4MzMxNzA1NjIsNzguNzgxNDUwODk4NTgyNgoiMTQiLDE0LDY2LjExNDY2ODEwNDA4NDQsMjguODMyMTA5MDA1MjU1MgoiMTUiLDE1LDcxLjYzMTEwNzgxNjY3NzEsNzYuNzU2MDcwNzIyNjM5NAoiMTYiLDE2LDYxLjQwMjY2ODM3MjY5NDUsNTUuNzc1MDgxNTAxODQzNAoiMTciLDE3LDg2LjYyMTg1NzE2NDMzODYsODQuNjk3MjQ3ODgyNTE4NAoiMTgiLDE4LDYzLjA2MzQ3MjA2MjI0MzcsNjMuNzg2MDQ2NTE5NDczNwoiMTkiLDE5LDc5LjQ2NTY2NTQ3NzYzODcsOTAuNjY5Nzc3MjUzOTAxMQoiMjAiLDIwLDU2LjUwODI1NjMwNTQzMjksNTkuNTM1ODkzNDIyNzA1OQoiMjEiLDIxLDY5LjgzNDIzNjM2ODgxMTMsNjYuNDAwMTE5ODU5MDY3NwoiMjIiLDIyLDUzLjY2MzY5MjU2NDMyNjgsNjIuNTc0ODM3MzcxNDE5MwoiMjMiLDIzLDcxLjUzODExNzI1MDc1MzYsNTUuNDI3NTczMzc4OTU0CiIyNCIsMjQsNzAuODQ0NTE2MzMzMTk0Myw3Ni40MTA1NDMyNzcxMzE1CiIyNSIsMjUsNzAuNzY1Nzk0ODQwNjk1MSw5NC4xNjUyMjcxNTUzOTA1CiIyNiIsMjYsNjcuNjU1MjA5MjAyNTEyMSw3My4wODM0Mzk4NzMzNjkKIjI3IiwyNyw0NS45NDg5MTg5NTM0MDM5LDQyLjE1OTc1Nzc1NTU3ODIKIjI4IiwyOCw2Ny44NDgyMzM3NDk1OTQzLDY4LjU5NTM0MTc4NTYzNjkKIjI5IiwyOSw4OS42MzIxODU0NTUwOTM5LDkxLjgyNzkyOTE5NTQ1NTcKIjMwIiwzMCw3Ny44NzYzODU1MTQ5NDQ0LDc3LjUyODAzNTU0Njc4MjUKIjMxIiwzMSw0OS4zMDU0NDE3MzM1NTQyLDY1LjE5MzgzMjA0OTk5MzkKIjMyIiwzMiw3MS40MTU4OTI3MjIzOTAxLDY1LjIwODU0Njk2MTI5NjYKIjMzIiwzMyw3Mi41NzE0NjQ5NDE2ODQ2LDcyLjgxOTQzMTA0MjgxMDkKIjM0IiwzNCw3Ny45MDA5ODk0NTA0NjIzLDY4LjI1MjM1MjI4MjM4NDgKIjM1IiwzNSw2NS44Nzc0MjY2OTQ2NTk2LDczLjYzODM4Njg1NDMyCiIzNiIsMzYsNzUuNDQ3MDM5OTgxODQwMSw3Ni4wMzY1OTgyNTI4NzUzCiIzNyIsMzcsODcuNDk5Mjc0OTY3NDg2Nyw5NC4xMjc1ODMxMDgwNjcyCiIzOCIsMzgsNTkuNDMxNDU0MjA1NzczNCw3MS4wNjY3NzA2NjUzOTEzCiIzOSIsMzksNjAuOTExMTU1OTY2MjA3Niw0My4yMTY5NjM4OTIwOTQ1CiI0MCIsNDAsNzcuNTYzMDA5ODg0NjI3OSw5MS4wMzU5MjMwODI5NTQzCiI0MSIsNDEsODMuMzY4ODQ4MDk3ODAxMyw4Mi4xNTY5ODQ0NzgxODQyCiI0MiIsNDIsODAuMTkyODA2OTQyMzEyMSw2OS44NzE5ODQzMjcwMTU4CiI0MyIsNDMsNjguNjgzNjkzNDg2OTEyNiw3Ni42NzgwOTkyMzQ3NTA4CiI0NCIsNDQsNjUuMzAyMDAyMjEzMTg4OSw1Ny43MTc3NzE1MzExNDQyCiI0NSIsNDUsODAuNjM2MDkwNjM0ODg2OSw3OS42ODM5NzEzMTUxNDU3CiI0NiIsNDYsNjkuMTg2NjY2ODAxODU0MSw1OC41OTk2NzcxNTQ5NjI0CiI0NyIsNDcsNTUuNzI0MzU3NDc5MzcxNiw1OS4zMDgxMzc4Mzk4MTIzCiI0OCIsNDgsNzIuMjE5MjYzOTUyNzAxNSw2OS44OTg0ODYwNjY2Mzc2CiI0OSIsNDksNjQuODkzMTI2NTU3MzczNCw4My40NzMyMjY5OTQzMDgzCiI1MCIsNTAsODYuMjAyMjcxMjExODc1Miw2MC4zNTkyNDgyMTgyMDUKIjUxIiw1MSw4Ni4zOTgyMDEyNzcxMDE2LDc5LjU0MjAwNjEwNjc2MzYKIjUyIiw1Miw4MS4wMTU3MzE5MzMzMDg5LDg4LjY0ODE2MzEzOTYwMDIKIjUzIiw1Myw2OS4xMTIzNjM3NzUyMzgzLDgyLjg5ODc1Mzk4NTQ0MTMKIjU0Iiw1NCw5NC4wMTYxMzYxMjQwODkzLDk1LjkzMjYwNzg3MDMwMjkKIjU1Iiw1NSw3NC4wMTYwMDcyNDM5MzQ3LDY5LjU2MDgwNTUwNjcxNTMKIjU2Iiw1Niw4Ni4wNjI4MjI0MjAwMzg1LDg5LjA3MzI2MzYwMDY3MDkKIjU3Iiw1Nyw4NC42NTUxNzk2MjM5NjI3LDkyLjQ0ODUzMzkzOTQ4MjcKIjU4Iiw1OCw1Ny40OTE1ODMyNDgxMDgxLDczLjgzODY1OTc3NTI4NjEKIjU5Iiw1OSw1OS4wNjAxNjY1Mjk5MDksNzMuOTU1MDA5NjIwMzc2CiI2MCIsNjAsODIuMDgyMTQ1MDE4NTA4NSw4Ni40MzMwNTM4MTYwMDI2CiI2MSIsNjEsNzQuMzA2MDkzNDkzMjc1OSw3My4zMTY5NjcwNTcwOTUzCiI2MiIsNjIsNjQuNjM1MDI1NDY5MzMxOCw1Mi4wNzU4MjQwNzcyNzA2CiI2MyIsNjMsODguMDI4ODUyNzkyNDUxNiw5NS44NTQyODIwOTY5NwoiNjQiLDY0LDY5LjM3NTE4NDg1MTA4NCw2OS4zNzc2MDI2MzEwMjM2CiI2NSIsNjUsNjcuNTI4MTI5OTAwMjA5OCw2Mi4zNDcyNjg4NDAzNDU1CiI2NiIsNjYsNzIuODU0NDMzMzY5ODg1Nyw3OC4xMTczOTIwNzY5MTcxCiI2NyIsNjcsNjMuMTk2NjQ5NDk0NDIwMSw2Mi42MTg0OTUzNDUzMDg5CiI2OCIsNjgsNzYuMjA2MzU1NzcyMTUwNyw3MC4zNzI0OTg5MDgyODExCiI2OSIsNjksNzIuNDAyNjc2ODI3MTgxNyw1NS4yMjI0ODE4NDk2NDgyCiI3MCIsNzAsNjkuMDE3MzI0MDg4NTg1OSw1MC45MjgzMTg1NDMyMjc4CiI3MSIsNzEsNTIuMDU1MTExNDUyMTEyMSw2MS43NDAxNTcxNDM2MTMxCiI3MiIsNzIsODkuMzEwODYxMTQ0NjU4MSw5OC4xODAwOTMyNjE0Mjk0CiI3MyIsNzMsNzUuMzMzODA1Mzk1MTk5OCw3MS4xODk5NTM3NTYwMzE0CiI3NCIsNzQsNjEuOTIyNzA5MzE4MTMxOCw2My42MjA3OTI2MzY2NTEyCiI3NSIsNzUsODAuMDQzMjIzMTgxMjg5OSw5MS45MjM1NjIzNjQxNzYyCiI3NiIsNzYsNTMuMjAxMTE1MjcyMzM2OSw1OC4zOTEyMzQ4Mjk2Nzk2CiI3NyIsNzcsNjIuODM1NDgzMjUxNjIwNSw4NS41NTU3ODkxNzQyNjg2CiI3OCIsNzgsNTguODU2MzU5MzA0NTkyMiw2NC4yMjcxOTIxMDg1ODY5CiI3OSIsNzksNzQuMjAxMDA0NzE5MjYwMSw3Ni44NzM3MjA5NDc4NzE3CiI4MCIsODAsNzguOTQ0NjE4NTM4NzY3Miw2OC43ODkzNTc1MzkxNzg4CiI4MSIsODEsNzEuNDg3NTQ4OTI5MzQ1NSw3My4yMDkxODM0Nzc2NTYxCiI4MiIsODIsNzIuMTgyNDM2MDc2NzM0Niw3Mi40NDczMzY5MTIwMDM3CiI4MyIsODMsNjkuMDYxNjk3ODc4NzM2MSw2MS4yMDkxMzY0ODc1OTgKIjg0Iiw4NCw3Ni4xMzI5OTM3MTExNDM0LDYxLjY1NDQzMTY3MjYxNTIKIjg1Iiw4NSw3OS42MjA5NDU1Mzg2Myw5MC4wMTY4MDI4NDM4ODM1CiI4NiIsODYsNTkuMDk2NzMwMjYzMDE4LDQ3LjI5NTgyNTgwMDk4MjgKIjg3Iiw4Nyw1Ny40ODg5NzkwODY1MTMyLDUzLjk3MTkwODYwMDYwMjYKIjg4Iiw4OCw4NC4xNTIwNzI1NDYxMDY3LDY5Ljc4ODA0NDgzNjM3OTUKIjg5Iiw4OSw2Ni42MTA4NzMwNjYxOTM4LDUwLjU3OTQ5ODQ5Mzg4NjYKIjkwIiw5MCw4Ni4yODM0NjYzMTkxNDg1LDg2LjgyMzQ4MzE5NTk2NzkKIjkxIiw5MSw2NS4zMzc3Mzg5OTUxNTk2LDcwLjkxNzQ3NTQzMTQ3OTIKIjkyIiw5Miw1NC4xMDkxMDQ2MDMwMzcxLDQ2LjY2OTcwODgzNDExMTcKIjkzIiw5Myw4MS4wMDQ2MTczMTcwNzU2LDgyLjg5NTQ5MjIyODQ3NAoiOTQiLDk0LDg0LjU5ODI3MjYwMjk4NjMsNzAuNDQzNjA5NTU3MTYxNgoiOTUiLDk1LDkyLjk3NDcyMDY4NjkzMzMsOTYuNTE3NjcxNDI2MTg0NwoiOTYiLDk2LDYwLjg0NjMwMzcyMTE0MDMsNjMuNDMzODAzNDc4OTM3OAoiOTciLDk3LDYwLjQ1MjYwMjE4MzQ3NTEsNjcuMDQ0NzIzNDA1NDczMgoiOTgiLDk4LDYyLjc5NzYxNjE3NDMzNDEsNjguNTA0MDQwNDEzMTAwNQoiOTkiLDk5LDc3LjcwMjAwMjE2NTkxMzMsODUuMzIxOTYzMTkzNzk4MQoiMTAwIiwxMDAsNjEuMTQ1MjYyMTEyMTQwOCw3NC43NDg0Mjg0MzM2MTUxCg==').then(res => res.blob()).then(blob => {
       const downloadURL = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       document.body.appendChild(a);
@@ -418,9 +426,9 @@ window.Quarto = {
       a.download = 'noten2.csv.csv'; a.click();
       window.URL.revokeObjectURL(downloadURL);
       document.body.removeChild(a);
-        });"><button class="btn btn-default downloadthis  " id="dnldts41979"><i class="bi bi-download"></i> Download </button></a></p>
+        });"><button class="btn btn-default downloadthis  " id="dnldts41858"><i class="bi bi-download"></i> Download </button></a></p>
 <p>Dann rechnen Sie den Mittelwert aus:</p>
-<div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-5_2b507901776b08752401153a162daa18">
+<div class="cell">
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">noten2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>mw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>  <span class="co"># y ist der Punktwert in der Klausur</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -462,7 +470,7 @@ Abbildung&nbsp;9.1: Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmode
 <span class="header-section-number">9.2.2</span> Nullmodell (Punktmodell)</h3>
 <p>Modelle ohne Prädiktor, Punktmodelle also, kann man so bezeichnen: <code>y ~ 1</code>. Da das Modell null Prädiktoren hat, nennt man es auch manchmal “Nullmodell”.</p>
 </section><p>Auf Errisch kann man dieses Nullmodell so spezifizieren:</p>
-<div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-7_e33cb08305bfeff3b12e46a3e28968db">
+<div class="cell">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">noten2</span><span class="op">)</span></span>
 <span><span class="va">lm0</span></span>
 <span><span class="co">## </span></span>
@@ -480,7 +488,7 @@ Abbildung&nbsp;9.1: Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmode
 <div id="exm-noten3" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 9.2 (Toni verrät die Lernzeit)</strong></span> Dis Studenti, Toni, entschließt sich dann doch noch, die Lernzeit zu verraten: “Okay, also ich hab insgesamt 42 Stunden gelernt, insgesamt.” Jetzt müssen Sie erstmal nachdenken: “Wie viele Klausurpunkte sag ich vorher, wenn Toni 42 Stunden gelernt hat?”</p>
 <p>Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. <a href="#fig-noten4" class="quarto-xref">Abbildung&nbsp;<span>9.2</span></a>, a)</p>
-<div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-8_78e6a96ad771b8d3fe9b5940a2c6ee06">
+<div class="cell">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">noten2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="va">noten2</span>, <span class="st">"daten/noten2.csv"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://boxuancui.github.io/DataExplorer/">DataExplorer</a></span><span class="op">)</span></span>
@@ -552,7 +560,9 @@ Das einfache lineare Modell
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Das einfache lineare Modell nimmt den Wert einer <span class="orange">abhängigen metrischen Variablen</span> als lineare Funktion einer <span class="lightblue">unabhängigen Variablen</span> an, plus einem <span class="green">Fehlerterm</span>:</p>
+<p>Das einfache lineare Modell nimmt den Wert einer <span class="orange">abhängigen metrischen Variablen, y</span> als lineare Funktion von <span class="lightblue">unabhängigen Variablen, x</span> an, plus einem <span class="green">Fehlerterm, e</span>. <span class="math inline">\(\square\)</span></p>
+</div>
+</div>
 <p><span class="math display">\[\begin{aligned}
 \color{ycol}{y} &amp;= f(\color{xcol}{x}) + \color{errorcol}{\epsilon} \\
 \color{ycol}{y_i} &amp;= \color{beta0col}{\beta_0} + \color{beta1col}{\beta_1} \cdot \color{modelcol}{x_i} + \color{errorcol}{\epsilon_i} \square
@@ -566,8 +576,6 @@ Das einfache lineare Modell
 <li>
 <span class="math inline">\(\color{errorcol}{\epsilon}\)</span>: Fehler des Modells</li>
 </ul>
-</div>
-</div>
 <p>Je nach Datenlage können sich Regressionsgerade in Steigung oder Achsenabschnitt unterscheiden, s. <a href="#fig-regr-div" class="quarto-xref">Abbildung&nbsp;<span>9.4</span></a>.</p>
 <div id="fig-regr-div" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-regr-div-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1314,7 +1322,7 @@ Abbildung&nbsp;9.6: Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei 
 <blockquote class="blockquote">
 <p>🤖 Okay, ich predicte mit Modell “lm1” und nehme als neue Datentabelle Tonis Lernzeit (x=0)!</p>
 </blockquote>
-<div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-14_b1d11d1611459f79405df2ec5e54cd72">
+<div class="cell">
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tonis_lernzeit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">tonis_lernzeit</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -1325,10 +1333,10 @@ Abbildung&nbsp;9.6: Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei 
 </div>
 </div>
 </div>
-<div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-15_aa9ac8c688396d743f58a0d2c01ddc6c">
+<div class="cell">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm1</span>, newdata <span class="op">=</span> <span class="va">tonis_lernzeit</span><span class="op">)</span></span>
-<span><span class="co">##          1 </span></span>
-<span><span class="co">## 0.04692592</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">##        1 </span></span>
+<span><span class="co">## 8.603032</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="spezifikation-eines-geradenmodells" class="level3" data-number="9.3.2"><h3 data-number="9.3.2" class="anchored" data-anchor-id="spezifikation-eines-geradenmodells">
 <span class="header-section-number">9.3.2</span> Spezifikation eines Geradenmodells</h3>
@@ -1339,14 +1347,14 @@ Abbildung&nbsp;9.6: Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei 
 <p><span id="eq-mod1"><span class="math display">\[\color{ycol}{AV} \sim \color{modelcol}{UV} \tag{9.2}\]</span></span></p>
 <p>Wir werden als Funktion (erstmal) nur Geraden verwenden. Die genauen Werte der Gerade lassen wir uns (erstmal) vom Computer ausrechnen.</p>
 <p><a href="#eq-mod1" class="quarto-xref">Gleichung&nbsp;<span>9.2</span></a> können Sie so ins Errische übersetzen:</p>
-<div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-16_19add5c23b9a6391e54d82d479ed5f4b">
+<div class="cell">
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data <span class="op">=</span> <span class="va">meine_daten</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>lm</code> steht für “lineares Modell”, also eine Gerade als Modell. Die Gerade nennt man auch <em>Regressionsgerade</em><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
 <div id="exm-noten5" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 9.4 (Zahlen für Toni)</strong></span> Toni ist nicht zufrieden mit Ihren Vorhersagen: “Jetzt hör mal auf mit deinem Lineal hier herum zu malen. Ich will es genau wissen, sag mir präzise Zahlen!”.</p>
 </div>
-<div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-17_c02a69c5272fcb3b61cc95305648137b">
+<div class="cell">
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data <span class="op">=</span> <span class="va">noten2</span><span class="op">)</span></span>
 <span><span class="va">lm1</span></span>
 <span><span class="co">## </span></span>
@@ -1361,7 +1369,7 @@ Abbildung&nbsp;9.6: Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei 
 <p>Die Regressionsgleichung lautet demnach: <code>y_pred = 8.6 + 0.88*x</code></p>
 <p><code>8.6</code> ist der Achsenabschnitt, d.h. der Wert von <span class="math inline">\(Y\)</span> wenn <span class="math inline">\(x=0\)</span>. <code>0.88</code> ist das Regressionsgewicht, d.h. die Steigung der Regressionsgeraden: Für jede Stunden Lernzeit steigt der vorhergesagte Klausurerfolg um <code>0.88</code> Punkte.</p>
 <p>Mit Kenntnis der beiden Koeffizienten kann man beliebige Y-Werte ausrechnen gegeben bestimmte X-Werte. Hat jemand zum Beispiel 10 Stunden gelernt, würden wir folgendes Klausurergebnis vorhersagen:</p>
-<div class="cell" data-hash="080-regression1_cache/html/unnamed-chunk-18_f968f63e1765aced20ab09f274757218">
+<div class="cell">
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lernzeit</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
 <span><span class="va">y_pred</span> <span class="op">&lt;-</span> <span class="fl">8.6</span> <span class="op">+</span> <span class="fl">0.88</span><span class="op">*</span><span class="va">lernzeit</span></span>
 <span><span class="va">y_pred</span></span>
@@ -1406,7 +1414,7 @@ Hinweis
 </div>
 </section><section id="vorhersagefehler" class="level3" data-number="9.3.3"><h3 data-number="9.3.3" class="anchored" data-anchor-id="vorhersagefehler">
 <span class="header-section-number">9.3.3</span> Vorhersagefehler</h3>
-<p>Die Differenz zwischen vorhergesagten Wert für eine (neue) Beobachtung, <span class="math inline">\(\hat{y_0}\)</span> und ihrem tatsächlichen Wert nennt man Vorhersagefehler (error, <span class="math inline">\(e_i\)</span>) oder <em>Residuum</em>: <span class="math inline">\(e_i = y_i - \hat{y}_i\)</span>.</p>
+<p>Die Differenz zwischen vorhergesagten Wert für eine (neue) Beobachtung, <span class="math inline">\(\hat{y_0}\)</span> und ihrem tatsächlichen Wert nennt man Vorhersagefehler (error, <span class="math inline">\(e_i\)</span>) oder <em>Residuum</em>: <span class="math inline">\(\color{errorcol}{e_i} = \color{ycol}{y_i} - \color{modelcol}{\hat{y}_i}\)</span>.</p>
 <div id="fig-resid" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-resid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">

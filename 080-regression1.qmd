@@ -172,13 +172,11 @@ Dis Studenti, Toni, entschließt sich dann doch noch, die Lernzeit zu verraten:
 "Okay, also ich hab insgesamt 42 Stunden gelernt, insgesamt."
 Jetzt müssen Sie erstmal nachdenken: "Wie viele Klausurpunkte sag ich vorher, wenn Toni 42 Stunden gelernt hat?"
 
-Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. @fig-noten4, a)
+Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. @fig-noten4, a).^[Die Daten stehen [hier](https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten2.csv) zum Download bereit.]
 
 
 ```{r}
 #| eval: false
-noten2 <- read.csv(noten2, "daten/noten2.csv")
-
 library(DataExplorer)
 noten2 %>% 
   plot_scatterplot(by = "y")  # Y-Variable muss angegeben werden
@@ -266,7 +264,7 @@ Eine Gerade ist das, was man bekommt, wenn man eine lineare Funktion in ein Koor
 Man kann sie durch durch zwei *Koeffizienten* festlegen: Achsenabschnitt (engl. *intercept*), und Steigung (engl. *slope*).
 Häufig wird (z.B. im Schulunterricht) der Achsenabschnitt mit $t$ und die Steigung mit $m$ bezeichnet: $f(\color{xcol}{x})=\color{ycol}{y}=\color{beta1col}{m} \color{xcol}{x} + \color{beta0col}{t}$.
 
-In der Statistik wird folgende Nomenklatur bevorzugt:  $f(\color{xcol}{x})=\color{ycol}{\hat{y}}=\color{beta0col}{\beta_0} \color{xcol}{x} + \color{beta1col}{\beta_1}$ oder $f(\color{xcol}{x})=\color{ycol}{\hat{y}}=\color{beta0col}{b_0} \color{xcol}{x} + \color{beta1col}{b_1}$ .^[Die Nomenklatur mit $b_0, b_1$ hat den Vorteil, dass man das Modell einfach erweitern kann: $b_2, b_3, ...$. Anstelle von $b$ liest man auch oft $\beta$. Griechische Buchstaben werden meist verwendet, um zu zeigen, dass man an einer Aussage über eine Population, nicht nur über eine Stichprobe, machen möchte.]
+In der Statistik wird folgende Nomenklatur bevorzugt:  $f(\color{xcol}{x})=\color{ycol}{\hat{y}}=\color{beta0col}{\beta_0} + \color{beta1col}{\beta_1} \color{xcol}{x}$ oder $f(\color{xcol}{x})=\color{ycol}{\hat{y}}= \color{beta0col}{b_0} + \color{beta1col}{b_1} \color{xcol}{x}$ .^[Die Nomenklatur mit $b_0, b_1$ hat den Vorteil, dass man das Modell einfach erweitern kann: $b_2, b_3, ...$. Anstelle von $b$ liest man auch oft $\beta$. Griechische Buchstaben werden meist verwendet, um zu zeigen, dass man an einer Aussage über eine Population, nicht nur über eine Stichprobe, machen möchte.]
 
 Das "Dach" über y, $\color{modelcol}{\hat{y}}$, drückt aus, dass es sich den den geschätzten, bzw. vom Modell vorhergesagten ("modellierten") Wert für $\color{ycol}{y}$ handelt, nicht das tatsächliche (empirische, beobachtete) $\color{ycol}{y}$. $\square$
 :::
@@ -383,7 +381,7 @@ Interaktives Beispiel für eines lineares Modell. Fügen Sie Punkte per Klick/To
 Da Toni Sie als Statistik-Profi abgespeichert hat, werden Sie wieder konsultiert.
 "Okay, ich hab noch zwei Fragen. Erstens: Wie viele Punkte bekomme ich, wenn ich gar nicht lerne? Zweitens, wie viele Punkte bekomme ich pro gelernte Stunde? Ist immerhin meine Lebenszeit, krieg ich nicht zurück!"
 
-Das sind gute Fragen. Den Y-Wert (Klausurpunkte) bei $X=0$ gibt der Achsenabschnitt zurück. Schnell skizzieren Sie dazu ein Diagramm, s. @fig-beta0.
+Das sind gute Fragen. Den $\color{ycol}{Y}$-Wert (Klausurpunkte) bei $\color{xcol}{X}=0$ gibt der Achsenabschnitt zurück. Schnell skizzieren Sie dazu ein Diagramm, s. @fig-beta0.
 Puh, die Antwort wird Toni nicht gefallen ...$\square$
 :::
 
@@ -409,9 +407,11 @@ noten2 %>%
            label = "MW Noten") +
   annotate("label", y = mean(noten2$y), x = 12, vjust = "left",
            label = "MW Klausurpunkte") +
-  geom_text_repel(data = tibble(x = 0, y = predict(lm1, newdata = tibble(x = 0))), aes(x = x, y = y,), 
+  geom_text_repel(data = tibble(x = 0, y = predict(lm1, newdata = tibble(x = 0))), 
+                  aes(x = x, y = y,), 
                   label = "Toni",
-                    point.padding = 5)
+                  point.padding = 5,
+                  size = 8)
 ```
 
 
@@ -440,13 +440,13 @@ predict(lm1, newdata = tonis_lernzeit)
 Ein Geradenmodell kann man im einfachsten Fall so spezifizieren, s. @eq-mod1 :
 
 
-$$\color{ycol}{\hat{y}} \sim \color{modelcol}{\text{m}}$$ {#eq-mod1}
+$$\color{ycol}{\hat{y}} \sim \color{xcol}{\text{x}}$$ {#eq-mod1}
 
-Lies: "Laut meinem Modell ist mein (geschätztes) $\color{ycol}{\hat{y}} irgendeine Funktion von $$\color{modelcol}{\text{m}}$".
+Lies: "Laut meinem Modell ist mein (geschätztes) $\color{ycol}{\hat{y}}$ irgendeine Funktion von $\color{xcol}{\text{x}}$".
 
-Wir erinnern uns, dass $\color{ycol}{Y}$ die $\color{ycol}{AV}$ und $\color{modelcol}{X}$ die $\color{modelcol}{UV}$ ist:
+Wir erinnern uns, dass $\color{ycol}{Y}$ die $\color{ycol}{AV}$ und $\color{xcol}{X}$ die $\color{modelcol}{UV}$ ist:
 
-$$\color{ycol}{AV} \sim \color{modelcol}{UV}$$ {#eq-mod1}
+$$\color{ycol}{AV} \sim \color{xcol}{UV}$$ {#eq-mod1}
 
 Wir werden als Funktion (erstmal) nur Geraden verwenden. Die genauen Werte der Gerade lassen wir uns (erstmal) vom Computer ausrechnen.
 
@@ -479,10 +479,10 @@ Den Namen des Objekts können Sie frei aussuchen, z.B. `mein_erstes_lm`.
 Die Regressionsgleichung lautet demnach:
 `y_pred = 8.6 + 0.88*x`
 
-`8.6` ist der Achsenabschnitt, d.h. der Wert von $Y$ wenn $x=0$.
-`0.88` ist das Regressionsgewicht, d.h. die Steigung der Regressionsgeraden: Für jede Stunden Lernzeit steigt der vorhergesagte Klausurerfolg um `0.88` Punkte.
+`8.6` ist der Achsenabschnitt, d.h. der Wert von $\color{ycol}{Y}$ wenn $\color{xcol}{x}=0$.
+`0.88` ist das Regressionsgewicht, d.h. die Steigung der Regressionsgeraden: Für jede Stunde Lernzeit steigt der vorhergesagte Klausurerfolg um `0.88` Punkte.
 
-Mit Kenntnis der beiden Koeffizienten kann man beliebige Y-Werte ausrechnen gegeben bestimmte X-Werte.
+Mit Kenntnis der beiden Koeffizienten kann man beliebige $\color{ycol}{Y}$-Werte ausrechnen gegeben bestimmte $\color{xcol}{X}$-Werte.
 Hat jemand zum Beispiel 10 Stunden gelernt, würden wir folgendes Klausurergebnis vorhersagen:
 
 ```{r}
@@ -529,7 +529,7 @@ Mit `predict` bekommt man eine Vorhersage; im Standard eine "Punkt-Vorhersage", 
 
 ### Vorhersagefehler
 
-Die Differenz zwischen vorhergesagten Wert für eine (neue) Beobachtung, $\hat{y_0}$ und ihrem tatsächlichen Wert nennt man Vorhersagefehler (error, $e_i$) oder *Residuum*: $\color{errorcol}{e_i} = \color{ycol}{y_i} - \color{modelcol}{\hat{y}_i}$.
+Die Differenz zwischen vorhergesagten Wert für eine (neue) Beobachtung, $\color{modelcol}{\hat{y_0}}$ und ihrem tatsächlichen Wert nennt man Vorhersagefehler (error, $e_i$) oder *Residuum*: $\color{errorcol}{e_i} = \color{ycol}{y_i} - \color{modelcol}{\hat{y}_i}$.
 
 
 
@@ -549,16 +549,16 @@ noten2 <-
 noten2 %>% 
   ggplot(aes(x, y)) +
   geom_point(color = "grey") +
-  geom_abline(slope = coef(lm1)[2], intercept = coef(lm1)[1], color = okabeito_colors()[8], size = 1.5) +
+  geom_abline(slope = coef(lm1)[2], intercept = coef(lm1)[1], color = modelcol, size = 1.5) +
   theme_minimal() +
-  geom_segment(aes(xend = x, yend = yhat))
+  geom_segment(aes(xend = x, yend = yhat), color = errorcol)
 
 noten2 %>% 
   ggplot(aes(x, y)) +
   geom_point(color = "grey") +
-  geom_hline(yintercept = mean(noten2$y), color = okabeito_colors()[8], size = 1.5) +
+  geom_hline(yintercept = mean(noten2$y), color = modelcol, size = 1.5) +
   theme_minimal() +
-  geom_segment(aes(xend = x, yend = mean(noten2$y)))
+  geom_segment(aes(xend = x, yend = mean(noten2$y)), color = errorcol)
 
 ```
 
@@ -704,7 +704,7 @@ d0 <-
 d0 %>% 
   ggplot(aes(x,y)) + 
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
+  geom_smooth(method = "lm", se = FALSE, color = modelcol) +
   theme_modern()
 
 
@@ -715,7 +715,7 @@ d_r1 =
 d_r1 %>% 
   ggplot(aes(x,y)) + 
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
+  geom_smooth(method = "lm", se = FALSE, color = modelcol) +
   theme_modern()
 ```
 
@@ -770,7 +770,7 @@ Oder sich mit der Modellgüte und den Vorhersagen begnügen. Was auch was wert i
 
 #### Achsenabschnitt (b0)
 
-"Im Modell `lm1` liegt der Achsenabschnitt bei $y=`r round(coef(lm1)[1], 2)`$. Beobachtungen mit $x=0$ können also diesen Y-Wert erwarten."
+"Im Modell `lm1` liegt der Achsenabschnitt bei $\textcolor{ycol}{y}=`r round(coef(lm1)[1], 2)`$. Beobachtungen mit $\color{xcol}{x}=0$ können also diesen $\textcolor{ycol}{Y}$-Wert erwarten."
 Leider ist es häufig so, dass Prädiktorwerte von 0 in der Praxis nicht realistisch sind, so dass der Achsenabschnitt dann wenig nützt.
 
 :::{#exm-groesse}
@@ -850,7 +850,7 @@ r2(lm2)
 ```
 
 
-Oh nein! Unterirdisch schlecht. Anstelle von bloßen Rumprobieren überlegen Sie und schauen dann in @fig-mario-corr nach, welche Variable am stärksten korreliert mit `total_pr`,
+Oh nein! Unterirdisch schlecht. Anstelle von bloßem Rumprobieren überlegen Sie und schauen dann in @fig-mario-corr nach, welche Variable am stärksten korreliert mit `total_pr`;
 es resultiert `lm3`: 
 
 ```{r}

@@ -1,8 +1,17 @@
 % Linear regression
-% Author: Henri Menke
+% Author: Henri Menke, adapted by Sebastian Sauer
 \documentclass[tikz,border=10pt]{standalone}
 \usetikzlibrary{arrows,intersections}
 \begin{document}
+
+% define custom colors:
+\definecolor{ycol}{RGB}{230,159,0}
+\definecolor{modelcol}{RGB}{86,180,233}
+\definecolor{errorcol}{RGB}{0,158,115}
+\definecolor{beta0col}{RGB}{213,94,0}
+\definecolor{beta1col}{RGB}{0,114,178}
+\definecolor{xcol}{RGB}{204,121,167}
+
 \begin{tikzpicture}[
     thick,
     >=stealth',
@@ -14,16 +23,16 @@
       minimum size = 4pt
     }
   ]
+  % draw coordinate system:
   \coordinate (O) at (0,0);
-
-  \draw[->] (-0.3,0) -- (8,0) coordinate[label = {below:$x$}] (xmax);
-  \draw[->] (1,-0.3) -- (1,5) coordinate[label = {right:$f(x)$}] (ymax);
+  \draw[->] (-0.3,0) -- (8,0) coordinate[label = {below:$\color{xcol}{x}$}] (xmax);
+  \draw[->] (1,-0.3) -- (1,5) coordinate[label = {right:$\color{ycol}{y}$}] (ymax);
   \path[name path=x] (0.3,0.5) -- (6.7,4.7);
   \path[name path=y] plot[smooth] coordinates {(-0.3,2) (2,1.5) (4,2.8) (6,5)};
   
-  %\node[left] {$\beta_0$} at (1,1);
-  \fill (1,.958) circle (3pt) [red] ;
-  \draw[ thick, red] (1,0) --  (1,1)  node[left]{$\beta_0$} (1,1);
+  %\ beta 0:
+  \fill (1,.958) circle (3pt) [beta0col] ;
+  \draw[ thick, beta0col] (1,0) --  (1,1)  node[left]{$\color{beta0col}{\beta_0}$} (1,1);
   
   \scope[name intersections = {of = x and y, name = i}]
     \fill[gray!20] (i-1) -- (i-2 |- i-1) -- (i-2) -- cycle;
@@ -37,9 +46,9 @@
       node[dot] (i-12) {};
     \draw           (i-12) -- (i-12 |- O) node[dot,
                               label = {below:$x_0 + 1$}] {};
-    \draw[blue, <->] (i-2) -- node[right] {$\beta_1$}
+    \draw[beta1col, <->] (i-2) -- node[right] {$\color{beta1col}{\beta_1}$}
                               (i-12);
-    \draw[blue, <->] (i-1) -- node[below] {$1$} (i-12);
+    \draw[beta1col, <->] (i-1) -- node[below] {$1$} (i-12);
     \path       (i-1 |- O) -- node[below] {$1$} (i-2 |- O);
     \draw[gray]      (i-2) -- (i-2 -| xmax);
     \draw[gray, <->] ([xshift = -0.5cm]i-2 -| xmax) -- node[fill = white]

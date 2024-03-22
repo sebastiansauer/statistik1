@@ -18,7 +18,7 @@ library(see)
 theme_set(theme_minimal())
 ```
 
-
+{{< include children/colors.qmd >}}
 
 <!-- ```{css, echo = FALSE} -->
 <!-- .justify { -->
@@ -50,7 +50,7 @@ theme_set(theme_minimal())
 
 
 
-:::{.xsmall}
+:::{.small}
 [Quelle](https://github.com/allisonhorst/stats-illustrations)
 :::
 
@@ -85,6 +85,13 @@ Gehen Sie in eine kleine Gruppe zusammen (3-4 Personen). Stellen Sie sich anhand
 :::
 
 
+:::{#exr-fragjetzt}
+### Frag jetzt
+Die Lehrkraft stellt Ihnen ein Forum zur Verfügung, auf dem Sie *anonym* Fragen an die Lehrkraft richten können (z.B. auf [frag.jetzt](https://frag.jetzt/home)).
+
+Stellen Sie dort Ihre Fragen ein; voten Sie die Fragen Ihrer Kommilitonis auf oder ab. Die Lehrkraft beantwortet dann die Fragen mit den meisten Upvotes. $\square$
+:::
+
 
 ### Erfolsgrezept
 
@@ -115,20 +122,17 @@ Eine gute Lehrkraft ist wie der Funke, der eine (Lern-)Flamme entzündet. Aber e
 ## Was ist Statistik und wozu ist sie gut?
 
 
-### Eine Definition von Statistik
+:::{#exr-nutzen-statistik}
 
-Es gibt mehrere Definition von Statistik;
-hier ist eine.
+### Nutzen von Statistik
 
-
-:::{#def-statistik}
-
-
-
-## Statistik
-Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entnehmen und beschreibt die Ungewissheit unserer Schlüsse [@kaplan_statistical_2009, @poldrack_statistical_2023].$\square$
-
+🏋️‍♀️ Fragen Sie ChatGPT, was der Nutzen von Statistik ist. Diskutieren Sie die Antwort. $\square$
 :::
+
+
+
+
+
 
 :::{.callout-note}
 In diesem Buch werden die Begriffe *Statistik*, *Datenanalyse* und *Data Science* synonym verwendet.$\square$
@@ -147,12 +151,16 @@ Hm. Vielleicht fragen wir mal ChatGPT, was es unter Statistik versteht:
 
 
 
+Es gibt mehrere Definition von Statistik;
+hier ist eine.
 
-:::{#exr-nutzen-statistik}
 
-### Nutzen von Statistik
+:::{#def-statistik}
+### Statistik
+Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entnehmen und beschreibt die Ungewissheit unserer Schlüsse [@poldrack_statistical_2023]; @kaplan_statistical_2009 .$\square$
+:::
 
-🏋️‍♀️ Fragen Sie ChatGPT, was der Nutzen von Statistik ist. Diskutieren Sie die Antwort.
+
 
 
 <!-- Statistik ist gut für: -->
@@ -169,7 +177,51 @@ Hm. Vielleicht fragen wir mal ChatGPT, was es unter Statistik versteht:
 
 <!-- Kommunikation von Daten: Statistik hilft uns, Daten zu visualisieren und zu präsentieren, um sie leichter verständlich und nachvollziehbar zu machen. -->
 
-:::
+
+Betrachten wir die zwei Bestimmungsstücke einer Definition von Statistik genauer:
+
+1. Daten zusammenfassen
+2. Ungewissheit beschreiben
+
+
+### Daten zusammenfassen
+
+@fig-zsmnfassen verdeutlicht das Prinzip des Zusammenfassens von Daten.
+Anschaulich gesprochen: Eine Menge von Zahlen wird zu einer einzelnen Zahl "zusammengedampt".
+Eine einzelne Zahl ist wesentlich besser zu verstehen als eine große Menge von Zahlen. Bei vielen Zahlen würde man den Überblick verlieren.
+
+```{r}
+#| echo: false
+#| label: fig-zsmnfassen
+#| fig-cap: "Daten zusammenfassen"
+#| layout-ncol: 2
+#| fig-subcap: 
+#|   - "Zusammenfassen einer Variable zu einem Punktwert, hier zum Mittelwert"
+#|   - "Zusammenfassen zweier Variablen zu einer Geraden"
+
+
+d <- 
+  tibble(y = rnorm(100),
+         e = rnorm(100, mean = 0, sd = 0.3),
+         x = y + e)
+
+d |> 
+  ggplot(aes(y = y, x = 1)) +
+  geom_jitter(width = .1) +
+  scale_x_continuous(limits = c(0, 2)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  annotate("point", size = 7, x = 1, y = 0,
+           color = modelcol) +
+  annotate("label", x = 0, y = 0, label = "MW", hjust = 0) +
+  labs(caption = "MW: Mittelwert")
+
+
+d |> 
+  ggplot(aes(x = x, y = y)) +
+  geom_point2() +
+  geom_smooth(method = "lm", color = modelcol)
+```
+
 
 
 
@@ -217,13 +269,13 @@ groesse %>%
   facet_wrap(~team) +
   labs(title = "Variation in der Körpergröße",
        y = "Körpergröße",
-       x = "Spielernummer") +
+       x = "Spielernummer",
+       caption = "MW: Mittelwert") +
   geom_label(data = distinct(groesse, team, .keep_all = TRUE), 
             aes(label = label, x = 3, y = 50), 
             size = 5, vjust = 0) +
   theme(strip.text = element_text(size = 16)) +
   theme_modern()
-
 ```
 
 
@@ -312,6 +364,11 @@ Beispiele für die einzelnen Zielarten der Datenanalyse:
 - *Vorhersagen*: Wenn ich 100 Stunden auf die Statistikklausur lernen, welche Note kann ich dann erwarten?
 - *Erklären*: Wie viel bringt mir das Lernen auf die Statistikklausur?
 
+
+:::{#exr-ziele-stat}
+Benennen Sie Beispiele für die die drei Zielarten von Datenanalysen! $\square$
+:::
+
 ###  Forschungsfrage
 
 Eine Forschungsfrage ist die Leitfrage Ihrer Analyse.
@@ -335,11 +392,11 @@ Eine Forschungsfrage weist häufig folgende Struktur auf, s. @fig-fo-struktur.
 %%| out-width: "100%"
 
 graph LR
-    Input --> X[hier passiert irgendwas]
+    I[Input bzw. X] --> X[hier passiert irgendwas]
     subgraph "Schwarze Kiste"
       X
     end
-    X --> Output
+    X --> O[Output bzw. Y]
 ```
 
 
@@ -348,9 +405,9 @@ graph LR
 
 ### Forschungsfrage 1
 
->   Hat Lernen einen Einfluss auf den Prüfungserfolg?
->   Verringert Joggen die Menge des Hüftgolds?
->   Um welchen Betrag erhöht sich der Umsatz, wenn wir 1000€ mehr Werbung ausgeben?$\square$
+>   Hat Lernen (X) einen Einfluss auf den Prüfungserfolg (Y)?
+>   Verringert Joggen (X) die Menge des Hüftgolds (Y)?
+>   Um welchen Betrag erhöht sich der Umsatz (Y), wenn wir 1000€ mehr Werbung ausgeben? (X)$\square$
 
 :::
 
@@ -367,6 +424,62 @@ Ihre Forschungsfrage lautet:
 
 >   Welche Produktmerkmale stehen mit einem hohen Verkaufserlös in Zusammenhang?$\square$
 :::
+
+
+:::{#exm-braindrain}
+### Handynutzung und Konzentrationsfähigkeit
+Eine Forschungsfrage könnte lauten zum Thema Handynutzung: 
+
+>    Verringert intensive Handynutzung die Konzentrationsfähigkeit? $\square$
+:::
+
+
+:::{#exm-braindrain2}
+
+### Aus der Forschung: Smartphone-Brain-Drain 📱🧠🚫
+
+@ward_brain_2017 untersuchten die Forschungsfrage, ob die bloße Gegenwart eines Handies (z.B. wenn es vor Ihnen auf dem Tisch liegt) dazu führt, dass man abgelenkt wird und daher schlechtere kognitive Leistungen zeigt.
+
+Leider schreiben die Autoren Ihre Hypothese nicht glasklar, aber implizit ist obige Hypothese herauszulesen:
+
+>   First, smartphones may redirect the orientation of conscious attention away from the focal task and toward thoughts or behaviors associated with one’s phone. Prior research provides ample evidence that ... this digital distraction adversely affects both performance ... and enjoyment.
+
+Später formulieren Sie Ihre Hypothese noch genauer:
+
+>   In two experiments, we test the hypothesis that the mere presence of one’s own smartphone reduces available cognitive capacity.
+
+Die Ergebnisse unterstützen Ihre Hypothese, s. @fig-braindrain. 
+Im Diagramm ist ersichtlich, dass die kognitive Leistung (Y-Achse) sowohl in der Kapazität des Arbeitsgedächtnisses (links) als auch in der fluiden Intelligenz (rechts) am geringsten ist, wenn das Handy auf dem Schreibtisch (Desk) liegt. Am besten ist die kognitive Leistung, wenn das Handy nicht im Raum ist.$\square$
+
+
+
+
+
+
+![Handy in Sichtweite verringert die kognitiven Ressourcen](img/braindrain1.jpg){#fig-braindrain}
+
+:::
+
+
+
+:::{#exr-braindrain1}
+Benennen Sie X und Y in @exm-braindrain2! $\square$
+:::
+
+:::{#exr-braindrain-chatgpt}
+Fragen Sie einen Bot (z.B. ChatGPT) zum Stand der Forschung hinsichtlich der Braindrain-Forschungsfrage. Diskutieren Sie die Antwort, auch in ihren Grenzen. $\square$
+:::
+
+
+
+
+:::{.callout-caution}
+Es ist ein häufiger Fehler, in der Forschungsfrage zu formulieren "X führt zu Y", aber in der Analyse keine Methode zu verwenden, die geeignet ist, kausale Zusammenhänge aufzudecken. Es reicht nicht, dass man z.B. einen (negativen) Zusammenhang zwischen der Häufigkeit von Smartphone-Nutzung und Konzentrationsfähigkeit findet [@schwaiger_impact_2022], um zu sagen: "Daddeln macht dumm!". Es könnte ja z.B. auch umgekehrt sein. Platt gesagt: "Dummheit führt zu Daddeln". Weitere Erklärungen sind möglich. Vorsicht also mit (vor)schnellen Aussagen zu kausalen Abhängigkeiten.
+:::
+
+
+
+
 
 
 ### Der Prozess der Datenanalyse
@@ -395,41 +508,6 @@ graph LR
     Problem --> Plan --> Data --> Analysis --> Conclusions --> Problem
 ```
 
-
-
-:::{#exm-braindrain}
-
-## Aus der Forschung: Smartphone-Brain-Drain 📱🧠🚫
-
-@ward_brain_2017 untersuchten die Forschungsfrage, ob die bloße Gegenwart eines Handies (z.B. wenn es vor Ihnen auf dem Tisch liegt) dazu führt, dass man abgelenkt wird und daher schlechtere kognitive Leistungen zeigt.
-
-Leider schreiben die Autoren Ihre Hypothese nicht glasklar, aber implizit ist obige Hypothese herauszulesen:
-
->   First, smartphones may redirect the orientation of conscious attention away from the focal task and toward thoughts or behaviors associated with one’s phone. Prior research provides ample evidence that ... this digital distraction adversely affects both performance ... and enjoyment.
-
-Später formulieren Sie Ihre Hypothese noch genauer:
-
->   In two experiments, we test the hypothesis that the mere presence of one’s own smartphone reduces available cognitive capacity.
-
-Die Ergebnisse unterstützen Ihre Hypothese, s. @fig-braindrain. 
-Im Diagramm ist ersichtlich, dass die kognitive Leistung (Y-Achse) sowohl in der Kapazität des Arbeitsgedächtnisses (links) als auch in der fluiden Intelligenz (rechts) am geringsten ist, wenn das Handy auf dem Schreibtisch (Desk) liegt. Am besten ist die kognitive Leistung, wenn das Handy nicht im Raum ist.$\square$
-
-
-
-
-![Handy in Sichtweite verringert die kognitiven Ressourcen](img/braindrain1.jpg){#fig-braindrain}
-
-:::
-
-
-
-
-
-
-
-:::{.callout-caution}
-Es ist ein häufiger Fehler, in der Forschungsfrage zu formulieren "X führt zu Y", aber in der Analyse keine Methode zu verwenden, die geeignet ist, kausale Zusammenhänge aufzudecken. Es reicht nicht, dass man z.B. einen (negativen) Zusammenhang zwischen der Häufigkeit von Smartphone-Nutzung und Konzentrationsfähigkeit findet [@schwaiger_impact_2022], um zu sagen: "Daddeln macht dumm!". Es könnte ja z.B. auch umgekehrt sein. Platt gesagt: "Dummheit führt zu Daddeln". Weitere Erklärungen sind möglich. Vorsicht also mit (vor)schnellen Aussagen zu kausalen Abhängigkeiten.
-:::
 
 
 ## Was sind Daten?
@@ -664,30 +742,85 @@ Das Tidy-Format wird auch als "langes" Format bezeichnet.
 
 
 ::: {.content-visible when-format="html"}
-![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ("long") ist "tidy".](img/tidyr-pivoting.gif){#fig-long-wide-anim width="50%"}
+![Eine Tabelle einmal im Format Format "wide" (nicht "tidy") und einmal im Format "long" ("tidy")](img/tidyr-pivoting.gif){#fig-long-wide-anim width="50%"}
 :::
 
 
-[Quelle: Garrick Aden-Buie, 2018, CC0-1.0 license, https://www.garrickadenbuie.com/project/tidyexplain/]{.small}
+[Quelle: Garrick Aden-Buie, 2018, CC0-1.0 license, <https://www.garrickadenbuie.com/project/tidyexplain/>]{.small}
 
 
+:::::{#exm-widelong}
+
+Im Folgenden sind eine Nicht-Tidy-Tabelle (@tbl-untidy1) und eine Tidy-Tablle (@tbl-tidy1) dargestellt.
+
+:::: {layout="[0.5, 0.5]"}
+
+:::{#firstcol}
+#### Breitformat
+
+```{r}
+#| echo: false
+#| label: tbl-untidy1
+#| tbl-cap: "Beispiel für eine NICHT-Tidy-Tabelle (Breitformat)"
+d <-
+  tribble(
+    ~Produkt, ~Umsatz_2021, ~Umsatz_2022, ~Umsatz_2023,
+    "Hammer", 10, 11, 12,
+    "Nägel", 15, 10, 5
+  )
+kable(d)
+```
+:::
+
+:::{#secondcol}
+#### Langformat (tidy)
+
+```{r}
+#| echo: false
+#| label: tbl-tidy1
+#| tbl-cap: "Beispiel für eine Tidy-Tabelle (Langformat)"
+d_long <-
+  d |> 
+  pivot_longer(cols = c(Umsatz_2021, Umsatz_2022, Umsatz_2023), names_to = "Jahr2", values_to = "Umsatz") |> 
+  separate(Jahr2, into = c("k", "Jahr")) |> 
+  select(-k)
+
+kable(d_long)
+```
+:::
+
+::::
+
+:::::
 
 
-::: {.callout-tip}
-In vielen Organisationen werden Exceltabellen für bestimmte Zwecke der Datenverarbeitung verwendet. 
-Excel^[und ähnliche Programme] hat bestimmte Stärken und Vorteile, aber auch gewisse Nachteile und Schwäche;
-das liegt z.T. daran, dass Excel für bestimmte Aufgaben besser und für andere weniger gut geeignet ist.
-Wenn man mit Excel arbeitet, wiederholen sich erfahrungsgemäß immer wieder die gleichen Fehler bzw. suboptimalen Vorgehensweise zum Aufbau einer Exceltabelle.
-
-[Dieser Artikel](https://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989) von @broman_data_2018 zeigt anhand einiger praktischer Tipps, wie man Exceltabellen so aufbaut, dass Fehler minimiert werden. 
+:::{#exr-widelong}
+Suchen Sie ein Beispiel für eine Konfiguration einer Tabelle im Long- vs. Wide-Format. $\square$
 :::
 
 
+>    🧑‍🎓 Wozu braucht man das Tidy-Format?
 
-:::{#exr-smartphonse}
-### Sind wir süchtig nach dem Handy?
-Sind Sie süchtig nach Ihrem Handy? Lassen Sie uns eine kleine Studie dazu live im Hörsaal durchführen. Füllen Sie [diese Umfrage](https://forms.gle/PP8yb6Ubqq3JU78F9) zum Thema Smartphonse-Sucht aus (anonym und kein Muss). Wir werden die Daten später zusammen aus. $\square$
-:::
+>    👩‍🏫 In vielen Software-Programmen der Datenanalyse weißt man z.B. der X- oder Y-Variable eine Spalte einer Tabelle zu. Möchte man etwa die Veränderung des Umsatzes im Verlauf der Jahre visualisieren oder analysieren, so braucht es die Spalten 'Jahr' und 'Umsatz', also ein Tidy-Format.
+
+
+```{r}
+#| echo: false
+#| label: fig-tidy
+#| fig-asp: 0.5
+#| fig-cap: "Beispiel für eine Visualisierung auf Basis einer Tidy-Tabelle,  vgl. @tbl-tidy1"
+d_long |> 
+  ggplot(aes(x = Jahr, y = Umsatz, color = Produkt, 
+             group = Produkt)) +
+  geom_point() +
+  geom_line() +
+  scale_color_okabeito() +
+  theme_modern()
+```
+
+
+
+
 
 
 
@@ -1100,7 +1233,7 @@ Vielleicht an Spielzeugautos, s. @fig-matchbox.
 
 ## Modelle
 
-Modelle sind ein vereinfachtes Abbild der Realität eine *Repräsentation* [@kaplan_statistical_2009].$\square$
+Modelle sind ein vereinfachtes Abbild der Realität, eine *Repräsentation* [@kaplan_statistical_2009].$\square$
 
 :::
 
@@ -1261,9 +1394,35 @@ Die Aufgabe von Statistik ist es, durch Zusammenfassen von Daten Modelle zu bild
 
 ## Vertiefung 
 
+### Excel für Könner
 
-Fassen Sie den Artikel von @broman_data_2018 zusammen.
 
+
+In vielen Organisationen werden Exceltabellen für bestimmte Zwecke der Datenverarbeitung verwendet. 
+Excel^[und ähnliche Programme] hat bestimmte Stärken und Vorteile, aber auch gewisse Nachteile und Schwäche;
+das liegt z.T. daran, dass Excel für bestimmte Aufgaben besser und für andere weniger gut geeignet ist.
+Wenn man mit Excel arbeitet, wiederholen sich erfahrungsgemäß immer wieder die gleichen Fehler bzw. suboptimalen Vorgehensweise zum Aufbau einer Exceltabelle.
+
+[Dieser Artikel](https://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989) von @broman_data_2018 zeigt anhand einiger praktischer Tipps, wie man Exceltabellen so aufbaut, dass Fehler minimiert werden. 
+
+
+:::{#exr-xls-paper}
+### Fassen Sie den Artikel von @broman_data_2018 zusammen
+Die Lehrkraft teilt Sie dazu in Gruppen ein und weist jeder Gruppe einen Abschnitt des Artikels zu.
+Fassen Sie das *Wesentliche* (und nur das Wesentliche) an einem geeigneten Ort zusammen (z.B. auf einem Miro-Board).
+$\square$
+:::
+
+
+
+### Sind wir süchtig nach dem Handy?
+
+Sind Sie süchtig nach Ihrem Handy? Lassen Sie uns eine kleine Studie dazu live im Hörsaal durchführen. Füllen Sie [diese Umfrage](https://forms.gle/PP8yb6Ubqq3JU78F9) zum Thema Smartphonse-Sucht aus (anonym und kein Muss). Wir werden die Daten später zusammen aus. $\square$
+
+
+
+
+### Datenprofi plaudert aus dem Nähkästchen
 
 Inspiration von einer Praktikerin der Datenanalyse: Caitlin Hudon verrät [in diesem Video](https://www.youtube.com/watch?v=O5lP6XcopdQ&list=PL9HYL-VRX0oQchs7dqFICoxMgnvFO10tC&index=15&t=1s), welche Fehler Sie sie in in den acht Jahren ihrer Berufserfahrung gemacht hat und was sie daraus gelernt hat.
 

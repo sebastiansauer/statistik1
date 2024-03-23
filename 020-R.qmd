@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Daten einlesen 
 
 
@@ -76,34 +81,6 @@ die Sie noch nicht gleich verstehen.
 Keine Sorge, das ist normal. 
 Mit etwas Übung wird Ihnen bald alles schnell von der Hand ghen.
 
-### Benötigte R-Pakete
-
-
-```{r}
-library(openintro)  # Datensatz `mariokart`
-```
-
-
-### Benötigte Daten
-
-Sie benötigen den Datensatz `mariokart`, der entweder über [diese Internetadresse](https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv) oder über R-Paket `openintro` importiert werden kann:
-
-#### Import via Download
-
-```{r}
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
-```
-
-
-
-#### Import via R-Paket
-
-```{r}
-#| eval: false
-data(mariokart, package = "openintro")  # Das Paket muss installiert sein
-```
-
-
 ### Begleitvideos
 
 Schauen Sie sich mal in [dieser Playlist](https://www.youtube.com/playlist?list=PLRR4REmBgpIEaIyeNBgNGPgmhQJ_T1y8_) um,
@@ -134,7 +111,7 @@ Allerdings gibt es auch abweichende Meinungen, s. @fig-bill-excel.
 
 
 
-### R und Reproduziebarkeit
+### R und Reproduzierbarkeit
 
 
 :::{#def-repro}
@@ -205,10 +182,12 @@ main results for 21 articles. $\square$
 
 
 
-## Architektur von R
+<!-- ## Architektur von R -->
 
 
 ### R & RStudio
+
+Wenn wir sagen, "wir arbeiten mit R", dann heißt das in unserem Fall "wir arbeiten mit R und mit RStudio".
 
 
 :::: {.columns}
@@ -243,6 +222,7 @@ main results for 21 articles. $\square$
 @ismay_statistical_2020 zeigen eine schöne Analogie, was der Unterschied von *R* und *RStudio* ist, s. @fig-r-rstudio.^[Streng genommen ist RStudio für die Datenanalyse irrelevant, aber RStudio ist praktisch, Sie werden es nicht missen wollen.]
 
 
+
 ```{r r-rstudio}
 #| echo: false
 #| fig-cap: "R vs. RStudio: R macht die Arbeit, RStudio ist für Komfort und Übersicht"
@@ -250,11 +230,12 @@ main results for 21 articles. $\square$
 
 knitr::include_graphics("img/r_vs_rstudio_1.png")
 ```
+Kurz gesagt: Das eigentlich Arbeiten besorgt R. Für den Komfort und die Schönheit ist RStudio zuständig. Auch eine Art von Arbeitsteilung!
 
-
-Wir verwenden beide Programme. Aber wir *öffnen nur* RStudio. 
-RStudio findet selbständig R und öffnet diese "heimlich".
-Öffnen Sie nicht noch extra R (sonst wäre R zweifach geöffnet).
+:::{.callout-note}
+- R:  🏋️‍♀️
+- RStudio: 💅 $\square$
+:::
 
 
 Hier sehen Sie einen Screenshot von der Oberfläche von RStudio, s.  @fig-rstudio.
@@ -263,28 +244,63 @@ Hier sehen Sie einen Screenshot von der Oberfläche von RStudio, s.  @fig-rstudi
 ![So sieht RStudio aus](img/rstudio.png){#fig-rstudio}
 
 
+## Installation von R und RStudio {#sec-install-r}
 
-### Posit Cloud
 
 
-Posit Cloud^[früher hieß der Dienst "RStudio Cloud"] ist ein Webdienst von Posit/RStudio (zum Teil kostenlos).
+### Installation von R
+
+R ist ein Softwarepaket für statistische Berechnungen^[Mehr Infos finden sich hier: <https://de.wikipedia.org/wiki/R_%28Programmiersprache%29>].
+Laden Sie es für Ihr Betriebssytem herunter:
+
+- [Windows](https://cloud.r-project.org/bin/windows/base/)
+- [MacOS](https://cloud.r-project.org/bin/macosx/)
+- [Linux](https://cloud.r-project.org/bin/linux/)
+
+Mehr Infos zu R finden Sie unter <https://cloud.r-project.org/>.^[Wenn Sie gefragt werden, dass Sie einen “Mirror” auswählen sollen, heißt das, Sie sollen einen Computer (Server) wählen, von dem Sie R herunterladen. Der sollte möglichst nicht zu weit weg stehen, dann spart es vielleicht etwas Zeit und Bandbreite.]
+
+
+Wenn Sie die Installationsdatei heruntergeladen haben, öffnen Sie diese Datei (Doppelklick) und Sie werden durch die Installation geführt.^[Sie benötigen Admin-Rechte auf Ihrem Computer.]
+
+
+### Installation von RStudio
+
+RStudio ist eine *graphische Benutzeroberfläche* (graphical user interface, GUI) für R, plus ein paar Goodies^[in Form einer *intergrierten Entwicklungsumgebung* (integrated development environment, IDE: <https://en.wikipedia.org/wiki/Integrated_development_environment>))].
+
+Laden Sie zunächst die *Desktop-Version* von RStudio herunter für Ihr Betriebssystem (Windows, MacOS, Linux) vom Anbieter (Posit) herunter: <https://posit.co/download/rstudio-desktop/>.
+
+
+Wenn Sie die Installationsdatei heruntergeladen haben, öffnen Sie diese Datei (Doppelklick) und Sie werden durch die Installation geführt.^[Sie benötigen Admin-Rechte auf Ihrem Computer.]
+
+
+
+### RStudio Cloud
+
+
+#### RStudio Cloud als Alternative zu RStudio
+
+RStuido Cloud^[oder "Posit Cloud"] ist ein Webdienst von Posit/RStudio (zum Teil kostenlos), also *RStudio online*:
 Man kann damit online mit R arbeiten.
 Die Oberfläche ist praktisch identisch zur 
 Desktop-Version, s. @fig-rstudio-cloud.
-Ein Vorteil ist, dass man als Nutzer nichts installieren muss und dass es auch auf Tablets läuft (im Gegensatz zur Desktop-Version von R).
+Sie können es als Alternative zur Installation von RStudio auf Ihrem Computer verwenden.
+Ein Vorteil von RStudio Cloud ist, dass man als Nutzer *nichts installieren* muss und dass es *auch auf Tablets* läuft (im Gegensatz zur Desktop-Version von RStudio).
 Ein Nachteil ist, dass es etwas langsamer ist und nur für ein gewisses Zeitvolumen kostenlos.
 
 ![So sieht RStudio Cloud aus. Genau wie RStudio Desktop](img/rstudio-cloud.png){#fig-rstudio-cloud}
 
-:::{.callout-note}
+
+#### Vertiefung
+
+
 Wenn Ihr Dozent Ihnen einen Projektordner bzw. einen Link dazu bereitstellt,
 ist das komfortabel, da der Dozent dann schon Pakete installieren, Daten bereitstellen und
 andere Nettigkeit vorbereiten kann für Sie.
 Allerdings müssen Sie den Projektordner in Ihrem Konto abspeichern, 
 wenn Sie etwas speichern möchten,
 da Sie vermutlich keine Schreibrechte im Projektordner Ihres Dozenten haben.
-Klicken Sie dazu auf "Save a permanent copy", s. @fig-perm-copy.$\square$
-:::
+Klicken Sie dazu auf "Save a permanent copy", s. @fig-perm-copy.
+
 
 ![Einen Projektordner im eigenen Konto abspeichern, um Schreibrechte zu haben](img/rstudio-save-a-permanent-copy.png){#fig-perm-copy}
 
@@ -293,18 +309,24 @@ Sie können auch von der Cloud exportieren, also Ihre Syntaxdatei herunterladen.
 Klicken Sie dazu im Reiter "Files" auf `More > Export ...`.
 
 
-### Installation
-
-Lesen Sie [hier](https://data-se.netlify.app/2021/11/30/installation-von-r-und-seiner-freunde/#installation) die Installation von R und seiner Freunde nach.
-
-Kurz gesagt: Laden Sie R von der [R-Homepage, genannt "CRAN"](https://cran.r-project.org/)^[CRAN: Comprehensive R Archive Network] herunter. 
-R wird für alle gängigen Betriebssystem angeboten.
 
 
 
 
-### R-Pakete
+## RStudio starten, nicht R
 
+ 
+Wir verwenden beide Programme (R und RStudio). Aber wir *öffnen nur* RStudio. 
+RStudio findet selbständig R und öffnet dieses "heimlich".
+Öffnen Sie nicht noch extra R (sonst wäre R zweifach geöffnet).
+
+Anstelle von *RStudio Desktop* (auf Ihrem Computer/Desktop) können Sie auch die *RStudio Cloud* (die Online-Version ) starten.
+
+
+## R-Pakete
+
+
+### Was sind R-Pakete?
 
 Typisch für R ist sein modularer Aufbau: Man kann eine große Zahl an Erweiterungen ("Pakete", engl. *packages*) installieren, alle kostenlos.
 In R Paketen "wohnen" R-Befehle, also Dinge, die R kann, "Skills" sozusagen.
@@ -357,7 +379,7 @@ gibt es ca. 20,000 Pakete (vgl. @fig-cran); [Stand: 2022; Quelle](https://gist.g
 
 
 
-#### Pakete installieren {#install-r-pckgs}
+### Pakete installieren {#install-r-pckgs}
 
 Wie jede Software muss man Pakete (Erweiterungen für R) erst einmal installieren,
 bevor man sie verwenden kann.
@@ -431,21 +453,16 @@ Sonst schrauben Sie an einem elektrischen Gerät herum, das noch unter Strom ste
 Die einfachste Art, alle Pakete zu beenden ist, `Session > Restart R` zu klicken  (in RStudio).$\square$
 :::
 
-#### Pakete updaten
-
-Klicken Sie im Reiter `Packages` (in RStudio) und dort auf den Button `Update`.^[Wenn die Anzahl der zu aktualisierenden Pakete groß ist, dann besser nicht alle auswählen, sondern nur ein paar. Dann die nächsten paar Pakete usw.]
-
-Denken Sie daran, dass Sie das Paket, das Sie updaten/installieren, nicht laufen darf.
 
 
-#### Pakete starten
+### Pakete starten
 
 
 Wenn Sie ein Softwareprogramm - nichts anderes sind R-Pakete - installiert haben,
 müssen Sie es noch *starten*.
 
-Merke: Ein bestimmtes Paket muss man nur einmalig installieren.
-Aber man muss es jedes Mal neu starten, wenn man R (bzw. RStudio) startet.
+Merke: Ein bestimmtes R-Paket muss man nur *einmalig installieren*.
+Aber man muss es *jedes Mal neu starten*, wenn man R (bzw. RStudio) startet.
 
 Sie erkennen leicht, ob ein Paket gestartet ist, wenn Sie ein Häkchen vor dem
 Namen des Pakets in der Paketliste (Reiter *Packages*) sehen, s. Abbildung @fig-install-packages.
@@ -453,6 +470,8 @@ Namen des Pakets in der Paketliste (Reiter *Packages*) sehen, s. Abbildung @fig-
 
 
 [Dieses Video](https://www.youtube.com/watch?v=Yej9xzKQ3yI&list=PLRR4REmBgpIEaIyeNBgNGPgmhQJ_T1y8_&index=26) verdeutlicht den Unterschied zwischen *Installation* und *Starten* eines R-Pakets. 
+
+## Mit R arbeiten
 
 ### Projekte in R
 
@@ -553,17 +572,17 @@ Ein neues Quarto-Dokument können Sie erstellen mit Klick auf *File > New File >
 
 ## Errisch für Einsteiger
 
-:::{.callout-note}
+:::{.callout-caution}
 R ist penibel: So sind `name` und `Name` zwei verschiedene Variablen für R. 
-Groß- und Kleinschreibung wird von R genau beachtet!
+Groß- und Kleinschreibung wird von R streng beachtet!
 Hingegen ist es R egal, ob Sie zur besseren Übersichtlichkeit Leerzeichen in Ihre Syntax tippen. 
 Ausnahme sind spezielle Operatoren wie `<-` oder `<=`.
 
 Eine gute Nachricht: Wenn R etwas von `WARNING` (bzw. Warnung) sagt, 
 können Sie das zumeist ignorieren. 
-Eine Warnung ist kein Fehler (`ERROR`) und meistens nicht gravierend oder nicht dringend.
+Eine *Warnung* ist kein Fehler (`ERROR`) und meistens nicht gravierend oder nicht dringend. Ihre Syntax läuft trotzdem durch.
 Im Zweifel ist Googeln eine gute Idee.
-Nur wenn R von `Error` spricht, ist es auch ein Fehler.$\square$
+Nur wenn R von `Error` spricht, ist es auch ein Fehler und Ihre Syntax läuft nicht durch.$\square$
 :::
 
 
@@ -991,8 +1010,9 @@ ggplot(d_x) +
 
 
 :::{#exr-rquiz}
-Ihre R-Muskeln sind gestählt? 💪 Noch nicht so ganz ausdefiniert? 😤 Macht nichts! Trainieren Sie sich mit [diesem Quiz](https://datenwerk.netlify.app/posts/r-quiz/r-quiz)!
+Ihre R-Muskeln sind gestählt? 💪 Oder doch noch nicht so ganz ausdefiniert? 😤 Macht nichts! Trainieren Sie sich mit [diesem Quiz](https://datenwerk.netlify.app/posts/r-quiz/r-quiz)! $\square$
 :::
+
 
 
 
@@ -1008,62 +1028,6 @@ Ihre R-Muskeln sind gestählt? 💪 Noch nicht so ganz ausdefiniert? 😤 Macht 
 - *Oh nein, ich seh rot, das heißt, R zeigt mir irgendwas in roter Schrift an. Ist jetzt was kaputt?* Keine Sorge, R ist in seiner Ausgabe nicht sparsam mit roter Frabe. Solange es nicht als Fehlermeldung (`ERROR`) erscheint, ist es meist kein Problem.
 - *R hat sich aufgehängt oder bringt einen Fehler an einer Stelle, wo sonst alles funktioniert hat.* Probieren Sie auf jeden Fall mal das AEG-Prinzip (Aus-Ein-Gut): sprich R neu starten.
 - *Ich suche schon seit einer Stunde einen Fehler und find ihn nicht. Ich habe schon verschiedene Gegenstände vor Wut an die Wand geworfen. Was soll ich tun?* Machen Sie eine Pause. Doch, das ist ernst gemeint. Meine Erfahrung: Mit etwas Abstand wird der Kopf klarer und man findet das Problem viel einfacher.^[Und manchmal ist einem das Problem danach schlichtweg egal.]
-
-
-### Hilfe?! Erbie! {#sec-erbie}
-
-
-R will nicht, so wie Sie wollen? Sie haben das Gefühl, R verweigert störrisch den Dienst, vermutlich rein aus Boshaftigkeit, rein um Sie zu ärgern? 
-Ausführliches Googeln und ChatGPT befragen hat keine Lösung gebracht?
-Kurz, Sie brauchen die Hilfe eines kundigen Menschens?^[<https://www.youtube.com/watch?v=2Q_ZzBGPdqE>]
-
-[Hier](https://data-se.netlify.app/2022/01/31/erbie-einfache-reproduzierbare-beispiele-ihres-problems-mit-r-syntax/) finden Sie eine Anleitung, wie man seinen Hilfeschrei so formuliert (ruft), dass er nicht nur gehört, sondern auch verstanden wird und einen anderen Menschen veranlasst und ermöglicht Ihnen zu helfen.
-
-Also: Sie müssen Ihr Problem nachvollziehbar aber prägnant formulieren. 
-Das nennt man auch ein *ERBie*, ein *einfaches, reproduzierbare Beispiel* Ihres Problems mit (R-)Syntax:
-
-- einfach: die einfachste Syntax, die Ihr Problem bzw. die Fehlermeldung produziert. Es bietet sich an, einen einfachen, allgemein bekannten Datensatz zu verwenden, etwa `mtcars`
-- reproduzierbar: Code (z.B. als Textdatei oder in einem Post), der die Fehlermeldung entstehen lässt
-
-
-:::{#exm-erbie}
-### Beispiel für ein Erbie
-
-*Problem:* Ich verstehe nicht, warum eine Fehlermeldung kommt
-
-*Ziel:* Ich möchte die Automatikautos filtern (am = 0)
-
-*Was ich schon versucht habe:* Ich habe folgende Posts gelesen ..., aber ohne Erfolg
-
-*Erbie*:
-
-```{r}
-#| error: true
-data(mtcars)
-library(dplyr)  # nicht "tidyverse", denn "dplyr" reicht
-
-mtcars %>% 
-  filter(am = 0)  # den kürzesten Code, der Ihren Fehler entstehen lässt!
-
-sessionInfo()  # gibt Infos zur R-Version etc. aus
-```
-
-
-Mit dem Paket `{reprex}` kann man sich R-Syntax schön formuliert ausgeben lassen.
-Das ist perfekt, um den Code dann in einem Forum (oder Mail) einzustellen.
-Dafür müssen Sie nur den Code auswählen, `Strg-C` drücken und dann `reprex::reprex` ausführen.
-Mit `Strg-V` können Sie die schön formatierte Syntax (sowie die Ausgabe, auch schön formatiert) dann irgendwohin pasten.
-:::
-
-<center>
-<iframe src="https://gifer.com/embed/G4h" width=480 height=275.556 frameBorder="0" allowFullScreen></iframe><p><a href="https://gifer.com">via GIFER</a></p>
-</center>
-
-
-:::{.callout-tip}
-Posten Sie Ihr Erbie bei <https://gist.github.com/> als "public gist". [Hier](https://gist.github.com/sebastiansauer/0649a0453b5cc7c6a1d16ac760667215) ist ein Beispiel.$\square$
-:::
-
 
 
 ## Daten importieren
@@ -1487,6 +1451,46 @@ Hier haben wir die mittlere Absolutabweichung der Elemente von `x` zum Mittelwer
 
 
 
+### R und Friends updaten
+
+Irgendwann werden Ihr R, RStudio und Ihre R-Pakete veraltet sind.
+
+Installieren Sie dann einfach die neue Version von R und RStudio wie oben beschreiben, s. @sec-install-r.
+
+So updaten Sie Ihre R-Pakete: Klicken Sie im Reiter `Packages` (in RStudio) und dort auf den Button `Update`.^[Wenn die Anzahl der zu aktualisierenden Pakete groß ist, dann besser nicht alle auswählen, sondern nur ein paar. Dann die nächsten paar Pakete usw.]
+
+Denken Sie daran, dass Sie die Software (R, RStudio, R-Paket), die Sie updaten/installieren, nicht laufen darf.
+
+
+### Benötigte R-Pakete
+
+In diesem Kapitel benötigen Sie folgendes R-Paket:
+
+```{r}
+library(openintro)  # Datensatz `mariokart`
+```
+
+
+### Benötigte Daten dieses Kapitels
+
+Sie benötigen in diesem Kapitel den Datensatz `mariokart`, der entweder über [diese Internetadresse](https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv) oder über R-Paket `openintro` importiert werden kann:
+
+#### Import via Download
+
+```{r}
+mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+```
+
+
+
+#### Import via R-Paket
+
+```{r}
+#| eval: false
+data(mariokart, package = "openintro")  # Das Paket muss installiert sein
+```
+
+
 
 ## Literaturhinweise
 
@@ -1499,6 +1503,8 @@ Das Buch hat auch den Vorteil, dass es komplett frei online verfügbar ist.
 Vergleichbar dazu ist @cetinkaya-rundel_introduction_2021-1,
 vielleicht einen Tick formaler; 
 auf jeden Fall genau das richtige Niveau für Bachelor-Statistik in angewandten nicht-technischen Studiengängen.
+
+Natürlich gibt es viele Online-Kurse zu R, die aber teilweise kostenplichtig sind. Ein Beispiel ist der Kurs [Getting Started with Rstudio](https://www.coursera.org/projects/getting-started-rstudiol) (Kursdauer: 1 Stunde).
 
 
 

@@ -76,6 +76,11 @@ zunächst in dem Sie einfach den R-Code kopieren und selber ausführen.$\square$
 Quelle: ChatGTP 3.5, 2023-02-09
 
 
+### Quiz zum Einstieg
+
+Vielleicht fordert Sie die Lehrkraft zu einem Einstiegsquiz auf, etwas mittels der Plattform [antworte.jetzt](https://antworte.jetzt/).^[https://antworte.jetzt/] Alternativ überlegen Sie sich selber 10 Quiz-Aufgaben zum Stoff des letzten Kapitels.
+
+
 
 ## Datenjudo
 
@@ -262,8 +267,7 @@ einfach anklicken. Ob das in R auch so einfach geht?
 
 
 ```{r}
-mariokart_neu <- arrange(mariokart, total_pr)
-mariokart_neu
+arrange(mariokart, total_pr)
 ```
 
 Übersetzen wir die R-Syntax ins Deutsche:
@@ -294,7 +298,9 @@ Sortierne Sie die Mariokart-Daten absteigend nach der Anzahl der beigelegten Len
 
 ### Zeilen filtern: `filter`
 
-*Zeilen filtern* bedeutet, dass man nur *bestimmte* Zeilen (Beobachtungen) behalten möchte, die restlichen Zeilen brauchen wir nicht, weg mit ihnen.
+#### Nur bestimmte Zeilen behalten
+
+Zeilen *filtern* bedeutet, dass man nur *bestimmte* *Zeilen* (Beobachtungen) *behalten* möchte, die restlichen Zeilen brauchen wir nicht, weg mit ihnen.
 Wir haben also ein Filterkriterium im Kopf,
 anhand dessen wir die Tabelle filern, s. @fig-filter.
 
@@ -356,12 +362,12 @@ mit anderen Worten, Auktionen (Beobachtungen) bei denen gilt: `stock_photo == TR
 :::
 
 
-### Komplexeres Filtern
+#### Komplexeres Filtern
 
 Angestachelt von Ihren Erfolgen möchten Sie jetzt komplexere Hypothesen prüfen:
 Ob wohl Auktionen von *neuen* Spielen und zwar *mit* Photo einen höheren Preis erzielen als die übrigen Auktionen?
 
-Anders gesagt haben Sie zwei Filterkriterien im Blick: Neuheit `cond` und Photo `stock_photo`. Nur diejenigen Auktionen, die *sowohl* Neuheit *als auch* Photo erfüllen, möchten Sie näher untersuchen.
+Anders gesagt haben Sie zwei Filterkriterien im Blick: Neuheit `cond` und Photo `stock_photo`. Nur diejenigen Auktionen, die *sowohl* Neuheit *als auch* Photo erfüllen, möchten Sie näher untersuchen (Filtern mit dem logischen UND):
 
 ```{r}
 mario_filter1 <- filter(mariokart, stock_photo == "yes" & cond == "new")
@@ -369,12 +375,16 @@ mario_filter1
 ```
 
 
-Hm. Was ist mit den Auktionen, die *entweder* über ein Photo verfügen *oder* neu sind (oder beides)?
+
+Hm. Was ist mit den Auktionen, die *entweder* über ein Photo verfügen *oder auch* neu sind, oder beides (Filtern mit dem logischen ODER)?
 
 ```{r}
 mario_filter2 <- filter(mariokart, stock_photo == "yes" | cond == "new")
 mario_filter2
 ```
+
+💡Zur Erinnerung: Logische Operatoren sind in @sec-logic erläutert.
+
 
 Hier könnte man noch viele interessante Hypothesen prüfen, denken Sie sich und tun das auch ... 
 
@@ -467,6 +477,14 @@ select(mariokart, 2:5)  #  Spalten 2 *bis* 5
 select(mariokart, -1)  # Alle Spalte *aber nicht* Spalte 1
 ```
 
+
+:::{#exr-select}
+Wählen Sie die Spalten `total_pr`, `cond` sowie die zweite Spalte der Tabelle `mariokart` aus!^[`select(mariokart, total_pr, cond, 2)`] $\square$
+:::
+
+
+
+
 Vertiefte Informationen zum Auswählen von Spalten mit `select` findet sich [hier](https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html).^[<https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html>]
 
 
@@ -516,9 +534,13 @@ p_summ
 
 Mit `summarise`, s. @lst-summarise, können wir den mittleren Verkaufspreis der Mariokart-Spiele berechnen.
 
-```{r lst-summarise, lst-cap: "Die R-Funktion summarise fasst einen Vektor z u einer Zahl zusammen"}
-mariokart_neu <- summarise(mariokart, preis_mw = mean(total_pr))
-mariokart_neu
+
+
+```{r}
+#| lst-label: lst-summarise
+#| lst-cap: "Die R-Funktion summarise fasst einen Vektor z u einer Zahl zusammen"
+mariokart_mittelwert <- summarise(mariokart, preis_mw = mean(total_pr))
+mariokart_mittelwert
 ```
 
 Aha! Etwa 50€ erzielt so eine Auktion im Schnitt.$\square$
@@ -528,7 +550,7 @@ Aha! Etwa 50€ erzielt so eine Auktion im Schnitt.$\square$
 
 Übersetzen wir @lst-summarise vom Errischen ins Deutsche:
 
->   🧑‍🎓  Hey R, fasse die Zeilen von `total_pr` aus `mariokart` zu einer Zahl zusammen, und zwar mit Hilfe des Mittelwerts. Die resultierende Tabelle nennen wir `mariokart_neu, sehr kreativ. Und die resultierende Spalte, die einzige in `mariokart_neu`, nennen wir `preis_mw`.
+>   🧑‍🎓  Hey R, fasse die Zeilen von `total_pr` aus `mariokart` zu einer Zahl zusammen, und zwar mit Hilfe des Mittelwerts. Die resultierende Tabelle nennen wir `mariokart_mittelwert, sehr kreativ. Und die resultierende Spalte, die einzige in `mariokart_mittelwert`, nennen wir `preis_mw`.
 
 
 
@@ -536,10 +558,18 @@ Ein bisschen abstrakter gesprochen, fasst `summarise` also eine *Spalte* zu eine
 Der Dollar-Operator trennt hier die Tabelle von der Spalte: `tibble$spalte`.
 Im Gegensatz zu den Verben des Tidyverse (die immer einer Tabelle zurückliefern),
 liefert der Dollar-Operator einen Vektor (Spalte) zurück. (Diese wird von `mean` dann zu einer einzelnen Zahl zusammengefasst.)]
+*Auf welche Art* zusammengefasst werden soll, z.B. anhand des Mittelwerts oder Maximalwerts, muss noch zusätzlich innerhalb von `summarise` angegeben werden.
 
 
 
 $$\begin{array}{|c|} \hline \\ \hline \\  \\  \\ \\ \hline \end{array} \qquad \rightarrow  \qquad \begin{array}{|c|} \hline \\  \hline \end{array}$$ {#eq-desk-summ}
+
+
+
+:::{#exr-summarise}
+Identifizieren Sie den höchsten Kaufpreis eines Mariokart-Spiels!^[`summarise(mariokart, hoechster_preis = max(total_pr))`] $\square$
+:::
+
 
 
 
@@ -632,7 +662,26 @@ Jetzt können Sie an jeder Teiltabelle Ihre weiteren Berechnungen vornehmen, etw
 summarise(mariokart_gruppiert, preis_mw = mean(total_pr))
 ```
 
-Langsam fühlen Sie sich als Datenchecker ... 🥷 🦹‍♀ $\square 
+Langsam fühlen Sie sich als Datenchecker ... 🥷 🦹‍♀ $\square$
+:::
+
+
+:::{#exr-groupby}
+:::{.panel-tabset}
+### Aufgabe
+Berechnen Sie den mittleren und maximalen Verkaufspreis getrennt für Spiele mit und ohne Foto!
+
+### Lösung
+```{r}
+mariokart_gruppiert_foto <- group_by(mariokart, stock_photo)
+mariokart_verkaufspreis_foto <- summarise(mariokart_gruppiert_foto,
+                                          total_pr_avg = mean(total_pr),
+                                          total_pr_max = max(total_pr))
+
+mariokart_verkaufspreis_foto
+```
+
+:::
 :::
 
 
@@ -700,6 +749,48 @@ Die Funktion, die Sie in `mutate` benennen wird für jede Zeile der Spalte `x` a
 :::
 
 
+:::{#exr-mutate}
+:::{.panel-tabset}
+### Aufgabe
+Rechnen Sie die Dauer der Auktionen von Tagen in Wochen um.
+
+### Lösung
+```{r}
+mariokart_duration_wochen <- 
+  mutate(mariokart, duration_week = duration / 7)
+
+mariokart_duration_wochen <-
+   select(mariokart_duration_wochen, duration, duration_week)
+mariokart_duration_wochen
+```
+:::
+:::
+
+
+
+:::{#exr-mutate2}
+:::{.panel-tabset}
+### Aufgabe
+Rechnen Sie wieder die Dauer der Auktionen von Tagen in Wochen um, aber runden Sie die Wochen auf ganze Wochen.
+
+### Lösung
+
+```{r}
+mariokart_duration_wochen <- 
+  mutate(mariokart, duration_week = duration / 7)
+
+mariokart_duration_wochen_gerundet <-
+  mutate(mariokart_duration_wochen, duration_week_gerundet = round(duration_week, digits = 0))
+
+mariokart_duration_wochen_schmal <-
+  select(mariokart_duration_wochen_gerundet, duration, duration_week, duration_week_gerundet)
+mariokart_duration_wochen_schmal
+```
+:::
+:::
+
+
+
 >    🧟‍♀️ Statistik, wann braucht man schon sowas!?
 
 >    👨‍🏫 Eigentlich nur dann, wenn man die Fakten gut verstehen will, sonst nicht.
@@ -734,9 +825,18 @@ Jetzt könnte man noch den *Anteil* (engl. *proportion*) ergänzen:
 Welcher *Anteil* (der 143 Spiele in `mariokart`) ist neu, welcher gebraucht?
 
 ```{r}
-mariocart_counted %>% 
-  mutate(Anteil = n / sum(n))
+mutate(mariocart_counted, Anteil = n / sum(n))
 ```
+
+
+
+:::{#exr-count}
+Zählen Sie Sie, wie viele Auktionen ein Foto enthalten.^[`count(mariokart, stock_photo)`] $\square$
+:::
+
+:::{#exr-count2}
+Zählen Sie Sie, wie viele Auktionen ein Foto enthalten -- innerhalb der gebrauchten Spiele und innerhalb der neuen Spiele. Anders gesagt: Teilen Sie den Datensatz sowohl nach Zustand als auch nach Foto auf und zählen Sie jeweils, wie viele Spiele/Auktionen in die jeweilige Gruppe gehören.^[`count(mariokart, stock_photo, cond)`] $\square$
+:::
 
 
 
@@ -934,11 +1034,6 @@ an jeder Stelle weiterverarbeitet.
 So könnte Ihre "Pfeifen-Sequenz" aussehen:
 
 ```{r}
-library(easystats)  # Das Paket muss installiert sein
-mariokart <- data_read("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")  # Daten einlesen nicht vergessen
-
-library(tidyverse)  # Die Pfeife wohnt auch im Paket "tidyverse"
-
 # Hey R:
 mariokart %>%   # nimm die Tabelle "mariokart" und dann...
   filter(total_pr < 100) %>%  # filter nur die günstigen Spiele und dann...
@@ -948,14 +1043,14 @@ mariokart %>%   # nimm die Tabelle "mariokart" und dann...
 ```
 
 
-:::{.callout-note}
+:::{.callout-important}
 Die Syntax `filter(mariokart, total_pr < 100)` und die Syntax `mariokart |> filter(total_pr < 100)` sind identisch.
 
 Allgemeiner: `d |> f(x)` = `f(d, x)`.
 :::
 
 
-## Fallbeispiel
+## Beispiele für Forschungsfragen
 
 :::{#exr-fallbsps}
 Bevor Sie die Lösungen der folgenden Fallbeispiele lesen, versuchen Sie die Aufgaben selber zu lösen.
@@ -970,8 +1065,13 @@ Heute sollen Sie zeigen, was Sie können (Schluck).
 
 ### Forschungsfrage 1
 
+:::{.panel-tabset}
+
+### Frage
+
 >   ️👩 Ich würde von Ihnen  gerne wissen, was das teuerste Spiel ist, aber jeweils für neue und gebrauchte Spiele. Aber nur für Spiele, die mit Foto verkauft wurden!
 
+### Antwort
 
 ```{r}
 mariokart %>% 
@@ -986,13 +1086,17 @@ Die Funktion `max` liefert den größten Wert eines Vektors zurück:
 x <- c(1, 2, 10)
 max(x)
 ```
+:::
 
 
 ### Forschungsfrage 2
 
+:::{.panel-tabset}
 
+### Frage
 >    ️👩️ Ich würde gerne die mittlere Versandpauschale wissen, aber getrennt nach Anzahl der Lenkräder, die dem Spiel beigelegt sind. Und ich will nur Gruppen berücksichtigen, die aus mindestens 10 Spielen bestehen!
 
+### Antwort
 
 Wenn wir die Anzahl der Spiele zählen in Abhängigkeit der beigelegten Lenkräder (`wheels`), bekommen wir eine Tabelle mit zwei Spalten: `wheels` und `n`.
 `n` zählt, wie viele Spiele (Zeilen) in der jeweiligen Gruppe ("Teiltabelle") von `wheels` sind.
@@ -1002,7 +1106,7 @@ mariokart %>%
   count(wheels)
 ```
 
-Aus dieser Tabellet sehen wir, dass es 3 oder 4 Lenkräder nur selten (2 bzw. 1 Mal) beigelegt wurden und wir solche Spiele herausfiltern sollten bevor wir den Mittelwert der Versankosten ausrechnen:
+Aus dieser Tabellet sehen wir, dass 3 oder 4 Lenkräder nur selten (2 bzw. 1 Mal) beigelegt wurden und wir solche Spiele herausfiltern sollten, bevor wir den Mittelwert der Versankosten ausrechnen:
 
 ```{r}
 mariokart %>%
@@ -1013,12 +1117,20 @@ mariokart %>%
 ```
 
 Die Funktion `n()` gibt die Anzahl der Zeilen pro Teiltabelle zurück.
+:::
+
 
 ### Forschungsfrage 3
 
 
+:::{.panel-tabset}
+
+### Frage
+
 >   ️👩️ Ich würde gerne den Verkaufspreis in Yen wissen, nicht in Euro. Dann rechne mal den mittleren Verkaufspreis aus und ziehe 10% ab, die wir als Provision unseren Verkäufern zahlen müssen.
 
+
+### Antwort
 
 ```{r}
 mariokart %>% 
@@ -1031,11 +1143,13 @@ mariokart %>%
 Wie man sieht kann man in `summarise` auch mehr als eine Berechnung einstellen.
 In diesem Fall haben wir zwei Berechnungen angestellt: Einmal den Mittelwert und einmal den Mittelwert minus 10% (des Mittelwerts).
 
+:::
 
-:::{#exr-dyi}
-### DYI
+
+:::{#exr-diy}
+### Do It Yourself
 Denken Sie sich selber ähnliche Forschungsfragen aus.
-Stellen Sie diese einer vertrauenswürdigen Kommilitonen bzw. einem vertrauenswürdigen Kommilitonen. 
+Stellen Sie diese einer vertrauenswürdigen Kommilitonen bzw. einem vertrauenswürdigen Kommilitonen. DIY!
 Schauen Sie, ob Ihre Aufgabe richtig gelöst wird. $\square$
 :::
 
@@ -1068,7 +1182,7 @@ Ei Analysti 🧑‍🦰 möchte zeigen, dass der Verkaufspreis von Mariokart-Spi
 
 >   ‍🦰 Kann man den Wert nicht ... "kreativ verbessern"? Ein paar Statistik-Tricks anwenden?
 
-Um dieses Ziel zu erreichen, teilt dis Analysti den Datensatz in Gruppen nach Anzahl der dem Spiel beigelegten Lenkräder (`wheels`). Dann berechnet er den Mittelwert pro Gruppe.
+Um dieses Ziel zu erreichen, teilt dis Analysti den Datensatz in Gruppen nach Anzahl der dem Spiel beigelegten Lenkräder (`wheels`). Dann wird der Mittelwert pro Gruppe berechnet.
 
 ```{r}
 mariokart_wheels <- 
@@ -1184,23 +1298,17 @@ die *nicht* in diesem Kapitel vorgestellt wurden.
 
 
 
-::::{.columns}
 
-:::{.column width="30%"}
-![Studie COVIDiSTTRESS](img/Covidistress1.jpg)
+![Studie COVIDiSTTRESS](img/Covidistress1.jpg){width=30%}
 <https://osf.io/z39us/>
-:::
 
-:::{.column width="70%"}
 
 >   The COVIDiSTRESS global survey is an international collaborative undertaking for data gathering on human experiences, behavior and attitudes during the COVID-19 pandemic. In particular, the survey focuses on psychological stress, compliance with behavioral guidelines to slow the spread of Coronavirus, and trust in governmental institutions and their preventive measures, but multiple further items and scales are included for descriptive statistics, further analysis and comparative mapping between participating countries. Round one data collection was concluded May 30. 2020. To gather comparable data swiftly from across the globe, when the Coronavirus started making a critical impact on societies and individuals, the collaboration and survey was constructed as an urgent collaborative process. Individual contributors and groups in the COVIDiSTRESS network (see below) conducted translations to each language and shared online links by their own best means in each country.
 
-:::
+
 
 [Die Daten](https://osf.io/z39us/files/osfstorage) stehen unter <https://osf.io/z39us> zur freien Verfügung. Sie können diese echten Daten eigenständig analysieren. [Diese Datei](https://osf.io/z39us/files/osfstorage/5f20b69732080501f5156b02) beinhaltet die finalen, aufbereiteten Daten. Achtung: Die Datei ist recht groß, ca. 90 MB.
 
-
-::::
 
 
 
@@ -1263,7 +1371,7 @@ Einfach ignorieren. 😄
 Häufig ist es nützlich, die Werte einer Variablen umzukodieren, z.B. "weiblich" in "w" oder in `0`. 
 Eine gute Möglichkeit, dies in R umzusetzen, bietet der Befehl `case_when()`;
 der Befehl wohnt im Tidyverse.
-[Hier](https://www.statology.org/dplyr-case_when/) - und an vielen weiteren Stellen im Internet - finden Sie ein Tutorium.
+[Hier](https://www.statology.org/dplyr-case_when/) - und an vielen weiteren Stellen im Internet - finden Sie ein Tutorium.^[<https://www.statology.org/dplyr-case_when/>]
 
 
 ### Hilfe?! Erbie! {#sec-erbie}
@@ -1337,7 +1445,7 @@ Sie können zu den Inhalten dieses Kapitels Zertifikate erwerben (teilweise kost
 ## Exkurs
 
 
-[Dall-E 2](https://openai.com/dall-e-2/) ist eine KI, die "realistische Bilder und Kunst aus einer Beschreibung in natürlicher Sprache" erstellt.
+[Dall-E 2](https://openai.com/dall-e-2/) ist eine KI, die "realistische Bilder und Kunst aus einer Beschreibung in natürlicher Sprache" erstellt.^[<Dall-E 2>]
 
 
 >   👨‍🏫 I'd like a mixture between robot und professor, in oil painting
@@ -1364,7 +1472,7 @@ Er ist einer der Hauptautoren von den beliebten R-Paketen `dplyr` und `ggplot2`.
 
 
 Wer sich tiefer in das Datenjudo mit dem Tidyverse einarbeiten möchte,
-dem sei z.B. dieser [Kurs](https://www.datacamp.com/courses/introduction-to-the-tidyverse) empfohlen.
+dem sei z.B. dieser [Kurs](https://www.datacamp.com/courses/introduction-to-the-tidyverse) empfohlen.^[<https://www.datacamp.com/courses/introduction-to-the-tidyverse>]
 
 
 

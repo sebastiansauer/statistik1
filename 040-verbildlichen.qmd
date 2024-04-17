@@ -364,7 +364,7 @@ mario_n2 <-
   ggplot(aes(y = n, x = cond)) + 
   geom_col()   +
   theme_modern() + 
-  labs(title = "vertikale Balekn")
+  labs(title = "vertikale Balken")
 
 plots(mario_n1, mario_n2)
 ```
@@ -608,14 +608,14 @@ so kann Rauschen (Zufallsschwankung) besser ausgeblendet werden.^[Mit *Dichte* i
 
 ```{r}
 #| echo: false
-#| fig-cap: "Balkendiagramm für `total_pr`"
+#| fig-cap: "Histogramm (graue Balken) und Dichtediagramm (orange Linie) für `total_pr`"
 #| label: fig-balken-total-pr-hist-dens
 
 m1a |> 
   ggplot(aes(x = total_pr, y = ..density..)) +
   geom_histogram(binwidth = 5, alpha = .7, center = 0)  +
   #geom_dotplot(binwidth = 1, method = "histodot") +
-  geom_density(color = "red")
+  geom_density(color = okabeito_colors()[1])
   #geom_dotplot(binwidth = 1, method = "histodot")
 ```
 
@@ -729,7 +729,7 @@ Dieses Phänomen kann man gut anhand des [Galton-Bretts](https://www.youtube.com
 
 :::callout-important
 ### Parameter der Normalverteilung
-Eine Normalverteilung lässt sich exakt beschreiben anhand zweier Parameter: ihres zentralen Werts (Mittelwerts), $\mu$ und ihrer Streuung (Standardabweichung), $\sigma$. $\square$
+Eine Normalverteilung lässt sich exakt beschreiben anhand zweier Parameter: ihres zentralen Werts (Mittelwerts), $\mu$, und ihrer Streuung (Standardabweichung), $\sigma$. $\square$
 :::
 
 
@@ -847,9 +847,11 @@ Anders gesagt: Unterscheiden sich die "Füllhöhe" in den Diagrammen, so gibt es
 Unterscheiden sich die Anteile in den Gruppen (neuwertige vs. gebrauchte Spiele), so spielt z.B. die Variable "Foto dabei" offenbar eine Rolle. Dann hängen Neuwertigkeit und "Foto dabei" also zusammen!
 
 So können Sie sich in R ein gefülltes Balkendiagramm ausgeben lassen,
-s. @fig-de-bar-filled.
+s. @fig-de-bar-filled. Diese Darstellung eignet sich, um Zusammenhänge zwischen zwei zweistufigen nominal skalierten Variablen zu verbildlichen. Die verschiedenen Werte der Füllfarbe werden den Stufen der Variablen `cond` zugewiesen, s. @lst-plot-bar.
 
 ```{r}
+#| lst-cap: "R-Syntax für ein gefülltes Balkendiagramm"
+#| lst-label: lst-plot-bar
 #| label: fig-de-bar-filled
 #| fig-cap: "Ein gefülltes Balkendiagramm zur Untersuchung eines Zusammenhangs zwischen nominalskalierter Variablen"
 mariokart %>% 
@@ -1101,10 +1103,12 @@ wählen Sie (mit `select`) nur diese Variablen aus.
 Dann weisen Sie R an, einen Scatterplot zu malen (`plot_scatterplot`) und zwar
 jeweils den Zusammenhang einer der gewählten Variablen mit dem Abschlusspreis (`total_pr`),
 da das die Variable ist, die Sie primär interessiert.
-Das Ergebnis sieht man in @fig-mario-scatter.
+Das Ergebnis sieht man in @fig-mario-scatter bzw. @lst-scatterplot.
 
 
 ```{r}
+#| lst-label: lst-scatterplot
+#| lst-cap: "Streudiagramm erstellen mit dem R-Paket 'DataExplorer'"
 #| label: fig-mario-scatter
 #| fig-cap: Der Zusammenhang metrischer Variablen mit Abschlusspreis
 mariokart %>% 
@@ -1278,7 +1282,9 @@ In einer vorherigen Analyse haben Sie den Zusammenhang von Abschlusspreis und de
 Jetzt möchten Sie eine sehr ähnliche Fragestellung betrachten:
 Wie *unterscheiden* sich die Verkaufspreise je nach Anzahl der beigelegten Lenkräder?
 Flink erstellen Sie dazu folgendes Diagramm, @fig-box-wheels1, links.
-Es zeigt die Verteilung des Abschlusspreises, aufgebrochen nach Anzahl Lenkräder (`by = "wheels`).
+Es zeigt die Verteilung des Abschlusspreises, aufgebrochen nach Anzahl Lenkräder (`by = "wheels`). $\square$
+:::
+
 
 
 Aber ganz glücklich sind Sie mit dem Diagramm nicht: 
@@ -1289,15 +1295,18 @@ so erkennt man, dass R `wheels` als stetige Zahl betrachtet und nicht in ganze Z
 Aber wir möchten jeden einzelnen Wert von `wheels` (0, 1, 2, 3, 4) als *Gruppe* verstehen.
 Mit anderen Worten, wir möchten `wheels` als nominale Variable definieren.
 Das kann man mit dem Befehle `factor(wheels)` erreichen (verpackt in `mutate`), s.
-@fig-box-wheels1, rechts.
+@fig-box-wheels1 rechts.
 
 ```{r}
 #| label: fig-box-wheels1
+#| echo: true
 #| fig-cap: "Abschlusspreis nach Anzahl von beigelegten Lenkrädern"
 #| fig-subcap: 
 #|   - "wheels als metrische Variable"
 #|   - "wheels als nominale Variable"
 #| layout-ncol: 2
+
+
 mariokart_no_extreme %>% 
   select(total_pr, wheels) %>% 
   plot_boxplot(by = "wheels")
@@ -1318,10 +1327,7 @@ mariokart_no_extreme %>%
 ```
 
 Tatsächlich gibt es (in `mariokart_no_extreme`) auch für 3 Lenkräder schon wenig Daten,
-so dass wir die Belastbarkeit dieses Ergebnisses skeptisch betrachten sollten.$\square$
-
-:::
-
+so dass wir die Belastbarkeit dieses Ergebnisses skeptisch betrachten sollten.
 
 
 Übrigens bezeichnet Sie Ihre Chefin nur noch als "Datengott".

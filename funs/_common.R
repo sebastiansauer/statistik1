@@ -1,6 +1,6 @@
 
-
-
+library(ggplot2)
+theme_update(axis.title = element_text(size = 18))
 
 
 

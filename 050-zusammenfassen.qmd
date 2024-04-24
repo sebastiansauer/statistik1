@@ -34,6 +34,9 @@ library(easystats)
 library(gt)
 library(mosaic)
 #library(gganimate)
+
+library(ggplot2)
+theme_update(axis.title = element_text(size = 66))
 ```
 
 
@@ -79,7 +82,7 @@ e) Keine Ahnung! $\square$
 
 :::{#exr-mw2}
 
-Laut [dieser Quelle](https://en.wikipedia.org/wiki/Average_human_height_by_country) beträgt der Wert der mittleren Größe deutscher Frauen etwa 1,66m, also 14&thinsp;cm weniger als bei Männern. $\square$
+Laut [dieser Quelle](https://en.wikipedia.org/wiki/Average_human_height_by_country) beträgt der Wert der mittleren Größe deutscher Frauen etwa 1,66m, also 14&thinsp;cm weniger als bei Männern.^[<https://en.wikipedia.org/wiki/Average_human_height_by_country>] $\square$
 :::
 
 
@@ -165,7 +168,7 @@ $$\bar {x} =\frac{1}{n} \sum_{i=1}^{n}{x_{i}}=\frac {x_{1}+x_{2}+\dotsb +x_{n}} 
 
 :::{#def-mw}
 ### Mittelwert
-Der Mittelwert von $X$, präziser: das arithmetische Mittel, ist definiert als die Summe der Elemente von $X$ geteilt durch deren Anzahl, $n. \square$
+Der Mittelwert  der Variablen $X$ (präziser: das arithmetische Mittel von $X$) ist definiert als die Summe der Elemente von $X$ geteilt durch deren Anzahl, $n$. Den Mittelwert von $X$ bezeichnet man mit $\bar {x}$. $\square$
 :::
 
 Da der Mittelwert eine zentrale Rolle spielt in der Statistik,
@@ -174,15 +177,15 @@ In s. @fig-mw1 sehen wir die Noten von (dieses Mal) vier Studentis.
 Die gestrichelte horizontale Linie zeigt den Mittelwert der vier Noten.
 Die schwarzen Punkte sind die Daten, in dem Fall die einzelnen Noten.
 Die vertikalen Linien zeigen die Abweichungen der Noten zum Mittelwert.
-Bezeichnen wir die Abweichung - auch als "Fehler", "Rest" oder "Residuum" bezeichnet - der $i$-ten Person mit $\color{errorcol}{\text{e}_i}$  (*e* wie engl. *error*, "Fehler) und die $i$-te Note mit $x_i$, so können wir festhalten:
+Bezeichnen wir die Abweichung - auch als "Fehler", "Rest" oder "Residuum" bezeichnet - der $i$-ten Person mit $\color{errorcol}{\text{e}_i}$  (*e* wie engl. *error*, "Fehler) und die $i$-te Note mit $\color{ycol}{y_i}$, so können wir mit @eq-modell1 festhalten:
 
-$$\color{ycol}{\text{y}_i} = \color{modelcol}{\bar{x}} + \color{errorcol}{\text{e}_i}$$
+$$\color{ycol}{\text{y}_i} \color{black}{ = } \color{modelcol}{\bar{x}} + \color{errorcol}{\text{e}_i}$${#eq-modell1}
 
-Anders ausgedrückt:
+Anders ausgedrückt (s. @eq-modell2):
 
 
-$$\color{ycol}{\text{Daten}} =     \color{modelcol}{\text{Modell}} + 
-\color{errorcol}{\text{Rest}}$$
+$$\color{ycol}{\text{Daten}} \color{black}{ = }     \color{modelcol}{\text{Modell}} + 
+\color{errorcol}{\text{Rest}}$${#eq-modell2}
 
 Der Mittelwert ist hier unser Modell der Daten.
 Wie gesagt: Ein Modell ist eine vereinfachte (zusammengefasste) Beschreibung einer Datenreihe.
@@ -198,28 +201,28 @@ Der Kringel "~"^[Das "Kringel" oder die "Welle" "~" nennt man auch "Tilde"] soll
 
 Mit $\color{modelcol}{\hat{y}}$ ist die vorhergesagte bzw. die zu erklärende Variable^[AV, Output-Variable, Zielvariable] gemeint.
 Das "Dach"  über dem $\color{ycol}{\text{y}}$ bedeutet "vorhergesagter Y-Wert" oder "Y-Wert laut dem Modell".
-Der tatsächliche, beobachtete Wert $\color{ycol}{\text{y}}$ setzt sich zusammen aus dem Modellwert $\color{modelcol}{\text{m}}$ plus einem Fehler $\color{errorcol}{\text{e}}$.
+Der tatsächliche, beobachtete Wert $\color{ycol}{\text{y}}$ setzt sich zusammen aus dem Modellwert $\color{modelcol}{\text{m}}$ plus einem Fehler $\color{errorcol}{\text{e}}$, s. @eq-modell3.
 
-$$\color{ycol}{\text{y}}  = \color{modelcol}{\text{m}} + \color{errorcol}{\text{e}}$$
+$$\color{ycol}{\text{y}} \color{black}{ = } \color{modelcol}{\text{m}} + \color{errorcol}{\text{e}}$${#eq-modell3}
 
 Anstelle von  $\color{modelcol}{\text{m}}$ schreibt man auch $\color{modelcol}{\hat{y}}$ ("y-Dach"). 
-In diesem Fall ist das Modell einfach gleich dem Mittelwert (und nicht irgendeiner Funktion des Mittelwerts), so dass wir schreiben können:
+In diesem Fall ist das Modell einfach gleich dem Mittelwert (und nicht irgendeiner Funktion des Mittelwerts), so dass wir mit @eq-modell4 schreiben können:
 
 
 
-$$\color{ycol}{y}  = \color{modelcol}{\bar{x}} + \color{errorcol}{e}$$
+$$\color{ycol}{y}  \color{black}{ = } \color{modelcol}{\bar{x}} + \color{errorcol}{e}$${#eq-modell4}
 
 
 Die Zielvariable $\color{ycol}{\text{y}}$ wird also durch ihren eigenen Mittelwert erklärt, außer gehen wir von einem Fehler $e$ in unseren Modellvorhersagen aus. Nobody is perfect.
 In späteren Kapiteln werden wir andere Variablen heranziehen, um die Zielvariable zu erklären.
 Würden wir z.B. sagen wollen, dass wir $\color{ycol}{\text{y}}$ als Funktion einer Variable $\color{xcol}{X}$ erklären,
-so würden wir schreiben:
+so würden wir schreiben (s. @eq-modell5):
 
-$$\color{modelcol}{\bar{y}} \sim \color{xcol}{\text{x}} $$
-\color{ycol}{\bar{y}}
-Da wir im Moment aber keine andere Variablen bemühen, um $\color{ycol}{\text{y}}$ zu erklären, schreibt man auch:
+$$\color{modelcol}{\bar{y}} \color{black}{ \sim } \color{xcol}{\text{x}} $$
+\color{ycol}{\bar{y}}{#eq-modell4}
+Da wir im Moment aber keine andere Variablen bemühen, um $\color{ycol}{\text{y}}$ zu erklären, schreibt man mit @eq-modell5 auch:
 
-$$\color{modelcol}{\bar{y}} \sim 1$$
+$$\color{modelcol}{\bar{y}}\;  \color{black}{\sim \; 1}$${#eq-modell5}
 
 Diese Schreibweise sieht verwirrend aus. 
 Die $1$ soll aber einfach zeigen, dass wir keine andere Variable zur Erklärung von $\color{ycol}{\text{y}}$ verwenden, 
@@ -311,7 +314,7 @@ Die Summe der Abweichungen vom Mittelwert ist Null.
 
 
 :::{#exr-mw-wealth1}
-Was schätzen Sie, wie hoch das "mittlere" Vermögen des Haushalte in Deutschland in etwa ist?^[Quelle:  [WSI](https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.htm) $\square$, Abruf 2023-04-19])
+Was schätzen Sie, wie hoch das "mittlere" Vermögen des Haushalte in Deutschland in etwa ist?^[Quelle:  SI, <https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.html>, Abruf 2023-04-19]. $\square$
 
 :::
 
@@ -341,8 +344,8 @@ e) 250.000 Euro
 :::{#exm-md}
 ### Der reichste Mensch der Welt in Ihrem Hörsaal
 
-Kommt der wertvollste Fußballspieler der Welt in Ihren Hörsaal, sagen wir, es ist Kylian Mbappé^[Quelle: <https://www.transfermarkt.de/spieler-statistik/wertvollstespieler/marktwertetop>, 2023-03-19].
-Sein Jahreseinkommen (2023) liegt bei ca. 120 Millionen Euro^[Quelle: <https://www.einkommenmagazin.de/kylian-mbappe-einkommen/>, 2023-03-19].
+Kommt der wertvollste Fußballspieler der Welt in Ihren Hörsaal, sagen wir, es ist Kylian Mbappé^[Quelle: <https://www.transfermarkt.de/spieler-statistik/wertvollstespieler/marktwertetop>, Abruf 2023-03-19].
+Sein Jahreseinkommen (2023) liegt bei ca. 120 Millionen Euro^[Quelle: <https://www.einkommenmagazin.de/kylian-mbappe-einkommen/>, Abruf 2023-03-19].
 
 >    🦹‍♂️ Hey Leute, wie geht's denn so! Wie viel Kohle verdient ihr eigentlich so?
 
@@ -362,7 +365,7 @@ dass alle der 100 Studentis jeweils 1000 Euro im Jahr verdienen. $\square$
 
 
 
-In R kann man das mittlere Einkommen (präziser: das arithmetische Mittel des Einkommens) wie folgt berechnen.^[Die Details der Syntax, z.B. der Befehl `rep()`, sind von geringer Bedeutung.]
+In R kann man das mittlere Einkommen (präziser: das arithmetische Mittel des Einkommens) wie folgt berechnen, s. @lst-einkommen.^[Die Details der Syntax, z.B. der Befehl `rep()`, sind von geringer Bedeutung.]
 
 :::{#lst-einkommen}
 
@@ -412,6 +415,9 @@ Es erklärt die Daten anhand einer Geraden. $\square$
 #| echo: false
 #| layout-ncol: 2
 
+
+
+
 mariokart$X <- 1:nrow(mariokart)
 
 mariokart <-
@@ -451,7 +457,8 @@ ggplot(mariokart2) +
        x = "Nr. des Spiel") + 
   scale_y_continuous(limits = c(0, 400)) +
   theme_minimal()  +
-  annotate("label", x = 0, y = 47, label = "MW", hjust = "left")
+  annotate("label", x = 0, y = 47, label = "MW", hjust = "left") +
+  theme(axis.title = element_text(size = 18))
 
 ```
 
@@ -496,8 +503,8 @@ Bei (sehr) schiefen Verteilungen (s. @fig-mbappe) ist der Mittelwert (sehr) weni
 da er nicht mehr "typische" Werte für die Merkmalsträger beschreibt.
 :::
 
-@fig-mbappe stellt die Verteilung einer mit normal skalierter Achse und einmal mit logarithmischer X-Achse.
-Die logarithmische X-Achse stellt den Unterschied von Mittelwert (MW) und Median deutlicher heraus als die "normale" (additive) Achse. 
+@fig-mbappe stellt die Verteilung einer mit "normal" skalierter Achse und einmal mit logarithmischer X-Achse.
+Die logarithmische X-Achse stellt den Unterschied von Mittelwert (MW) und Median deutlicher heraus als die normale (additive) Achse. 
 
 ```{r}
 #| echo: false
@@ -521,12 +528,14 @@ p1 <- ggplot(d) +
   geom_vline(xintercept = c(median(einkommen)), color = okabeito_colors()[2]) +
   annotate("label", x = median(einkommen), y = 100, label = "Median", color = okabeito_colors()[2]) +
   annotate("label", x = mean(einkommen), y = 0, label = "MW", color = okabeito_colors()[1]) +
-  annotate("label", 
+  geom_label(
            x = Inf, 
-           y = -10, 
+           y = 10, 
            hjust = 1,
            label = "Extremwert") +
-  labs(caption = "MW: Mittelwert")
+  labs(caption = "MW: Mittelwert",
+  y = "Anzahl",
+       x = "Einkommen")
 
 p1
 
@@ -581,7 +590,8 @@ d %>%
   #geom_label(aes(label = name)) +
   annotate("label", x = 3, y = 50, label = "Median") +
   theme_minimal() +
-  scale_x_continuous(breaks = 1:5, labels = d$name)
+  scale_x_continuous(breaks = 1:5, labels = d$name) +
+  labs(y = "Einkommen")
 
 
 d %>% 
@@ -594,7 +604,9 @@ d %>%
   theme_minimal() +
   scale_y_continuous(breaks = c(0, 1)) +
   annotate("label", x = 100, y = 0, label = "Dora") +
-  labs(caption = "MW: Mittelwert")
+  labs(caption = "MW: Mittelwert",
+       y = "Anzahl",
+       x = "Einkommen")
 ```
 
 
@@ -609,6 +621,13 @@ da es genauso viele Studentinnen gibt, die mehr verdienen, wie solche, die wenig
 ### Median
 Merkmalsausprägung, die bei (aufsteigend) sortierten Beobachtungen in der Mitte liegt. $\square$
 :::
+
+:::{#exr-aufstellen}
+### Alle mal aufstehen
+Auf Geheiß der Lehrkraft stehen jetzt alle Studis bitte auf und sortieren sich der Größe nach im Raum, schön in einer Reihe aufgestellt. 
+Die Körpergröße der Person in der Mitte der Reihe, zu der also gleich viele Personen zu links wie zu rechts stehen, das ist der Medien dieser Datenreihe, vgl. @fig-median-human. $\square$
+:::
+
 
 
 Der Median ist *robust* (gegenüber) Extremwerten: Fügt man Extremwerte zu einer Verteilung hinzu, ändert sich der Median zumeist (deutlich) weniger als der Mittelwert.
@@ -696,7 +715,8 @@ mariokart %>%
   annotate("label", x = 8.7, y = 0.1, label = "MW: 8.7", color = okabeito_colors()[2]) +
   theme_modern() +
   labs(
-    caption = "MD: Median; MW: Mittelwert"
+    caption = "MD: Median; MW: Mittelwert",
+    y = "Anzahl"
   )
 
 ```
@@ -747,7 +767,7 @@ mariokart |>
 
 
 :::{#exr-mw-wealthmd}
-Was schätzen Sie, wie hoch das *mediane* Vermögen des Haushalte in Deutschland in etwa ist (Stand 2016)?^[Quelle: WSI, <https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.htm>, Abruf 2023-04-19. Die Antwort lautet: ca. 60 Tsd Euro laut der angegebenen Quelle])
+Was schätzen Sie, wie hoch das *mediane* Vermögen des Haushalte in Deutschland in etwa ist (Stand 2016)?^[Quelle: WSI, <https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.htm>, Abruf 2023-04-19. Die Antwort lautet: ca. 60 Tsd Euro laut der angegebenen Quelle.])
 
 a) 50.000 Euro
 b) 100.000 Euro
@@ -819,7 +839,7 @@ Die neun Quantile $p= 0.1, 0.2, \ldots, 1$, die die Verteilung in 10 gleiche Tei
 
 
 Oder vielleicht in 1%-Schritten oder in sonstigen Schnitten?
-Wo die Quartile in 25%-Schritten aufteilen, teilt in *Quantil* in $p$-Prozent-Schritten auf, s. fig-quantile-anim.
+Wo die Quartile in 25%-Schritten aufteilen, teilt in *Quantil* in $p$-Prozent-Schritten auf, s. @fig-quantile-anim.
 
 
 :::{#def-quantile}
@@ -860,7 +880,8 @@ mariokart %>%
   geom_histogram() +
   geom_vline(xintercept = mario_quantile$qs) +
   annotate("label", x =  mario_quantile$qs, y = 0, label =  mario_quantile$qs) +
-  annotate("label", x =  mario_quantile$qs, y = Inf, label =  c("Q1", "Median", "Q3"), vjust = 2) 
+  annotate("label", x =  mario_quantile$qs, y = Inf, label =  c("Q1", "Median", "Q3"), vjust = 2) +
+  labs(y = "Anzahl")
 ```
 
 
@@ -1005,6 +1026,15 @@ Syntax zur Berechnung von Lagemaßen
 
 :::
 
+<!-- Alterantiv zu @lst-mario-lage ließe sich auch der Befehl `describe_distribution()` aus `{easystats}` verwenden:  -->
+
+<!-- ```{r} -->
+<!-- mariokart |>  -->
+<!--   select(total_pr) |>  -->
+<!--   describe_distribution() -->
+<!-- ``` -->
+
+
 ### Gruppierte Lagemaße
 
 Häufig möchte man Statistiken wie Lagemaße für mehrere Teilgruppen -- z.B. Mittlere Körpergröße von Frauen vs. Mittlere Körpergröße von Männer -- berechnen und dann vergleichen.
@@ -1026,9 +1056,9 @@ Anders ausgedrückt:
 
 Die *Modellformel* könnte also lauten:
 
-$$\color{ycol}{y} \sim \color{xcol}{G}$$
+$$\color{ycol}{y} \; \color{black}{ \sim } \; \color{xcol}{G}$$
 
-Gruppierte Lagemaße lassen sich in R z.B. so berechnen, s. @lst-mario-lage-gruppiert, also ähnlich wie in @#lst-mario-lage.
+Gruppierte Lagemaße lassen sich in R z.B. so berechnen, s. @lst-mario-lage-gruppiert, also ähnlich wie in @lst-mario-lage.
 
 
 ::: {#lst-mario-lage-gruppiert}
@@ -1114,10 +1144,11 @@ p2 <- mariokart3 |>
   theme_minimal()  +
   scale_y_continuous(limits = c(0, 100)) +
   theme(legend.position = c(.8, .1),
-        legend.background = element_rect(fill = NA, # Background color
-                                           color = "grey40", # Border color
-                                           linewidth = 1, # Border size
-                                           linetype = "solid"))
+        legend.background = element_rect(
+          fill = NA, # Background color
+          color = "grey40", # Border color
+          linewidth = 1, # Border size
+          linetype = "solid"))
 
 p1
 p2
@@ -1206,16 +1237,12 @@ $\square$
 :::
 
 
-### Datensätze zum Üben
-
-Mittlerweile verfügen Sie die wesentlichen Werkzeuge des Datenjudo. [Hier](https://data-se.netlify.app/2022/02/23/data-sets-for-for-teaching/) finden Sie einen Überblick an Datensätze, die Sie nach Herzenslust analysieren können.
-
 
 
 
 ## Aufgaben
 
-Ein Teil der Aufgaben kann Stoff beinhalten,
+Ein Teil der folgenden Aufgaben kann Stoff beinhalten,
 den Sie noch nicht kennen, aber später kennenlernen.
 Ignorieren Sie daher Aufgaben(teile) mit (noch) unbekannte Stoff.
 
@@ -1240,7 +1267,15 @@ Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine 
 1. [summarise02](https://datenwerk.netlify.app/posts/summarise02/summarise02.html)
 
 
-Schauen Sie sich auch mal auf [Datenwerk](https://datenwerk.netlify.app/) die Aufgaben zu z.B. dem Tag [EDA](https://datenwerk.netlify.app/#category=eda) an.
+
+:::{.callout-tip}
+Schauen Sie sich auch mal auf [datenwerk.netlify.app](https://datenwerk.netlify.app) die Aufgaben zu z.B. dem Tag [EDA](https://datenwerk.netlify.app/#category=eda) an. $\square$
+:::
+
+
+:::{#exr-datensaetze}
+Mittlerweile verfügen Sie die wesentlichen Werkzeuge des Datenjudo. [Hier](https://data-se.netlify.app/2022/02/23/data-sets-for-for-teaching/) finden Sie einen Überblick an Datensätze, die Sie nach Herzenslust analysieren können.^[<https://data-se.netlify.app/2022/02/23/data-sets-for-for-teaching/>] $\square$
+:::
 
 
 

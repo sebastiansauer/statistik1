@@ -1,5 +1,13 @@
 # mario quartiles animation:
 
+data(mariokart, package = "openintro")
+library(tidyverse)
+library(gganimate)
+
+mariokart2 <-
+  mariokart |> 
+  filter(total_pr < 100)
+
 d_anim_quartile <- 
   mariokart2|> 
   select(total_pr) |> 
@@ -88,9 +96,11 @@ anim_save("img/p_deciles_anim.gif", p_decile_anim, renderer = gifski_renderer())
 k <- 1:100
 breaks_percentiles <- quantile(mariokart2$total_pr, probs = k * .01) 
 
-breaks_percentiles <- breaks_percentiles + runif(n = length(breaks_percentiles), min = -.01, max = .01)
+breaks_percentiles <- 
+  breaks_percentiles + 
+  runif(n = length(breaks_percentiles), min = -.01, max = .01)
 
-cuts_percentiles <- cut(mariokart$total_pr,
+cuts_percentiles <- cut(mariokart2$total_pr,
                         breaks = breaks_percentiles,
                         include.lowest = TRUE,
                         labels = 1:99)
@@ -115,7 +125,7 @@ p_percentile  <-
   geom_vline(aes(xintercept = total_pr_max)) +
   geom_label(aes(label = perc, x = total_pr_max), y = 0)
 
-library(gganimate)
+
 p_percentile_anim <-
   p_percentile +
   transition_states(perc, transition_length = 2, state_length = 1) +
@@ -123,6 +133,7 @@ p_percentile_anim <-
   enter_fade() +
   exit_fade()
 
+library(gifski)
 anim_save("img/p_percentile_anim.gif", p_percentile_anim, renderer = gifski_renderer())
 
 

@@ -1,7 +1,7 @@
 
 
 
-
+ggplot2::theme_set(see::theme_modern(axis.title.size = 18))
 
 
 library(knitr)

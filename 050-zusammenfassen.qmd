@@ -863,9 +863,13 @@ Ein Quantil ist ein Oberbegriff für Quartile, Dezile, etc. $\square$
 
 ::: {#fig-quantile-mario}
 
+:::{.panel-tabset}
+
+### Histogramm
+
 ```{r}
 #| echo: false
-#| label: fig-mario-qs
+#| label: fig-mario-qs1
 #| fig-cap: Q1, Q2 und Q3 für das Schlussgebot (nur Spiele für weniger als 100 Euro)
 mario_quantile <- 
 mariokart %>% 
@@ -890,9 +894,41 @@ mariokart %>%
 ```
 
 
+### Dichtediagramm
+
+```{r}
+#| echo: false
+#| label: fig-mario-qs2
+#| fig-cap: Q1, Q2 und Q3 für das Schlussgebot (nur Spiele für weniger als 100 Euro)
+mario_quantile <- 
+mariokart %>% 
+  filter(total_pr < 100) %>% 
+  summarise(q25 = quantile(total_pr, .25),
+            q50 = quantile(total_pr, .50),
+            q75 = quantile(total_pr, .75))
+
+mario_quantile <- 
+  mariokart %>% 
+  filter(total_pr < 100) %>% 
+  reframe(qs = quantile(total_pr, c(.25, .5, .75)))
+
+mariokart %>% 
+  filter(total_pr < 100) %>%  
+  ggplot(aes(x = total_pr)) +
+  geom_density() +
+  geom_vline(xintercept = mario_quantile$qs) +
+  annotate("label", x =  mario_quantile$qs, y = 0, label =  mario_quantile$qs) +
+  annotate("label", x =  mario_quantile$qs, y = Inf, label =  c("Q1", "Median", "Q3"), vjust = 2) +
+  labs(y = "Anzahl")
+```
+
+:::
+
 Verschiedene Arten von Quantilen.
 
 :::
+
+
 
 *Quantile* kann man in R mit dem Befehl `quantile()` berechnen:
 

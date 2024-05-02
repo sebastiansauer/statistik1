@@ -25,13 +25,21 @@ In diesem Kapitel benötigen Sie folgende R-Pakete.
 ```{r}
 library(tidyverse)
 library(easystats)
-library(ggpubr)
+library(DataExplorer)
 ```
 
 ```{r libs-hideen}
 #| echo: false
 library(patchwork)
+library(ggpubr)
 ```
+
+
+```{r}
+#| echo: false
+source("_common.R")
+```
+
 
 
 
@@ -52,10 +60,24 @@ ggplot2::theme_set(theme_minimal())
 
 
 
+### Zum Einstieg
+
+:::{#exr-streuung-erkennen}
+### Freiwillige vor! 
+Für diese kleine Live-Demonstration brauchen wir einige Freiwillige. 
+Die Lehrkraft teilt die Freiwilligen in zwei Gruppen, Gruppe *Gleich-Groß* und Gruppe *Verschieden-Groß*. 
+Erkennen Sie, dass die *Unterschiedlichkeit* der Größe in Gruppe *Gleich-Groß* gering ist, aber in Gruppe *Verschieden-Groß* hoch? $\square$
+:::
+
+
 ## Warum Sie die Streuung Ihrer Daten kennen sollten
 
-### Prof. Weiss-Ois hat eine Idee {#sec-weiss-ois}
 
+
+
+### Die Schlankheitspille von Prof. Weiss-Ois  {#sec-weiss-ois}
+
+Prof. Weiss-Ois hat eine Erfindung gemacht, eine Schlankheitspille 💊  ...
 
 :::: {.columns}
 ::: {.column width="45%"}
@@ -105,12 +127,12 @@ Treffen sich zwei Bauern, Fritz Furchenzieher und Karla Kartoffelsack.
 Fritz will mit seiner Kuh einen Fluss überqueren, nur kann die Kuh nicht schwimmen^[ob es Fritz kann, ist nicht überliefert.]. 
 
 
->    🧑‍🌾 (Fritz): Sag mal, Karl, ist der Fluss tief?
+>    🧑‍🌾 (Fritz): Sag mal, Karla, ist der Fluss tief?
 
 >    👩‍🌾 (Karla): Nö, im Schnitt nur einen Meter.
 
 
-Also führt Fritz seine Kuh durch den Fluss, leider kam die Kuh nicht am anderen Ufer an, s. @fig-fluss-tief.
+Also führt Fritz seine Kuh durch den Fluss, leider kam die Kuh nicht am anderen Ufer an, im Floß ersoffen, s. @fig-fluss-tief.
 
 ![Der Fluss ist im Schnitt nur einen Meter tief, trotzdem ist die Kuh ersoffen.](img/fluss-tief.png){#fig-fluss-tief}
 
@@ -118,6 +140,11 @@ Also führt Fritz seine Kuh durch den Fluss, leider kam die Kuh nicht am anderen
 >    👩‍🌾 (Karla): Übrigens, Lagemaße sagen nicht alles, Fritz.
 
 >    🧑‍🌾 (Fritz): Läuft die Kuh durch den Fluss, kann sie schwimmen oder 's ist Schluss.
+
+
+:::{.callout-important}
+Die Streuung ihrer Daten zu kennen ist eine wesentliche Information. $\square$
+:::
 
 
 
@@ -137,7 +164,7 @@ Links ist die Streuung der Schlankheitspille *Dicktableitin* und rechts von der 
 ```{r viel-wenig-streuung}
 #| echo: false
 #| label: fig-streuung
-#| fig-cap: Ein Modell mit wenig Streuung vs. ein Modell mit viel Streuung
+#| fig-cap: "Ein Modell mit wenig Streuung (links) vs. ein Modell mit viel Streuung (rechts). Die vertikalen grauen Balken kennzeichnen den (absoluten) Abstand von jeweils einem Datenpunkt zum Mittelwert (horizontale orange Linie). Je länger die 'Abstandsbalken', desto größer die Streuung."
 set.seed(42)
 d <-
   tibble(
@@ -164,11 +191,12 @@ d %>%
   ggplot(aes(x = id, y = value)) +
   geom_point() +
   facet_wrap(~ name, labeller = as_labeller(group_names)) +
-  geom_hline(data = d_sum,
-             color = okabeito_colors()[1], aes(yintercept = avg)) +
+  geom_hline(color = okabeito_colors()[1], yintercept = 0) +
   geom_segment(aes(x = id, xend = id, y = value, yend = avg), 
                alpha = .5, color = "grey") +
-  theme_minimal()
+  theme_minimal() +
+  geom_label(x = 0, y = 0, label = "MW", color = okabeito_colors()[1]) +
+  scale_x_continuous(limits = c(-10,100))
 ```
 
 
@@ -228,7 +256,7 @@ sind die Fehlerbalken jeweils im Durchschnitt kürzer (rechtes Teildiagramm) als
 #| layout-ncol: 2
 #| fig-subcap:
 #|   - "Fehlerbalken im einfachen Modell: Ein Mittelwert; viel Streuung insgesamt"
-#|   - "Fehlerbalken im komplexen Modell: Zwei Mittelwerte; wenig Streuung in jeder Gruppe"
+#|   - "Fehlerbalken im komplexen Modell: Zwei Mittelwerte; weniger Streuung in jeder Gruppe. Das erkennt man daran, dass die vertikalen, grauen Abstandsbalken im Schnitt kürzer sind als im einfachen Modell (links)"
 data(mariokart, package = "openintro")
 m <-
   mariokart %>%
@@ -258,7 +286,7 @@ m %>%
                    yend = mean(total_pr)
                    ), color = "grey") +
   geom_point(aes(x = ID, y = total_pr)) +
-  annotate("label", x = 0, y = 47, label = "MW", hjust = "left")
+  annotate("label", x = 0, y = 47, label = "MW", hjust = "left", size = 6)
 
 
 
@@ -284,8 +312,9 @@ m %>%
   labs(color = "wheels") +
   theme(legend.position = "none") +
   geom_label(data = m_sum,
-    aes(label = paste0("MW für ", wheels, " Räder"), y = total_pr, color = factor(wheels)), x = 3) +
-  scale_color_okabeito()
+    aes(label = paste0("MW bei ", wheels, " Räder"), y = total_pr, color = factor(wheels)), x = 3, size = 6) +
+  scale_color_okabeito() +
+  scale_x_continuous(limits = c(-10, 90))
 ```
 
 
@@ -350,8 +379,9 @@ ggplot(d) +
   geom_point(size = 5, alpha = .7, color = "red") +
   geom_segment(aes(x = id, xend = id, y = y, yend = mean(y))) +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  annotate("label", x = 1, y = 0, label = "Mittelwert") +
-  theme_minimal()
+  annotate("label", x = 0.5, y = 0, label = "Mittelwert") +
+  theme_minimal() +
+  scale_x_continuous(limits = c(0, 4))
 ```
 
 Natürlich können wir R auch die Rechenarbeit überlassen.
@@ -404,6 +434,78 @@ Der Interquartilsabstand ist definiert als der die (absolute) Differenz vom 3. Q
 ### IQR im Hörsaal
 In einem Statistikkurs betragen die Quartile der Körpergröße: Q1: 1.65m, Q2 (Median): 1,70m, Q3: 1.75m. Der IQR beträgt dann: $IQR = Q3-Q1 = 1.75m - 1.65m = 0.10m$, d.h. 10 cm.$\square$
 :::
+
+
+@fig-iqr-mario stellt den IQR (und einige Quantile) für den Verkaufspreise von Mariokart-Spielen dar.
+
+::: {#fig-iqr-mario}
+
+:::{.panel-tabset}
+
+### Histogramm
+
+```{r}
+#| echo: false
+#| label: fig-mario-qs-iqr1
+#| fig-cap: IQR, Q1, Q2 und Q3 für das Schlussgebot (nur Spiele für weniger als 100 Euro)
+mario_quantile2 <- 
+mariokart %>% 
+  filter(total_pr < 100) %>% 
+  summarise(q25 = quantile(total_pr, .25),
+            q50 = quantile(total_pr, .50),
+            q75 = quantile(total_pr, .75))
+
+mario_quantile <- 
+  mariokart %>% 
+  filter(total_pr < 100) %>% 
+  reframe(qs = quantile(total_pr, c(.25, .5, .75)))
+
+mariokart %>% 
+  filter(total_pr < 100) %>%  
+  ggplot(aes(x = total_pr)) +
+  geom_histogram() +
+  geom_vline(xintercept = mario_quantile$qs) +
+  annotate("label", x =  mario_quantile$qs, y = 0, label =  mario_quantile$qs) +
+  annotate("label", x =  mario_quantile$qs, y = Inf, label =  c("Q1", "Median", "Q3"), vjust = 2) +
+  labs(y = "Anzahl") +
+  geom_segment( 
+           aes(x = q25, xend = q75), 
+           y = 5, yend = 5, color = "#56B4E9",
+           data = mario_quantile2, size = 3) +
+  annotate("label", x = mario_quantile2$q50, y = 5,
+           label = "IQR", color = "#56B4E9")
+```
+
+
+### Dichtediagramm
+
+```{r}
+#| echo: false
+#| label: fig-mario-iqr2
+#| fig-cap: IQR, Q1, Q2 und Q3 für das Schlussgebot (nur Spiele für weniger als 100 Euro)
+
+mariokart %>% 
+  filter(total_pr < 100) %>%  
+  ggplot(aes(x = total_pr)) +
+  geom_density() +
+  geom_vline(xintercept = mario_quantile$qs) +
+  annotate("label", x =  mario_quantile$qs, y = 0, label =  mario_quantile$qs) +
+  annotate("label", x =  mario_quantile$qs, y = Inf, label =  c("Q1", "Median", "Q3"), vjust = 2) +
+  labs(y = "Anzahl") +
+  geom_segment( 
+           aes(x = q25, xend = q75), 
+           y = 0.01, yend = 0.01, color = "#56B4E9",
+           data = mario_quantile2, size = 3) +
+  annotate("label", x = mario_quantile2$q50, y = .01,
+           label = "IQR", color = "#56B4E9")
+```
+
+:::
+
+Der IQR für den Verkaufspreis von Mariokart-Spielen.
+
+:::
+
 
 
 ### Streuungsmaße für Normalverteilungen
@@ -1021,6 +1123,8 @@ Liegen Extremwerte vor, kann es vorteilhafter sein, den IQR vorzuziehen gegenüb
 
 ## Aufgaben
 
+
+
 Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine Reihe von einschlägigen Übungsaufgaben bereit. Sie können die Suchfunktion der Webseite nutzen, um die Aufgaben mit den folgenden Namen zu suchen:
 
 <!-- :::{#exr-koerpergroesse} -->
@@ -1033,6 +1137,17 @@ Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine 
 
 
 Schauen Sie sich auch mal auf [Datenwerk](https://datenwerk.netlify.app/) die Aufgaben zu  dem Tag [variability](https://datenwerk.netlify.app/#category=variability) an.
+
+
+
+
+:::{#exr-handy}
+### Analysieren Sie den Datensatz zur Handynutzung
+Laden Sie den [Datensatz zur Handynutzung](https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing) von Google-Docs herunter.^[<https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing>]. 
+Berechnen Sie dann gängige deskriptive Statistiken und visualisieren Sie sie. $\square$
+:::
+
+
 
 
 ## Literaturhinweise

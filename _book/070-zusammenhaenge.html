@@ -129,6 +129,35 @@ div.csl-indent {
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -389,7 +418,7 @@ div.csl-indent {
 <h2 data-number="8.2" class="anchored" data-anchor-id="zusammenfassen-zum-zusammenhang"><span class="header-section-number">8.2</span> Zusammenfassen zum Zusammenhang</h2>
 <p>In <a href="050-zusammenfassen.html" class="quarto-xref"><span>Kapitel 6</span></a> haben wir gelernt, dass das Wesen eines Punktmodells als Zusammenfassung <em>einer</em> Spalte (eines Vektors) zu einer einzelnen Zahl<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, zu einem “Punkt” sozusagen, zusammengefasst werden kann.</p>
 <p>In diesem Kapitel fassen wir <em>zwei</em> Spalten zusammen, wieder zu <em>einer</em> Zahl, s. <a href="#eq-desk2" class="quarto-xref">Gleichung&nbsp;<span>8.1</span></a>.</p>
-<p><span id="eq-desk2"><span class="math display">$$\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} + \begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarrow \qquad \begin{array}{|c|} \hline \\ \hline  \hline \end{array} \qquad(8.1)$$</span></span></p>
+<p><span id="eq-desk2"><span class="math display">\[\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} + \begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarrow \qquad \begin{array}{|c|} \hline \\ \hline  \hline \end{array} \tag{8.1}\]</span></span></p>
 <p>Wo wir in <a href="050-zusammenfassen.html" class="quarto-xref"><span>Kapitel 6</span></a> eine Variable mit Hilfe eines Lagemaßes beschrieben/dargestellt/zusammengefasst/modelliert haben, tun wir hier das Gleiche für zwei Variablen. Beschreibt man aber zwei Variablen, so geht es um die Frage, was die beiden Variablen miteinander zu tun haben: Wie die beiden Variablen von einander abhängen bzw. miteinander (irgendwie) zusammenhängen. Wir begrenzen auf <em>metrische</em> Variablen.</p>
 <p>Die Verbildlichung<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> zweier metrischer Variablen haben wir bereits in <a href="040-verbildlichen.html#sec-zshg-metr" class="quarto-xref"><span>Kapitel 5.5.2</span></a> kennengelernt. Zur Verdeutlichung, wie ein Zusammenhang zweier metrischer Variablen aussehen kann, helfe noch einmal <a href="#fig-zshg" class="quarto-xref">Abbildung&nbsp;<span>8.1</span></a>.</p>
 <div id="fig-zshg" class="quarto-layout-panel">
@@ -433,7 +462,7 @@ Abbildung&nbsp;8.1: Visualisierung des Zusammenhangs von wheels und total_pr
 <section id="noten-und-abweichungsrechtecke" class="level3" data-number="8.3.1">
 <h3 data-number="8.3.1" class="anchored" data-anchor-id="noten-und-abweichungsrechtecke"><span class="header-section-number">8.3.1</span> Noten und Abweichungsrechtecke</h3>
 <div id="exm-noten2" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 8.1 (Wieder Statistiknoten)</strong></span> Anton, Bert, Carl und Daniel haben ihre Statistikklausur zurückbekommen. Die Lernzeit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> scheint mit der erreichten Punktzahl <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math> (0-100, je mehr desto besser) zusammenzuhängen.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> Gar nicht so schlecht ausgefallen, s. <a href="#tbl-noten2" class="quarto-xref">Tabelle&nbsp;<span>8.1</span></a>.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Beispiel 8.1 (Wieder Statistiknoten)</strong></span> Anton, Bert, Carl und Daniel haben ihre Statistikklausur zurückbekommen. Die Lernzeit <span class="math inline">\(X\)</span> scheint mit der erreichten Punktzahl <span class="math inline">\(Y\)</span> (0-100, je mehr desto besser) zusammenzuhängen.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> Gar nicht so schlecht ausgefallen, s. <a href="#tbl-noten2" class="quarto-xref">Tabelle&nbsp;<span>8.1</span></a>.<span class="math inline">\(\square\)</span></p>
 </div>
 <div class="cell">
 <div id="tbl-noten2" class="cell quarto-float anchored">
@@ -481,7 +510,7 @@ Tabelle&nbsp;8.1: Statistiknoten und Lernzeit
 </div>
 <p>Zeichnen wir uns die Daten als Streudiagramm, s. <a href="#fig-delta-rect" class="quarto-xref">Abbildung&nbsp;<span>8.2</span></a>. Dabei zeichnen wir noch <em>Abweichungsrechtecke</em> ein.</p>
 <div id="def-abweichungsrechteck" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 8.1 (Abweichungsrechteck)</strong></span> Im zweidimensionalen Fall spannt sich ein Abweichungsrechteck vom Mittelwert <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> bis zum Messwert <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math> und genauso für <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>. Wir bezeichnen mit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">dx_i</annotation></semantics></math> die Distanz (Abweichung) vom Mittelwert <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> bis zum Messwert <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math> (und analog <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">dy_i</annotation></semantics></math>), also <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>x</mi><mi>i</mi></msub><mo>=</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mover><mi>x</mi><mo accent="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">dx_i = x_i - \bar{x}</annotation></semantics></math>. Die Fläche des Abweichungsrechtecks ist dann das Produkt der Abweichungen: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>x</mi><mi>i</mi></msub><mo>⋅</mo><mi>d</mi><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">dx_i \cdot dy_i</annotation></semantics></math>.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 8.1 (Abweichungsrechteck)</strong></span> Im zweidimensionalen Fall spannt sich ein Abweichungsrechteck vom Mittelwert <span class="math inline">\(\bar{x}\)</span> bis zum Messwert <span class="math inline">\(x_i\)</span> und genauso für <span class="math inline">\(Y\)</span>. Wir bezeichnen mit <span class="math inline">\(dx_i\)</span> die Distanz (Abweichung) vom Mittelwert <span class="math inline">\(\bar{x}\)</span> bis zum Messwert <span class="math inline">\(x_i\)</span> (und analog <span class="math inline">\(dy_i\)</span>), also <span class="math inline">\(dx_i = x_i - \bar{x}\)</span>. Die Fläche des Abweichungsrechtecks ist dann das Produkt der Abweichungen: <span class="math inline">\(dx_i \cdot dy_i\)</span>.<span class="math inline">\(\square\)</span></p>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -550,7 +579,7 @@ Abbildung&nbsp;8.4: Die Kovarianz als mittleres Abweichungsrechteck. Die Fläche
 <section id="sec-kov" class="level3" data-number="8.3.2">
 <h3 data-number="8.3.2" class="anchored" data-anchor-id="sec-kov"><span class="header-section-number">8.3.2</span> Kovarianz</h3>
 <div id="def-kov" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 8.2 (Kovarianz)</strong></span> Die Kovarianz ist definiert als die Fläche des mittleren Abweichungsrechtecks. Sie ist ein Maß für die Stärke und Richtung des linearen Zusammenhangs zweier metrischer Variablen, s. <a href="#fig-cov2" class="quarto-xref">Abbildung&nbsp;<span>8.4</span></a>.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 8.2 (Kovarianz)</strong></span> Die Kovarianz ist definiert als die Fläche des mittleren Abweichungsrechtecks. Sie ist ein Maß für die Stärke und Richtung des linearen Zusammenhangs zweier metrischer Variablen, s. <a href="#fig-cov2" class="quarto-xref">Abbildung&nbsp;<span>8.4</span></a>.<span class="math inline">\(\square\)</span></p>
 </div>
 <blockquote class="blockquote">
 <p>👩‍🎓 Zu viele Bilder! Ich brauch Zahlen.</p>
@@ -669,14 +698,14 @@ Tabelle&nbsp;8.2: Werte der Abweichungsrechtecke
 </div>
 </div>
 <p>Die Formel der Kovarianz lautet, s. <a href="#eq-cov4" class="quarto-xref">Gleichung&nbsp;<span>8.2</span></a>:</p>
-<p><span id="eq-cov4"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">cov(xy)</mtext><mo>=</mo><msub><mi>s</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mo>:=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><mover><mi>y</mi><mo accent="true">‾</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>d</mi><msub><mi>x</mi><mi>i</mi></msub><mo>⋅</mo><mi>d</mi><msub><mi>y</mi><mi>i</mi></msub><mspace width="2.0em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mn>8.2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{cov(xy)} = s_{xy}:=\frac{1}{n}\sum_{i=1}^n (x_i-\bar{x})(y_i-\bar{y}) = \frac{1}{n}\sum_{i=1}^n dx_i\cdot dy_i \qquad(8.2)</annotation></semantics></math></span></p>
+<p><span id="eq-cov4"><span class="math display">\[\text{cov(xy)} = s_{xy}:=\frac{1}{n}\sum_{i=1}^n (x_i-\bar{x})(y_i-\bar{y}) = \frac{1}{n}\sum_{i=1}^n dx_i\cdot dy_i \tag{8.2}\]</span></span></p>
 <p><a href="#eq-cov4" class="quarto-xref">Gleichung&nbsp;<span>8.2</span></a> in Worten ausgedrückt:</p>
 <ol type="1">
-<li>Rechne für jedes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math> die Abweichung vom Mittelwert, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>, aus, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">dx_i</annotation></semantics></math>.</li>
-<li>Rechne für jedes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>i</mi></msub><annotation encoding="application/x-tex">y_i</annotation></semantics></math> die Abweichung vom Mittelwert, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>y</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{y}</annotation></semantics></math>, aus, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">dy_i</annotation></semantics></math>.</li>
-<li>Multipliziere für alle <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">dx_i</annotation></semantics></math> mit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">xy_i</annotation></semantics></math>, um die Abweichungsrechtecke <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>x</mi><mi>i</mi></msub><mi>d</mi><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">dx_i dy_i</annotation></semantics></math> zu erhalten.</li>
+<li>Rechne für jedes <span class="math inline">\(x_i\)</span> die Abweichung vom Mittelwert, <span class="math inline">\(\bar{x}\)</span>, aus, <span class="math inline">\(dx_i\)</span>.</li>
+<li>Rechne für jedes <span class="math inline">\(y_i\)</span> die Abweichung vom Mittelwert, <span class="math inline">\(\bar{y}\)</span>, aus, <span class="math inline">\(dy_i\)</span>.</li>
+<li>Multipliziere für alle <span class="math inline">\(i\)</span> <span class="math inline">\(dx_i\)</span> mit <span class="math inline">\(xy_i\)</span>, um die Abweichungsrechtecke <span class="math inline">\(dx_i dy_i\)</span> zu erhalten.</li>
 <li>Addiere die Flächen der Abweichungsrechtecke.</li>
-<li>Teile durch die Anzahl der Beobachtungen <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>.</li>
+<li>Teile durch die Anzahl der Beobachtungen <span class="math inline">\(n\)</span>.</li>
 </ol>
 <div id="exm-pos-kov" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 8.2 (Variablen mit positiver Kovarianz)</strong></span> &nbsp;</p>
@@ -684,7 +713,7 @@ Tabelle&nbsp;8.2: Werte der Abweichungsrechtecke
 <li>Größe und Gewicht</li>
 <li>Lernzeit und Klausurerfolg</li>
 <li>Distanz zum Ziel und Reisezeit</li>
-<li>Temperatur und Eisverkauf<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></li>
+<li>Temperatur und Eisverkauf<span class="math inline">\(\square\)</span></li>
 </ul>
 </div>
 <div id="exm-neg-kov" class="theorem example">
@@ -693,7 +722,7 @@ Tabelle&nbsp;8.2: Werte der Abweichungsrechtecke
 <li>Lernzeit und Freizeit</li>
 <li>Alter und Restlebenszeit</li>
 <li>Temperatur und Schneemenge</li>
-<li>Lebenszufriedenheit und Depressivität<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></li>
+<li>Lebenszufriedenheit und Depressivität<span class="math inline">\(\square\)</span></li>
 </ul>
 </div>
 <p>Drei Extrembeispiele für Kovarianz-Werte sind in <a href="#fig-demos-cov" class="quarto-xref">Abbildung&nbsp;<span>8.5</span></a> dargestellt.</p>
@@ -746,11 +775,11 @@ Abbildung&nbsp;8.5: Verschiedene Werte der Kovarianz
 </div>
 <p>Bei einer Kovarianz von (ungefähr) 0 ist die Gesamt-Fläche der Abweichungsrechtecke<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, wenn man sie pro <em>Quadrant</em> aufsummiert, ungefähr gleich groß, s. <a href="#fig-covnull" class="quarto-xref">Abbildung&nbsp;<span>8.6</span></a>. Addiert man die Abweichungsrechtecke (unter Beachtung der Vorzeichen: rot = positiv; blau = negativ), so beträgt die Summe in etwa (oder genau) Null.</p>
 <p>Damit ist die Kovarianz in diesem Fall etwa (bzw. genau) Null:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mo>∑</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>d</mi><mi>X</mi><mo>⋅</mo><mi>d</mi><mi>Y</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mo>⇔</mo><mi>⌀</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>d</mi><mi>X</mi><mo>⋅</mo><mi>d</mi><mi>Y</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mo>⇔</mo><mtext mathvariant="normal">cov</mtext></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mn>0</mn></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+<p><span class="math display">\[\begin{align}
 \sum \left(dX \cdot dY \right) &amp;= 0\\
 \Leftrightarrow \varnothing \left(dX \cdot dY \right) &amp;= 0\\
 \Leftrightarrow \text{cov} &amp;= 0
-\end{align}</annotation></semantics></math></p>
+\end{align}\]</span></p>
 <div id="fig-covnull" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-covnull-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -796,16 +825,16 @@ Abbildung&nbsp;8.6: Wenn die Kovarianz 0 ist, gleichen sich die Abweichungsrecht
 <h2 data-number="8.4" class="anchored" data-anchor-id="korrelation"><span class="header-section-number">8.4</span> Korrelation</h2>
 <section id="korrelation-als-mittleres-z-produkt" class="level3" data-number="8.4.1">
 <h3 data-number="8.4.1" class="anchored" data-anchor-id="korrelation-als-mittleres-z-produkt"><span class="header-section-number">8.4.1</span> Korrelation als mittleres z-Produkt</h3>
-<p>Der Korrelationskoeffizient <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> nach Karl Pearson löst das Problem, dass die Kovarianz schwer interpretierbar ist. Der Wertebereich von <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> reicht von -1 (perfekte negative lineare Korrelation) bis +1 (perfekte positive lineare Korrelation). Eine Korrelation von <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">r = 0</annotation></semantics></math> bedeutet <em>kein linearer</em> Zusammenhang.</p>
+<p>Der Korrelationskoeffizient <span class="math inline">\(r\)</span> nach Karl Pearson löst das Problem, dass die Kovarianz schwer interpretierbar ist. Der Wertebereich von <span class="math inline">\(r\)</span> reicht von -1 (perfekte negative lineare Korrelation) bis +1 (perfekte positive lineare Korrelation). Eine Korrelation von <span class="math inline">\(r = 0\)</span> bedeutet <em>kein linearer</em> Zusammenhang.</p>
 <p>Die Korrelation berechnet sich wie folgt:</p>
 <ol type="1">
-<li>Teile alle <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math> durch ihre Standardabweichung, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>x</mi></msub><annotation encoding="application/x-tex">s_x</annotation></semantics></math></li>
-<li>Teile alle <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>i</mi></msub><annotation encoding="application/x-tex">y_i</annotation></semantics></math> durch ihre Standardabweichung, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>y</mi></msub><annotation encoding="application/x-tex">s_y</annotation></semantics></math></li>
+<li>Teile alle <span class="math inline">\(x_i\)</span> durch ihre Standardabweichung, <span class="math inline">\(s_x\)</span></li>
+<li>Teile alle <span class="math inline">\(y_i\)</span> durch ihre Standardabweichung, <span class="math inline">\(s_y\)</span></li>
 <li>Berechne mit diesen Werten die Kovarianz</li>
 </ol>
-<p>Teilt man nämlich alle <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math> bzw. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>i</mi></msub><annotation encoding="application/x-tex">y_i</annotation></semantics></math> durch ihre Standardabweichung, so führt man mit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> bzw. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math> eine z-Transformation durch. Daher kann man den Korrelationskoeffizienten <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> so definieren:</p>
+<p>Teilt man nämlich alle <span class="math inline">\(x_i\)</span> bzw. <span class="math inline">\(y_i\)</span> durch ihre Standardabweichung, so führt man mit <span class="math inline">\(X\)</span> bzw. <span class="math inline">\(Y\)</span> eine z-Transformation durch. Daher kann man den Korrelationskoeffizienten <span class="math inline">\(r\)</span> so definieren:</p>
 <div id="def-r" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 8.3 (Korrelationskoeffizient r)</strong></span> Der Korrelationskoeffizient <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> ist definiert als das mittlere Produkt der z-Wert-Paare: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><msub><mi>z</mi><msub><mi>x</mi><mi>i</mi></msub></msub><msub><mi>z</mi><msub><mi>y</mi><mi>i</mi></msub></msub></mrow><annotation encoding="application/x-tex">r_{xy}=\frac{1}{n}\sum_{i=1}^n z_{x_i} z_{y_i}</annotation></semantics></math>, vgl <span class="citation" data-cites="cohen_applied_2003">Cohen et al. (<a href="references.html#ref-cohen_applied_2003" role="doc-biblioref">2003</a>)</span>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 8.3 (Korrelationskoeffizient r)</strong></span> Der Korrelationskoeffizient <span class="math inline">\(r\)</span> ist definiert als das mittlere Produkt der z-Wert-Paare: <span class="math inline">\(r_{xy}=\frac{1}{n}\sum_{i=1}^n z_{x_i} z_{y_i}\)</span>, vgl <span class="citation" data-cites="cohen_applied_2003">Cohen et al. (<a href="references.html#ref-cohen_applied_2003" role="doc-biblioref">2003</a>)</span>. <span class="math inline">\(\square\)</span></p>
 </div>
 <p>Man beachte, dass eine Korrelation (genauso wie eine Kovarianz) nur für metrische Variablen definiert ist.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -824,8 +853,8 @@ Hinweis
 <li><em>Absolutwert</em> der Korrelation: Der Absolutwert<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> des Korrelationskoeffizienten gibt die Stärke des linearen Zusammenhangs an. Je näher der Wert bei 1 liegt desto stärker der Zusammenhang.</li>
 </ol>
 <ul>
-<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">r = 0</annotation></semantics></math>: kein linearer Zusammenhang</li>
-<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r = 1</annotation></semantics></math>: perfekter linearer Zusammenhang<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></li>
+<li><span class="math inline">\(r = 0\)</span>: kein linearer Zusammenhang</li>
+<li><span class="math inline">\(r = 1\)</span>: perfekter linearer Zusammenhang<span class="math inline">\(\square\)</span></li>
 </ul>
 </div>
 </div>
@@ -840,12 +869,12 @@ Abbildung&nbsp;8.7: Verschiedene Streudiagramme, die sich in ihrem Korrelationsk
 </figcaption>
 </figure>
 </div>
-<p>Die untere Zeile von <a href="#fig-corr-wiki" class="quarto-xref">Abbildung&nbsp;<span>8.7</span></a> zeigt Beispiele für nicht-lineare Zusammenhänge. Wie man sieht, liegt in diesen Beispielen kein linearer Zusammenhang vor (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">r=0</annotation></semantics></math>), obwohl ein starker <em>nicht</em>-linearer Zusammhang besteht.</p>
+<p>Die untere Zeile von <a href="#fig-corr-wiki" class="quarto-xref">Abbildung&nbsp;<span>8.7</span></a> zeigt Beispiele für nicht-lineare Zusammenhänge. Wie man sieht, liegt in diesen Beispielen kein linearer Zusammenhang vor (<span class="math inline">\(r=0\)</span>), obwohl ein starker <em>nicht</em>-linearer Zusammhang besteht.</p>
 <div id="exr-corrgame" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 8.1 (Korrelationsspiel)</strong></span> Spielen Sie das <a href="https://gallery.shinyapps.io/correlation_game/">Korrelationsspiel</a>: Sie Sehen ein Streudiagramm und müssen den richtigen Korrelationskoeffizienten eingeben.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 8.1 (Korrelationsspiel)</strong></span> Spielen Sie das <a href="https://gallery.shinyapps.io/correlation_game/">Korrelationsspiel</a>: Sie Sehen ein Streudiagramm und müssen den richtigen Korrelationskoeffizienten eingeben.<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exr-corrvis" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 8.2 (Interaktive Visualisierung der Korrelation)</strong></span> Auf der Seite von <a href="https://rpsychologist.com/correlation/">RPsychologist</a> findet sich eine ansprechende dynamische Visualisierung der Korrelation. Nutzen Sie sie, um Ihr Gefühl für die Stärke des Korrelationskoeffizienten zu entwickeln.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 8.2 (Interaktive Visualisierung der Korrelation)</strong></span> Auf der Seite von <a href="https://rpsychologist.com/correlation/">RPsychologist</a> findet sich eine ansprechende dynamische Visualisierung der Korrelation. Nutzen Sie sie, um Ihr Gefühl für die Stärke des Korrelationskoeffizienten zu entwickeln.<span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 <section id="korrelation-mit-r-berechnen" class="level3" data-number="8.4.2">
@@ -935,7 +964,7 @@ Vorsicht
 <blockquote class="blockquote">
 <p>Bald men at higher risk of severe case of Covid-19, research finds<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></p>
 </blockquote>
-<p>Eine Erklärung lautet, dass Alter einen Effekt hat auf Glatze (je älter ein Mann, desto wahrscheinlicher ist es, dass er eine Glatz hat) und auf die Schwere des Corona-Verlaufs (ältere Menschen haben deutlich schwerere Corona-Verläufe). <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Eine Erklärung lautet, dass Alter einen Effekt hat auf Glatze (je älter ein Mann, desto wahrscheinlicher ist es, dass er eine Glatz hat) und auf die Schwere des Corona-Verlaufs (ältere Menschen haben deutlich schwerere Corona-Verläufe). <span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 </section>
@@ -944,7 +973,7 @@ Vorsicht
 <section id="range-restriktion" class="level3" data-number="8.5.1">
 <h3 data-number="8.5.1" class="anchored" data-anchor-id="range-restriktion"><span class="header-section-number">8.5.1</span> Range-Restriktion</h3>
 <p>Durch (nicht-randomisierte) Einschränkung (Restriktion) des Ranges einer (oder beider) Variablen sinkt die Stärke (der Absolutwert) einer Korrelation, vgl. <span class="citation" data-cites="cohen_applied_2003">Cohen et al. (<a href="references.html#ref-cohen_applied_2003" role="doc-biblioref">2003</a>)</span> und <a href="#fig-corr-range" class="quarto-xref">Abbildung&nbsp;<span>8.9</span></a>.</p>
-<p>Erstellen wir uns dazu zwei Datensätze mit je zwei Variablen, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> und <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math> der Größe <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">n=100</annotation></semantics></math>. Ein Datensatz ist ohne Einschränkung des Ranges und einer mit. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> und <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math> seien normalverteilt mit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\mu=0</annotation></semantics></math> (Mittelwert) und <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma=1</annotation></semantics></math> (Streuung); s. Datensatz <code>d</code> in <a href="#lst-corr-range" class="quarto-xref">Listing&nbsp;<span>8.1</span></a>. Wir schränken dann den Range von <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> ein auf, sagen wir, den Bereich von <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mo>−</mo><mn>0.5</mn><mo>,</mo><mn>.5</mn><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[-0.5, .5]</annotation></semantics></math> (Datensatz <code>d_filtered</code>).</p>
+<p>Erstellen wir uns dazu zwei Datensätze mit je zwei Variablen, <span class="math inline">\(X\)</span> und <span class="math inline">\(Y\)</span> der Größe <span class="math inline">\(n=100\)</span>. Ein Datensatz ist ohne Einschränkung des Ranges und einer mit. <span class="math inline">\(X\)</span> und <span class="math inline">\(Y\)</span> seien normalverteilt mit <span class="math inline">\(\mu=0\)</span> (Mittelwert) und <span class="math inline">\(\sigma=1\)</span> (Streuung); s. Datensatz <code>d</code> in <a href="#lst-corr-range" class="quarto-xref">Listing&nbsp;<span>8.1</span></a>. Wir schränken dann den Range von <span class="math inline">\(X\)</span> ein auf, sagen wir, den Bereich von <span class="math inline">\([-0.5, .5]\)</span> (Datensatz <code>d_filtered</code>).</p>
 <div id="lst-corr-range" class="listing quarto-float">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-corr-range-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1005,7 +1034,7 @@ Abbildung&nbsp;8.9: Schränkt man den Range einer (oder beider) Variablen ein, s
 </figure>
 </div>
 <div id="exr-corr-range" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 8.3 (Berechnen Sie die Korrelation)</strong></span> Glauben Sie nicht, prüfen Sie nach! Berechnen Sie die Korrelation von <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> und <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math> im Datensatz <code>d</code> und <code>d_filtered</code>! <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 8.3 (Berechnen Sie die Korrelation)</strong></span> Glauben Sie nicht, prüfen Sie nach! Berechnen Sie die Korrelation von <span class="math inline">\(X\)</span> und <span class="math inline">\(Y\)</span> im Datensatz <code>d</code> und <code>d_filtered</code>! <span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 </section>
@@ -1050,7 +1079,7 @@ Namensverwechslung (name clash)
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Es kann vorkommen, dass Sie zwei R-Pakete geladen haben, in denen es jeweils z.B. eine Funktion mit Namen <code>select</code> gibt. R wird in dem Fall diejenige Funktion verwenden, deren Paket Sie als letztes gestartet haben. Das kann dann das falsche <code>select</code> sein, wie es mir oben in der Syntax passiert ist. In dem Fall resultiert eine verwirrende Fehlermeldung, die sinngemäß sagt: “Hey Mensch, du hast Argumente in der Funktion verwendet, die du gar nicht verwenden darfst, da es sie nicht gibt.” Auf Errisch: <code>Error in select(., duration, n_bids, start_pr, ship_pr, total_pr, seller_rate,  : unused arguments (duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels)</code>. Eine einfache Abhilfe ist es, R zu sagen: “Hey R, nimm gefälligst <code>select</code> aus dem Paket <code>dplyr</code>, dort”wohnt” nämlich <code>select</code>. Auf Errisch spricht sich das so: <code>dplyr::select(...)</code>.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Es kann vorkommen, dass Sie zwei R-Pakete geladen haben, in denen es jeweils z.B. eine Funktion mit Namen <code>select</code> gibt. R wird in dem Fall diejenige Funktion verwenden, deren Paket Sie als letztes gestartet haben. Das kann dann das falsche <code>select</code> sein, wie es mir oben in der Syntax passiert ist. In dem Fall resultiert eine verwirrende Fehlermeldung, die sinngemäß sagt: “Hey Mensch, du hast Argumente in der Funktion verwendet, die du gar nicht verwenden darfst, da es sie nicht gibt.” Auf Errisch: <code>Error in select(., duration, n_bids, start_pr, ship_pr, total_pr, seller_rate,  : unused arguments (duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels)</code>. Eine einfache Abhilfe ist es, R zu sagen: “Hey R, nimm gefälligst <code>select</code> aus dem Paket <code>dplyr</code>, dort”wohnt” nämlich <code>select</code>. Auf Errisch spricht sich das so: <code>dplyr::select(...)</code>.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p>Etwas schöner sieht die Ausgabe mit dem Befehl <code>correlation</code> aus <code>{easystats}</code> aus, s. <a href="#tbl-mario-corr" class="quarto-xref">Tabelle&nbsp;<span>8.3</span></a>.</p>
@@ -1164,7 +1193,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Einige der Fallstudien oder Übungsaufgaben können theoretische Inhalte (Konzepte der Statistik) oder praktische Inhalte (R-Befehle) enthalten, die Sie (noch) nicht kennen. In dem Fall: Einfach ignorieren. Oder Sie suchen nach einer Lösung anhand von Konzepten bzw. R-Befehlen, die Sie kennen.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Einige der Fallstudien oder Übungsaufgaben können theoretische Inhalte (Konzepte der Statistik) oder praktische Inhalte (R-Befehle) enthalten, die Sie (noch) nicht kennen. In dem Fall: Einfach ignorieren. Oder Sie suchen nach einer Lösung anhand von Konzepten bzw. R-Befehlen, die Sie kennen.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1177,7 +1206,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Bitte verstehen Sie die folgende Auswahl an Fallstudien als Auswahl. Es ist nicht nötig, dass Sie alle Fallstudien bearbeiten. Sehen Sie die Fallstudien eher als Angebot zur selektiven Vertiefung und Übung, dort, wo Sie es nötig haben.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Bitte verstehen Sie die folgende Auswahl an Fallstudien als Auswahl. Es ist nicht nötig, dass Sie alle Fallstudien bearbeiten. Sehen Sie die Fallstudien eher als Angebot zur selektiven Vertiefung und Übung, dort, wo Sie es nötig haben.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <ol type="1">

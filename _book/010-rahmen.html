@@ -133,6 +133,35 @@ div.csl-indent {
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -374,14 +403,14 @@ div.csl-indent {
 </header>
 
 
-<p><span class="math display">$$
+<p><span class="math display">\[
 \definecolor{ycol}{RGB}{230,159,0}
 \definecolor{modelcol}{RGB}{86,180,233}
 \definecolor{errorcol}{RGB}{0,158,115}
 \definecolor{beta0col}{RGB}{213,94,0}
 \definecolor{beta1col}{RGB}{0,114,178}
 \definecolor{xcol}{RGB}{204,121,167}
-$$</span></p>
+\]</span></p>
 <!-- ```{css, echo = FALSE} -->
 <!-- .justify { -->
 <!--   text-align: justify !important -->
@@ -426,12 +455,12 @@ Abbildung&nbsp;2.1: Datenanalyse als eine Abfolge am Fließband
 <ol type="1">
 <li>Name</li>
 <li>(wissenschaftliche) Interessen</li>
-<li>Erwartung an diesen Kurs <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></li>
+<li>Erwartung an diesen Kurs <span class="math inline">\(\square\)</span></li>
 </ol>
 </div>
 <div id="exr-fragjetzt" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 2.2 (Frag jetzt)</strong></span> Die Lehrkraft stellt Ihnen ein Forum zur Verfügung, auf dem Sie <em>anonym</em> Fragen an die Lehrkraft richten können (z.B. auf <a href="https://frag.jetzt/home">frag.jetzt</a>).</p>
-<p>Stellen Sie dort Ihre Fragen ein; voten Sie die Fragen Ihrer Kommilitonis auf oder ab. Die Lehrkraft beantwortet dann die Fragen mit den meisten Upvotes. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Stellen Sie dort Ihre Fragen ein; voten Sie die Fragen Ihrer Kommilitonis auf oder ab. Die Lehrkraft beantwortet dann die Fragen mit den meisten Upvotes. <span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 <section id="erfolsgrezept" class="level3" data-number="2.1.4">
@@ -470,7 +499,7 @@ Abbildung&nbsp;2.2: Ihr Lernerfolg besteht aus drei Komponenten: Der Lehrkraft, 
 <section id="was-ist-statistik-und-wozu-ist-sie-gut" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="was-ist-statistik-und-wozu-ist-sie-gut"><span class="header-section-number">2.2</span> Was ist Statistik und wozu ist sie gut?</h2>
 <div id="exr-nutzen-statistik" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 2.3 (Nutzen von Statistik)</strong></span> 🏋️‍♀️ Fragen Sie ChatGPT, was der Nutzen von Statistik ist. Diskutieren Sie die Antwort. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 2.3 (Nutzen von Statistik)</strong></span> 🏋️‍♀️ Fragen Sie ChatGPT, was der Nutzen von Statistik ist. Diskutieren Sie die Antwort. <span class="math inline">\(\square\)</span></p>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -482,7 +511,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In diesem Buch werden die Begriffe <em>Statistik</em>, <em>Datenanalyse</em> und <em>Data Science</em> synonym verwendet.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>In diesem Buch werden die Begriffe <em>Statistik</em>, <em>Datenanalyse</em> und <em>Data Science</em> synonym verwendet.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p>Hm. Vielleicht fragen wir mal ChatGPT, was es unter Statistik versteht:</p>
@@ -494,7 +523,7 @@ Hinweis
 </blockquote>
 <p>Es gibt mehrere Definition von Statistik; hier ist eine.</p>
 <div id="def-statistik" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2.1 (Statistik)</strong></span> Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entnehmen und beschreibt die Ungewissheit unserer Schlüsse <span class="citation" data-cites="poldrack_statistical_2023">(<a href="references.html#ref-poldrack_statistical_2023" role="doc-biblioref">Poldrack, 2023</a>)</span>; <span class="citation" data-cites="kaplan_statistical_2009">Kaplan (<a href="references.html#ref-kaplan_statistical_2009" role="doc-biblioref">2009</a>)</span> .<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 2.1 (Statistik)</strong></span> Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entnehmen und beschreibt die Ungewissheit unserer Schlüsse <span class="citation" data-cites="poldrack_statistical_2023">(<a href="references.html#ref-poldrack_statistical_2023" role="doc-biblioref">Poldrack, 2023</a>)</span>; <span class="citation" data-cites="kaplan_statistical_2009">Kaplan (<a href="references.html#ref-kaplan_statistical_2009" role="doc-biblioref">2009</a>)</span> .<span class="math inline">\(\square\)</span></p>
 </div>
 <!-- Statistik ist gut für: -->
 <!-- Entscheidungsfindung: Durch die Analyse von Daten können wir bessere Entscheidungen treffen, indem wir Muster und Trends erkennen. -->
@@ -581,10 +610,10 @@ Abbildung&nbsp;2.5: Die Abweichungen der einzelnen Personen von der mittleren K�
 </div>
 </div>
 </div>
-<p>Eine <em>Abweichung</em> (auch <em>Residuum</em>) genannt, zeigt hier die Differenz von Mittelwert und dem Wert der Körpergröße bei der jeweiligen Person. Wenn wir allgemein von einer Person <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> sprechen, Das Merkmal <em>Körpergröße</em> mit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> bezeichnen und den Mittelwert der Körpergröße als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> (“x quer”), dann können wir knapp und präzise das Residuum der <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>-ten Person mit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>i</mi></msub><annotation encoding="application/x-tex">r_i</annotation></semantics></math> bezeichnen und entsprechend definieren.</p>
+<p>Eine <em>Abweichung</em> (auch <em>Residuum</em>) genannt, zeigt hier die Differenz von Mittelwert und dem Wert der Körpergröße bei der jeweiligen Person. Wenn wir allgemein von einer Person <span class="math inline">\(i\)</span> sprechen, Das Merkmal <em>Körpergröße</em> mit <span class="math inline">\(X\)</span> bezeichnen und den Mittelwert der Körpergröße als <span class="math inline">\(\bar{x}\)</span> (“x quer”), dann können wir knapp und präzise das Residuum der <span class="math inline">\(i\)</span>-ten Person mit <span class="math inline">\(r_i\)</span> bezeichnen und entsprechend definieren.</p>
 <div id="def-residuum" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2.2 (Residuum)</strong></span> Das Residuum des Merkmals <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> der <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>-ten Beobachtung ist definiert als die Differenz vom Wert <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math> und einem Referenzwert, etwa dem Mittelwert, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>:</p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>i</mi></msub><mo>=</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mover><mi>x</mi><mo accent="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">r_i = x_i - \bar{x}</annotation></semantics></math>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 2.2 (Residuum)</strong></span> Das Residuum des Merkmals <span class="math inline">\(X\)</span> der <span class="math inline">\(i\)</span>-ten Beobachtung ist definiert als die Differenz vom Wert <span class="math inline">\(x_i\)</span> und einem Referenzwert, etwa dem Mittelwert, <span class="math inline">\(\bar{x}\)</span>:</p>
+<p><span class="math inline">\(r_i = x_i - \bar{x}\)</span>. <span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 </section>
@@ -621,7 +650,7 @@ Abbildung&nbsp;2.6: Zielarten einer Datenanalyse
 <li><em>Erklären</em>: Wie viel bringt mir das Lernen auf die Statistikklausur?</li>
 </ul>
 <div id="exr-ziele-stat" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 2.4</strong></span> Benennen Sie Beispiele für die die drei Zielarten von Datenanalysen! <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 2.4</strong></span> Benennen Sie Beispiele für die die drei Zielarten von Datenanalysen! <span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 <section id="forschungsfrage" class="level3" data-number="2.3.2">
@@ -656,19 +685,19 @@ Abbildung&nbsp;2.7: Struktur eine Forschungsfrage
 <div id="exm-fofrage1" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 2.1 (Forschungsfrage 1)</strong></span> &nbsp;</p>
 <blockquote class="blockquote">
-<p>Hat Lernen (X) einen Einfluss auf den Prüfungserfolg (Y)? Verringert Joggen (X) die Menge des Hüftgolds (Y)? Um welchen Betrag erhöht sich der Umsatz (Y), wenn wir 1000€ mehr Werbung ausgeben? (X)<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Hat Lernen (X) einen Einfluss auf den Prüfungserfolg (Y)? Verringert Joggen (X) die Menge des Hüftgolds (Y)? Um welchen Betrag erhöht sich der Umsatz (Y), wenn wir 1000€ mehr Werbung ausgeben? (X)<span class="math inline">\(\square\)</span></p>
 </blockquote>
 </div>
 <div id="exm-fofrage2" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 2.2 (Forschungsfrage 2)</strong></span> Nach dem Studium haben Sie bei einem großen Online-Auktionshaus angeheuert. Da Sie angaben, sich im Studium <del>intensiv</del> etwas mit Statistik beschäftigt zu haben, hat man Sie in die F&amp;E-Abteilung<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> gesteckt. Heute ist es Ihre Aufgabe, Auktionen zur Spielekonsole <a href="https://www.nintendo.de/Wii/Wii-94559.html">Wii</a> zu untersuchen,<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> genauer gesagt, geht es um das Spiel <a href="https://www.nintendo.de/Spiele/Wii/Mario-Kart-Wii-281848.html#_bersicht">Mariokart</a>.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> Ihre Forschungsfrage lautet:</p>
 <blockquote class="blockquote">
-<p>Welche Produktmerkmale stehen mit einem hohen Verkaufserlös in Zusammenhang?<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Welche Produktmerkmale stehen mit einem hohen Verkaufserlös in Zusammenhang?<span class="math inline">\(\square\)</span></p>
 </blockquote>
 </div>
 <div id="exm-braindrain" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 2.3 (Handynutzung und Konzentrationsfähigkeit)</strong></span> Eine Forschungsfrage könnte lauten zum Thema Handynutzung:</p>
 <blockquote class="blockquote">
-<p>Verringert intensive Handynutzung die Konzentrationsfähigkeit? <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Verringert intensive Handynutzung die Konzentrationsfähigkeit? <span class="math inline">\(\square\)</span></p>
 </blockquote>
 </div>
 <div id="exm-braindrain2" class="theorem example">
@@ -681,7 +710,7 @@ Abbildung&nbsp;2.7: Struktur eine Forschungsfrage
 <blockquote class="blockquote">
 <p>In two experiments, we test the hypothesis that the mere presence of one’s own smartphone reduces available cognitive capacity.</p>
 </blockquote>
-<p>Die Ergebnisse unterstützen Ihre Hypothese, s. <a href="#fig-braindrain" class="quarto-xref">Abbildung&nbsp;<span>2.8</span></a>. Im Diagramm ist ersichtlich, dass die kognitive Leistung (Y-Achse) sowohl in der Kapazität des Arbeitsgedächtnisses (links) als auch in der fluiden Intelligenz (rechts) am geringsten ist, wenn das Handy auf dem Schreibtisch (Desk) liegt. Am besten ist die kognitive Leistung, wenn das Handy nicht im Raum ist.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Die Ergebnisse unterstützen Ihre Hypothese, s. <a href="#fig-braindrain" class="quarto-xref">Abbildung&nbsp;<span>2.8</span></a>. Im Diagramm ist ersichtlich, dass die kognitive Leistung (Y-Achse) sowohl in der Kapazität des Arbeitsgedächtnisses (links) als auch in der fluiden Intelligenz (rechts) am geringsten ist, wenn das Handy auf dem Schreibtisch (Desk) liegt. Am besten ist die kognitive Leistung, wenn das Handy nicht im Raum ist.<span class="math inline">\(\square\)</span></p>
 <div id="fig-braindrain" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-braindrain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -694,10 +723,10 @@ Abbildung&nbsp;2.8: Handy in Sichtweite verringert die kognitiven Ressourcen
 </div>
 </div>
 <div id="exr-braindrain1" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 2.5</strong></span> Benennen Sie X und Y in <a href="#exm-braindrain2" class="quarto-xref">Beispiel&nbsp;<span>2.4</span></a>! <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 2.5</strong></span> Benennen Sie X und Y in <a href="#exm-braindrain2" class="quarto-xref">Beispiel&nbsp;<span>2.4</span></a>! <span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exr-braindrain-chatgpt" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 2.6</strong></span> Fragen Sie einen Bot (z.B. ChatGPT) zum Stand der Forschung hinsichtlich der Braindrain-Forschungsfrage. Diskutieren Sie die Antwort, auch in ihren Grenzen. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 2.6</strong></span> Fragen Sie einen Bot (z.B. ChatGPT) zum Stand der Forschung hinsichtlich der Braindrain-Forschungsfrage. Diskutieren Sie die Antwort, auch in ihren Grenzen. <span class="math inline">\(\square\)</span></p>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -746,7 +775,7 @@ Abbildung&nbsp;2.9: Datenanalyse als Prozess: Das PPDAC-Modell
 <section id="was-sind-daten" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="was-sind-daten"><span class="header-section-number">2.4</span> Was sind Daten?</h2>
 <div id="def-daten" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2.3 (Hallo, Daten)</strong></span> Daten kann man als eine geordnete Folge von Zeichen definieren.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 2.3 (Hallo, Daten)</strong></span> Daten kann man als eine geordnete Folge von Zeichen definieren.<span class="math inline">\(\square\)</span></p>
 </div>
 <p>Daten kommen häufig in Tabellenform vor; so sind sie (oft) am besten zu untersuchen, s. <a href="#tbl-daten" class="quarto-xref">Tabelle&nbsp;<span>2.1</span></a>.</p>
 <div class="cell">
@@ -1349,15 +1378,15 @@ Tabelle&nbsp;2.2: Auszug aus der Tabelle mariokart
 </figure>
 </div>
 </div>
-<p>Eine Erklärung aller Variablen des Datensatzes <code>mariokart</code> findet sich <a href="https://www.openintro.org/data/index.php?data=mariokart">hier</a>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Eine Erklärung aller Variablen des Datensatzes <code>mariokart</code> findet sich <a href="https://www.openintro.org/data/index.php?data=mariokart">hier</a>. <span class="math inline">\(\square\)</span></p>
 </div>
 <div id="def-datadict" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2.4 (Data Dictionary)</strong></span> Eine Erklärung, was die Namen einer Datentabelle bedeuten, nennt man <em>Code Book</em> or <em>Data Dictionary</em>.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 2.4 (Data Dictionary)</strong></span> Eine Erklärung, was die Namen einer Datentabelle bedeuten, nennt man <em>Code Book</em> or <em>Data Dictionary</em>.<span class="math inline">\(\square\)</span></p>
 </div>
 <section id="was-ist-eine-variable" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="was-ist-eine-variable"><span class="header-section-number">2.4.1</span> Was ist eine Variable?</h3>
 <div id="def-var" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2.5 (Variable)</strong></span> Eine Variable ist ein Platzhalter, der für ein Merkmal steht, das verschiedene Werte annehmen kann.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 2.5 (Variable)</strong></span> Eine Variable ist ein Platzhalter, der für ein Merkmal steht, das verschiedene Werte annehmen kann.<span class="math inline">\(\square\)</span></p>
 </div>
 <p>Man kann sich eine Variable wie einen Behälter vorstellen, auf dem mit einem Stift geschrieben steht, was für eine Art Inhalt darin ist, s. <a href="#fig-var-zuweisen" class="quarto-xref">Abbildung&nbsp;<span>2.10</span></a>.</p>
 <div id="fig-var-zuweisen" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -1374,18 +1403,18 @@ Abbildung&nbsp;2.10: Wir definieren eine Variable “temp” mit dem Inhalt “9
 <section id="beobachtungseinheit" class="level3" data-number="2.4.2">
 <h3 data-number="2.4.2" class="anchored" data-anchor-id="beobachtungseinheit"><span class="header-section-number">2.4.2</span> Beobachtungseinheit</h3>
 <div id="def-beobeinheit" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2.6 (Beobachtungseinheit)</strong></span> Beobachtungseinheiten sind die Dinge, die wir untersuchen (beobachten). Beobachtungseinheiten sind die Träger von Variablen.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 2.6 (Beobachtungseinheit)</strong></span> Beobachtungseinheiten sind die Dinge, die wir untersuchen (beobachten). Beobachtungseinheiten sind die Träger von Variablen.<span class="math inline">\(\square\)</span></p>
 </div>
 <p>In <a href="#tbl-daten" class="quarto-xref">Tabelle&nbsp;<span>2.1</span></a> gibt es drei Variablen: <code>id</code>, <code>Name</code> und <code>Note</code>. Es gibt auch drei Beobachtungseinheiten: <em>Anna</em>, <em>Berta</em> und <em>Carla.</em></p>
 </section>
 <section id="wert" class="level3" data-number="2.4.3">
 <h3 data-number="2.4.3" class="anchored" data-anchor-id="wert"><span class="header-section-number">2.4.3</span> Wert</h3>
 <div id="def-wert" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2.7 (Wert)</strong></span> Ein <em>Wert</em> ist der Inhalt einer Variablen.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 2.7 (Wert)</strong></span> Ein <em>Wert</em> ist der Inhalt einer Variablen.<span class="math inline">\(\square\)</span></p>
 </div>
 <p>In <a href="#fig-var-zuweisen" class="quarto-xref">Abbildung&nbsp;<span>2.10</span></a> ist der Wert von <code>temp</code> 9. In <a href="#tbl-daten" class="quarto-xref">Tabelle&nbsp;<span>2.1</span></a> hat die Variable <code>name</code> drei Elemente: Anna, Berta, Carla. Der Wert des 2. Elements ist Berta.</p>
 <div id="def-auspraegung" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2.8</strong></span> Als <em>Ausprägungen</em> bezeichnet man die verschiedenen Werte einer Variablen. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 2.8</strong></span> Als <em>Ausprägungen</em> bezeichnet man die verschiedenen Werte einer Variablen. <span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exm-geschlecht" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 2.6</strong></span> In einer Studie wurden zehn Probanden untersucht. Die Variable <code>geschlecht</code> dokumentiert die Geschlechter der Personen:</p>
@@ -1396,7 +1425,7 @@ Abbildung&nbsp;2.10: Wir definieren eine Variable “temp” mit dem Inhalt “9
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "Mann"   "Frau"   "Frau"   "Frau"   "Mann"   "Frau"   "Mann"   "Mann"  </span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "divers" "Frau"</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>In dieser Variable (die aus 10 Werten besteht) finden sich drei Ausprägungen: divers, Frau, Mann.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>In dieser Variable (die aus 10 Werten besteht) finden sich drei Ausprägungen: divers, Frau, Mann.<span class="math inline">\(\square\)</span></p>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1415,7 +1444,7 @@ Tipp
 <section id="tidy-data" class="level3" data-number="2.4.4">
 <h3 data-number="2.4.4" class="anchored" data-anchor-id="tidy-data"><span class="header-section-number">2.4.4</span> Tidy-Data</h3>
 <div id="def-tidy" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2.9</strong></span> Unter <em>Tidy-Data</em> (tidy data, “Normalform”) versteht man eine Tabelle, in der jede Zeile eine Beobachtungseinheit darstellt, jede Spalte eine Variable und jede Zelle der Tabelle einen Wert, s. <a href="#fig-tidy1" class="quarto-xref">Abbildung&nbsp;<span>2.11 (a)</span></a>. (Zusätzlich ist noch eine “Kopfzeile” erlaubt, in der die Namen der Variablen stehen.)<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 2.9</strong></span> Unter <em>Tidy-Data</em> (tidy data, “Normalform”) versteht man eine Tabelle, in der jede Zeile eine Beobachtungseinheit darstellt, jede Spalte eine Variable und jede Zelle der Tabelle einen Wert, s. <a href="#fig-tidy1" class="quarto-xref">Abbildung&nbsp;<span>2.11 (a)</span></a>. (Zusätzlich ist noch eine “Kopfzeile” erlaubt, in der die Namen der Variablen stehen.)<span class="math inline">\(\square\)</span></p>
 </div>
 <p><a href="#tbl-daten" class="quarto-xref">Tabelle&nbsp;<span>2.1</span></a> ist ein Beispiel für Tidy-Data. <a href="#fig-tidy1" class="quarto-xref">Abbildung&nbsp;<span>2.11 (a)</span></a> zeigt ein Sinnbild für Tidy-Data <span class="citation" data-cites="wickham_r_2018">(<a href="references.html#ref-wickham_r_2018" role="doc-biblioref">Wickham &amp; Grolemund, 2018</a>)</span>. Und <a href="#fig-tidy-hadley" class="quarto-xref">Abbildung&nbsp;<span>2.11 (b)</span></a> erläutert das Tidy-Prinzip genauer.</p>
 <div id="fig-tidy-all" class="quarto-layout-panel">
@@ -1602,7 +1631,7 @@ Tabelle&nbsp;2.4: Beispiel für eine Tidy-Tabelle (Langformat)
 </div>
 </div>
 <div id="exr-widelong" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 2.7</strong></span> Suchen Sie ein Beispiel für eine Konfiguration einer Tabelle im Long- vs.&nbsp;Wide-Format. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 2.7</strong></span> Suchen Sie ein Beispiel für eine Konfiguration einer Tabelle im Long- vs.&nbsp;Wide-Format. <span class="math inline">\(\square\)</span></p>
 </div>
 <blockquote class="blockquote">
 <p>🧑‍🎓 Wozu braucht man das Tidy-Format?</p>
@@ -1630,9 +1659,9 @@ Abbildung&nbsp;2.14: Beispiel für eine Visualisierung auf Basis einer Tidy-Tabe
 <p>Was Daten betrifft, könnte man behaupten: “Viel hilft viel” oder “Je mehr, desto besser”. Natürlich unter sonst gleichen Umständen<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>. Viel Datenmüll ist natürlich nicht besser als ein paar knappe, wasserdichte Fakten!</p>
 <div id="exm-samplesize" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 2.8</strong></span> Um Ihre eigene Lehraktivität zu organisieren, wollen Sie sich ein Bild machen, wie viel Ihre Nebensitzer im Hörsaal so lernen. Sie blicken nach links und fragen “wie viel lernst du so?”. Sie blicken nach recht und wiederholen die Frage gerichtet an den rechtsnebensitzenden Kommilitonen. Dann addieren Sie die zwei Zahlen (unter der Annahme, dass Sie zwei Zahlen bekommen haben), und teilen durch zwei, um den Mittelwert zu erhalten.</p>
-<p>Ein kritischer Geist könnte anmerken, dass Sie besser die Untersuchung nicht gemacht hätten (auch wenn Sie, vielleicht ohne zu wollen, eine statistische Untersuchung angestellt haben). Denn bei so wenig befragten Personen ist die Ungenauigkeit Ihrer Schätzung der typischen Lernzeit bei Studentis einfach zu hoch.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Ein kritischer Geist könnte anmerken, dass Sie besser die Untersuchung nicht gemacht hätten (auch wenn Sie, vielleicht ohne zu wollen, eine statistische Untersuchung angestellt haben). Denn bei so wenig befragten Personen ist die Ungenauigkeit Ihrer Schätzung der typischen Lernzeit bei Studentis einfach zu hoch.<span class="math inline">\(\square\)</span></p>
 </div>
-<p><a href="#fig-sample-estimate" class="quarto-xref">Abbildung&nbsp;<span>2.15</span></a> veranschaulicht, dass man einen Mittelwert genauer schätzen kann, wenn man auf eine größere Stichprobe zurückgreift. Das Teilbild links zeigt den Mittelwert einer Stichprobe mit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">n=20</annotation></semantics></math> Beobachtungen. Das Teilbild rechts zeigt den Mittelwert einer Stichprobe mit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>200</mn></mrow><annotation encoding="application/x-tex">n=200</annotation></semantics></math> Beobachtungen (jeweils aus der gleichen Grundgesamtheit). Wie man sieht, ist im linken Teilbild die Streuung (Variation) höher als im rechten Teilbild:</p>
+<p><a href="#fig-sample-estimate" class="quarto-xref">Abbildung&nbsp;<span>2.15</span></a> veranschaulicht, dass man einen Mittelwert genauer schätzen kann, wenn man auf eine größere Stichprobe zurückgreift. Das Teilbild links zeigt den Mittelwert einer Stichprobe mit <span class="math inline">\(n=20\)</span> Beobachtungen. Das Teilbild rechts zeigt den Mittelwert einer Stichprobe mit <span class="math inline">\(n=200\)</span> Beobachtungen (jeweils aus der gleichen Grundgesamtheit). Wie man sieht, ist im linken Teilbild die Streuung (Variation) höher als im rechten Teilbild:</p>
 <div id="fig-sample-estimate" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-sample-estimate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1654,17 +1683,17 @@ Wichtig
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Mehr Daten = genauere Ergebnisse (unter sonst gleichen Umständen) <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Mehr Daten = genauere Ergebnisse (unter sonst gleichen Umständen) <span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <div id="exr-kleine-grosse-stipro" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 2.8 (Live-Experiment zum Effekt der Stichprobengröße)</strong></span> In diesem Live-Experiment untersuchen wir den Effekt der <em>Stichprobengröße</em> auf die Streuung des Mittelwerts in der <em>Stichprobe.</em> Streuen die Ergebnisse mehr in kleinen Stichproben als in großen? Probieren wir es aus!</p>
 <p>In diesem Experiment werfen Sie (in kleinen Gruppen) eine Münze (auf faire Art und Weise) und notieren das Ergebnis (Kopf oder Zahl). Uns interessiert dabei die Frage, ob die Ergebnisse bei kleinen Stichproben (n=5 Münzwürfe) anders streuen als in großen Stichproben (n=20 Münzwürfe).</p>
 <p>Sie brauchen nur experimentierfreudige Partner (Kleingruppen mit 2-4 Personen), eine faire Münze und dann kann’s los gehen! <a href="https://docs.google.com/forms/d/e/1FAIpQLSeAwqNyZtyQwttq5JrQdQ2AO7w5vzcVDXjiejKnyFNxiWtEag/viewform?usp=sf_link">Klicken Sie hier, um mit dem Experiment zu starten</a>.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
-<p>Die Daten aller Versuche können Sie <a href="https://docs.google.com/spreadsheets/d/11mKFFpr-Y1CMPpq4dGA-JA_Z9jRkPbXolo54Y0G_2gE/edit?usp=sharing">hier</a> einsehen.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Die Daten aller Versuche können Sie <a href="https://docs.google.com/spreadsheets/d/11mKFFpr-Y1CMPpq4dGA-JA_Z9jRkPbXolo54Y0G_2gE/edit?usp=sharing">hier</a> einsehen.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> <span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exm-schule-samplesize" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 2.9 (Dorfschulen machen die schlauesten Schüler!)</strong></span> In einer Pressemitteilung sei zu lesen, dass die besten Schüler in den Dorfschulen zu finden seien<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>. Mit etwas Recherche finden Sie heraus, dass diese Aussage für belastbaren Daten beruht: Tatsächlich sind die Notendurchschnitte auf den kleinen Dorfschulen deutlich besser als in den großen Schulen in der Stadt. Also stimmt die Behauptung der Pressemitteilung? Die gute Landluft lässt das Hirn wachsen? Sie recherchieren noch etwas weiter in den Daten. Dann fällt Ihnen auf: Die <em>schlechtesten</em> Schüler kommen auch aus den Dorfschulen! Eine statistische Erklärung bietet sich an: In den Dorfschulen gibt es nur wenig Kinder und kleine Klassen – die Stichproben sind also klein. Bei kleinen Stichproben gibt es viel Variation um den Mittelwert herum, s. <a href="#fig-sample-estimate" class="quarto-xref">Abbildung&nbsp;<span>2.15</span></a>, und zwar nach oben (guter Notenschnitt) und nach unten (schlechter Notenschnitt). <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Beispiel 2.9 (Dorfschulen machen die schlauesten Schüler!)</strong></span> In einer Pressemitteilung sei zu lesen, dass die besten Schüler in den Dorfschulen zu finden seien<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>. Mit etwas Recherche finden Sie heraus, dass diese Aussage für belastbaren Daten beruht: Tatsächlich sind die Notendurchschnitte auf den kleinen Dorfschulen deutlich besser als in den großen Schulen in der Stadt. Also stimmt die Behauptung der Pressemitteilung? Die gute Landluft lässt das Hirn wachsen? Sie recherchieren noch etwas weiter in den Daten. Dann fällt Ihnen auf: Die <em>schlechtesten</em> Schüler kommen auch aus den Dorfschulen! Eine statistische Erklärung bietet sich an: In den Dorfschulen gibt es nur wenig Kinder und kleine Klassen – die Stichproben sind also klein. Bei kleinen Stichproben gibt es viel Variation um den Mittelwert herum, s. <a href="#fig-sample-estimate" class="quarto-xref">Abbildung&nbsp;<span>2.15</span></a>, und zwar nach oben (guter Notenschnitt) und nach unten (schlechter Notenschnitt). <span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 </section>
@@ -1705,13 +1734,13 @@ Abbildung&nbsp;2.16: Synonyme Bezeichnungen für Input- und Output-Variablen ein
 </div>
 </div>
 <div id="exr-uvav" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 2.9</strong></span> Überlegen Sie sich eine Forschungsfrage, die eine UV und eine AV enthält. Sagen Sie einer/em Kommilitonen diese Forschungsfrage und fragen Sie, was die UV und die AV ist. Bei richtiger Antwort belohnen Sie großzügig. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 2.9</strong></span> Überlegen Sie sich eine Forschungsfrage, die eine UV und eine AV enthält. Sagen Sie einer/em Kommilitonen diese Forschungsfrage und fragen Sie, was die UV und die AV ist. Bei richtiger Antwort belohnen Sie großzügig. <span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 <section id="nach-dem-skalenniveau" class="level3" data-number="2.5.2">
 <h3 data-number="2.5.2" class="anchored" data-anchor-id="nach-dem-skalenniveau"><span class="header-section-number">2.5.2</span> Nach dem Skalenniveau</h3>
 <div id="def-skalenniveau" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2.10</strong></span> Der Begriff <em>Skalenniveau</em> wird verwendet, um die Art und Menge der Information, die in Variablen enthalten ist, zu benennen. Diese Klassifikation basiert auf den Eigenschaften der Daten und den mathematischen Operationen, die sinnvoll auf diese Daten angewendet werden können. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 2.10</strong></span> Der Begriff <em>Skalenniveau</em> wird verwendet, um die Art und Menge der Information, die in Variablen enthalten ist, zu benennen. Diese Klassifikation basiert auf den Eigenschaften der Daten und den mathematischen Operationen, die sinnvoll auf diese Daten angewendet werden können. <span class="math inline">\(\square\)</span></p>
 </div>
 <p><a href="#fig-skalenniveau" class="quarto-xref">Abbildung&nbsp;<span>2.17</span></a> gibt einen Überblick über typisch verwendete Skalenniveaus.</p>
 <div class="cell" data-out-width="100%" data-layout-align="center">
@@ -1740,7 +1769,7 @@ Abbildung&nbsp;2.17: Skalenniveaus
 </section>
 <section id="beispiele-für-skalenniveaus" class="level3 exm-skalen" data-number="2.5.3">
 <h3 data-number="2.5.3" class="anchored" data-anchor-id="beispiele-für-skalenniveaus"><span class="header-section-number">2.5.3</span> Beispiele für Skalenniveaus</h3>
-<p>Beispiele zu den Skalenniveaus sind in <a href="#tbl-skalen-bsps" class="quarto-xref">Tabelle&nbsp;<span>2.5</span></a> aufgeführt. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Beispiele zu den Skalenniveaus sind in <a href="#tbl-skalen-bsps" class="quarto-xref">Tabelle&nbsp;<span>2.5</span></a> aufgeführt. <span class="math inline">\(\square\)</span></p>
 </section>
 <div class="cell">
 <div id="tbl-skalen-bsps" class="cell quarto-float anchored">
@@ -1894,15 +1923,15 @@ Tabelle&nbsp;2.6: Erlaubte Rechenoperationen nach Skalenniveau
 <p><em>Nominalskala</em>: Die Variable <em>Geschlecht</em> ist nominalskaliert. Das bedeutet, dass ihre Ausprägungen <em>Frau</em> und <em>Mann</em> z.B. nicht (sinnvoll) addiert oder sonstwie “verrechnet” werden können. Man könnte, z.B. um das Eintippen zu erleichtern, Frauen mit <code>1</code> kodieren und Männer mit <code>2</code>. Damit darf man aber nicht rechnen! Nicht addieren, multiplizieren … Es macht keinen Sinn zu sagen: “Ich habe eine Frau und einen Mann in meiner Tabelle, das ist im Schnitt ein diverses Geschlecht, weil der Mittelwert von 1 und 2 ist 1,5!”</p>
 <p>Die <em>einzige</em> “Rechenoperation”, die man auf der Nominalskala machen darf, ist die Prüfung auf <em>Gleichheit</em>: Mann kann feststellen, ob ein Objekt gleich zu einem anderen ist oder unterschiedlich. Also ob zwei Personen das gleiche Geschlecht haben oder von unterschiedlichem Geschlecht sind. Anders ausgedrückt:</p>
 <ul>
-<li>👩 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>≠</mo><annotation encoding="application/x-tex">\ne</annotation></semantics></math> 👨</li>
-<li>👩 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>=</mo><annotation encoding="application/x-tex">=</annotation></semantics></math> 👩</li>
-<li>👨 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>=</mo><annotation encoding="application/x-tex">=</annotation></semantics></math> 👨</li>
+<li>👩 <span class="math inline">\(\ne\)</span> 👨</li>
+<li>👩 <span class="math inline">\(=\)</span> 👩</li>
+<li>👨 <span class="math inline">\(=\)</span> 👨</li>
 </ul>
 <p><em>Ordinalskala</em>: Diese Skala entspricht einer Rangordnung. Eine Rangordnung ist etwa die geordnete Abfolge Ihres Leibgerichte<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>. Etwas “formaler” ausgedrückt:</p>
 <ul>
-<li>🍕 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>≻</mo><annotation encoding="application/x-tex">\succ</annotation></semantics></math> 🍝 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>≻</mo><annotation encoding="application/x-tex">\succ</annotation></semantics></math> 🥩</li>
+<li>🍕 <span class="math inline">\(\succ\)</span> 🍝 <span class="math inline">\(\succ\)</span> 🥩</li>
 </ul>
-<p>Das komische Zeichen <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>≻</mo><annotation encoding="application/x-tex">\succ</annotation></semantics></math> soll heißen: “Ist auf meiner Liste von Leibgerichten weiter oben, mag ich lieber”. Man kann aber <em>nicht</em> sagen, “Ich mag aber Pizza um 42% mehr als die Spagetthi und die wieder um 73% mehr als ein Schnitzel!”. Zumindest kann man das nicht ohne weitere Informationen und Annahmen. Es gibt also Dinge auf der Welt, die man leicht in eine Rangordnung bringen kann, aber die man nur schwer in der Größe der Unterschiede bemessen kann. Das ist die Ordinalskala.</p>
+<p>Das komische Zeichen <span class="math inline">\(\succ\)</span> soll heißen: “Ist auf meiner Liste von Leibgerichten weiter oben, mag ich lieber”. Man kann aber <em>nicht</em> sagen, “Ich mag aber Pizza um 42% mehr als die Spagetthi und die wieder um 73% mehr als ein Schnitzel!”. Zumindest kann man das nicht ohne weitere Informationen und Annahmen. Es gibt also Dinge auf der Welt, die man leicht in eine Rangordnung bringen kann, aber die man nur schwer in der Größe der Unterschiede bemessen kann. Das ist die Ordinalskala.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1913,7 +1942,7 @@ Wichtig
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Die Ordinalskale erlaubt, Objekte zu ordnen (hinsichtlich eines Merkmals). Die Abstände zwischen den Objekten können nicht quantifiziert werden. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Die Ordinalskale erlaubt, Objekte zu ordnen (hinsichtlich eines Merkmals). Die Abstände zwischen den Objekten können nicht quantifiziert werden. <span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p><em>Intervallskala</em>: Das ist vielleicht eine Überraschung für Sie: Wenn es heute 10°C hat und morgen 5°C – dann ist es heute <em>nicht</em> doppelt so warm wie morgen. Ja, 10 ist das Doppelte von 5. Aber <em>10° Celcius</em> ist <em>nicht</em> doppelt so warm wie 20° Celcius. Wenn Sie das verwundert: Das ist normal, so geht es vielen Leuten, wenn sie das zum ersten Mal hören. Der Grund, dass es nicht erlaubt ist, Verhältnisse (wie doppelt/halb so viel etc.) auf der Celcius-Skala zu bilden, ist, dass der Nullpunkt der Skala, 0° C, kein echter, physikalischer Nullpunkt ist. Bei 0° C liegt eben nicht Null Wärmeenergie vor. Stattdessen wurde eine Wärmenergiemenge gewählt, die für uns Menschen ganz praktisch, da augenfällig ist: der Gefrierpunkt von Wasser. Was bei der Intervallskala erlaubt ist, ist das Addieren (und Subtrahieren): heute 10°C, morgen 5°C, das ist ein Unterschied von 5°C. Oder: Im Schnitt waren es 7,5°C, das ist genau in der Mitte von 5 und 10°C. <a href="#fig-intervall" class="quarto-xref">Abbildung&nbsp;<span>2.18</span></a> versinnbildlicht die Intervallskala.</p>
@@ -1951,7 +1980,7 @@ Abbildung&nbsp;2.19: Puh! Der rote Flitzer ist 10 Mal so teuer wie die blaue Mö
 <p>Außerdem können quantitative Variablen untergliedert werden in:</p>
 <ul>
 <li><em>stetige</em> Variablen, das sind Variablen, bei denen man zwischen zwei Ausprägungen immer noch eine weitere quetschen kann. So gibt es eine Wert für die Köpergröße zwischen 1.60 m und 1.61 m. Und einen Wert zwischen 1.601 m und 1.602 m, etc.</li>
-<li>diskrete Variablen, das sind metrische Variablen, die nur bestimmte Ausprägungen haben, häufig sind das die natürlichen Zahlen: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">1,2,...</annotation></semantics></math>. Ein Beispiel wäre die Anzahl der Kinder in einer Familie.</li>
+<li>diskrete Variablen, das sind metrische Variablen, die nur bestimmte Ausprägungen haben, häufig sind das die natürlichen Zahlen: <span class="math inline">\(1,2,...\)</span>. Ein Beispiel wäre die Anzahl der Kinder in einer Familie.</li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1967,7 +1996,7 @@ Tipp
 </div>
 </div>
 <div id="exr-skalenniveaus" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 2.10</strong></span> Überlegen Sie sich für einige Variablen die Skalenniveaus und befragen Sie dann eine:n Kommilitonen dazu. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 2.10</strong></span> Überlegen Sie sich für einige Variablen die Skalenniveaus und befragen Sie dann eine:n Kommilitonen dazu. <span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 <section id="modelle" class="level2" data-number="2.6">
@@ -1984,10 +2013,10 @@ Abbildung&nbsp;2.20: Matchbox-Autos sind Modelle für Autos
 </figure>
 </div>
 <div id="def-modelle" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2.11 (Modelle)</strong></span> Modelle sind ein vereinfachtes Abbild der Realität, eine <em>Repräsentation</em> <span class="citation" data-cites="kaplan_statistical_2009">(<a href="references.html#ref-kaplan_statistical_2009" role="doc-biblioref">Kaplan, 2009</a>)</span>.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 2.11 (Modelle)</strong></span> Modelle sind ein vereinfachtes Abbild der Realität, eine <em>Repräsentation</em> <span class="citation" data-cites="kaplan_statistical_2009">(<a href="references.html#ref-kaplan_statistical_2009" role="doc-biblioref">Kaplan, 2009</a>)</span>.<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exm-Modelle" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 2.10 (Beispiele für Modelle)</strong></span> Puppen sind Modelle für Babies, Landkarten für Landstriche und <a href="https://de.wikipedia.org/wiki/Bohrsches_Atommodell">das Atommodell von Nils Bohr</a> ist ein Modell für Atome.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Beispiel 2.10 (Beispiele für Modelle)</strong></span> Puppen sind Modelle für Babies, Landkarten für Landstriche und <a href="https://de.wikipedia.org/wiki/Bohrsches_Atommodell">das Atommodell von Nils Bohr</a> ist ein Modell für Atome.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a><span class="math inline">\(\square\)</span></p>
 </div>
 <p>Auch in der Statistik nutzen wir Modelle. Helfen Sie Prof.&nbsp;Weiss-Ois: Er blickt nicht durch. Gerne würde er wissen, wie viele Stunden seine Studentis auf die Prüfung lernen. Aber mit so vielen Zahlen kann er nicht umgehen … Geben Sie ihm ein Modell: Sagen Sie ihm, wie lang die Studis typischerweise lernen (sagen Sie ihm ein einfach den Mittelwert der Lernzeiten).</p>
 <div class="columns">
@@ -2069,12 +2098,12 @@ Abbildung&nbsp;2.21: Forschung früher und heute
 <p>In vielen Organisationen werden Exceltabellen für bestimmte Zwecke der Datenverarbeitung verwendet. Excel<a href="#fn17" class="footnote-ref" id="fnref17" role="doc-noteref"><sup>17</sup></a> hat bestimmte Stärken und Vorteile, aber auch gewisse Nachteile und Schwäche; das liegt z.T. daran, dass Excel für bestimmte Aufgaben besser und für andere weniger gut geeignet ist. Wenn man mit Excel arbeitet, wiederholen sich erfahrungsgemäß immer wieder die gleichen Fehler bzw. suboptimalen Vorgehensweise zum Aufbau einer Exceltabelle.</p>
 <p><a href="https://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989">Dieser Artikel</a> von <span class="citation" data-cites="broman_data_2018">Broman &amp; Woo (<a href="references.html#ref-broman_data_2018" role="doc-biblioref">2018</a>)</span> zeigt anhand einiger praktischer Tipps, wie man Exceltabellen so aufbaut, dass Fehler minimiert werden.</p>
 <div id="exr-xls-paper" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 2.11 (Fassen Sie den Artikel von <span class="citation" data-cites="broman_data_2018">Broman &amp; Woo (<a href="references.html#ref-broman_data_2018" role="doc-biblioref">2018</a>)</span> zusammen)</strong></span> Die Lehrkraft teilt Sie dazu in Gruppen ein und weist jeder Gruppe einen Abschnitt des Artikels zu. Fassen Sie das <em>Wesentliche</em> (und nur das Wesentliche) an einem geeigneten Ort zusammen (z.B. auf einem Miro-Board). <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 2.11 (Fassen Sie den Artikel von <span class="citation" data-cites="broman_data_2018">Broman &amp; Woo (<a href="references.html#ref-broman_data_2018" role="doc-biblioref">2018</a>)</span> zusammen)</strong></span> Die Lehrkraft teilt Sie dazu in Gruppen ein und weist jeder Gruppe einen Abschnitt des Artikels zu. Fassen Sie das <em>Wesentliche</em> (und nur das Wesentliche) an einem geeigneten Ort zusammen (z.B. auf einem Miro-Board). <span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 <section id="sind-wir-süchtig-nach-dem-handy" class="level3" data-number="2.11.2">
 <h3 data-number="2.11.2" class="anchored" data-anchor-id="sind-wir-süchtig-nach-dem-handy"><span class="header-section-number">2.11.2</span> Sind wir süchtig nach dem Handy?</h3>
-<p>Sind Sie süchtig nach Ihrem Handy? Lassen Sie uns eine kleine Studie dazu live im Hörsaal durchführen. Füllen Sie <a href="https://forms.gle/PP8yb6Ubqq3JU78F9">diese Umfrage</a> zum Thema Smartphonse-Sucht aus (anonym und kein Muss).<a href="#fn18" class="footnote-ref" id="fnref18" role="doc-noteref"><sup>18</sup></a> Wir werten die Daten später zusammen aus. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Sind Sie süchtig nach Ihrem Handy? Lassen Sie uns eine kleine Studie dazu live im Hörsaal durchführen. Füllen Sie <a href="https://forms.gle/PP8yb6Ubqq3JU78F9">diese Umfrage</a> zum Thema Smartphonse-Sucht aus (anonym und kein Muss).<a href="#fn18" class="footnote-ref" id="fnref18" role="doc-noteref"><sup>18</sup></a> Wir werten die Daten später zusammen aus. <span class="math inline">\(\square\)</span></p>
 </section>
 <section id="datenprofi-plaudert-aus-dem-nähkästchen" class="level3" data-number="2.11.3">
 <h3 data-number="2.11.3" class="anchored" data-anchor-id="datenprofi-plaudert-aus-dem-nähkästchen"><span class="header-section-number">2.11.3</span> Datenprofi plaudert aus dem Nähkästchen</h3>

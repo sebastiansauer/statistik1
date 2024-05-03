@@ -129,6 +129,35 @@ div.csl-indent {
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -368,14 +397,14 @@ div.csl-indent {
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><span class="math display">$$
+<p><span class="math display">\[
 \definecolor{ycol}{RGB}{230,159,0}
 \definecolor{modelcol}{RGB}{86,180,233}
 \definecolor{errorcol}{RGB}{0,158,115}
 \definecolor{beta0col}{RGB}{213,94,0}
 \definecolor{beta1col}{RGB}{0,114,178}
 \definecolor{xcol}{RGB}{204,121,167}
-$$</span></p>
+\]</span></p>
 </section>
 <section id="benötigte-daten" class="level3" data-number="6.1.4">
 <h3 data-number="6.1.4" class="anchored" data-anchor-id="benötigte-daten"><span class="header-section-number">6.1.4</span> Benötigte Daten</h3>
@@ -394,11 +423,11 @@ $$</span></p>
 <li>Das arithmetische Mittel der Männer beträgt 1,80m.</li>
 <li>Die meisten Männer sind 1,80m groß.</li>
 <li>Etwas anderes.</li>
-<li>Keine Ahnung! <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></li>
+<li>Keine Ahnung! <span class="math inline">\(\square\)</span></li>
 </ol>
 </div>
 <div id="exr-mw2" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 6.2</strong></span> Laut <a href="https://en.wikipedia.org/wiki/Average_human_height_by_country">dieser Quelle</a> beträgt der Wert der mittleren Größe deutscher Frauen etwa 1,66m, also 14 cm weniger als bei Männern.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 6.2</strong></span> Laut <a href="https://en.wikipedia.org/wiki/Average_human_height_by_country">dieser Quelle</a> beträgt der Wert der mittleren Größe deutscher Frauen etwa 1,66m, also 14 cm weniger als bei Männern.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <span class="math inline">\(\square\)</span></p>
 </div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Frage</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Antwort</a></li></ul>
@@ -409,7 +438,7 @@ $$</span></p>
 <li>ja</li>
 <li>nein</li>
 <li>kommt drauf an</li>
-<li>weiß nicht <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></li>
+<li>weiß nicht <span class="math inline">\(\square\)</span></li>
 </ol>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
@@ -418,7 +447,7 @@ $$</span></p>
 </div>
 </div>
 <div id="exm-mw" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 6.1 (Beispiel zum Mittelwert)</strong></span> Ein Statistikkurs besteht aus drei Studentinnen: Anna, Berta und Carla. Sie haben gerade ihre Noten in der Klausur erfahren. Anna hat eine 1, Berta eine 2 und Carla eine 3. Der Durchschnitt (das arithmetische Mittel, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>⌀</mi><annotation encoding="application/x-tex">\varnothing</annotation></semantics></math>) beträgt: 2. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Beispiel 6.1 (Beispiel zum Mittelwert)</strong></span> Ein Statistikkurs besteht aus drei Studentinnen: Anna, Berta und Carla. Sie haben gerade ihre Noten in der Klausur erfahren. Anna hat eine 1, Berta eine 2 und Carla eine 3. Der Durchschnitt (das arithmetische Mittel, <span class="math inline">\(\varnothing\)</span>) beträgt: 2. <span class="math inline">\(\square\)</span></p>
 </div>
 <blockquote class="blockquote">
 <p>🧑‍🎓 Zu easy!</p>
@@ -433,11 +462,11 @@ $$</span></p>
 <li>Fertig. 😄</li>
 </ol>
 <p>Etwas abstrakter kann man <a href="#exm-mw" class="quarto-xref">Beispiel&nbsp;<span>6.1</span></a> in folgendem Schaubild darstellen, s. <a href="#eq-mw" class="quarto-xref">Gleichung&nbsp;<span>6.1</span></a>.</p>
-<p><span id="eq-mw"><span class="math display">$$
+<p><span id="eq-mw"><span class="math display">\[
 \begin{array}{|c|} \hline \\ \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \square \\ \square \\ \square \\ \hline \end{array} = 3 \cdot \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array}
-\qquad(6.1)$$</span></span></p>
+\tag{6.1}\]</span></span></p>
 <p>Der Nutzen des Mittelwerts liegt darin, dass er uns ein Bild gibt (ein Modell ist!) für die “typische Note” im Statistikkurs, s. <a href="#eq-mw2" class="quarto-xref">Gleichung&nbsp;<span>6.2</span></a>.</p>
-<p><span id="eq-mw2"><span class="math display">$$\begin{array}{|c|} \hline \\ \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \square \\ \square \\ \square \\ \hline \end{array} \qquad \leftrightarrow  \qquad \underbrace{\begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array}}_{\text{"typischer Vertreter"}} \qquad(6.2)$$</span></span></p>
+<p><span id="eq-mw2"><span class="math display">\[\begin{array}{|c|} \hline \\ \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \square \\ \square \\ \square \\ \hline \end{array} \qquad \leftrightarrow  \qquad \underbrace{\begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array}}_{\text{"typischer Vertreter"}} \tag{6.2}\]</span></span></p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -465,30 +494,30 @@ Abbildung&nbsp;6.1: Mittelwert als ausbalancierte Wippe mit Mittelwert 3
 <div class="xsmall">
 <p><a href="https://commons.wikimedia.org/w/index.php?curid=79390659">Quelle: Von Maphry - Eigenes Werk, CC BY-SA 4.0</a></p>
 </div>
-<p>In “Mathe-Sprech” bezeichnet man den Mittelwert häufig mit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> und schreibt die Rechenregel so, s. <a href="#eq-mw-formel" class="quarto-xref">Gleichung&nbsp;<span>6.3</span></a>.</p>
-<p><span id="eq-mw-formel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>x</mi><mi>i</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>x</mi><mn>2</mn></msub><mo>+</mo><mi>⋯</mi><mo>+</mo><msub><mi>x</mi><mi>n</mi></msub></mrow><mi>n</mi></mfrac><mspace width="2.0em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mn>6.3</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\bar {x} =\frac{1}{n} \sum_{i=1}^{n}{x_{i}}=\frac {x_{1}+x_{2}+\dotsb +x_{n}} {n} \qquad(6.3)</annotation></semantics></math></span></p>
+<p>In “Mathe-Sprech” bezeichnet man den Mittelwert häufig mit <span class="math inline">\(\bar{x}\)</span> und schreibt die Rechenregel so, s. <a href="#eq-mw-formel" class="quarto-xref">Gleichung&nbsp;<span>6.3</span></a>.</p>
+<p><span id="eq-mw-formel"><span class="math display">\[\bar {x} =\frac{1}{n} \sum_{i=1}^{n}{x_{i}}=\frac {x_{1}+x_{2}+\dotsb +x_{n}} {n} \tag{6.3}\]</span></span></p>
 <div id="def-mw" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 6.1 (Mittelwert)</strong></span> Der Mittelwert der Variablen <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> (präziser: das arithmetische Mittel von <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>) ist definiert als die Summe der Elemente von <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> geteilt durch deren Anzahl, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>. Den Mittelwert von <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> bezeichnet man mit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar {x}</annotation></semantics></math>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 6.1 (Mittelwert)</strong></span> Der Mittelwert der Variablen <span class="math inline">\(X\)</span> (präziser: das arithmetische Mittel von <span class="math inline">\(X\)</span>) ist definiert als die Summe der Elemente von <span class="math inline">\(X\)</span> geteilt durch deren Anzahl, <span class="math inline">\(n\)</span>. Den Mittelwert von <span class="math inline">\(X\)</span> bezeichnet man mit <span class="math inline">\(\bar {x}\)</span>. <span class="math inline">\(\square\)</span></p>
 </div>
-<p>Da der Mittelwert eine zentrale Rolle spielt in der Statistik, sollten wir ihn uns noch etwas genauer anschauen. In s. <a href="#fig-mw1" class="quarto-xref">Abbildung&nbsp;<span>6.2</span></a> sehen wir die Noten von (dieses Mal) vier Studentis. Die gestrichelte horizontale Linie zeigt den Mittelwert der vier Noten. Die schwarzen Punkte sind die Daten, in dem Fall die einzelnen Noten. Die vertikalen Linien zeigen die Abweichungen der Noten zum Mittelwert. Bezeichnen wir die Abweichung - auch als “Fehler”, “Rest” oder “Residuum” bezeichnet - der <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>-ten Person mit <span class="math inline">$\color{errorcol}{\text{e}_i}$</span> (<em>e</em> wie engl. <em>error</em>, Fehler) und die <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>-te Note mit <span class="math inline">$\color{ycol}{y_i}$</span>, so können wir mit <a href="#eq-modell1" class="quarto-xref">Gleichung&nbsp;<span>6.4</span></a> festhalten:</p>
-<p><span id="eq-modell1"><span class="math display">$$\color{ycol}{\text{y}_i} \color{black}{ = } \color{modelcol}{\;\bar{x}\;} + \color{errorcol}{\;\text{e}_i} \qquad(6.4)$$</span></span></p>
+<p>Da der Mittelwert eine zentrale Rolle spielt in der Statistik, sollten wir ihn uns noch etwas genauer anschauen. In s. <a href="#fig-mw1" class="quarto-xref">Abbildung&nbsp;<span>6.2</span></a> sehen wir die Noten von (dieses Mal) vier Studentis. Die gestrichelte horizontale Linie zeigt den Mittelwert der vier Noten. Die schwarzen Punkte sind die Daten, in dem Fall die einzelnen Noten. Die vertikalen Linien zeigen die Abweichungen der Noten zum Mittelwert. Bezeichnen wir die Abweichung - auch als “Fehler”, “Rest” oder “Residuum” bezeichnet - der <span class="math inline">\(i\)</span>-ten Person mit <span class="math inline">\(\color{errorcol}{\text{e}_i}\)</span> (<em>e</em> wie engl. <em>error</em>, Fehler) und die <span class="math inline">\(i\)</span>-te Note mit <span class="math inline">\(\color{ycol}{y_i}\)</span>, so können wir mit <a href="#eq-modell1" class="quarto-xref">Gleichung&nbsp;<span>6.4</span></a> festhalten:</p>
+<p><span id="eq-modell1"><span class="math display">\[\color{ycol}{\text{y}_i} \color{black}{ = } \color{modelcol}{\;\bar{x}\;} + \color{errorcol}{\;\text{e}_i} \tag{6.4}\]</span></span></p>
 <p>Anders ausgedrückt (s. <a href="#eq-modell2" class="quarto-xref">Gleichung&nbsp;<span>6.5</span></a>):</p>
-<p><span id="eq-modell2"><span class="math display">$$\color{ycol}{\text{Daten}} \color{black}{ = }     \color{modelcol}{\text{Modell}} +
-\color{errorcol}{\text{Rest}} \qquad(6.5)$$</span></span></p>
+<p><span id="eq-modell2"><span class="math display">\[\color{ycol}{\text{Daten}} \color{black}{ = }     \color{modelcol}{\text{Modell}} +
+\color{errorcol}{\text{Rest}} \tag{6.5}\]</span></span></p>
 <p>Der Mittelwert ist hier unser Modell der Daten. Wie gesagt: Ein Modell ist eine vereinfachte (zusammengefasste) Beschreibung einer Datenreihe.</p>
 <p>Um Modelle darzustellen, wird in der Datenanalyse häufig folgende Art von Modellgleichung verwendet, s. <a href="#eq-sim-mean" class="quarto-xref">Gleichung&nbsp;<span>6.6</span></a>.</p>
-<p><span id="eq-sim-mean"><span class="math display">$$\color{modelcol}{\hat{y}} \sim \color{xcol}{\text{x}} \qquad(6.6)$$</span></span></p>
-<p>Lies: “Der Modellwert <span class="math inline">$\color{modelcol}{\hat{y}}$</span> ist eine Funktion der Variable <span class="math inline">$\color{xcol}{\text{x}}$</span>”. Der Kringel “~”<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> soll also hier heißen “… ist eine Funktion von …”.</p>
-<p>Mit <span class="math inline">$\color{modelcol}{\hat{y}}$</span> ist die vorhergesagte bzw. die zu erklärende Variable<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> gemeint. Das “Dach” über dem <span class="math inline">$\color{ycol}{\text{y}}$</span> bedeutet “vorhergesagter Y-Wert” oder “Y-Wert laut dem Modell”. Der tatsächliche, beobachtete Wert <span class="math inline">$\color{ycol}{\text{y}}$</span> setzt sich zusammen aus dem Modellwert <span class="math inline">$\color{modelcol}{\text{m}}$</span> plus einem Fehler <span class="math inline">$\color{errorcol}{\text{e}}$</span>, s. <a href="#eq-modell3" class="quarto-xref">Gleichung&nbsp;<span>6.7</span></a>.</p>
-<p><span id="eq-modell3"><span class="math display">$$\color{ycol}{\text{y}} \color{black}{=} \color{modelcol}{\text{m}} + \color{errorcol}{\text{e}} \qquad(6.7)$$</span></span></p>
-<p>Anstelle von <span class="math inline">$\color{modelcol}{\text{m}}$</span> schreibt man auch <span class="math inline">$\color{modelcol}{\hat{y}}$</span> (“y-Dach”). In diesem Fall ist das Modell einfach gleich dem Mittelwert (und nicht irgendeiner Funktion des Mittelwerts), so dass wir mit <a href="#eq-modell4" class="quarto-xref">Gleichung&nbsp;<span>6.8</span></a> schreiben können:</p>
-<p><span id="eq-modell4"><span class="math display">$$\color{ycol}{y}  \color{black}{ = } \color{modelcol}{\bar{x}} + \color{errorcol}{e} \qquad(6.8)$$</span></span></p>
-<p>Die Zielvariable <span class="math inline">$\color{ycol}{\text{y}}$</span> wird also durch ihren eigenen Mittelwert erklärt, außer gehen wir von einem Fehler <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math> in unseren Modellvorhersagen aus. Nobody is perfect. In späteren Kapiteln werden wir andere Variablen heranziehen, um die Zielvariable zu erklären. Würden wir z.B. sagen wollen, dass wir <span class="math inline">$\color{ycol}{\text{y}}$</span> als Funktion einer Variable <span class="math inline">$\color{xcol}{X}$</span> erklären, so würden wir schreiben (s. <a href="#eq-modell5" class="quarto-xref">Gleichung&nbsp;<span>6.9</span></a>):</p>
-<p><span class="math display">$$\color{modelcol}{\bar{y}} \color{black}{ \sim } \color{xcol}{\text{x}} $$</span> Da wir im Moment aber keine andere Variablen bemühen, um <span class="math inline">$\color{ycol}{\text{y}}$</span> zu erklären, schreibt man mit <a href="#eq-modell5" class="quarto-xref">Gleichung&nbsp;<span>6.9</span></a> auch:</p>
-<p><span id="eq-modell5"><span class="math display">$$\color{modelcol}{\bar{y}}\;  \color{black}{\sim \; 1} \qquad(6.9)$$</span></span></p>
-<p>Diese Schreibweise sieht verwirrend aus. Die <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math> soll aber einfach zeigen, dass wir keine andere Variable zur Erklärung von <span class="math inline">$\color{ycol}{\text{y}}$</span> verwenden, daher steht hier kein Buchstabe, sondern eine einfache <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>.</p>
+<p><span id="eq-sim-mean"><span class="math display">\[\color{modelcol}{\hat{y}} \sim \color{xcol}{\text{x}} \tag{6.6}\]</span></span></p>
+<p>Lies: “Der Modellwert <span class="math inline">\(\color{modelcol}{\hat{y}}\)</span> ist eine Funktion der Variable <span class="math inline">\(\color{xcol}{\text{x}}\)</span>”. Der Kringel “~”<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> soll also hier heißen “… ist eine Funktion von …”.</p>
+<p>Mit <span class="math inline">\(\color{modelcol}{\hat{y}}\)</span> ist die vorhergesagte bzw. die zu erklärende Variable<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> gemeint. Das “Dach” über dem <span class="math inline">\(\color{ycol}{\text{y}}\)</span> bedeutet “vorhergesagter Y-Wert” oder “Y-Wert laut dem Modell”. Der tatsächliche, beobachtete Wert <span class="math inline">\(\color{ycol}{\text{y}}\)</span> setzt sich zusammen aus dem Modellwert <span class="math inline">\(\color{modelcol}{\text{m}}\)</span> plus einem Fehler <span class="math inline">\(\color{errorcol}{\text{e}}\)</span>, s. <a href="#eq-modell3" class="quarto-xref">Gleichung&nbsp;<span>6.7</span></a>.</p>
+<p><span id="eq-modell3"><span class="math display">\[\color{ycol}{\text{y}} \color{black}{=} \color{modelcol}{\text{m}} + \color{errorcol}{\text{e}} \tag{6.7}\]</span></span></p>
+<p>Anstelle von <span class="math inline">\(\color{modelcol}{\text{m}}\)</span> schreibt man auch <span class="math inline">\(\color{modelcol}{\hat{y}}\)</span> (“y-Dach”). In diesem Fall ist das Modell einfach gleich dem Mittelwert (und nicht irgendeiner Funktion des Mittelwerts), so dass wir mit <a href="#eq-modell4" class="quarto-xref">Gleichung&nbsp;<span>6.8</span></a> schreiben können:</p>
+<p><span id="eq-modell4"><span class="math display">\[\color{ycol}{y}  \color{black}{ = } \color{modelcol}{\bar{x}} + \color{errorcol}{e} \tag{6.8}\]</span></span></p>
+<p>Die Zielvariable <span class="math inline">\(\color{ycol}{\text{y}}\)</span> wird also durch ihren eigenen Mittelwert erklärt, außer gehen wir von einem Fehler <span class="math inline">\(e\)</span> in unseren Modellvorhersagen aus. Nobody is perfect. In späteren Kapiteln werden wir andere Variablen heranziehen, um die Zielvariable zu erklären. Würden wir z.B. sagen wollen, dass wir <span class="math inline">\(\color{ycol}{\text{y}}\)</span> als Funktion einer Variable <span class="math inline">\(\color{xcol}{X}\)</span> erklären, so würden wir schreiben (s. <a href="#eq-modell5" class="quarto-xref">Gleichung&nbsp;<span>6.9</span></a>):</p>
+<p><span class="math display">\[\color{modelcol}{\bar{y}} \color{black}{ \sim } \color{xcol}{\text{x}} \]</span> Da wir im Moment aber keine andere Variablen bemühen, um <span class="math inline">\(\color{ycol}{\text{y}}\)</span> zu erklären, schreibt man mit <a href="#eq-modell5" class="quarto-xref">Gleichung&nbsp;<span>6.9</span></a> auch:</p>
+<p><span id="eq-modell5"><span class="math display">\[\color{modelcol}{\bar{y}}\;  \color{black}{\sim \; 1} \tag{6.9}\]</span></span></p>
+<p>Diese Schreibweise sieht verwirrend aus. Die <span class="math inline">\(1\)</span> soll aber einfach zeigen, dass wir keine andere Variable zur Erklärung von <span class="math inline">\(\color{ycol}{\text{y}}\)</span> verwenden, daher steht hier kein Buchstabe, sondern eine einfache <span class="math inline">\(1\)</span>.</p>
 <div id="exm-noten" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 6.2 (Noten, Mittelwert und Abweichung)</strong></span> Vier Studentis – Anna, Berta, Carl, Dani – haben ihre Statistik-Klausur zurückbekommen (Schluck). Die Noten sehen Sie in <a href="#fig-mw1" class="quarto-xref">Abbildung&nbsp;<span>6.2</span></a>, gar nicht so schlecht ausgefallen. Außerdem ist der Mittelwert (gestrichelte horizontale Linie) sowie die Abweichungen der einzelnen Noten vom Mittelwert eingezeichnet.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Beispiel 6.2 (Noten, Mittelwert und Abweichung)</strong></span> Vier Studentis – Anna, Berta, Carl, Dani – haben ihre Statistik-Klausur zurückbekommen (Schluck). Die Noten sehen Sie in <a href="#fig-mw1" class="quarto-xref">Abbildung&nbsp;<span>6.2</span></a>, gar nicht so schlecht ausgefallen. Außerdem ist der Mittelwert (gestrichelte horizontale Linie) sowie die Abweichungen der einzelnen Noten vom Mittelwert eingezeichnet.<span class="math inline">\(\square\)</span></p>
 </div>
 <p>Schauen Sie sich die Abweichungsbalken<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> in <a href="#fig-mw1" class="quarto-xref">Abbildung&nbsp;<span>6.2</span></a> einmal genauer an.</p>
 <div class="cell">
@@ -507,7 +536,7 @@ Abbildung&nbsp;6.2: Der Mittelwert als horizontale (gestrichelte) Linie. Die ver
 </div>
 <p>Jetzt stellen Sie sich vor, Sie würden die vom Mittelwert nach <em>oben</em> ragenden Balkenlängen aneinanderlegen (das sind die gestrichelten. Sehen Sie das vor Ihrem geistigen Auge? Jetzt legen Sie auch noch die Abweichungsbalken, die nach <em>unten</em> ragen, aneinander (die mit den durchgezogenen Linien). Wer viel Phantasie hat, erkennt (sieht) jetzt, dass die Gesamtlänge der “Balken nach oben” identisch ist zur Gesamtlänge der nach “unten ragenden Balken”, vgl. <a href="#fig-wippe" class="quarto-xref">Abbildung&nbsp;<span>6.1</span></a>.</p>
 <p>Präziser ausgedrückt und ohne Ihre Phantasie zu strapazieren (<a href="#eq-summenull" class="quarto-xref">Gleichung&nbsp;<span>6.10</span></a>):</p>
-<p><span id="eq-summenull"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mi>n</mi><mo>⋅</mo><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>−</mo><mi>n</mi><mo>⋅</mo><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>0</mn><mspace width="2.0em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mn>6.10</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\sum_{i=1}^n (x_i-\bar{x})=\sum_{i=1}^n x_i - \sum_{i=1}^n \bar{x} = n\cdot \bar{x} - n\cdot \bar{x}=0 \qquad(6.10)</annotation></semantics></math></span></p>
+<p><span id="eq-summenull"><span class="math display">\[\sum_{i=1}^n (x_i-\bar{x})=\sum_{i=1}^n x_i - \sum_{i=1}^n \bar{x} = n\cdot \bar{x} - n\cdot \bar{x}=0 \tag{6.10}\]</span></span></p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -522,7 +551,7 @@ Hinweis
 </div>
 </div>
 <div id="exr-mw-wealth1" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 6.3</strong></span> Was schätzen Sie, wie hoch das “mittlere” Vermögen des Haushalte in Deutschland in etwa ist?<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 6.3</strong></span> Was schätzen Sie, wie hoch das “mittlere” Vermögen des Haushalte in Deutschland in etwa ist?<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>. <span class="math inline">\(\square\)</span></p>
 </div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Auswahl</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Antwort</a></li></ul>
@@ -558,7 +587,7 @@ Hinweis
 <p>Die 100 Studis im Hörsaal schauen verdattert aus der Wäsche: Was ist das für eine komische Frage!? Aber zumindest verteilt der Fußballspieler Autogramme.</p>
 </div>
 <div id="exr-elon" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 6.4 (Mittleres Einkommen im Hörsaal, mit Kylian Mbappé)</strong></span> Schätzen Sie – im Kopf – das mittlere Vermögen im Hörsaal, gehen Sie davon aus, dass alle der 100 Studentis jeweils 1000 Euro im Jahr verdienen. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 6.4 (Mittleres Einkommen im Hörsaal, mit Kylian Mbappé)</strong></span> Schätzen Sie – im Kopf – das mittlere Vermögen im Hörsaal, gehen Sie davon aus, dass alle der 100 Studentis jeweils 1000 Euro im Jahr verdienen. <span class="math inline">\(\square\)</span></p>
 </div>
 <p>In R kann man das mittlere Einkommen (präziser: das arithmetische Mittel des Einkommens) wie folgt berechnen, s. <a href="#lst-einkommen" class="quarto-xref">Listing&nbsp;<span>6.1</span></a>.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></p>
 <div id="lst-einkommen" class="listing quarto-float">
@@ -596,7 +625,7 @@ Hinweis
 <h3 data-number="6.2.1" class="anchored" data-anchor-id="der-mittelwert-als-lineares-modell"><span class="header-section-number">6.2.1</span> Der Mittelwert als lineares Modell</h3>
 <p>Man kann den Mittelwert als Gerade einzeichnen, s. <a href="#fig-mw2" class="quarto-xref">Abbildung&nbsp;<span>6.3</span></a>, bzw. als Gerade begreifen. Insofern kann man vom Mittelwert auch als <em>lineares Modell</em> sprechen.</p>
 <div id="def-lm" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 6.2 (Lineares Modell)</strong></span> Ein lineares Modell verwendet eine Gerade als Modell der Daten. Es erklärt die Daten anhand einer Geraden. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 6.2 (Lineares Modell)</strong></span> Ein lineares Modell verwendet eine Gerade als Modell der Daten. Es erklärt die Daten anhand einer Geraden. <span class="math inline">\(\square\)</span></p>
 </div>
 <div id="fig-mw2" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
@@ -635,7 +664,7 @@ Abbildung&nbsp;6.3: Der mittlere Preis von Mariokart-Spielen als horizontale Ger
 </div>
 <p><a href="#fig-mw2" class="quarto-xref">Abbildung&nbsp;<span>6.3</span></a> zeigt den Mittelwert des Verkaufspreises der Mariokart-Spiele (<code>total_pr</code>), einmal mit Extremwerte (a) bzw. einmal ohne Extremwerte (b).</p>
 <div id="def-extremwert" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 6.3 (Extremwert)</strong></span> Ein Extremwert (engl. <em>outlier</em>) ist eine Beobachtung, dessen Wert deutlich vom Großteil der anderen Beobachtungen im Datensatz abweicht, z.B. viel größer ist. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 6.3 (Extremwert)</strong></span> Ein Extremwert (engl. <em>outlier</em>) ist eine Beobachtung, dessen Wert deutlich vom Großteil der anderen Beobachtungen im Datensatz abweicht, z.B. viel größer ist. <span class="math inline">\(\square\)</span></p>
 </div>
 <p>Berechnen wir mal den Mittelwert von <code>einkommen</code> mit R (vgl. <a href="#lst-einkommen" class="quarto-xref">Listing&nbsp;<span>6.1</span></a>):</p>
 <div class="cell">
@@ -767,13 +796,13 @@ Abbildung&nbsp;6.5: Das Median-Einkommen einiger Studentinnen sowie der Mittelwe
 </figcaption>
 </figure>
 </div>
-<p>Wir könnten jetzt behaupten, dass Carla das typische Einkommen (für diese Datenreihe) aufweist, da es genauso viele Studentinnen gibt, die mehr verdienen, wie solche, die weniger verdienen. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Wir könnten jetzt behaupten, dass Carla das typische Einkommen (für diese Datenreihe) aufweist, da es genauso viele Studentinnen gibt, die mehr verdienen, wie solche, die weniger verdienen. <span class="math inline">\(\square\)</span></p>
 </div>
 <div id="def-median" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 6.4 (Median)</strong></span> Merkmalsausprägung, die bei (aufsteigend) sortierten Beobachtungen in der Mitte liegt. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 6.4 (Median)</strong></span> Merkmalsausprägung, die bei (aufsteigend) sortierten Beobachtungen in der Mitte liegt. <span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exr-aufstellen" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 6.5 (Alle mal aufstehen)</strong></span> Auf Geheiß der Lehrkraft stehen jetzt alle Studis bitte auf und sortieren sich der Größe nach im Raum, schön in einer Reihe aufgestellt. Die Körpergröße der Person in der Mitte der Reihe, zu der also gleich viele Personen zu links wie zu rechts stehen, das ist der Medien dieser Datenreihe, vgl. <a href="#fig-median-human" class="quarto-xref">Abbildung&nbsp;<span>6.6</span></a>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 6.5 (Alle mal aufstehen)</strong></span> Auf Geheiß der Lehrkraft stehen jetzt alle Studis bitte auf und sortieren sich der Größe nach im Raum, schön in einer Reihe aufgestellt. Die Körpergröße der Person in der Mitte der Reihe, zu der also gleich viele Personen zu links wie zu rechts stehen, das ist der Medien dieser Datenreihe, vgl. <a href="#fig-median-human" class="quarto-xref">Abbildung&nbsp;<span>6.6</span></a>. <span class="math inline">\(\square\)</span></p>
 </div>
 <p>Der Median ist <em>robust</em> (gegenüber) Extremwerten: Fügt man Extremwerte zu einer Verteilung hinzu, ändert sich der Median zumeist (deutlich) weniger als der Mittelwert.</p>
 <p><a href="#fig-median-human" class="quarto-xref">Abbildung&nbsp;<span>6.6</span></a> stellt den Median schematisch dar.</p>
@@ -828,12 +857,12 @@ Abbildung&nbsp;6.6: Der Median als der Wert des “mittleren” Objekts, wenn di
 </figcaption>
 </figure>
 </div>
-<p>Bei geradem <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> werden die beiden mittleren Werte betrachtet und das arithmetische Mittel aus diesen beiden Werten gebildet.</p>
+<p>Bei geradem <span class="math inline">\(n\)</span> werden die beiden mittleren Werte betrachtet und das arithmetische Mittel aus diesen beiden Werten gebildet.</p>
 <div id="exm-med2" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 6.5</strong></span> Bei der Messreihe 1, 2, 3, 4, 5, 6, 8, 9 beträgt der Median 4.5.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Beispiel 6.5</strong></span> Bei der Messreihe 1, 2, 3, 4, 5, 6, 8, 9 beträgt der Median 4.5.<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exr-md2" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 6.6 (Emma wird reich)</strong></span> Durch ein geniales Patent wird Emma steinreich. Ihr Einkommen erhöht sich um das Hundertfache. Wie verändert sich der Median?<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 6.6 (Emma wird reich)</strong></span> Durch ein geniales Patent wird Emma steinreich. Ihr Einkommen erhöht sich um das Hundertfache. Wie verändert sich der Median?<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> <span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exr-mw-md" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 6.7 (Wer ist mehr “mittel”? Median oder Mittelwert?)</strong></span> &nbsp;</p>
@@ -843,7 +872,7 @@ Abbildung&nbsp;6.6: Der Median als der Wert des “mittleren” Objekts, wenn di
 <blockquote class="blockquote">
 <p>👩‍🎓 Moment! Der Median und nur der Median zeigt den mittleren Messwert! Links und rechts sind gleich viele Messwerte, wenn man die Werte der Größe nach sortiert. Also liegt der Median genau in der Mitte!</p>
 </blockquote>
-<p>Nehmen Sie Stellung zu dieser Diskussion!<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Nehmen Sie Stellung zu dieser Diskussion!<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exm-md3" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 6.6 (Ein “mittlerer” Preis für Mariokart)</strong></span> Der Mittelwert (das arithmetische Mittel) und der Median für das Start-Gebot (<code>start_pr)</code> von Mariokart-Spielen sind nicht gleich, der Mittelwert ist höher als der Median.</p>
@@ -900,7 +929,7 @@ Hinweis
 </div>
 </div>
 <div id="exr-mw-no-extrem" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 6.8 (Mariokart ohne Extremwerte)</strong></span> Im Datensatz <code>mariokart</code> gibt es einige wenige Spiele, die für einen vergleichsweise hohen Preis verkauft wurden. Diese Extremwerte verzerren den mittleren Verkaufspreis möglicherweise über die Gebühr. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 6.8 (Mariokart ohne Extremwerte)</strong></span> Im Datensatz <code>mariokart</code> gibt es einige wenige Spiele, die für einen vergleichsweise hohen Preis verkauft wurden. Diese Extremwerte verzerren den mittleren Verkaufspreis möglicherweise über die Gebühr. <span class="math inline">\(\square\)</span></p>
 </div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Aufgabe</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Lösung</a></li></ul>
@@ -966,7 +995,7 @@ Hinweis
 <li>100.000 Euro</li>
 <li>150.000 Euro</li>
 <li>200.000 Euro</li>
-<li>250.000 Euro<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></li>
+<li>250.000 Euro<span class="math inline">\(\square\)</span></li>
 </ol>
 </div>
 <div id="exr-mw-wealthmd" class="theorem exercise">
@@ -976,7 +1005,7 @@ Hinweis
 <li>2.000 Euro</li>
 <li>3.000 Euro</li>
 <li>4.000 Euro</li>
-<li>5.000 Euro<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></li>
+<li>5.000 Euro<span class="math inline">\(\square\)</span></li>
 </ol>
 </div>
 </section>
@@ -985,18 +1014,18 @@ Hinweis
 <p>Der Median teilt eine Verteilung in eine untere und ein obere Hälfte. Er markiert sozusagen eine “50-Prozent-Marke” (der aufsteigend sortierten Beobachtungen). Betrachten wir einmal nur alle Spiele, die für weniger als 100 Euro verkauft wurden (<code>total_pr</code>, finales Verkaufsgebot), s. <span class="quarto-unresolved-ref">?fig-mario-qs</span>. 50% aller Spiele wurden für weniger als ca. 46 Euro verkauft; 50% aller Spiele für mehr als 46 Euro. Der Median beträgt als 46 Euro.</p>
 <p>Jetzt könnten wir nur die günstigere Hälfte betrachten und wieder nach dem Median fragen (d.h. <code>total_pr &lt; 46</code>). Dieser “Median der günstigeren Hälfte” grenzt damit das insgesamt günstigste Viertel vom Rest der Verkaufsgebote ab. In unserem Datensatz liegt dieser Wert bei ca. 41 Euro. Entsprechend kann man nach dem Wert fragen, der das oberste Viertel vom Rest der Verkaufsgebote abtrennt. Dieser Wert liegt bei ca. 54 Euro.</p>
 <div id="def-quartile" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 6.5 (Quartile)</strong></span> Sortiert man die Daten aufsteigend, so nennt man den Wert, der das Viertel mit den kleisten Wert vom Rest der Daten trennt das <em>erste Quartil</em> (Q1, 25%). Den Median nennt man das <em>zweite Quartil</em> (Q2, 50%). Entsprechend heißt der Wert, der die drei Viertel kleinsten Werte vom oberen Viertel abtrennt, das <em>dritte Quartil</em> (Q3, 75%).<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 6.5 (Quartile)</strong></span> Sortiert man die Daten aufsteigend, so nennt man den Wert, der das Viertel mit den kleisten Wert vom Rest der Daten trennt das <em>erste Quartil</em> (Q1, 25%). Den Median nennt man das <em>zweite Quartil</em> (Q2, 50%). Entsprechend heißt der Wert, der die drei Viertel kleinsten Werte vom oberen Viertel abtrennt, das <em>dritte Quartil</em> (Q3, 75%).<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exm-mario-qs" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 6.7 (Quartile des Verkaufsgebot)</strong></span> <span class="quarto-unresolved-ref">?fig-mario-qs</span> zeigt die Quartile für das Verkaufsgebot.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Beispiel 6.7 (Quartile des Verkaufsgebot)</strong></span> <a href="#fig-quantile-mario" class="quarto-xref">Abbildung&nbsp;<span>6.8</span></a> zeigt die Quartile für das Verkaufsgebot.<span class="math inline">\(\square\)</span></p>
 </div>
 <p>Jetzt könnte man sagen, hey, warum nur in 25%-Stücke die Verteilung aufteilen? Warum nicht in 10%-Schritten?</p>
 <div id="def-dezile" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 6.6 (Dezile)</strong></span> Die neun Quantile <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>0.1</mn><mo>,</mo><mn>0.2</mn><mo>,</mo><mi>…</mi><mo>,</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">p= 0.1, 0.2, \ldots, 1</annotation></semantics></math>, die die Verteilung in 10 gleiche Teile unterteilen, nennt man Dezile. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 6.6 (Dezile)</strong></span> Die neun Quantile <span class="math inline">\(p= 0.1, 0.2, \ldots, 1\)</span>, die die Verteilung in 10 gleiche Teile unterteilen, nennt man Dezile. <span class="math inline">\(\square\)</span></p>
 </div>
-<p>Oder vielleicht in 1%-Schritten oder in sonstigen Schnitten? Wo die Quartile in 25%-Schritten aufteilen, teilt in <em>Quantil</em> in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-Prozent-Schritten auf, s. <a href="#fig-quantile-anim" class="quarto-xref">Abbildung&nbsp;<span>6.9</span></a>.</p>
+<p>Oder vielleicht in 1%-Schritten oder in sonstigen Schnitten? Wo die Quartile in 25%-Schritten aufteilen, teilt in <em>Quantil</em> in <span class="math inline">\(p\)</span>-Prozent-Schritten auf, s. <a href="#fig-quantile-anim" class="quarto-xref">Abbildung&nbsp;<span>6.9</span></a>.</p>
 <div id="def-quantile" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 6.7 (Quantile)</strong></span> Ein p-Quantil ist der Wert, der von <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> Prozent der Werte nicht überschritten wird.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 6.7 (Quantile)</strong></span> Ein p-Quantil ist der Wert, der von <span class="math inline">\(p\)</span> Prozent der Werte nicht überschritten wird.<span class="math inline">\(\square\)</span></p>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1008,7 +1037,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Ein Quantil ist ein Oberbegriff für Quartile, Dezile, etc. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Ein Quantil ist ein Oberbegriff für Quartile, Dezile, etc. <span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p><a href="#fig-quantile-mario" class="quarto-xref">Abbildung&nbsp;<span>6.8</span></a> zeigt das 1. (Q1), das 2. (Median) und das 3. Quartil für den Datensatz <code>mariokart2</code>.</p>
@@ -1164,7 +1193,7 @@ Abbildung&nbsp;6.10: Verschiedene Quantile visualisiert. In jedem Diagramm sind 
 <p>👩‍🏫 Gute Frage! Wie würden Sie ihn nennen?</p>
 </blockquote>
 <div id="def-lage" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 6.8 (Lagemaß)</strong></span> Ein <em>Lagemaß</em> (synonym: Maß der zentralen Tendenz) für eine Verteilung gibt einen Vorschlag, welchen Wert der Verteilung wir als typisch, normal, zu erwarten, repräsentativ oder “mittel” ansehen sollten.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 6.8 (Lagemaß)</strong></span> Ein <em>Lagemaß</em> (synonym: Maß der zentralen Tendenz) für eine Verteilung gibt einen Vorschlag, welchen Wert der Verteilung wir als typisch, normal, zu erwarten, repräsentativ oder “mittel” ansehen sollten.<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exm-lagemaße" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 6.8</strong></span> Typische Lagemaße sind:</p>
@@ -1175,7 +1204,7 @@ Abbildung&nbsp;6.10: Verschiedene Quantile visualisiert. In jedem Diagramm sind 
 <li>Quantile</li>
 <li>Minimum (kleinster Wert)</li>
 <li>Maximum (größter Wert)</li>
-<li>Modus (häufigster Wert) <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></li>
+<li>Modus (häufigster Wert) <span class="math inline">\(\square\)</span></li>
 </ul>
 </div>
 <p>Berechnen wir Lagemaße für den Mariokart-Datensatz, s. <a href="#lst-mario-lage" class="quarto-xref">Listing&nbsp;<span>6.2</span></a>.<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a></p>
@@ -1225,10 +1254,10 @@ Listing&nbsp;6.2: Syntax zur Berechnung von Lagemaßen
 </blockquote>
 <p>Anders ausgedrückt:</p>
 <blockquote class="blockquote">
-<p>Körpergröße <span class="math inline">$\color{ycol}{\text{y}}$</span> ist eine Funktion des Geschlechts <span class="math inline">$\color{xcol}{G}$</span>.</p>
+<p>Körpergröße <span class="math inline">\(\color{ycol}{\text{y}}\)</span> ist eine Funktion des Geschlechts <span class="math inline">\(\color{xcol}{G}\)</span>.</p>
 </blockquote>
 <p>Die <em>Modellformel</em> könnte also lauten:</p>
-<p><span class="math display">$$\color{ycol}{y} \; \color{black}{ \sim } \; \color{xcol}{G}$$</span></p>
+<p><span class="math display">\[\color{ycol}{y} \; \color{black}{ \sim } \; \color{xcol}{G}\]</span></p>
 <p>Gruppierte Lagemaße lassen sich in R z.B. so berechnen, s. <a href="#lst-mario-lage-gruppiert" class="quarto-xref">Listing&nbsp;<span>6.3</span></a>, also ähnlich wie in <a href="#lst-mario-lage" class="quarto-xref">Listing&nbsp;<span>6.2</span></a>.</p>
 <div id="lst-mario-lage-gruppiert" class="listing quarto-float">
 <figure class="quarto-float quarto-float-lst figure">
@@ -1291,9 +1320,9 @@ Abbildung&nbsp;6.11: Der mittlere Preis von Mariokart-Spielen als horizontale Ge
 </figure>
 </div>
 <div id="def-punktmodell" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 6.9 (Punktmodell)</strong></span> Ein Modell, welches für alle Beobachtungen ein und denselben Wert annimmt (vorhersagt), heißt ein <em>Punktmodell</em>. Anders gesagt fasst ein Punktmodell eine Wertereihe (häufig ist das eine Tabellenspalte) zu einer einzelnen Zahl zusammen, einem “Punkt” in diesem Sinne, s. <a href="#eq-desk" class="quarto-xref">Gleichung&nbsp;<span>6.11</span></a>.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 6.9 (Punktmodell)</strong></span> Ein Modell, welches für alle Beobachtungen ein und denselben Wert annimmt (vorhersagt), heißt ein <em>Punktmodell</em>. Anders gesagt fasst ein Punktmodell eine Wertereihe (häufig ist das eine Tabellenspalte) zu einer einzelnen Zahl zusammen, einem “Punkt” in diesem Sinne, s. <a href="#eq-desk" class="quarto-xref">Gleichung&nbsp;<span>6.11</span></a>.<span class="math inline">\(\square\)</span></p>
 </div>
-<p><span id="eq-desk"><span class="math display">$$\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarrow \qquad \begin{array}{|c|} \hline \\ \hline  \hline \end{array} \qquad(6.11)$$</span></span></p>
+<p><span id="eq-desk"><span class="math display">\[\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarrow \qquad \begin{array}{|c|} \hline \\ \hline  \hline \end{array} \tag{6.11}\]</span></span></p>
 <p>Mittelwert, Median und Quartile sind Beispiele für Punktmodelle: Sie fassen eine Verteilung zu einem einzelnen Wert zusammen und geben uns ein “Bild” der Daten, machen Sie uns verständlich - sie sind uns ein Modell.</p>
 </section>
 </section>
@@ -1789,7 +1818,7 @@ Abbildung&nbsp;6.11: Der mittlere Preis von Mariokart-Spielen als horizontale Ge
 <ol type="1">
 <li>Wenn man mal nicht weiterkommt, hilft es auch mal ein paar Tage Abstand von R und Statistik zu nehmen.</li>
 <li>Es hilft, sich während des Semesters neue Begriffe und ihre Erklärung zusammenschreiben.</li>
-<li>Gut ist auch, sich mit KommilitonInnen auszutauschen oder in höheren Semestern nach Tipps fragen.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></li>
+<li>Gut ist auch, sich mit KommilitonInnen auszutauschen oder in höheren Semestern nach Tipps fragen.<span class="math inline">\(\square\)</span></li>
 </ol>
 </div>
 <blockquote class="blockquote">
@@ -1804,7 +1833,7 @@ Abbildung&nbsp;6.11: Der mittlere Preis von Mariokart-Spielen als horizontale Ge
 <blockquote class="blockquote">
 <p>🧑‍🎓 Ich bin ein Student in einem Bachelor-Studiengang für Psychologie. Gerade bereite ich mich auf die Klausur im Fach “Grundlagen der Statistik” vor. Bitte schreibe mir Aufgaben, die mir helfen, mich auf die Prüfung vorzubereiten. Die Fragen sollten folgende Themen beinhalten: Maße der zentralen Tendenz, Grundlagen von R, Skalenniveau (z.B. Nominalskala vs.&nbsp;Intervallskala), Verteilungsformen, Normalverteilungen, z-Werte. Bitte schreibe die Aufgabe im Stil von Richtig-Falsch-Aufgaben. Schreibe ca. 10 Aufgaben.</p>
 </blockquote>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 <section id="aufgaben" class="level2" data-number="6.8">
@@ -1837,11 +1866,11 @@ Tipp
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Schauen Sie sich auch mal auf <a href="https://datenwerk.netlify.app">datenwerk.netlify.app</a> die Aufgaben zu z.B. dem Tag <a href="https://datenwerk.netlify.app/#category=eda">EDA</a> an. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Schauen Sie sich auch mal auf <a href="https://datenwerk.netlify.app">datenwerk.netlify.app</a> die Aufgaben zu z.B. dem Tag <a href="https://datenwerk.netlify.app/#category=eda">EDA</a> an. <span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <div id="exr-datensaetze" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 6.12</strong></span> Mittlerweile verfügen Sie die wesentlichen Werkzeuge des Datenjudo. <a href="https://data-se.netlify.app/2022/02/23/data-sets-for-for-teaching/">Hier</a> finden Sie einen Überblick an Datensätze, die Sie nach Herzenslust analysieren können.<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 6.12</strong></span> Mittlerweile verfügen Sie die wesentlichen Werkzeuge des Datenjudo. <a href="https://data-se.netlify.app/2022/02/23/data-sets-for-for-teaching/">Hier</a> finden Sie einen Überblick an Datensätze, die Sie nach Herzenslust analysieren können.<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a> <span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 <section id="literaturhinweise" class="level2" data-number="6.9">
@@ -1889,7 +1918,7 @@ Wicherts, J. M., Veldkamp, C. L. S., Augusteijn, H. E. M., Bakker, M., van Aert,
 <li id="fn2"><p><a href="https://en.wikipedia.org/wiki/Average_human_height_by_country" class="uri">https://en.wikipedia.org/wiki/Average_human_height_by_country</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>Das “Kringel” oder die “Welle” “~” nennt man auch “Tilde”<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>AV, Output-Variable, Zielvariable<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>Residuen, Fehler; häufig mit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math> wie <em>error</em> bezeichnet<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Residuen, Fehler; häufig mit <span class="math inline">\(e\)</span> wie <em>error</em> bezeichnet<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn6"><p>Quelle: SI, <a href="https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.html" class="uri">https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.html</a>, Abruf 2023-04-19<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn7"><p>Quelle: <a href="https://www.transfermarkt.de/spieler-statistik/wertvollstespieler/marktwertetop" class="uri">https://www.transfermarkt.de/spieler-statistik/wertvollstespieler/marktwertetop</a>, Abruf 2023-03-19<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn8"><p>Quelle: <a href="https://www.einkommenmagazin.de/kylian-mbappe-einkommen/" class="uri">https://www.einkommenmagazin.de/kylian-mbappe-einkommen/</a>, Abruf 2023-03-19<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>

@@ -129,6 +129,35 @@ div.csl-indent {
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -385,7 +414,7 @@ div.csl-indent {
 <section id="zum-einstieg" class="level3" data-number="7.1.5">
 <h3 data-number="7.1.5" class="anchored" data-anchor-id="zum-einstieg"><span class="header-section-number">7.1.5</span> Zum Einstieg</h3>
 <div id="exr-streuung-erkennen" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 7.1 (Freiwillige vor!)</strong></span> Für diese kleine Live-Demonstration brauchen wir einige Freiwillige. Die Lehrkraft teilt die Freiwilligen in zwei Gruppen, Gruppe <em>Gleich-Groß</em> und Gruppe <em>Verschieden-Groß</em>. Erkennen Sie, dass die <em>Unterschiedlichkeit</em> der Größe in Gruppe <em>Gleich-Groß</em> gering ist, aber in Gruppe <em>Verschieden-Groß</em> hoch? <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 7.1 (Freiwillige vor!)</strong></span> Für diese kleine Live-Demonstration brauchen wir einige Freiwillige. Die Lehrkraft teilt die Freiwilligen in zwei Gruppen, Gruppe <em>Gleich-Groß</em> und Gruppe <em>Verschieden-Groß</em>. Erkennen Sie, dass die <em>Unterschiedlichkeit</em> der Größe in Gruppe <em>Gleich-Groß</em> gering ist, aber in Gruppe <em>Verschieden-Groß</em> hoch? <span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 </section>
@@ -426,7 +455,7 @@ div.csl-indent {
 <li>ja</li>
 <li>nein</li>
 <li>Nur wenn ich 100 Euro bekomme</li>
-<li>Okay, für 1000 Euro<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></li>
+<li>Okay, für 1000 Euro<span class="math inline">\(\square\)</span></li>
 </ol>
 </div>
 <div class="callout callout-style-default callout-important callout-titled">
@@ -439,7 +468,7 @@ Wichtig
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Wie sehr die Werte eines Modells streuen, ist eine wichtige Information.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Wie sehr die Werte eines Modells streuen, ist eine wichtige Information.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 </section>
@@ -479,7 +508,7 @@ Wichtig
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Die Streuung ihrer Daten zu kennen ist eine wesentliche Information. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Die Streuung ihrer Daten zu kennen ist eine wesentliche Information. <span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 </section>
@@ -501,11 +530,11 @@ Abbildung&nbsp;7.2: Ein Modell mit wenig Streuung (links) vs.&nbsp;ein Modell mi
 </div>
 </div>
 </div>
-<p>Bei einem Modell mit <em>wenig</em> Streuung liegen die tatsächlichen, beobachtete Werte (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>) nah an den Modellwerten (vorhergesagten Werten, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>y</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{y}</annotation></semantics></math>); die Abweichungen <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mi>y</mi><mo>−</mo><mover><mi>y</mi><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">e = y - \hat{y}</annotation></semantics></math> sind also gering (der Modellfehler ist klein). Bei einem Modell mit <em>viel</em> Streuung ist der Modellfehler <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math> (im Vergleich dazu) groß.</p>
+<p>Bei einem Modell mit <em>wenig</em> Streuung liegen die tatsächlichen, beobachtete Werte (<span class="math inline">\(y\)</span>) nah an den Modellwerten (vorhergesagten Werten, <span class="math inline">\(\hat{y}\)</span>); die Abweichungen <span class="math inline">\(e = y - \hat{y}\)</span> sind also gering (der Modellfehler ist klein). Bei einem Modell mit <em>viel</em> Streuung ist der Modellfehler <span class="math inline">\(e\)</span> (im Vergleich dazu) groß.</p>
 <!-- >   🧑‍🎓  Immer diese Trivialitäten! -->
 <!-- >   👩‍🏫 Wird gleich interessanter. -->
 <div id="exm-weiss-ois" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 7.1 (Daten zur Schlankheitskur von Prof.&nbsp;Weiss-Ois)</strong></span> In <a href="#fig-streuung" class="quarto-xref">Abbildung&nbsp;<span>7.2</span></a> sind die Daten zu der Gewichtsveränderung nach Einnahme von “Schlankheitspillen” zweier verschiedener Präparate. Wie man sieht unterscheidet sich die typische (vorhergesagte) Gewichtsveränderung zwischen den beiden Präparaten kaum. Die Streuung allerdings schon. Links sieht man die Gewichtsveränderungen nach Einnahme des Präparats “Dickableibtin extra mild” (c) und rechts das Präparat von Prof.&nbsp;Weiss-Ois “Pfundafliptan Forte”. Welches Präparat würden Sie lieber einnehmen?<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Beispiel 7.1 (Daten zur Schlankheitskur von Prof.&nbsp;Weiss-Ois)</strong></span> In <a href="#fig-streuung" class="quarto-xref">Abbildung&nbsp;<span>7.2</span></a> sind die Daten zu der Gewichtsveränderung nach Einnahme von “Schlankheitspillen” zweier verschiedener Präparate. Wie man sieht unterscheidet sich die typische (vorhergesagte) Gewichtsveränderung zwischen den beiden Präparaten kaum. Die Streuung allerdings schon. Links sieht man die Gewichtsveränderungen nach Einnahme des Präparats “Dickableibtin extra mild” (c) und rechts das Präparat von Prof.&nbsp;Weiss-Ois “Pfundafliptan Forte”. Welches Präparat würden Sie lieber einnehmen?<span class="math inline">\(\square\)</span></p>
 </div>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -517,7 +546,7 @@ Wichtig
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Wir wollen ein präzises Modell, also kurze Fehlerbalken: Das Modell soll die Daten gut erklären, also wenig vom tatsächlichen Wert abweichen. Jedes Modell sollte Informationen über die Präzision des Modellwerts bzw. der Modellwerte (Vorhersagen) angeben. Ein Modell ohne Angaben der Modellgüte, d.h. der Präzision der Schätzung des Modellwerts, ist wenig nütze.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Wir wollen ein präzises Modell, also kurze Fehlerbalken: Das Modell soll die Daten gut erklären, also wenig vom tatsächlichen Wert abweichen. Jedes Modell sollte Informationen über die Präzision des Modellwerts bzw. der Modellwerte (Vorhersagen) angeben. Ein Modell ohne Angaben der Modellgüte, d.h. der Präzision der Schätzung des Modellwerts, ist wenig nütze.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <blockquote class="blockquote">
@@ -576,14 +605,14 @@ Wichtig
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Durch sinnvolle, komplexere Modelle sinkt die Fehlerstreuung eines Modells.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Durch sinnvolle, komplexere Modelle sinkt die Fehlerstreuung eines Modells.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 </section>
 <section id="sec-streuung" class="level2" data-number="7.4">
 <h2 data-number="7.4" class="anchored" data-anchor-id="sec-streuung"><span class="header-section-number">7.4</span> Streuungsmaße</h2>
 <div id="def-streuungsmaße" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 7.1 (Streuungsmaße)</strong></span> Ein Streuungsmaß quantifiziert die Variabilität eines Merkmals. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 7.1 (Streuungsmaße)</strong></span> Ein Streuungsmaß quantifiziert die Variabilität eines Merkmals. <span class="math inline">\(\square\)</span></p>
 </div>
 <p>Ein einfaches Streuungsmaß ist der <em>Range</em>, definiert als Abstand von größtem und kleinsten Wert eines Merkmals. Dieses Mermals ist aber nicht robust (gegenüber Extremwerten) und sollte daher nur mit Einschränkung verwendet werden.</p>
 <section id="der-mittlere-abweichungsbalken" class="level3" data-number="7.4.1">
@@ -594,14 +623,14 @@ Wichtig
 <blockquote class="blockquote">
 <p>👨‍🏫 Gute Frage! Am einfachsten ist es, wenn wir die mittlere Länge eines Abweichungsbalkens ausrechnen.</p>
 </blockquote>
-<p>Legen wir (gedanklich) alle Abweichungsbalken <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math> aneinander und teilen durch die Anzahl <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> der Balken, so erhalten wir wir den “mittleren Abweichungsbalken”, den wir mit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>⌀</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">\varnothing e</annotation></semantics></math> bezeichnen könnten. Diesen Kennwert bezeichnet man als <em>Mean Absolute Error</em> (MAE) bzw. als <em>Mittlere Absolutabweichung</em> (MAA). Er ist so definiert, s. <a href="#eq-mae" class="quarto-xref">Gleichung&nbsp;<span>7.1</span></a>.</p>
-<p><span id="eq-mae"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mrow><mi mathvariant="normal">M</mi><mi mathvariant="normal">A</mi><mi mathvariant="normal">E</mi></mrow><mo>=</mo><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><mover><mi>y</mi><mo accent="true">‾</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow></mrow><mi>n</mi></mfrac><mo>=</mo><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>e</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">|</mo></mrow></mrow><mi>n</mi></mfrac><mi>.</mi></mrow><mspace width="2.0em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mn>7.1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">{\displaystyle \mathrm {MAE} ={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}.} \qquad(7.1)</annotation></semantics></math></span></p>
+<p>Legen wir (gedanklich) alle Abweichungsbalken <span class="math inline">\(e\)</span> aneinander und teilen durch die Anzahl <span class="math inline">\(n\)</span> der Balken, so erhalten wir wir den “mittleren Abweichungsbalken”, den wir mit <span class="math inline">\(\varnothing e\)</span> bezeichnen könnten. Diesen Kennwert bezeichnet man als <em>Mean Absolute Error</em> (MAE) bzw. als <em>Mittlere Absolutabweichung</em> (MAA). Er ist so definiert, s. <a href="#eq-mae" class="quarto-xref">Gleichung&nbsp;<span>7.1</span></a>.</p>
+<p><span id="eq-mae"><span class="math display">\[{\displaystyle \mathrm {MAE} ={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}.} \tag{7.1}\]</span></span></p>
 <div id="def-mae" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 7.2 (Mittlere Absolutabweichung)</strong></span> Die Mittlere Absolutabweichung (MAA, MAE) ist definiert als die Summe der Absolutwerte der Differenzen eines Messwerts zum Mittelwert, geteilt durch die Anzahl der Messwerte.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 7.2 (Mittlere Absolutabweichung)</strong></span> Die Mittlere Absolutabweichung (MAA, MAE) ist definiert als die Summe der Absolutwerte der Differenzen eines Messwerts zum Mittelwert, geteilt durch die Anzahl der Messwerte.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a><span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exm-mae" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 7.2</strong></span> <a href="#fig-mae" class="quarto-xref">Abbildung&nbsp;<span>7.4</span></a> visualisiert ein einfaches Beispiel zum MAE. Rechnen wir den MAE für das Beispiel von <a href="#fig-mae" class="quarto-xref">Abbildung&nbsp;<span>7.4</span></a> aus:</p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mi>A</mi><mi>E</mi><mo>=</mo><mfrac><mrow><mn>1</mn><mo>+</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo>−</mo><mn>3</mn><mo stretchy="true" form="postfix">|</mo></mrow><mo>+</mo><mn>1</mn><mo>+</mo><mn>1</mn></mrow><mn>4</mn></mfrac><mo>=</mo><mn>6</mn><mi>/</mi><mn>4</mn><mo>=</mo><mn>1.5</mn></mrow><annotation encoding="application/x-tex">MAE = \frac{1 + |- 3| + 1 + 1}{4} = 6/4 = 1.5</annotation></semantics></math></p>
+<p><span class="math inline">\(MAE = \frac{1 + |- 3| + 1 + 1}{4} = 6/4 = 1.5\)</span></p>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -621,7 +650,7 @@ Abbildung&nbsp;7.4: Abweichungsbalken und der MAE
 <blockquote class="blockquote">
 <p>🤖 Loving it!!</p>
 </blockquote>
-<p>Schauen Sie: Den Mittelwert (s. <a href="#fig-mae" class="quarto-xref">Abbildung&nbsp;<span>7.4</span></a>) kann man doch mit Fug und Recht als ein <em>lineares Modell</em>, eine Gerade, betrachten, oder nicht? Schließlich erklären wir <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math> anhand einer Gerade (die parallel zur X-Achse ist).</p>
+<p>Schauen Sie: Den Mittelwert (s. <a href="#fig-mae" class="quarto-xref">Abbildung&nbsp;<span>7.4</span></a>) kann man doch mit Fug und Recht als ein <em>lineares Modell</em>, eine Gerade, betrachten, oder nicht? Schließlich erklären wir <span class="math inline">\(y\)</span> anhand einer Gerade (die parallel zur X-Achse ist).</p>
 <p>In R gibt es einen Befehl für ein <em>l</em>ineares <em>M</em>odell, er heißt <code>lm</code>.</p>
 <p>Die Syntax von <code>lm()</code> lautet:</p>
 <p><code>lm(y ~ 1, data = meine_daten)</code>.</p>
@@ -642,10 +671,10 @@ Abbildung&nbsp;7.4: Abweichungsbalken und der MAE
 <h3 data-number="7.4.2" class="anchored" data-anchor-id="der-interquartilsabstand"><span class="header-section-number">7.4.2</span> Der Interquartilsabstand</h3>
 <p>Der Interquartilsabstand (IQA; engl. inter quartile range, IQR) ist ein Streuungsmaß, das nicht auf dem Mittelwert aufbaut. Der IQR ist robuster als z.B. der MAA oder die Varianz und die Standardabweichung.</p>
 <div id="def-iqr" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 7.3 (Interquartilsabstand)</strong></span> Der Interquartilsabstand ist definiert als der die (absolute) Differenz vom 3. Quartil und 1. Quartil.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 7.3 (Interquartilsabstand)</strong></span> Der Interquartilsabstand ist definiert als der die (absolute) Differenz vom 3. Quartil und 1. Quartil.<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exm-iqr" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 7.3 (IQR im Hörsaal)</strong></span> In einem Statistikkurs betragen die Quartile der Körpergröße: Q1: 1.65m, Q2 (Median): 1,70m, Q3: 1.75m. Der IQR beträgt dann: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mi>Q</mi><mi>R</mi><mo>=</mo><mi>Q</mi><mn>3</mn><mo>−</mo><mi>Q</mi><mn>1</mn><mo>=</mo><mn>1.75</mn><mi>m</mi><mo>−</mo><mn>1.65</mn><mi>m</mi><mo>=</mo><mn>0.10</mn><mi>m</mi></mrow><annotation encoding="application/x-tex">IQR = Q3-Q1 = 1.75m - 1.65m = 0.10m</annotation></semantics></math>, d.h. 10 cm.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Beispiel 7.3 (IQR im Hörsaal)</strong></span> In einem Statistikkurs betragen die Quartile der Körpergröße: Q1: 1.65m, Q2 (Median): 1,70m, Q3: 1.75m. Der IQR beträgt dann: <span class="math inline">\(IQR = Q3-Q1 = 1.75m - 1.65m = 0.10m\)</span>, d.h. 10 cm.<span class="math inline">\(\square\)</span></p>
 </div>
 <p><a href="#fig-iqr-mario" class="quarto-xref">Abbildung&nbsp;<span>7.5</span></a> stellt den IQR (und einige Quantile) für den Verkaufspreise von Mariokart-Spielen dar.</p>
 <div id="fig-iqr-mario" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -708,7 +737,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Hat man normalverteilte Variablen/Abweichungen/Residuen, so ist die <em>Standardabweichung</em> (engl. standard deviation, SD, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>) eine komfortable Maßeinheit der Streuung, denn damit lässt sich die Streuung (Abweichung vom Mittelwert, Residuen) der Normalverteilung gut beschreiben.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Hat man normalverteilte Variablen/Abweichungen/Residuen, so ist die <em>Standardabweichung</em> (engl. standard deviation, SD, <span class="math inline">\(\sigma\)</span>, <span class="math inline">\(s\)</span>) eine komfortable Maßeinheit der Streuung, denn damit lässt sich die Streuung (Abweichung vom Mittelwert, Residuen) der Normalverteilung gut beschreiben.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <blockquote class="blockquote">
@@ -735,7 +764,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist, grob gesagt, der typische Abstand eines Verkaufspreis vom mittleren Verkaufspreis.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist, grob gesagt, der typische Abstand eines Verkaufspreis vom mittleren Verkaufspreis.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <div class="columns">
@@ -745,7 +774,7 @@ Hinweis
 <li>Man gehe von der Häufigkeitsverteilung der Daten aus.</li>
 <li>Betrachtet man die Daten als Gewichte auf einer Wippe, so ist der Schwerpunkt der Wippe der Mittelwert.</li>
 <li>Man bilde Quadrate für jeden Datenpunkt mit der Kantenlänge, die dem Abstand des Punktes zum Mittelwert entspricht.</li>
-<li>Die Quadrate quetscht man jetzt wo nötig in rechteckige Formen (ohne dass sich die Fläche ändern darf) und verschiebt sie, bis sich alle Formen zu einem Rechteck mit Seitenlänge <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> und <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^2</annotation></semantics></math> anordnen.</li>
+<li>Die Quadrate quetscht man jetzt wo nötig in rechteckige Formen (ohne dass sich die Fläche ändern darf) und verschiebt sie, bis sich alle Formen zu einem Rechteck mit Seitenlänge <span class="math inline">\(n\)</span> und <span class="math inline">\(\sigma^2\)</span> anordnen.</li>
 </ol>
 </div><div class="column">
 <div id="fig-var" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -773,7 +802,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Die Varianz ist also ein Maß, das die typische Abweichung der Beobachtungen vom Mittelwert in eine Zahl fasst.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Die Varianz ist also ein Maß, das die typische Abweichung der Beobachtungen vom Mittelwert in eine Zahl fasst.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <div id="fig-mse" class="quarto-layout-panel">
@@ -811,25 +840,32 @@ Abbildung&nbsp;7.7: Sinnbild zur Varianz als typischer Fehlerbalken
 </figcaption>
 </figure>
 </div>
-<p>Bildquelle: FOM-ifes</p>
 <div id="exm-var" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 7.4</strong></span> Sie arbeiten immer noch bei einem Online-Auktionshaus und untersuchen den Verkauf von Videospielen. Natürlich mit dem Ziel, dass Ihre Firma mehr von dem Zeug verkaufen kann.</p>
-<p>Zunächst betrachten Sie die Streuung in den Verkaufspreisen:</p>
+<p>Dazu berechnen Sie die Streuung in den Verkaufspreisen, s. <a href="#lst-mario-streu" class="quarto-xref">Listing&nbsp;<span>7.1</span></a>. <span class="math inline">\(\square\)</span></p>
+</div>
+<div id="lst-mario-streu" class="listing quarto-float">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-mario-streu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;7.1: Berechnung der Streuung des Verkaufpreises als Indikatoren für die Modellgüte des Mittelwerts.
+</figcaption>
+<div aria-describedby="lst-mario-streu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">%&gt;%</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>)  <span class="co"># ohne Extremwerte</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>m_summ <span class="ot">&lt;-</span> </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  m <span class="sc">%&gt;%</span> </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_mw =</span> <span class="fu">mean</span>(total_pr),</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_iqr =</span> <span class="fu">IQR</span>(total_pr),</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_maa =</span> <span class="fu">mean</span>(<span class="fu">abs</span>(total_pr <span class="sc">-</span> <span class="fu">mean</span>(total_pr))),</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_var =</span> <span class="fu">var</span>(total_pr),</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_sd =</span> <span class="fu">sd</span>(total_pr))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mariokart_no_extreme <span class="ot">&lt;-</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>)  <span class="co"># ohne Extremwerte</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>m_summ <span class="ot">&lt;-</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  mariokart_no_extreme <span class="sc">%&gt;%</span> </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_mw =</span> <span class="fu">mean</span>(total_pr),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_iqr =</span> <span class="fu">IQR</span>(total_pr),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_maa =</span> <span class="fu">mean</span>(<span class="fu">abs</span>(total_pr <span class="sc">-</span> <span class="fu">mean</span>(total_pr))),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_var =</span> <span class="fu">var</span>(total_pr),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_sd =</span> <span class="fu">sd</span>(total_pr))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</figure>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -855,7 +891,7 @@ Abbildung&nbsp;7.7: Sinnbild zur Varianz als typischer Fehlerbalken
 </table>
 </div>
 </div>
-<p>Statistiken sind ja schön … aber Bilder sind auch gut, s. <a href="#fig-var" class="quarto-xref">Abbildung&nbsp;<span>7.8</span></a>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Statistiken sind ja schön … aber Bilder sind auch gut, s. <a href="#fig-var" class="quarto-xref">Abbildung&nbsp;<span>7.8</span></a>. Datendiagramme eignen sich gut, um (grob) die Streuung einer Variable zu erfassen.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">%&gt;%</span> </span>
@@ -898,25 +934,25 @@ Abbildung&nbsp;7.8: Die Verteilung des Verkaufspreises von Mariokart-Spielen
 </figcaption>
 </figure>
 </div>
-</div>
-<p>Wer sich die Berechnung von Hand für <code>pr_maa</code> sparen möchte, kann die <a href="https://rdrr.io/cran/DescTools/man/MeanAD.html">Funktion <code>MeanAD</code> aus dem Paket <code>DescTools</code></a> nutzen.</p>
+<p>:::</p>
+<p>Wer sich die Berechnung von Hand für <code>pr_maa</code> sparen möchte (s. <a href="#lst-mario-streu" class="quarto-xref">Listing&nbsp;<span>7.1</span></a>), kann die <a href="https://rdrr.io/cran/DescTools/man/MeanAD.html">Funktion <code>MeanAD</code> aus dem Paket <code>DescTools</code></a> nutzen.</p>
 </section>
 <section id="kochrezept-für-die-varianz" class="level4" data-number="7.4.4.2">
 <h4 data-number="7.4.4.2" class="anchored" data-anchor-id="kochrezept-für-die-varianz"><span class="header-section-number">7.4.4.2</span> Kochrezept für die Varianz</h4>
-<p>Um die Standardabweichung zu berechnen, berechnet man zunächst die <em>Varianz</em>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>s</mi><mn>2</mn></msup><annotation encoding="application/x-tex">s^2</annotation></semantics></math> abgekürzt. Hier ist ein “Kochrezept”<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> zur Berechnung der Varianz:</p>
+<p>Um die Standardabweichung zu berechnen, berechnet man zunächst die <em>Varianz</em>, <span class="math inline">\(s^2\)</span> abgekürzt. Hier ist ein “Kochrezept”<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> zur Berechnung der Varianz:</p>
 <ol type="1">
-<li>Für alle Datenpunkte <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math>: Berechne die Abweichungen vom Mittelwert, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math></li>
+<li>Für alle Datenpunkte <span class="math inline">\(x_i\)</span>: Berechne die Abweichungen vom Mittelwert, <span class="math inline">\(\bar{x}\)</span></li>
 <li>Quadriere diese Werte</li>
 <li>Summiere dann auf</li>
-<li>Teile durch die Anzahl <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> der Werte</li>
+<li>Teile durch die Anzahl <span class="math inline">\(N\)</span> der Werte</li>
 </ol>
 <p>Als Formel ausgedrückt, lautet die Definition der Varianz<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> einer Stichprobe wie folgt, s. <a href="#eq-var" class="quarto-xref">Gleichung&nbsp;<span>7.2</span></a>.</p>
-<p><span id="eq-var"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><msup><mi>s</mi><mn>2</mn></msup><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><mover><mi>y</mi><mo accent="true">‾</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>d</mi><msubsup><mi>y</mi><mi>i</mi><mn>2</mn></msubsup><mi>.</mi></mrow><mspace width="2.0em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mn>7.2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">{\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{N}}\sum _{i=1}^{n}dy_i^{2}.} \qquad(7.2)</annotation></semantics></math></span></p>
+<p><span id="eq-var"><span class="math display">\[{\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{N}}\sum _{i=1}^{n}e_i^{2}.} \tag{7.2}\]</span></span></p>
 <div id="def-var" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 7.4 (Varianz)</strong></span> Die Varianz (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>s</mi><mn>2</mn></msup><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">s^2, \sigma^2</annotation></semantics></math>) ist definiert als der Mittelwert der quadrierten Abweichungen, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msubsup><mi>y</mi><mi>i</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">dy_i^2</annotation></semantics></math>, (vom Mittelwert).<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 7.4 (Varianz)</strong></span> Die Varianz (<span class="math inline">\(s^2, \sigma^2\)</span>) ist definiert als der Mittelwert der quadrierten Abweichungen, <span class="math inline">\(e_i^2\)</span>, (vom Mittelwert).<span class="math inline">\(\square\)</span></p>
 </div>
 <p>Die Varianz steht im engen Verhältnis zur Kovarianz, s. <a href="070-zusammenhaenge.html#sec-cov" class="quarto-xref"><span>Kapitel 8.3</span></a>. Die Varianz kann auch verstehen als den <em>mittleren Quadratfehler</em> (Mean Squared Error, MSE) eines Modells, s. <a href="#eq-mse" class="quarto-xref">Gleichung&nbsp;<span>7.3</span></a>.</p>
-<p><span id="eq-mse"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>M</mi><mi>S</mi><mi>E</mi><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mover><mi>y</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mi>.</mi></mrow><mspace width="2.0em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mn>7.3</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">{\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\hat {y}}\right)^{2}.} \qquad(7.3)</annotation></semantics></math></span></p>
+<p><span id="eq-mse"><span class="math display">\[{\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(y_{i}-{\hat {y}}\right)^{2}.} \tag{7.3}\]</span></span></p>
 <p>Im Fall eines Punktmodells ist der Mittelwert der vorhergesagte Wert eines Modells.</p>
 </section>
 </section>
@@ -924,12 +960,12 @@ Abbildung&nbsp;7.8: Die Verteilung des Verkaufspreises von Mariokart-Spielen
 <h3 data-number="7.4.5" class="anchored" data-anchor-id="die-standardabweichung"><span class="header-section-number">7.4.5</span> Die Standardabweichung</h3>
 <p>Kennt man die Varianz, so lässt sich die Standardabweichung einfach als Quadratwurzel der Varianz berechnen.</p>
 <div id="def-sd" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 7.5 (Standardabweichung)</strong></span> Die Standardabweichung (SD, s, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>) ist definiert als die Quadratwurzel der Varianz, s. <a href="#eq-sd" class="quarto-xref">Gleichung&nbsp;<span>7.4</span></a>.</p>
-<p><span id="eq-sd"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>:=</mo><msqrt><msup><mi>s</mi><mn>2</mn></msup></msqrt><mspace width="2.0em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mn>7.4</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">s := \sqrt{s^2} \qquad(7.4)</annotation></semantics></math></span></p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 7.5 (Standardabweichung)</strong></span> Die Standardabweichung (SD, s, <span class="math inline">\(\sigma\)</span>) ist definiert als die Quadratwurzel der Varianz, s. <a href="#eq-sd" class="quarto-xref">Gleichung&nbsp;<span>7.4</span></a>.</p>
+<p><span id="eq-sd"><span class="math display">\[s := \sqrt{s^2} \tag{7.4}\]</span></span></p>
+<p><span class="math inline">\(\square\)</span></p>
 </div>
 <p>Durch das Wurzelziehen besitzt die Standardabweichung wieder <em>in etwa</em> die gleiche Größenordnung wie die Daten (im Gegensatz zur Varianz, die durch das Quadrieren sehr groß werden kann).</p>
-<p>Aus einem Modellierungsblickwinkel kann man die SD definieren als die Wurzel von MSE. Dann nennt man sie <em>Root Mean Squared Error</em> (RMSE): <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>m</mi><mi>s</mi><mi>e</mi><mo>:=</mo><msqrt><mrow><mi>m</mi><mi>s</mi><mi>e</mi></mrow></msqrt></mrow><annotation encoding="application/x-tex">rmse := \sqrt{mse}</annotation></semantics></math>.</p>
+<p>Aus einem Modellierungsblickwinkel kann man die SD definieren als die Wurzel von MSE. Dann nennt man sie <em>Root Mean Squared Error</em> (RMSE): <span class="math inline">\(RMSE := \sqrt{MSE}\)</span>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -940,7 +976,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Die SD ist i.d.R. <em>un</em>gleich zur MAE, aber (fast) gleich zur RMSE. Entsprechend ist die Varianz (fast) gleich zur MSE.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Die SD ist i.d.R. <em>un</em>gleich zur MAE, aber (fast) gleich zur RMSE. Entsprechend ist die Varianz (fast) gleich zur MSE.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <div id="exm-sd-mario" class="theorem example">
@@ -959,7 +995,7 @@ Hinweis
 </div>
 </div>
 </div>
-<p>Ah! Das war einfach. Wird auch langsam Zeit für Feierabend.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Ah! Das war einfach. Wird auch langsam Zeit für Feierabend.<span class="math inline">\(\square\)</span></p>
 </div>
 <div id="exm-gruppen-mw" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 7.6</strong></span> Ihr Job als Datenanalyst ist anstrengend, aber auch mitunter interessant. So auch heute. Bevor Sie nach Hause gehen, möchten Sie noch eine Sache anschauen. In einer früheren Analyse (s. <a href="#fig-fehler-red" class="quarto-xref">Abbildung&nbsp;<span>7.3</span></a>) fanden Sie heraus, dass die Fehlerbalken kürzer werden, wenn man ein geschickteres und komplexeres Modell findet. Das wollen Sie natürlich prüfen. Sie überlegen: “Okay, ich will ein einfaches Modell, in dem der Mittelwert das Modell des Verkaufspreis sein soll.”</p>
@@ -975,7 +1011,7 @@ Hinweis
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(lm2)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 7.375873</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Ah! Sehr schön, Sie haben mit <code>lm2</code> ein besseres Modell als einfach nur den Mittelwert gefunden. Ab nach hause!<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Ah! Sehr schön, Sie haben mit <code>lm2</code> ein besseres Modell als einfach nur den Mittelwert gefunden. Ab nach hause!<span class="math inline">\(\square\)</span></p>
 </div>
 </section>
 </section>
@@ -999,45 +1035,45 @@ Hinweis
 </section>
 <section id="z-transformation" class="level2" data-number="7.6">
 <h2 data-number="7.6" class="anchored" data-anchor-id="z-transformation"><span class="header-section-number">7.6</span> z-Transformation</h2>
-<p>Sie arbeiten immer noch als Datenknecht, Moment, <em>Datenhecht</em> bei dem Online-Auktionshaus. Heute untersuchen Sie die Frage, wie gut sich die Verkaufspreise mit einer einzeigen Zahl, dem mittleren Verkaufspreis, beschreiben lassen. Einige widerspenstige Werte haben Sie dabei einfach des Datensatzes verwiesen. Schon ist das Leben leichter, s. <code>mariokart2</code>.</p>
+<p>Sie arbeiten immer noch als Datenknecht, Moment, <em>Datenhecht</em> bei dem Online-Auktionshaus. Heute untersuchen Sie die Frage, wie gut sich die Verkaufspreise mit einer einzeigen Zahl, dem mittleren Verkaufspreis, beschreiben lassen. Einige widerspenstige Werte haben Sie dabei einfach des Datensatzes verwiesen. Schon ist das Leben leichter, s. <code>mariokart_no_extreme</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mariokart2 <span class="ot">&lt;-</span> </span>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mariokart_no_extreme <span class="ot">&lt;-</span> </span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">%&gt;%</span> </span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Mit dem R-Paket <code>ggpubr</code> (Funktion <code>gghistogram</code>) lässt sich die Verteilung leicht visualisieren, s. <a href="#fig-mariokart2" class="quarto-xref">Abbildung&nbsp;<span>7.9</span></a>, links.</p>
-<div id="fig-mariokart2" class="quarto-layout-panel">
+<p><a href="#fig-mariokart_no_extreme" class="quarto-xref">Abbildung&nbsp;<span>7.9</span></a> (links) zeigt, dass es einige Streuung um den Mittelwert herum gibt. <a href="#fig-mariokart_no_extreme" class="quarto-xref">Abbildung&nbsp;<span>7.9</span></a> (rechts) zeigt die (um den Mittelwert) <em>zentrierten</em> Daten.</p>
+<div id="fig-mariokart_no_extreme" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-mariokart2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="fig-mariokart_no_extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-mariokart2" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-mariokart2-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-mariokart_no_extreme" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-mariokart_no_extreme-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-mariokart2-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-mariokart2-1.png" class="img-fluid figure-img" data-ref-parent="fig-mariokart2" width="672">
+<div aria-describedby="fig-mariokart_no_extreme-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="060-modellguete_files/figure-html/fig-mariokart_no_extreme-1.png" class="img-fluid figure-img" data-ref-parent="fig-mariokart_no_extreme" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mariokart2-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mariokart_no_extreme-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Wie nah drängen sich die Verkaufspreise um ihren Mittelwert?
 </figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-mariokart2" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-mariokart2-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-mariokart_no_extreme" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-mariokart_no_extreme-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-mariokart2-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-mariokart2-2.png" class="img-fluid figure-img" data-ref-parent="fig-mariokart2" width="672">
+<div aria-describedby="fig-mariokart_no_extreme-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="060-modellguete_files/figure-html/fig-mariokart_no_extreme-2.png" class="img-fluid figure-img" data-ref-parent="fig-mariokart_no_extreme" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mariokart2-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(b) Abweichungen vom Mittelwert
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mariokart_no_extreme-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Abweichungen vom Mittelwert: zentrierte Daten
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mariokart2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;7.9: Verteilung von <code>mariokart2</code>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mariokart_no_extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Abbildung&nbsp;7.9: Verteilung von <code>mariokart_no_extreme</code>
 </figcaption>
 </figure>
 </div>
@@ -1052,19 +1088,19 @@ Wichtig
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Je weniger Streuung um den Mittelwert (ca. 47 Euro) herum, desto besser eignet sich der Mittelwert als Modell für die Daten, bzw. desto höher die Modellgüte.<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p>Je weniger Streuung um den Mittelwert (ca. 47 Euro) herum, desto besser eignet sich der Mittelwert als Modell für die Daten, bzw. desto höher die Modellgüte.<span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <p>Ja, es ist <em>etwas</em> Streuung, aber wie viel? Kann man das genau angeben? Sie überlegen … und überlegen. Da! Eine Idee!</p>
 <p>Man könnte vielleicht angeben, wie viel Euro jedes Spiel vom Mittelwert entfernt ist. Je größer diese Abweichung, desto schlechter die Modellgüte! Also rechnen Sie diese Abweichung aus.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mariokart2 <span class="ot">&lt;-</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  mariokart2 <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mariokart_no_extreme <span class="ot">&lt;-</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  mariokart_no_extreme <span class="sc">%&gt;%</span> </span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">abw =</span> <span class="fl">47.4</span> <span class="sc">-</span> total_pr)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Anders gesagt: Wir haben die Verkaufspreise <em>zentriert.</em></p>
 <div id="def-zentrieren" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 7.6 (Zentrieren)</strong></span> Zentrieren bedeutet, von jedem Wert einer Verteilung <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> den Mittelwert abzuziehen. Daher ist der neue Mittelwert (der zentrierten Verteilung) gleich Null. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 7.6 (Zentrieren)</strong></span> Zentrieren bedeutet, von jedem Wert einer Verteilung <span class="math inline">\(X\)</span> den Mittelwert abzuziehen. Daher ist der neue Mittelwert (der zentrierten Verteilung) gleich Null. <span class="math inline">\(\square\)</span></p>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -1084,8 +1120,8 @@ Abbildung&nbsp;7.10: Die Abweichungen zum Mittelwert (MW) einer normalverteilten
 <p>Also: Wenn ein Spiel 10 Euro vom Mittelwert abweicht und die SD 10 Euro betragen sollte, dann hätten wir eine “standardisierte”<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> Abweichung von 1, weil 10/10=1.</p>
 <p>Begeistert über Ihre Schlauheit machen Sie sich ans Werk.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mariokart2 <span class="ot">&lt;-</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  mariokart2 <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mariokart_no_extreme <span class="ot">&lt;-</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  mariokart_no_extreme <span class="sc">%&gt;%</span> </span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">abw_std =</span> abw <span class="sc">/</span> <span class="fu">sd</span>(abw),  <span class="co"># std wie "standardisiert"</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">abw_std2 =</span> abw <span class="sc">/</span> <span class="fu">mean</span>(<span class="fu">abs</span>(abw)))  </span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1112,10 +1148,10 @@ Abbildung&nbsp;7.11: Standardisierung von Abweichungswerten bzw. einer Verteilun
 </ol>
 <p>Diese Art von Transformation bezeichnet man als <em>z-Transformation</em> und die resultierenden Werte als <em>z-Werte</em>.</p>
 <div id="def-z-werte" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 7.7 (z-Werte)</strong></span> z-Werte sind das Resultat der z-Transformation. Für die Variable <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> berechnet sich der z-Wert der <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>-ten Beobachtung so: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mover><mi>x</mi><mo accent="true">‾</mo></mover></mrow><mrow><mi>s</mi><msub><mi>d</mi><mi>x</mi></msub></mrow></mfrac><mi>.</mi><mi>▫</mi></mrow><annotation encoding="application/x-tex">z_i = \frac{x_i - \bar{x}}{sd_x}.\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Definition 7.7 (z-Werte)</strong></span> z-Werte sind das Resultat der z-Transformation. Für die Variable <span class="math inline">\(X\)</span> berechnet sich der z-Wert der <span class="math inline">\(i\)</span>-ten Beobachtung so: <span class="math inline">\(z_i = \frac{x_i - \bar{x}}{sd_x}.\square\)</span></p>
 </div>
 <p>z-Werte sind nützlich, weil sie die “relative” Abweichung einzelner Beobachtungen vom Mittelwert anzeigen.</p>
-<p>Nach einer <em>Faustregel</em> spricht man von extremen Abweichungen (Extremwerten, Ausreißern), wenn <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub><mo>&gt;</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">z_i &gt; 2</annotation></semantics></math> oder <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub><mo>&gt;</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">z_i &gt; 3</annotation></semantics></math>.</p>
+<p>Nach einer <em>Faustregel</em> spricht man von extremen Abweichungen (Extremwerten, Ausreißern), wenn <span class="math inline">\(z_i &gt; 2\)</span> oder <span class="math inline">\(z_i &gt; 3\)</span>.</p>
 </section>
 <section id="fazit" class="level2" data-number="7.7">
 <h2 data-number="7.7" class="anchored" data-anchor-id="fazit"><span class="header-section-number">7.7</span> Fazit</h2>
@@ -1138,8 +1174,60 @@ Abbildung&nbsp;7.11: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <!-- ::: -->
 <p>Schauen Sie sich auch mal auf <a href="https://datenwerk.netlify.app/">Datenwerk</a> die Aufgaben zu dem Tag <a href="https://datenwerk.netlify.app/#category=variability">variability</a> an.</p>
 <div id="exr-handy" class="theorem exercise">
-<p><span class="theorem-title"><strong>Übungsaufgabe 7.2 (Analysieren Sie den Datensatz zur Handynutzung)</strong></span> Laden Sie den <a href="https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing">Datensatz zur Handynutzung</a> von Google-Docs herunter.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>.</p>
-<p>Berechnen Sie dann gängige deskriptive Statistiken und visualisieren Sie sie. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>▫</mi><annotation encoding="application/x-tex">\square</annotation></semantics></math></p>
+<p><span class="theorem-title"><strong>Übungsaufgabe 7.2 (Analysieren Sie den Datensatz zur Handynutzung)</strong></span> &nbsp;</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Aufgabe</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Lösung: Daten importieren</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Lösung: Daten aufbereiten</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">Lösung: Komplett</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>Laden Sie den <a href="https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing">Datensatz zur Handynutzung</a> von Google-Docs herunter.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>. Berechnen Sie dann gängige deskriptive Statistiken und visualisieren Sie sie. <span class="math inline">\(\square\)</span></p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>Sie können die Daten entweder selber herunterladen oder aber die folgende Version des Datensatzes verwenden. In beiden Fällen ist es nützlich, den (absoluten oder relativen) Pfad anzugeben:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data_path <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/Smartphone-Nutzung%20(Responses)%20-%20Form%20responses%201.csv"</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Dann können Sie die Daten wie gewohnt importieren:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>smartphone_raw <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(data_path)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<p>Die Spaltennamen sind sehr unschön. Lassen Sie uns daher die Spaltennamen umbenennen (aber vorab sichern):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>item_labels <span class="ot">&lt;-</span> <span class="fu">names</span>(smartphone_raw)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(smartphone_raw) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"item"</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(smartphone_raw))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Check:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(smartphone_raw)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Rows: 70</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Columns: 18</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item1  &lt;chr&gt; "21/03/2024 15:36:52", "05/04/2024 10:24:58", "05/04/2024 10:52…</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item2  &lt;chr&gt; "15:31:00", "10:23:00", "10:40:00", "11:14:00", "12:33:00", "10…</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item3  &lt;int&gt; 3, 4, 3, 3, 5, 5, 5, 5, 1, 2, 5, 3, 2, 2, 2, 5, 3, 1, 2, 4, 5, …</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item4  &lt;int&gt; 5, 3, 3, 3, 4, 3, 3, 6, 2, 4, 5, 1, 1, 2, 3, 3, 4, 3, 2, 4, 2, …</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item5  &lt;int&gt; 3, 3, 1, 5, 1, 3, 2, 4, 3, 2, 1, 1, 1, 4, 1, 2, 2, 1, 1, 1, 4, …</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item6  &lt;int&gt; 4, 2, 4, 3, 5, 4, 6, 3, 2, 5, 6, 4, 2, 6, 5, 5, 5, 5, 5, 4, 2, …</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item7  &lt;int&gt; 4, 3, 2, 3, 3, 1, 3, 2, 1, 2, 1, 1, 1, 3, 2, 2, 1, 2, 2, 2, 1, …</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item8  &lt;int&gt; 1, 3, 1, 2, 3, 1, 1, 2, 2, 2, 1, 1, 2, 4, 1, 1, 2, 2, 1, 2, 1, …</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item9  &lt;int&gt; 2, 6, 1, 3, 6, 5, 5, 2, 2, 5, 6, 1, 1, 5, 4, 6, 2, 4, 3, 4, 3, …</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item10 &lt;int&gt; 2, 5, 5, 3, 4, 3, 1, 5, 1, 5, 3, 4, 3, 5, 4, 4, 4, 5, 3, 2, 2, …</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item11 &lt;int&gt; 5, 6, 6, 5, 6, 6, 5, 6, 4, 3, 6, 4, 4, 5, 3, 6, 6, 4, 4, 5, 5, …</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item12 &lt;int&gt; 1, 3, 1, 2, 5, 2, 4, 2, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 2, 1, …</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item13 &lt;int&gt; 4, 3, 4, 2, 4, 2, 5, 3, 1, 1, 4, 1, 3, 4, 1, 3, 5, 2, 1, 4, 2, …</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item14 &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",…</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item15 &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",…</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item16 &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item17 &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",…</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item18 &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<p>😁</p>
+</div>
+</div>
+</div>
 </div>
 </section>
 <section id="literaturhinweise" class="level2" data-number="7.9">
@@ -1168,10 +1256,10 @@ Downey, A. (2023). <em>Probably Overthinking It: How to Use Data to Answer Quest
 <li id="fn4"><p>Wenn man solche Sätze liest, fühlt sich die Formel fast einfacher an.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn5"><p>Die Abweichungsquadrate wirken optisch nicht quadratisch, da die X-Achse breiter skaliert dargestellt ist als die Y-Achse. Trotzdem sind es Quadrate, nur nicht optisch, wenn Sie wissen, was ich meine…<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn6"><p>Algorithmus<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7"><p>sog. unkorrigierte Stichprobenvarianz; um anhand einer Stichprobe die Varianz der zugehörigen Population zu schätzen, teilt man nicht durch <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>, sondern durch <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">N-1</annotation></semantics></math><a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>sog. unkorrigierte Stichprobenvarianz; um anhand einer Stichprobe die Varianz der zugehörigen Population zu schätzen, teilt man nicht durch <span class="math inline">\(N\)</span>, sondern durch <span class="math inline">\(N-1\)</span><a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn8"><p>abgekürzt manchmal mit <code>std</code><a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn9"><p>Ich wollte noch hinzufügen, dass die Varianz eng verknüpft mit der linearen Algebra, aber ich war nicht sicher, ob das Argument allgemein überzeugen würde.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn10"><p>https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p><a href="https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing</a><a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

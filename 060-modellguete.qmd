@@ -653,14 +653,19 @@ p_var <-
     scale_y_continuous(limits = c(-.3, .1)) +
     scale_x_continuous(limits = c(0, 6)) +
     annotate(geom = "label",
-                  x = 5,
+                  x = 4,
                   hjust = 0.5,
-                  y = -0.01,
-                  label = "Varianz") +
+                  y = -0.1,
+                  label = "Varianz",
+             color = "#56B4E9FF",
+             size = 8) +
   theme_minimal() +
-  annotate("label", x = 1, y = -0.1,
-           hjust = 0,
-           label = paste0(var_smpl, " = (0.01 + 0.01 + 0.01 + 0.09)/4"))
+  annotate("label", 
+           x = 3, 
+           y = -0.2,
+           hjust = 0.5,
+           label = paste0(var_smpl, " = (0.01 + 0.01 + 0.01 + 0.09)/4"),
+           size = 8)
 
 p_deltas
 p_var
@@ -670,24 +675,26 @@ p_var
 
 
 
-Bildquelle: FOM-ifes
+
 
 
 :::{#exm-var}
 Sie arbeiten immer noch bei einem Online-Auktionshaus und untersuchen den Verkauf von Videospielen.
 Natürlich mit dem Ziel, dass Ihre Firma mehr von dem Zeug verkaufen kann.
 
-Zunächst betrachten Sie die Streuung in den Verkaufspreisen:
+Dazu berechnen Sie die Streuung in den Verkaufspreisen, s. @lst-mario-streu. $\square$
+:::
+
+
+:::{#lst-mario-streu}
 
 ```{r}
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
-
-m <-
+mariokart_no_extreme <-
   mariokart %>%
   filter(total_pr < 100)  # ohne Extremwerte
 
 m_summ <- 
-  m %>% 
+  mariokart_no_extreme %>% 
   summarise(
     pr_mw = mean(total_pr),
     pr_iqr = IQR(total_pr),
@@ -696,6 +703,9 @@ m_summ <-
     pr_sd = sd(total_pr))
 ```
 
+Berechnung der Streuung des Verkaufpreises als Indikatoren für die Modellgüte des Mittelwerts. 
+
+:::
 
 ```{r}
 #| echo: false
@@ -704,7 +714,7 @@ m_summ %>% print_md()
 
 
 
-Statistiken sind ja schön ... aber Bilder sind auch gut, s. @fig-var. $\square$
+Statistiken sind ja schön ... aber Bilder sind auch gut, s. @fig-var. Datendiagramme eignen sich gut, um (grob) die Streuung einer Variable zu erfassen.
 
 
 ```{r}
@@ -768,7 +778,7 @@ mariokart %>%
 :::
 
 
-Wer sich die Berechnung von Hand für `pr_maa` sparen möchte, kann die [Funktion `MeanAD` aus dem Paket `DescTools`](https://rdrr.io/cran/DescTools/man/MeanAD.html) nutzen.
+Wer sich die Berechnung von Hand für `pr_maa` sparen möchte (s. @lst-mario-streu), kann die [Funktion `MeanAD` aus dem Paket `DescTools`](https://rdrr.io/cran/DescTools/man/MeanAD.html) nutzen.
 
 
 #### Kochrezept für die Varianz
@@ -785,12 +795,12 @@ Um die Standardabweichung zu berechnen, berechnet man zunächst die *Varianz*, $
 Als Formel ausgedrückt, lautet die Definition der Varianz^[sog. unkorrigierte Stichprobenvarianz; um anhand einer Stichprobe die Varianz der zugehörigen Population zu schätzen, teilt man nicht durch $N$, sondern durch $N-1$] einer Stichprobe wie folgt, s. @eq-var.
 
 
-$${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{N}}\sum _{i=1}^{n}dy_i^{2}.}$$ {#eq-var}
+$${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{N}}\sum _{i=1}^{n}e_i^{2}.}$$ {#eq-var}
 
 
 :::{#def-var}
 ### Varianz
-Die Varianz ($s^2, \sigma^2$) ist definiert als der Mittelwert der quadrierten Abweichungen, $dy_i^2$, (vom Mittelwert).$\square$
+Die Varianz ($s^2, \sigma^2$) ist definiert als der Mittelwert der quadrierten Abweichungen, $e_i^2$, (vom Mittelwert).$\square$
 :::
 
 
@@ -799,7 +809,7 @@ Die Varianz kann auch verstehen als den *mittleren Quadratfehler* (Mean Squared 
 
 
 
-$${\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(x_{i}-{\hat {y}}\right)^{2}.}$$ {#eq-mse}
+$${\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(y_{i}-{\hat {y}}\right)^{2}.}$$ {#eq-mse}
 
 Im Fall eines Punktmodells ist der Mittelwert der vorhergesagte Wert eines Modells.
 
@@ -825,7 +835,7 @@ Durch das Wurzelziehen besitzt die Standardabweichung wieder *in etwa* die gleic
 
 
 Aus einem Modellierungsblickwinkel kann man die SD definieren als die Wurzel von MSE.
-Dann nennt man sie *Root Mean Squared Error* (RMSE): $rmse := \sqrt{mse}$.
+Dann nennt man sie *Root Mean Squared Error* (RMSE): $RMSE := \sqrt{MSE}$.
 
 
 :::{.callout-note}
@@ -909,10 +919,10 @@ rmse(lm_mario1)  # Root mean squared error
 Sie arbeiten immer noch als Datenknecht, Moment, *Datenhecht* bei dem Online-Auktionshaus.
 Heute untersuchen Sie die Frage, wie gut sich die Verkaufspreise mit einer einzeigen Zahl, dem mittleren Verkaufspreis, beschreiben lassen.
 Einige widerspenstige Werte haben Sie dabei einfach des Datensatzes verwiesen.
-Schon ist das Leben leichter, s. `mariokart2`.
+Schon ist das Leben leichter, s. `mariokart_no_extreme`.
 
 ```{r}
-mariokart2 <- 
+mariokart_no_extreme <- 
   mariokart %>% 
   filter(total_pr < 100)
 ```
@@ -920,30 +930,30 @@ mariokart2 <-
 
 ```{r}
 #| echo: false
-mariokart2 <-
-  mariokart2 %>% 
+mariokart_no_extreme <-
+  mariokart_no_extreme %>% 
   mutate(abw = 47.4 - total_pr)
 ```
 
 
-Mit dem R-Paket `ggpubr` (Funktion `gghistogram`) lässt sich die Verteilung leicht visualisieren, s. @fig-mariokart2, links. 
+@fig-mariokart_no_extreme (links) zeigt, dass es einige Streuung um den Mittelwert herum gibt. @fig-mariokart_no_extreme (rechts) zeigt die (um den Mittelwert) *zentrierten* Daten.
 
 ```{r}
-#| label: fig-mariokart2
-#| fig-cap: Verteilung von `mariokart2`
+#| label: fig-mariokart_no_extreme
+#| fig-cap: Verteilung von `mariokart_no_extreme`
 #| layout-ncol: 2
 #| echo: false
 #| fig-subcap:
-#|   - Wie nah drängen sich die Verkaufspreise um ihren Mittelwert?
-#|   - Abweichungen vom Mittelwert
+#|   - "Wie nah drängen sich die Verkaufspreise um ihren Mittelwert?"
+#|   - "Abweichungen vom Mittelwert: zentrierte Daten"
 
 
-gghistogram(mariokart2, x = "total_pr", 
+gghistogram(mariokart_no_extreme, x = "total_pr", 
             add = "mean",  # Mittelwert wird hinzugefügt
             add.params = list(color = okabeito_colors()[1], size = 3))  +# Schnickschnack zur Verschönerung
   annotate("label", x=47, y = 0, label = "Mittelwert")
 
-gghistogram(mariokart2, x = "abw",
+gghistogram(mariokart_no_extreme, x = "abw",
             add = "mean",  # Mittelwert wird hinzugefügt
             add.params = list(color =  okabeito_colors()[1], size = 3))  +# Schnickschnack zur Verschönerung
   annotate("label", x= 0, y = 0, label = "Mittelwert")
@@ -965,8 +975,8 @@ Je größer diese Abweichung, desto schlechter die Modellgüte!
 Also rechnen Sie diese Abweichung aus.
 
 ```{r}
-mariokart2 <-
-  mariokart2 %>% 
+mariokart_no_extreme <-
+  mariokart_no_extreme %>% 
   mutate(abw = 47.4 - total_pr)
 ```
 
@@ -1050,8 +1060,8 @@ dann hätten wir eine "standardisierte"^[abgekürzt manchmal mit `std`] Abweichu
 Begeistert über Ihre Schlauheit machen Sie sich ans Werk.
 
 ```{r}
-mariokart2 <-
-  mariokart2 %>% 
+mariokart_no_extreme <-
+  mariokart_no_extreme %>% 
   mutate(abw_std = abw / sd(abw),  # std wie "standardisiert"
          abw_std2 = abw / mean(abs(abw)))  
 ```
@@ -1066,13 +1076,13 @@ die wir hier als *standardisiert* bezeichnen, da wir sie in Bezug zur "typischen
 #| label: fig-z-transf
 #| fig-cap: "Standardisierung von Abweichungswerten bzw. einer Verteilung; der vertikale Balken zeigt den Mittelwert"
 
-p1 <- gghistogram(mariokart2, x = "abw",
+p1 <- gghistogram(mariokart_no_extreme, x = "abw",
             add = "mean",  # Mittelwert wird hinzugefügt
             add.params = list(color = okabeito_colors()[1], size = 3)) +
   labs(title = "Rohwerte") +
   annotate("label", x = 0, y = 0, label = "MW", hjust = "bottom")
 
-p2 <-  gghistogram(mariokart2, x = "abw_std",
+p2 <-  gghistogram(mariokart_no_extreme, x = "abw_std",
             add = "mean",  # Mittelwert wird hinzugefügt
             add.params = list(color = okabeito_colors()[1], size = 3)) +
   labs(title = "Standardisierte Werte") +
@@ -1143,10 +1153,51 @@ Schauen Sie sich auch mal auf [Datenwerk](https://datenwerk.netlify.app/) die Au
 
 :::{#exr-handy}
 ### Analysieren Sie den Datensatz zur Handynutzung
+
+:::{.panel-tabset}
+### Aufgabe
 Laden Sie den [Datensatz zur Handynutzung](https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing) von Google-Docs herunter.^[<https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing>]. 
 Berechnen Sie dann gängige deskriptive Statistiken und visualisieren Sie sie. $\square$
+
+### Lösung: Daten importieren
+
+Sie können die Daten entweder selber herunterladen oder aber die folgende Version des Datensatzes verwenden.
+In beiden Fällen ist es nützlich, den (absoluten oder relativen) Pfad anzugeben:
+
+```{r}
+data_path <- "https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/Smartphone-Nutzung%20(Responses)%20-%20Form%20responses%201.csv"
+```
+
+Dann können Sie die Daten wie gewohnt importieren:
+
+```{r}
+smartphone_raw <- read.csv(data_path)
+```
+
+### Lösung: Daten aufbereiten
+
+Die Spaltennamen sind sehr unschön. Lassen Sie uns daher die Spaltennamen umbenennen (aber vorab sichern):
+
+```{r}
+item_labels <- names(smartphone_raw)
+
+names(smartphone_raw) <- paste0("item",1:ncol(smartphone_raw))
+```
+
+Check:
+
+```{r}
+glimpse(smartphone_raw)
+```
+
+### Lösung: Komplett
+
+😁
+
 :::
 
+
+:::
 
 
 

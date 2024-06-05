@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -437,12 +457,12 @@ window.Quarto = {
 <h3 data-number="9.2.1" class="anchored" data-anchor-id="vorhersagen-ohne-prädiktor"><span class="header-section-number">9.2.1</span> Vorhersagen ohne Prädiktor</h3>
 <div id="exm-noten-prognose" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 9.1</strong></span> Nach intensiver Beschäftigung mit Statistik sind Sie allgemein als Checker bekannt. Viele jüngere Studentis fragen Sie um Rat. eines Tages kommt ei Studenti, Toni, und fragt: “Welche Statistiknote kann ich in der Klausur erwarten?” Sie entgegnen: “Wie viel hast du denn gelernt?”. Die Antwort: “Sag ich nicht.”</p>
-<p>Nach kurzem Überlegen geben sie den Notenschnitt der letzten Klausur als Prognose für dis Studenti. Dazu rechnen Sie schnell den Notenschnitt (Mittelwert aus).</p>
+<p>Nach kurzem Überlegen geben sie den Notenschnitt der letzten Klausur als Prognose für diese Person. Dazu rechnen Sie schnell den Notenschnitt (Mittelwert) aus.</p>
 <p>Zuerst importieren Sie die Daten der letzten Klausur<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>noten2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"daten/noten2.csv"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><a href="#dnldts56797" onclick="fetch('data:text/csv;base64,IiIsImlkIiwieCIsInkiDQoiMSIsMSw2MC44Mzg3ODgwNzMwODMzLDYyLjk4MTc4NzEyMTA0MTUNCiIyIiwyLDY3Ljk4NTA2NjEzMzkzNTYsNjQuMDE2OTk0NTg1MDAxDQoiMyIsMyw3NC4yOTc4NDc1MjgwNjEyLDYwLjc1MzA5NzA4NTAzMjcNCiI0Iiw0LDcwLjE5OTE3NTA1NDI3MDUsNTguODE1MzA2MjQ0MDAxNQ0KIjUiLDUsNzguNjEwNjUwMzA1MjAyMyw1NS43NjA4NTAzODkyOTA5DQoiNiIsNiw2MC43NDY2MzA1MDQ4Mjk4LDYxLjY0MzA3ODUwNDgyODQNCiI3Iiw3LDc1LjEwMjExMTQxMTIxMDQsODUuNjM3NTM4NzY2MjExNA0KIjgiLDgsNzMuNzEwMzEyMTA3MjM3Niw3Ny4wMzAzMTA1MDUxMzQ2DQoiOSIsOSw0NS4xNTg5NTA4MTc4NzUxLDQ4LjY1NjgzMTY3NDQzNDMNCiIxMCIsMTAsNzIuNzc5NDMyNjg3OTg3NCw2Mi44Mzc3MDExMjYzOTEyDQoiMTEiLDExLDc4LjU5MTA5MDQ5Nzc1MDQsODAuODk0NzExMTMxMjM3Ng0KIjEyIiwxMiw3My41OTI3MjYxMDMwNTc1LDg3LjA0MjQ4ODkwMDQzMg0KIjEzIiwxMyw3Ni43Nzc3ODMzMTcwNTYyLDc4Ljc4MTQ1MDg5ODU4MjYNCiIxNCIsMTQsNjYuMTE0NjY4MTA0MDg0NCwyOC44MzIxMDkwMDUyNTUyDQoiMTUiLDE1LDcxLjYzMTEwNzgxNjY3NzEsNzYuNzU2MDcwNzIyNjM5NA0KIjE2IiwxNiw2MS40MDI2NjgzNzI2OTQ1LDU1Ljc3NTA4MTUwMTg0MzQNCiIxNyIsMTcsODYuNjIxODU3MTY0MzM4Niw4NC42OTcyNDc4ODI1MTg0DQoiMTgiLDE4LDYzLjA2MzQ3MjA2MjI0MzcsNjMuNzg2MDQ2NTE5NDczNw0KIjE5IiwxOSw3OS40NjU2NjU0Nzc2Mzg3LDkwLjY2OTc3NzI1MzkwMTENCiIyMCIsMjAsNTYuNTA4MjU2MzA1NDMyOSw1OS41MzU4OTM0MjI3MDU5DQoiMjEiLDIxLDY5LjgzNDIzNjM2ODgxMTMsNjYuNDAwMTE5ODU5MDY3Nw0KIjIyIiwyMiw1My42NjM2OTI1NjQzMjY4LDYyLjU3NDgzNzM3MTQxOTMNCiIyMyIsMjMsNzEuNTM4MTE3MjUwNzUzNiw1NS40Mjc1NzMzNzg5NTQNCiIyNCIsMjQsNzAuODQ0NTE2MzMzMTk0Myw3Ni40MTA1NDMyNzcxMzE1DQoiMjUiLDI1LDcwLjc2NTc5NDg0MDY5NTEsOTQuMTY1MjI3MTU1MzkwNQ0KIjI2IiwyNiw2Ny42NTUyMDkyMDI1MTIxLDczLjA4MzQzOTg3MzM2OQ0KIjI3IiwyNyw0NS45NDg5MTg5NTM0MDM5LDQyLjE1OTc1Nzc1NTU3ODINCiIyOCIsMjgsNjcuODQ4MjMzNzQ5NTk0Myw2OC41OTUzNDE3ODU2MzY5DQoiMjkiLDI5LDg5LjYzMjE4NTQ1NTA5MzksOTEuODI3OTI5MTk1NDU1Nw0KIjMwIiwzMCw3Ny44NzYzODU1MTQ5NDQ0LDc3LjUyODAzNTU0Njc4MjUNCiIzMSIsMzEsNDkuMzA1NDQxNzMzNTU0Miw2NS4xOTM4MzIwNDk5OTM5DQoiMzIiLDMyLDcxLjQxNTg5MjcyMjM5MDEsNjUuMjA4NTQ2OTYxMjk2Ng0KIjMzIiwzMyw3Mi41NzE0NjQ5NDE2ODQ2LDcyLjgxOTQzMTA0MjgxMDkNCiIzNCIsMzQsNzcuOTAwOTg5NDUwNDYyMyw2OC4yNTIzNTIyODIzODQ4DQoiMzUiLDM1LDY1Ljg3NzQyNjY5NDY1OTYsNzMuNjM4Mzg2ODU0MzINCiIzNiIsMzYsNzUuNDQ3MDM5OTgxODQwMSw3Ni4wMzY1OTgyNTI4NzUzDQoiMzciLDM3LDg3LjQ5OTI3NDk2NzQ4NjcsOTQuMTI3NTgzMTA4MDY3Mg0KIjM4IiwzOCw1OS40MzE0NTQyMDU3NzM0LDcxLjA2Njc3MDY2NTM5MTMNCiIzOSIsMzksNjAuOTExMTU1OTY2MjA3Niw0My4yMTY5NjM4OTIwOTQ1DQoiNDAiLDQwLDc3LjU2MzAwOTg4NDYyNzksOTEuMDM1OTIzMDgyOTU0Mw0KIjQxIiw0MSw4My4zNjg4NDgwOTc4MDEzLDgyLjE1Njk4NDQ3ODE4NDINCiI0MiIsNDIsODAuMTkyODA2OTQyMzEyMSw2OS44NzE5ODQzMjcwMTU4DQoiNDMiLDQzLDY4LjY4MzY5MzQ4NjkxMjYsNzYuNjc4MDk5MjM0NzUwOA0KIjQ0Iiw0NCw2NS4zMDIwMDIyMTMxODg5LDU3LjcxNzc3MTUzMTE0NDINCiI0NSIsNDUsODAuNjM2MDkwNjM0ODg2OSw3OS42ODM5NzEzMTUxNDU3DQoiNDYiLDQ2LDY5LjE4NjY2NjgwMTg1NDEsNTguNTk5Njc3MTU0OTYyNA0KIjQ3Iiw0Nyw1NS43MjQzNTc0NzkzNzE2LDU5LjMwODEzNzgzOTgxMjMNCiI0OCIsNDgsNzIuMjE5MjYzOTUyNzAxNSw2OS44OTg0ODYwNjY2Mzc2DQoiNDkiLDQ5LDY0Ljg5MzEyNjU1NzM3MzQsODMuNDczMjI2OTk0MzA4Mw0KIjUwIiw1MCw4Ni4yMDIyNzEyMTE4NzUyLDYwLjM1OTI0ODIxODIwNQ0KIjUxIiw1MSw4Ni4zOTgyMDEyNzcxMDE2LDc5LjU0MjAwNjEwNjc2MzYNCiI1MiIsNTIsODEuMDE1NzMxOTMzMzA4OSw4OC42NDgxNjMxMzk2MDAyDQoiNTMiLDUzLDY5LjExMjM2Mzc3NTIzODMsODIuODk4NzUzOTg1NDQxMw0KIjU0Iiw1NCw5NC4wMTYxMzYxMjQwODkzLDk1LjkzMjYwNzg3MDMwMjkNCiI1NSIsNTUsNzQuMDE2MDA3MjQzOTM0Nyw2OS41NjA4MDU1MDY3MTUzDQoiNTYiLDU2LDg2LjA2MjgyMjQyMDAzODUsODkuMDczMjYzNjAwNjcwOQ0KIjU3Iiw1Nyw4NC42NTUxNzk2MjM5NjI3LDkyLjQ0ODUzMzkzOTQ4MjcNCiI1OCIsNTgsNTcuNDkxNTgzMjQ4MTA4MSw3My44Mzg2NTk3NzUyODYxDQoiNTkiLDU5LDU5LjA2MDE2NjUyOTkwOSw3My45NTUwMDk2MjAzNzYNCiI2MCIsNjAsODIuMDgyMTQ1MDE4NTA4NSw4Ni40MzMwNTM4MTYwMDI2DQoiNjEiLDYxLDc0LjMwNjA5MzQ5MzI3NTksNzMuMzE2OTY3MDU3MDk1Mw0KIjYyIiw2Miw2NC42MzUwMjU0NjkzMzE4LDUyLjA3NTgyNDA3NzI3MDYNCiI2MyIsNjMsODguMDI4ODUyNzkyNDUxNiw5NS44NTQyODIwOTY5Nw0KIjY0Iiw2NCw2OS4zNzUxODQ4NTEwODQsNjkuMzc3NjAyNjMxMDIzNg0KIjY1Iiw2NSw2Ny41MjgxMjk5MDAyMDk4LDYyLjM0NzI2ODg0MDM0NTUNCiI2NiIsNjYsNzIuODU0NDMzMzY5ODg1Nyw3OC4xMTczOTIwNzY5MTcxDQoiNjciLDY3LDYzLjE5NjY0OTQ5NDQyMDEsNjIuNjE4NDk1MzQ1MzA4OQ0KIjY4Iiw2OCw3Ni4yMDYzNTU3NzIxNTA3LDcwLjM3MjQ5ODkwODI4MTENCiI2OSIsNjksNzIuNDAyNjc2ODI3MTgxNyw1NS4yMjI0ODE4NDk2NDgyDQoiNzAiLDcwLDY5LjAxNzMyNDA4ODU4NTksNTAuOTI4MzE4NTQzMjI3OA0KIjcxIiw3MSw1Mi4wNTUxMTE0NTIxMTIxLDYxLjc0MDE1NzE0MzYxMzENCiI3MiIsNzIsODkuMzEwODYxMTQ0NjU4MSw5OC4xODAwOTMyNjE0Mjk0DQoiNzMiLDczLDc1LjMzMzgwNTM5NTE5OTgsNzEuMTg5OTUzNzU2MDMxNA0KIjc0Iiw3NCw2MS45MjI3MDkzMTgxMzE4LDYzLjYyMDc5MjYzNjY1MTINCiI3NSIsNzUsODAuMDQzMjIzMTgxMjg5OSw5MS45MjM1NjIzNjQxNzYyDQoiNzYiLDc2LDUzLjIwMTExNTI3MjMzNjksNTguMzkxMjM0ODI5Njc5Ng0KIjc3Iiw3Nyw2Mi44MzU0ODMyNTE2MjA1LDg1LjU1NTc4OTE3NDI2ODYNCiI3OCIsNzgsNTguODU2MzU5MzA0NTkyMiw2NC4yMjcxOTIxMDg1ODY5DQoiNzkiLDc5LDc0LjIwMTAwNDcxOTI2MDEsNzYuODczNzIwOTQ3ODcxNw0KIjgwIiw4MCw3OC45NDQ2MTg1Mzg3NjcyLDY4Ljc4OTM1NzUzOTE3ODgNCiI4MSIsODEsNzEuNDg3NTQ4OTI5MzQ1NSw3My4yMDkxODM0Nzc2NTYxDQoiODIiLDgyLDcyLjE4MjQzNjA3NjczNDYsNzIuNDQ3MzM2OTEyMDAzNw0KIjgzIiw4Myw2OS4wNjE2OTc4Nzg3MzYxLDYxLjIwOTEzNjQ4NzU5OA0KIjg0Iiw4NCw3Ni4xMzI5OTM3MTExNDM0LDYxLjY1NDQzMTY3MjYxNTINCiI4NSIsODUsNzkuNjIwOTQ1NTM4NjMsOTAuMDE2ODAyODQzODgzNQ0KIjg2Iiw4Niw1OS4wOTY3MzAyNjMwMTgsNDcuMjk1ODI1ODAwOTgyOA0KIjg3Iiw4Nyw1Ny40ODg5NzkwODY1MTMyLDUzLjk3MTkwODYwMDYwMjYNCiI4OCIsODgsODQuMTUyMDcyNTQ2MTA2Nyw2OS43ODgwNDQ4MzYzNzk1DQoiODkiLDg5LDY2LjYxMDg3MzA2NjE5MzgsNTAuNTc5NDk4NDkzODg2Ng0KIjkwIiw5MCw4Ni4yODM0NjYzMTkxNDg1LDg2LjgyMzQ4MzE5NTk2NzkNCiI5MSIsOTEsNjUuMzM3NzM4OTk1MTU5Niw3MC45MTc0NzU0MzE0NzkyDQoiOTIiLDkyLDU0LjEwOTEwNDYwMzAzNzEsNDYuNjY5NzA4ODM0MTExNw0KIjkzIiw5Myw4MS4wMDQ2MTczMTcwNzU2LDgyLjg5NTQ5MjIyODQ3NA0KIjk0Iiw5NCw4NC41OTgyNzI2MDI5ODYzLDcwLjQ0MzYwOTU1NzE2MTYNCiI5NSIsOTUsOTIuOTc0NzIwNjg2OTMzMyw5Ni41MTc2NzE0MjYxODQ3DQoiOTYiLDk2LDYwLjg0NjMwMzcyMTE0MDMsNjMuNDMzODAzNDc4OTM3OA0KIjk3Iiw5Nyw2MC40NTI2MDIxODM0NzUxLDY3LjA0NDcyMzQwNTQ3MzINCiI5OCIsOTgsNjIuNzk3NjE2MTc0MzM0MSw2OC41MDQwNDA0MTMxMDA1DQoiOTkiLDk5LDc3LjcwMjAwMjE2NTkxMzMsODUuMzIxOTYzMTkzNzk4MQ0KIjEwMCIsMTAwLDYxLjE0NTI2MjExMjE0MDgsNzQuNzQ4NDI4NDMzNjE1MQ0K').then(res => res.blob()).then(blob => {
+<p><a href="#dnldts40424" onclick="fetch('data:text/csv;base64,IiIsImlkIiwieCIsInkiDQoiMSIsMSw2MC44Mzg3ODgwNzMwODMzLDYyLjk4MTc4NzEyMTA0MTUNCiIyIiwyLDY3Ljk4NTA2NjEzMzkzNTYsNjQuMDE2OTk0NTg1MDAxDQoiMyIsMyw3NC4yOTc4NDc1MjgwNjEyLDYwLjc1MzA5NzA4NTAzMjcNCiI0Iiw0LDcwLjE5OTE3NTA1NDI3MDUsNTguODE1MzA2MjQ0MDAxNQ0KIjUiLDUsNzguNjEwNjUwMzA1MjAyMyw1NS43NjA4NTAzODkyOTA5DQoiNiIsNiw2MC43NDY2MzA1MDQ4Mjk4LDYxLjY0MzA3ODUwNDgyODQNCiI3Iiw3LDc1LjEwMjExMTQxMTIxMDQsODUuNjM3NTM4NzY2MjExNA0KIjgiLDgsNzMuNzEwMzEyMTA3MjM3Niw3Ny4wMzAzMTA1MDUxMzQ2DQoiOSIsOSw0NS4xNTg5NTA4MTc4NzUxLDQ4LjY1NjgzMTY3NDQzNDMNCiIxMCIsMTAsNzIuNzc5NDMyNjg3OTg3NCw2Mi44Mzc3MDExMjYzOTEyDQoiMTEiLDExLDc4LjU5MTA5MDQ5Nzc1MDQsODAuODk0NzExMTMxMjM3Ng0KIjEyIiwxMiw3My41OTI3MjYxMDMwNTc1LDg3LjA0MjQ4ODkwMDQzMg0KIjEzIiwxMyw3Ni43Nzc3ODMzMTcwNTYyLDc4Ljc4MTQ1MDg5ODU4MjYNCiIxNCIsMTQsNjYuMTE0NjY4MTA0MDg0NCwyOC44MzIxMDkwMDUyNTUyDQoiMTUiLDE1LDcxLjYzMTEwNzgxNjY3NzEsNzYuNzU2MDcwNzIyNjM5NA0KIjE2IiwxNiw2MS40MDI2NjgzNzI2OTQ1LDU1Ljc3NTA4MTUwMTg0MzQNCiIxNyIsMTcsODYuNjIxODU3MTY0MzM4Niw4NC42OTcyNDc4ODI1MTg0DQoiMTgiLDE4LDYzLjA2MzQ3MjA2MjI0MzcsNjMuNzg2MDQ2NTE5NDczNw0KIjE5IiwxOSw3OS40NjU2NjU0Nzc2Mzg3LDkwLjY2OTc3NzI1MzkwMTENCiIyMCIsMjAsNTYuNTA4MjU2MzA1NDMyOSw1OS41MzU4OTM0MjI3MDU5DQoiMjEiLDIxLDY5LjgzNDIzNjM2ODgxMTMsNjYuNDAwMTE5ODU5MDY3Nw0KIjIyIiwyMiw1My42NjM2OTI1NjQzMjY4LDYyLjU3NDgzNzM3MTQxOTMNCiIyMyIsMjMsNzEuNTM4MTE3MjUwNzUzNiw1NS40Mjc1NzMzNzg5NTQNCiIyNCIsMjQsNzAuODQ0NTE2MzMzMTk0Myw3Ni40MTA1NDMyNzcxMzE1DQoiMjUiLDI1LDcwLjc2NTc5NDg0MDY5NTEsOTQuMTY1MjI3MTU1MzkwNQ0KIjI2IiwyNiw2Ny42NTUyMDkyMDI1MTIxLDczLjA4MzQzOTg3MzM2OQ0KIjI3IiwyNyw0NS45NDg5MTg5NTM0MDM5LDQyLjE1OTc1Nzc1NTU3ODINCiIyOCIsMjgsNjcuODQ4MjMzNzQ5NTk0Myw2OC41OTUzNDE3ODU2MzY5DQoiMjkiLDI5LDg5LjYzMjE4NTQ1NTA5MzksOTEuODI3OTI5MTk1NDU1Nw0KIjMwIiwzMCw3Ny44NzYzODU1MTQ5NDQ0LDc3LjUyODAzNTU0Njc4MjUNCiIzMSIsMzEsNDkuMzA1NDQxNzMzNTU0Miw2NS4xOTM4MzIwNDk5OTM5DQoiMzIiLDMyLDcxLjQxNTg5MjcyMjM5MDEsNjUuMjA4NTQ2OTYxMjk2Ng0KIjMzIiwzMyw3Mi41NzE0NjQ5NDE2ODQ2LDcyLjgxOTQzMTA0MjgxMDkNCiIzNCIsMzQsNzcuOTAwOTg5NDUwNDYyMyw2OC4yNTIzNTIyODIzODQ4DQoiMzUiLDM1LDY1Ljg3NzQyNjY5NDY1OTYsNzMuNjM4Mzg2ODU0MzINCiIzNiIsMzYsNzUuNDQ3MDM5OTgxODQwMSw3Ni4wMzY1OTgyNTI4NzUzDQoiMzciLDM3LDg3LjQ5OTI3NDk2NzQ4NjcsOTQuMTI3NTgzMTA4MDY3Mg0KIjM4IiwzOCw1OS40MzE0NTQyMDU3NzM0LDcxLjA2Njc3MDY2NTM5MTMNCiIzOSIsMzksNjAuOTExMTU1OTY2MjA3Niw0My4yMTY5NjM4OTIwOTQ1DQoiNDAiLDQwLDc3LjU2MzAwOTg4NDYyNzksOTEuMDM1OTIzMDgyOTU0Mw0KIjQxIiw0MSw4My4zNjg4NDgwOTc4MDEzLDgyLjE1Njk4NDQ3ODE4NDINCiI0MiIsNDIsODAuMTkyODA2OTQyMzEyMSw2OS44NzE5ODQzMjcwMTU4DQoiNDMiLDQzLDY4LjY4MzY5MzQ4NjkxMjYsNzYuNjc4MDk5MjM0NzUwOA0KIjQ0Iiw0NCw2NS4zMDIwMDIyMTMxODg5LDU3LjcxNzc3MTUzMTE0NDINCiI0NSIsNDUsODAuNjM2MDkwNjM0ODg2OSw3OS42ODM5NzEzMTUxNDU3DQoiNDYiLDQ2LDY5LjE4NjY2NjgwMTg1NDEsNTguNTk5Njc3MTU0OTYyNA0KIjQ3Iiw0Nyw1NS43MjQzNTc0NzkzNzE2LDU5LjMwODEzNzgzOTgxMjMNCiI0OCIsNDgsNzIuMjE5MjYzOTUyNzAxNSw2OS44OTg0ODYwNjY2Mzc2DQoiNDkiLDQ5LDY0Ljg5MzEyNjU1NzM3MzQsODMuNDczMjI2OTk0MzA4Mw0KIjUwIiw1MCw4Ni4yMDIyNzEyMTE4NzUyLDYwLjM1OTI0ODIxODIwNQ0KIjUxIiw1MSw4Ni4zOTgyMDEyNzcxMDE2LDc5LjU0MjAwNjEwNjc2MzYNCiI1MiIsNTIsODEuMDE1NzMxOTMzMzA4OSw4OC42NDgxNjMxMzk2MDAyDQoiNTMiLDUzLDY5LjExMjM2Mzc3NTIzODMsODIuODk4NzUzOTg1NDQxMw0KIjU0Iiw1NCw5NC4wMTYxMzYxMjQwODkzLDk1LjkzMjYwNzg3MDMwMjkNCiI1NSIsNTUsNzQuMDE2MDA3MjQzOTM0Nyw2OS41NjA4MDU1MDY3MTUzDQoiNTYiLDU2LDg2LjA2MjgyMjQyMDAzODUsODkuMDczMjYzNjAwNjcwOQ0KIjU3Iiw1Nyw4NC42NTUxNzk2MjM5NjI3LDkyLjQ0ODUzMzkzOTQ4MjcNCiI1OCIsNTgsNTcuNDkxNTgzMjQ4MTA4MSw3My44Mzg2NTk3NzUyODYxDQoiNTkiLDU5LDU5LjA2MDE2NjUyOTkwOSw3My45NTUwMDk2MjAzNzYNCiI2MCIsNjAsODIuMDgyMTQ1MDE4NTA4NSw4Ni40MzMwNTM4MTYwMDI2DQoiNjEiLDYxLDc0LjMwNjA5MzQ5MzI3NTksNzMuMzE2OTY3MDU3MDk1Mw0KIjYyIiw2Miw2NC42MzUwMjU0NjkzMzE4LDUyLjA3NTgyNDA3NzI3MDYNCiI2MyIsNjMsODguMDI4ODUyNzkyNDUxNiw5NS44NTQyODIwOTY5Nw0KIjY0Iiw2NCw2OS4zNzUxODQ4NTEwODQsNjkuMzc3NjAyNjMxMDIzNg0KIjY1Iiw2NSw2Ny41MjgxMjk5MDAyMDk4LDYyLjM0NzI2ODg0MDM0NTUNCiI2NiIsNjYsNzIuODU0NDMzMzY5ODg1Nyw3OC4xMTczOTIwNzY5MTcxDQoiNjciLDY3LDYzLjE5NjY0OTQ5NDQyMDEsNjIuNjE4NDk1MzQ1MzA4OQ0KIjY4Iiw2OCw3Ni4yMDYzNTU3NzIxNTA3LDcwLjM3MjQ5ODkwODI4MTENCiI2OSIsNjksNzIuNDAyNjc2ODI3MTgxNyw1NS4yMjI0ODE4NDk2NDgyDQoiNzAiLDcwLDY5LjAxNzMyNDA4ODU4NTksNTAuOTI4MzE4NTQzMjI3OA0KIjcxIiw3MSw1Mi4wNTUxMTE0NTIxMTIxLDYxLjc0MDE1NzE0MzYxMzENCiI3MiIsNzIsODkuMzEwODYxMTQ0NjU4MSw5OC4xODAwOTMyNjE0Mjk0DQoiNzMiLDczLDc1LjMzMzgwNTM5NTE5OTgsNzEuMTg5OTUzNzU2MDMxNA0KIjc0Iiw3NCw2MS45MjI3MDkzMTgxMzE4LDYzLjYyMDc5MjYzNjY1MTINCiI3NSIsNzUsODAuMDQzMjIzMTgxMjg5OSw5MS45MjM1NjIzNjQxNzYyDQoiNzYiLDc2LDUzLjIwMTExNTI3MjMzNjksNTguMzkxMjM0ODI5Njc5Ng0KIjc3Iiw3Nyw2Mi44MzU0ODMyNTE2MjA1LDg1LjU1NTc4OTE3NDI2ODYNCiI3OCIsNzgsNTguODU2MzU5MzA0NTkyMiw2NC4yMjcxOTIxMDg1ODY5DQoiNzkiLDc5LDc0LjIwMTAwNDcxOTI2MDEsNzYuODczNzIwOTQ3ODcxNw0KIjgwIiw4MCw3OC45NDQ2MTg1Mzg3NjcyLDY4Ljc4OTM1NzUzOTE3ODgNCiI4MSIsODEsNzEuNDg3NTQ4OTI5MzQ1NSw3My4yMDkxODM0Nzc2NTYxDQoiODIiLDgyLDcyLjE4MjQzNjA3NjczNDYsNzIuNDQ3MzM2OTEyMDAzNw0KIjgzIiw4Myw2OS4wNjE2OTc4Nzg3MzYxLDYxLjIwOTEzNjQ4NzU5OA0KIjg0Iiw4NCw3Ni4xMzI5OTM3MTExNDM0LDYxLjY1NDQzMTY3MjYxNTINCiI4NSIsODUsNzkuNjIwOTQ1NTM4NjMsOTAuMDE2ODAyODQzODgzNQ0KIjg2Iiw4Niw1OS4wOTY3MzAyNjMwMTgsNDcuMjk1ODI1ODAwOTgyOA0KIjg3Iiw4Nyw1Ny40ODg5NzkwODY1MTMyLDUzLjk3MTkwODYwMDYwMjYNCiI4OCIsODgsODQuMTUyMDcyNTQ2MTA2Nyw2OS43ODgwNDQ4MzYzNzk1DQoiODkiLDg5LDY2LjYxMDg3MzA2NjE5MzgsNTAuNTc5NDk4NDkzODg2Ng0KIjkwIiw5MCw4Ni4yODM0NjYzMTkxNDg1LDg2LjgyMzQ4MzE5NTk2NzkNCiI5MSIsOTEsNjUuMzM3NzM4OTk1MTU5Niw3MC45MTc0NzU0MzE0NzkyDQoiOTIiLDkyLDU0LjEwOTEwNDYwMzAzNzEsNDYuNjY5NzA4ODM0MTExNw0KIjkzIiw5Myw4MS4wMDQ2MTczMTcwNzU2LDgyLjg5NTQ5MjIyODQ3NA0KIjk0Iiw5NCw4NC41OTgyNzI2MDI5ODYzLDcwLjQ0MzYwOTU1NzE2MTYNCiI5NSIsOTUsOTIuOTc0NzIwNjg2OTMzMyw5Ni41MTc2NzE0MjYxODQ3DQoiOTYiLDk2LDYwLjg0NjMwMzcyMTE0MDMsNjMuNDMzODAzNDc4OTM3OA0KIjk3Iiw5Nyw2MC40NTI2MDIxODM0NzUxLDY3LjA0NDcyMzQwNTQ3MzINCiI5OCIsOTgsNjIuNzk3NjE2MTc0MzM0MSw2OC41MDQwNDA0MTMxMDA1DQoiOTkiLDk5LDc3LjcwMjAwMjE2NTkxMzMsODUuMzIxOTYzMTkzNzk4MQ0KIjEwMCIsMTAwLDYxLjE0NTI2MjExMjE0MDgsNzQuNzQ4NDI4NDMzNjE1MQ0K').then(res => res.blob()).then(blob => {
       const downloadURL = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       document.body.appendChild(a);
@@ -450,7 +470,7 @@ window.Quarto = {
       a.download = 'noten2.csv.csv'; a.click();
       window.URL.revokeObjectURL(downloadURL);
       document.body.removeChild(a);
-        });"><button class="btn btn-default downloadthis  " id="dnldts56797"><i class="bi bi-download"></i> Download </button></a></p>
+        });"><button class="btn btn-default downloadthis  " id="dnldts40424"><i class="bi bi-download"></i> Download </button></a></p>
 <p>Dann rechnen Sie den Mittelwert aus:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>noten2 <span class="sc">%&gt;%</span> </span>
@@ -1576,7 +1596,7 @@ Abbildung&nbsp;9.8: Bildquelle: <a href="https://www.fom-blog.de/autorinnen-und-
 </div>
 <p>Genauer gesagt wird die Summe der quadrierten <span class="green">Residuen</span> minimiert, s. <a href="#eq-min" class="quarto-xref">Gleichung&nbsp;<span>9.3</span></a>.</p>
 <p><span id="eq-min"><span class="math display">\[\text{min}\sum_i \color{errorcol}{e_i}^2 \tag{9.3}\]</span></span></p>
-<p>Es gibt verschiedene Möglichkeiten, um die Koeffizienten zu berechnen<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>. Eine schöne Darstellung dazu findet sich bei <span class="citation" data-cites="kaplan_statistical_2009">@kaplan_statistical_2009</span>.</p>
+<p>Es gibt verschiedene Möglichkeiten, um die Koeffizienten zu berechnen<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>. Eine schöne Darstellung dazu findet sich bei <span class="citation" data-cites="kaplan_statistical_2009">Kaplan (<a href="references.html#ref-kaplan_statistical_2009" role="doc-biblioref">2009</a>)</span>.</p>
 <p>“Von Hand” können Sie die Optimierung von b0 und b1 in <a href="https://fomshinyapps.shinyapps.io/KleinsteQuadrate/">dieser App der FOM-Hochschule</a> ausprobieren.</p>
 </section>
 </section>
@@ -1833,7 +1853,7 @@ Tabelle&nbsp;9.1: Modellparameter von lm3
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="do">##        1        2 </span></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 40.58276 53.59442</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Aber nützlich wäre noch, das Modell (bzw. die Schätzung der erwarteten Werte) als Diagramm zu bekommen. Das erreicht man z.B. so, s. <a href="#fig-lm3" class="quarto-xref">Abbildung&nbsp;<span>9.11</span></a>.</p>
+<p>Aber nützlich wäre noch, das Modell (bzw. die Schätzung der erwarteten Werte) als Diagramm zu bekommen. Das erreicht man z.B. so, s. <a href="090-regression2.html#fig-lm3" class="quarto-xref">Abbildung&nbsp;<span>10.10</span></a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">estimate_expectation</span>(lm3) <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -2903,7 +2923,7 @@ Hinweis
 </dd>
 <dt data-target-cell="annotated-cell-45" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-45" data-code-lines="3" data-code-annotation="2">zähle die Anzahl der Zeilen</span>
+<span data-code-cell="annotated-cell-45" data-code-lines="3" data-code-annotation="2">zähle die Anzahl der Zeilen (die noch verbleiben)</span>
 </dd>
 </dl>
 </div>
@@ -2992,12 +3012,23 @@ Hinweis
 </section>
 <section id="literaturhinweise" class="level2" data-number="9.10">
 <h2 data-number="9.10" class="anchored" data-anchor-id="literaturhinweise"><span class="header-section-number">9.10</span> Literaturhinweise</h2>
-<p><span class="citation" data-cites="gelman_regression_2021-1">@gelman_regression_2021-1</span> liefert eine deutlich umfassendere Einführung in die Regressionsanalyse als dieses Kapitel es tut. Eine moderne, R-orientierte Einführung in Statistik inklusive der Regressionsanalyse findet sich bei <span class="citation" data-cites="cetinkaya-rundel_introduction_2021-2">@cetinkaya-rundel_introduction_2021-2</span>. Ein Klassiker mit viel Aha-Potenzial ist <span class="citation" data-cites="cohen_applied_2003">@cohen_applied_2003</span>.</p>
+<p><span class="citation" data-cites="gelman_regression_2021-1">Gelman, Hill, und Vehtari (<a href="references.html#ref-gelman_regression_2021-1" role="doc-biblioref">2021</a>)</span> liefert eine deutlich umfassendere Einführung in die Regressionsanalyse als dieses Kapitel es tut. Eine moderne, R-orientierte Einführung in Statistik inklusive der Regressionsanalyse findet sich bei <span class="citation" data-cites="cetinkaya-rundel_introduction_2021-2">Cetinkaya-Rundel und Hardin (<a href="references.html#ref-cetinkaya-rundel_introduction_2021-2" role="doc-biblioref">2021</a>)</span>. Ein Klassiker mit viel Aha-Potenzial ist <span class="citation" data-cites="cohen_applied_2003">(<a href="references.html#ref-cohen_applied_2003" role="doc-biblioref"><strong>cohen_applied_2003?</strong></a>)</span>.</p>
 </section>
 <section id="literatur" class="level2" data-number="9.11">
 <h2 data-number="9.11" class="anchored" data-anchor-id="literatur"><span class="header-section-number">9.11</span> Literatur</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-cetinkaya-rundel_introduction_2021-2" class="csl-entry" role="listitem">
+Cetinkaya-Rundel, Mine, und Johanna Hardin. 2021. <em>Introduction to <span>Modern Statistics</span></em>. <a href="https://openintro-ims.netlify.app/">https://openintro-ims.netlify.app/</a>.
+</div>
+<div id="ref-gelman_regression_2021-1" class="csl-entry" role="listitem">
+Gelman, Andrew, Jennifer Hill, und Aki Vehtari. 2021. <em>Regression and Other Stories</em>. Analytical Methods for Social Research. <span>Cambridge</span>: <span>Cambridge University Press</span>.
+</div>
+<div id="ref-kaplan_statistical_2009" class="csl-entry" role="listitem">
+Kaplan, Daniel T. 2009. <em>Statistical Modeling: A Fresh Approach</em>. <span>Scotts Valley, Calif.</span>: <span>CreateSpace</span>. <a href="https://dtkaplan.github.io/SM2-bookdown/">https://dtkaplan.github.io/SM2-bookdown/</a>.
+</div>
+</div>
 </section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>

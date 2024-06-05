@@ -237,53 +237,19 @@ Wie viele Variablen sind in @fig-many-dims dargestellt?^[5]
 
 ::: {.content-visible when-format="html"}
 Eine weitere Möglichkeit, mehr Variablen in einem Diagramm unterzubringen,
-ist, die "Flatlands" zu verlassen, also von 2D auf 3D zu wechseln, [s. hier](https://plotly.com/r/3d-surface-plots/), 
-s. @fig-3d-earth.^[Quelle: Plotly, <https://plotly.com/r/trisurf/>]
+ist, die "Flatlands" zu verlassen, also von 2D auf 3D und/oder auf interaktive Diagramme zu wechseln, [s. hier](https://plotly.com/r/3d-surface-plots/), 
+s. @fig-3d-earth.^[Quelle: Paul Buffa, d3js, <https://observablehq.com/@pstuffa/faux-3d-globe>]
+
 
 
 ```{r fig-3d-earth}
 #| echo: false
-#| eval: true
+#| eval: false
 #| message: false
 #| cache: false
 #| label: fig-3d-earth
 #| fig-cap: "Eine 3D-Karte der Erde"
-
-
-wrld_simpl <- readr::read_rds(file = "daten/wrld_simpl.rds")
-
-map1 <- subset(wrld_simpl,
-               NAME %in% c("Germany"))
-map1 <- wrld_simpl
-
-## DEL model (like TRI in silicate)
-delmesh <-  anglr::globe(anglr::DEL(map1, max_area = 0.5))
-mesh <- anglr::as.mesh3d(delmesh)
-
-# plot point cloud
-x <- mesh$vb[1,]
-y <- mesh$vb[2, ]
-z <- mesh$vb[3,]
-m <- matrix(c(x,y,z), ncol=3, dimnames=list(NULL,c("x","y","z")))
-
-# colours in z don't make sense here, need to map object aesthetics above
-zmean <- apply(t(mesh$it),MARGIN=1,function(row){mean(m[row,3])})
-
-
-facecolor = scales::colour_ramp(
-  scales::brewer_pal(palette="RdBu")(9)
-)(scales::rescale(x=zmean))
-
-fig <- plotly::plot_ly(
-  x = x, y = y, z = z,
-  i = mesh$it[1,]-1, j = mesh$it[2,]-1, k = mesh$it[3,]-1,
-  facecolor = facecolor,
-  type = "mesh3d"
-)
-
-fig
 ```
-
 
 
 

@@ -65,13 +65,28 @@ Das Code Book können Sie [hier einsehen und herunterladen](https://github.com/s
 ### Prognosedatei
 
 
-Die Prognosedatei soll prinzipiell so aussehen:
+Die Prognosedatei ist die Datei, die Ihre Vorhersagen (Prognosen) enthält.
+Sie soll prinzipiell so aussehen wie in @tbl-subm dargestellt.
+
+```{r}
+#| tbl-cap: Beispiel den Aufbau der Prognose-Datei
+#| label: tbl-subm
+#| echo: false
+sample_subm_data <-
+tribble( ~id, ~SalePrice,
+        1461, 169277.1,
+        1462, 187758.4,
+        1463, 183583.7)
+
+  gt::gt(sample_subm_data)
+```
+
 
 ```{r read-data-ames}
 #| echo: false
-sample_subm_path <- "daten/ames-kaggle/sample_submission.csv"
-sample_subm <- readr::read_csv(sample_subm_path)
-head(sample_subm)
+#sample_subm_path <- "daten/ames-kaggle/sample_submission.csv"
+#sample_subm <- readr::read_csv(sample_subm_path)
+#head(sample_subm)
 ```
 
 Die Prognosedatei besteht also aus zwei Spalten: der Spalte `id` und der Spalte `Saleprice`.
@@ -86,19 +101,15 @@ Alles klar?
 Los geht's!
 
 
-### Daten importieren
+### Daten importieren von der Festplatte
 
-Wir starten die üblichen R-Pakete und importieren die Daten (`d`):
+Wir können die Daten auch von der Festplatte importieren; oft müssen wir das auch - wenn die Daten nämlich nicht öffentlich zugreifbar auf einem Server liegen.
 
-
-```{r}
-library(tidyverse)
-library(easystats)
-```
 
 
 ```{r read-data-local}
 #| message: false
+#| eval: false
 d_train_path <- "daten/ames-kaggle/train.csv"
 d_test_path <- "daten/ames-kaggle/test.csv"
 d_train <- read.csv(d_train_path)
@@ -111,7 +122,7 @@ d_test <- read.csv(d_test_path)
 :::{.callout-note}
 In diesem Beispiel gehen wir davon aus, dass die Dateien `train.csv` und `test.csv` in einem Unterordner namens `daten/ames-kaggle` liegen.
 Sie müssen sie dort abspeichern.
-Dieser Ornder muss ein Unterordner Ihres aktuellen R-Projekts sein.$\square$
+Dieser Ordner muss ein Unterordner Ihres aktuellen R-Projekts sein.$\square$
 :::
 
 :::{.callout-caution}
@@ -120,11 +131,6 @@ Es ist hilfreich, wenn man Daten von der eigenen Festplatte importieren kann.
 Aber fürs Erste können Sie die Daten auch von oben angegeben Online-Pfad importieren.$\square$
 :::
 
-```{r}
-#| eval: false
-d_train <- read_csv(d_train_path_online)
-d_test <- read_csv(d_test_path_online)
-```
 
 ### Ein erster Blick in die Daten
 
@@ -252,13 +258,16 @@ rmse(m2)
 
 Im Schnitt liegen unsere Vorhersagen ca. 40 Tausend Dollar daneben. Ist das gut?
 
+Betrachten wir noch $R^2$:
 
 ```{r}
-r2(m1)
+r2(m2)
 ```
 
+:::{.callout-note}
 Ob die Modellgüte (R-Quadrat, RMSE, etc.) "gut" oder "hoch" ist, beantwortet man am besten *relativ*, 
-also im Vergleich zu anderen Modellen.
+also im Vergleich zu anderen Modellen. $\square$
+:::
 
 
 #### Nullmodell
@@ -294,9 +303,9 @@ r2(m0)
 ```
 
 
-### Vorhersagen im Test-Datensatz
+### Vorhersagen im Test-Datensatz mit `m2`
 
-Wir haben jetzt unseren Champion, `m1`.
+Wir haben jetzt unseren Champion, `m2`.
 Alle Hoffnung ruht auf diesem Modell.
 Ob die Vorhersagen im Test-Sample präzise sein werden?
 Oder himmelweit daneben?
@@ -307,8 +316,8 @@ Hier sind die Vorhersagen:
 
 
 ```{r}
-m1_pred <- predict(m1, newdata = d_test)  # <1> 
-head(m1_pred) # <2>
+m2_pred <- predict(m2, newdata = d_test)  # <1> 
+head(m2_pred) # <2>
 ```
 1. predicte anhand der Regressionsgerade von m1 und zwar anhand der Daten aus `d_test`
 2. zeige den "Kopf" der Vorhersagen (`m1_pred`), d.h. die ersten paar Vorhersagen
@@ -320,21 +329,24 @@ Die Vohersagen fügen wir jetzt dem Test-Sample hinzu:
 ```{r}
 d_test <- 
   d_test %>% 
-  mutate(SalePrice = m1_pred)
+  mutate(SalePrice = m2_pred)
 ```
 
 
 ### Einreichen!
 
 
+#### Wir brauchen zwei Spalten: `Id` und `SalePrice`
+
+
 So, wir haben unsere Vorhersagen!
-Jetzt reichen wir diese Vorhesagen ein.
+Jetzt reichen wir diese Vorhersagen ein.
 
 Für die Prognosedatei (submission file) zum Einreichen brauchen wir nur die Spalten `id` und `SalePrice`:
 
 
 ```{r}
-m1_subm <-
+m2_subm <-
   d_test %>% 
   select(Id, SalePrice)
 ```
@@ -345,65 +357,73 @@ Kaggle möchte keine fehlenden Werten in den Vorhersagen, also prüfen wir das m
 ```{r}
 #| eval: true
 #| code-annotations: hover
-m1_subm %>% 
+m2_subm %>% 
   drop_na() %>%  # <1>
   nrow()         # <2>
 ```
 
 1. Lass alle Zeilen mit NAs (fehlenden Werten in irgendeiner Spalte) fallen, filtere diese Zeilen also raus
 
-2. zähle die Anzahl der Zeilen
+2. zähle die Anzahl der Zeilen (die noch verbleiben)
+
+Die Anzahl der Zeilen, die wir hier erhalten, ist gleich zu den Anzahl der Zeilen von `d_test`. Es gibt also keine fehlenden Werte.
 
 
-Oh, das ist *eine* Zeile weniger! Wir haben also einen fehlenden Wert!
-
-Filtern wir die Spalte `SalePrice` mal nach "ist NA":
-
-```{r}
-m1_subm %>% # <1)
-  filter(is.na(SalePrice)) # <2>
-```
-
-Übersetzen wir die Syntax auf Deutsch:
+<!-- #### Vertiefung: Fehlende Werte -->
 
 
-1. Nimm zuerst die Tabelle `m1_smb`
+<!-- Angenommen wir hätten fehlende Werte bei `SalePrice`. -->
 
-2. Filter dann so, dass du nur Zeilen hast, für die gilt, "hier ist ein NA in der Spalte `SalePrice`
+<!-- Filtern wir die Spalte `SalePrice` mal nach "ist NA": -->
 
-Ah, da ist er, der fehlende Wert, in Zeile 2577!
-Hinfort!
+<!-- ```{r} -->
+<!-- m1_subm %>% # <1) -->
+<!--   filter(is.na(SalePrice)) # <2> -->
+<!-- ``` -->
 
-Wir ersetzen die fehlenden Werte in `SalePrice` mit dem Mittelwert von `SalePrice`:
-
-```{r}
-m1_subm_nona <- # <1>
-  m1_subm %>%  # <2>
-  mutate(SalePrice = replace_na(SalePrice, mean(SalePrice, na.rm = TRUE))) # <3>
-```
-
-Die Syntax wieder auf Deutsch:
-
-1. Definiere `m1_subm_nona` wie folgt
-2. Nimm `m1_subm` und dann
-3. Verändere die Spalte `SalePrice` und zwar so, dass NAs ersetzt werden durch den Mittelwert von `SalePrice`
+<!-- Übersetzen wir die Syntax auf Deutsch: -->
 
 
-Und? Gib es jetzt noch fehlende Werte?
+<!-- 1. Nimm zuerst die Tabelle `m1_smb` -->
 
-```{r}
-m1_subm_nona %>% 
-  filter(is.na(SalePrice))
-```
+<!-- 2. Filter dann so, dass du nur Zeilen hast, für die gilt, "hier ist ein NA in der Spalte `SalePrice` -->
 
-Nein! Die Ergebnistabelle hat null Zeilen. 
-"No NA" - Keine NAs, keine fehlenden Werte mehr.
+<!-- Ah, da ist er, der fehlende Wert, in Zeile 2577! -->
+<!-- Hinfort! -->
+
+<!-- Wir ersetzen die fehlenden Werte in `SalePrice` mit dem Mittelwert von `SalePrice`: -->
+
+<!-- ```{r} -->
+<!-- m1_subm_nona <- # <1> -->
+<!--   m1_subm %>%  # <2> -->
+<!--   mutate(SalePrice = replace_na(SalePrice, mean(SalePrice, na.rm = TRUE))) # <3> -->
+<!-- ``` -->
+
+<!-- Die Syntax wieder auf Deutsch: -->
+
+<!-- 1. Definiere `m1_subm_nona` wie folgt -->
+<!-- 2. Nimm `m1_subm` und dann -->
+<!-- 3. Verändere die Spalte `SalePrice` und zwar so, dass NAs ersetzt werden durch den Mittelwert von `SalePrice` -->
+
+
+<!-- Und? Gib es jetzt noch fehlende Werte? -->
+
+<!-- ```{r} -->
+<!-- m1_subm_nona %>%  -->
+<!--   filter(is.na(SalePrice)) -->
+<!-- ``` -->
+
+<!-- Nein! Die Ergebnistabelle hat null Zeilen.  -->
+<!-- "No NA" - Keine NAs, keine fehlenden Werte mehr. -->
+
+#### Hochladen
 
 Diesen Tibble speichern wir als CSV-Datei an geeigneter Stelle ab.^[Es bietet sich an `write_csv` zu verwenden, da `write.csv` automatisch (ungefragt) noch eine Id-Spalte  ohne Namen einfügt (mit den Zeilennummern), das mag aber Kaggle nicht. Kaggle erwartet exakt zwei Spalten und zwar mit den Namen `Id` und `SalePrice`.]
 
 
 ```{r}
-write_csv(m1_subm_nona, "daten/ames-kaggle/m1-subm.csv")
+#| eval: false
+write_csv(m2_subm, "daten/ames-kaggle/m1-subm.csv")
 ```
 
 Und dann laden Sie diese Datei, `m1_subm.csv` bei Kaggle hoch und hoffen auf einen Hauptgewinn.
@@ -412,7 +432,7 @@ Das Modell erzielte einen Score von *0.55521*.
 
 
 
-### Debrief
+### Fazit
 
 Diese Fallstudie hat ein einfaches Prognosemodell vorgestellt.
 Sicherlich gibt es viele Ansätze, dieses Modell zu verbessern.

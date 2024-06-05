@@ -1,0 +1,102 @@
+
+
+
+```{ojs color}
+//| echo: false
+viewof color = Inputs.color({label: "Lieblingsfarbe", value: "#d1d6d4"})
+```
+
+
+
+```{ojs select-button}
+//| echo: false
+viewof radios = Inputs.radio(["Pushed", "Pressed"], {label: "Filter", value: "Pushed"})
+```
+
+
+```{ojs import-modules}
+//| echo: false
+import {world} from "@d3/world-tour"
+import {NeumorphismFlat, NeumorphismPressed} from "@pstuffa/neumorphism-contour-density-map"
+import {zoom} from "@d3/versor-zooming"
+```
+
+
+```{ojs def-globe}
+//| echo: false
+globe = {
+  let container = htl.html`<div>`;
+  
+  let projection = d3
+    .geoOrthographic()
+    .rotate([90, -40])
+    .fitExtent([[margin, margin], [width - margin, height - margin]], { type: "Sphere" });
+  
+  let render = () => {
+    let ele = plotGlobe(projection);
+    ele.style.pointerEvents = "none";
+    container.replaceChildren(ele);
+  };
+  
+  return d3.select(container)
+    .call(zoom(projection).on("zoom.render end.render", render))
+    .call(render)
+    .node();
+}
+```
+
+
+
+```{ojs plot-globe}
+//| echo: false
+plotGlobe = (projection) => {
+  const svg = d3.select(
+    Plot.plot({
+      margin,
+      width,
+      height,
+      projection,
+      marks: [
+        Plot.sphere({
+          stroke: d3.color(color).darker().hex(),
+          fill:
+            radios === "Pushed"
+              ? d3.color(color).darker(0.1).hex()
+              : d3.color(color).brighter(0.2).hex()
+        }),
+        Plot.graticule({ stroke: color }),
+        Plot.geo(countries.features, {
+          fill: color,
+          ariaDescription: "land",
+          stroke: d3.color(color).darker().hex()
+        }),
+        Plot.geo(countries, {
+          stroke: d3.color(color).darker().hex(),
+          ariaDescription: "landstroke"
+        })
+      ]
+    })
+  );
+
+  const defs = svg.append("defs");
+  const filter =
+    radios === "Pushed"
+      ? NeumorphismFlat(defs, 10, 20, color)
+      : NeumorphismPressed(defs, 10, 20, color);
+  svg.selectAll(`[aria-description="land"]`).style("filter", filter);
+
+  return svg.node();
+}
+```
+
+
+
+
+```{ojs constants}
+//| echo: false
+margin = 50
+width = 600
+height = 600
+countries = topojson.feature(world, world.objects.countries)
+```
+

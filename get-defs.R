@@ -6,8 +6,7 @@ quarto_dir <- "."
 
 # Define the pattern to match the definition shortcode
 pattern_def <- ':::\\{#def-(.+?)\\}'
-pattern_word <- '###\\s*(\\w+)'
-
+pattern_word <- '(.+)'
 
 # Initialize an empty list to store definitions
 definitions <- list()
@@ -21,7 +20,6 @@ read_files <- function(path = ".") {
 # Get all Quarto files
 files <- read_files(quarto_dir)
 
-
 # Iterate over all files and extract definitions
 for (file in files) {
   content <- readLines(file, warn = FALSE)
@@ -32,7 +30,7 @@ for (file in files) {
     if (!is.na(def_match[1])) {
       term <- def_match[2]
       
-      # Look ahead to find the word pattern
+      # Look ahead to find the next non-empty line
       j <- i + 1
       while (j <= length(content) && content[j] == "") {
         j <- j + 1
@@ -53,13 +51,15 @@ for (file in files) {
 definitions <- definitions[order(sapply(definitions, `[`, 1))]
 
 # Write the definitions to a new Quarto file
-output_file <- file.path(quarto_dir, "definitions.qmd")
+output_file <- file.path(quarto_dir, "110-definitions.qmd")
 fileConn <- file(output_file, "w")
-writeLines("# Definitions\n\n", fileConn)
+writeLines("# Definitionen\n\n", fileConn)
+writeLines(":::\n\n", fileConn)
 for (definition in definitions) {
-  line <- paste0("**", definition[2], "**: @", definition[1], "\n\n")
+  line <- paste0("- **", definition[2], "**: @def-", definition[1], "\n\n")
   writeLines(line, fileConn)
 }
+writeLines(":::\n", fileConn)
 close(fileConn)
 
 cat("Extracted", length(definitions), "definitions to definitions.qmd\n")

@@ -125,7 +125,7 @@ Ohne Kenntnis eines Prädiktors (UV) (wie z.B. Lernzeit) ist der Mittelwert ein 
 Wir nutzen den Mittelwert als Punktmodell für den Klausurerfolg.$\square$
 :::
 
-```{r}
+```{r p-punktmodell}
 #| echo: false
 #| fig-cap: "Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmodell"
 #| label: fig-noten3
@@ -146,7 +146,7 @@ Da das Modell null Prädiktoren hat, nennt man es auch manchmal "Nullmodell".
 
 Auf Errisch kann man dieses Nullmodell so spezifizieren:
 
-```{r}
+```{r lm0}
 lm0 <- lm(y ~ 1, data = noten2)
 lm0
 ```
@@ -183,7 +183,7 @@ noten2 %>%
 ```
 
 
-```{r}
+```{r lm1-b0-b1}
 #| echo: false
 lm1 <- lm(y ~ x, data = noten2)
 lm1_b0 <- coef(lm1)[1]
@@ -202,7 +202,7 @@ Der Trend (im Sinne eines linearen Zusammenhangs) von *Lernzeit* und *Klausurpun
 Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einzeichnen, s. @fig-noten4, b).
 
 
-```{r}
+```{r fig-noten}
 #| label: fig-noten4
 #| echo: false
 #| fig-cap: "Noten und Lernzeit: Rohdaten und Modell"
@@ -303,33 +303,35 @@ Mit:
 
 Je nach Datenlage können sich Regressionsgerade in Steigung oder Achsenabschnitt unterscheiden, s. @fig-regr-div.
 
-```{r}
+```{r lm11-lm12}
 #| echo: false
+#| cache: false
 
 set.seed(42)
-d1 <- tibble(
+d1 <- tibble::tibble(
   x1 = rnorm(50),
   y1 = 2 * x1 + rnorm(50, mean = 0, sd = .5)
 )
 
 set.seed(3141)
-d2 <- tibble(
+d2 <- tibble::tibble(
   x2 = rnorm(50),
   y2 = -x2 + rnorm(50, mean = 1, sd = .5)
 )
 
-lm1 <- lm(y1 ~ x1, data = d1)
-lm1_coef <- coef(lm1)
-lm2 <- lm(y2 ~ x2, data = d2)
-lm2_coef <- coef(lm2)
+lm11 <- lm(y1 ~ x1, data = d1)
+lm11_coef <- coef(lm11)
+lm12 <- lm(y2 ~ x2, data = d2)
+lm12_coef <- coef(lm12)
 
-cap1 <- paste0("Datensatz 1: b0 = ", round(lm1_coef[1], 2), "; b1 = ", round(lm1_coef[2], 2))
-cap2 <- paste0("Datensatz 2: b0 = ", round(lm2_coef[1], 2), "; b1 = ", round(lm2_coef[2], 2))
+cap1 <- paste0("Datensatz 1: b0 = ", round(lm11_coef[1], 2), "; b1 = ", round(lm11_coef[2], 2))
+cap2 <- paste0("Datensatz 2: b0 = ", round(lm12_coef[1], 2), "; b1 = ", round(lm12_coef[2], 2))
 ```
 
 
-```{r}
+```{r p-b0-b1}
 #| echo: false
+#| cache: false
 #| fig-cap: "Regressionsanalysen mit verschiedenen Koeffizienten, aber gleicher Modellgüte"
 #| label: fig-regr-div
 #| layout-ncol: 2
@@ -341,14 +343,14 @@ ggplot(d1, aes(x1, y1)) +
   geom_point() +
   geom_smooth(method = "lm", se = TRUE, color = okabeito_colors()[8]) +
   scale_y_continuous(limits = c(-4, 4)) +
-  labs(title = paste0("b0 = ",round(lm1_coef[1], 2), "; b1 = ", round(lm1_coef[2]), 2)) +
+  labs(title = paste0("b0 = ",round(lm11_coef[1], 2), "; b1 = ", round(lm11_coef[2]), 2)) +
   theme_modern()
 
 ggplot(d2, aes(x2, y2)) + 
   geom_point() +
   geom_smooth(method = "lm", se = TRUE, color = okabeito_colors()[8]) +
   scale_y_continuous(limits = c(-4, 4)) +
-  labs(title = paste0("b0 = ",round(lm2_coef[1], 1), "; b1 = ", round(lm2_coef[2]), 2)) +
+  labs(title = paste0("b0 = ",round(lm12_coef[1], 1), "; b1 = ", round(lm12_coef[2]), 2)) +
   theme_modern()
 ```
 
@@ -385,7 +387,7 @@ Das sind gute Fragen. Den $\color{ycol}{Y}$-Wert (Klausurpunkte) bei $\color{xco
 Puh, die Antwort wird Toni nicht gefallen ...$\square$
 :::
 
-```{r}
+```{r fig-beta0}
 #| echo: false
 #| label: fig-beta0
 #| fig-cap: "Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei 0 Lernstunden? (roter Punkt bei x=0)"
@@ -424,7 +426,7 @@ Anstelle auf @fig-beta0 zu schauen, können Sie sich auch von R Tonis Klausurerf
 >    🤖 Okay, ich predicte mit Modell "lm1" und nehme als neue Datentabelle Tonis Lernzeit (x=0)!
 
 ```{r}
-tonis_lernzeit <- tibble(x = 0)
+tonis_lernzeit <- tibble(x = 0)  # `tibble` erstellt eine Tabelle
 tonis_lernzeit
 ```
 
@@ -533,7 +535,7 @@ Die Differenz zwischen vorhergesagten Wert für eine (neue) Beobachtung, $\color
 
 
 
-```{r}
+```{r p-abweichungsbalken}
 #| echo: false
 #| fig-cap: "Vorhersagefehler als Abweichungsbalken"
 #| label: fig-resid
@@ -928,7 +930,7 @@ estimate_expectation(lm3) %>% plot()
 `estimate_expectation` heißt sinngemäß "schätze den zu erwartenden Wert".
 Kurz gesagt: Wir wollen eine Vorhersage von R.
 
-Am wichtigsten ist Ihnen aber im Moment die Frage, wie "gut" das Modell ist, spricht wie lang oder kurz die Vorhersagefehler-Balken sind:
+Am wichtigsten ist Ihnen aber im Moment die Frage, wie "gut" das Modell ist, spricht wie lang oder kurz die (absoluten) Vorhersagefehler-Balken sind:
 
 ```{r}
 mae(lm3)
@@ -942,6 +944,11 @@ lm3_r2 <- round(r2(lm3)$R2, 2)
 
 Das Modell erklärt einen Anteil von ca. `r lm3_r2` der Gesamtstreuung.
 
+```{r}
+r2(lm3)
+```
+
+
 
 ```{r}
 mae(lm3)
@@ -949,9 +956,11 @@ mae(lm3)
 
 
 
-Im nächsten Meeting erzählen Sie Ihrem Chef "Ich kann den Verkaufspreis von Mariokart-Spielen im Schnitt auf 13 Dollar genau vorhersagen!".
+Im nächsten Meeting erzählen Sie Ihrem Chef 
+"Ich kann den Verkaufspreis von Mariokart-Spielen im Schnitt auf `r round(mae(lm3),0)` Dollar genau vorhersagen!".
 Hört sich gut an.
-Allerdings hätte ihr Chef es gerne genauer. Kann man da noch was machen?
+Allerdings hätte ihr Chef es gerne genauer. 
+Kann man da noch was machen?
 
 
 

@@ -42,6 +42,8 @@ library(easystats)
 library(ggpubr)
 library(plotly)
 library(openintro)  # dataset mariokart
+
+source("children/colors.R")
 ```
 
 
@@ -1005,9 +1007,27 @@ Visualisieren wir uns die geschätzten Erwartungswert pro Prädiktorwert, s. @fi
 #| label: fig-lm3
 #| fig-cap: Temperaturverlauf über die Jahre für zwei Monate. Man beachte, dass die Regressionsgeraden parallel sind.
 #| echo: false
-plot(estimate_expectation(lm_year_month)) +
-  scale_color_okabeito() + # schönes Farbschema
-  theme_minimal()
+
+ggplot(wetter_month_1_7) +
+  aes(x = year_c, 
+  y = precip, 
+  color = month_factor,
+  group = month_factor) +
+  geom_point2(alpha = .1) +
+  scale_color_okabeito() +
+geom_abline(slope = coef(lm_year_month)[2],
+intercept = coef(lm_year_month)[1], color = okabeito_colors()[1], size = 2) +
+geom_abline(slope = coef(lm_year_month)[2],
+intercept = coef(lm_year_month)[1] + coef(lm_year_month)[3], color = okabeito_colors()[2], size = 2) +
+annotate("label", x = Inf,
+y = predict(lm_year_month, newdata = tibble(year_c = 50, month_factor = factor("1"))),
+label = "month 1", hjust = 1.1) +
+scale_x_continuous(limits = c(-100, 100)) +
+  theme(legend.position = "none") +
+annotate("label", x = Inf,
+y = predict(lm_year_month, newdata = tibble(year_c = 50, month_factor = factor("7"))),
+label = "month 7", hjust = 1.1)
+
 ```
 
 Mit `scale_color_okabeito` haben wir die Standard-Farbpalette durch die von  [@okabeito] ersetzt (s. [Hinweise
@@ -1030,8 +1050,7 @@ Aber vielleicht würden sie besser in die Punktewolken passen, wenn wir ihnen er
 Nicht-parallele Regressionsgeraden erlauben wir, indem wir das Regressionsmodell wie folgt spezifizieren und visualisieren, s. @fig-wetter-interakt.
 
 ```{r}
-#| label: fig-wetter-interakt
-#| fig-cap: "Niederschlag im Jahresverlauf und Monatsvergleich mit Interaktionseffekt: Die Veränderung im Verlauf der Jahre ist unterschiedlich für die Monate (Janur vs. Juli). Die beiden Regressionsgeraden sind nicht parallel."
+#| results: hide
 lm_year_month_interaktion <- lm(
   precip ~ year_c + month_factor + year_c:month_factor, 
   data = wetter_month_1_7)
@@ -1039,6 +1058,23 @@ lm_year_month_interaktion <- lm(
 plot(estimate_expectation(lm_year_month_interaktion)) +
   scale_color_okabeito()  # schönes Farbschema
 ```
+
+
+```{r}
+#| echo: false
+#| label: fig-wetter-interakt
+#| fig-cap: "Niederschlag im Jahresverlauf und Monatsvergleich mit Interaktionseffekt: Die Veränderung im Verlauf der Jahre ist unterschiedlich für die Monate (Janur vs. Juli). Die beiden Regressionsgeraden sind nicht parallel."
+
+ggplot(wetter_month_1_7) +
+  aes(x = year_c, 
+  y = precip, 
+  color = month_factor,
+  group = month_factor) +
+  geom_point2(alpha = .1) +
+  geom_smooth(method = "lm", size = 2) +
+  scale_color_okabeito()
+```
+
 
 
 Der *Doppelpunkt-Operator* `:` fügt der Regressionsgleichung einen Interaktionseffekt hinzu, in diesem Fall die Interaktion von Jahr (`year_c`) und Monat (`month_factor`):

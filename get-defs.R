@@ -30,7 +30,7 @@ for (file in files) {
     if (!is.na(def_match[1])) {
       term <- def_match[2]
       
-      # Look ahead to find the next non-empty line
+      # Look ahead to find the word pattern
       j <- i + 1
       while (j <= length(content) && content[j] == "") {
         j <- j + 1
@@ -39,7 +39,7 @@ for (file in files) {
       if (j <= length(content)) {
         word_match <- str_match(content[j], pattern_word)
         if (!is.na(word_match[1])) {
-          word <- word_match[2]
+          word <- word_match[1]
           definitions <- append(definitions, list(c(term, word)))
         }
       }
@@ -51,15 +51,15 @@ for (file in files) {
 definitions <- definitions[order(sapply(definitions, `[`, 1))]
 
 # Write the definitions to a new Quarto file
-output_file <- file.path(quarto_dir, "110-definitions.qmd")
+output_file <- file.path(quarto_dir, "definitions.qmd")
 fileConn <- file(output_file, "w")
-writeLines("# Definitionen\n\n", fileConn)
-writeLines(":::\n\n", fileConn)
+writeLines("# Definitions\n\n", fileConn)
+writeLines("### Definitions\n\n", fileConn) # Adding a heading for the definitions section
+
 for (definition in definitions) {
-  line <- paste0("- **", definition[2], "**: @def-", definition[1], "\n\n")
+  line <- paste0("- **", definition[2], "**: def-", definition[1], "\n\n")
   writeLines(line, fileConn)
 }
-writeLines(":::\n", fileConn)
 close(fileConn)
 
 cat("Extracted", length(definitions), "definitions to definitions.qmd\n")

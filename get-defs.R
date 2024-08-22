@@ -1,14 +1,14 @@
-# Load necessary libraries
+# Load necessary libraries:
 library(stringr)
 
-# Define the path to the directory containing your Quarto files
+# Define the path to the directory containing your Quarto files:
 quarto_dir <- "."
 
-# Define the pattern to match the definition shortcode
+# Define the pattern to match the definition shortcode:
 pattern_def <- ':::\\{#def-(.+?)\\}'
-pattern_word <- '(.+)'
+pattern_word <- '(.+)'  # that's the definitions following the id of the def.
 
-# Initialize an empty list to store definitions
+# Initialize an empty list to store definitions:
 definitions <- list()
 
 # Function to read all files in a directory recursively
@@ -17,14 +17,14 @@ read_files <- function(path = ".") {
   return(files)
 }
 
-# Get all Quarto files
+# Get all Quarto files:
 files <- read_files(quarto_dir)
 
-# Iterate over all files and extract definitions
+# Iterate over all files and extract definitions:
 for (file in files) {
   content <- readLines(file, warn = FALSE)
   
-  # Use a loop to go through lines and capture definitions and their corresponding words
+  # Use a loop to go through lines and capture definitions and their corresponding words:
   for (i in seq_along(content)) {
     def_match <- str_match(content[i], pattern_def)
     if (!is.na(def_match[1])) {
@@ -40,6 +40,8 @@ for (file in files) {
         word_match <- str_match(content[j], pattern_word)
         if (!is.na(word_match[1])) {
           word <- word_match[1]
+          # Remove "### " from the word if it exists:
+          word <- str_replace(word, "### ", "")
           definitions <- append(definitions, list(c(term, word)))
         }
       }
@@ -47,19 +49,21 @@ for (file in files) {
   }
 }
 
-# Sort definitions alphabetically by term
+# Sort definitions alphabetically by term:
 definitions <- definitions[order(sapply(definitions, `[`, 1))]
 
-# Write the definitions to a new Quarto file
-output_file <- file.path(quarto_dir, "definitions.qmd")
+
+# Write the definitions to a new Quarto file:
+output_file <- file.path(quarto_dir, "1300-definitions.qmd")
 fileConn <- file(output_file, "w")
-writeLines("# Definitions\n\n", fileConn)
-writeLines("### Definitions\n\n", fileConn) # Adding a heading for the definitions section
+writeLines("# Definitionen\n\n", fileConn)
+#writeLines("### Definitions\n\n", fileConn) # Adding a heading for the definitions section
 
 for (definition in definitions) {
-  line <- paste0("- **", definition[2], "**: def-", definition[1], "\n\n")
+  line <- paste0("- **", definition[2], "**: @def-", definition[1], "\n\n")
   writeLines(line, fileConn)
 }
 close(fileConn)
 
 cat("Extracted", length(definitions), "definitions to definitions.qmd\n")
+

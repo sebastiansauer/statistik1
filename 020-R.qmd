@@ -16,6 +16,7 @@ library(see)
 ```{r}
 #| include: false
 theme_set(theme_minimal())
+knitr::opts_chunk$set(tidy = TRUE, width = 60, max.print = 100)
 ```
 
 
@@ -125,18 +126,16 @@ Ein (wissenschaftlicher) Befunde ist reproduzierbar, wenn andere Analystis mit d
 @def-repro ist, etwas überspitzt, in @fig-repro wiedergegeben.
 
 
-:::: {.content-visible when-format="html"}
+
 
 :::{#fig-repro}
 
 :::{.xxlarge}
+:::: {.content-visible when-format="html"}
 🔢 + 🤖 + 🔬 = 🤩   
 :::
 
-Daten + Syntax + genaue Beschreibung der Messungen = reproduzierbar
 
-:::
-::::
 
 
 ::::: {.content-visible when-format="pdf"}
@@ -157,7 +156,7 @@ Daten + Syntax + genaue Beschreibung der Messungen = reproduzierbar
 
 ### Aus der Forschung: Reproduzierbarkeit in der Psychologie
 
->   🧑‍🎓 Wie ist es um unsere Wissenschaft, Psychologie, bestellt? Haben die Befunde Hand und Fuß?
+>   [🧑‍🎓]{.content-visible when-format="html"} Wie ist es um unsere Wissenschaft, Psychologie, bestellt? Haben die Befunde Hand und Fuß?
 
 
 @obels_analysis_2020 haben die Reproduzierbarkeit in psychologischen Studien untersucht. 
@@ -185,32 +184,32 @@ main results for 21 articles. $\square$
 Wenn wir sagen, "wir arbeiten mit R", dann heißt das in unserem Fall "wir arbeiten mit R und mit RStudio".
 
 
-:::: {.columns}
+::::: {layout-ncol="3"}
 
 
 
-::: {.column width="40%"}
+:::: {.column width="40%"}
 
 ![](img/R-logo.png){width="20%"}
+::::
+
+
+
+:::: {.column width="20%"}
+::: {.content-visible when-format="pdf"}
+\text{\huge{\emoji{sparkling-heart}}}
 :::
+::::
 
 
 
-::: {.column width="20%"}
-:::{.xlarge}
-💖
-:::
-:::
-
-
-
-::: {.column width="40%"}
+:::: {.column width="40%"}
 
 ![](img/rlogo.png){width="40%"}
-:::
-
-
 ::::
+
+
+::::: 
 
 
 
@@ -227,11 +226,14 @@ knitr::include_graphics("img/r_vs_rstudio_1.png")
 ```
 Kurz gesagt: Das eigentlich Arbeiten besorgt R. Für den Komfort und die Schönheit ist RStudio zuständig. Auch eine Art von Arbeitsteilung!
 
+::: {.content-visible when-format="html"}
+
 :::{.callout-note}
 - R:  🏋️‍♀️
 - RStudio: 💅 $\square$
 :::
 
+:::
 
 Hier sehen Sie einen Screenshot von der Oberfläche von RStudio, s.  @fig-rstudio.
 
@@ -406,7 +408,7 @@ So installiert man Pakete in R.
 
 
 
->   🧑‍🎓Welche R-Pakete sind denn schon installiert?
+>   [🧑‍🎓]{.content-visible when-format="html"} Welche R-Pakete sind denn schon installiert?
 
 
 Im Reiter *Packages* können Sie nachschauen, welche Pakete 
@@ -425,7 +427,7 @@ Diese Pakete brauchen Sie logischerweise dann *nicht* noch mal installieren, s. 
 Alternativ können Sie zum Installieren von Paketen auch den Befehl `install.packages()` verwenden. Also zum Beispiel `install.packages(tidyverse)` um das Paket `tidyverse` zu installieren.
 
 
->   🧑‍🎓Ja, aber welche R-Pakete "soll" ich denn installieren, welche brauch ich denn?
+>   [🧑‍🎓]{.content-visible when-format="html"} Ja, aber welche R-Pakete "soll" ich denn installieren, welche brauch ich denn?
 
 Im Moment sollten Sie die folgenden Pakete installiert haben:
 
@@ -546,8 +548,8 @@ Vergessen Sie nicht zu *speichern*,
 wenn Sie ein tolles Skript geschrieben haben.
 Dafür gibt es mehrere Möglichkeiten:
 
-1. Tastaturkürzel *Strg+S
-2. Menü: File > Save
+1. Tastaturkürzel *Strg+S*
+2. Menü: `File > Save`
 3. Klick auf das Icon mit der Diskette, s. @fig-script-new.
 
 
@@ -786,13 +788,16 @@ R arbeitet so einen "verschachtelten" Befehl *von innen nach außen* ab:
 
 Start: `mean(Antworten)`
 
-      ⬇️ 
+[⬇️]{.content-visible when-format="html"}
+[$\downarrow$]{.content-visible when-format="pdf"}
 
 Schritt 1: `mean(c(42, 43))`
 
-      ⬇️ 
+[⬇️]{.content-visible when-format="html"}
+[$\downarrow$]{.content-visible when-format="pdf"}
 
 Schritt 2: `42.5`
+
 
 
 #### Schema einer Funktion
@@ -819,7 +824,7 @@ image_write(p_trimmed, "img/function-schema.png")
 #### Argumente einer Funktion
 
 
-Eine Funktion hat einen oder mehrere *Inputs*,
+Eine Funktion hat einen oder mehrere *Inputs* (s. @fig-function-schema),
 das sind Daten oder Verarbeitungshinweise, die man in die Funktion `fun` *eingibt*, bevor sie loslegt.
 Eine Funktion hat immer (genau) eine *Ausgabe* (Output),
 in der das Ergebnis einer Funktion ausgegeben wird.
@@ -835,7 +840,6 @@ nennt man auch *Argumente*.$\square$
 So hat die Funktion `mean()` z.B. folgende Argumente, s. @lst-mean.
 
 :::{#lst-mean}
-
 
 
 ```{r}
@@ -872,9 +876,16 @@ etwa bei `mean()`: `mean(x, trim = 0, na.rm = FALSE, ...)`.
 (Nur) wenn man die Argumente in ihrer vorgegebenen Reihenfolge anspricht,
 muss man *nicht* den Namen des Arguments anführen:
 
-✅  `mean(Antworten, 0, FALSE)` 
 
-Hält man sic aber nicht an die vorgebene Reihenfolge,
+::: {.content-visible when-format="html"}
+✅  `mean(Antworten, 0, FALSE)` 
+:::
+
+::: {.content-visible when-format="pdf"}
+\emoji{check-mark-button} `mean(Antworten, 0, FALSE)` 
+:::
+
+Hält man sich aber nicht an die vorgebene Reihenfolge,
 so weiß R nicht, was zu tun ist und flüchtet sich in eine Fehlermeldung:
 
 
@@ -882,7 +893,7 @@ so weiß R nicht, was zu tun ist und flüchtet sich in eine Fehlermeldung:
 ```{r}
 #| error: true
 #| 
-mean(Antworten, FALSE, 0)  # FALSCH, DON'T DO IT 🙅‍♀️
+mean(Antworten, FALSE, 0)  # FALSCH, DON'T DO IT 
 ```
 
 Wenn man die Namen der Argumente anspricht, ist die Reihenfolge egal:
@@ -922,10 +933,10 @@ quittiert R das mit einem schnöden `NA`.
 mean(Antworten)
 ```
 
-R meint es gut mit Ihnen^[>   🤖 Naja, manchmal.]. Stellen Sie sich vor, 
+R meint es gut mit Ihnen^[>   [🤖]{.content-visible when-format="html"} Naja, manchmal.]. Stellen Sie sich vor, 
 dass R Sie auf dieses Problem aufmerksam machen möchte: 
 
->   🤖 Achtung, lieber Herr und Gebieter, du hast nicht mehr alle Latten am Zaun, will sagen, alle Daten im Vektor!
+>    [🤖]{.content-visible when-format="html"} Achtung, lieber Herr und Gebieter, du hast nicht mehr alle Latten am Zaun, will sagen, alle Daten im Vektor!
 
 (Danke, R.)
 
@@ -938,11 +949,11 @@ mean(Antworten, na.rm = TRUE)
 
 
 :::{#exr-na}
-### Geben Sie lustige Bedeutungen an, was "NA" noch bedeuten könnte!
+### Geben Sie neue Bedeutungen an, was "NA" noch bedeuten könnte!
 
->   🤖 Wie wäre es mit "nebulöse Anomalie" oder "nix-checkender Angeber" oder "nölender Automat".
+>    [🤖]{.content-visible when-format="html"} Wie wäre es mit "nebulöse Anomalie" oder "nix-checkender Angeber" oder "nölender Automat".
 
->   🧑‍🎓 Hm...
+>    [👩‍🎓]{.content-visible when-format="html"} Hm...
 
 $\square$
 :::
@@ -984,10 +995,12 @@ Im Einzelnen haben wir also folgenden drei Differenzen ausgerechnet:
 ```
 
 
+Diese drei Rechenschritte sind symbolisch in @fig-vektoriell dargestellt.
+
 ```{r}
 #| echo: false
-#| label: fig-vektorierell
-#| fig-cap: "Schema des vektoriellen Rechnens: Eine Funktion wird auf jedes Elemnt eines Vektors angewandt"
+#| label: fig-vektoriell
+#| fig-cap: "Schema des vektoriellen Rechnens: Eine Funktion wird auf jedes Element eines Vektors angewandt. Hier: 1-2=-1; 2-2=0; 3-2=1"
 #| fig-asp: 0.5
 #| out-width: "50%"
 d_x <-
@@ -1009,7 +1022,7 @@ ggplot(d_x) +
 
 
 :::{#exr-rquiz}
-Ihre R-Muskeln sind gestählt? 💪 Oder doch noch nicht so ganz ausdefiniert? 😤 Macht nichts! Trainieren Sie sich mit dem R-Quiz auf der Datenwerk-Webseite^[<https://datenwerk.netlify.app/posts/r-quiz/r-quiz>]! $\square$
+Ihre R-Muskeln sind gestählt? [💪]{.content-visible when-format="html"} Oder doch noch nicht so ganz ausdefiniert? [😤]{{.content-visible when-format="html"}} Macht nichts! Trainieren Sie sich mit dem R-Quiz auf der Datenwerk-Webseite^[<https://datenwerk.netlify.app/posts/r-quiz/r-quiz>]! $\square$
 :::
 
 
@@ -1059,7 +1072,7 @@ wo Ihre Datei liegen könnte.
 1. Irgendwo im Internet^[z.B. hier:  <https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv>]
 2. Irgendwo auf Ihrem Computer, z.B. in Ihrem R-Projektordner
 
-In beiden Fällen wird der "Aufenthaltsort" der Datei durch den *Pfad*^[Der Pfad einer Datei sagt, in welchem Ordner und Unterorder und Unter-Unterordner die gesuchte Datei liegt. Ein Pfad könnte z.B. so aussehen: "/Users/sebastiansaueruser/github-repos/statistik1/020-R.qmd".] und den Namen der Datei definiert.
+In beiden Fällen wird der "Aufenthaltsort" der Datei durch den *Pfad*^[Der Pfad einer Datei sagt, in welchem Ordner und Unterorder und Unter-Unterordner die gesuchte Datei liegt. Ein Pfad könnte z.B. so aussehen: "/Users/sebastiansaueruser/github-repos/statistik1/".] und den Namen der Datei definiert.
 
 :::{.callout-note}
 Wir werden in diesem Kurs häufiger mit dem Daten `mariokart` arbeiten;
@@ -1097,7 +1110,7 @@ In diesem Buch werden wir mit einem Datensatz namens `mariokart` arbeiten; hallo
 
 
 
-:::{#exr-texteditor}
+::::{#exr-texteditor}
 ### CSV-Datei von innen
 
 :::{.panel-tabset}
@@ -1123,7 +1136,7 @@ V1,id,duration,n_bids,cond,start_pr,ship_pr,total_pr,ship_sp,seller_rate,stock_p
 :::
 
 
-:::
+::::
 
 
 ### Daten importieren
@@ -1161,12 +1174,23 @@ d <- mariokart
 
 Hier ist eine Möglichkeit, Daten (in Form einer Tabelle) von einer Webseite (URL) in R zu importieren:
 
+::: {.content-visible when-format="html"}
 
 ```{r}
 #| eval: false
 mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 ```
+:::
 
+
+::: {.content-visible when-format="pdf"}
+```{r}
+#| eval: false
+mariokart <- read.csv(paste0(
+  "https://vincentarelbundock.github.io/Rdatasets/",
+  "csv/openintro/mariokart.csv"))
+```
+:::
 
 
 Es ist egal,
@@ -1174,6 +1198,7 @@ welchen Namen Sie der Tabelle geben.
 Ich nehme oft `d`, *d* die Daten. 
 Außerdem ist `d` kurz,
 muss man nicht so viel tippen.
+Auf der anderen Seite ist `d` nicht gerade präzise und vielsagend.
 
 Werfen wir einen Blick in die Tabelle (engl. *to glimpse*):
 
@@ -1311,7 +1336,7 @@ Alternativ öffnet der Befehl `View(mariokart)` die gleiche Ansicht.
 ## Logikprüfung {#sec-logic}
 
 
->   🧑‍🎓 Wer will schon wieder wen prüfen?!
+>   [🧑‍🎓]{.content-visible when-format="html"} Wer will schon wieder wen prüfen?!
 
 In diesem Abschnitt schauen wir uns *Logikprüfungen* an: 
 Wir lassen R prüfen, ob eine Variable einen bestimmten Wert hat oder größer/kleiner als ein Referenzwert ist.
@@ -1329,7 +1354,7 @@ Dann fragen wir R, ob diese Variable den Wert `42` hat.
 x == 42
 ```
 
->   🤖 Hallo, Mensch. Ja, diese Variable hat den Wert 42.
+>   [🤖]{.content-visible when-format="html"} Hallo, Mensch. Ja, diese Variable hat den Wert 42.
 
 (Danke, R.)
 
@@ -1407,14 +1432,14 @@ Dieses Ergebnis lässt darauf schließen, dass R in der Praxis viel mehr als Exc
 
 
 
->   🧑‍🎓 Aber ist R wirklich ein Werkzeug, das mir im Job hilft? 
+>   [🧑‍🎓]{.content-visible when-format="html"} Aber ist R wirklich ein Werkzeug, das mir im Job hilft? 
 
 Viele Firmen weltweit nutzen R zur Datenanalyse.^[wie diese Liste zeigt: <https://www.quora.com/Which-organizations-use-R?share=1> zeigt].
 
->   👨‍🏫 R ist *der* Place-to-be für die Datenanalyse.
+>    [👩]{.content-visible when-format="html"}  R ist *der* Place-to-be für die Datenanalyse.
 
 
->   🧑‍🎓 Aber ist Datenanalyse wirklich etwas, womit ich in Zukunft einen guten Job bekomme?
+>    [🧑‍🎓]{.content-visible when-format="html"}  Aber ist Datenanalyse wirklich etwas, womit ich in Zukunft einen guten Job bekomme?
 
 
 Berufe mit Bezug zu Daten, Datenanalyse oder, allgemeiner, Künstlicher Intelligenz (artificial intelligence) gehören zu den am meisten wachsenden Berufen:
@@ -1475,12 +1500,27 @@ Die Webseite [Datenwerk](https://datenwerk.netlify.app/) stellt eine Reihe von A
 
 Hier ist eine weitere Möglichkeit, um Daten von einem Ordner (egal ob dieser sich im Internet oder auf Ihrem Computer befinde) einzulesen, stellt die Funktion `data_read` bereit:
 
+::: {.content-visible when-format="html"}
+
 ```{r}
 #| eval: false
 library(easystats)  # Das Paket muss installiert sein
 d <- data_read("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 ```
+:::
 
+
+::: {.content-visible when-format="pdf"}
+
+
+```{r}
+#| eval: false
+library(easystats)  # Das Paket muss installiert sein
+d <- data_read(paste0(
+  "https://vincentarelbundock.github.io/Rdatasets/",
+  "csv/openintro/mariokart.csv"))
+```
+:::
 
 Der Unterschied ist, dass `data_read` *viele* Formate von Daten (Excel, CSV, SPSS, ...) verkraftet, wohingegen `read.csv` nur Standard-CSV einlesen kann.
 
@@ -1525,11 +1565,24 @@ Allerdings kann `data_read` keine Dateien aus dem Internet importieren, was prak
 
 Wenn Sie allerdings "remote", also aus dem Internet, eine Excel-Datei importieren möchten, so können Sie das mit `import` aus dem R-Paket `{rio}` tun:
 
+::: {.content-visible when-format="html"}
+
 ```{r}
 library(rio)
 extra_path <- "https://github.com/sebastiansauer/statistik1/raw/main/daten/extra.xls"
 extra <- import(extra_path)
 ```
+:::
+
+::: {.content-visible when-format="pdf"}
+```{r}
+library(rio)
+extra_path <- paste0(
+  "https://github.com/sebastiansauer/statistik1/",
+  "raw/main/daten/extra.xls")
+extra <- import(extra_path)
+```
+:::
 
 
 
@@ -1640,9 +1693,22 @@ Sie benötigen in diesem Kapitel den Datensatz `mariokart`, der entweder online^
 
 #### Import via Download
 
-```{r import-mariokart}
+::: {.content-visible when-format="html"}
+
+```{r import-mariokart-html}
 mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 ```
+
+:::
+
+::: {.content-visible when-format="pdf"}
+```{r import-mariokart-pdf}
+mariokart <- read.csv(paste0(
+  "https://vincentarelbundock.github.io/Rdatasets/",
+  "csv/openintro/mariokart.csv"))
+```
+
+:::
 
 
 
@@ -1650,7 +1716,8 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 
 ```{r}
 #| eval: false
-data(mariokart, package = "openintro")  # Das Paket muss installiert sein
+#|  # Das Paket muss installiert sein:
+data(mariokart, package = "openintro") 
 ```
 
 
@@ -1663,11 +1730,11 @@ In Kapitel 4 werden Grundlagen von "Errisch" erläutert;
 Kapitel 5 führt in Datenstrukturen von R ein (schon etwas anspruchsvoller).
 Alternativ bietet [Kapitel 1](https://moderndive.com/1-getting-started.html) von @ismay_statistical_2020 einen guten und sehr anwenderfreundlichen Überblick.
 Das Buch hat auch den Vorteil, dass es komplett frei online verfügbar ist.
-Vergleichbar dazu ist @cetinkaya-rundel_introduction_2021-1,
+Vergleichbar dazu ist @cetinkaya-rundel_introduction_2021,
 vielleicht einen Tick formaler; 
 auf jeden Fall genau das richtige Niveau für Bachelor-Statistik in angewandten nicht-technischen Studiengängen.
 
-Natürlich gibt es viele Online-Kurse zu R, die aber teilweise kostenplichtig sind^[Ein Beispiel ist der Kurs *Getting Started with Rstudio*, <https://www.coursera.org/projects/getting-started-rstudio> (Kursdauer: 1 Stunde)].
+Natürlich gibt es viele Online-Kurse zu R, die aber teilweise kostenplichtig sind^[Ein Beispiel ist der Kurs *Getting Started with RStudio*, <https://www.coursera.org/projects/getting-started-rstudio> (Kursdauer: 1 Stunde)].
 
 
 

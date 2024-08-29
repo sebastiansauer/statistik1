@@ -23,20 +23,20 @@
 
 In diesem Kapitel benötigen Sie folgende R-Pakete.
 
-```{r}
+```{r libs}
 library(tidyverse)
 library(easystats)
 ```
 
 
-```{r}
+```{r source-common}
 #| echo: false
 
 source("_common.R")
 ```
 
 
-```{r}
+```{r libs-hidden}
 #| include: false
 library(gt)
 library(mosaic)
@@ -54,18 +54,28 @@ ggplot2::theme_update(axis.title = ggplot2::element_text(size = 66))
 
 ### Benötigte Daten
 
-```{r}
+
+::: {.content-visible when-format="html"}
+
+```{r import-mariokart-csv}
 mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 ```
+:::
 
 
+::: {.content-visible when-format="pdf"}
 
 
+```{r import-mariokart-csv2}
+mariokart_path <- paste0(
+  "https://vincentarelbundock.github.io/Rdatasets/",
+  "csv/openintro/mariokart.csv")
 
-```{r}
-#| echo: false
-ggplot2::theme_set(theme_minimal())
+mariokart <- read.csv(mariokart_path)
 ```
+
+:::
+
 
 
 
@@ -89,7 +99,9 @@ e) Keine Ahnung! $\square$
 
 :::{#exr-mw2}
 
-Laut [dieser Quelle](https://en.wikipedia.org/wiki/Average_human_height_by_country) beträgt der Wert der mittleren Größe deutscher Frauen etwa 1,66m, also 14&thinsp;cm weniger als bei Männern.^[<https://en.wikipedia.org/wiki/Average_human_height_by_country>] $\square$
+Laut [dieser Quelle](https://en.wikipedia.org/wiki/Average_human_height_by_country) 
+beträgt der Wert der mittleren Größe deutscher Frauen etwa 1,66m, 
+also 14&thinsp;cm weniger als bei Männern.^[<https://en.wikipedia.org/wiki/Average_human_height_by_country>] $\square$
 :::
 
 
@@ -107,8 +119,11 @@ d) weiß nicht $\square$
 
 ### Antwort
 
-Auf dieser Frage gibt es keine Antwort, zumindest nicht ohne weitere Annahmen. 
-So könnte man z.B. sagen, "mehr als 5&thinsp;cm sind viel". So eine Entscheidung ist aber keine statistische Angelegenheit, sondern eine inhaltliche.
+Auf dieser Frage gibt es keine Antwort, 
+zumindest nicht ohne weitere Annahmen. 
+So könnte man z.B. sagen, "mehr als 5&thinsp;cm sind viel". 
+So eine Entscheidung ist aber keine statistische Angelegenheit, 
+sondern eine inhaltliche.
 
 :::
 
@@ -125,9 +140,10 @@ Der Durchschnitt (das arithmetische Mittel, $\varnothing$) beträgt: 2. $\square
 :::
 
 
->   🧑‍🎓 Zu easy!
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"}
+ Zu easy!
 
->   👨‍🏫 Schon gut! Chill mal. Wird gleich interessanter.
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Schon gut! Chill mal. Wird gleich interessanter.
 
 
 Die Rechenregel zum Mittelwert lautet:
@@ -182,9 +198,14 @@ Da der Mittelwert eine zentrale Rolle spielt in der Statistik,
 sollten wir ihn uns noch etwas genauer anschauen.
 In s. @fig-mw1 sehen wir die Noten von (dieses Mal) vier Studentis.
 Die gestrichelte horizontale Linie zeigt den Mittelwert der vier Noten.
-Die schwarzen Punkte sind die Daten, in dem Fall die einzelnen Noten.
+Die schwarzen Punkte sind die Daten, 
+in dem Fall die einzelnen Noten.
 Die vertikalen Linien zeigen die Abweichungen der Noten zum Mittelwert.
-Bezeichnen wir die Abweichung - auch als "Fehler", "Rest" oder "Residuum" bezeichnet - der $i$-ten Person mit $\color{errorcol}{\text{e}_i}$  (*e* wie engl. *error*, Fehler) und die $i$-te Note mit $\color{ycol}{y_i}$, so können wir mit @eq-modell1 festhalten:
+Bezeichnen wir die Abweichung - auch als "Fehler", 
+"Rest" oder "Residuum" bezeichnet - der $i$-ten Person mit 
+$\color{errorcol}{\text{e}_i}$
+(*e* wie engl. *error*, Fehler) und die $i$-te Note mit $\color{ycol}{y_i}$, 
+so können wir mit @eq-modell1 festhalten:
 
 $$\color{ycol}{\text{y}_i} \color{black}{ = } \color{modelcol}{\;\bar{x}\;} + \color{errorcol}{\;\text{e}_i}$${#eq-modell1}
 
@@ -201,7 +222,7 @@ Wie gesagt: Ein Modell ist eine vereinfachte (zusammengefasste) Beschreibung ein
 Um Modelle darzustellen, wird in der Datenanalyse häufig folgende Art von Modellgleichung verwendet, s. @eq-sim-mean.
 
 
-$$\color{modelcol}{\hat{y}} \sim \color{xcol}{\text{x}}$$ {#eq-sim-mean}
+$$\color{modelcol}{\hat{y}} \sim \color{xcol}{\text{ x}}$$ {#eq-sim-mean}
 
 Lies: "Der Modellwert $\color{modelcol}{\hat{y}}$ ist eine Funktion der Variable $\color{xcol}{\text{x}}$". 
 Der Kringel "~"^[Das "Kringel" oder die "Welle" "~" nennt man auch "Tilde".] soll also hier heißen "... ist eine Funktion von ...".
@@ -210,7 +231,7 @@ Mit $\color{modelcol}{\hat{y}}$ ist die vorhergesagte bzw. die zu erklärende Va
 Das "Dach"  über dem $\color{ycol}{\text{y}}$ bedeutet "vorhergesagter Y-Wert" oder "Y-Wert laut dem Modell".
 Der tatsächliche, beobachtete Wert $\color{ycol}{\text{y}}$ setzt sich zusammen aus dem Modellwert $\color{modelcol}{\text{m}}$ plus einem Fehler $\color{errorcol}{\text{e}}$, s. @eq-modell3.
 
-$$\color{ycol}{\text{y}} \color{black}{=} \color{modelcol}{\text{m}} + \color{errorcol}{\text{e}}$${#eq-modell3}
+$$\color{ycol}{y} \color{black}{ = } \color{modelcol}{\text{m}} + \color{errorcol}{\text{e}}$${#eq-modell3}
 
 Anstelle von  $\color{modelcol}{\text{m}}$ schreibt man auch $\color{modelcol}{\hat{y}}$ ("y-Dach"). 
 In diesem Fall ist das Modell einfach gleich dem Mittelwert (und nicht irgendeiner Funktion des Mittelwerts), so dass wir mit @eq-modell4 schreiben können:
@@ -220,20 +241,26 @@ In diesem Fall ist das Modell einfach gleich dem Mittelwert (und nicht irgendein
 $$\color{ycol}{y}  \color{black}{ = } \color{modelcol}{\bar{x}} + \color{errorcol}{e}$${#eq-modell4}
 
 
-Die Zielvariable $\color{ycol}{\text{y}}$ wird also durch ihren eigenen Mittelwert erklärt, außer gehen wir von einem Fehler $e$ in unseren Modellvorhersagen aus. Nobody is perfect.
-In späteren Kapiteln werden wir andere Variablen heranziehen, um die Zielvariable zu erklären.
+Die Zielvariable $\color{ycol}{\text{y}}$ wird also durch ihren eigenen Mittelwert erklärt, 
+außer gehen wir von einem Fehler $e$ in unseren Modellvorhersagen aus. 
+Nobody is perfect.
+In späteren Kapiteln werden wir andere Variablen heranziehen, 
+um die Zielvariable zu erklären.
 Würden wir z.B. sagen wollen, dass wir $\color{ycol}{\text{y}}$ als Funktion einer Variable $\color{xcol}{X}$ erklären,
-so würden wir schreiben (s. @eq-modell5):
+so würden wir schreiben (s. @eq-modell5a):
 
-$$\color{modelcol}{\bar{y}} \color{black}{ \sim } \color{xcol}{\text{x}} $$
-\color{ycol}{\bar{y}}{#eq-modell4}
-Da wir im Moment aber keine andere Variablen bemühen, um $\color{ycol}{\text{y}}$ zu erklären, schreibt man mit @eq-modell5 auch:
+$$\color{modelcol}{\bar{y}} \color{black} \quad { \sim } \color{xcol}{\text{ x}}$${#eq-modell5a}
+
+Da wir im Moment aber keine andere Variablen bemühen, 
+um $\color{ycol}{\text{y}}$ zu erklären, 
+schreibt man mit @eq-modell5 auch:
 
 $$\color{modelcol}{\bar{y}}\;  \color{black}{\sim \; 1}$${#eq-modell5}
 
 Diese Schreibweise sieht verwirrend aus. 
-Die $1$ soll aber einfach zeigen, dass wir keine andere Variable zur Erklärung von $\color{ycol}{\text{y}}$ verwenden, 
-daher steht hier kein Buchstabe, sondern eine einfache $1$.
+Die $1$ soll aber nur zeigen, 
+dass wir keine andere Variable zur Erklärung von $\color{ycol}{\text{y}}$ verwenden, 
+daher steht hier kein Buchstabe, sondern eine einfache $1$.^[Der mathematische Hintergrund liegt in der Art, wie man Matrizen multipliziert.]
 
 
 :::{#exm-noten}
@@ -321,8 +348,8 @@ Die Summe der Abweichungen vom Mittelwert ist Null.
 
 
 :::{#exr-mw-wealth1}
-Was schätzen Sie, wie hoch das "mittlere" Vermögen des Haushalte in Deutschland in etwa ist?^[Quelle:  SI, <https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.html>, Abruf 2023-04-19]. $\square$
-
+Was schätzen Sie, wie hoch das "mittlere" Vermögen der 
+Haushalte in Deutschland in etwa ist?^[Quelle:  SI, <https://www.wsi.de/en/how-is-wealth-distributed-in-germany-14401.html>, Abruf 2023-04-19]. $\square$
 :::
 
 :::{.panel-tabset}
@@ -354,9 +381,9 @@ e) 250.000 Euro
 Kommt der wertvollste Fußballspieler der Welt in Ihren Hörsaal, sagen wir, es ist Kylian Mbappé^[Quelle: <https://www.transfermarkt.de/spieler-statistik/wertvollstespieler/marktwertetop>, Abruf 2023-03-19].
 Sein Jahreseinkommen (2023) liegt bei ca. 120 Millionen Euro^[Quelle: <https://www.einkommenmagazin.de/kylian-mbappe-einkommen/>, Abruf 2023-03-19].
 
->    🦹‍♂️ Hey Leute, wie geht's denn so! Wie viel Kohle verdient ihr eigentlich so?
+>    [🦹]{.content-visible when-format="html"}[\emoji{supervillain}]{.content-visible when-format="pdf"}  Hey Leute, wie geht's denn so! Wie viel Kohle verdient ihr eigentlich so?
 
->    🧑‍🎓 Äh, wir studieren und verdienen fast nix!
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Äh, wir studieren und verdienen fast nix!
 
 Die 100 Studis im Hörsaal schauen verdattert aus der Wäsche: Was ist das für eine komische Frage!?
 Aber zumindest verteilt der Fußballspieler Autogramme.
@@ -462,8 +489,9 @@ ggplot(mariokart2) +
        x = "Nr. des Spiel") + 
   scale_y_continuous(limits = c(0, 400)) +
   theme_minimal()  +
-  annotate("label", x = 0, y = 47, label = "MW", hjust = "left") +
-  theme(axis.title = element_text(size = 18))
+  annotate("label", x = 0, y = 47, label = "MW", hjust = "left", size = 8) +
+  theme(axis.title = element_text(size = 18)) +
+  theme(caption.title = element_text(size = 14))
 
 ```
 
@@ -493,14 +521,18 @@ Ignorieren Sie das fürs Erste, wir besprechen das später (@sec-gerade1) ausfü
 `lm` steht übrigens für "lineares Modell".
 
 
+
+
+
 ## Median als Modell {#sec-median}
 
 
->   🧑‍🎓 Hey, der Mittelwert ist doch Quatsch! Das ist gar kein typischer Wert für die Menschen im Hörsaal. Weder für den Mbappé, noch für uns Studis!
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Hey, der Mittelwert ist doch Quatsch! Das ist gar kein typischer Wert für die Menschen im Hörsaal. Weder für den Mbappé, noch für uns Studis!
 
->   👨‍🏫 Ja, da habt ihr Recht.
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Ja, da habt ihr Recht.
 
->    ⚽   Die Welt  ist schon ungerecht! 
+
+>    [⚽]{.content-visible when-format="html"}[\emoji{soccer-ball}]{.content-visible when-format="pdf"} Die Welt  ist schon ungerecht! 
 
 
 :::{.callout-important}
@@ -508,8 +540,10 @@ Bei (sehr) schiefen Verteilungen (s. @fig-mbappe) ist der Mittelwert (sehr) weni
 da er nicht mehr "typische" Werte für die Merkmalsträger beschreibt.
 :::
 
-@fig-mbappe stellt die Verteilung einer mit "normal" skalierter Achse und einmal mit logarithmischer X-Achse.
-Die logarithmische X-Achse stellt den Unterschied von Mittelwert (MW) und Median deutlicher heraus als die normale (additive) Achse. 
+@fig-mbappe stellt die Verteilung des Einkommens einer mit "normal" skalierter Achse 
+und einmal mit logarithmischer X-Achse.^[Zur Erinnerung: 4.0+e07 bedeutet $4 \cdot 10^{07} = 40000000$, eine 4 gefolgt von 7 Nullern.]
+Die logarithmische X-Achse stellt den Unterschied von Mittelwert (MW)
+und Median deutlicher heraus als die normale (additive) Achse. 
 
 ```{r}
 #| echo: false
@@ -696,14 +730,14 @@ Nehmen Sie Stellung zu dieser Diskussion!$\square$
 Der Mittelwert (das arithmetische Mittel) und der Median für das Start-Gebot (`start_pr)` von Mariokart-Spielen sind nicht gleich, der Mittelwert ist höher als der Median.
 
 ```{r}
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+mariokart <- read.csv(mariokart_path)  # Der Pfad steht zu Beginn des Kapitels
 
 mariokart %>% 
   summarise(price_mw = mean(start_pr),
             price_md = median(start_pr))
 ```
 
-Wie man sieht, ist der Mittelwert größer als der Median, s. @fig-mario-md
+Wie man sieht, ist der Mittelwert größer als der Median, s. @fig-mario-md.
 
 
 ```{r fig-mario-md}
@@ -717,7 +751,7 @@ mariokart %>%
   geom_vline(xintercept = 1, color = okabeito_colors()[1]) +
   annotate("label", x = 1, y = 0.1, label = "Md: 1", color = okabeito_colors()[1]) +
   geom_vline(xintercept = 8.7, color = okabeito_colors()[2]) +
-  annotate("label", x = 8.7, y = 0.1, label = "MW: 8.7", color = okabeito_colors()[2]) +
+  annotate("label", x = 8.7, y = 30, label = "MW: 8.7", color = okabeito_colors()[2]) +
   theme_modern() +
   labs(
     caption = "MD: Median; MW: Mittelwert",
@@ -843,8 +877,16 @@ Die neun Quantile $p= 0.1, 0.2, \ldots, 1$, die die Verteilung in 10 gleiche Tei
 
 
 
+::: {.content-visible when-format="html"}
 Oder vielleicht in 1%-Schritten oder in sonstigen Schnitten?
 Wo die Quartile in 25%-Schritten aufteilen, teilt in *Quantil* in $p$-Prozent-Schritten auf, s. @fig-quantile-anim.
+:::
+
+::: {.content-visible when-format="pdf"}
+Oder vielleicht in 1%-Schritten oder in sonstigen Schnitten?
+Wo die Quartile in 25%-Schritten aufteilen, teilt in *Quantil* in $p$-Prozent-Schritten auf.
+:::
+
 
 
 :::{#def-quantile}
@@ -861,7 +903,7 @@ Ein Quantil ist ein Oberbegriff für Quartile, Dezile, etc. $\square$
 
 
 
-::: {#fig-quantile-mario}
+:::: {#fig-quantile-mario}
 
 :::{.panel-tabset}
 
@@ -926,7 +968,7 @@ mariokart %>%
 
 Verschiedene Arten von Quantilen.
 
-:::
+::::
 
 
 
@@ -942,10 +984,12 @@ mariokart %>%
             q75 = quantile(total_pr, .75))
 ```
 
+::::: {.content-visible when-format="html"}
+
 @fig-quantile-anim stellt einige Quantile animiert dar.
 
 
-:::{#fig-quantile-anim}
+::::{#fig-quantile-anim}
 
 :::{.panel-tabset}
 
@@ -968,33 +1012,36 @@ mariokart %>%
 :::
 
 Verschiedenen Quantile animiert
-:::
+::::
+
+:::::
+
+@fig-quantile-mosaic visualisiert verschiedene Quantile.
+Man beachte, dass alle Regionen gleichgroße Flächen (d.h. Wahrscheinlichkeitsmassen) aufweisen.
 
 
-@fig-quantile-mosaic visualisiert ebenfalls verschiedene Quantile.
-Man beachte, dass alle Regionen gleiche Flächen (d.h. Wahrscheinlichkeitsmassen) aufweisen.
-
-
-:::{#fig-quantile-mosaic}
+::::{#fig-quantile-mosaic}
 
 
 
 :::{.panel-tabset}
 
-### Quartile
+### 25%-Schritte: Quartile
 
 ```{r}
 #| echo: false
+#| out-width: 50%
 xqnorm( p = c(.25, .5, .75), return = "plot") +
   guides(fill = "none") + 
   theme_minimal()
 ```
 
 
-### Dezile
+### 10%-Schritte: Dezile
 
 ```{r}
 #| echo: false
+#| out-width: 50%
 xqnorm( p = seq(0,1, by = .1), return = "plot") +
   theme_minimal() +
   guides(fill = "none") 
@@ -1003,10 +1050,11 @@ xqnorm( p = seq(0,1, by = .1), return = "plot") +
 
 
 
-### Perzentile
+### 1%-Schritte: Perzentile
 
 ```{r}
 #| echo: false
+#| out-width: 50%
 xqnorm( p = seq(0,1, by = .01), return = "plot") +
   theme_minimal() +
   guides(fill = "none") 
@@ -1015,25 +1063,33 @@ xqnorm( p = seq(0,1, by = .01), return = "plot") +
 
 Verschiedene Quantile visualisiert. In jedem Diagramm sind die Regionen gleich groß, beinhalten also (ungefähr) die gleiche Anzahl von Beobachtungen.
 
-:::
+::::
+
+
+
+
+
+
+
 
 ## Lagemaße {#sec-lage}
 
->    🧑‍🎓 Was ist der Oberbegriff für Median, Mittelwert und so weiter?
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Was ist der Oberbegriff für Median, Mittelwert und so weiter?
 
->    👩‍🏫 Gute Frage! Wie würden Sie ihn nennen?
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Gute Frage! Wie würden Sie ihn nennen?
 
 
 
 :::{#def-lage}
 
 ### Lagemaß
-Ein *Lagemaß* (synonym: Maß der zentralen Tendenz) für eine Verteilung gibt einen Vorschlag, welchen Wert der Verteilung wir als typisch, normal, zu erwarten, repräsentativ oder "mittel" ansehen sollten.$\square$
+Ein *Lagemaß* (synonym: Maß der zentralen Tendenz) für eine Verteilung gibt einen Vorschlag, 
+welchen Wert der Verteilung wir als typisch, normal, erwartbar, repräsentativ oder "mittel" ansehen sollten.$\square$
 :::
 
 
 :::{#exm-lagemaße}
-Typische Lagemaße sind:
+Gebräuchliche Lagemaße sind:
 
 - Mittelwert (arithmetisches Mittel)
 - Median
@@ -1045,12 +1101,13 @@ Typische Lagemaße sind:
 :::
 
 
-Berechnen wir Lagemaße für den Mariokart-Datensatz, s. @lst-mario-lage.^[Es ist übrigens egal, wie sie die Variablen benennen, die Sie berechnen: `mw` oder `mittelwert` oder `mean` oder `mein_krasser_variablenname` -- alles okay!]
+Berechnen wir Lagemaße für den Mariokart-Datensatz, 
+s. @lst-mario-lage.^[Es ist übrigens egal, wie sie die Variablen benennen, die Sie berechnen: `mw` oder `mittelwert` oder `mean` oder `mein_krasser_variablenname` -- alles okay!]
 
 
 :::{#lst-mario-lage}
 
-```{r}
+```{r mariokart_lagemaße_total_pr}
 mariokart_lagemaße_total_pr <-
   mariokart %>% 
   summarise(mw = mean(total_pr),
@@ -1213,6 +1270,9 @@ Mittelwert, Median und Quartile sind Beispiele für Punktmodelle:
 Sie fassen eine Verteilung zu einem einzelnen Wert zusammen und geben uns ein "Bild" der Daten, machen Sie uns verständlich - sie sind uns ein Modell.
 
 
+
+
+
 ## Wie man mit Statistik lügt
 
 Mit Statistik kann man vortrefflich lügen, heißt es. 
@@ -1257,9 +1317,9 @@ Eine Studentin aus dem dem Bachelorstudiengang "Angewandte Medien- und Wirtschaf
 :::
 
 
->    👩‍🎓 Irgendwie kann ich mir R-Code so schlecht merken.
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Irgendwie kann ich mir R-Code so schlecht merken.
 
->    👩‍🏫 Frag doch mal ChatGPT, oder einen anderen Chatbot, da bekommt man auch R-Code ausgegegeben.
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Frag doch mal ChatGPT, oder einen anderen Chatbot, da bekommt man auch R-Code ausgegegeben.
 
 
 
@@ -1272,7 +1332,7 @@ Fragen Sie einen Chat-Bot wie ChatGPT nach Übungsaufgaben.
 
 Sie können sich an folgenden Prompt orientieren. Empfehlenswert ist mit verschiedenen Prompts zu experimentieren.
 
->    🧑‍🎓 Ich bin ein Student in einem Bachelor-Studiengang für Psychologie. Gerade bereite ich mich auf die Klausur im Fach "Grundlagen der Statistik" vor. Bitte schreibe mir Aufgaben, die mir helfen, mich auf die Prüfung vorzubereiten. Die Fragen sollten folgende Themen beinhalten: Maße der zentralen Tendenz, Grundlagen von R, Skalenniveau (z.B. Nominalskala vs. Intervallskala), Verteilungsformen, Normalverteilungen, z-Werte. Bitte schreibe die Aufgabe im Stil von Richtig-Falsch-Aufgaben. Schreibe ca. 10 Aufgaben.
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Ich bin ein Student in einem Bachelor-Studiengang für Psychologie. Gerade bereite ich mich auf die Klausur im Fach "Grundlagen der Statistik" vor. Bitte schreibe mir Aufgaben, die mir helfen, mich auf die Prüfung vorzubereiten. Die Fragen sollten folgende Themen beinhalten: Maße der zentralen Tendenz, Grundlagen von R, Skalenniveau (z.B. Nominalskala vs. Intervallskala), Verteilungsformen, Normalverteilungen, z-Werte. Bitte schreibe die Aufgabe im Stil von Richtig-Falsch-Aufgaben. Schreibe ca. 10 Aufgaben. 
 
 $\square$
 :::
@@ -1322,10 +1382,17 @@ Mittlerweile verfügen Sie die wesentlichen Werkzeuge des Datenjudo. [Hier](http
 
 ## Literaturhinweise
 
-Es gibt viele Lehrbücher zu den Grundlagen der Statistik; die Inhalte dieses Kapitels gehören zu den Grundlagen der Statistik. 
-Vielleicht ist es am einfachsten, wenn Sie einfach in Ihrer Bibliothek des Vertrauens nach einem typischen Lehrbuch schauen.
-Beispiel für Lehrbücher sind @mittag_statistik_2020 oder @oestreich_keine_2014; ein Klassiker ist @bortz_statistik_2010. Ein Fokus auf R legt @sauer_moderne_2019-1.
-Wer vor Englisch nicht zurückschreckt, ist mit @cetinkaya-rundel_introduction_2021-2 oder @poldrack_statistical_2022-1 gut beraten. Beide Bücher sind online verfügbar. Tipp: Mit dem Browser einfach auf Deutsch übersetzen.
+Es gibt viele Lehrbücher zu den Grundlagen der Statistik; 
+die Inhalte dieses Kapitels gehören zu den Grundlagen der Statistik. 
+Vielleicht ist es am einfachsten, 
+wenn Sie einfach in Ihrer Bibliothek des Vertrauens nach einem typischen Lehrbuch schauen.
+Beispiel für Lehrbücher sind @mittag_statistik_2020 
+oder @oestreich_keine_2014; ein Klassiker ist @bortz_statistik_2010. 
+Ein Fokus auf R legt @sauer_moderne_2019-1.
+Wer vor Englisch nicht zurückschreckt, ist mit @cetinkaya-rundel_introduction_2021-2 
+oder @poldrack_statistical_2022-1 gut beraten. 
+Beide Bücher sind online verfügbar. 
+Tipp: Mit dem Browser einfach auf Deutsch übersetzen.
 
 
 

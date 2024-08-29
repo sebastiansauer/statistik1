@@ -45,18 +45,30 @@ source("_common.R")
 
 ### Benötigte Daten
 
-```{r}
+
+::: {.content-visible when-format="html"}
+
+```{r import-mariokart-csv}
 mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 ```
+:::
 
 
+::: {.content-visible when-format="pdf"}
 
 
+```{r import-mariokart-csv2}
+mariokart_path <- paste0(
+  "https://vincentarelbundock.github.io/Rdatasets/",
+  "csv/openintro/mariokart.csv")
 
-```{r}
-#| echo: false
-ggplot2::theme_set(theme_minimal())
+mariokart <- read.csv(mariokart_path)
 ```
+
+:::
+
+
+
 
 
 
@@ -77,9 +89,9 @@ Erkennen Sie, dass die *Unterschiedlichkeit* der Größe in Gruppe *Gleich-Groß
 
 ### Die Schlankheitspille von Prof. Weiss-Ois  {#sec-weiss-ois}
 
-Prof. Weiss-Ois hat eine Erfindung gemacht, eine Schlankheitspille 💊  ...
+Prof. Weiss-Ois hat eine Erfindung gemacht, eine Schlankheitspille [💊]{.content-visible when-format="html"}  ...
 
-:::: {.columns}
+:::: {layout-ncol="3"}
 ::: {.column width="45%"}
 
 #### Was er sagt
@@ -127,9 +139,9 @@ Treffen sich zwei Bauern, Fritz Furchenzieher und Karla Kartoffelsack.
 Fritz will mit seiner Kuh einen Fluss überqueren, nur kann die Kuh nicht schwimmen^[ob es Fritz kann, ist nicht überliefert.]. 
 
 
->    🧑‍🌾 (Fritz): Sag mal, Karla, ist der Fluss tief?
+>    [👨‍🌾]{.content-visible when-format="html"}[\emoji{man-farmer}]{.content-visible when-format="pdf"} (Fritz): Sag mal, Karla, ist der Fluss tief?
 
->    👩‍🌾 (Karla): Nö, im Schnitt nur einen Meter.
+>    [👩‍🌾]{.content-visible when-format="html"}[\emoji{woman-farmer}]{.content-visible when-format="pdf"} (Karla): Nö, im Schnitt nur einen Meter.
 
 
 Also führt Fritz seine Kuh durch den Fluss, leider kam die Kuh nicht am anderen Ufer an, im Floß ersoffen, s. @fig-fluss-tief.
@@ -137,9 +149,9 @@ Also führt Fritz seine Kuh durch den Fluss, leider kam die Kuh nicht am anderen
 ![Der Fluss ist im Schnitt nur einen Meter tief, trotzdem ist die Kuh ersoffen.](img/fluss-tief.png){#fig-fluss-tief}
 
 
->    👩‍🌾 (Karla): Übrigens, Lagemaße sagen nicht alles, Fritz.
+>    [👩‍🌾]{.content-visible when-format="html"}[\emoji{woman-farmer}]{.content-visible when-format="pdf"} (Karla): Übrigens, Lagemaße sagen nicht alles, Fritz.
 
->    🧑‍🌾 (Fritz): Läuft die Kuh durch den Fluss, kann sie schwimmen oder 's ist Schluss.
+>    [👨‍🌾]{.content-visible when-format="html"}[\emoji{man-farmer}]{.content-visible when-format="pdf"} (Fritz): Läuft die Kuh durch den Fluss, kann sie schwimmen oder 's ist Schluss.
 
 
 :::{.callout-important}
@@ -207,9 +219,6 @@ Bei einem Modell mit *viel* Streuung ist der Modellfehler $e$ (im Vergleich dazu
 
 
 
-<!-- >   🧑‍🎓  Immer diese Trivialitäten! -->
-
-<!-- >   👩‍🏫 Wird gleich interessanter. -->
 
 :::{#exm-weiss-ois}
 ### Daten zur Schlankheitskur von Prof. Weiss-Ois
@@ -232,11 +241,12 @@ Jedes Modell sollte Informationen über die Präzision des Modellwerts bzw. der 
 
 
 
->   👩‍🎓 Ich frage mich, ob man so ein Modell nicht verbessern kann?
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"}
+Ich frage mich, ob man so ein Modell nicht verbessern kann?
 
->   👩‍🏫 Die Frage ist, was wir mit "verbessern" meinen?
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Die Frage ist, was wir mit "verbessern" meinen?
 
->    👩‍🎓 Naja, kürzere Fehlerbalken, ist doch klar!
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Naja, kürzere Fehlerbalken, ist doch klar!
 
 Da die Anzahl der Lenkräder mit dem Verkaufsgebot zusammenhängt, könnte es vielleicht sein, dass wir die Lenkräder-Anzahl da irgendwie nutzen könnten.
 Das sollten wir ausprobieren.
@@ -312,7 +322,7 @@ m %>%
   labs(color = "wheels") +
   theme(legend.position = "none") +
   geom_label(data = m_sum,
-    aes(label = paste0("MW bei ", wheels, " Räder"), y = total_pr, color = factor(wheels)), x = 3, size = 6) +
+    aes(label = paste0("MW bei ", wheels, " Räder"), y = total_pr, color = factor(wheels)), x = max(m$ID), hjust = 1, size = 6) +
   scale_color_okabeito() +
   scale_x_continuous(limits = c(-10, 90))
 ```
@@ -336,9 +346,10 @@ Dieses Mermals ist aber nicht robust (gegenüber Extremwerten) und sollte daher 
 
 ### Der mittlere Abweichungsbalken
 
->   🧑‍🎓 Wir müssen jetzt mal präziser werden! Wie können wir die Streuung berechnen?
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"}
+ Wir müssen jetzt mal präziser werden! Wie können wir die Streuung berechnen?
 
->   👨‍🏫 Gute Frage! Am einfachsten ist es, wenn wir die mittlere Länge eines Abweichungsbalkens ausrechnen. 
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Gute Frage! Am einfachsten ist es, wenn wir die mittlere Länge eines Abweichungsbalkens ausrechnen. 
 
 
 
@@ -369,6 +380,7 @@ $MAE = \frac{1 + |- 3| + 1 + 1}{4} = 6/4 = 1.5$
 #| label: fig-mae
 #| fig-cap: "Abweichungsbalken und der MAE"
 #| fig-asp: .5
+#| out-width: 50%
 d <-
   tibble(id = 1:4,
          y = c(1, -3, 1, 1))
@@ -386,8 +398,7 @@ ggplot(d) +
 
 Natürlich können wir R auch die Rechenarbeit überlassen.
 
-
->   🤖 Loving it!!
+>    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Loving it!!
 
 
 Schauen Sie: Den Mittelwert (s. @fig-mae) kann man doch mit Fug und Recht als ein *lineares Modell*, eine Gerade, betrachten, oder nicht?
@@ -438,7 +449,7 @@ In einem Statistikkurs betragen die Quartile der Körpergröße: Q1: 1.65m, Q2 (
 
 @fig-iqr-mario stellt den IQR (und einige Quantile) für den Verkaufspreise von Mariokart-Spielen dar.
 
-::: {#fig-iqr-mario}
+:::: {#fig-iqr-mario}
 
 :::{.panel-tabset}
 
@@ -504,7 +515,7 @@ mariokart %>%
 
 Der IQR für den Verkaufspreis von Mariokart-Spielen.
 
-:::
+::::
 
 
 
@@ -524,11 +535,13 @@ denn damit lässt sich die Streuung (Abweichung vom Mittelwert, Residuen) der No
 :::
 
 
->   🧑‍🎓 Aber wie berechnet man jetzt diese Standardabweichung?
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"}
+ Aber wie berechnet man jetzt diese Standardabweichung?
 
->    👨‍🏫 Moment, noch ein kurzer Exkurs zur Varianz ...
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Moment, noch ein kurzer Exkurs zur Varianz ...
 
->    🧑‍🎓 (seufzt)
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"}
+ (seufzt)
 
 
 ### Varianz
@@ -542,7 +555,7 @@ Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist, grob gesagt, 
 
 
 
-:::: {.columns}
+:::: {layout-ncol=2}
 
 ::: {.column}
 
@@ -555,7 +568,7 @@ Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist, grob gesagt, 
 
 :::
 
-:::: {.column}
+::: {.column}
 
 
 ![Illustration zur Varianz als "mittlerer Quadratfehler"](img/Variance_visualisation.svg.png){#fig-var}
@@ -664,7 +677,7 @@ p_var <-
            x = 3, 
            y = -0.2,
            hjust = 0.5,
-           label = paste0(var_smpl, " = (0.01 + 0.01 + 0.01 + 0.09)/4"),
+           label = paste0(var_smpl, " = (0.01+0.01+0.01+0.09)/4"),
            size = 8)
 
 p_deltas
@@ -775,7 +788,6 @@ mariokart %>%
 ```
 
 
-:::
 
 
 Wer sich die Berechnung von Hand für `pr_maa` sparen möchte (s. @lst-mario-streu), kann die [Funktion `MeanAD` aus dem Paket `DescTools`](https://rdrr.io/cran/DescTools/man/MeanAD.html) nutzen.
@@ -825,9 +837,8 @@ Kennt man die Varianz, so lässt sich die Standardabweichung einfach als Quadrat
 Die Standardabweichung (SD, s, $\sigma$) ist definiert als die Quadratwurzel der Varianz, s. @eq-sd.
 
 
-$$s := \sqrt{s^2}$$ {#eq-sd}
+$$s := \sqrt{s^2} \square$$ {#eq-sd}
 
-$\square$
 :::
 
 
@@ -1156,7 +1167,7 @@ Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine 
 :::{#exr-handy}
 ### Analysieren Sie den Datensatz zur Handynutzung
 
-:::{.panel-tabset}
+:::::{.panel-tabset}
 ### Aufgabe
 
 Sind Sie händysüchtig? Das ist die Forschungsfrage [dieser Umfrage](https://docs.google.com/forms/d/e/1FAIpQLSfM6oDLHX4_lqWq-bXw39drTkdGAvecE6ow2HIKoxdrVygp2A/viewform). Nehmen Sie ggf. an dieser Umfrage teil (sie ist anonym und dauert drei Minuten).
@@ -1168,9 +1179,23 @@ Berechnen Sie dann gängige deskriptive Statistiken und visualisieren Sie sie. $
 Sie können die Daten entweder selber herunterladen oder aber die folgende Version des Datensatzes verwenden.
 In beiden Fällen ist es nützlich, den (absoluten oder relativen) Pfad anzugeben:
 
+::: {.content-visible when-format="html"}
+
 ```{r}
 data_path <- "https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/Smartphone-Nutzung%20(Responses)%20-%20Form%20responses%201.csv"
 ```
+:::
+
+
+::: {.content-visible when-format="pdf"}
+
+```{r}
+data_path <- paste0(
+  "https://raw.githubusercontent.com/sebastiansauer/",
+  "statistik1/main/daten/Smartphone-Nutzung%20",
+  "(Responses)%20-%20Form%20responses%201.csv")
+```
+:::
 
 Dann können Sie die Daten wie gewohnt importieren:
 
@@ -1188,20 +1213,25 @@ item_labels <- names(smartphone_raw)
 names(smartphone_raw) <- paste0("item",1:ncol(smartphone_raw))
 ```
 
+::: {.content-visible when-format="html"}
+
 Check:
 
 ```{r}
 glimpse(smartphone_raw)
 ```
+:::
 
-### Lösung: Komplett
+
+::: {.content-visible when-format="html"}
+
+### Komplette Lösung
 
 😁
 
 :::
 
-
-:::
+:::::
 
 ### Fallstudie zur Lebenszufriedenheit
 

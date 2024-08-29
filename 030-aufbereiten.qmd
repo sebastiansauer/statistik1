@@ -36,10 +36,7 @@ Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt dam
 
 
 
-```{r}
-#| echo: false
-ggplot2::theme_set(theme_minimal())
-```
+
 
 
 ### Lernziele
@@ -64,7 +61,7 @@ library(easystats)
 
 ::: {.content-visible when-format="html"}
 
-```{r import-mariokart}
+```{r import-mariokart-csv}
 mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 ```
 :::
@@ -73,7 +70,7 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 ::: {.content-visible when-format="pdf"}
 
 
-```{r import-mariokart}
+```{r import-mariokart-csv2}
 mariokart <- read.csv(paste0(
   "https://vincentarelbundock.github.io/Rdatasets/",
   "csv/openintro/mariokart.csv"))
@@ -99,9 +96,9 @@ Sie finden den R-Code für jedes Kapitel [hier](https://github.com/sebastiansaue
 ### Frag den Bot
 
 
->   👨‍🏫 Erkläre einem Fünfjährigen, warum Statistik nützlich ist.
+>   [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Erkläre einem Fünfjährigen, warum Statistik nützlich ist.
 
->   🤖 Okay, hör zu. Stell dir vor, du hast viele Spielzeugautos und du willst herausfinden, welches Auto am meisten bespielt wird. Du kannst jeden Tag zählen, wie oft du jedes Auto benutzt hast. Aber das wäre sehr mühsam und könnte schnell durcheinander gebracht werden. Stattdessen kannst du mit Statistik eine einfachere Methode finden. Du kannst zum Beispiel eine Liste machen und jedes Auto mit einer bestimmten Farbe markieren. Dann kannst du jeden Tag einfach zählen, wie oft du jede Farbe verwendet hast. Am Ende kannst du herausfinden, welches Auto am meisten bespielt wurde, indem du siehst, welche Farbe am meisten verwendet wurde. Das ist ein Beispiel dafür, wie Statistik uns dabei helfen kann, Muster in großen Datensätzen zu finden und Entscheidungen zu treffen, ohne alles einzeln zu zählen.
+>   [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"}  Okay, hör zu. Stell dir vor, du hast viele Spielzeugautos und du willst herausfinden, welches Auto am meisten bespielt wird. Du kannst jeden Tag zählen, wie oft du jedes Auto benutzt hast. Aber das wäre sehr mühsam und könnte schnell durcheinander gebracht werden. Stattdessen kannst du mit Statistik eine einfachere Methode finden. Du kannst zum Beispiel eine Liste machen und jedes Auto mit einer bestimmten Farbe markieren. Dann kannst du jeden Tag einfach zählen, wie oft du jede Farbe verwendet hast. Am Ende kannst du herausfinden, welches Auto am meisten bespielt wurde, indem du siehst, welche Farbe am meisten verwendet wurde. Das ist ein Beispiel dafür, wie Statistik uns dabei helfen kann, Muster in großen Datensätzen zu finden und Entscheidungen zu treffen, ohne alles einzeln zu zählen.
 
 Quelle: ChatGTP 3.5, 2023-02-09
 
@@ -295,10 +292,29 @@ Die Spalte des Verkaufspreis heißt offenbar `total_pr` (s. Tabelle `mariokart`)
 In Excel kann die Spalte, nach der man die Tabelle sortieren möchte,
 einfach anklicken. Ob das in R auch so einfach geht?
 
+::: {.content-visible when-format="html"}
 
 ```{r}
 arrange(mariokart, total_pr)
 ```
+
+:::
+
+::: {.content-visible when-format="pdf"}
+```{r}
+#| eval: false
+arrange(mariokart, total_pr)
+```
+
+
+```{r}
+#| echo: false
+mariokart |> 
+  select(rownames, total_price, start_pr) |> 
+  arrange(total_pr)
+```
+
+:::
 
 Übersetzen wir die R-Syntax ins Deutsche:
 
@@ -382,8 +398,15 @@ als Auktionen ohne Photo.
 
 ```{r}
 mariokart_neu <- filter(mariokart, stock_photo == "yes")
+```
+
+::: {.content-visible when-format="html"}
+```{r}
 mariokart_neu
 ```
+:::
+
+
 
 Sie filtern also die Tabelle so,
 dass *nur* diese Auktionen im Datensatz verbleiben,
@@ -401,19 +424,29 @@ Anders gesagt haben Sie zwei Filterkriterien im Blick: Neuheit `cond` und Photo 
 
 ```{r}
 mario_filter1 <- filter(mariokart, stock_photo == "yes" & cond == "new")
-mario_filter1
 ```
 
 
+::: {.content-visible when-format="html"}
+```{r}
+mario_filter1
+```
+:::
 
 Hm. Was ist mit den Auktionen, die *entweder* über ein Photo verfügen *oder auch* neu sind, oder beides (Filtern mit dem logischen ODER)?
 
 ```{r}
-mario_filter2 <- filter(mariokart, stock_photo == "yes" | cond == "new")
-mario_filter2
+mario_filter2 <- filter(mariokart, 
+                        stock_photo == "yes" | cond == "new")
 ```
 
-💡Zur Erinnerung: Logische Operatoren sind in @sec-logic erläutert.
+::: {.content-visible when-format="html"}
+```{r}
+mario_filter2
+```
+:::
+
+Zur Erinnerung: Logische Operatoren sind in @sec-logic erläutert.
 
 
 Hier könnte man noch viele interessante Hypothesen prüfen, denken Sie sich und tun das auch ... 
@@ -484,9 +517,7 @@ Sie entschließen sich, mal ein Stündchen auf die relevanten Daten zu starren.
 ```{r}
 #| eval: false
 mario_select1 <- select(mariokart, cond, total_pr)
-mario_select1
 ```
-
 
 
 
@@ -569,7 +600,8 @@ Mit `summarise`, s. @lst-summarise, können wir den mittleren Verkaufspreis der 
 ```{r}
 #| lst-label: lst-summarise
 #| lst-cap: "Die R-Funktion summarise fasst einen Vektor z u einer Zahl zusammen"
-mariokart_mittelwert <- summarise(mariokart, preis_mw = mean(total_pr))
+mariokart_mittelwert <- summarise(mariokart,
+                                  preis_mw = mean(total_pr))
 mariokart_mittelwert
 ```
 
@@ -580,7 +612,7 @@ Aha! Etwa 50€ erzielt so eine Auktion im Schnitt.$\square$
 
 Übersetzen wir @lst-summarise vom Errischen ins Deutsche:
 
->   🧑‍🎓  Hey R, fasse die Zeilen von `total_pr` aus `mariokart` zu einer Zahl zusammen, und zwar mit Hilfe des Mittelwerts. Die resultierende Tabelle nennen wir `mariokart_mittelwert, sehr kreativ. Und die resultierende Spalte, die einzige in `mariokart_mittelwert`, nennen wir `preis_mw`.
+>   [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Hey R, fasse die Zeilen von `total_pr` aus `mariokart` zu einer Zahl zusammen, und zwar mit Hilfe des Mittelwerts. Die resultierende Tabelle nennen wir `mariokart_mittelwert, sehr kreativ. Und die resultierende Spalte, die einzige in `mariokart_mittelwert`, nennen wir `preis_mw`.
 
 
 
@@ -612,7 +644,7 @@ Aber viel interessanter wäre es doch, denken Sie sich,
 zu wissen, ob die neuen Spiele im Schnitt mehr kosten als die alten?
 Ob R Ihnen so etwas ausrechnen kann?
 
->   🤖 Ich tue fast alles für dich. 🧡 
+>   [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"}  Ich tue fast alles für dich. [🧡]{.content-visible when-format="html"}[\emoji{heart}]{.content-visible when-format="pdf"} 
 
 Also gut, R, dann gruppiere die Tabelle, s. @fig-group.
 
@@ -704,9 +736,11 @@ Berechnen Sie den mittleren und maximalen Verkaufspreis getrennt für Spiele mit
 ### Lösung
 ```{r}
 mariokart_gruppiert_foto <- group_by(mariokart, stock_photo)
-mariokart_verkaufspreis_foto <- summarise(mariokart_gruppiert_foto,
-                                          total_pr_avg = mean(total_pr),
-                                          total_pr_max = max(total_pr))
+
+mariokart_verkaufspreis_foto <- 
+  summarise(mariokart_gruppiert_foto,
+            total_pr_avg = mean(total_pr),
+            total_pr_max = max(total_pr))
 
 mariokart_verkaufspreis_foto
 ```
@@ -810,10 +844,12 @@ mariokart_duration_wochen <-
   mutate(mariokart, duration_week = duration / 7)
 
 mariokart_duration_wochen_gerundet <-
-  mutate(mariokart_duration_wochen, duration_week_gerundet = round(duration_week, digits = 0))
+  mutate(mariokart_duration_wochen, duration_week_gerundet =
+           round(duration_week, digits = 0))
 
 mariokart_duration_wochen_schmal <-
-  select(mariokart_duration_wochen_gerundet, duration, duration_week, duration_week_gerundet)
+  select(mariokart_duration_wochen_gerundet, duration, 
+         duration_week, duration_week_gerundet)
 mariokart_duration_wochen_schmal
 ```
 :::
@@ -821,9 +857,9 @@ mariokart_duration_wochen_schmal
 
 
 
->    🧟‍♀️ Statistik, wann braucht man schon sowas!?
+>   [🧟‍♀️]{.content-visible when-format="html"}[\emoji{woman-zombie}]{.content-visible when-format="pdf"}️ Statistik, wann braucht man schon sowas!?
 
->    👨‍🏫 Eigentlich nur dann, wenn man die Fakten gut verstehen will, sonst nicht.
+>   [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Eigentlich nur dann, wenn man die Fakten gut verstehen will, sonst nicht.
 
 
 
@@ -892,7 +928,7 @@ flowchart LR
 
 :::::{#fig-pfeifen}
 
-:::: {.columns}
+:::: {layout-ncol=4}
 
 ::: {.column width="30%"}
 ![Das ist keine Pfeife. Sondern ein Bild einer Pfeife.](img/800px-Pipa_savinelli.jpg){#fig-pfeife width="50%"}
@@ -948,15 +984,18 @@ Wie schon erwähnt, arbeitet R so einen "verschachtelten" Befehl *von innen nach
 
 Start: `sum(x - mean(x))`
 
-      ⬇️ 
+[⬇️]{.content-visible when-format="html"}
+[$\downarrow$]{.content-visible when-format="pdf"}
 
 Schritt 1: `sum(x - 2)`
 
-      ⬇️ 
+[⬇️]{.content-visible when-format="html"}
+[$\downarrow$]{.content-visible when-format="pdf"}
 
 Schritt 2: `sum(-1, 0, 1)`
 
-      ⬇️ 
+[⬇️]{.content-visible when-format="html"}
+[$\downarrow$]{.content-visible when-format="pdf"}
 
 Schritt 3: `0`. Fertig. Puh. Kompliziert.
 
@@ -1064,12 +1103,16 @@ an jeder Stelle weiterverarbeitet.
 So könnte Ihre "Pfeifen-Sequenz" aussehen:
 
 ```{r}
-# Hey R:
-mariokart %>%   # nimm die Tabelle "mariokart" und dann...
-  filter(total_pr < 100) %>%  # filter nur die günstigen Spiele und dann...
-  select(cond, total_pr) %>%  # wähle die zwei Spalten und dann ...
-  group_by(cond) %>%  # gruppiere die Tabelle nach Zustand des Spiels und dann ...
-  summarise(total_pr_mean = mean(total_pr))  # fasse beide Gruppen nach dem mittleren Preis zusammen
+# Hey R, nimm die Tabelle "mariokart":
+mariokart %>%  
+   # filter nur die günstigen Spiele:
+  filter(total_pr < 100) %>% 
+  # wähle die zwei Spalten:
+  select(cond, total_pr) %>%  
+  # gruppiere die Tabelle nach Zustand des Spiels:
+  group_by(cond) %>%  
+  # fasse beide Gruppen nach dem mittleren Preis zusammen:
+  summarise(total_pr_mean = mean(total_pr))  
 ```
 
 
@@ -1098,7 +1141,7 @@ Heute sollen Sie zeigen, was Sie können (Schluck).
 
 ### Frage
 
->   ️👩 Ich würde von Ihnen  gerne wissen, was das teuerste Spiel ist, aber jeweils für neue und gebrauchte Spiele. Aber nur für Spiele, die mit Foto verkauft wurden!
+>   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} Ich würde von Ihnen  gerne wissen, was das teuerste Spiel ist, aber jeweils für neue und gebrauchte Spiele. Aber nur für Spiele, die mit Foto verkauft wurden!
 
 ### Antwort
 
@@ -1123,7 +1166,8 @@ max(x)
 :::{.panel-tabset}
 
 ### Frage
->    ️👩️ Ich würde gerne die mittlere Versandpauschale wissen, aber getrennt nach Anzahl der Lenkräder, die dem Spiel beigelegt sind. Und ich will nur Gruppen berücksichtigen, die aus mindestens 10 Spielen bestehen!
+
+>   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"}  ️ Ich würde gerne die mittlere Versandpauschale wissen, aber getrennt nach Anzahl der Lenkräder, die dem Spiel beigelegt sind. Und ich will nur Gruppen berücksichtigen, die aus mindestens 10 Spielen bestehen!
 
 ### Antwort
 
@@ -1156,7 +1200,7 @@ Die Funktion `n()` gibt die Anzahl der Zeilen pro Teiltabelle zurück.
 
 ### Frage
 
->   ️👩️ Ich würde gerne den Verkaufspreis in Yen wissen, nicht in Euro. Dann rechne mal den mittleren Verkaufspreis aus und ziehe 10% ab, die wir als Provision unseren Verkäufern zahlen müssen.
+>   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} Ich würde gerne den Verkaufspreis in Yen wissen, nicht in Euro. Dann rechne mal den mittleren Verkaufspreis aus und ziehe 10% ab, die wir als Provision unseren Verkäufern zahlen müssen.
 
 
 ### Antwort
@@ -1165,8 +1209,9 @@ Die Funktion `n()` gibt die Anzahl der Zeilen pro Teiltabelle zurück.
 mariokart %>% 
   select(total_pr) %>% 
   mutate(total_pr_yen = total_pr * 133) %>% 
-  summarise(preis_yen_mw = mean(total_pr_yen),
-            preis_yen_mw_minus_10proz = preis_yen_mw - 0.1*preis_yen_mw)
+  summarise(
+    preis_yen_mw = mean(total_pr_yen),
+    preis_yen_mw_minus_10proz = preis_yen_mw - 0.1*preis_yen_mw)
 ```
 
 Wie man sieht kann man in `summarise` auch mehr als eine Berechnung einstellen.
@@ -1206,10 +1251,10 @@ pr_mean <- round(mean(mariokart$total_pr), 0)
 ```
 
 
-Ei Analysti 🧑‍ möchte zeigen, dass der Verkaufspreis von Mariokart-Spielen "viel zu niedrig" ist. Es muss ein höherer Wert rauskommen, findet dis Analysti. Der mittlere Verkaufspreis (im Datensatz `mariokart`) liegt bei 50 Euro. 
+Eine Analystin [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} möchte zeigen, dass der Verkaufspreis von Mariokart-Spielen "viel zu niedrig" ist. Es muss ein höherer Wert rauskommen, findet dis Analysti. Der mittlere Verkaufspreis (im Datensatz `mariokart`) liegt bei 50 Euro. 
 
 
->   🧑‍ Kann man den Wert nicht ... "kreativ verbessern"? Ein paar Statistik-Tricks anwenden?
+>   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"}  Kann man den Wert nicht ... "kreativ verbessern"? Ein paar Statistik-Tricks anwenden?
 
 Um dieses Ziel zu erreichen, teilt dis Analysti den Datensatz in Gruppen nach Anzahl der dem Spiel beigelegten Lenkräder (`wheels`). Dann wird der Mittelwert pro Gruppe berechnet.
 
@@ -1223,7 +1268,7 @@ mariokart %>%
 mariokart_wheels
 ```
 
-Schließlich berechnet unser Analysti den *ungewichteten* Mittelwert über diese 5 Gruppen:
+Schließlich berechnet unsere Analystin den *ungewichteten* Mittelwert über diese 5 Gruppen:
 
 ```{r}
 mariokart_wheels %>% 
@@ -1430,6 +1475,7 @@ Das nennt man auch ein *ERBie*, ein *einfaches, reproduzierbare Beispiel* Ihres 
 
 ```{r}
 #| error: true
+#| eval: false
 data(mtcars)
 library(dplyr)  # nicht "tidyverse", denn "dplyr" reicht
 
@@ -1476,10 +1522,10 @@ Sie können zu den Inhalten dieses Kapitels Zertifikate erwerben (teilweise kost
 [Dall-E 2](https://openai.com/dall-e-2/) ist eine KI, die "realistische Bilder und Kunst aus einer Beschreibung in natürlicher Sprache" erstellt.^[<Dall-E 2>]
 
 
->   👨‍🏫 I'd like a mixture between robot und professor, in oil painting
+>   [👨‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} I'd like a mixture between robot und professor, in oil painting
 
 
->    🤖 ... s. @fig-mix-rob-prof
+>   [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} ... s. @fig-mix-rob-prof
 
 
 

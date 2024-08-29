@@ -2,7 +2,7 @@
 plot_distribs <- function(plot_it = FALSE) {
   
   #library(openintro)
-  library(mosaic)
+  suppressPackageStartupMessages(library(mosaic))
   
   # Fleishman, Allen I. "A method for simulating non-normal distributions." Psychometrika 43.4 (1978): 521-532.
   

@@ -13,10 +13,14 @@ library(ggfittext)
 library(see)
 ```
 
+
 ```{r}
 #| include: false
-theme_set(theme_minimal())
+
+source("_common.R")
 ```
+
+
 
 {{< include children/colors.qmd >}}
 
@@ -275,8 +279,7 @@ groesse %>%
   facet_wrap(~team) +
   labs(title = "Variation in der Körpergröße",
        y = "Körpergröße",
-       x = "Spielernummer",
-       caption = "MW: Mittelwert") +
+       x = "Spielernummer") +
   geom_label(data = distinct(groesse, team, .keep_all = TRUE), 
             aes(label = label, x = 3, y = 50), 
             size = 5, vjust = 0) +
@@ -444,7 +447,14 @@ Eine Forschungsfrage könnte lauten zum Thema Handynutzung:
 
 :::{#exm-braindrain2}
 
+
+::: {.content-visible when-format="html"}
 ### Aus der Forschung: Smartphone-Brain-Drain 📱🧠🚫
+:::
+
+::: {.content-visible when-format="pdf"}
+### Aus der Forschung: Smartphone-Brain-Drain 
+:::
 
 @ward_brain_2017 untersuchten die Forschungsfrage, ob die bloße Gegenwart eines Handies (z.B. wenn es vor Ihnen auf dem Tisch liegt) dazu führt, dass man abgelenkt wird und daher schlechtere kognitive Leistungen zeigt.
 
@@ -805,9 +815,11 @@ Suchen Sie ein Beispiel für eine Konfiguration einer Tabelle im Long- vs. Wide-
 :::
 
 
->    🧑‍🎓 Wozu braucht man das Tidy-Format?
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Wozu braucht man das Tidy-Format?
 
->    👩‍🏫 In vielen Software-Programmen der Datenanalyse weißt man z.B. der X- oder Y-Variable eine Spalte einer Tabelle zu. Möchte man etwa die Veränderung des Umsatzes im Verlauf der Jahre visualisieren oder analysieren, so braucht es die Spalten 'Jahr' und 'Umsatz', also ein Tidy-Format.
+>    [👩‍🏫]{.content-visible when-format="html"}[\emoji{woman-teacher}]{.content-visible when-format="pdf"} In vielen Software-Programmen der Datenanalyse weißt man z.B. der X- oder Y-Variable eine Spalte einer Tabelle zu. Möchte man etwa die Veränderung des Umsatzes im Verlauf der Jahre visualisieren oder analysieren, so braucht es die Spalten 'Jahr' und 'Umsatz', also ein Tidy-Format.
+
+@fig-tidy stellt auf Basis einer "Tidy-Tabelle" (@tbl-tidy1) ein Diagramm dar. Ohne Tidy-Daten wäre dieses Diagramm nicht (so einfach) zu erstellen gewesen.
 
 
 ```{r}
@@ -873,7 +885,7 @@ Wie man sieht, ist im linken Teilbild die Streuung (Variation) höher als im rec
 
 ```{r}
 #| label: fig-sample-estimate
-#| fig-cap: "Schätzgenauigkeit als Funktion der Stichprobengröße"
+#| fig-cap: "Schätzgenauigkeit als Funktion der Stichprobengröße. Jeder Punkt stellt eine Stichprobe dar, entweder mit n=20 (links) oder mit n=200 (rechts). Kleine Stichproben (links) haben im Schnitt eine größere Abweichung vom wahren Mittelwert als größere Stichproben (rechts). "
 #| echo: false
 
 d <- tibble(id = 1:20)
@@ -885,7 +897,8 @@ d <- d |>
   )
 
 d_long <- d |> 
-  pivot_longer(cols = c(x1, x2), names_to = "variable", values_to = "value")
+  pivot_longer(cols = c(x1, x2), 
+               names_to = "variable", values_to = "value")
 
 
 
@@ -896,11 +909,14 @@ ggplot(d_long, aes(x = id, y = value)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_point() +
   facet_wrap(~ variable, labeller = labeller(variable = custom_labels)) +
-  theme_minimal() 
+  theme_minimal() +
   labs(
     x = "Nummer der Stichprobe",
-    y = "Wert"
-  )
+    y = "Wert") +  
+    geom_segment(aes(x = id, xend = id,
+                   y = value, yend = 0),
+               linetype = "dotted", 
+               color = "grey40")
 ```
 
 :::
@@ -908,10 +924,12 @@ ggplot(d_long, aes(x = id, y = value)) +
 
 ::: {.content-visible when-format="html"}
 ![Schätzgenauigkeit als Funktion der Stichprobengröße: Die vertikale Linie zeigt den wahren Mittelwert. Kleinere Stichproben-Mittelwerte schanken (variieren) mehr um den Mittelwert herum als größere Stichproben.](img/Estimate.gif){#fig-sample-estimate}
+
+Bildquelle: Karsten Lübke
+
 :::
 
 
-Bildquelle: Karsten Lübke
 
 :::{.callout-important}
 Mehr Daten = genauere Ergebnisse (unter sonst gleichen Umständen) $\square$
@@ -1276,10 +1294,11 @@ zeiten_mw <- mean(zeiten)
 
 
 
-::::: {.content-visible when-format="html"}
 
-:::: {.columns}
-::: {.column width="45%"}
+
+::::: {layout-ncol="3"}
+
+:::: {.column width="40%"}
 
 ### Vorher
 
@@ -1287,60 +1306,37 @@ zeiten_mw <- mean(zeiten)
 `r zeiten`
 
 ![Oh jeh, so viele Zahlen! Ich check nix! Wie viel lernen denn jetzt meine Studis?!](img/teacher.png){width="25%"}
-:::
+::::
 
 
-::: {.column width="10%"}
+:::: {.column width="10%"}
 <!-- empty column to create gap -->
-:::
+::::
 
 
-::: {.column width="45%"}
+:::: {.column width="40%"}
 ### Nachher
 
+:::: {.content-visible when-format="html"}
 ::: {.centered}
 **`r zeiten_mw`** 
 :::
+::::
+
+:::: {.content-visible when-format="pdf"}
+\centering{9.6}
+::::
+
 </br>
 </br>
 
 ![Yeah, jetzt weiß ich, wie viel die Studis so typischerweise lernen. Viel zu wenig natürlich!](img/teacher.png){width="25%"}
 
 
-:::
 
 ::::
 :::::
 
-
-::: {.content-visible when-format="pdf"}
-
-
-
-
-:::: {layout="[0.5, 0.5]"}
-
-:::{#firstcol}
-## Vorher
-
-`r zeiten`
-
-![Oh jeh, so viele Zahlen! Ich check nix! Wie viel lernen denn jetzt meine Studis?!](img/teacher.png){width="25%"}
-:::
-
-:::{#secondcol}
-
-## Nachher
-
-**`r zeiten_mw`** 
-
-![Yeah, jetzt weiß ich, wie viel die Studis so typischerweise lernen. Viel zu wenig natürlich!](img/teacher.png){width="25%"}
-:::
-
-::::
-
-
-:::
 
 
 
@@ -1473,7 +1469,7 @@ Inspiration von einer Praktikerin der Datenanalyse: Caitlin Hudon verrät [in di
 ## Literaturhinweise
 
 Einen Einblick in die  Fundamente statistischer Analyse bietet @stigler_seven_2016. 
-@cetinkaya-rundel_introduction_2021-1, stellen grundlegende Konzepte der Analyse von Daten im Kapitel 1, "Hello data", vor.
+@cetinkaya-rundel_introduction_2021, stellen grundlegende Konzepte der Analyse von Daten im Kapitel 1, "Hello data", vor.
 @downey_probably_2023 illustriert statistische Überraschungsmoment auf unterhaltsame, und vor allem: sofataugliche Art.
 
 

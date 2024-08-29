@@ -13,3 +13,21 @@ knit_print.head = function(x, ...) {
 # register the method
 registerS3method("knit_print", "data.frame", knit_print.head)
 
+ggplot2::theme_set(see::theme_modern())
+
+knitr::opts_chunk$set(tidy = FALSE, 
+                      width = 60, 
+                      max.print = 100,
+                      warning = FALSE)
+options(width=60)
+
+
+
+   
+
+ycol <- "#E69F00"
+modelcol <- "#56B4E9"
+errorcol <- "#009E73"
+beta0col <- "#D55E00"
+beta1col <- "#0072B2"
+xcol <- "#CC79A7"

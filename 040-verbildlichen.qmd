@@ -1,9 +1,13 @@
+
+
+
 # Daten verbildlichen
 
 
 
 ```{r libs-hidden}
 #| message: false
+#| warning: false
 #| echo: false
 library(tidyverse)
 library(easystats)
@@ -11,11 +15,12 @@ library(easystats)
 #library(maptools)
 library(plotly)
 library(scales)
+library(ggpubr)
 ```
 
 
 ```{r}
-#| echo: false
+#| include: false
 
 source("_common.R")
 ```
@@ -54,21 +59,46 @@ Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt dam
 library(tidyverse)
 library(easystats)
 library(DataExplorer)  # nicht vergessen zu installieren
-```
-
-
-```{r}
-#| echo: false
-theme_set(theme_modern())
+library(ggpubr)  # optional
+library(ggstatsplot)  # optional
 ```
 
 
 ### Benötigte Daten
 
-```{r import-mariokart}
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
-```
+::: {.content-visible when-format="html"}
 
+Zuerst definieren wir den Pfad, wo wir die Daten finden, s. @lst-mariokart-path.
+
+
+```{r mariokart-path}
+#| label: lst-mariokart-path
+#| lst-cap: Pfad zu den Mariokart-Daten
+mariokart_path <- "https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"
+```
+:::
+
+
+
+::: {.content-visible when-format="pdf"}
+
+Zuerst definieren wir den Pfad, wo wir die Daten finden, s. @lst-mariokart-path-pdf.
+
+
+```{r mariokart-path-pdf}
+#| lst-label: lst-mariokart-path-pdf
+#| lst-cap: Pfad zu den Mariokart-Daten
+mariokart_path <- paste0(
+  "https://vincentarelbundock.github.io/Rdatasets",
+  "/csv/openintro/mariokart.csv")
+```
+:::
+
+Dann importieren wir die Mariokart-Daten:
+
+```{r import-mariokar}
+mariokart <- read.csv(mariokart_path)
+```
 
 ### R-Code zum Copy-Pasten
 
@@ -89,7 +119,7 @@ Vielleicht fordert Sie die Lehrkraft zu einem Einstiegsquiz auf, etwas mittels d
 
 
 
-::: {.content-visible unless-format="pdf"}
+::: {.content-visible when-format="html"}
 
 <center>
 <iframe src="https://giphy.com/embed/3oriNSf2iLjMVO7dao" width="480" height="244" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/culture--meme-kermit-3oriNSf2iLjMVO7dao">Quelle: GIPHY</a></p>
@@ -97,10 +127,9 @@ Vielleicht fordert Sie die Lehrkraft zu einem Einstiegsquiz auf, etwas mittels d
 
 :::
 
->   🥷 Wir müssen die Galaxis retten, Kermit.
+>   [🥷]{.content-visible when-format="html"} [\emoji{ninja}]{.content-visible when-format="pdf"} Wir müssen die Galaxis retten, Kermit.
 
->   🐸 *Schlock*
-
+>   [🐸]{.content-visible when-format="html"} [\emoji{frog}]{.content-visible when-format="pdf"} *Schlock*
 
 
 
@@ -121,7 +150,7 @@ s. @fig-dino1.^[Quelle: <https://towardsdatascience.com/how-to-turn-a-dinosaur-d
 :::
 
 ::: {.content-visible when-format="pdf"}
-```{r}
+```{r dino-pdf}
 #| echo: false
 #| label: fig-dino1
 #| fig-cap: "Alle Diagramme haben gleiche statistische Koeffizienten, wie Mittelwert und Streuung und Korrelation, aber die Datengrundlage sind komplett verschieden."
@@ -222,7 +251,9 @@ data(mariokart, package ="openintro")
 
 mariokart |> 
   filter(total_pr < 100) |> 
-  ggplot(aes(x = duration, y = total_pr, color = cond, size = wheels, shape = stock_photo)) +
+  ggplot(aes(x = duration, y = total_pr, 
+             color = cond, size = wheels, 
+             shape = stock_photo)) +
   geom_point()
 ```
 
@@ -300,14 +331,14 @@ wie häufig jede Ausprägung von $X$ ist.$\square$
 :::
 
 :::{#exm-verteilung1}
-@tbl-wheels-n zeigt die Häufigkeitsverteilung von `cond` aus dem Datensatz `mariokart`.
+@tbl-wheels-n zeigt die Häufigkeitsverteilung von `cond` (condition, also der Zustand des Artikels, neu oder gebraucht) aus dem Datensatz `mariokart`.
 Die Variable hat 5 Ausprägungen; 
 z.B. kommt die Ausprägung `new`  59 mal vor.$\square$
 :::
 
 
 
-```{r}
+```{r mariokart-cond-freq-tbl}
 #| echo: false
 #| label: tbl-wheels-n
 #| tbl-cap: "Häufigkeitsverteilung von `cond` aus dem Datensatz `mariokart`"
@@ -328,7 +359,7 @@ Ein Balkendiagramm eignet sich, um Häufigkeiten darzustellen
 :::
 
 
-```{r}
+```{r p-mariokart-n-cond}
 #| echo: false
 #| label: fig-mario-n-plot-cond
 #| fig-cap: "Häufigkeitsverteilung der Variable `cond`"
@@ -340,7 +371,7 @@ mario_n1 <-
   geom_col() +
   coord_flip() +
   theme_modern() + 
-  labs(title = "horizontale Balekn")
+  labs(title = "horizontale Balken")
 
 mario_n2 <-
   mariokart |> 
@@ -355,12 +386,14 @@ plots(mario_n1, mario_n2)
 
 
 
+
+
 ```{r}
 #| label: fig-de1
 #| echo: false
 #| fig-cap: "Balkendiagramm mit dem R-Paket `DataExplorer`"
 library(DataExplorer)
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+mariokart <- read.csv(mariokart_path)
 
 mariokart %>% 
   select(cond) %>% 
@@ -371,11 +404,20 @@ Es gibt viele Methoden, sich mit R ein Balkendiagramm ausgeben zu lassen.
 Eine einfache, komfortable ist die mit dem Paket `DataExplorer`,
 s. @fig-de1.
 
+::: {.content-visible when-format="html"}
+Zuerst importieren wir die Daten, s.  @lst-mariokart und @lst-mariokart-path.
+:::
 
-Zuerst importieren wir die Daten, s. @lst-mariokart.
+::: {.content-visible when-format="pdf"}
+Zuerst importieren wir die Daten, s. @lst-mariokart und @lst-mariokart-path-pdf.
+:::
 
-```{#lst-mariokart .r lst-cap="Mariokart-Daten importieren von einer Webseite"}
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+
+```{r}
+#| lst-cap: "Mariokart-Daten importieren von einer Webseite"
+#| lst-label: lst-mariokart
+#| eval: false
+mariokart <- read.csv(mariokart_path)
 ```
 
 
@@ -383,7 +425,10 @@ Außerdem nicht vergessen, das Paket `DataExplorer` zu starten, s. @lst-dataexpl
 In diesem Paket "wohnen" die Befehle, die wir zum Erstellen der Datendiagramme nutzen werden. @lst-de1 zeigt die Syntax, um ein Balkendiagramm zu erstellen.^[Auf der Hilfeseite der Funktion finden Sie weitere Details zur Funktion.]
 
 
-```{#lst-dataexplorer .r lst-cap="Wir starten das R-Paket DataExplorer"}
+```{r}
+#| lst-label: lst-dataexplorer
+#| lst-cap: "Wir starten das R-Paket DataExplorer"
+#| eval: false
 library(DataExplorer)
 ```
 
@@ -391,7 +436,9 @@ library(DataExplorer)
 
 
 
-```{#lst-de1 .r lst-cap="Syntax zur Erstellung eines Balkendiagramms"}
+```{r }
+#| lst-label: lst-de1
+#| lst-cap: "Syntax zur Erstellung eines Balkendiagramms"
 mariokart %>% 
   select(cond) %>% 
   plot_bar()
@@ -412,7 +459,7 @@ Hätten wir andere Spalten ausgewählt, so würde das Balkendiagramm die Verteil
 :::
 
 
-:::{#exr-balken}
+::::{#exr-balken}
 :::{.panel-tabset}
 ### Aufgabe
 Visualisieren Sie die Verteilung von `stock_photo`!
@@ -424,7 +471,7 @@ mariokart |>
   plot_bar()
 ```
 :::
-:::
+::::
 
 
 
@@ -435,13 +482,12 @@ mariokart |>
 
 #### Histogramm
 
-Bei einer quantitativen Variablen mit vielen Ausprägungen wäre ein Balkendiagramm nicht so aussagekräftig, s. @fig-balken-total-pr. Es gibt einfach zu viele Ausprägungen.
+Bei einer quantitativen Variablen mit vielen Ausprägungen wäre ein Balkendiagramm nicht so aussagekräftig, s. @fig-balken-hist (links). Es gibt einfach zu viele Ausprägungen.
 
 ```{r}
 #| echo: false
-#| fig-cap: "Balkendiagramm für `total_pr`"
-#| label: fig-balken-total-pr
 
+mariokart_bar_total_pr <- 
 mariokart |> 
   filter(total_pr < 200) |> 
   mutate(total_pr = round(total_pr, digits = 1)) |> 
@@ -458,18 +504,23 @@ Oder, um noch weniger Ausprägungen zu bekommen, können wir einfach Gruppen def
 ...
 
 
-In @fig-balken-total-pr-hist sind z.B. die Ausprägungen des Verkaufspreis (`total_pr`) in in Gruppen der Breite von 5 Dollar aufgeteilt worden. 
+In @fig-balken-hist (rechts) sind z.B. die Ausprägungen des Verkaufspreis (`total_pr`) in in Gruppen der Breite von 5 Dollar aufgeteilt worden. 
 Zusätzlich sind noch die einzelnen Werte als schwarze Punkte gezeigt.
 
 ```{r}
 #| echo: false
-#| fig-cap: "Balkendiagramm für `total_pr`"
-#| label: fig-balken-total-pr-hist
+#| fig-cap: "Balkendiagramm vs. Histogramm für den Gesamtpreis (`total_pr`)"
+#| layout-ncol: 2
+#| label: fig-balken-hist
+#| fig-subcap: 
+#|   - Balkendiagramm
+#|   - Histogramm
 
 m1a <- 
   mariokart |> 
   filter(total_pr < 100)
 
+mariokart_hist_total_pr <- 
 m1a |> 
   ggplot(aes(x = total_pr)) +
   geom_histogram(binwidth = 5, alpha = .7, center = 0, color = "white")  +
@@ -478,6 +529,9 @@ m1a |>
   scale_y_continuous(
     name = "Anzahl",
     sec.axis = sec_axis(trans = ~. / 141, name = "Anteil"))
+
+mariokart_bar_total_pr
+mariokart_hist_total_pr
 ```
 
 
@@ -559,7 +613,7 @@ mariokart %>%
 
 
 
-:::{#exr-histo-ship-pr}
+::::{#exr-histo-ship-pr}
 :::{.panel-tabset}
 ### Aufgabe
 Visualisieren Sie die Verteilung von `ship_pr` anhand eines Histogramms!
@@ -571,7 +625,7 @@ mariokart |>
   plot_histogram()
 ```
 :::
-:::
+::::
 
 
 
@@ -641,7 +695,7 @@ ggplot(NULL) +
 
 @fig-plot-distribs zeigt verschiedene Formen von Verteilungen. "Bimodal" meint "zweigipflig" und "multimodal" entsprechend "mehrgipflig".^[Quelle: ifes/FOM Hochschule, <https://github.com/FOM-ifes/VL-Vorlesungsfolien>]
 
-```{r}
+```{r plot-distribs}
 #| echo: false
 #| label: fig-plot-distribs
 #| fig-cap: "Verschiedene Verteilungsformen"
@@ -652,7 +706,7 @@ p_distribs
 
 
 
-:::{#exr-verteilungsform-total-pr}
+::::{#exr-verteilungsform-total-pr}
 :::{.panel-tabset}
 ### Aufgabe 
 Bennenen Sie die am besten passende Verteilungsform für die Variable `total_pr`.
@@ -667,7 +721,7 @@ mariokart |>
   plot_density()
 ```
 :::
-:::
+::::
 
 
 
@@ -704,7 +758,7 @@ Dieses Phänomen kann man gut anhand des [Galton-Bretts](https://www.youtube.com
 
 
 
-::: {.content-visible unless-format="pdf"}
+::: {.content-visible when-format="html"}
 
 {{< video https://youtu.be/3m4bxse2JEQ >}}
 
@@ -718,14 +772,14 @@ Eine Normalverteilung lässt sich exakt beschreiben anhand zweier Parameter: ihr
 
 
 
-::::: {.content-visible unless-format="pdf"}
+::::: {.content-visible when-format="html"}
 
 
 @fig-normal-interactive zeigt  interaktive Beispiele für Normalverteilung. Wählen Sie einfach Mittelwert ($\mu$) und Streuung ($\sigma$) anhand der Schieberegler.^[Quelle: <https://observablehq.com/@mcmcclur/the-normal-model>]
 
 
 
-:::{#fig-normal-interactive }
+::::{#fig-normal-interactive }
 
 ::: {.figure-content}
 
@@ -739,7 +793,7 @@ Eine Normalverteilung lässt sich exakt beschreiben anhand zweier Parameter: ihr
 
 Interaktives Beispiel für Normalverteilungen.
 
-:::
+::::
 
 :::::
 
@@ -795,7 +849,7 @@ Dazu betrachten Sie wieder die `mariokart`-Daten, s. @fig-zshg-nom1.
 
 
 
-```{r}
+```{r fig-zshg-nom1}
 #| echo: false
 #| label: fig-zshg-nom1
 #| fig-cap: "Zusammenhang zwischen nominalskalierten Variablen verbildlichen"
@@ -850,7 +904,7 @@ sonst sind die Zusammenhänge nicht mehr so gut zu erkennen.$\square$
 :::
 
 
-:::{#exr-zsmnhang-cond-wheels}
+::::{#exr-zsmnhang-cond-wheels}
 :::{.panel-tabset}
 ### Aufgabe
 Visualisieren Sie den Zusammenhang der beiden nominalen Variablen `cond` und `wheels`!
@@ -869,8 +923,7 @@ mariokart |>
 ```
 
 :::
-:::
-
+::::
 
 ### Zusammenhang: metrisch {#sec-zshg-metr}
 
@@ -960,17 +1013,19 @@ plots(p1, p2, p3, p4, n_rows = 2, tags = "A")
 :::{#def-zshg}
 ### Richtung und Stärke eines Zusammenhang
 
-*Gleichsinnige* (positive) Zusammenhänge erkennt man an *aufsteigenden* Trendgeraden;
-*gegensinnige* (negative) Zusammenhänge an *absteigenden* Trendgeraden:
+*Gleichsinnige* (positive) Zusammenhänge erkennt man an *aufsteigenden* Trendgeraden $\nearrow$;
+*gegensinnige* (negative) Zusammenhänge an *absteigenden* Trendgeraden $\searrow$
 
-- ➕  : ⬆️
-- ➖ :   ⬇️
+
 
 Starke Zusammenhänge erkennt man an schmalen Ellipsen ("Baguette");
-schwache Zusammenhänge an breiten Ellipsen ("Torte"):
+schwache Zusammenhänge an breiten Ellipsen ("Torte")
+
+::: {.content-visible when-format="html"}
 
 - schwach: 🥮 
 - stark: 🥖
+:::
 
 $\square$
 :::
@@ -1041,14 +1096,14 @@ und *schwache* Zusammenhänge mit einer *breiten* Ellipse einhergehen.
 
 
 
-
+::::: {.content-visible when-format="html"}
 
 
 @fig-scatter-interactive zeigt interaktive Beispiele für (lineare) Zusammenhänge.^[Quelle: <https://observablehq.com/d/bb7ad3ecfb1ac2a6>]
 
 
 
-:::{#fig-scatter-interactive}
+::::{#fig-scatter-interactive}
 
 ::: {.figure-content}
 
@@ -1062,9 +1117,9 @@ und *schwache* Zusammenhänge mit einer *breiten* Ellipse einhergehen.
 
 Interaktives Beispiel für Zusammenhangsdiagramme.
 
-:::
+::::
 
-
+:::::
 
 
 
@@ -1075,7 +1130,7 @@ Interaktives Beispiel für Zusammenhangsdiagramme.
 
 
 :::{#exm-scatter}
-Sie arbeiten nach wie vor bei einem Online-Auktionshaus, und machmal gehört Datenanalyse zu Ihren Aufgaben.
+Sie arbeiten nach wie vor bei einem Online-Auktionshaus, und manchmal gehört Datenanalyse zu Ihren Aufgaben.
 Daher interessiert Sie, ob welche Variablen mit dem Abschlusspreis (`total_pr`) im Datensatz `mariokart` zusammenhängen.
 Sie verbildlichen die Daten mit R, und zwar nutzen Sie das Paket `DataExplorer`.
 Starten Sie dieses Paket, s. @lst-dataexplorer.
@@ -1096,7 +1151,9 @@ Das Ergebnis sieht man in @fig-mario-scatter bzw. @lst-scatterplot.
 #| label: fig-mario-scatter
 #| fig-cap: Der Zusammenhang metrischer Variablen mit Abschlusspreis
 mariokart %>% 
-  select(duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels) %>% 
+  select(duration, n_bids, start_pr,
+         ship_pr, total_pr, 
+         seller_rate, wheels) %>% 
   plot_scatterplot(by = "total_pr")
 ```
 
@@ -1117,7 +1174,9 @@ mariokart_no_extreme <-
   filter(total_pr < 100)
 
 mariokart_no_extreme %>% 
-  select(duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels) %>% 
+  select(duration, n_bids, start_pr, 
+         ship_pr, total_pr, 
+         seller_rate, wheels) %>% 
   plot_scatterplot(by = "total_pr")
 ```
 
@@ -1129,7 +1188,7 @@ Das Argument `by = "total_pr"` bei `plot_scatterplot` weist R an, als Y-Variable
 :::
 
 
-:::{#exr-zsmnhang-metrisch}
+::::{#exr-zsmnhang-metrisch}
 :::{.panel-tabset}
 ### Aufgabe
 Visualisieren Sie den Zusammenhang der beiden metrischen Variablen `start_pr` und `total_pr`. Verwenden Sie den Datensatz ohne Extremwerte wie oben definiert.
@@ -1144,7 +1203,9 @@ mariokart_no_extreme |>
 ```
 
 :::
-:::
+::::
+
+
 
 
 
@@ -1317,7 +1378,7 @@ so dass wir die Belastbarkeit dieses Ergebnisses skeptisch betrachten sollten.
 Übrigens bezeichnet Sie Ihre Chefin nur noch als "Datengott".
 
 
-:::{#exm-diff-plot}
+::::{#exm-diff-plot}
 :::{.panel-tabset}
 ### Aufgabe
 Visualisieren Sie den Unterschied im Verkaufspreis zwischen gebrauchten und neuen Spielen.
@@ -1330,12 +1391,12 @@ mariokart_no_extreme |>
   plot_boxplot(by = "cond")
 ```
 :::
-:::
+::::
 
 
 
 
-:::{#exm-diff-plot}
+::::{#exm-diff-plot}
 :::{.panel-tabset}
 ### Aufgabe
 Visualisieren Sie den Unterschied im Verkaufspreis abhängig von `ship_pr`; betrachten Sie `ship_pr` als ein Gruppierungsvariable. Interpretieren Sie das Ergebnis.
@@ -1352,7 +1413,7 @@ mariokart_no_extreme |>
 
 Es sieht so aus, als würde der Median zwischen den Gruppen leicht steigen, mit Ausnahme der mittleren Gruppe.
 :::
-:::
+::::
 
 
 
@@ -1483,11 +1544,11 @@ Zwar sind sie beliebt, doch ist [von ihrer Verwendung zumeist abzuraten](https:/
 Mehr Informationen zu `{DataExplorer}` finden Sie [hier](https://boxuancui.github.io/DataExplorer/index.html).
 
 
-
+::: {.content-visible when-format="html"}
 
 ### Animation
 
-::: {.content-visible unless-format="pdf"}
+
 Eine weitere nützliche Art von Visualisierung sind *Karten*, *3D-Bilder* und *Animationen.* So zeigt z.B. @fig-le-world die Veränderung der Lebenserwartung (in Jahren) über die letzten Dekaden.^[Der Quellcode der Animation ist hier  zu finden: <https://gist.github.com/rafapereirabr/0d68f7ccfc3af1680c4c8353cf9ab345>.]
 
 ![Animation zur Veränderung der Lebenserwartung](img/life-exp-world.gif){#fig-le-world width="75%"}
@@ -1523,10 +1584,12 @@ fig2
 
 Leider ist @fig-mario-3d nicht sehr aufschlussreich.
 
-:::
+
 
 Natürlich sind der Fantasie keine Grenzen beim Visualisieren gesetzt, so ist etwa [diese Animationen](https://www.tylermw.com/wp-content/uploads/2019/06/featuredmeasles.mp4) ziemlich atemberaubend.^[<https://www.tylermw.com/wp-content/uploads/2019/06/featuredmeasles.mp4>]
 
+
+:::
 
 ### Schicke Diagramme
 
@@ -1556,7 +1619,9 @@ s. @fig-comp-means-ggpubr.
 ```{r}
 #| label: fig-comp-means-ggpubr
 #| fig-cap: Vergleich der Verteilungen zweier Gruppen mit Mittelwert und Standardabweichung pro Gruppe hervorgehoben
-ggviolin(mariokart_no_extreme, x = "cond", y = "total_pr",
+ggviolin(mariokart_no_extreme, 
+         x = "cond", 
+         y = "total_pr",
          add = "mean_sd") 
 ```
 
@@ -1588,7 +1653,7 @@ gghistostats(
   data       = mariokart_no_extreme,
   x          = total_pr,
   xlab       = "Verkaufspreis" 
-  # results.subtitle = FALSE   # unterdrückt statistische Kennzahlen
+  # results.subtitle = FALSE   # unterdrückt statist. Details
 )
 ```
 
@@ -1601,9 +1666,9 @@ Möchte man auf die Kennzahlen verzichten, so nutzt man den Schalter `results.su
 
 
 
->   🧑‍🎓 Ich würde gerne mal Beispiele von *schlechten* Datendiagrammen sehen.
+>   [👩‍🏫]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Ich würde gerne mal Beispiele von *schlechten* Datendiagrammen sehen.
 
->   👨‍🏫 Auf der Seite von [Flowingdata](https://flowingdata.com/category/visualization/ugly-visualization/) findet sich eine nette Liste mit schlechten Datendiagrammen.^[<https://flowingdata.com/category/visualization/ugly-visualization/>]
+>   [🧑‍🎓]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Auf der Seite von [Flowingdata](https://flowingdata.com/category/visualization/ugly-visualization/) findet sich eine nette Liste mit schlechten Datendiagrammen.^[<https://flowingdata.com/category/visualization/ugly-visualization/>]
 
 
 ### Farbwahl {#sec-farbwahl}
@@ -1621,15 +1686,6 @@ mariokart %>%
   scale_fill_okabeito()
 ```
 
-
-### Literaturhinweise
-
-
-Sowohl `ggpubr` als auch `DataExplorer` (und viele andere R-Pakete) bauen auf dem R-Paket `ggplot2` auf.
-`ggplot2` ist eines der am weitesten ausgearbeiteten Softwarepakete zur Erstellung von Datendiagrammen.
-Das Buch zur Software (vom Autor von `ggplot2`) ist empfehlenswert [@wickham_ggplot2_2009].
-Eine neue, gute Einführung in Datenvisualisierung findet sich bei @wilke_fundamentals_2019.
-Beide Bücher sind kostenfrei online lesbar.
 
 
 
@@ -1657,6 +1713,13 @@ Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine 
 Noch mehr Aufgaben zum Thema Datenvisualisierung finden Sie im Datenwerk unter dem Tag [vis](https://datenwerk.netlify.app/#category=vis).
 
 ## Literaturhinweise
+
+
+Sowohl `ggpubr` als auch `DataExplorer` (und viele andere R-Pakete) bauen auf dem R-Paket `ggplot2` auf.
+`ggplot2` ist eines der am weitesten ausgearbeiteten Softwarepakete zur Erstellung von Datendiagrammen.
+Das Buch zur Software (vom Autor von `ggplot2`) ist empfehlenswert [@wickham_ggplot2_2009].
+Eine neue, gute Einführung in Datenvisualisierung findet sich bei @wilke_fundamentals_2019.
+Beide Bücher sind kostenfrei online lesbar.
 
 
 @wilke_fundamentals_2019 gibt einen hervorragenden Überblick über praktische Aspekte der Datenvisualisierung; gut geeignet, wenn man mit R arbeitet.

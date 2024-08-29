@@ -45,9 +45,30 @@ library(gt)
 
 ### Benötigte Daten
 
-```{r}
+
+
+::: {.content-visible when-format="html"}
+
+```{r import-mariokart-csv}
 mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 ```
+:::
+
+
+::: {.content-visible when-format="pdf"}
+
+@lst-mario-path definiert den Pfad zum Datensatz `mariokart` und importiert die zugehörige CSV-Datei in R, so dass wir einen Tibble mit Namen `mariokart` erhalten.
+
+
+```{r import-mariokart-csv2}
+mariokart_path <- paste0(
+  "https://vincentarelbundock.github.io/Rdatasets/",
+  "csv/openintro/mariokart.csv")
+
+mariokart <- read.csv(mariokart_path)
+```
+
+:::
 
 
 
@@ -55,7 +76,7 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 
 :::{#exm-zsgh-studis}
 
-1. Suchen Sie sich eine vertrauenwürdige Partnerin oder einen vertrauenswürdigen Partner. Im Zweifel reicht die Person, die neben Ihnen sitzt. 😁
+1. Suchen Sie sich eine vertrauenwürdige Partnerin oder einen vertrauenswürdigen Partner. Im Zweifel reicht die Person, die neben Ihnen sitzt. [😁]{.conten-visible when-format="html"}
 2. Nennen Sie zwei Variablen, die wie folgt zusammenhängen:
 
 - gleichsinnig (Viel von dem einen, viel von dem anderen)
@@ -165,7 +186,7 @@ cov_xy <- cov(d$y, d$x)
 ### Wieder Statistiknoten
 
 Anton, Bert, Carl und Daniel haben ihre Statistikklausur zurückbekommen.
-Die Lernzeit $X$ scheint mit der erreichten Punktzahl $Y$ (0-100, je mehr desto besser) zusammenzuhängen.^[>    🧑‍🎓  Typisches Lehrerbeispiel!!]
+Die Lernzeit $X$ scheint mit der erreichten Punktzahl $Y$ (0-100, je mehr desto besser) zusammenzuhängen.^[>   [🧑‍🎓]{.content-visible when-format="html"}  Typisches Lehrerbeispiel!!]
 Gar nicht so schlecht ausgefallen, s. @tbl-noten2.$\square$
 :::
 
@@ -231,7 +252,9 @@ Ja, ich weiß, ich strapaziere mal wieder Ihre Phantasie^[hoffentlich nicht Ihre
 Jetzt kommt's: Je größer die Fläche des Summenrechtecks, desto stärker der (lineare) Zusammenhang.
 
 Beachten Sie, dass die Flächen Vorzeichen haben, positiv oder negativ (Plus oder Minus), je nach dem, in welchem der vier Quadranten sie stehen. Die Füllfarben der Rechtecke verdeutlichen dies, s. @fig-delta-rect.
+
 Das *Vorzeichen* der Summe zeigt an, ob der Zusammenhang positiv (gleichsinnig, ansteigende Trendlinie) oder negativ (gegensinnig, absinkende Trendlinie) ist.
+
 So zeigt @fig-kov links eine positive Summe der Abweichungsrechtecke und rechts eine negative Summe. Man sieht im linken Diagramme, dass die Summe der Rechtecke mit positivem Vorzeigen (rot) überwiegt; im rechten Diagramm ist es umgekehrt (blau, negativ überwiegt).
 
 ```{r}
@@ -309,13 +332,14 @@ Sie ist ein Maß für die Stärke und Richtung des linearen Zusammenhangs zweier
 :::
 
 
->   👩‍🎓 Zu viele Bilder! Ich brauch Zahlen.
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"}
+ Zu viele Bilder! Ich brauch Zahlen.
 
->   👩‍🏫 Kommen schon!
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Kommen gleich!
 
 
 @tbl-kov2 zeigt die Werte für die X- und Y-Abweichung und die resultierenden Flächen der Abweichungsrechtecke.
-Wenn Sie die Werte selber nachrechnen wollen, finden Sie den Noten-Datensatz in der Datei [noten.csv](https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv).
+Wenn Sie die Werte selber nachrechnen wollen, finden Sie den Noten-Datensatz in der Datei [noten.csv](https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv)^[<https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv>].
 
 
 
@@ -325,6 +349,7 @@ Wenn Sie die Werte selber nachrechnen wollen, finden Sie den Noten-Datensatz in 
 #| tbl-cap: "Werte der Abweichungsrechtecke. avg: average (Mittelwert), cov_sign: Vorzeichen der Kovarianz,_pos: positiver Wert auf der entsprechenden Achse (x/y)?, xy_area: Produkt von x_delta und y_delta"
 
 d %>% 
+  select(-x_pos, -y_pos) |> 
   kable()
 ```
 
@@ -417,14 +442,15 @@ cor.rect.plot(y = points3$y, x = points3$x,
 Bei einer Kovarianz von (ungefähr) 0 ist die Gesamt-Fläche der Abweichungsrechtecke^[Bei der Varianz waren es Quadrate, bei der Kovarianz sind es Rechtecke.], wenn man sie pro *Quadrant* aufsummiert, ungefähr gleich groß, s. @fig-covnull.
 Addiert man die Abweichungsrechtecke (unter Beachtung der Vorzeichen: rot = positiv; blau = negativ), so beträgt die Summe in etwa (oder genau) Null.
 
-Damit ist die Kovarianz in diesem Fall etwa (bzw. genau) Null, s. @eq-cov-is-zero.
+Damit ist die Kovarianz in diesem Fall etwa (bzw. genau) Null, s. @eq-cov-is-zero: Wenn die Summe der Aweichungsrechtecke Null ist, dann ist auch ihr Mittelwert (MW) Null. Damit ist die Kovarianz Null.
 
 
-$$\begin{align}
+
+$$\begin{aligned}
 \sum \left(dX \cdot dY \right) &= 0\\
-\Leftrightarrow \varnothing \left(dX \cdot dY \right) &= 0\\
-\Leftrightarrow \text{cov} &= 0
-\end{align}$${#eq-cov-is-zero}
+\Leftrightarrow \text{MW} \left(dX \cdot dY \right) &= 0\\
+\Leftrightarrow \text{cov}(X, Y) &= 0
+\end{aligned}$${#eq-cov-is-zero}
 
 
 
@@ -554,13 +580,7 @@ Nutzen Sie sie, um Ihr Gefühl für die Stärke des Korrelationskoeffizienten zu
 ### Korrelation mit R berechnen
 
 Ob der Verkaufspreis (`total_pr`) wohl mit der Dauer der Auktion (`duration`) oder mit der Anzahl der Gebote (`n_bids)` (linear) zusammenhängt? 
-Schauen wir nach! Die Funktion `correlation()` (aus dem Paket `{easystats}`) erledigt das Rechnen für uns.
-
-```{r}
-mariokart |> 
-  select(total_pr, duration, n_bids) |> 
-  correlation()  # aus `easystats`
-```
+Schauen wir nach! Die Funktion `correlation()` (aus dem Paket `{easystats}`) erledigt das Rechnen für uns, s. @tbl-mario-corr1.
 
 
 
@@ -568,20 +588,24 @@ mariokart |>
 #| eval: false
 mariokart |> 
   select(total_pr, duration, n_bids) |> 
-  correlation() |> 
+  correlation()  |>  # aus `easystats`
   summary()
 ```
 
 
 
-```{r}
+```{r mario-corr1}
 #| echo: false
+#| tbl-cap: "Korrelation berechnen mittels der Funktion `correlation` aus `easystats`"
 mariokart |> 
   select(total_pr, duration, n_bids) |> 
   correlation() |> 
   summary() |> 
   print_md()
 ```
+
+
+
 
 Sie können auch auf die letzte Zeile, also dem Befehl `summary()` verzichten. Dann ist die Ausgabe ausführlicher.
 
@@ -591,7 +615,7 @@ Sie können auch auf die letzte Zeile, also dem Befehl `summary()` verzichten. D
 Eine Studie fand eine starke Korrelation, 
  zwischen der (Höhe des) Schokoladenkonsums eines Landes und (Anzahl der) Nobelpreise eines Landes [@messerli_chocolate_2012], s. @fig-schoki.
  
- ![Schoki futtern macht schlau?](img/correlation_550.png){#fig-schoki}
+ ![Schoki futtern macht schlau?](img/correlation_550.png){#fig-schoki width=75%}
 
 :::{.callout-caution}
 Korrelation (bzw. Zusammenhang) ungleich Kausation! Korrelation kann bedeuten, dass eine Kausation vorliegt, aber es muss auch nicht sein, dass Kausation vorliegt. 
@@ -678,7 +702,8 @@ d |>
 ggplot(aes(x = x, y = y)) +
   geom_point() +
   labs(title = paste0("r: ", round(cor(d$x, d$y), 2))) +
-  theme_modern()
+  theme_modern() +
+  theme(plot.title = element_text(size = 16))
 
 d_filtered |>   
 ggplot(aes(x = x, y = y)) +
@@ -727,11 +752,26 @@ Man beachte, dass solche sog. relativen Pfade (relativ zu Ihrem Arbeitsverzeichn
 Falls Sie die Daten nicht auf Ihrem Computer haben,
 können Sie sie komfortable von z.B. der Webseite von [Vincent Arel-Bundock](https://vincentarelbundock.github.io/Rdatasets) herunterladen:
 
+::: {.content-visible when-format="html"}
+
 ```{r}
 mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 ```
 
+:::
+
+::: {.content-visible when-format="pdf"}
+
+Den Pfad hatten wir in @lst-mario-path definiert.
+
+```{r}
+mariokart <- read.csv(mariokart_path)
+```
+:::
+
 Sie wählen die Variablen von `mariokart`, die Sie in diesem Fall interessieren -- natürlich nur die metrischen -- und lassen sich mit `cor` die Korrelation aller Variablen untereinander ausgeben: 
+
+::: {.content-visible when-format="html"}
 
 ```{r}
 mariokart %>%  
@@ -740,6 +780,16 @@ mariokart %>%
   round(2) # Runden auf zwei Dezimalen
 ```
 
+:::
+
+::: {.content-visible when-format="pdf"}
+```{r}
+mariokart %>%  
+  dplyr::select(start_pr, ship_pr, total_pr) %>% 
+  cor() %>% 
+  round(2) # Runden auf zwei Dezimalen
+```
+:::
 
 
 :::{.callout-caution}
@@ -752,6 +802,7 @@ Eine einfache Abhilfe ist es, R zu sagen: "Hey R, nimm gefälligst `select` aus 
 :::
 
 
+::: {.content-visible when-format="html"}
 
 Etwas schöner sieht die Ausgabe mit dem Befehl `correlation` aus `{easystats}` aus, s. @tbl-mario-corr.
 
@@ -762,6 +813,22 @@ mariokart %>%
   dplyr::select(duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels) %>% 
   correlation() 
 ```
+
+:::
+
+::: {.content-visible when-format="pdf"}
+Etwas schöner sieht die Ausgabe mit dem Befehl `correlation` aus `{easystats}` aus, s. @tbl-mario-corr-pdf.
+
+```{r}
+#| label: tbl-mario-corr-pdf
+#| tbl-cap: Korrelationstabelle (tidy) im Datensatz mariokart
+mariokart %>% 
+  dplyr::select(start_pr, ship_pr, total_pr) %>% 
+  correlation() 
+```
+
+:::
+
 
 
 Neben einigen Statistiken, die wir einfach geflissentlich ausblenden (`t` und `p`) beinhaltet die Tabelle eine interessante Information: den Schätzbereich für die Korrelation, gekennzeichnet als `95% CI`.
@@ -776,18 +843,21 @@ mariokart %>%
 ```
 
 :::{.callout-caution}
-Im Falle von fehlenden Werte müssen Sie R aus seiner schüchternen Vorsicht befreien und ermutigen, trotz fehlender Werte einen Korrelationskoeffizienten auszugeben.
-Das geht mit dem Argument `use = "complete.obs"` in `cor`:
+Im Falle von fehlenden Werte müssen Sie den Befehl `cor()` aus seiner schüchternen Vorsicht befreien und ermutigen, 
+trotz fehlender Werte einen Korrelationskoeffizienten auszugeben.
+Das geht mit dem Argument `use = "complete.obs"` in `cor`.
+:::
 
 ```{r}
 mariokart %>% 
   summarise(cor_super_wichtig = cor(total_pr, wheels, use = "complete.obs"))
 ```
-:::
 
 
->   🧑‍🎓 Immer so viele Zahlen! Ich brauch Bilder.
 
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Immer so viele Zahlen! Ich brauch Bilder.
+
+::: {.content-visible when-format="html"}
 
 Mit dem Befehl `plot_correlation` aus dem R-Paket `{dataExplorer}` bekommt man eine ansehnliche Heatmap zur Verdeutlichung der Korrelationswerte, s. @fig-mario-corr.
 
@@ -801,7 +871,24 @@ mariokart %>%
   plot_correlation()
 ```
 
+:::
 
+
+::: {.content-visible when-format="pdf"}
+
+Mit dem Befehl `plot_correlation` aus dem R-Paket `{dataExplorer}` bekommt man eine ansehnliche Heatmap zur Verdeutlichung der Korrelationswerte, s. @fig-mario-corr-pdf.
+
+```{r}
+#| label: fig-mario-corr-pdf
+#| fig-cap: Heatmap zu den Korrelationen im Datensatz mariokart.
+library(DataExplorer)
+
+mariokart %>% 
+  dplyr::select(start_pr, ship_pr, total_pr) %>% 
+  plot_correlation()
+```
+
+:::
 
 
 
@@ -841,17 +928,20 @@ Oder Sie suchen nach einer Lösung anhand von Konzepten bzw. R-Befehlen, die Sie
 :::
 
 
-:::{.callout-note}
-Bitte verstehen Sie die folgende Auswahl an Fallstudien als Auswahl.
-Es ist nicht nötig, dass Sie alle Fallstudien bearbeiten.
-Sehen Sie die Fallstudien eher als Angebot zur selektiven Vertiefung und Übung, dort, wo Sie es nötig haben.$\square$
-:::
 
 
 
 2. [YACSDA: Topgear](https://data-se.netlify.app/2021/02/11/yacda-topgear/)
 4. [Datensatz flights: Finde den Tag mit den meisten Abflügen](https://data-se.netlify.app/2021/05/27/datensatz-flights-finde-den-tag-mit-den-meisten-abfl%C3%BCgen/)
 5. [Tidyverse Case Study: Exploring the Billboard Charts](https://www.njtierney.com/post/2017/11/07/tidyverse-billboard/)
+
+
+:::{.callout-note}
+Bitte verstehen Sie die folgende Auswahl an Fallstudien als Auswahl.
+Es ist nicht nötig, dass Sie alle Fallstudien bearbeiten.
+Sehen Sie die Fallstudien eher als Angebot zur selektiven Vertiefung und Übung, dort, wo Sie es nötig haben.$\square$
+:::
+
 
 ## Literaturhinweise
 
@@ -860,7 +950,7 @@ entsprechend wird Ihnen jedes typische Statistik-Buch die Grundlagen erläutern.
 Schauen Sie doch mal, was Ihre Bibliothek Ihnen zu bieten hat.
 Wer eine unorthodoxe (geometrische!) Herangehensweise an die Korrelation (und Regression) sucht, darf sich auf eine Menge Aha-Momente bei @kaplan_statistical_2009 freuen.
 Ein schönes, modernes Statistikbuch bietet der Psychologie-Prof Russel Poldrack von der Princeton University [-@poldrack_statistical_2023]; auch dieses Buch ist frei online verfügbar. Tipp: Nutzen Sie die Übersetzungfunktion Ihres Browsers, wenn Sie das Buch nicht in Englisch lesen wollen.
-Ein Klassiker, wenn auch nicht mehr ganz frisch, ist @cohen_2013; immer noch sehr empfehlenswert, aber etwas höheren Anspruchs.
+Ein Klassiker, wenn auch nicht mehr ganz frisch, ist  @cohen_applied_2003; immer noch sehr empfehlenswert, aber etwas höheren Anspruchs.
 
 ## Literatur
 

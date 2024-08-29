@@ -138,12 +138,21 @@ Schauen wir uns einmal die Verteilung der metrischen Variablen an,
 @tbl-ames1.
 
 ```{r}
-#| label: tbl-ames1
-#| tbl-cap: Verteilung der metrischen Variablen im ames-Datensatz 
+#| eval: false
 describe_distribution(d_train)
 ```
 
 
+::: {.content-visible when-format="html"}
+
+```{r}
+#| label: tbl-ames1
+#| tbl-cap: Verteilung der metrischen Variablen im ames-Datensatz 
+#| echo: false
+describe_distribution(d_train) |> print_md()
+```
+
+:::
 
 ### Ein erstes Vorhersagemodell
 
@@ -171,6 +180,7 @@ d_train %>%
 
 ```{r}
 #| echo: false
+#| results: hide
 #| label: tbl-d_train_corr
 #| tbl-cap: "Korrelation der Prädiktoren (UV) mit der AV"
 d_train %>% 
@@ -197,9 +207,23 @@ Diese Variable ist am stärksten mit der Zielvariable korreliert und ist daher e
 
 
 ```{r}
+#| eval: false
 m1 <- lm(SalePrice ~ OverallQual, data = d_train)
 parameters(m1)  # aus easystats
 ```
+
+
+
+
+
+```{r lm1-ames}
+#| echo: false
+m1 <- lm(SalePrice ~ OverallQual, data = d_train)
+parameters(m1)  |> print_md() # aus easystats
+```
+
+
+
 
 Wie gut ist das Modell?
 

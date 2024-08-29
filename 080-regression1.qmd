@@ -53,15 +53,39 @@ scale_colour_discrete <- function(...)
 
 
 
-### Benötigte Daten
+
 
 {{< include children/colors.qmd >}}
 
 
 
-```{r}
+
+### Benötigte Daten
+
+
+
+::: {.content-visible when-format="html"}
+
+```{r import-mariokart-csv}
 mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 ```
+:::
+
+
+::: {.content-visible when-format="pdf"}
+
+@lst-mario-path definiert den Pfad zum Datensatz `mariokart` und importiert die zugehörige CSV-Datei in R, so dass wir einen Tibble mit Namen `mariokart` erhalten.
+
+
+```{r import-mariokart-csv2}
+mariokart_path <- paste0(
+  "https://vincentarelbundock.github.io/Rdatasets/",
+  "csv/openintro/mariokart.csv")
+
+mariokart <- read.csv(mariokart_path)
+```
+
+:::
 
 
 
@@ -298,14 +322,14 @@ Wert für $\color{ycol}{y}$ handelt, nicht das tatsächliche (empirische, beobac
 :::
 
 
-@fig-regrtex skizziert die Elemente einer Regression.
+@fig-regrtex skizziert die Elemente einer Regression.^[Bildquelle: Basierend auf einem Diagramm von Henri Menke, <https://texample.net/tikz/examples/linear-regression/>]
 
 
 
 ![Achsenabschnitt und Steigung einer Regressionsgeraden](img/regr.png){#fig-regrtex width="70%"}
 
 
-[Bildquelle: Basierend auf diesem Diagramm von Henri Menke](https://texample.net/tikz/examples/linear-regression/)
+
 
 
 :::{.callout-important}
@@ -330,8 +354,7 @@ Mit:
 
 
 
-Je nach Datenlage können sich Regressionsgerade in Steigung oder Achsenabschnitt unterscheiden, 
-s. @fig-regr-div.
+Je nach Datenlage können sich Regressionsgerade in Steigung oder Achsenabschnitt unterscheiden, s. @fig-regr-div.
 
 ```{r lm11-lm12}
 #| echo: false
@@ -385,11 +408,13 @@ ggplot(d2, aes(x2, y2)) +
 ```
 
 
+::::: {.content-visible when-format="html"}
+
 @fig-linfun zeigt ein interaktives Beispiel einer linearen Funktion. 
 Sie können Punkte per Klick/Touch hinzufügen.
 
 
-:::{#fig-linfun}
+::::{#fig-linfun}
 
 ::: {.figure-content}
 
@@ -404,8 +429,8 @@ Sie können Punkte per Klick/Touch hinzufügen.
 :::
 
 Interaktives Beispiel für eines lineares Modell. Fügen Sie Punkte per Klick/Touch hinzu.
-
-:::
+::::
+:::::
 
 
 
@@ -457,13 +482,12 @@ Anstelle auf @fig-beta0 zu schauen,
 können Sie sich auch von R Tonis Klausurerfolg vorhersagen (to predict) lassen:
 
 
->    🧑‍🎓 Hey R, predicte mir mal auf Basis vom Modell "lm1" den Lernerfolg für Toni, wenn der x=0 Stunden lernt.
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"}  Hey R, predicte mir mal auf Basis vom Modell "lm1" den Lernerfolg für Toni, wenn der x=0 Stunden lernt.
 
->    🤖 Okay, ich predicte mit Modell "lm1" und nehme als neue Datentabelle Tonis Lernzeit (x=0)!
+>    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Okay, ich predicte mit Modell "lm1" und nehme als neue Datentabelle Tonis Lernzeit (x=0)!
 
 ```{r}
 tonis_lernzeit <- tibble(x = 0)  # `tibble` erstellt eine Tabelle
-tonis_lernzeit
 ```
 
 
@@ -661,13 +685,20 @@ verhaeltnis_fehler_mse
 ```
 
 
+
+
 ### Berechnung der Modellkoeffizienten
 
 Aber wie legt man die Regressionsgerade in das Streudiagramm, bildlich gesprochen?
 
-Die Regressionskoeffizienten^[hier synonym: Modellparameter] b0 und b1 wählt man so, dass die *Residuen* *minimal* sind, s. @fig-opt.
+Die Regressionskoeffizienten^[hier synonym: Modellparameter] b0 und b1 wählt man so, dass die *Residuen* *minimal* sind,
 
-:::{#fig-opt}
+
+::::: {.content-visible when-format="html"}
+
+ @fig-opt veranschaulicht die Minimierung der Residuen (Vorhersagefehler).
+
+::::{#fig-opt}
 
 :::{.panel-tabset}
 
@@ -684,7 +715,8 @@ Die Regressionskoeffizienten^[hier synonym: Modellparameter] b0 und b1 wählt ma
 
 Bildquelle: [Karsten Lübke, FOM Hochschule](https://www.fom-blog.de/autorinnen-und-autoren/karsten-luebke)
 
-:::
+::::
+:::::
 
 Genauer gesagt wird die Summe der quadrierten [Residuen]{.green} minimiert, s. @eq-min.
 
@@ -694,8 +726,9 @@ Es gibt verschiedene Möglichkeiten,
 um die Koeffizienten zu berechnen^[die sind aber nicht in diesem Buch zu finden].
 Eine schöne Darstellung dazu findet sich bei @kaplan_statistical_2009.
 
+
 "Von Hand" können Sie die Optimierung von b0 und b1 in 
-[dieser App der FOM-Hochschule](https://fomshinyapps.shinyapps.io/KleinsteQuadrate/) ausprobieren.
+ dieser App der FOM-Hochschule^[<https://fomshinyapps.shinyapps.io/KleinsteQuadrate/>] ausprobieren.
 
 
 
@@ -912,9 +945,18 @@ Auf geht's!
 
 Daten laden:^[Und die üblichen Pakete starten, nicht vergessen.]
 
+::: {.content-visible when-format="html"}
+
 ```{r}
 mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 ```
+:::
+
+::: {.content-visible when-format="pdf"}
+```{r}
+mariokart <- read.csv(mariokart_path)
+```
+:::
 
 
 ```{r}
@@ -962,8 +1004,19 @@ In Worten:
 
 Man kann sich die erwarteten Werte ("expectations") des Verkaufspreises in Abhängigkeit vom Wert der UV (`ship_pr`) auch schätzen ("to estimate") lassen, und zwar so^[Die Funktion stammt aus easystats]: 
 
+
+
 ```{r}
+#| eval: false
 estimate_expectation(lm3) %>% head()  # nur die ersten paar vorhergesagten Werte
+```
+
+
+
+
+```{r}
+#| echo: false
+estimate_expectation(lm3) %>% head() |> print_md()  # nur die ersten paar vorhergesagten Werte
 ```
 
 
@@ -971,18 +1024,17 @@ Ah, bei 4 Euro Versandkosten ist laut dem Modell knapp 54 Euro Verkaufspreis zu 
 fassen Sie sich die Ausgabe zusammen.
 
 
->   🤖 Das sieht man in der Spalte `Predicted`, dort steht der vorhersagte Wert für `total_pr` für einen bestimmten Wert von `ship_pr`.
+>    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Das sieht man in der Spalte `Predicted`, dort steht der vorhersagte Wert für `total_pr` für einen bestimmten Wert von `ship_pr`.
 
 
->    🧑‍🎓 Kann ich auch `predict` benutzen? Ich würde gerne den Verkaufspreis wissen, wenn die Versandkosten bei 1 und bei 4 Euro liegen.
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Kann ich auch `predict` benutzen? Ich würde gerne den Verkaufspreis wissen, wenn die Versandkosten bei 1 und bei 4 Euro liegen.
 
->   🤖 Ja, klar!
+>    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Ja, klar!
 
 
 ```{r}
 neue_daten <- tibble(
-  ship_pr = c(1, 4)  # zwei Werte zum Vorhersagen
-)
+  ship_pr = c(1, 4)) # zwei Werte zum Vorhersagen
 ```
 
 
@@ -1055,8 +1107,8 @@ Kann man da noch was machen?
 
 ## Aufgaben
 
-Eine Aufgabe, die eine Einführung zum [Kaggle-Wettbewerb Ames House Prices](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview) bietet, 
-finden Sie [hier im Datenwerk](https://datenwerk.netlify.app/posts/ames-kaggle1/ames-kaggle1.html).
+Eine Aufgabe, die eine Einführung zum [Kaggle-Wettbewerb Ames House Prices](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview) bietet^[<https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview>], 
+finden Sie [im Datenwerk](https://datenwerk.netlify.app/posts/ames-kaggle1/ames-kaggle1.html).^[<https://datenwerk.netlify.app/posts/ames-kaggle1/ames-kaggle1.html>]
 
 Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine Reihe von einschlägigen Übungsaufgaben bereit. Sie können die Suchfunktion der Webseite nutzen, um die Aufgaben mit den folgenden Namen zu suchen:
 
@@ -1083,14 +1135,14 @@ Schauen Sie sich die Aufgaben beim [Datenwerk](https://datenwerk.netlify.app/) a
 *Nicht alle Aufgaben* aus dieser Sammlung passen zum Stoff; vielleicht können Sie einige Aufgaben nicht lösen.
 Ignorieren Sie einfach diese Aufgaben.
 
-Beachten Sie die [Hinweise zu den Aufgaben](https://datenwerk.netlify.app/hinweise).
+Beachten Sie die [Hinweise zu den Aufgaben](https://datenwerk.netlify.app/hinweise).^[<https://datenwerk.netlify.app/hinweise>]
 
 
 ## Literaturhinweise
 
 @gelman_regression_2021-1 liefert eine deutlich umfassendere Einführung in die Regressionsanalyse als dieses Kapitel es tut.
 Eine moderne, R-orientierte Einführung in Statistik inklusive der Regressionsanalyse findet sich bei @cetinkaya-rundel_introduction_2021-2.
-Ein Klassiker mit viel Aha-Potenzial ist @cohen2013.
+Ein Klassiker mit viel Aha-Potenzial ist @cohen2003.
 
 
 ## Literatur

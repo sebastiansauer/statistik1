@@ -42,6 +42,13 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
+\ifLuaTeX
+  \usepackage{luacolor}
+  \usepackage[soul]{lua-ul}
+\else
+  \usepackage{soul}
+  
+\fi
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \setcounter{secnumdepth}{5}
 % Make \paragraph and \subparagraph free-standing
@@ -244,11 +251,9 @@
 \newcommand*\listoflistings{\listof{codelisting}{Listingverzeichnis}}
 \usepackage{amsthm}
 \theoremstyle{definition}
-\newtheorem{exercise}{Übungsaufgabe}[chapter]
+\newtheorem{example}{Beispiel}[chapter]
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[chapter]
-\theoremstyle{definition}
-\newtheorem{example}{Beispiel}[chapter]
 \theoremstyle{remark}
 \AtBeginDocument{\renewcommand*{\proofname}{Beweis}}
 \newtheorem*{remark}{Anmerkung}
@@ -424,7 +429,7 @@ decreasing demand across industries'' (S. 30, Abb. 22):
 \subsection{Was ist hier das
 Erfolgsgeheimnis?}\label{was-ist-hier-das-erfolgsgeheimnis}
 
-\begin{tcolorbox}[enhanced jigsaw, opacityback=0, arc=.35mm, left=2mm, colframe=quarto-callout-important-color-frame, toptitle=1mm, colback=white, toprule=.15mm, bottomrule=.15mm, colbacktitle=quarto-callout-important-color!10!white, bottomtitle=1mm, coltitle=black, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, rightrule=.15mm, breakable, leftrule=.75mm, opacitybacktitle=0.6]
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-important-color!10!white, left=2mm, colframe=quarto-callout-important-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
 
 \emph{Dran bleiben} ist der Schlüssel zum Erfolg. Üben Sie regelmäßig.
 Geben Sie bei Schwierigkeiten nicht auf.
@@ -588,258 +593,346 @@ Dieses Dokument wurde erzeugt am/um: 2024-08-29 09:33:27.
 
 \part{Modellieren}
 
-\chapter{Modellgüte}\label{modellguxfcte}
+\chapter{Geradenmodelle 2}\label{geradenmodelle-2}
 
 \section{Lernsteuerung}\label{lernsteuerung}
 
 \subsection{Standort im Lernpfad}\label{standort-im-lernpfad}
 
-Abbildung~\ref{fig-ueberblick} zeigt den Standort dieses Kapitels im
-Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels
-im Kontext aller Kapitel.
+Abb. Abbildung~\ref{fig-ueberblick} zeigt den Standort dieses Kapitels
+im Lernpfad und gibt damit einen Überblick über das Thema dieses
+Kapitels im Kontext aller Kapitel.
 
 \subsection{Lernziele}\label{lernziele-1}
 
 \begin{itemize}
 \tightlist
 \item
-  Sie kennen gängige Maße der Streuung einer Stichprobe und können diese
-  definieren und mit Beispielen erläutern.
+  Sie können Regressionsmodelle für Forschungsfragen mit binärer,
+  nominaler und metrischer UV erläutern und in R anwenden.
 \item
-  Sie können gängige Maße der Streuung einer Stichprobe mit R berechnen.
+  Sie können Interaktionseffekte in Regressionsmodellen erläutern und in
+  R anwenden.
 \item
-  Sie können die Bedeutung von Streuung für die Güte eines Modells
-  erläutern.
+  Sie können den Anwendungszweck von Zentrieren und z-Transformationen
+  zur besseren Interpretation von Regressionsmodellen erläutern und in R
+  anwenden.
+\item
+  Sie können Modelle nutzen, um Vorhersagen anhand neuer Daten zu
+  erstellen.
 \end{itemize}
 
 \subsection{Benötigte R-Pakete}\label{benuxf6tigte-r-pakete}
 
-In diesem Kapitel benötigen Sie folgende R-Pakete.
-
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(yardstick)  }\CommentTok{\# für Modellgüte im Test{-}Sample}
 \FunctionTok{library}\NormalTok{(easystats)}
-\FunctionTok{library}\NormalTok{(DataExplorer)}
+\FunctionTok{library}\NormalTok{(ggpubr)  }\CommentTok{\# Daten visualisieren}
+\FunctionTok{library}\NormalTok{(openintro)  }\CommentTok{\# dataset mariokart}
 \end{Highlighting}
 \end{Shaded}
 
+\[
+\definecolor{ycol}{RGB}{230,159,0}
+\definecolor{modelcol}{RGB}{86,180,233}
+\definecolor{errorcol}{RGB}{0,158,115}
+\definecolor{beta0col}{RGB}{213,94,0}
+\definecolor{beta1col}{RGB}{0,114,178}
+\definecolor{xcol}{RGB}{204,121,167}
+\]
+
 \subsection{Benötigte Daten}\label{benuxf6tigte-daten}
+
+\textbf{?@lst-mario-path} definiert den Pfad zum Datensatz
+\texttt{mariokart} und importiert die zugehörige CSV-Datei in R, so dass
+wir einen Tibble mit Namen \texttt{mariokart} erhalten.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{mariokart\_path }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}
   \StringTok{"https://vincentarelbundock.github.io/Rdatasets/"}\NormalTok{,}
   \StringTok{"csv/openintro/mariokart.csv"}\NormalTok{)}
-
 \NormalTok{mariokart }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(mariokart\_path)}
+
+\NormalTok{wetter\_path }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{( }\StringTok{"https://raw.githubusercontent.com/sebastiansauer/"}\NormalTok{,}
+\StringTok{"Lehre/main/data/wetter{-}dwd/precip\_temp\_DWD.csv"}\NormalTok{)}
+\NormalTok{wetter }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(wetter\_path)}
 \end{Highlighting}
 \end{Shaded}
 
-\subsection{Zum Einstieg}\label{zum-einstieg}
+Die Wetterdaten stammen vom
+\href{https://opendata.dwd.de/}{DWD}.\footnote{Lizenzhinweis:
+  Datenbasis: Deutscher Wetterdienst, eigene Elemente ergänzt.}
 
-\begin{exercise}[Freiwillige
-vor!]\protect\hypertarget{exr-streuung-erkennen}{}\label{exr-streuung-erkennen}
+\section{Forschungsbezug: Gläserne
+Kunden}\label{forschungsbezug-gluxe4serne-kunden}
 
-Für diese kleine Live-Demonstration brauchen wir einige Freiwillige. Die
-Lehrkraft teilt die Freiwilligen in zwei Gruppen, Gruppe
-\emph{Gleich-Groß} und Gruppe \emph{Verschieden-Groß}. Erkennen Sie,
-dass die \emph{Unterschiedlichkeit} der Größe in Gruppe
-\emph{Gleich-Groß} gering ist, aber in Gruppe \emph{Verschieden-Groß}
-hoch? \(\square\)
+Lineare Modelle\footnote{synonym: Regressionsanalysen} sind ein altes,
+aber mächtiges Werkzeug. Sie gehören immernoch zum Standard-Repertoire
+moderner Analystis.
 
-\end{exercise}
+\begin{example}[Wie gut kann man Ihre Persönlchkeit auf Basis des
+Facebook-Profils
+vorhersagen?]\protect\hypertarget{exm-kosinski}{}\label{exm-kosinski}
 
-\section{Warum Sie die Streuung Ihrer Daten kennen
-sollten}\label{warum-sie-die-streuung-ihrer-daten-kennen-sollten}
-
-\subsection{Die Schlankheitspille von
-Prof.~Weiss-Ois}\label{sec-weiss-ois}
-
-Prof.~Weiss-Ois hat eine Erfindung gemacht, eine Schlankheitspille
-\ldots{}
-
-\subsubsection{Was er sagt}\label{was-er-sagt}
-
-\begin{figure}[H]
-
-{\centering \includegraphics[width=0.25\textwidth,height=\textheight]{img/teacher.png}
-
-}
-
-\caption{``Ich habe eine Schlankheitspille entwickelt, die pro Einnahme
-das Gewicht im Schnitt um 1kg reduziert!''}
-
-\end{figure}%
-
-\subsubsection{Was er NICHT sagt}\label{was-er-nicht-sagt}
-
-\begin{figure}[H]
-
-{\centering \includegraphics[width=0.25\textwidth,height=\textheight]{img/teacher.png}
-
-}
-
-\caption{``Allerdings streuten die Werte der Gewichtsveränderung um 10kg
-um den Mittelwert herum.''}
-
-\end{figure}%
-
-\href{https://www.flaticon.com/free-icons/professor}{Icon unter Flaticon
-licence, Autor: iconixar}
-
-Würden Sie die Pille von Prof.~I. Ch. Weiss-Ois nehmen?\footnote{Ich auf
-  keinen Fall.}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi})}
-\tightlist
-\item
-  ja
-\item
-  nein
-\item
-  Nur wenn ich 100 Euro bekomme
-\item
-  Okay, für 1000 Euro\(\square\)
-\end{enumerate}
-
-\begin{tcolorbox}[enhanced jigsaw, opacityback=0, arc=.35mm, left=2mm, colframe=quarto-callout-important-color-frame, toptitle=1mm, colback=white, toprule=.15mm, bottomrule=.15mm, colbacktitle=quarto-callout-important-color!10!white, bottomtitle=1mm, coltitle=black, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, rightrule=.15mm, breakable, leftrule=.75mm, opacitybacktitle=0.6]
-
-Wie sehr die Werte eines Modells streuen, ist eine wichtige
-Information.\(\square\)
-
-\end{tcolorbox}
-
-\subsection{Wie man seine Kuh über den Fluss
-bringt}\label{wie-man-seine-kuh-uxfcber-den-fluss-bringt}
-
-Treffen sich zwei Bauern, Fritz Furchenzieher und Karla Kartoffelsack.
-Fritz will mit seiner Kuh einen Fluss überqueren, nur kann die Kuh nicht
-schwimmen\footnote{ob es Fritz kann, ist nicht überliefert.}.
+In einer Studie mit viel Medienresonanz untersuchten
+(\textbf{Kosinski2013?}), wie gut Persönlichkeitszüge durch
+Facebook-Daten (Likes etc.) vorhergesagt werden können. Die Autoren
+resümieren:
 
 \begin{quote}
-{\emoji{man-farmer}} (Fritz): Sag mal, Karla, ist der Fluss tief?
+We show that easily accessible digital records of behavior, Facebook
+Likes, can be used to automatically and accurately predict a range of
+highly sensitive personal attributes including: sexual orientation,
+ethnicity, religious and political views, personality traits,
+intelligence, happiness, use of addictive substances, parental
+separation, age, and gender.
 \end{quote}
 
-\begin{quote}
-{\emoji{woman-farmer}}(Karla): Nö, im Schnitt nur einen Meter.
-\end{quote}
+Die Autoren berichten über hohe Modellgüte (\(r\)) zwischen den
+tatsächlichen persönlichen Attributen und den vorhergesagten Werten
+Ihres Modells, s. Abbildung~\ref{fig-pnas1}. Das eingesetzte
+statistische Modell beruht auf einem linearen Modell, also ähnlich zu
+dem in diesem Kapitel vorgestellten Methoden.
 
-Also führt Fritz seine Kuh durch den Fluss, leider kam die Kuh nicht am
-anderen Ufer an, im Floß ersoffen, s. Abbildung~\ref{fig-fluss-tief}.
-
-\begin{figure}
-
-\centering{
-
-\includegraphics{img/fluss-tief.png}
-
-}
-
-\caption{\label{fig-fluss-tief}Der Fluss ist im Schnitt nur einen Meter
-tief, trotzdem ist die Kuh ersoffen.}
-
-\end{figure}%
-
-\begin{quote}
-{\emoji{woman-farmer}}(Karla): Übrigens, Lagemaße sagen nicht alles,
-Fritz.
-\end{quote}
-
-\begin{quote}
-{\emoji{man-farmer}}: Läuft die Kuh durch den Fluss, kann sie schwimmen
-oder 's ist Schluss.
-\end{quote}
-
-\begin{tcolorbox}[enhanced jigsaw, opacityback=0, arc=.35mm, left=2mm, colframe=quarto-callout-important-color-frame, toptitle=1mm, colback=white, toprule=.15mm, bottomrule=.15mm, colbacktitle=quarto-callout-important-color!10!white, bottomtitle=1mm, coltitle=black, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, rightrule=.15mm, breakable, leftrule=.75mm, opacitybacktitle=0.6]
-
-Die Streuung ihrer Daten zu kennen ist eine wesentliche Information.
-\(\square\)
-
-\end{tcolorbox}
-
-\section{Woran erkennt man ein gutes
-Modell?}\label{woran-erkennt-man-ein-gutes-modell}
-
-Abbildung~\ref{fig-streuung} zeigt ein einfaches Modell (Mittelwert) mit
-wenig Streuung (links) vs.~ein einfaches Modell mit viel Streuung
-(rechts). Links ist die Streuung der Schlankheitspille
-\emph{Dicktableitin} und rechts von der Schlankheitspille
-\emph{Pfundafliptan} abgetragen.
-
-\begin{figure}
-
-\centering{
-
-\includegraphics{060-modellguete_files/figure-pdf/fig-streuung-1.pdf}
-
-}
-
-\caption{\label{fig-streuung}Ein Modell mit wenig Streuung (links)
-vs.~ein Modell mit viel Streuung (rechts). Die vertikalen grauen Balken
-kennzeichnen den (absoluten) Abstand von jeweils einem Datenpunkt zum
-Mittelwert (horizontale orange Linie). Je länger die `Abstandsbalken',
-desto größer die Streuung.}
-
-\end{figure}%
-
-Bei einem Modell mit \emph{wenig} Streuung liegen die tatsächlichen,
-beobachtete Werte (\(y\)) nah an den Modellwerten (vorhergesagten
-Werten, \(\hat{y}\)); die Abweichungen \(e = y - \hat{y}\) sind also
-gering (der Modellfehler ist klein). Bei einem Modell mit \emph{viel}
-Streuung ist der Modellfehler \(e\) (im Vergleich dazu) groß.
-
-\begin{example}[Daten zur Schlankheitskur von
-Prof.~Weiss-Ois]\protect\hypertarget{exm-weiss-ois}{}\label{exm-weiss-ois}
-
-In Abbildung~\ref{fig-streuung} sind die Daten zu der
-Gewichtsveränderung nach Einnahme von ``Schlankheitspillen'' zweier
-verschiedener Präparate. Wie man sieht unterscheidet sich die typische
-(vorhergesagte) Gewichtsveränderung zwischen den beiden Präparaten kaum.
-Die Streuung allerdings schon. Links sieht man die Gewichtsveränderungen
-nach Einnahme des Präparats ``Dickableibtin extra mild'' (c) und rechts
-das Präparat von Prof.~Weiss-Ois ``Pfundafliptan Forte''. Welches
-Präparat würden Sie lieber einnehmen?\(\square\)
+Neben der analytischen Stärke der Regressionsanalyse zeigt das Beispiel
+auch, wie gläsern Konsument:innen im Internet sind.\(\square\)
 
 \end{example}
 
-\begin{tcolorbox}[enhanced jigsaw, opacityback=0, arc=.35mm, left=2mm, colframe=quarto-callout-important-color-frame, toptitle=1mm, colback=white, toprule=.15mm, bottomrule=.15mm, colbacktitle=quarto-callout-important-color!10!white, bottomtitle=1mm, coltitle=black, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, rightrule=.15mm, breakable, leftrule=.75mm, opacitybacktitle=0.6]
+\begin{figure}
 
-Wir wollen ein präzises Modell, also kurze Fehlerbalken: Das Modell soll
-die Daten gut erklären, also wenig vom tatsächlichen Wert abweichen.
-Jedes Modell sollte Informationen über die Präzision des Modellwerts
-bzw. der Modellwerte (Vorhersagen) angeben. Ein Modell ohne Angaben der
-Modellgüte, d.h. der Präzision der Schätzung des Modellwerts, ist wenig
-nütze.\(\square\)
+\centering{
+
+\includegraphics[width=0.33\textwidth,height=\textheight]{img/pnas.kosinski.1218772110fig03.jpeg}
+
+}
+
+\caption{\label{fig-pnas1}Prediction accuracy of regression for numeric
+attributes and traits expressed by the Pearson correlation coefficient
+between predicted and actual attribute values}
+
+\end{figure}%
+
+\section{Wetter in Deutschland}\label{wetter-in-deutschland}
+
+\begin{example}[Wetterdaten]\protect\hypertarget{exm-wetterdaten}{}\label{exm-wetterdaten}
+
+Nachdem Sie einige Zeit als Datenanalyst bei dem Online-Auktionshaus
+gearbeitet haben, stand Ihnen der Sinn nach ewtas Abwechslung. Viel Geld
+verdienen und Ruhm und Anerkennung sind ja schon ganz nett, aber dann
+fiel Ihnen ein, dass Sie ja zu Generation Z gehören, und daher den
+schnöden Mammon nicht so hoch schätzen sollten. Sie entschließen sich,
+Ihre hochgeschätzten Analyse-Skills für etwas einzusetzen, das Ihnen
+sinnvoll erscheint: Die Analyse des Klimawandels.
+
+Beim \href{https://www.dwd.de/DE/Home/home_node.html}{Deutschen
+Wetterdienst, DWD} haben Sie sich Wetterdaten von Deutschland
+heruntergeladen. Nach etwas
+\href{https://data-se.netlify.app/2022/07/24/preparing-german-weather-data/}{Datenjudo,
+auf das wir hier nicht eingehen wollen} resultiert ein schöner
+Datensatz, den Sie jetzt analysieren wollen\footnote{Temperatur: Grad
+  Celcius, Niederschlag (\texttt{precip}) mm Niederschlag pro
+  Quadratmeter}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wetter\_path }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}
+  \StringTok{"https://raw.githubusercontent.com/sebastiansauer/"}\NormalTok{,}
+  \StringTok{"Lehre/main/data/wetter{-}dwd/precip\_temp\_DWD.csv"}\NormalTok{)}
+
+\NormalTok{wetter }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(wetter\_path)}
+\end{Highlighting}
+\end{Shaded}
+
+Ein \emph{Data-Dictionary} für den Datensatz können Sie
+\href{https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/wetter-dwd-data-dict.md}{hier}
+herunterladen.\footnote{\url{https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/wetter-dwd-data-dict.md}}
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colframe=quarto-callout-note-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Ein \emph{Data-Dictionary} (Codebook) erklärt einen Datensatz. Oft
+bedeutet das, das für jede Spalte der Datentabelle erklärt wird, was die
+Spalte bedeutet.\(\square\)
 
 \end{tcolorbox}
 
+Hervorragend! An die Arbeit!
+
+\end{example}
+
+\subsection{metrische UV}\label{metrische-uv}
+
+\subsubsection{Modell Wetter1}\label{modell-wetter1}
+
+Sie stellen sich nun folgende Forschungsfrage:
+
 \begin{quote}
-{\emoji{student}} Ich frage mich, ob man so ein Modell nicht verbessern
-kann?
+{\emoji{teacher}} Um wieviel ist die Temperatur in Deutschland pro Jahr
+gestiegen, wenn man die letzten ca. 100 Jahre betrachtet?
+\end{quote}
+
+Die Modellparameter von \texttt{lm\_wetter1} sind in
+Tabelle~\ref{tbl-lm-wetter1} zu sehen.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm\_wetter1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(temp }\SpecialCharTok{\textasciitilde{}}\NormalTok{ year, }\AttributeTok{data =}\NormalTok{ wetter)}
+\FunctionTok{parameters}\NormalTok{(lm\_wetter1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1690}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1831}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1408}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2535}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1408}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1127}}@{}}
+
+\caption{\label{tbl-lm-wetter1}Modellparameter von lm\_wetter1}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Parameter
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Coefficient
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+SE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+95\% CI
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+t(28864)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+p
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+(Intercept) & -14.25 & 1.85 & (-17.87, -10.63) & -7.71 & \textless{}
+.001 \\
+year & 0.01 & 9.47e-04 & (9.80e-03, 0.01) & 12.30 & \textless{} .001 \\
+
+\end{longtable}
+
+Laut Ihrem Modell wurde es pro Jahr um 0.01 Grad wärmer, pro Jahrzehnt
+also 0.1 und pro Jahrhundert 1 Grad.
+
+\begin{quote}
+{\emoji{student}} Das ist sicherlich nicht linear! Vermutlich ist die
+Temperatur bis 1950 konstant geblieben und jetzt knallt sie durch die
+Decke!
 \end{quote}
 
 \begin{quote}
-{\emoji{teacher}} Die Frage ist, was wir mit ``verbessern'' meinen?
+{\emoji{teacher}} Mit der Ruhe, das schauen Sie sich später an.
 \end{quote}
 
-\begin{quote}
-{\emoji{student}} Naja, kürzere Fehlerbalken, ist doch klar!
-\end{quote}
+\subsubsection{Punkt-
+vs.~Bereichsschätzung}\label{punkt--vs.-bereichsschuxe4tzung}
 
-Da die Anzahl der Lenkräder mit dem Verkaufsgebot zusammenhängt, könnte
-es vielleicht sein, dass wir die Lenkräder-Anzahl da irgendwie nutzen
-könnten. Das sollten wir ausprobieren.
+In tbl-lm-wetter1 finden sich zwei Arten von Information für den Wert
+des Achsenabschnitts (b0) und des Regressionsgewichts von
+\texttt{year}(b1):
 
-Abbildung~\ref{fig-fehler-red} zeigt, dass die Fehlerbalken
-\emph{kürzer} werden, wenn wir ein (sinnvolles) komplexeres Modell
-finden. Innerhalb jeder der beiden Gruppen (mit 2 Lenkrädern vs.~mit 0
-Lenkrädern) sind die Fehlerbalken jeweils im Durchschnitt kürzer
-(rechtes Teildiagramm) als im Modell ohne Gruppierung (linkes
-Teildiagramm).\footnote{Aus Gründen der Übersichtlichkeit wurden nur
-  Autos mit Verkaufsgebot von weniger als 100 Euros berücksichtigt und
-  nur Spiele mit 0 oder mit 2 Lenkrädern.}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \emph{Punktschätzungen} In der Spalte \texttt{Coefficient} sehen Sie
+  den ``Best-Guess'' für den entsprechenden Koeffizienten in der
+  Population. Das is sozusagen der Wert für den sich das Modell
+  festlegen würde, wenn es sonst nichts sagen dürfte.
+\item
+  \emph{Bereichschätzungen} Cleverer als Punktschätzungen sind
+  Bereichsschätzungen (Intervallschätzungen): Hier wird ein Bereich
+  plausibler Werte für den entsprechenden Wert angegeben. Der ``Bereich
+  plausibler Werte'' wird auch als Konfidenzintervall (engl. confidence
+  intervall, CI) bezeichnet. Entsprechend gibt \texttt{CI\_low} die
+  Untergrenze des Bereichs plausibler Werte und \texttt{CI\_high} die
+  Obergrenze aus. So können wir ablesen, dass das Regressionsgewicht von
+  \texttt{year} irgendwo zwischen praktisch Null (0.009) und ca. 0.01
+  Grad geschätzt wird.
+\end{enumerate}
+
+💡 Merke: Je schmaler das Konfidenzintervall, desto genauer wird der
+Effekt geschätzt.
+
+\subsubsection{Modell Wetter1a}\label{modell-wetter1a}
+
+Das Modell \texttt{lm\_wetter1}, bzw. die Schätzungen zu den erwarteten
+Werten, kann mich sich so ausgeben lassen, s.
+Abbildung~\ref{fig-wetter1}, links. Allerdings sind das zu viele
+Datenpunkte. Wir sollten es vielleicht anders visualisieren, s.
+Abbildung~\ref{fig-wetter1}, rechts. Dazu aggregieren wir die Messwerte
+eines Jahres zu jeweils einem Mittelwert.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wetter\_summ }\OtherTok{\textless{}{-}}
+\NormalTok{  wetter }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(year) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{temp =} \FunctionTok{mean}\NormalTok{(temp),}
+            \AttributeTok{precip =} \FunctionTok{mean}\NormalTok{(precip))  }\CommentTok{\# precipitation: engl. für Niederschlag}
+\end{Highlighting}
+\end{Shaded}
+
+Auf dieser Basis erstellen wir ein neues lineares Modell, s.
+Tabelle~\ref{tbl-lm-wetter1a}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm\_wetter1a }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(temp }\SpecialCharTok{\textasciitilde{}}\NormalTok{ year, }\AttributeTok{data =}\NormalTok{ wetter\_summ)}
+\FunctionTok{parameters}\NormalTok{(lm\_wetter1a)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1739}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1884}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1449}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2609}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1159}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1159}}@{}}
+
+\caption{\label{tbl-lm-wetter1a}Modellparameter von lm\_wetter1a}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Parameter
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Coefficient
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+SE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+95\% CI
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+t(140)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+p
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+(Intercept) & -14.14 & 2.70 & (-19.48, -8.79) & -5.23 & \textless{}
+.001 \\
+year & 0.01 & 1.38e-03 & (8.86e-03, 0.01) & 8.38 & \textless{} .001 \\
+
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{estimate\_relation}\NormalTok{(lm\_wetter1)) }
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{estimate\_relation}\NormalTok{(lm\_wetter1a))}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{figure}
 
@@ -847,12 +940,12 @@ Teildiagramm).\footnote{Aus Gründen der Übersichtlichkeit wurden nur
 
 \centering{
 
-\includegraphics{060-modellguete_files/figure-pdf/fig-fehler-red-1.pdf}
+\includegraphics{090-regression2_files/figure-pdf/fig-wetter1-1.pdf}
 
 }
 
-\subcaption{\label{fig-fehler-red-1}Fehlerbalken im einfachen Modell:
-Ein Mittelwert; viel Streuung insgesamt}
+\subcaption{\label{fig-wetter1-1}Jeder Punkt ist ein Tag (viel
+Overplotting, wenig nützlich)}
 
 \end{minipage}%
 %
@@ -860,356 +953,1161 @@ Ein Mittelwert; viel Streuung insgesamt}
 
 \centering{
 
-\includegraphics{060-modellguete_files/figure-pdf/fig-fehler-red-2.pdf}
+\includegraphics{090-regression2_files/figure-pdf/fig-wetter1-2.pdf}
 
 }
 
-\subcaption{\label{fig-fehler-red-2}Fehlerbalken im komplexen Modell:
-Zwei Mittelwerte; weniger Streuung in jeder Gruppe. Das erkennt man
-daran, dass die vertikalen, grauen Abstandsbalken im Schnitt kürzer sind
-als im einfachen Modell (links)}
+\subcaption{\label{fig-wetter1-2}Jeder Punkt ist ein Jahr
+(wetter\_summ)}
 
 \end{minipage}%
 
-\caption{\label{fig-fehler-red}Fehlerbalken in einem einfachen und
-komplexeren Modell}
+\caption{\label{fig-wetter1}Die Veränderung der mittleren Temperatur in
+Deutschland im Zeitverlauf (Datenquelle: DWD)}
 
 \end{figure}%
 
-\begin{tcolorbox}[enhanced jigsaw, opacityback=0, arc=.35mm, left=2mm, colframe=quarto-callout-important-color-frame, toptitle=1mm, colback=white, toprule=.15mm, bottomrule=.15mm, colbacktitle=quarto-callout-important-color!10!white, bottomtitle=1mm, coltitle=black, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, rightrule=.15mm, breakable, leftrule=.75mm, opacitybacktitle=0.6]
+\begin{quote}
+{\emoji{student}} Moment mal, der Achsenabschnitt liegt bei -15 Grad!
+Was soll das bitte bedeuten?
+\end{quote}
 
-Durch sinnvolle, komplexere Modelle sinkt die Fehlerstreuung eines
-Modells.\(\square\)
+\subsection{UV zentrieren}\label{uv-zentrieren}
+
+Zur Erinnerung: Der Achsenabschnitt (\(\beta_0\); engl.
+\emph{intercept}) ist definiert als der Y-Wert an der Stelle X=0, s.
+\textbf{?@sec-interpret-reg-mod}.
+
+In den Wetterdaten wäre Jahr=0 Christi Geburt. Da unsere
+Wetteraufzeichnung gerade mal ca. 150 Jahre in die Vergangenheit reicht,
+ist es vollkommen vermessen, dass Modell 2000 Jahre in die Vergangenheit
+zu extraplieren, ganz ohne dass wir dafür Daten haben, s.
+Abbildung~\ref{fig-extrapolation}.
+
+\begin{figure}
+
+\centering{
+
+\includegraphics{img/extrapolating.png}
+
+}
+
+\caption{\label{fig-extrapolation}Du sollst nicht ein Modell weit
+außerhalb seines Datenbereichs extrapolieren}
+
+\end{figure}%
+
+Sinnvoller ist es da, z.B. einen \emph{Referenzwert} festzulegen, etwa
+1950. Wenn wir dann von allen Jahren 1950 abziehen, wird das Jahr 1950
+zum neuen Jahr Null. Damit bezöge sich der Achsenabschnitt auf das Jahr
+1950, was Sinn macht, denn für dieses Jahr haben wir Daten.
+
+Hat man nicht einen bestimmten Wert, der sich als Referenzwert anbietet,
+so ist es üblich, z.B. den Mittelwert (der UV) als Referenzwert zu
+nehmen. Diese Transformation bezeichnet man als \emph{Zentrierung}
+(engl. centering) der Daten.
+
+So zentriert man eine Verteilung:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wetter }\OtherTok{\textless{}{-}}
+\NormalTok{  wetter }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{year\_c =}\NormalTok{ year }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(year))  }\CommentTok{\# "c" wie centered}
+\end{Highlighting}
+\end{Shaded}
+
+Das mittlere Jahr in unserer Messwertereihe ist übrigens 1951:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wetter }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarise}\NormalTok{(}\FunctionTok{mean}\NormalTok{(year))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}r@{}}
+\toprule\noalign{}
+mean(year) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1951.251 \\
+\end{longtable}
+
+Die Steigung (d.h. der Regressionskoeffizient für \texttt{year\_c})
+bleibt unverändert, nur der Achsenabschnitt ändert sich, s.
+Tabelle~\ref{tbl-lm_wetter1_zentriert}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm\_wetter1\_zentriert }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(temp }\SpecialCharTok{\textasciitilde{}}\NormalTok{ year\_c, }\AttributeTok{data =}\NormalTok{ wetter)}
+\FunctionTok{parameters}\NormalTok{(lm\_wetter1\_zentriert)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1690}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1831}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1408}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2535}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1408}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1127}}@{}}
+
+\caption{\label{tbl-lm_wetter1_zentriert}Modellparameter von
+lm\_wetter1\_zentriert}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Parameter
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Coefficient
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+SE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+95\% CI
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+t(28864)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+p
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+(Intercept) & 8.49 & 0.04 & (8.42, 8.57) & 219.43 & \textless{} .001 \\
+year c & 0.01 & 9.47e-04 & (9.80e-03, 0.01) & 12.30 & \textless{}
+.001 \\
+
+\end{longtable}
+
+Jetzt ist die Interpretation des Achsenabschnitts komfortabel: Im Jahr
+1951 (x=0) lag die mittlere Temperatur in Deutschland (laut DWD) bei ca.
+8.5 Grad Celcius. Die Regressionsgleichung lautet:
+\texttt{temp\_pred\ =\ 8.49\ +\ 0.01*year\_c}. In Worten: Wir sagen eine
+Temperatur vorher, die sich als Summe von 8.49 Grad plus 0.01 mal das
+Jahr (in zentrierter Form) berechnet.
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Referenzwert entspricht Null}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-important-color!10!white, left=2mm, colframe=quarto-callout-important-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Der Referenzwert bzw. der Wert der Referenzgruppe entspricht dem Y-Wert
+bei x=0 im Regressionsmodell.\(\square\)
 
 \end{tcolorbox}
 
-\section{Streuungsmaße}\label{sec-streuung}
+Wie gut erklärt unser Modell die Daten?
 
-\begin{definition}[Streuungsmaße]\protect\hypertarget{def-streuungsmaße}{}\label{def-streuungsmaße}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{r2}\NormalTok{(lm\_wetter1\_zentriert)  }\CommentTok{\# aus \textasciigrave{}\{easystats\}\textasciigrave{}}
+\DocumentationTok{\#\# \# R2 for Linear Regression}
+\DocumentationTok{\#\#        R2: 0.005}
+\DocumentationTok{\#\#   adj. R2: 0.005}
+\end{Highlighting}
+\end{Shaded}
 
-Ein Streuungsmaß quantifiziert die Variabilität eines Merkmals.
+Viel Varianz des Wetters erklärt das Modell mit
+\texttt{year\_c}\footnote{\texttt{year} und \texttt{year\_c} sind gleich
+  stark mit \texttt{temp} korreliert, daher wird sich die Modellgüte
+  nicht unterscheiden.} aber nicht. Macht auch Sinn: Abgesehen von der
+Jahreszahl spielt z.B. die Jahreszeit eine große Rolle für die
+Temperatur. Das haben wir nicht berücksichtigt.
+
+\begin{quote}
+{\emoji{student}} Wie warm ist es laut unserem Modell dann im Jahr 2051?
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{predict}\NormalTok{(lm\_wetter1\_zentriert, }\AttributeTok{newdata =} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{year\_c =} \DecValTok{100}\NormalTok{))}
+\DocumentationTok{\#\#       1 }
+\DocumentationTok{\#\# 9.65775}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{quote}
+{\emoji{student}} Moment! Die Vorhersage ist doch Quatsch! Schon im Jahr
+2022 lag die Durchschnittstemperatur bei 10,5° Celcius.\footnote{\href{https://www.umweltbundesamt.de/daten/klima/trends-der-lufttemperatur\#steigende-durchschnittstemperaturen-weltweit}{Quelle:
+  Umweltbundesamt}}
+\end{quote}
+
+\begin{quote}
+{\emoji{teacher}} Wir brauchen ein besseres Modell! Zum Glück haben wir
+ambitionierte Nachwuchs-Wissenschaftler:innen.
+\end{quote}
+
+\subsection{Binäre UV}\label{binuxe4re-uv}
+
+\begin{definition}[Binäre
+Variable]\protect\hypertarget{def-binvar}{}\label{def-binvar}
+
+Eine \emph{binäre} UV, auch \emph{Indikatorvariable} oder
+\emph{Dummyvariable} genannt, hat nur zwei Ausprägungen: 0 und
+1.\(\square\)
+
+\end{definition}
+
+\begin{example}[Binäre
+Variablen]\protect\hypertarget{exm-bin}{}\label{exm-bin}
+
+Das sind zum Beispiel \emph{weiblich} mit den Ausprägungen \texttt{0}
+(nein) und \texttt{1} (ja) oder \emph{before\_1950} mit \texttt{1} für
+Jahre früher als 1950 und \texttt{0} ansonsten.\(\square\)
+
+\end{example}
+
+\begin{example}[]\protect\hypertarget{exm-binuv}{}\label{exm-binuv}
+
+Hier interessiert Sie folgende Forschungsfrage:
+
+\begin{quote}
+{\emoji{student}} Ob es in der zweiten Hälfte des 20. Jahrhunderts wohl
+wärmer warm, im Durchschnitt, als vorher?\(\square\)
+\end{quote}
+
+\end{example}
+
+Aber wie erstellen Sie eine Variable \texttt{after\_1950}, um die zweite
+Hälfte des 20. Jahrhunderts (und danach) zu fassen? Nach einigem
+Überlegen kommen Sie auf die Idee, das vektorisierte Rechnen von R (s.
+\textbf{?@sec-veccalc}) auszunutzen:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{year }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1940}\NormalTok{, }\DecValTok{1950}\NormalTok{, }\DecValTok{1960}\NormalTok{)}
+\NormalTok{after\_1950 }\OtherTok{\textless{}{-}}\NormalTok{ year }\SpecialCharTok{\textgreater{}} \DecValTok{1950}  \CommentTok{\# prüfe ob as Jahr größer als 1950 ist}
+\NormalTok{after\_1950}
+\DocumentationTok{\#\# [1] FALSE FALSE  TRUE}
+\end{Highlighting}
+\end{Shaded}
+
+Die ersten zwei Jahre von \texttt{year} sind nicht größer als 1950, das
+dritte schon.
+
+Ja, so könnte das klappen! Diese Syntax übertragen Sie auf Ihre
+\texttt{wetter}-Daten:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wetter }\OtherTok{\textless{}{-}}
+\NormalTok{  wetter }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{after\_1950 =}\NormalTok{ year }\SpecialCharTok{\textgreater{}} \DecValTok{1950}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(region }\SpecialCharTok{!=} \StringTok{"Deutschland"}\NormalTok{)  }\CommentTok{\# ohne Daten für Gesamt{-}Deutschland}
+\end{Highlighting}
+\end{Shaded}
+
+Scheint zu klappen!
+
+Jetzt ein lineares Modell dazu berechnen:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm\_wetter\_bin\_uv }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(temp }\SpecialCharTok{\textasciitilde{}}\NormalTok{ after\_1950, }\AttributeTok{data =}\NormalTok{ wetter)}
+\end{Highlighting}
+\end{Shaded}
+
+Die Parameter des Modells lassen darauf schließen, dass es tatsächlich
+wärmer war nach 1950, und zwar im Schnitt offenbar ein gutes halbes
+Grad, s. Abbildung~\ref{fig-wetter2}.
+
+\begin{figure}
+
+\begin{minipage}{0.50\linewidth}
+
+\includegraphics{img/fig-lm-wetter-bin-uv.png}
+
+\subcaption{\label{}Der Schätzbereich für den Parameter reicht von ca.
+0.5 bis 0.8 Grad Unterschied}
+\end{minipage}%
+%
+\begin{minipage}{0.50\linewidth}
+
+\includegraphics{img/fig-temp-after1950.png}
+
+\subcaption{\label{}Wie man sieht, überlappen die Temperaturen dennoch
+beträchtlich; aufgrund des starken Overplotting ist dieses Diagramm
+alles andere als ideal}
+\end{minipage}%
+
+\caption{\label{fig-wetter2}Modell
+\texttt{temp\ \textasciitilde{}\ after\_1950}}
+
+\end{figure}%
+
+Leider zeigt ein Blick zum \texttt{r2}, dass die Vorhersagegüte des
+Modells zu wünschen übrig lässt\footnote{\texttt{r2(lm\_wetter\_bin\_uv)}}.
 \(\square\)
 
-\end{definition}
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Lineare Modelle verkraften nur metrische Variablen}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-important-color!10!white, left=2mm, colframe=quarto-callout-important-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
 
-Ein einfaches Streuungsmaß ist der \emph{Range}, definiert als Abstand
-von größtem und kleinsten Wert eines Merkmals. Dieses Mermals ist aber
-nicht robust (gegenüber Extremwerten) und sollte daher nur mit
-Einschränkung verwendet werden.
+Um die Koeffizienten eines linearen Modells auszurechnen, benötigt man
+eine metrische X- und eine metrische Y-Variable. Hier haben wir aber
+keine richtige metrische X-Variable\footnotemark{}, sondern eine
+\emph{logische} Variable mit den Werten \texttt{TRUE} und
+\texttt{FALSE}.\(\square\)
 
-\subsection{Der mittlere
-Abweichungsbalken}\label{der-mittlere-abweichungsbalken}
+\end{tcolorbox}
+
+\footnotetext{UV}
+
+Um die X-Variable in eine metrische Variable umzuwandeln, gibt es einen
+einfachen Trick, den R für uns ohne viel Ankündigung durchführt:
+Umwandling in mehrere binäre Variablen.
+
+Hat ein nominaler Prädiktor zwei Stufen, so überführt\footnote{synonym:
+  transformiert} \texttt{lm()} diese Variable in eine binäre Variable.
+Da eine binäre Variable metrisch ist, kann die Regression in gewohnter
+Weise durchgeführt werden. Wenn Sie die Ausgabe der Parameter
+betrachten, so sehen Sie die neu erstellte binäre Variable. Man beachte,
+dass der ursprüngliche Datensatz nicht geändert wird, nur während der
+Analyse von \texttt{lm} wird die Umwandlung der Variable \footnote{Transformation}
+durchgeführt.
 
 \begin{quote}
-{\emoji{student}} Wir müssen jetzt mal präziser werden! Wie können wir
-die Streuung berechnen?
+{\emoji{robot}} Eine \texttt{1} kannst du als ``Ja! Richtig!'' verstehen
+und eine\texttt{0} als ``Nein! Falsch!''
 \end{quote}
 
-\begin{quote}
-{\emoji{teacher}} Gute Frage! Am einfachsten ist es, wenn wir die
-mittlere Länge eines Abweichungsbalkens ausrechnen.
-\end{quote}
+\texttt{after\_1950} wird in eine Indikatorvariable umgewandelt:
 
-Legen wir (gedanklich) alle Abweichungsbalken \(e\) aneinander und
-teilen durch die Anzahl \(n\) der Balken, so erhalten wir wir den
-``mittleren Abweichungsbalken'', den wir mit \(\varnothing e\)
-bezeichnen könnten. Diesen Kennwert bezeichnet man als \emph{Mean
-Absolute Error} (MAE) bzw. als \emph{Mittlere Absolutabweichung} (MAA).
-Er ist so definiert, s. Gleichung~\ref{eq-mae}.
+\begin{figure}
 
-\begin{equation}\phantomsection\label{eq-mae}{{\displaystyle \mathrm {MAE} ={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}.}}\end{equation}
+\begin{minipage}{0.40\linewidth}
 
-\begin{definition}[Mittlere
-Absolutabweichung]\protect\hypertarget{def-mae}{}\label{def-mae}
+\begin{longtable}[]{@{}rl@{}}
+\toprule\noalign{}
+id & after\_1950 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & TRUE \\
+2 & FALSE \\
+\end{longtable}
 
-Die Mittlere Absolutabweichung (MAA, MAE) ist definiert als die Summe
-der Absolutwerte der Differenzen eines Messwerts zum Mittelwert, geteilt
-durch die Anzahl der Messwerte.\footnote{Wenn man solche Sätze liest,
-  fühlt sich die Formel fast einfacher an.}\(\square\)
+\end{minipage}%
+%
+\begin{minipage}{0.20\linewidth}
+\(\qquad \rightarrow\)\end{minipage}%
+%
+\begin{minipage}{0.40\linewidth}
 
-\end{definition}
+\begin{longtable}[]{@{}rr@{}}
+\toprule\noalign{}
+id & after\_1950TRUE \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & 1 \\
+2 & 0 \\
+\end{longtable}
 
-\begin{example}[]\protect\hypertarget{exm-mae}{}\label{exm-mae}
+\end{minipage}%
 
-Abbildung~\ref{fig-mae} visualisiert ein einfaches Beispiel zum MAE.
-Rechnen wir den MAE für das Beispiel von Abbildung~\ref{fig-mae} aus:
+\end{figure}%
 
-\(MAE = \frac{1 + |- 3| + 1 + 1}{4} = 6/4 = 1.5\)
+\begin{example}[Beispiel: `Geschlecht' in eine binäre Variable
+umwandeln.]\protect\hypertarget{exm-bin-trans}{}\label{exm-bin-trans}
+
+Angenommen wir haben eine Variable \texttt{geschlecht} mit den zwei
+Stufen \texttt{Frau} und \texttt{Mann} und wollen diese in eine
+Indikatorvariable umwandeln. Da ``Frau'' alphabetisch vor ``Mann''
+kommt, nimmt R ``Frau'' als \emph{erste} Stufe bzw. als
+\emph{Referenzgruppe}. ``Mann'' ist dann die zweite Stufe, die in der
+Regression dann in Bezug zur Referenzgruppe gesetzt wird. \texttt{lm}
+wandelt uns diese Variable in \texttt{geschlechtMann} um mit den zwei
+Stufen \texttt{0} (kein Mann, also Frau) und \texttt{1}
+(Mann).\(\square\)
 
 \end{example}
 
 \begin{figure}
 
-\centering{
+\begin{minipage}{0.40\linewidth}
 
-\includegraphics{060-modellguete_files/figure-pdf/fig-mae-1.pdf}
+\begin{longtable}[]{@{}rl@{}}
+\toprule\noalign{}
+id & geschlecht \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & Mann \\
+2 & Frau \\
+\end{longtable}
 
-}
+\end{minipage}%
+%
+\begin{minipage}{0.20\linewidth}
+\(\qquad \rightarrow\)\end{minipage}%
+%
+\begin{minipage}{0.40\linewidth}
 
-\caption{\label{fig-mae}Abweichungsbalken und der MAE}
+\begin{longtable}[]{@{}rr@{}}
+\toprule\noalign{}
+id & geschlechtMann \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & 1 \\
+2 & 0 \\
+\end{longtable}
+
+\end{minipage}%
 
 \end{figure}%
 
-Natürlich können wir R auch die Rechenarbeit überlassen.
-
-\begin{quote}
-{\emoji{robot}} Loving it!!
-\end{quote}
-
-Schauen Sie: Den Mittelwert (s. Abbildung~\ref{fig-mae}) kann man doch
-mit Fug und Recht als ein \emph{lineares Modell}, eine Gerade,
-betrachten, oder nicht? Schließlich erklären wir \(y\) anhand einer
-Gerade (die parallel zur X-Achse ist).
-
-In R gibt es einen Befehl für ein \emph{l}ineares \emph{M}odell, er
-heißt \texttt{lm}.
-
-Die Syntax von \texttt{lm()} lautet:
-
-\texttt{lm(y\ \textasciitilde{}\ 1,\ data\ =\ meine\_daten)}.
-
-In Worten:
-
-\begin{quote}
-Hey R, berechne mit ein lineares Modell zur Erklärung von Y. Aber
-verwende keine andere Variable zur Erklärung von Y, sondern nimm den
-Mittelwert von Y.
-\end{quote}
+Ein lineares Modell mit binärer UV ist nichts anderes die Differenz der
+Gruppenmittelwerte zu berechnen:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{lm1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }\AttributeTok{data =}\NormalTok{ d)}
+\NormalTok{wetter }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(after\_1950) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{temp\_mean =} \FunctionTok{mean}\NormalTok{(temp))}
 \end{Highlighting}
 \end{Shaded}
 
-Den MAE können wir uns jetzt so ausgeben lassen:
+\begin{longtable}[]{@{}lr@{}}
+\toprule\noalign{}
+after\_1950 & temp\_mean \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+FALSE & 8.175287 \\
+TRUE & 8.816761 \\
+\end{longtable}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{mae}\NormalTok{(lm1)}
-\DocumentationTok{\#\# [1] 1.5}
-\end{Highlighting}
-\end{Shaded}
-
-\subsection{Der Interquartilsabstand}\label{der-interquartilsabstand}
-
-Der Interquartilsabstand (IQA; engl. inter quartile range, IQR) ist ein
-Streuungsmaß, das nicht auf dem Mittelwert aufbaut. Der IQR ist robuster
-als z.B. der MAA oder die Varianz und die Standardabweichung.
-
-\begin{definition}[Interquartilsabstand]\protect\hypertarget{def-iqr}{}\label{def-iqr}
-
-Der Interquartilsabstand ist definiert als der die (absolute) Differenz
-vom 3. Quartil und 1. Quartil.\(\square\)
-
-\end{definition}
-
-\begin{example}[IQR im
-Hörsaal]\protect\hypertarget{exm-iqr}{}\label{exm-iqr}
-
-In einem Statistikkurs betragen die Quartile der Körpergröße: Q1: 1.65m,
-Q2 (Median): 1,70m, Q3: 1.75m. Der IQR beträgt dann:
-\(IQR = Q3-Q1 = 1.75m - 1.65m = 0.10m\), d.h. 10 cm.\(\square\)
-
-\end{example}
-
-Abbildung~\ref{fig-iqr-mario} stellt den IQR (und einige Quantile) für
-den Verkaufspreise von Mariokart-Spielen dar.
+Die Interpretation eines linearen Modells mit binärer UV veranschaulicht
+Abbildung~\ref{fig-binvar}: Der Achsenabschnitt (b0) entspricht dem
+Mittelwert der 1. Gruppe. Der Mittelwert der 2. Gruppe entspricht der
+\emph{Summe} aus Achsenabschnitt und dem Koeffizienten der zweiten
+Gruppe. (Abbildung~\ref{fig-binvar} zeigt nur die Daten für den Monat
+Juli im Bundesland Bayern, der Einfachheit und Übersichtlichkeit
+halber.)
 
 \begin{figure}
 
 \centering{
 
-\subsection{Histogramm}
-
-\centering{
-
-\includegraphics{060-modellguete_files/figure-pdf/fig-mario-qs-iqr1-1.pdf}
+\includegraphics{090-regression2_files/figure-pdf/fig-binvar-1.pdf}
 
 }
 
-\subcaption{\label{fig-mario-qs-iqr1}IQR, Q1, Q2 und Q3 für das
-Schlussgebot (nur Spiele für weniger als 100 Euro)}
-
-\subsection{Dichtediagramm}
-
-\centering{
-
-\includegraphics{060-modellguete_files/figure-pdf/fig-mario-iqr2-1.pdf}
-
-}
-
-\subcaption{\label{fig-mario-iqr2}IQR, Q1, Q2 und Q3 für das
-Schlussgebot (nur Spiele für weniger als 100 Euro)}
-
-}
-
-\caption{\label{fig-iqr-mario}Der IQR für den Verkaufspreis von
-Mariokart-Spielen.}
+\caption{\label{fig-binvar}Sinnbild zur Interpretation eines linearen
+Modells mit binärer UV (reingezoomt, um den Mittelwertsunterschied
+hervorzuheben)}
 
 \end{figure}%
 
-\subsection{Streuungsmaße für
-Normalverteilungen}\label{streuungsmauxdfe-fuxfcr-normalverteilungen}
-
-Normalverteilungen sind recht häufig anzutreffen in der Praxis der
-Datenanalyse. Daher lohnt es sich, zu überlegen, wie man diese
-Verteilungen gut zusammenfasst. Man kann zeigen, dass eine
-Normalverteilung sich komplett über ihren \emph{Mittelwert} sowie ihre
-\emph{Standardabweichung} beschreiben lässt. Außerdem gilt: Sind Ihre
-Daten normalverteilt, dann sind die Abweichungen vom Mittelwert auch
-normalverteilt. Denn wenn man eine Konstante zu einer Verteilung addiert
-(bzw. subtrahiert), ``verschiebt man den Berg'' ja nur zur Seite, ohne
-seine Form zu verändern, s. Abbildung~\ref{fig-norm-dev}.
-
-\begin{tcolorbox}[enhanced jigsaw, opacityback=0, arc=.35mm, left=2mm, colframe=quarto-callout-note-color-frame, toptitle=1mm, colback=white, toprule=.15mm, bottomrule=.15mm, colbacktitle=quarto-callout-note-color!10!white, bottomtitle=1mm, coltitle=black, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, rightrule=.15mm, breakable, leftrule=.75mm, opacitybacktitle=0.6]
-
-Hat man normalverteilte Variablen/Abweichungen/Residuen, so ist die
-\emph{Standardabweichung} (engl. standard deviation, SD, \(\sigma\),
-\(s\)) eine komfortable Maßeinheit der Streuung, denn damit lässt sich
-die Streuung (Abweichung vom Mittelwert, Residuen) der Normalverteilung
-gut beschreiben.\(\square\)
-
-\end{tcolorbox}
-
-\begin{quote}
-{\emoji{student}} Aber wie berechnet man jetzt diese Standardabweichung?
-\end{quote}
-
-\begin{quote}
-{\emoji{teacher}} Moment, noch ein kurzer Exkurs zur Varianz \ldots{}
-\end{quote}
-
-\begin{quote}
-{\emoji{student}} (seufzt)
-\end{quote}
-
-\subsection{Varianz}\label{varianz}
-
-\subsubsection{Intuition}\label{intuition}
-
-\begin{tcolorbox}[enhanced jigsaw, opacityback=0, arc=.35mm, left=2mm, colframe=quarto-callout-note-color-frame, toptitle=1mm, colback=white, toprule=.15mm, bottomrule=.15mm, colbacktitle=quarto-callout-note-color!10!white, bottomtitle=1mm, coltitle=black, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, rightrule=.15mm, breakable, leftrule=.75mm, opacitybacktitle=0.6]
-
-Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist, grob
-gesagt, der typische Abstand eines Verkaufspreis vom mittleren
-Verkaufspreis.\(\square\)
-
-\end{tcolorbox}
-
-Abbildung~\ref{fig-var} illustriert die Varianz:
+Fassen wir die Interpretation der Koeffizienten für das Modell mit
+binärer UV zusammen:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Man gehe von der Häufigkeitsverteilung der Daten aus.
+  Mittelwert der 1. Gruppe (bis 1950): {Achsenabschnitt (b0)}
 \item
-  Betrachtet man die Daten als Gewichte auf einer Wippe, so ist der
-  Schwerpunkt der Wippe der Mittelwert.
-\item
-  Man bilde Quadrate für jeden Datenpunkt mit der Kantenlänge, die dem
-  Abstand des Punktes zum Mittelwert entspricht.
-\item
-  Die Quadrate quetscht man jetzt wo nötig in rechteckige Formen (ohne
-  dass sich die Fläche ändern darf) und verschiebt sie, bis sich alle
-  Formen zu einem Rechteck mit Seitenlänge \(n\) und \(\sigma^2\)
-  anordnen.
+  Mittelwert der 2. Gruppe (nach 1950): {Achsenabschnitt (b0)} +
+  {Steigung der Regressionsgeraden (b1)}
 \end{enumerate}
+
+Für die Modellwerte \(\color{modelcol}{\hat{y}}\) gilt also:
+
+\begin{itemize}
+\item
+  Temperatur laut Modell bis 1950:
+  \(\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} = 17.7\)
+\item
+  Temperatur laut Modell bis 1950:
+  \(\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} +  \color{beta1col}{\beta_1}= \color{beta0col}{17.7} + \color{beta1col}{0.6} = 18.3\)
+\end{itemize}
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colframe=quarto-callout-note-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Bei \emph{nominalen} (und auch bei \emph{binären}) Variablen ist
+\(\color{beta1col}{\beta_1}\) ein \emph{Schalter}; bei \emph{metrischen}
+Variablen ein \emph{Dimmer}.\footnotemark{} \(\square\)
+
+\end{tcolorbox}
+
+\footnotetext{Ich danke Karsten Lübke für diese Idee.}
+
+\subsection{Nominale UV}\label{nominale-uv}
+
+In diesem Abschnitt betrachten wir ein lineare Modell\footnote{für uns
+  synonym: Regressionsmodell} mit einer mehrstufigen\footnote{drei oder
+  mehr Stufen bzw. Ausprägungen} (nominalskalierten) UV.\footnote{So ein
+  Modell ist von den Ergebnissen her praktisch identisch zu einer
+  einfachen \emph{Varianzanalyse}.}
+
+\begin{example}[]\protect\hypertarget{exm-wetter2}{}\label{exm-wetter2}
+
+Ob es wohl substanzielle\footnote{wie könnte man dieses Wort eigentlich
+  definieren?} Temperaturunterschiede zwischen den Bundesländern gibt?
+
+\end{example}
+
+Befragen wir dazu ein lineares Modell, s.
+Tabelle~\ref{tbl-lm_wetter_region}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm\_wetter\_region }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(temp }\SpecialCharTok{\textasciitilde{}}\NormalTok{ region, }\AttributeTok{data =}\NormalTok{ wetter)}
+\FunctionTok{parameters}\NormalTok{(lm\_wetter\_region)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.4176}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1429}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0659}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1758}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1099}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0879}}@{}}
+
+\caption{\label{tbl-lm_wetter_region}Modellparameter für
+lm\_wetter\_region}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Parameter
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Coefficient
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+SE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+95\% CI
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+t(27152)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+p
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+(Intercept) & 8.25 & 0.16 & (7.93, 8.56) & 51.62 & \textless{} .001 \\
+region (Bayern) & -0.63 & 0.23 & (-1.07, -0.19) & -2.79 & 0.005 \\
+region (Brandenburg) & 0.57 & 0.23 & (0.13, 1.02) & 2.53 & 0.011 \\
+region (Brandenburg/Berlin) & 0.58 & 0.23 & (0.14, 1.03) & 2.59 &
+0.010 \\
+region (Hessen) & 0.11 & 0.23 & (-0.33, 0.56) & 0.51 & 0.612 \\
+region (Mecklenburg-Vorpommern) & 0.08 & 0.23 & (-0.37, 0.52) & 0.34 &
+0.732 \\
+region (Niedersachsen) & 0.52 & 0.23 & (0.07, 0.96) & 2.29 & 0.022 \\
+region (Niedersachsen/Hamburg/Bremen) & 0.52 & 0.23 & (0.08, 0.96) &
+2.31 & 0.021 \\
+region (Nordrhein-Westfalen) & 0.80 & 0.23 & (0.35, 1.24) & 3.53 &
+\textless{} .001 \\
+region (Rheinland-Pfalz) & 0.46 & 0.23 & (0.02, 0.90) & 2.03 & 0.042 \\
+region (Saarland) & 0.71 & 0.23 & (0.27, 1.16) & 3.16 & 0.002 \\
+region (Sachsen) & -0.04 & 0.23 & (-0.48, 0.40) & -0.18 & 0.853 \\
+region (Sachsen-Anhalt) & 0.55 & 0.23 & (0.11, 1.00) & 2.45 & 0.014 \\
+region (Schleswig-Holstein) & 0.17 & 0.23 & (-0.27, 0.62) & 0.76 &
+0.446 \\
+region (Thueringen) & -0.48 & 0.23 & (-0.92, -0.03) & -2.11 & 0.035 \\
+region (Thueringen/Sachsen-Anhalt) & 0.10 & 0.23 & (-0.34, 0.54) & 0.43
+& 0.664 \\
+
+\end{longtable}
+
+Hat die nominalskalierte UV mehr als zwei Stufen, so transformiert
+\texttt{lm} sie in mehr als eine Indikatorvariablen um. Genauer gesagt
+ist es immer eine Indikatorvariablen weniger als es Stufen in der
+nominalskalierten Variablen gibt.
+
+Betrachten wir ein einfaches Beispiel, eine Tabelle mit der Spalte
+\texttt{Bundesland} -- aus Gründen der Einfachheit hier nur mit
+\emph{drei} Bundesländern. Damit \texttt{lm} arbeiten kann, wird
+\texttt{Bundesland} in \emph{zwei} Indikatorvariablen umgewandelt:
+
+\begin{figure}
+
+\begin{minipage}{0.40\linewidth}
+
+\begin{longtable}[]{@{}rl@{}}
+\toprule\noalign{}
+id & Bundesland \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & BaWü \\
+2 & Bayern \\
+3 & Brandenburg \\
+\end{longtable}
+
+\end{minipage}%
+%
+\begin{minipage}{0.20\linewidth}
+\(\qquad \rightarrow\)\end{minipage}%
+%
+\begin{minipage}{0.40\linewidth}
+
+\begin{longtable}[]{@{}rrr@{}}
+\toprule\noalign{}
+id & BL\_Bayern & BL\_Bra \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & 0 & 0 \\
+2 & 1 & 0 \\
+3 & 0 & 1 \\
+\end{longtable}
+
+\end{minipage}%
+
+\end{figure}%
+
+Auch im Fall mehrerer Ausprägungen einer nominalen Variablen gilt die
+gleiche Logik der Interpretation wie bei binären Variablen:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Mittelwert der 1. Gruppe: Achsenabschnitt (b0)
+\item
+  Mittelwert der 2. Gruppe: Achsenabschnitt (b0) + Steigung der 1.
+  Regressionsgeraden (b1)
+\item
+  Mittelwert der 2. Gruppe: Achsenabschnitt (b0) + Steigung der 2.
+  Regressionsgeraden (b2)
+\item
+  usw.
+\end{enumerate}
+
+Es kann nervig sein, dass das Bundesland, welches als
+\emph{Referenzgruppe} (sprich als Gruppe des Achsenabschnitts ausgewählt
+wurde) nicht explizit in der Ausgabe angegeben ist. Der Wert der
+Referenzgruppe findet seinen Niederschlag im Achsenabschnitt.
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colframe=quarto-callout-note-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Bei einer Variable vom Typ \texttt{character} wählt R den alphabetisch
+ersten Wert als Referenzgruppe für ein lineares Modell aus. Bei einer
+Variable vom Typ \texttt{factor} ist die Reihenfolge bereits festgelegt,
+vgl. Kapitel~\ref{sec-faktorvar}. Der Mittelwert dieser Gruppe
+entspricht dem Achsenabschnitt. \(\square\)
+
+\end{tcolorbox}
+
+\begin{example}[Achsenabschnitt in
+wetter\_lm2]\protect\hypertarget{exm-bawü}{}\label{exm-bawü}
+
+Da Baden-Württemberg das alphabetisch erste Bundesland ist, wird es von
+R als Referenzgruppe ausgewählt, dessen Mittelwert als Achsenabschnitt
+im linearen Modell hergenommen wird.\(\square\)
+
+\end{example}
+
+Am einfachsten verdeutlicht sich \texttt{lm\_wetter\_region} vielleicht
+mit einem Diagramm, s. Abbildung~\ref{fig-bin-nom}.
 
 \begin{figure}
 
 \centering{
 
-\includegraphics{img/Variance_visualisation.svg.png}
+\includegraphics{090-regression2_files/figure-pdf/fig-bin-nom-1.pdf}
 
 }
 
-\caption{\label{fig-var}Illustration zur Varianz als ``mittlerer
-Quadratfehler''}
+\caption{\label{fig-bin-nom}Sinnbild zur Interpretation eines linearen
+Modells mit nominaler UV (reingezoomt, um den Mittelwertsunterschied
+hervorzuheben). Die Achsen wurden um 90° gedreht, damit man die Namen
+der Bundesländer besser lessen kann.}
 
 \end{figure}%
 
-\href{https://commons.wikimedia.org/w/index.php?curid=39472834}{By
-Cmglee - Own work, CC BY-SA 3.0}
+\begin{example}[Niederschlagsmenge im Vergleich der
+Monate]\protect\hypertarget{exm-months}{}\label{exm-months}
 
-Abbildung~\ref{fig-mse} visualisiert die Varianz für
-Beispiel~\ref{exm-mae}.\footnote{Die Abweichungsquadrate wirken optisch
-  nicht quadratisch, da die X-Achse breiter skaliert dargestellt ist als
-  die Y-Achse. Trotzdem sind es Quadrate, nur nicht optisch, wenn Sie
-  wissen, was ich meine\ldots{}}
+Eine weitere Forschungsfrage, die Sie nicht außer acht lassen wollen,
+ist die Frage nach den jahreszeitlichen Unterschieden im Niederschlag
+(engl. precipitation). Los R, rechnen!
 
-Links sind die \emph{Abweichungsquadrate} dargestellt, rechts die
-Varianz als ``\emph{typisches Abweichungsquadrat}''.
+\begin{quote}
+{\emoji{robot}} Endlich geht's weiter! Ergebnisse in
+Tabelle~\ref{tbl-lm_wetter-month}! \(\square\)
+\end{quote}
 
-\begin{tcolorbox}[enhanced jigsaw, opacityback=0, arc=.35mm, left=2mm, colframe=quarto-callout-note-color-frame, toptitle=1mm, colback=white, toprule=.15mm, bottomrule=.15mm, colbacktitle=quarto-callout-note-color!10!white, bottomtitle=1mm, coltitle=black, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, rightrule=.15mm, breakable, leftrule=.75mm, opacitybacktitle=0.6]
+\end{example}
 
-Die Varianz ist also ein Maß, das die typische Abweichung der
-Beobachtungen vom Mittelwert in eine Zahl fasst.\(\square\)
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm\_wetter\_month }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(precip }\SpecialCharTok{\textasciitilde{}}\NormalTok{ month, }\AttributeTok{data =}\NormalTok{ wetter)}
+\FunctionTok{parameters}\NormalTok{(lm\_wetter\_month)}
+\end{Highlighting}
+\end{Shaded}
 
-\end{tcolorbox}
+\begin{longtable}[]{@{}lccccc@{}}
+
+\caption{\label{tbl-lm_wetter-month}Modellparameter für
+lm\_wetter\_month}
+
+\tabularnewline
+
+\toprule\noalign{}
+Parameter & Coefficient & SE & 95\% CI & t(27166) & p \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+(Intercept) & 53.27 & 0.41 & (52.46, 54.08) & 128.76 & \textless{}
+.001 \\
+month & 1.14 & 0.06 & (1.03, 1.25) & 20.29 & \textless{} .001 \\
+
+\end{longtable}
+
+Ja, da scheint es deutliche Unterschied im Niederschlag zu geben. Wir
+brauchen ein Diagramm zur Verdeutlichung, s.
+Abbildung~\ref{fig-wetter-month}, links.\footnote{\texttt{plot(estimate\_expectation(lm\_wetter\_month)}}
+Oh nein: R betrachtet \texttt{month} als numerische Variable! Aber
+``Monat'' bzw. ``Jahreszeit'' sollte nominal sein.
+
+\begin{quote}
+{\emoji{robot}} Aber \texttt{month} ist als Zahl in der Tabelle
+hinterlegt. Jede ehrliche Maschine verarbeitet eine Zahl als Zahl, ist
+doch klar!
+\end{quote}
+
+\begin{quote}
+{\emoji{woman}} Okay, R, wir müssen \texttt{month} in eine nominale Zahl
+transformieren. Wie geht das?
+\end{quote}
+
+\begin{quote}
+{\emoji{robot}} Dazu kannst du den Befehl \texttt{factor} nehmen. Damit
+wandelst du eine numerische Variable in eine nominalskalierte Variable
+(Faktorvariable) um. Faktisch heißt das, dass dann eine Zahl als Text
+gesehen wird.
+\end{quote}
+
+\begin{example}[]\protect\hypertarget{exm-factor}{}\label{exm-factor}
+
+Transformiert man \texttt{42} mit \texttt{factor}, so wird aus
+\texttt{42} \texttt{"42"}. Aus der Zahl wird ein Text. Alle metrischen
+Eigenschaften gehen verloren; die Variable ist jetzt auf nominalen
+Niveau.\(\square\)
+
+\end{example}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wetter }\OtherTok{\textless{}{-}}
+\NormalTok{  wetter }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{month\_factor =} \FunctionTok{factor}\NormalTok{(month))}
+\end{Highlighting}
+\end{Shaded}
+
+Jetzt berechnen wir mit der faktorisierten Variablen ein lineares
+Modell, s. Tabelle~\ref{tbl-lm_wetter_month_factor}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm\_wetter\_month\_factor }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(precip }\SpecialCharTok{\textasciitilde{}}\NormalTok{ month\_factor, }\AttributeTok{data =}\NormalTok{ wetter)}
+\FunctionTok{parameters}\NormalTok{(lm\_wetter\_month\_factor)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2500}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1806}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0833}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2361}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1389}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1111}}@{}}
+
+\caption{\label{tbl-lm_wetter_month_factor}Modellparameter von
+lm\_wetter\_month\_factor}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Parameter
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Coefficient
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+SE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+95\% CI
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+t(27156)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+p
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+(Intercept) & 56.95 & 0.64 & (55.68, 58.21) & 88.56 & \textless{}
+.001 \\
+month factor (2) & -9.95 & 0.91 & (-11.73, -8.17) & -10.94 & \textless{}
+.001 \\
+month factor (3) & -7.78 & 0.91 & (-9.56, -6.00) & -8.56 & \textless{}
+.001 \\
+month factor (4) & -8.49 & 0.91 & (-10.27, -6.71) & -9.34 & \textless{}
+.001 \\
+month factor (5) & 4.74 & 0.91 & (2.96, 6.53) & 5.22 & \textless{}
+.001 \\
+month factor (6) & 14.34 & 0.91 & (12.56, 16.12) & 15.77 & \textless{}
+.001 \\
+month factor (7) & 24.36 & 0.91 & (22.57, 26.14) & 26.74 & \textless{}
+.001 \\
+month factor (8) & 17.52 & 0.91 & (15.74, 19.31) & 19.24 & \textless{}
+.001 \\
+month factor (9) & 1.93 & 0.91 & (0.15, 3.72) & 2.12 & 0.034 \\
+month factor (10) & 2.29 & 0.91 & (0.51, 4.08) & 2.52 & 0.012 \\
+month factor (11) & 0.89 & 0.91 & (-0.89, 2.68) & 0.98 & 0.327 \\
+month factor (12) & 5.20 & 0.91 & (3.42, 6.99) & 5.71 & \textless{}
+.001 \\
+
+\end{longtable}
+
+Sehr schön! Jetzt haben wir eine Referenzgruppe (Monat 1, d.h. Januar)
+und 11 Unterschiede zum Januar, s. Abbildung~\ref{fig-wetter-month},
+rechts.
 
 \begin{figure}
 
 \begin{minipage}{0.50\linewidth}
 
-\centering{
+\includegraphics{img/fig-precip-month-num.png}
 
-\includegraphics{060-modellguete_files/figure-pdf/fig-mse-1.pdf}
-
-}
-
-\subcaption{\label{fig-mse-1}Quadrierte Fehlerbalken}
-
+\subcaption{\label{}\texttt{lm\_wetter\_month}, Monat fälschlich als
+metrische Variable}
 \end{minipage}%
 %
 \begin{minipage}{0.50\linewidth}
 
-\centering{
+\includegraphics{img/fig-precip-month.png}
 
-\includegraphics{060-modellguete_files/figure-pdf/fig-mse-2.pdf}
-
-}
-
-\subcaption{\label{fig-mse-2}Varianz als `typischer' Fehlerbalken}
-
+\subcaption{\label{}\texttt{lm\_wetter\_month\_text}, Monat korrekt als
+nominale Variable (aber mit viel Overplotting, das müsste man besser
+machen)}
 \end{minipage}%
 
-\caption{\label{fig-mse}Sinnbild zur Varianz als typischer Fehlerbalken}
+\caption{\label{fig-wetter-month}Niederschlagsunterschiede pro Monat
+(ein Punkt ist ein Jahr); aufgrund der vielen Datenpunkte ist das
+Diagramm wenig übersichtlich (Overplotting).}
 
 \end{figure}%
 
-\begin{example}[]\protect\hypertarget{exm-var}{}\label{exm-var}
+Möchte man die Referenzgruppe eines Faktors ändern, kann man dies mit
+\texttt{relevel} tun:
 
-Sie arbeiten immer noch bei einem Online-Auktionshaus und untersuchen
-den Verkauf von Videospielen. Natürlich mit dem Ziel, dass Ihre Firma
-mehr von dem Zeug verkaufen kann.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wetter }\OtherTok{\textless{}{-}}
+\NormalTok{  wetter }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{month\_factor =} \FunctionTok{relevel}\NormalTok{(month\_factor, }\AttributeTok{ref =} \StringTok{"7"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
 
-Dazu berechnen Sie die Streuung in den Verkaufspreisen, s.
-Listing~\ref{lst-mario-streu}. \(\square\)
+So sieht dann die geänderte Reihenfolge aus:\footnote{Zum
+  Dollar-Operator s. \textbf{?@sec-dollar-op}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{levels}\NormalTok{(wetter}\SpecialCharTok{$}\NormalTok{month\_factor)}
+\DocumentationTok{\#\#  [1] "7"  "1"  "2"  "3"  "4"  "5"  "6"  "8"  "9"  "10" "11"}
+\DocumentationTok{\#\# [12] "12"}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Binäre plus metrische UV}\label{sec-faktorvar}
+
+In diesem Abschnitt untersuchen wir ein lineares Modell mit zwei UV:
+einer \emph{zweistufigen} (binären) UV plus einer \emph{metrischen}
+UV.\footnote{So ein Modell kann auch als \emph{Kovarianzanalyse} (engl.
+  analysis of covariance, ancova) bezeichnet werden.}
+
+\begin{example}[]\protect\hypertarget{exm-rain1}{}\label{exm-rain1}
+
+Ob sich die Niederschlagsmenge wohl unterschiedlich zwischen den Monaten
+entwickelt hat in den letzten gut 100 Jahren? Der Einfachheit halber
+greifen Sie sich nur zwei Monate heraus (Januar und Juli).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wetter\_month\_1\_7 }\OtherTok{\textless{}{-}}
+\NormalTok{  wetter }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(month }\SpecialCharTok{==} \DecValTok{1}  \SpecialCharTok{|}\NormalTok{ month }\SpecialCharTok{==} \DecValTok{7}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{quote}
+{\emoji{teacher}} Ich muss mal kurz auf eine Sache hinweisen\ldots{}
+\end{quote}
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Faktorvariable}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colframe=quarto-callout-note-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Eine Faktorvariable ist einer der beiden Datentypen in R, die sich für
+nominalskalierte Variablen anbieten: Textvariablen (\texttt{character})
+und Faktor-Variablen (\texttt{factor}). Ein wichtiger Unterschied ist,
+dass die erlaubten Ausprägungen (``Faktorstufen'') bei einer
+Faktor-Variable mitgespeichert werden, bei der Text-Variable nicht.
+
+Das kann praktisch sein, denn bei einer Faktorvariable ist immer klar,
+welche Ausprägungen in Ihrer Variable möglich sind.\(\square\)
+
+\end{tcolorbox}
+
+\begin{example}[Beispiel für eine
+Faktorvariable]\protect\hypertarget{exm-factor1}{}\label{exm-factor1}
+
+~
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{geschlecht }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"f"}\NormalTok{, }\StringTok{"f"}\NormalTok{, }\StringTok{"m"}\NormalTok{)}
+\NormalTok{geschlecht\_factor }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(geschlecht)}
+\NormalTok{geschlecht\_factor}
+\DocumentationTok{\#\# [1] f f m}
+\DocumentationTok{\#\# Levels: f m}
+\end{Highlighting}
+\end{Shaded}
 
 \end{example}
 
+\begin{example}[Filtern verändert die Faktorstufen
+nicht]\protect\hypertarget{exm-factor2}{}\label{exm-factor2}
+
+Wenn Sie von der Faktorvariablen\footnote{synonym: nominalskalierte
+  Variable} \texttt{geschlecht} das 3. Element (\texttt{"m"})
+herausfiltern, so dass z.B. nur die ersten beiden Elemente übrig bleiben
+mit allein der Ausprägung \texttt{"f"}, merkt sich R trotzdem, dass es
+\emph{zwei} Faktorstufen gibt (\texttt{"f"} und \texttt{"m"}).
+
+Genaus so ist es, wenn Sie aus \texttt{wetter} nur die Monate
+\texttt{"1"} und \texttt{"7"} herausfiltern: R merkt sich, dass es 12
+Faktorstufen gibt. Möchten Sie die herausgefilterten Faktorstufen
+``löschen'', so können Sie einfach die Faktorvariable neu berechnen (mit
+\texttt{factor}).\(\square\)
+
+\end{example}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wetter\_month\_1\_7 }\OtherTok{\textless{}{-}}
+\NormalTok{  wetter }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(month }\SpecialCharTok{==} \DecValTok{1}  \SpecialCharTok{|}\NormalTok{ month }\SpecialCharTok{==} \DecValTok{7}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# Faktor (und damit die Faktorstufen) neu berechnen:}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{month\_factor =} \FunctionTok{factor}\NormalTok{(month))}
+\end{Highlighting}
+\end{Shaded}
+
+Okay. Wie spezifiziert man jetzt das lineare Modell?\(\square\)
+
+\end{example}
+
+Hat man mehrere (``multiple'') X-Variablen\footnote{Prädiktoren,
+  unabhängige Variablen, X-Variablen}, so trennt man sich mit einem
+Plus-Zeichen in der Regressionsformel, z.B.
+\texttt{temp\ \textasciitilde{}\ year\_c\ +\ month}.
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Multiple Regression}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-important-color!10!white, left=2mm, colframe=quarto-callout-important-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Eine multiple Regression beinhaltet mehr als eine X-Variable. Die
+Modellformel spezifiziert man so:
+
+\(y ~ x_1 + x_2 + \ldots + x_n \qquad \square\)
+
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Modellgleichung}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colframe=quarto-callout-note-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Das Pluszeichen hat in der Modellgleichung\footnotemark{} \emph{keine}
+arithmetische Funktion. Es wird nichts addiert. In der Modellgleichung
+sagt das Pluszeichen nur ``und noch folgende UV\ldots{}''.\(\square\)
+
+\end{tcolorbox}
+
+\footnotetext{synonym: Regressionsformel}
+
+Die obige Modellgleichung liest sich also so:
+
+\begin{quote}
+Temperatur ist eine Funktion von der (zentrierten) Jahreszahl und des
+Monats
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm\_year\_month }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(precip }\SpecialCharTok{\textasciitilde{}}\NormalTok{ year\_c }\SpecialCharTok{+}\NormalTok{ month\_factor, }\AttributeTok{data =}\NormalTok{ wetter\_month\_1\_7)}
+\end{Highlighting}
+\end{Shaded}
+
+Die Modellparameter sind in Tabelle~\ref{tbl-lm_year_month} zu sehen.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2394}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1831}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0845}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2535}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1268}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1127}}@{}}
+
+\caption{\label{tbl-lm_year_month}Modellparameter von lm\_year\_month}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Parameter
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Coefficient
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+SE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+95\% CI
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+t(4525)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+p
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+(Intercept) & 56.94 & 0.68 & (55.60, 58.27) & 83.57 & \textless{}
+.001 \\
+year c & 0.03 & 0.01 & (5.59e-03, 0.05) & 2.43 & 0.015 \\
+month factor (7) & 24.37 & 0.97 & (22.48, 26.27) & 25.25 & \textless{}
+.001 \\
+
+\end{longtable}
+
+Die Modellkoeffizienten sind so zu interpretieren:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Achsenabschnitt (b0, \texttt{(Intercept})): Im Referenzjahr (1951) im
+  \emph{Referenzmonat Januar} lag die Niederschlagsmenge bei 57 mm pro
+  Quadratmeter.
+\item
+  Regressionskoeffizient für Jahr (b1, \texttt{year\_c}): Pro Jahr ist
+  die Niederschlagsmenge im Schnitt um 0.02 mm an (im Referenzmonat).
+\item
+  Regressionskoeffizient für Monat (b2, \texttt{month\ {[}7{]}}) Im
+  Monat \texttt{7} (Juli) lag die mittlere Niederschlagsmenge (im
+  Referenzjahr) knapp 25 mm über dem mittleren Wert des Referenzmonats
+  (Januar).
+\end{enumerate}
+
+Die Regressiongleichung von \texttt{lm\_year\_month} lautet:
+\texttt{precip\_pred\ =\ 56.94\ +\ 0.03*year\_c\ +\ 24.37*month\_factor\_7}.
+
+Im Monat Juli ist \texttt{month\_factor\_7\ =\ 1}, ansonsten (Januar)
+ist \texttt{month\_factor\ =\ 0}.
+
+\begin{quote}
+{\emoji{student}} Puh, kompliziert!
+\end{quote}
+
+\begin{quote}
+{\emoji{teacher}} Es gibt einen Trick, man kann sich von R einfach einen
+beliebigen Y-Wert berechnen lassen, s. Beispiel~\ref{exm-niederschlag1}.
+\end{quote}
+
+\begin{example}[Niederschlag laut Modell Im Juli
+2020?]\protect\hypertarget{exm-niederschlag1}{}\label{exm-niederschlag1}
+
+Hey R, berechne uns anhand neuer Daten den laut Modell zu erwartenden
+Niederschlag für Januar im Jahr 2020!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{neue\_daten }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{year\_c =} \DecValTok{2020{-}1951}\NormalTok{,}
+                     \AttributeTok{month\_factor =} \FunctionTok{factor}\NormalTok{(}\StringTok{"1"}\NormalTok{))}
+\FunctionTok{predict}\NormalTok{(lm\_year\_month, }\AttributeTok{newdata =}\NormalTok{ neue\_daten)}
+\DocumentationTok{\#\#        1 }
+\DocumentationTok{\#\# 58.92171}
+\end{Highlighting}
+\end{Shaded}
+
+\end{example}
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colframe=quarto-callout-note-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Alle Regressionskoeffizienten beziehen sich auf den Y-Wert \emph{unter
+der Annahme, dass alle übrigen Prädiktoren den Wert Null (bzw.
+Referenzwert) aufweisen}.\(\square\)
+
+\end{tcolorbox}
+
+Visualisieren wir uns die geschätzten Erwartungswert pro Prädiktorwert,
+s. Abbildung~\ref{fig-lm3}:
+\texttt{plot(estimate\_expectation(lm\_year\_month))}
+
+\begin{figure}
+
+\centering{
+
+\includegraphics{090-regression2_files/figure-pdf/fig-lm3-1.pdf}
+
+}
+
+\caption{\label{fig-lm3}Temperaturverlauf über die Jahre für zwei
+Monate. Man beachte, dass die Regressionsgeraden \emph{parallel} sind.}
+
+\end{figure}%
+
+Mit \texttt{scale\_color\_okabeito} haben wir die Standard-Farbpalette
+durch die von (Okabe und Ito 2023) ersetzt\footnote{s. Hinweise hier:
+  \url{https://malcolmbarrett.github.io/ggokabeito/reference/palette_okabe_ito.html}}.
+Das ist nicht unbedingt nötig, aber robuster bei Schwarz-Weiß-Druck und
+bei Sehschwächen, vgl. \textbf{?@sec-farbwahl}.
+
+Die erklärte Varianz von \texttt{lm\_year\_month} liegt bei:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{r2}\NormalTok{(lm\_year\_month)}
+\DocumentationTok{\#\# \# R2 for Linear Regression}
+\DocumentationTok{\#\#        R2: 0.124}
+\DocumentationTok{\#\#   adj. R2: 0.124}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Interaktion}\label{interaktion}
+
+Eine Modellgleichung der Form
+\texttt{temp\ \textasciitilde{}\ year\ +\ month} zwingt die
+Regressionsgeraden dazu, parallel zu verlaufen. Aber vielleicht würden
+sie besser in die Punktewolken passen, wenn wir ihnen erlauben, auch
+\emph{nicht} parallel verlaufen zu dürfen?
+
+Nicht-parallele Regressionsgeraden erlauben wir, indem wir das
+Regressionsmodell wie folgt spezifizieren und visualisieren, s.
+Listing~\ref{lst-lm-interact}.
+
 \begin{codelisting}
 
-\caption{\label{lst-mario-streu}Berechnung der Streuung des
-Verkaufpreises als Indikatoren für die Modellgüte des Mittelwerts.}
+\caption{\label{lst-lm-interact}Ein Interaktionsmodell spezifiziert man
+in dieser Art: y \textasciitilde{} x1 + x2 + x1:x2}
 
 \centering{
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{mariokart\_no\_extreme }\OtherTok{\textless{}{-}}
-\NormalTok{  mariokart }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{filter}\NormalTok{(total\_pr }\SpecialCharTok{\textless{}} \DecValTok{100}\NormalTok{)  }\CommentTok{\# ohne Extremwerte}
-
-\NormalTok{m\_summ }\OtherTok{\textless{}{-}} 
-\NormalTok{  mariokart\_no\_extreme }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{summarise}\NormalTok{(}
-    \AttributeTok{pr\_mw =} \FunctionTok{mean}\NormalTok{(total\_pr),}
-    \AttributeTok{pr\_iqr =} \FunctionTok{IQR}\NormalTok{(total\_pr),}
-    \AttributeTok{pr\_maa =} \FunctionTok{mean}\NormalTok{(}\FunctionTok{abs}\NormalTok{(total\_pr }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(total\_pr))),}
-    \AttributeTok{pr\_var =} \FunctionTok{var}\NormalTok{(total\_pr),}
-    \AttributeTok{pr\_sd =} \FunctionTok{sd}\NormalTok{(total\_pr))}
+\NormalTok{lm\_year\_month\_interaktion }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
+\NormalTok{  precip }\SpecialCharTok{\textasciitilde{}}\NormalTok{ year\_c }\SpecialCharTok{+}\NormalTok{ month\_factor }\SpecialCharTok{+}\NormalTok{ year\_c}\SpecialCharTok{:}\NormalTok{month\_factor, }
+  \AttributeTok{data =}\NormalTok{ wetter\_month\_1\_7)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1217,293 +2115,951 @@ Verkaufpreises als Indikatoren für die Modellgüte des Mittelwerts.}
 
 \end{codelisting}%
 
-\begin{longtable}[]{@{}lrrrr@{}}
-\toprule\noalign{}
-pr\_mw & pr\_iqr & pr\_maa & pr\_var & pr\_sd \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-47.43 & 12.99 & 7.20 & 83.06 & 9.11 \\
-\end{longtable}
-
-Statistiken sind ja schön \ldots{} aber Bilder sind auch gut, s.
-Abbildung~\ref{fig-var}. Datendiagramme eignen sich gut, um (grob) die
-Streuung einer Variable zu erfassen.
+Visualisiert ist das Modell in Abbildung~\ref{fig-wetter-interakt}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{mariokart }\SpecialCharTok{\%\textgreater{}\%} 
-\NormalTok{  mariokart }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{select}\NormalTok{(total\_pr) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{filter}\NormalTok{(total\_pr }\SpecialCharTok{\textless{}} \DecValTok{100}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}  \CommentTok{\# ohne Extremwerte}
-  \FunctionTok{plot\_density}\NormalTok{()}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{estimate\_expectation}\NormalTok{(lm\_year\_month\_interaktion)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_okabeito}\NormalTok{()  }\CommentTok{\# schönes Farbschema}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{figure}
 
-\begin{minipage}{0.50\linewidth}
-
 \centering{
 
-\includegraphics{060-modellguete_files/figure-pdf/fig-var-1.pdf}
+\includegraphics{090-regression2_files/figure-pdf/fig-wetter-interakt-1.pdf}
 
 }
 
-\subcaption{\label{fig-var-1}Dichtediagramm mit MW±SD in roter Farbe}
-
-\end{minipage}%
-%
-\begin{minipage}{0.50\linewidth}
-
-\centering{
-
-\includegraphics{060-modellguete_files/figure-pdf/fig-var-2.pdf}
-
-}
-
-\subcaption{\label{fig-var-2}Violindiagramm mit MW±SD in roter Farbe}
-
-\end{minipage}%
-
-\caption{\label{fig-var}Die Verteilung des Verkaufspreises von
-Mariokart-Spielen}
+\caption{\label{fig-wetter-interakt}Niederschlag im Jahresverlauf und
+Monatsvergleich mit Interaktionseffekt: Die Veränderung im Verlauf der
+Jahre ist unterschiedlich für die Monate (Janur vs.~Juli). Die beiden
+Regressionsgeraden sind \emph{nicht} parallel.}
 
 \end{figure}%
 
-Wer sich die Berechnung von Hand für \texttt{pr\_maa} sparen möchte (s.
-Listing~\ref{lst-mario-streu}), kann die
-\href{https://rdrr.io/cran/DescTools/man/MeanAD.html}{Funktion
-\texttt{MeanAD} aus dem Paket \texttt{DescTools}} nutzen.
+Der \emph{Doppelpunkt-Operator} (\texttt{:}) fügt der
+Regressionsgleichung einen \emph{Interaktionseffekt} hinzu, in diesem
+Fall die Interaktion von Jahr (\texttt{year\_c}) und Monat
+(\texttt{month\_factor}):
 
-\subsubsection{Kochrezept für die
-Varianz}\label{kochrezept-fuxfcr-die-varianz}
+\texttt{precip\ \textasciitilde{}\ year\_c\ +\ month\_factor\ +\ year\_c:month\_factor}
 
-Um die Standardabweichung zu berechnen, berechnet man zunächst die
-\emph{Varianz}, \(s^2\) abgekürzt. Hier ist ein
-``Kochrezept''\footnote{Algorithmus} zur Berechnung der Varianz:
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-important-color!10!white, left=2mm, colframe=quarto-callout-important-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Für alle Datenpunkte \(x_i\): Berechne die Abweichungen vom
-  Mittelwert, \(\bar{x}\)
-\item
-  Quadriere diese Werte
-\item
-  Summiere dann auf
-\item
-  Teile durch die Anzahl \(N\) der Werte
-\end{enumerate}
+Einen Interaktionseffekt von x1 und x2 kennzeichnet man in R mit dem
+Doppelpunkt-Operator, \texttt{x1:x2}:
 
-Als Formel ausgedrückt, lautet die Definition der Varianz\footnote{sog.
-  unkorrigierte Stichprobenvarianz; um anhand einer Stichprobe die
-  Varianz der zugehörigen Population zu schätzen, teilt man nicht durch
-  \(N\), sondern durch \(N-1\)} einer Stichprobe wie folgt, s.
-Gleichung~\ref{eq-var}.
-
-\begin{equation}\phantomsection\label{eq-var}{{\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{N}}\sum _{i=1}^{n}e_i^{2}.}}\end{equation}
-
-\begin{definition}[Varianz]\protect\hypertarget{def-var}{}\label{def-var}
-
-Die Varianz (\(s^2, \sigma^2\)) ist definiert als der Mittelwert der
-quadrierten Abweichungen, \(e_i^2\), (vom Mittelwert).\(\square\)
-
-\end{definition}
-
-Die Varianz steht im engen Verhältnis zur Kovarianz, s.
-\textbf{?@sec-cov}. Die Varianz kann auch verstehen als den
-\emph{mittleren Quadratfehler} (Mean Squared Error, MSE) eines Modells,
-s. Gleichung~\ref{eq-mse}.
-
-\begin{equation}\phantomsection\label{eq-mse}{{\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(y_{i}-{\hat {y}}\right)^{2}.}}\end{equation}
-
-Im Fall eines Punktmodells ist der Mittelwert der vorhergesagte Wert
-eines Modells.
-
-\subsection{Die Standardabweichung}\label{die-standardabweichung}
-
-Kennt man die Varianz, so lässt sich die Standardabweichung einfach als
-Quadratwurzel der Varianz berechnen.
-
-\begin{definition}[Standardabweichung]\protect\hypertarget{def-sd}{}\label{def-sd}
-
-Die Standardabweichung (SD, s, \(\sigma\)) ist definiert als die
-Quadratwurzel der Varianz, s. Gleichung~\ref{eq-sd}.
-
-\begin{equation}\phantomsection\label{eq-sd}{s := \sqrt{s^2} \square}\end{equation}
-
-\end{definition}
-
-Durch das Wurzelziehen besitzt die Standardabweichung wieder \emph{in
-etwa} die gleiche Größenordnung wie die Daten (im Gegensatz zur Varianz,
-die durch das Quadrieren sehr groß werden kann).
-
-Aus einem Modellierungsblickwinkel kann man die SD definieren als die
-Wurzel von MSE. Dann nennt man sie \emph{Root Mean Squared Error}
-(RMSE): \(RMSE := \sqrt{MSE}\).
-
-\begin{tcolorbox}[enhanced jigsaw, opacityback=0, arc=.35mm, left=2mm, colframe=quarto-callout-note-color-frame, toptitle=1mm, colback=white, toprule=.15mm, bottomrule=.15mm, colbacktitle=quarto-callout-note-color!10!white, bottomtitle=1mm, coltitle=black, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, rightrule=.15mm, breakable, leftrule=.75mm, opacitybacktitle=0.6]
-
-Die SD ist i.d.R. \emph{un}gleich zur MAE, aber (fast) gleich zur RMSE.
-Entsprechend ist die Varianz (fast) gleich zur MSE.\(\square\)
+\texttt{y\ \textasciitilde{}\ x1\ +\ x2\ +\ x1:x2} \(\square\)
 
 \end{tcolorbox}
 
-\begin{example}[]\protect\hypertarget{exm-sd-mario}{}\label{exm-sd-mario}
+In Worten:
 
-Sie arbeiten weiter an Ihrem Mariokart-Projekt. Da Sie heute keine Lust
-auf viel Tippen haben, nutzen Sie das R-Paket \texttt{easystats} mit der
-Funktion \texttt{describe\_distribution}.
+\begin{quote}
+y wird modelliert als eine Funktion von x1 und x2 und dem
+Interaktionseffekt von x1 mit x2.
+\end{quote}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(easystats)}
+Wie man in Abbildung~\ref{fig-wetter-interakt} sieht, sind die beiden
+Regressionsgeraden \emph{nicht parallel}.
 
-\NormalTok{mariokart }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{select}\NormalTok{(total\_pr) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{describe\_distribution}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colframe=quarto-callout-note-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Sind die Regressionsgeraden von zwei (oder mehr) Gruppen nicht parallel,
+so liegt ein Interaktionseffekt vor.\(\square\)
+
+\end{tcolorbox}
+
+\begin{example}[Interaktionseffekt von Niederschlag und
+Monat]\protect\hypertarget{exm-interakt-precip}{}\label{exm-interakt-precip}
+
+Wie ist die Veränderung der Niederschlagsmenge (Y-Achse) im Verlauf der
+Jahre (X-Achse)? \emph{Das kommt darauf an, welchen Monat man
+betrachtet}. Der Effekt der Zeit ist \emph{unterschiedlich} für die
+Monate: Im Juli nahm der Niederschlag ab, im Januar zu.\(\square\)
+
+\end{example}
+
+Liegt ein Interaktionseffekt vor, kann man nicht mehr von ``dem''
+(statistischen) Effekt eines Prädiktors (afu die Y-Variable) sprechen.
+Vielmehr muss man unterscheiden: Je nach Gruppe (z.B. Monat)
+unterscheidet der Effekt.\footnote{Effekt ist hier immer statistisch,
+  nie kausal gemeint.}
+
+Betrachten wir die Parameterwerte des Interaktionsmodells
+(\texttt{parameters(lm\_year\_month\_interaktion)}), s.
+Tabelle~\ref{tbl-lm_year_month_interaktion}.
 
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 18\tabcolsep) * \real{0.1154}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 18\tabcolsep) * \real{0.1154}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 18\tabcolsep) * \real{0.1154}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 18\tabcolsep) * \real{0.0769}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 18\tabcolsep) * \real{0.0769}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 18\tabcolsep) * \real{0.0897}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 18\tabcolsep) * \real{0.1154}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 18\tabcolsep) * \real{0.1154}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 18\tabcolsep) * \real{0.0513}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 18\tabcolsep) * \real{0.1282}}@{}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.3333}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0769}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2051}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1154}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1026}}@{}}
+
+\caption{\label{tbl-lm_year_month_interaktion}Modellparameter von
+lm\_year\_month\_interaktion}
+
+\tabularnewline
+
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
-Variable
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-Mean
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-SD
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-IQR
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-Min
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-Max
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-Skewness
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-Kurtosis
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-n
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-n\_Missing
+Parameter
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Coefficient
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+SE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+95\% CI
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+t(4524)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+p
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-total\_pr & 49.88049 & 25.68856 & 12.99 & 28.98 & 326.51 & 9.035897 &
-96.14414 & 143 & 0 \\
+(Intercept) & 56.91 & 0.68 & (55.59, 58.24) & 84.21 & \textless{}
+.001 \\
+year c & 0.13 & 0.02 & (0.10, 0.16) & 7.80 & \textless{} .001 \\
+month factor (7) & 24.37 & 0.96 & (22.50, 26.25) & 25.45 & \textless{}
+.001 \\
+year c × month factor (7) & -0.20 & 0.02 & (-0.25, -0.16) & -8.62 &
+\textless{} .001 \\
+
 \end{longtable}
 
-Ah! Das war einfach. Wird auch langsam Zeit für Feierabend.\(\square\)
+Neu bei der Ausgabe zu diesem Modell ist die Zeile
+\texttt{year\ c\ ×\ month\ factor\ {[}7{]}}. Sie gibt die Stärke des
+Interaktionseffekts an. Die Zeile zeigt, wie unterschiedlich sich die
+die Niederschlagsmenge zwischen den beiden Monaten im Verlauf der Jahre
+ändert: Im Monat \texttt{"7"} ist der Effekt von \texttt{year\_c} um
+0.20 mm geringer: Die Regressionsgerade neigt sich mehr nach ``unten''
+im Monat Juli, da der Koeffizient kleiner als Null ist.
+
+Die Regressionsgleichung lautet:
+\texttt{precip\_pred\ =\ 56.91\ +\ 0.13*year\_c\ +\ 24.37*month\_factor\_7\ -\ 0.20*year\_c:month\_factor\_7}.
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-important-color!10!white, left=2mm, colframe=quarto-callout-important-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Der Achsenabschnitt gibt den Wert für Y an unter der Annahme, dass alle
+Prädiktoren den Wert Null aufweisen. In diesem Fall gibt der
+Achsenabschnitt also den Niederschlag für den Janur des Jahres 1951 an.
+Die Regressionskoeffizienten geben die Zunahme in Y an, wenn der
+jeweilige Prädiktorwert um 1 steigt, die übrigen Prädiktoren aber den
+Wert 0 aufweisen.\(\square\)
+
+\end{tcolorbox}
+
+Das R-Quadrat von \texttt{lm\_year\_month\_interaktion} beträgt übrigens
+nur geringfügig mehr als im Modell ohne Interaktion:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{r2}\NormalTok{(lm\_year\_month\_interaktion)  }\CommentTok{\# aus \textasciigrave{}\{easystats\}\textasciigrave{}}
+\DocumentationTok{\#\# \# R2 for Linear Regression}
+\DocumentationTok{\#\#        R2: 0.139}
+\DocumentationTok{\#\#   adj. R2: 0.138}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Modelle mit vielen UV}\label{modelle-mit-vielen-uv}
+
+\subsection{Zwei metrische UV}\label{zwei-metrische-uv}
+
+Ein Modell mit zwei metrischen UV kann man sich im 3D-Raum
+visualisieren, s. Abbildung~\ref{fig-3d-regr-statisch}, oder im 2D-Raum,
+s. Abbildung~\ref{fig-3d-regr-2d}. Im 3D-Raum wird die Regressionsgerade
+zu einer \emph{Regressionsebene.}
+
+\begin{figure}
+
+\begin{minipage}{0.33\linewidth}
+
+\includegraphics{img/3d_scatter1.png}
+
+\subcaption{\label{}Winkel 1}
+\end{minipage}%
+%
+\begin{minipage}{0.33\linewidth}
+
+\includegraphics{img/3d_scatter2.png}
+
+\subcaption{\label{}Winkel 2}
+\end{minipage}%
+%
+\begin{minipage}{0.33\linewidth}
+
+\includegraphics{img/3d_scatter3.png}
+
+\subcaption{\label{}Winkel 3}
+\end{minipage}%
+
+\caption{\label{fig-3d-regr-statisch}Ein lineares Modell,
+\texttt{y\ \textasciitilde{}\ x1\ +\ x2} mit zwei Prädiktoren im
+3D-Raum.}
+
+\end{figure}%
+
+\begin{figure}
+
+\centering{
+
+\includegraphics{090-regression2_files/figure-pdf/fig-3d-regr-2d-1.pdf}
+
+}
+
+\caption{\label{fig-3d-regr-2d}2D-Diagramm für 3D-Modell}
+
+\end{figure}%
+
+Grundsätzlich kann man viele Prädiktoren in ein (lineares) Modell
+aufnehmen. Betrachten wir z. B. folgendes lineares Modell mit zwei
+metrischen UV.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm\_mario\_2uv }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(total\_pr }\SpecialCharTok{\textasciitilde{}}\NormalTok{ start\_pr }\SpecialCharTok{+}\NormalTok{ ship\_pr, }\AttributeTok{data =}\NormalTok{ mariokart }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(total\_pr }\SpecialCharTok{\textless{}} \DecValTok{100}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{?@fig-mario-2uv} visualisiert das Modell \texttt{lm\_mario2v} in
+einem 3D-Diagramm (betrachtet aus verschiedenen Winkeln).
+
+\begin{figure}
+
+\begin{minipage}{0.33\linewidth}
+
+\includegraphics{img/3d_scatter_mario1.png}
+
+\subcaption{\label{}Winkel 1}
+\end{minipage}%
+%
+\begin{minipage}{0.33\linewidth}
+
+\includegraphics{img/3d_scatter_mario2.png}
+
+\subcaption{\label{}Winkel 2}
+\end{minipage}%
+%
+\begin{minipage}{0.33\linewidth}
+
+\includegraphics{img/3d_scatter_mario3.png}
+
+\subcaption{\label{}Winkel 3}
+\end{minipage}%
+
+\caption{\label{fig-3d-regr-statisch}Das Modell \texttt{lm\_mario2v} mit
+2 metrischen UV (und 1 metrische AV) als 3D-Diagramm}
+
+\end{figure}%
+
+\subsection{Viele UV ins Modell?}\label{viele-uv-ins-modell}
+
+Wir könnten im Prinzip alle Variablen unserer Datentabelle als
+Prädiktoren in das Regressionsmodell aufnehmen. Die Frage ist nur: Macht
+das Sinn?
+
+Hier sind einige Richtlinien, die helfen, welche Prädiktoren (und wie
+viele) man in ein Modell aufnehmen sollte (Gelman, Hill, und Vehtari
+2021), s. S. 199:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Man sollte alle Prädiktoren aufnehmen, von denen anzunehmen ist, dass
+  Sie Ursachen für die Zielvariablen sind
+\item
+  Bei Prädiktoren mit starken (absoluten) Effekten kann es Sinn machen,
+  ihre Interaktionseffekte auch mit in das Modell aufzunehmen
+\item
+  Prädiktoren mit kleinem Schätzbereich (\texttt{95\ CI}) sollten
+  tendenziell im Modell belassen werden, da sie die Modellgüte
+  verbessern
+\end{enumerate}
+
+\section{Fallbeispiel zur Prognose}\label{fallbeispiel-zur-prognose}
+
+\begin{example}[Prognose des
+Verkaufspreis]\protect\hypertarget{exm-prognose}{}\label{exm-prognose}
+
+Ganz können Sie von Business-Welt und ihren Gratifikationen nicht
+lassen, trotz Ihrer wissenschaftlichen Ambitionen. Sie haben den Auftrag
+bekommen, den Verkaufspreis von Mariokart-Spielen möglichst exakt
+vorherzusagen. Also gut, das Honorar ist phantastisch, Sie sind jung und
+brauchen das Geld.\(\square\)
 
 \end{example}
 
-\begin{example}[]\protect\hypertarget{exm-gruppen-mw}{}\label{exm-gruppen-mw}
+\subsection{Modell ``all-in''}\label{modell-all-in}
 
-Ihr Job als Datenanalyst ist anstrengend, aber auch mitunter
-interessant. So auch heute. Bevor Sie nach Hause gehen, möchten Sie noch
-eine Sache anschauen. In einer früheren Analyse (s.
-Abbildung~\ref{fig-fehler-red}) fanden Sie heraus, dass die Fehlerbalken
-kürzer werden, wenn man ein geschickteres und komplexeres Modell findet.
-Das wollen Sie natürlich prüfen. Sie überlegen: ``Okay, ich will ein
-einfaches Modell, in dem der Mittelwert das Modell des Verkaufspreis
-sein soll.''
+Um die Güte Ihrer Vorhersagen zu prüfen, teilt Ihr Chef den Datensatz in
+zwei zufällige Teile.
 
-Das spezifizieren Sie so:
+\begin{quote}
+🧔‍♂️ Ich teile den Datensatz \texttt{mariokart} zufällig in zwei Teile.
+Den ersten Teil kannst du nutzehn, um Modelle zu berechnen
+(``trainieren'') und ihre Güte zu prüfen. Den Teil nenne ich
+``Trainingssample'', hört sich cool an, oder? Im Train-Sample ist ein
+Anteil (\texttt{frac}tion) von 70\% der Daten, okay? Die restlichen
+Daten behalte ich. Wenn du ein gutes Modell hast, kommst du und wir
+berechnen die Güte deiner Vorhersagen in dem verbleibenden Teil, die
+übrigen 30\% der Daten. Diesen Teil nennen wir Test-Sample, alles klar?
+\end{quote}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{lm1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(total\_pr }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }\AttributeTok{data =}\NormalTok{ mariokart)}
-\FunctionTok{mae}\NormalTok{(lm1)}
-\DocumentationTok{\#\# [1] 10.01811}
-\end{Highlighting}
-\end{Shaded}
-
-Im nächsten Schritt spezifizieren Sie ein Modell, in dem der
-Verkaufpreis eine Funktion der Anzahl der Lenkräder ist (ähnlich wie in
-Abbildung~\ref{fig-fehler-red}):
+Wenn die Daten auf Ihrer Festplatte liegen, z.B. im Unterordner
+\texttt{daten}, dann könne Sie sie von dort importieren:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{lm2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(total\_pr }\SpecialCharTok{\textasciitilde{}}\NormalTok{ wheels, }\AttributeTok{data =}\NormalTok{ mariokart)}
-\FunctionTok{mae}\NormalTok{(lm2)}
-\DocumentationTok{\#\# [1] 7.375873}
+\NormalTok{mariokart\_train }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"daten/mariokart\_train.csv"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-Ah! Sehr schön, Sie haben mit \texttt{lm2} ein besseres Modell als
-einfach nur den Mittelwert gefunden. Ab nach hause!\(\square\)
-
-\end{example}
-
-\section{Streuung als Modellfehler}\label{streuung-als-modellfehler}
-
-Wenn wir den Mittelwert als Punktmodell des Verkaufpreises auffassen, so
-kann man die verschiedenen Kennwerte der Streuung als verschiedene
-Kennwerte der Modellgüte auffassen.
-
-Definieren wir zunächst als Punktmodell auf Errisch:
+Alternativ können Sie sie auch von diesem Pfad von einem Rechner in der
+Cloud herunterladen:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{lm\_mario1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(total\_pr }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }\AttributeTok{data =}\NormalTok{ mariokart)}
+\NormalTok{mariokart\_train\_path }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{( }\StringTok{"https://raw.githubusercontent.com/sebastiansauer/"}\NormalTok{,}
+\StringTok{"statistik1/main/daten/mariokart\_train.csv"}\NormalTok{)}
+
+\NormalTok{mariokart\_train }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(mariokart\_train\_path)}
 \end{Highlighting}
 \end{Shaded}
 
-Zur Erinnerung: Wir modellieren \texttt{total\_pr} ohne Prädiktoren,
-sondern als Punktmodell, und zwar schätzen wir den Mittelwert mit den
-Daten \texttt{mariokoart}.
-
-Das (Meta-)Paket \texttt{easystats} bietet komfortable Befehle, um die
-Modellgüte zu berechnen:
+Dann importieren wir auf gleiche Weise Test-Sample in R:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{mae}\NormalTok{(lm\_mario1)  }\CommentTok{\# Mean absolute error}
-\DocumentationTok{\#\# [1] 10.01811}
-\FunctionTok{mse}\NormalTok{(lm\_mario1)  }\CommentTok{\# Mean squared error}
-\DocumentationTok{\#\# [1] 655.2874}
-\FunctionTok{rmse}\NormalTok{(lm\_mario1)  }\CommentTok{\# Root mean squared error}
-\DocumentationTok{\#\# [1] 25.59858}
+\NormalTok{mariokart\_test\_path }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}
+ \StringTok{"https://raw.githubusercontent.com/sebastiansauer/"}\NormalTok{,}
+ \StringTok{"statistik1/main/daten/mariokart\_test.csv"}\NormalTok{)}
+
+\NormalTok{mariokart\_test }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(mariokart\_test\_path)}
 \end{Highlighting}
 \end{Shaded}
 
-\section{z-Transformation}\label{z-transformation}
-
-Sie arbeiten immer noch als Datenknecht, Moment, \emph{Datenhecht} bei
-dem Online-Auktionshaus. Heute untersuchen Sie die Frage, wie gut sich
-die Verkaufspreise mit einer einzeigen Zahl, dem mittleren
-Verkaufspreis, beschreiben lassen. Einige widerspenstige Werte haben Sie
-dabei einfach des Datensatzes verwiesen. Schon ist das Leben leichter,
-s. \texttt{mariokart\_no\_extreme}.
+Also los. Sie probieren mal die ``All-in-Strategie'': Alle Variablen
+rein in das Modell. Viel hilft viel, oder nicht?
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{mariokart\_no\_extreme }\OtherTok{\textless{}{-}} 
-\NormalTok{  mariokart }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{filter}\NormalTok{(total\_pr }\SpecialCharTok{\textless{}} \DecValTok{100}\NormalTok{)}
+\NormalTok{lm\_allin }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(total\_pr }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ mariokart\_train)}
+\FunctionTok{r2}\NormalTok{(lm\_allin)  }\CommentTok{\# aus easystats}
+\DocumentationTok{\#\# \# R2 for Linear Regression}
+\DocumentationTok{\#\#        R2: 0.994}
+\DocumentationTok{\#\#   adj. R2: 0.979}
 \end{Highlighting}
 \end{Shaded}
 
-Abbildung~\ref{fig-mariokart_no_extreme} (links) zeigt, dass es einige
-Streuung um den Mittelwert herum gibt.
-Abbildung~\ref{fig-mariokart_no_extreme} (rechts) zeigt die (um den
-Mittelwert) \emph{zentrierten} Daten.
+Der Punkt in \texttt{total\_pr\ \textasciitilde{}\ .} heißt ``alle
+Variablen in der Tabelle (außer \texttt{total\_pr})''.
+
+\begin{quote}
+{\emoji{old-man}} Hey! Das ist ja fast perfekte Modellgüte!
+\end{quote}
+
+\begin{quote}
+{\emoji{woman-supervillain}}️ Vorsicht: Wenn ein Angebot aussieht wie
+``too good to be true'', dann ist es meist auch too good to be true.
+\end{quote}
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Overfitting}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colframe=quarto-callout-note-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Der Grund für den fast perfekten Modellfit ist die Spalte
+\texttt{Title}. Unser Modell hat einfach den Titel jeder Auktion
+auswendig gelernt. Weiß man, welcher Titel zu welcher Auktion gehört,
+kann man perfekt die Auktion aufsagen bzw. das Verkaufsgebot perfekt
+vorhersagen. Leider nützen die Titel der Auktionen im Train-Sample
+\emph{nichts} für andere Auktionen. Im Test-Sample werden unsere
+Vorhersagen also grottenschlecht sein, wenn wir uns auf die Titel der
+Auktionen im Test-Sample stützen. Merke: Höchst idiografische
+Informationen wie Namen, Titel etc. sind nicht nützlich, um allgemeine
+Muster zu erkennen und damit exakte Prognosen zu erstellen.\(\square\)
+
+\end{tcolorbox}
+
+Probieren wir also die Vorhersage im Test-Sample:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{predict}\NormalTok{(lm\_allin, }\AttributeTok{newdata =}\NormalTok{ mariokart\_test)}
+\DocumentationTok{\#\# Error in eval(predvars, data, env): object \textquotesingle{}V1\textquotesingle{} not found}
+\end{Highlighting}
+\end{Shaded}
+
+Oh nein! Was ist los!? Eine Fehlermeldung!
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Vorsicht}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-caution-color!10!white, left=2mm, colframe=quarto-callout-caution-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Nominalskalierte Prädiktorvariablen mit vielen Ausprägungen, wie
+\texttt{title} sind problematisch. Kommt eine Ausprägung von
+\texttt{title} im Test-Sample vor, die es \emph{nicht} im Train-Sample
+gab, so resultiert ein Fehler beim \texttt{predict}en. Häufig ist es
+sinnvoll, auf diese Variable zu verzichten, da diese Variablen oft zu
+Overfitting führen.\(\square\)
+
+\end{tcolorbox}
+
+\subsection{Modell ``all-in'', ohne
+Titelspalte}\label{modell-all-in-ohne-titelspalte}
+
+Okay, also auf die Titelspalte sollten wir vielleicht besser verzichten.
+Nächster Versuch.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mariokart\_train2 }\OtherTok{\textless{}{-}}
+\NormalTok{  mariokart\_train }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(title, V1, id))}
+\end{Highlighting}
+\end{Shaded}
+
+Wir entfernen auch die Spalte \texttt{V1} und \texttt{id}, da sie
+ebenfalls keine Informationen bergen.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm\_allin\_no\_title }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(total\_pr }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ mariokart\_train2)}
+\FunctionTok{r2}\NormalTok{(lm\_allin\_no\_title) }
+\DocumentationTok{\#\# \# R2 for Linear Regression}
+\DocumentationTok{\#\#        R2: 0.521}
+\DocumentationTok{\#\#   adj. R2: 0.441}
+\end{Highlighting}
+\end{Shaded}
+
+Das R-Quadrat ist ja durchaus ordentlich. Schauen wir uns noch den
+\texttt{rmse} (die SD der Vorhersagefehler) an\footnote{der Befehl wohnt
+  im Paket \texttt{performance}, Teil des Metapakets \texttt{easystats}}:
+
+\begin{quote}
+{\emoji{robot}} Gut gemacht!
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{performance}\SpecialCharTok{::}\FunctionTok{rmse}\NormalTok{(lm\_allin\_no\_title)}
+\DocumentationTok{\#\# [1] 20.22998}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Name Clash}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-caution-color!10!white, left=2mm, colframe=quarto-callout-caution-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Im Paket \texttt{yardstick} gibt es eine Funktion namens \texttt{rmse}
+und im Paket \texttt{performance}, Teil des Meta-Pakets
+\texttt{easystats} ebenfalls. Da sind Probleme vorprogrammiert. Das ist
+so als würde die Lehrerin rufen: ``Schorsch, komm her!''. Dabei gibt es
+zwei Schorsche in der Klasse: Den Müllers Schorsch und den Meiers
+Schorsch. Sonst kommen beide, was die Lehrerin nicht will. Die Lehrerin
+müsste also rufen: ``Müller Schorsch, komm her!''. Genau dasselbe machen
+wir, wenn wir das R-Paket eines Befehls mitschreiben, sozusagen den
+``Nachnamen'' des Befehls: \texttt{paketname::funktion} ist wie
+\texttt{Müller::Schorsch}. In unserem Fall also:
+\texttt{performance::rmse} Endlich weiß R wieder, was zu tun
+ist!\(\square\)
+
+\end{tcolorbox}
+
+Sie rennen zu Ihrem Chef, der jetzt die Güte Ihrer Vorhersagen in den
+\emph{restlichen} Daten bestimmen soll.
+
+\begin{quote}
+{\emoji{old-man}} Da wir dein Modell in diesem Teil des
+Komplett-Datensatzes \emph{testen}, nennen wir diesen Teil das
+``Test-Sample''.
+\end{quote}
+
+Ihr Chef schaut sich die Verkaufspreise im Test-Sample an:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mariokart\_test }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(id, total\_pr) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{head}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}rr@{}}
+\toprule\noalign{}
+id & total\_pr \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+120477729093 & 37.02 \\
+290355805215 & 54.99 \\
+180415462166 & 56.01 \\
+180415244903 & 56.00 \\
+350261958546 & 64.95 \\
+110443013258 & 46.50 \\
+\end{longtable}
+
+\begin{quote}
+{\emoji{old-man}}️ Okay, hier sind die ersten paar echten Verkaufspreise.
+Jetzt mach mal deine Vorhersagen auf Basis deines besten Modells!
+\end{quote}
+
+Hier sind Ihre Vorhersagen\footnote{engl. predictions; to predict:
+  vorhersagen}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm\_allin\_predictions }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(lm\_allin\_no\_title, }\AttributeTok{newdata =}\NormalTok{ mariokart\_test)}
+\end{Highlighting}
+\end{Shaded}
+
+Hier sind Ihre ersten paar Vorhersagen:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(lm\_allin\_predictions)}
+\DocumentationTok{\#\#        1        2        3        4        5        6 }
+\DocumentationTok{\#\# 28.62826 53.85885 53.28035 54.03619 41.75512 46.57713}
+\end{Highlighting}
+\end{Shaded}
+
+Dies Vorhersagen fügen wir noch der Ordnung halber in die Tabelle mit
+den Test-Daten:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mariokart\_test }\OtherTok{\textless{}{-}}
+\NormalTok{  mariokart\_test }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{lm\_allin\_predictions =} \FunctionTok{predict}\NormalTok{(lm\_allin\_no\_title, }\AttributeTok{newdata =}\NormalTok{ mariokart\_test))}
+\end{Highlighting}
+\end{Shaded}
+
+Okay, was ist jetzt der mittlere Vorhersagefehler?
+
+Um die Vorhersagegüte im Test-Sample auszurechnen\footnote{wir verwenden
+  dazu die Funktionen \texttt{mae} und \texttt{rsq}}, nutzen wir die
+Funktionen des R-Paketes \texttt{yardstick}\footnote{welches Sie
+  vielleicht noch installieren müssen.}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(yardstick)}
+
+\NormalTok{yardstick}\SpecialCharTok{::}\FunctionTok{mae}\NormalTok{(}\AttributeTok{data =}\NormalTok{ mariokart\_test,}
+               \AttributeTok{truth =}\NormalTok{ total\_pr,  }\CommentTok{\# echter Verkaufspreis}
+               \AttributeTok{estimate =}\NormalTok{ lm\_allin\_predictions)  }\CommentTok{\# Ihre Vorhersage}
+\NormalTok{yardstick}\SpecialCharTok{::}\FunctionTok{rmse}\NormalTok{(}\AttributeTok{data =}\NormalTok{ mariokart\_test,}
+               \AttributeTok{truth =}\NormalTok{ total\_pr,  }\CommentTok{\# echter Verkaufspreis}
+               \AttributeTok{estimate =}\NormalTok{ lm\_allin\_predictions)  }\CommentTok{\# Ihre Vorhersage}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(yardstick)}
+
+\NormalTok{yardstick}\SpecialCharTok{::}\FunctionTok{mae}\NormalTok{(}\AttributeTok{data =}\NormalTok{ mariokart\_test,}
+               \AttributeTok{truth =}\NormalTok{ total\_pr,  }\CommentTok{\# echter Verkaufspreis}
+               \AttributeTok{estimate =}\NormalTok{ lm\_allin\_predictions) }\SpecialCharTok{|\textgreater{}}  \CommentTok{\# Ihre Vorhersage}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{()}
+\NormalTok{yardstick}\SpecialCharTok{::}\FunctionTok{rmse}\NormalTok{(}\AttributeTok{data =}\NormalTok{ mariokart\_test,}
+               \AttributeTok{truth =}\NormalTok{ total\_pr,  }\CommentTok{\# echter Verkaufspreis}
+               \AttributeTok{estimate =}\NormalTok{ lm\_allin\_predictions)  }\SpecialCharTok{|\textgreater{}}  \CommentTok{\# Ihre Vorhersage}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+Ihr mittlerer Vorhersagefehler (RMSE) liegt bei ca. 13 Euro.\footnote{Wir
+  haben hier \texttt{yardstick::rmse} geschrieben und nicht nur
+  \texttt{rmse}, da es sowohl im Paket \texttt{performance} ( Teil des
+  Metapakets \texttt{easystats}) als auch im Paket \texttt{yardstick}
+  (Teil des Metapakets \texttt{tidymodels}) einen Befehl des Namens
+  \texttt{rmse\textasciigrave{}\textasciigrave{}\ gibt.\ Name-Clash-Alarm!\ \ R\ könnte\ daher\ den\ anderen}rmse``
+  meinen als Sie, was garantiert zu Verwirrung führt. Entweder bei R
+  oder bei Ihnen.}
+
+\begin{quote}
+{\emoji{old-man}} Ganz okay.
+\end{quote}
+
+Wie ist es um das R-Quadrat Ihrer Vorhersagen bestellt?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# \textasciigrave{}rsq \textasciigrave{} ist auch aus dem Paket yardstick:}
+\FunctionTok{rsq}\NormalTok{(}\AttributeTok{data =}\NormalTok{ mariokart\_test,}
+    \AttributeTok{truth =}\NormalTok{ total\_pr,  }\CommentTok{\# echter Verkaufspreis}
+    \AttributeTok{estimate =}\NormalTok{ lm\_allin\_predictions)  }\CommentTok{\# Ihre Vorhersage}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llr@{}}
+\toprule\noalign{}
+.metric & .estimator & .estimate \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+rsq & standard & 0.1741705 \\
+\end{longtable}
+
+\begin{quote}
+{\emoji{old-man}}️ 17\%, nicht berauschend, aber immerhin!
+\end{quote}
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Modellgüte im Test-Sample meist geringer als im Train-Sample}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colframe=quarto-callout-note-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Wie das Beispiel zeigt, ist die Modellgüte im Test-Sample (leider) oft
+\emph{geringer} als im Train-Sample. Die Modellgüte im Train-Sample ist
+mitunter übermäßig optimistisch. Dieses Phänomen bezeichnet man als
+\emph{Overfitting}.\(\square\)
+
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Tipp}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-tip-color!10!white, left=2mm, colframe=quarto-callout-tip-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Bevor man Vorhersagen eines Modells einreicht, bietet es sich, die
+Modellgüte in einem neuen Datensatz, als einem Test-Sample, zu
+überprüfen.\(\square\)
+
+\end{tcolorbox}
+
+\section{Vertiefung: Das Aufteilen Ihrer
+Daten}\label{vertiefung-das-aufteilen-ihrer-daten}
+
+\subsection{Analyse- und
+Assessment-Sample}\label{analyse--und-assessment-sample}
+
+Wenn Sie eine robuste Schätzung der Güte Ihres Modells erfahren möchten,
+bietet sich folgendes Vorgehen an (vgl.
+Abbildung~\ref{fig-sample-types}):
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Teilen Sie Ihren Datensatz (das Train-Sample) in zwei Teile: Das sog.
+  Validation-Sample und das sog. Assessment-Sample.
+\item
+  Berechnen Sie Ihr Modell im ersten Teil Ihres Datensatzes (dem
+  \emph{Validation-Sample}).
+\item
+  Prüfen Sie die Modellgüte im zweiten Teil Ihres Datensatzes (dem
+  \emph{Assessment-Sample})
+\end{enumerate}
+
+Diese Aufteilung Ihres Datensatzatzes in diese zwei Teile nennt man auch
+\emph{Validierungsaufteilung} (validation split); Sie können sie z.B. so
+bewerkstelligen:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(rsample)}
+\NormalTok{mariokart }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"daten/mariokart.csv"}\NormalTok{)  }\CommentTok{\# Wenn die CSV{-}Datei in einem Unterordner mit Namen "daten" liegt}
+
+\NormalTok{meine\_aufteilung }\OtherTok{\textless{}{-}} \FunctionTok{initial\_split}\NormalTok{(mariokart, }\AttributeTok{strata =}\NormalTok{ total\_pr)}
+\end{Highlighting}
+\end{Shaded}
+
+\texttt{initial\_split} \emph{bestimmt} für jede Zeile (Beobachtung)
+zufällig aus, ob diese Zeile in das Analyse- oder in das
+Assessment-Sample kommen soll. Im Standard werden 75\% der Daten in das
+Analyse- und 25\% in das Assessment-Sample eingeteilt\footnote{vgl.
+  \texttt{help(initial\_split)}}; das ist eine sinnvolle Aufteilung. Das
+Argument \texttt{strata} sorgt dafür, dass die Verteilung der AV in
+beiden Stichproben gleich ist. Es wäre nämlich blöd für Ihr Modell, wenn
+im Train-Sample z.B. nur die teuren, und im Test-Sample nur die
+günstigen Spiele landen würde.\footnote{Anderes Beispiel: In den ersten
+  Zeilen stehen nur Kunden aus Land A und in den unteren Zeilen nur aus
+  Land B.} In so einem Fall würde sich Ihr Modell unnötig schwer tun.
+
+Im nächsten Schritt können Sie anhand anhand der von
+\texttt{initial\_split} bestimmten Aufteilung die Daten tatsächlich
+aufteilen.\footnote{initial\_split sagt nur, welche Zeile in welche der
+  beiden Stichproben kommen \emph{soll}. Die eigentliche Aufteilung wird
+  aber noch nicht durchgeführt.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mariokart\_train }\OtherTok{\textless{}{-}} \FunctionTok{training}\NormalTok{(meine\_aufteilung)  }\CommentTok{\# Analyse{-}Sample}
+\NormalTok{mariokart\_test }\OtherTok{\textless{}{-}} \FunctionTok{testing}\NormalTok{(meine\_aufteilung)  }\CommentTok{\# Assessment{-}Sample}
+\end{Highlighting}
+\end{Shaded}
+
+Ich persönliche nenne die Tabelle mit den Daten gerne
+\texttt{d\_analysis} bzw. \texttt{d\_assess}, das ist kürzer zu tippen
+und einheitlich. Sie können aber auch ein eigenes Namens-Schema nutzen;
+was aber hilfreich ist, ist Konsistenz in der Benamung, außerdem Kürze
+und aussagekräftige Namen.
+
+\subsection{Train- vs.~Test-Sample}\label{train--vs.-test-sample}
+
+\begin{definition}[Train-Sample]\protect\hypertarget{def-trainsample}{}\label{def-trainsample}
+
+Den Datensatz, für die Sie sowohl UV \emph{als auch AV} vorliegen haben,
+nennt man Train-Sample. \(\square\)
+
+\end{definition}
+
+Das Train-Sample stellt die bekannten Daten dar; aus denen können wir
+lernen, d.h. unser Modell berechnen.
+
+\begin{definition}[Test-Sample]\protect\hypertarget{def-testsample}{}\label{def-testsample}
+
+Den Datensatz, für den Sie \emph{nur} Daten der UV, aber nicht zu der AV
+vorliegen haben, nennt man \emph{Test-Sample}. \(\square\)
+
+\end{definition}
+
+Das Test-Sample stellt das Problem der wirklichen Welt dar: Neue
+Beobachtungen, von denen man (noch) nicht weiß, was der Wert der AV ist.
+
+Der Zusammenhang dieser verschiedenen, aber zusammengehörigen Arten von
+Stichproben ist in Abbildung~\ref{fig-sample-types} dargestellt.
+
+\begin{figure}
+
+\centering{
+
+\includegraphics[width=3.96in,height=2.26in]{090-regression2_files/figure-latex/mermaid-figure-1.png}
+
+}
+
+\caption{\label{fig-sample-types}Verschiedene Arten von
+zusammengehörigen Stichprobenarten im Rahmen einer Prognosemodellierung}
+
+\end{figure}%
+
+\section{Praxisbezug}\label{praxisbezug}
+
+Ein Anwendungsbezug von moderner Datenanalyse ist es vorherzusagen,
+welche Kunden ``abwanderungsgefährdet'' sind, also vielleicht in Zukunft
+bald nicht mehr unsere Kunden sind (``customer churn''). Es gibt eine
+ganze Reihe von Untersuchungen dazu, z.B. die von
+(\textbf{lalwani\_customer\_2022?}). Die Forschis versuchen anhand von
+Daten und u.a. auch der linearen Regression vorherzusagen, welche Kunden
+abgewandert sein werden. Die Autoren berichten von einer Genauigkeit von
+über 80\% in Ihrem (besten) Vorhersagemodell.
+
+\section{Wie man mit Statistik
+lügt}\label{wie-man-mit-statistik-luxfcgt}
+
+\subsection{Pinguine drehen durch}\label{pinguine-drehen-durch}
+
+Ein Forscher-Team untersucht Pinguine von der
+\href{https://pallter.marine.rutgers.edu/}{Palmer Station, Antarktis}.
+Das Team ist am Zusammenhang von Schnabellänge (\emph{bill length}) und
+Schnabeltiefe (\emph{bill depth}) interessiert, s.
+Abbildung~\ref{fig-peng-bill}.
+
+\begin{figure}
+
+\centering{
+
+\includegraphics[width=0.5\textwidth,height=\textheight]{index_files/mediabag/culmen_depth.png}
+
+}
+
+\caption{\label{fig-peng-bill}Schnabellänge und Schnabeltiefe}
+
+\end{figure}%
+
+Das Team hat in \st{schweißtreibender} eiszapfentreibender Arbeit
+\(n=344\) Tiere vermessen bei antarktischen Temperaturen. Hier sind die
+Daten:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{penguins\_path }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}
+  \StringTok{"https://vincentarelbundock.github.io/"}\NormalTok{,}
+  \StringTok{"Rdatasets/csv/palmerpenguins/penguins.csv"}\NormalTok{)}
+
+\NormalTok{penguins }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(penguins\_path)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Analyse 1: Gesamtdaten}\label{analyse-1-gesamtdaten}
+
+Man untersucht, rechnet und überlegt. Ah! Jetzt haben wir es! Klarer
+Fall: Ein \emph{negativer} Zusammenhang von Schnabellänge und
+Schnabeltiefe. Das könnte einen Nobelpreis wert sein. Schnell
+publizieren!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggscatter}\NormalTok{(penguins, }\AttributeTok{x =} \StringTok{"bill\_length\_mm"}\NormalTok{, }\AttributeTok{y =} \StringTok{"bill\_depth\_mm"}\NormalTok{, }
+          \AttributeTok{add =} \StringTok{"reg.line"}\NormalTok{)  }\CommentTok{\# aus \textasciigrave{}ggpubr\textasciigrave{}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{090-regression2_files/figure-pdf/unnamed-chunk-62-1.pdf}
+
+Hier sind die statistischen Details, s. Tabelle~\ref{tbl-peng-simpson1}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(bill\_depth\_mm }\SpecialCharTok{\textasciitilde{}}\NormalTok{ bill\_length\_mm, }\AttributeTok{data =}\NormalTok{ penguins)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2273}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1970}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0909}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2424}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1212}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1212}}@{}}
+
+\caption{\label{tbl-peng-simpson1}Koeffizienten des Modells 1: Negativer
+Effekt von bill\_length\_mm}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Parameter
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Coefficient
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+SE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+95\% CI
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+t(340)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+p
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+(Intercept) & 20.89 & 0.84 & (19.23, 22.55) & 24.75 & \textless{}
+.001 \\
+bill length mm & -0.09 & 0.02 & (-0.12, -0.05) & -4.46 & \textless{}
+.001 \\
+
+\end{longtable}
+
+\subsection{Analyse 2: Aufteilung in Arten
+(Gruppen)}\label{analyse-2-aufteilung-in-arten-gruppen}
+
+Kurz darauf veröffentlicht eine verfeindete Forscherin auch einen
+Aufsatz zum gleichen Thema. Gleiche Daten. Aber mit \emph{gegenteiligem}
+Ergebnis: Bei \emph{jeder Rasse} von (untersuchten) Pinguinen gilt: Es
+gibt einen \emph{positiven} Zusammenhang von Schnabelllänge und
+Schnabeltiefe.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggscatter}\NormalTok{(penguins, }\AttributeTok{x =} \StringTok{"bill\_length\_mm"}\NormalTok{, }\AttributeTok{y =} \StringTok{"bill\_depth\_mm"}\NormalTok{, }
+          \AttributeTok{add =} \StringTok{"reg.line"}\NormalTok{, }\AttributeTok{color =} \StringTok{"species"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{090-regression2_files/figure-pdf/unnamed-chunk-65-1.pdf}
+
+Oh nein! Was ist hier nur los? Daten lügen nicht, oder doch?
+
+Hier sind die statistischen Details der zweiten Analyse, s.
+Tabelle~\ref{tbl-peng-simpson2}. Im zweiten Modell kam \texttt{species}
+als zweiter Prädiktor neu ins Modell (zusätlzich zur Schnabellänge).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(bill\_depth\_mm }\SpecialCharTok{\textasciitilde{}}\NormalTok{ bill\_length\_mm }\SpecialCharTok{+}\NormalTok{ species, }\AttributeTok{data =}\NormalTok{ penguins)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2817}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1831}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0845}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2254}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1127}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1127}}@{}}
+
+\caption{\label{tbl-peng-simpson2}Koeffizienten des Modells 2: Positiver
+Effekt von bill\_length\_mm}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Parameter
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Coefficient
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+SE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+95\% CI
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+t(338)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+p
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+(Intercept) & 10.59 & 0.68 & (9.25, 11.94) & 15.51 & \textless{} .001 \\
+bill length mm & 0.20 & 0.02 & (0.17, 0.23) & 11.43 & \textless{}
+.001 \\
+species (Chinstrap) & -1.93 & 0.22 & (-2.37, -1.49) & -8.62 &
+\textless{} .001 \\
+species (Gentoo) & -5.11 & 0.19 & (-5.48, -4.73) & -26.67 & \textless{}
+.001 \\
+
+\end{longtable}
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Daten alleine reichen nicht}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-caution-color!10!white, left=2mm, colframe=quarto-callout-caution-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Ohne Hintergrundwissen oder ohne weitere Analysen kann \emph{nicht}
+entschieden werden, welche Analyse - Gesamtdaten oder Subgruppen - die
+richtige ist. Nicht-exprimentelle Studien können zu grundverschiedenen
+Ergebnissen führen, jenachdem ob Prädiktoren dem Modell hinzugefügt oder
+weggenommen werden. \(\square\)
+
+\end{tcolorbox}
+
+\subsection{Vorsicht bei der Interpretation von
+Regressionskoeffizienten}\label{vorsicht-bei-der-interpretation-von-regressionskoeffizienten}
+
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-important-color!10!white, left=2mm, colframe=quarto-callout-important-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
+
+Interpretiere nie Modellkoeffizienten kausal ohne ein
+Kausalmodell.\(\square\)
+
+\end{tcolorbox}
+
+Nur wenn man die Ursache-Wirkungs-Beziehungen in einem System kennt,
+macht es Sinn, die Modellkoeffizienten kausal zu interpretieren.
+Andernfalls lässt man besser die Finger von der Interpretation der
+Modellkoeffizienten und begnügt sich mit der Beschreibung der Modellgüte
+und mit Vorhersage\footnote{synonym: Prognose}. Wer das nicht glaubt,
+der betrachte Abbildung~\ref{fig-confounder}, links.\footnote{\href{https://data-se.netlify.app/2021/12/01/simulation-on-controlling-confounders/}{Quelle}}
+Ei Forschi stellt das Modell \texttt{m1:\ y\ \textasciitilde{}\ x} auf
+und interpretiert dann \texttt{b1}: ``Ist ja klar, X hat einen starken
+positiven Effekt auf Y!''.
+
+In der nächsten Studie nimmt dis Forschi dann eine zweite Variable,
+\texttt{group} (z.B. Geschlecht) in das Modell auf:
+\texttt{m2:\ y\ \textasciitilde{}\ x\ +\ g}. Oh Schreck! Jetzt ist
+\texttt{b1} auf einmal nicht mehr stark positiv, sondern praktisch Null,
+und zwar in jeder Gruppe, s. Abbildung~\ref{fig-confounder}, rechts!
+
+Dieses Umschwenken der Regressionskoeffizienten kann \emph{nicht}
+passieren, wenn der Effekt ``echt'', also kausal, ist. Handelt es sich
+aber um ``nicht echte'', also nicht-kausale Zusammenhänge, um
+Scheinzusammenhänge also, so können sich die Modellkoeffizienten
+dramatisch verändern (sogar das Vorzeichen kann wechseln\footnote{das
+  nennt man dann \emph{Simpsons Paradox}}), wenn man das Modell
+verändert, also Variablen hinzufügt oder aus dem Modell entfernt.
+
+Wenn man die kausalen Abhängigkeiten nicht kennt, weiß man also nicht,
+ob die Zusammenhänge kausal oder nicht-kausal sind. Man weiß also nicht,
+ob die Modellkoeffizienten belastbar, robust, stichhaltig sind oder
+nicht.
 
 \begin{figure}
 
@@ -1511,12 +3067,13 @@ Mittelwert) \emph{zentrierten} Daten.
 
 \centering{
 
-\includegraphics{060-modellguete_files/figure-pdf/fig-mariokart_no_extreme-1.pdf}
+\includegraphics{090-regression2_files/figure-pdf/fig-confounder-1.pdf}
 
 }
 
-\subcaption{\label{fig-mariokart_no_extreme-1}Wie nah drängen sich die
-Verkaufspreise um ihren Mittelwert?}
+\subcaption{\label{fig-confounder-1}Modell:
+\texttt{y\ \textasciitilde{}\ x}, starker Zusammenhang; b1 ist stark
+positiv}
 
 \end{minipage}%
 %
@@ -1524,175 +3081,113 @@ Verkaufspreise um ihren Mittelwert?}
 
 \centering{
 
-\includegraphics{060-modellguete_files/figure-pdf/fig-mariokart_no_extreme-2.pdf}
+\includegraphics{090-regression2_files/figure-pdf/fig-confounder-2.pdf}
 
 }
 
-\subcaption{\label{fig-mariokart_no_extreme-2}Abweichungen vom
-Mittelwert: zentrierte Daten}
+\subcaption{\label{fig-confounder-2}Modell:
+\texttt{y\ \textasciitilde{}\ x\ +\ g}, in jeder der beiden Gruppen ist
+der Zusammenhang praktisch Null, b1 = 0}
 
 \end{minipage}%
 
-\caption{\label{fig-mariokart_no_extreme}Verteilung von
-\texttt{mariokart\_no\_extreme}}
+\caption{\label{fig-confounder}Fügt man in ein Modell eine Variable
+hinzu, können sich die Koeffizienten massiv ändern. In beiden Diagrammen
+wurden die gleichen Daten verwendet.}
 
 \end{figure}%
 
-Tja, das ist doch etwas Streuung um den Mittelwert herum.
-
-\begin{tcolorbox}[enhanced jigsaw, opacityback=0, arc=.35mm, left=2mm, colframe=quarto-callout-important-color-frame, toptitle=1mm, colback=white, toprule=.15mm, bottomrule=.15mm, colbacktitle=quarto-callout-important-color!10!white, bottomtitle=1mm, coltitle=black, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, rightrule=.15mm, breakable, leftrule=.75mm, opacitybacktitle=0.6]
-
-Je weniger Streuung um den Mittelwert (ca. 47 Euro) herum, desto besser
-eignet sich der Mittelwert als Modell für die Daten, bzw. desto höher
-die Modellgüte.\(\square\)
-
-\end{tcolorbox}
-
-Ja, es ist \emph{etwas} Streuung, aber wie viel? Kann man das genau
-angeben? Sie überlegen \ldots{} und überlegen. Da! Eine Idee!
-
-Man könnte vielleicht angeben, wie viel Euro jedes Spiel vom Mittelwert
-entfernt ist. Je größer diese Abweichung, desto schlechter die
-Modellgüte! Also rechnen Sie diese Abweichung aus.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{mariokart\_no\_extreme }\OtherTok{\textless{}{-}}
-\NormalTok{  mariokart\_no\_extreme }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{abw =} \FloatTok{47.4} \SpecialCharTok{{-}}\NormalTok{ total\_pr)}
-\end{Highlighting}
-\end{Shaded}
-
-Anders gesagt: Wir haben die Verkaufspreise \emph{zentriert.}
-
-\begin{definition}[Zentrieren]\protect\hypertarget{def-zentrieren}{}\label{def-zentrieren}
-
-Zentrieren bedeutet, von jedem Wert einer Verteilung \(X\) den
-Mittelwert abzuziehen. Daher ist der neue Mittelwert (der zentrierten
-Verteilung) gleich Null. \(\square\)
-
-\end{definition}
-
-\begin{figure}
-
-\centering{
-
-\includegraphics{060-modellguete_files/figure-pdf/fig-norm-dev-1.pdf}
-
-}
-
-\caption{\label{fig-norm-dev}Die Abweichungen zum Mittelwert (MW) einer
-normalverteilten Variable sind selber normalverteilt}
-
-\end{figure}%
-
-Aber irgendwie sind Sie noch nicht am Ziel Ihrer Überlegungen: Woher
-weiß man, ob 10 Euro oder 20 Euro ``viel'' Abweichung vom Verkaufspreis
-ist? Man müsste die Abweichung eines Verkaufpreis zu irgendetwas in
-Bezug setzen. Wieder! Ein Geistesblitz! Man könnte doch die jeweilige
-Abweichung in Bezug setzen zur \emph{mittleren (absoluten) Abweichung}
-(MAA)! Ein alternativer, ähnlicher Kennwert zur mittlerer absolute
-Abweichung ist die SD. Sie haben gehört, dass die SD gebräuchlicher ist
-als die MAA. Um sich als Checker zu präsentieren, berechnen Sie also
-auch die SD; die beiden Koeffizienten sind ja ähnlich.
-
-Also: Wenn ein Spiel 10 Euro vom Mittelwert abweicht und die SD 10 Euro
-betragen sollte, dann hätten wir eine ``standardisierte''\footnote{abgekürzt
-  manchmal mit \texttt{std}} Abweichung von 1, weil 10/10=1.
-
-Begeistert über Ihre Schlauheit machen Sie sich ans Werk.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{mariokart\_no\_extreme }\OtherTok{\textless{}{-}}
-\NormalTok{  mariokart\_no\_extreme }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{abw\_std =}\NormalTok{ abw }\SpecialCharTok{/} \FunctionTok{sd}\NormalTok{(abw),  }\CommentTok{\# std wie "standardisiert"}
-         \AttributeTok{abw\_std2 =}\NormalTok{ abw }\SpecialCharTok{/} \FunctionTok{mean}\NormalTok{(}\FunctionTok{abs}\NormalTok{(abw)))  }
-\end{Highlighting}
-\end{Shaded}
-
-Zufrieden betrachten Sie Ihr Werk, s. Abbildung~\ref{fig-z-transf}. In
-Abbildung~\ref{fig-z-transf} sieht man oben die Rohwerte und unten die
-transformierten Werte, die wir hier als \emph{standardisiert}
-bezeichnen, da wir sie in Bezug zur ``typischen Abweichung'', der SD,
-gesetzt haben.
-
-\begin{figure}
-
-\centering{
-
-\includegraphics{060-modellguete_files/figure-pdf/fig-z-transf-1.pdf}
-
-}
-
-\caption{\label{fig-z-transf}Standardisierung von Abweichungswerten bzw.
-einer Verteilung; der vertikale Balken zeigt den Mittelwert}
-
-\end{figure}%
-
-Wir fassen die Schritte unserer Umrechnung (``Transformation'') zusammen
-wie in einem Kochrezept:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Nimm die Verteilung der Verkaufspreise
-\item
-  Berechne die Abweichungen vom mittleren Verkaufspreis (Differenz
-  Mittelwert und jeweiliger Verkaufspreis)
-\item
-  Teile die Abweichungen (Schritt 2) durch die SD
-\end{enumerate}
-
-Diese Art von Transformation bezeichnet man als \emph{z-Transformation}
-und die resultierenden Werte als \emph{z-Werte}.
-
-\begin{definition}[z-Werte]\protect\hypertarget{def-z-werte}{}\label{def-z-werte}
-
-z-Werte sind das Resultat der z-Transformation. Für die Variable \(X\)
-berechnet sich der z-Wert der \(i\)-ten Beobachtung so:
-\(z_i = \frac{x_i - \bar{x}}{sd_x}.\square\)
-
-\end{definition}
-
-z-Werte sind nützlich, weil sie die ``relative'' Abweichung einzelner
-Beobachtungen vom Mittelwert anzeigen.
-
-Nach einer \emph{Faustregel} spricht man von extremen Abweichungen
-(Extremwerten, Ausreißern), wenn \(z_i > 2\) oder \(z_i > 3\).
+Man könnte höchstens sagen, dass man (wenn man die Kausalstruktur nicht
+kennt) die Modellkoeffizienten nur \emph{deskriptiv} interpretiert, z.B.
+``Dort wo es viele Störche gibt, gibt es auch viele Babies''.\footnote{Das
+  Störche-Babies-Beispiel passt auch zu Abbildung~\ref{fig-confounder}.}
+Leider ist unser Gehirn auf kausale Zusammenhänge geprägt: Es fällt uns
+schwer, Zusammenhänge nicht kausal zu interpretieren. Daher werden
+deskriptive Befunde immer wieder unzulässig kausal interpretiert -- von
+Laien und Wissenschaftlern auch.
 
 \section{Fazit}\label{fazit}
 
-Der „gesunde Menschenverstand`` würde spontan den mittleren
-Absolutabstand (MAA oder MAE) der Varianz (oder der Standardabweichung,
-SD) vorziehen. Das ist vernünftig, denn die MAA ist anschaulicher und
-damit nützlicher als die Varianz und die SD.
+In diesem Kapitel haben Sie lineare Modelle gelernt, die über einfache
+Modelle der Art \texttt{y\ \textasciitilde{}\ x} hinausgehen. Dazu
+gehören multiple Modelle, das sind Modelle mit mehr als einer UV
+(Prädiktor) und auch Interaktionsmodelle. Außerdem haben Sie sich mit
+einem Datensatz von gesamtgesellschaftlichen Nutzen beschäftigt - sehr
+schön. Das Fallbeispiel zum Schluss war vielleicht erhellend insofern,
+als dass ein gutes Modell im Train-Sample nicht (notwendig) zu guten
+Vorhersagen im Test-Sample führt.
 
-Warum sollte man überhaupt ein unanschauliches Maß wie die Varianz
-verwenden? Wenn es nur um deskriptive Statistik geht, braucht man die
-Varianz (oder die SD) nicht unbedingt. Gründe, warum Sie die Varianz
-(bzw. SD) kennen und nutzen sollten, sind:\footnote{Ich wollte noch
-  hinzufügen, dass die Varianz eng verknüpft mit der linearen Algebra,
-  aber ich war nicht sicher, ob das Argument allgemein überzeugen würde.}
+\begin{tcolorbox}[enhanced jigsaw, bottomtitle=1mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, toptitle=1mm, arc=.35mm, bottomrule=.15mm, breakable, colbacktitle=quarto-callout-important-color!10!white, left=2mm, colframe=quarto-callout-important-color-frame, colback=white, opacityback=0, titlerule=0mm, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, toprule=.15mm, coltitle=black]
 
-\begin{itemize}
-\tightlist
-\item
-  Die SD ist sehr nützlich zur Beschreibung der Normalverteilung
-\item
-  Die Varianz wird häufig verwendet bzw. in Forschungsarbeiten
-  berichtet, also müssen Sie die Varianz kennen.
-\end{itemize}
+Wenn Sie dran bleiben an der Statistik, wird der Erfolg sich einstellen,
+s. Abbildung~\ref{fig-dranbleiben}. \(\square\)
 
-Liegen Extremwerte vor, kann es vorteilhafter sein, den IQR vorzuziehen
-gegenüber Mittelwert basierten Streuungsmaßen (MAA, Varianz, SD).
+\end{tcolorbox}
+
+\begin{figure}
+
+\begin{minipage}{0.50\linewidth}
+
+\centering{
+
+\includegraphics{img/meme-stat1.jpg}
+
+}
+
+\subcaption{\label{fig-gestern}So ging es Ihnen gestern}
+
+\end{minipage}%
+%
+\begin{minipage}{0.50\linewidth}
+
+\centering{
+
+\includegraphics{img/meme-stat2.jpg}
+
+}
+
+\subcaption{\label{fig-morgen}So wird es Ihnen morgen ergehen, wenn Sie
+dran bleiben}
+
+\end{minipage}%
+
+\caption[\label{fig-dranbleiben}Statistik, Sie und Party: Gestern und
+(vielleicht) morgen.]{\label{fig-dranbleiben}Statistik, Sie und Party: Gestern und
+(vielleicht) morgen.\footnotemark{}}
+
+\end{figure}%
+\footnotetext{Quelle: imgflip,
+  \url{https://imgflip.com/memegenerator/Distracted-Boyfriend}}
+
+\section{Fallstudien}\label{fallstudien}
+
+Die folgenden Fallstudien zeigen auf recht anspruchsvollem Niveau
+(bezogen auf diesen Kurs) beispielhalft zwei ausführlichere
+Entwicklungen eines Prognosemodells.
+
+Nutzen Sie diese Fallstudien, um sich intensiver mit der Entwicklung
+eines Prognosemodells auseinander zu setzen.
+
+\subsection{New Yorker Flugverspätungen
+2023}\label{new-yorker-flugverspuxe4tungen-2023}
+
+\href{https://datenwerk.netlify.app/posts/flights-delay-simplified//}{Vorhersage
+von Flugverspätungen}
+
+\subsection{Filmerlöse}\label{filmerluxf6se}
+
+\href{https://data-se.netlify.app/2020/11/13/fallstudie-zur-regressionsanalyse-ggplot2movies/}{Vorhersagen
+von Filmerlösen}
+
+\section{Vertiefung}\label{vertiefung}
+
+\href{https://allisonhorst.com/linear-regression-dragons}{Allison Horst}
+erklärt die lineare Regression mit Hilfe von Drachen. Sehenswert.
 
 \section{Aufgaben}\label{aufgaben}
 
-\subsection{Datenwerk}\label{datenwerk}
-
-Die Webseite \href{https://datenwerk.netlify.app}{datenwerk.netlify.app}
+Die Webseite
+\href{https://datenwerk.netlify.app}{datenwerk.netlify.app}\footnote{\url{https://datenwerk.netlify.app}}
 stellt eine Reihe von einschlägigen Übungsaufgaben bereit. Sie können
 die Suchfunktion der Webseite nutzen, um die Aufgaben mit den folgenden
 Namen zu suchen:
@@ -1700,154 +3195,62 @@ Namen zu suchen:
 \begin{itemize}
 \tightlist
 \item
-  \href{https://datenwerk.netlify.app/posts/mariokart-sd2/mariokart-sd2}{mariokart-sd2}
+  \href{https://datenwerk.netlify.app/posts/interpret-koeff-lm/interpret-koeff-lm.html}{interpret-koeff-lm}
 \item
-  \href{https://datenwerk.netlify.app/posts/mariokart-sd3/mariokart-sd3}{mariokart-sd3}
+  \href{https://datenwerk.netlify.app/posts/aussagen-einfache-regr/aussagen-einfache-regr}{Aussagen-einfache-Regr}
 \item
-  \href{https://datenwerk.netlify.app/posts/kennwert-robust/kennwert-robust}{Kennwert-robust}
+  \href{https://datenwerk.netlify.app/posts/interpret-koeff/interpret-koeff.html}{interpret-koeff}
 \item
-  \href{https://datenwerk.netlify.app/posts/summarise04/summarise04}{summarise04}
+  \href{https://datenwerk.netlify.app/posts/regression1b/regression1b.html}{regression1b}
 \item
-  \href{https://datenwerk.netlify.app/posts/summarise05/summarise05}{summarise05}
+  \href{https://datenwerk.netlify.app/posts/mtcars-regr01/mtcars-regr01.html}{mtcars-regr01}
 \item
-  \href{https://datenwerk.netlify.app/posts/vis-mariokart-variab/vis-mariokart-variab}{vis-mariokart-variab}
+  \href{https://datenwerk.netlify.app/posts/regression1a/regression1a.html}{regression1a}
 \item
-  \href{https://datenwerk.netlify.app/posts/sd-vergleich/sd-vergleich}{sd-vergleich}
+  \href{https://datenwerk.netlify.app/posts/lm1/lm1.html}{lm1}
 \item
-  \href{https://datenwerk.netlify.app/posts/nasa01/nasa01}{nasa01}
+  \href{https://datenwerk.netlify.app/posts/regression5/regression5}{Regression5}
 \item
-  \href{https://datenwerk.netlify.app/posts/streuung-histogramm/streuung-histogramm}{Streuung-Histogramm}
+  \href{https://datenwerk.netlify.app/posts/regression6/regression6}{Regression6}
 \item
-  \href{https://datenwerk.netlify.app/posts/mariokart-sd1/mariokart-sd1}{mariokart-sd1}
+  \href{https://datenwerk.netlify.app/posts/lm-mario1/lm-mario1.html}{lm-mario1}
 \item
-  \href{https://datenwerk.netlify.app/posts/summarise06/summarise06}{summarise06}
+  \href{https://datenwerk.netlify.app/posts/lm-mario2/lm-mario2.html}{lm-mario2}
 \item
-  \href{https://datenwerk.netlify.app/posts/mariokart-desk01/mariokart-desk01}{mariokart-desk01}
+  \href{https://datenwerk.netlify.app/posts/lm-mario3/lm-mario3.html}{lm-mario3}
+\item
+  \href{https://datenwerk.netlify.app/posts/ausreisser1/ausreisser1.html}{ausreisser1}
+\item
+  \href{https://datenwerk.netlify.app/posts/mario-compare-models/}{mario-compare-models}
 \end{itemize}
-
-\begin{exercise}[Analysieren Sie den Datensatz zur
-Handynutzung]\protect\hypertarget{exr-handy}{}\label{exr-handy}
-
-~
-
-\subsection{Aufgabe}
-
-Sind Sie händysüchtig? Das ist die Forschungsfrage
-\href{https://docs.google.com/forms/d/e/1FAIpQLSfM6oDLHX4_lqWq-bXw39drTkdGAvecE6ow2HIKoxdrVygp2A/viewform}{dieser
-Umfrage}. Nehmen Sie ggf. an dieser Umfrage teil (sie ist anonym und
-dauert drei Minuten). Laden Sie den
-\href{https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing}{Datensatz
-zur Handynutzung} von Google-Docs herunter.\footnote{\url{https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing}}
-Berechnen Sie dann gängige deskriptive Statistiken und visualisieren Sie
-sie. \(\square\)
-
-\subsection{Lösung: Daten importieren}
-
-Sie können die Daten entweder selber herunterladen oder aber die
-folgende Version des Datensatzes verwenden. In beiden Fällen ist es
-nützlich, den (absoluten oder relativen) Pfad anzugeben:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{data\_path }\OtherTok{\textless{}{-}} \StringTok{"https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/Smartphone{-}Nutzung\%20(Responses)\%20{-}\%20Form\%20responses\%201.csv"}
-\end{Highlighting}
-\end{Shaded}
-
-Dann können Sie die Daten wie gewohnt importieren:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{smartphone\_raw }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(data\_path)}
-\end{Highlighting}
-\end{Shaded}
-
-\subsection{Lösung: Daten aufbereiten}
-
-Die Spaltennamen sind sehr unschön. Lassen Sie uns daher die
-Spaltennamen umbenennen (aber vorab sichern):
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{item\_labels }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(smartphone\_raw)}
-
-\FunctionTok{names}\NormalTok{(smartphone\_raw) }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"item"}\NormalTok{,}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(smartphone\_raw))}
-\end{Highlighting}
-\end{Shaded}
-
-Check:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{glimpse}\NormalTok{(smartphone\_raw)}
-\DocumentationTok{\#\# Rows: 70}
-\DocumentationTok{\#\# Columns: 18}
-\DocumentationTok{\#\# $ item1  \textless{}chr\textgreater{} "21/03/2024 15:36:52", "05/04/2024 10:24:58\textasciitilde{}}
-\DocumentationTok{\#\# $ item2  \textless{}chr\textgreater{} "15:31:00", "10:23:00", "10:40:00", "11:14:\textasciitilde{}}
-\DocumentationTok{\#\# $ item3  \textless{}int\textgreater{} 3, 4, 3, 3, 5, 5, 5, 5, 1, 2, 5, 3, 2, 2, 2\textasciitilde{}}
-\DocumentationTok{\#\# $ item4  \textless{}int\textgreater{} 5, 3, 3, 3, 4, 3, 3, 6, 2, 4, 5, 1, 1, 2, 3\textasciitilde{}}
-\DocumentationTok{\#\# $ item5  \textless{}int\textgreater{} 3, 3, 1, 5, 1, 3, 2, 4, 3, 2, 1, 1, 1, 4, 1\textasciitilde{}}
-\DocumentationTok{\#\# $ item6  \textless{}int\textgreater{} 4, 2, 4, 3, 5, 4, 6, 3, 2, 5, 6, 4, 2, 6, 5\textasciitilde{}}
-\DocumentationTok{\#\# $ item7  \textless{}int\textgreater{} 4, 3, 2, 3, 3, 1, 3, 2, 1, 2, 1, 1, 1, 3, 2\textasciitilde{}}
-\DocumentationTok{\#\# $ item8  \textless{}int\textgreater{} 1, 3, 1, 2, 3, 1, 1, 2, 2, 2, 1, 1, 2, 4, 1\textasciitilde{}}
-\DocumentationTok{\#\# $ item9  \textless{}int\textgreater{} 2, 6, 1, 3, 6, 5, 5, 2, 2, 5, 6, 1, 1, 5, 4\textasciitilde{}}
-\DocumentationTok{\#\# $ item10 \textless{}int\textgreater{} 2, 5, 5, 3, 4, 3, 1, 5, 1, 5, 3, 4, 3, 5, 4\textasciitilde{}}
-\DocumentationTok{\#\# $ item11 \textless{}int\textgreater{} 5, 6, 6, 5, 6, 6, 5, 6, 4, 3, 6, 4, 4, 5, 3\textasciitilde{}}
-\DocumentationTok{\#\# $ item12 \textless{}int\textgreater{} 1, 3, 1, 2, 5, 2, 4, 2, 1, 1, 3, 1, 1, 1, 1\textasciitilde{}}
-\DocumentationTok{\#\# $ item13 \textless{}int\textgreater{} 4, 3, 4, 2, 4, 2, 5, 3, 1, 1, 4, 1, 3, 4, 1\textasciitilde{}}
-\DocumentationTok{\#\# $ item14 \textless{}chr\textgreater{} "", "", "", "", "", "", "", "", "", "", "",\textasciitilde{}}
-\DocumentationTok{\#\# $ item15 \textless{}chr\textgreater{} "", "", "", "", "", "", "", "", "", "", "",\textasciitilde{}}
-\DocumentationTok{\#\# $ item16 \textless{}int\textgreater{} NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,\textasciitilde{}}
-\DocumentationTok{\#\# $ item17 \textless{}chr\textgreater{} "", "", "", "", "", "", "", "", "", "", "",\textasciitilde{}}
-\DocumentationTok{\#\# $ item18 \textless{}int\textgreater{} NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,\textasciitilde{}}
-\end{Highlighting}
-\end{Shaded}
-
-\subsection{Lösung: Komplett}
-
-😁
-
-\end{exercise}
-
-\subsection{Fallstudie zur
-Lebenszufriedenheit}\label{fallstudie-zur-lebenszufriedenheit}
-
-Die OECD führt eine
-\href{https://www.oecd.org/wise/measuring-well-being-and-progress.htm}{weltweite
-Studie zur Lebenszufriedenheit} durch.\footnote{https://www.oecd.org/wise/measuring-well-being-and-progress.htm}
-
-Arbeiten Sie die die
-\href{https://datenwerk.netlify.app/posts/oecd-yacsda/}{Fallstudie
-``OECD Wellbeing''} durch, um ein tieferes Verständnis für die
-Lebenszufriedenheit in verschiedenen Ländern der Welt zu bekommen.
 
 \section{Literaturhinweise}\label{literaturhinweise}
 
-Allen Downey (2023) stellt in seinem vergnüglich zu lesenden Buch eine
-kurzweilige Einführung in die Statistik vor; auch Streuungsmaße haben
-dabei einen Auftritt. Wer mehr ``Lehrbuch-Feeling'' sucht, wird bei
-(\textbf{cetinkaya-rundel\_introduction\_2021-1?}) fündig (das Buch ist
-online frei verfügbar). Es ist kein Geheimnis, dass Streuungsmaße keine
-ganz neuen Themen in der Statistik sind. Aber hey, Oldie is Goldie, ohne
-Streuungsmaße geht's nicht. Jedenfalls werden Sie in jedem
-Statistik-Lehrbuch, dass Sie in der Bib (oder sonstwo) aus dem Regal
-ziehen, fündig werden zu diesem Thema. Die Bücher unterscheiden sich
-meist ``nur'' in ihrem Anspruch bzw. der didaktischen Aufmachung; für
-alle ist da was dabei.
+Wenn es ein Standardwerk für Regressionsanalyse geben könnte, dann
+vielleicht das neueste Buch von Andrew Gelman, ein bekannter Statistiker
+(Gelman, Hill, und Vehtari 2021). Sein Buch ist für
+Sozialwissenschaftler geschrieben, also nicht für typische Nerds, hat
+aber deutlich mehr Anspruch als dieses Kapitel.
 
 \section*{Literatur}\label{literatur}
 \addcontentsline{toc}{section}{Literatur}
 
 \phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
-\bibitem[\citeproctext]{ref-downey_probably_2023}
-Downey, Allen. 2023. \emph{Probably Overthinking It: How to Use Data to
-Answer Questions, Avoid Statistical Traps, and Make Better Decisions}.
-Chicago ; London: The University of Chicago Press.
-
 \bibitem[\citeproctext]{ref-world_economic_forum_future_2020}
 Forum, World Economic. 2020. {„The {Future} of {Jobs Report} 2020``}.
 CH-1223 Cologny/Geneva Switzerland: World Economic Forum.
 \url{https://www3.weforum.org/docs/WEF_Future_of_Jobs_2020.pdf}.
+
+\bibitem[\citeproctext]{ref-gelman_regression_2021}
+Gelman, Andrew, Jennifer Hill, und Aki Vehtari. 2021. \emph{Regression
+and Other Stories}. Analytical Methods for Social Research. Cambridge:
+Cambridge University Press.
+
+\bibitem[\citeproctext]{ref-okabeito}
+Okabe, Masataka, und Kei Ito. 2023. {„Color {Universal Design} ({CUD}) /
+{Colorblind Barrier Free}``}. 2023.
+\url{https://jfly.uni-koeln.de/color/}.
 
 \end{CSLReferences}
 

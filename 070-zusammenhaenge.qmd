@@ -187,13 +187,13 @@ cov_xy <- cov(d$y, d$x)
 
 Anton, Bert, Carl und Daniel haben ihre Statistikklausur zurückbekommen.
 Die Lernzeit $X$ scheint mit der erreichten Punktzahl $Y$ (0-100, je mehr desto besser) zusammenzuhängen.^[>   [🧑‍🎓]{.content-visible when-format="html"}  Typisches Lehrerbeispiel!!]
-Gar nicht so schlecht ausgefallen, s. @tbl-noten2.$\square$
+Gar nicht so schlecht ausgefallen wie gedacht ..., s. @tbl-noten2.$\square$
 :::
 
 ```{r}
 #| echo: false
 #| label: tbl-noten2
-#| tbl-cap: Statistiknoten und Lernzeit
+#| tbl-cap: Punkte in der Statistikklausur (0-100) und Lernzeit (0-100)
 
 d %>% 
   select(id, y, x) %>% 
@@ -206,8 +206,10 @@ Dabei zeichnen wir noch *Abweichungsrechtecke* ein.
 
 :::{#def-abweichungsrechteck}
 ### Abweichungsrechteck
-Im zweidimensionalen Fall spannt sich ein Abweichungsrechteck vom Mittelwert $\bar{x}$ bis zum Messwert $x_i$ und genauso für $Y$.
-Wir bezeichnen mit $dx_i$ die Distanz (Abweichung) vom Mittelwert $\bar{x}$ bis zum Messwert $x_i$ (und analog $dy_i$), also $dx_i = x_i - \bar{x}$.  Die Fläche des Abweichungsrechtecks ist dann das Produkt der Abweichungen: $dx_i \cdot dy_i$.$\square$
+Im zweidimensionalen Fall spannt sich ein Abweichungsrechteck vom Mittelwert $\bar{x}$ 
+bis zum Messwert $x_i$ und genauso für $Y$.
+Wir bezeichnen mit $dx_i$ die Distanz (Abweichung) vom Mittelwert $\bar{x}$ bis zum Messwert $x_i$ (und analog $dy_i$), also $dx_i = x_i - \bar{x}$.  
+Die Fläche des Abweichungsrechtecks ist dann das Produkt der Abweichungen: $dx_i \cdot dy_i$.$\square$
 :::
 
 ```{r}
@@ -250,11 +252,8 @@ Stellen Sie sich vor, wir legen alle Rechtecke zusammen aus @fig-delta-rect.
 Nennen wir das resultierende Rechteck das "Summenrechteck".
 Ja, ich weiß, ich strapaziere mal wieder Ihre Phantasie^[hoffentlich nicht Ihre Geduld].
 Jetzt kommt's: Je größer die Fläche des Summenrechtecks, desto stärker der (lineare) Zusammenhang.
-
 Beachten Sie, dass die Flächen Vorzeichen haben, positiv oder negativ (Plus oder Minus), je nach dem, in welchem der vier Quadranten sie stehen. Die Füllfarben der Rechtecke verdeutlichen dies, s. @fig-delta-rect.
-
-Das *Vorzeichen* der Summe zeigt an, ob der Zusammenhang positiv (gleichsinnig, ansteigende Trendlinie) oder negativ (gegensinnig, absinkende Trendlinie) ist.
-
+Das *Vorzeichen* der Summe zeigt an, ob der Zusammenhang positiv (gleichsinnig, ansteigende Trendlinie) oder negativ (gegensinnig, absinkende Trendl≥inie) ist.
 So zeigt @fig-kov links eine positive Summe der Abweichungsrechtecke und rechts eine negative Summe. Man sieht im linken Diagramme, dass die Summe der Rechtecke mit positivem Vorzeigen (rot) überwiegt; im rechten Diagramm ist es umgekehrt (blau, negativ überwiegt).
 
 ```{r}
@@ -794,11 +793,19 @@ mariokart %>%
 
 :::{.callout-caution}
 ### Namensverwechslung (name clash)
-Es kann vorkommen, dass Sie zwei R-Pakete geladen haben, in denen es jeweils z.B. eine Funktion mit Namen `select` gibt.
-R wird in dem Fall diejenige Funktion verwenden, deren Paket Sie als letztes gestartet haben.
+Es kann vorkommen, dass Sie zwei R-Pakete geladen haben, 
+in denen es jeweils z.B. eine Funktion mit Namen `select` gibt.
+R wird in dem Fall diejenige Funktion verwenden, 
+deren Paket Sie als letztes gestartet haben.
 Das kann dann das falsche `select` sein, wie es mir oben in der Syntax passiert ist.
-In dem Fall resultiert eine verwirrende Fehlermeldung, die sinngemäß sagt: "Hey Mensch, du hast Argumente in der Funktion verwendet, die du gar nicht verwenden darfst, da es sie nicht gibt." Auf Errisch: `Error in select(., duration, n_bids, start_pr, ship_pr, total_pr, seller_rate,  : unused arguments (duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels)`.
-Eine einfache Abhilfe ist es, R zu sagen: "Hey R, nimm gefälligst `select` aus dem Paket `dplyr`, dort "wohnt" nämlich `select`. Auf Errisch spricht sich das so: `dplyr::select(...)`.$\square$
+In dem Fall resultiert eine verwirrende Fehlermeldung, 
+die sinngemäß sagt: "Hey Mensch, du hast Argumente in der Funktion verwendet, die du gar nicht verwenden darfst, 
+da es sie nicht gibt." 
+Auf Errisch: `Error in select(., duration, n_bids, start_pr, ship_pr, total_pr, seller_rate,  : unused arguments (duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels)`.
+Eine einfache Abhilfe ist es, R zu sagen: 
+"Hey R, nimm gefälligst `select` aus dem Paket `dplyr`, 
+dort "wohnt" nämlich `select`. 
+Auf Errisch spricht sich das so: `dplyr::select(...)`.$\square$
 :::
 
 
@@ -807,11 +814,23 @@ Eine einfache Abhilfe ist es, R zu sagen: "Hey R, nimm gefälligst `select` aus 
 Etwas schöner sieht die Ausgabe mit dem Befehl `correlation` aus `{easystats}` aus, s. @tbl-mario-corr.
 
 ```{r}
+#| eval: false
+mariokart %>% 
+  dplyr::select(duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels) |> 
+  correlation() |> 
+  summary()
+```
+
+
+```{r}
 #| label: tbl-mario-corr
+#| echo: false
 #| tbl-cap: Korrelationstabelle (tidy) im Datensatz mariokart
 mariokart %>% 
-  dplyr::select(duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels) %>% 
-  correlation() 
+  dplyr::select(duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels) |> 
+  correlation() |> 
+  summary() |> 
+  print_md()
 ```
 
 :::
@@ -820,11 +839,23 @@ mariokart %>%
 Etwas schöner sieht die Ausgabe mit dem Befehl `correlation` aus `{easystats}` aus, s. @tbl-mario-corr-pdf.
 
 ```{r}
+#| eval: false
+mariokart %>% 
+  dplyr::select(start_pr, ship_pr, total_pr) %>% 
+  correlation() |> 
+  summary() |> 
+  print_md()
+```
+
+```{r}
 #| label: tbl-mario-corr-pdf
+#| echo: false
 #| tbl-cap: Korrelationstabelle (tidy) im Datensatz mariokart
 mariokart %>% 
   dplyr::select(start_pr, ship_pr, total_pr) %>% 
-  correlation() 
+  correlation() |> 
+  summary() |> 
+  print_md()
 ```
 
 :::
@@ -919,7 +950,7 @@ Testen Sie Ihr Wissen mit [diesem Quiz](https://forms.gle/w7eTW3ftKy8Hv3nw8) zur
 
 ## Fallstudien
 
-1. [YACSDA: EDA zu Flugverspätungen](https://datenwerk.netlify.app/posts/flights-yacsda-eda/)
+1. [YACSDA: EDA zu Flugverspätungen](https://datenwerk.netlify.app/posts/flights-yacsda-eda/)^[<https://datenwerk.netlify.app/posts/flights-yacsda-eda>]
 
 :::{.callout-note}
 Einige der Fallstudien oder Übungsaufgaben können theoretische Inhalte (Konzepte der Statistik) oder praktische Inhalte (R-Befehle) enthalten, die Sie (noch) nicht kennen.
@@ -931,15 +962,16 @@ Oder Sie suchen nach einer Lösung anhand von Konzepten bzw. R-Befehlen, die Sie
 
 
 
-2. [YACSDA: Topgear](https://data-se.netlify.app/2021/02/11/yacda-topgear/)
-4. [Datensatz flights: Finde den Tag mit den meisten Abflügen](https://data-se.netlify.app/2021/05/27/datensatz-flights-finde-den-tag-mit-den-meisten-abfl%C3%BCgen/)
-5. [Tidyverse Case Study: Exploring the Billboard Charts](https://www.njtierney.com/post/2017/11/07/tidyverse-billboard/)
+2. [YACSDA: Topgear](https://data-se.netlify.app/2021/02/11/yacda-topgear/)^[<https://data-se.netlify.app/2021/02/11/yacda-topgear/>]
+4. [Datensatz flights: Finde den Tag mit den meisten Abflügen](https://data-se.netlify.app/2021/05/27/datensatz-flights-finde-den-tag-mit-den-meisten-abfl%C3%BCgen/)^[<https://data-se.netlify.app/2021/05/27/datensatz-flights-finde-den-tag-mit-den-meisten-abfl%C3%BCgen/>]
+5. [Tidyverse Case Study: Exploring the Billboard Charts](https://www.njtierney.com/post/2017/11/07/tidyverse-billboard/)^[<https://www.njtierney.com/post/2017/11/07/tidyverse-billboard/>]
 
 
 :::{.callout-note}
 Bitte verstehen Sie die folgende Auswahl an Fallstudien als Auswahl.
 Es ist nicht nötig, dass Sie alle Fallstudien bearbeiten.
-Sehen Sie die Fallstudien eher als Angebot zur selektiven Vertiefung und Übung, dort, wo Sie es nötig haben.$\square$
+Sehen Sie die Fallstudien eher als Angebot zur selektiven
+Vertiefung und Übung, dort, wo Sie es nötig haben.$\square$
 :::
 
 

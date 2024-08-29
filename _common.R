@@ -19,8 +19,9 @@ knitr::opts_chunk$set(tidy = FALSE,
                       width = 60, 
                       max.print = 100,
                       warning = FALSE)
-options(width=60)
 
+options(widthi = 60)
+options(digits = 2)
 
 
    

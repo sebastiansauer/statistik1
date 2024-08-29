@@ -43,9 +43,9 @@ histogram_to_boxplot <- function(d = mariokart,
     scale_y_continuous(limits = c((min(d[[var_chosen]])),(max(d[[var_chosen]]))), 
                        breaks = pretty(d[[var_chosen]], n = 10)) +
     labs(x = "", y = var_chosen)  +
-    annotate("label", y = var_md, x = 0 , label = paste0("Md")) +
-    annotate("label", y = var_q1, x = -1 + 0.5 , label = paste0("Q1"), vjust = "bottom") +
-    annotate("label", y = var_q3, x = -1 + 0.5, label = paste0("Q3"), vjust = "bottom") +
+    annotate("label", y = var_md, x = 0.5 , label = paste0("Md")) +
+    annotate("label", y = var_q1, x = -2 + 0.5 , label = paste0("Q1"), vjust = "bottom") +
+    annotate("label", y = var_q3, x = -2 + 0.5, label = paste0("Q3"), vjust = "bottom") +
     scale_x_continuous(limits = c(-2,1), breaks = NULL)
   
   

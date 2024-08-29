@@ -62,7 +62,9 @@ library(easystats)
 ::: {.content-visible when-format="html"}
 
 ```{r import-mariokart-csv}
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+mariokart_path <- "https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"
+
+mariokart <- read.csv(mariokart_path)
 ```
 :::
 
@@ -71,9 +73,11 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 
 
 ```{r import-mariokart-csv2}
-mariokart <- read.csv(paste0(
+mariokart <- paste0(
   "https://vincentarelbundock.github.io/Rdatasets/",
-  "csv/openintro/mariokart.csv"))
+  "csv/openintro/mariokart.csv")
+
+mariokart <- read.csv(mariokart_path)
 ```
 
 :::
@@ -169,12 +173,13 @@ Zerlegt man es aber in seine Einzelteile, so sind es deutlich einfachere geometr
 
 ![Das Lego-Prinzip](img/Bausteine_dplyr_crop){#fig-lego width="75%"}
 
-Damit Sie es selber einfach machen können, müssen Sie selber Hand anlegen.
+Damit Sie es selber einfach machen können, 
+müssen Sie selber Hand anlegen.
 Importieren Sie daher den Datensatz `mariokart`, z.B. so:
 
 
 ```{r}
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+mariokart <- read.csv(mariokart_path)
 
 glimpse(mariokart)
 ```
@@ -291,6 +296,7 @@ Sie wollen mal locker anfangen. Daher stellen Sie sich folgende Frage: Was sind 
 Die Spalte des Verkaufspreis heißt offenbar `total_pr` (s. Tabelle `mariokart`).
 In Excel kann die Spalte, nach der man die Tabelle sortieren möchte,
 einfach anklicken. Ob das in R auch so einfach geht?
+Die Funktion `arrange()` macht es uns ziemlich einfach:
 
 ::: {.content-visible when-format="html"}
 
@@ -303,15 +309,16 @@ arrange(mariokart, total_pr)
 ::: {.content-visible when-format="pdf"}
 ```{r}
 #| eval: false
-arrange(mariokart, total_pr)
+arrange(mariokart, total_pr) 
 ```
 
 
 ```{r}
 #| echo: false
 mariokart |> 
-  select(rownames, total_price, start_pr) |> 
-  arrange(total_pr)
+  select(total_pr, start_pr) |> 
+  arrange(total_pr) |> 
+  head()
 ```
 
 :::
@@ -320,7 +327,7 @@ mariokart |>
 
 ```
 Hey R,
-arrangiere (sortiere) `mariokart` nach der Spalte `total_pr`
+arrangiere (sortiere) `mariokart` nach der Spalte `total_pr`.
 ```
 
 Gar nicht so schwer.$\square$
@@ -346,7 +353,8 @@ Sortieren Sie die Mariokart-Daten absteigend nach der Anzahl der beigelegten Len
 
 #### Nur bestimmte Zeilen behalten
 
-Zeilen *filtern* bedeutet, dass man nur *bestimmte* *Zeilen* (Beobachtungen) *behalten* möchte, die restlichen Zeilen brauchen wir nicht, weg mit ihnen.
+Zeilen *filtern* bedeutet, dass man nur *bestimmte* *Zeilen* (Beobachtungen) *behalten* möchte, 
+die restlichen Zeilen brauchen wir nicht, weg mit ihnen.
 Wir haben also ein Filterkriterium im Kopf,
 anhand dessen wir die Tabelle filern, s. @fig-filter.
 
@@ -524,7 +532,8 @@ mario_select1 <- select(mariokart, cond, total_pr)
 Aha (?)$\square$
 :::
 
-Der Befehl `select` erwartet als Input eine Tabelle und gibt (als Output) eine Tabelle zurück - genau wie die meisten anderen Befehle des Datenjudos.
+Der Befehl `select` erwartet als Input eine Tabelle und gibt (als Output) eine Tabelle zurück 
+-- genau wie die meisten anderen Befehle des Datenjudos.
 Auch wenn Sie nur eine Spalte auswählen, bleibt es eine Tabelle,
 eben eine Tabelle mit nur einer Spalte.
 
@@ -699,7 +708,7 @@ p_group <- wrap_plots(A= p_d1,
 p_group
 ```
 
-Durch das Gruppieren wird die Tabelle in "Teiltabellen" - entsprechend der Gruppen - aufgeteilt.
+Durch das Gruppieren wird die Tabelle in "Teiltabellen" -- entsprechend der Gruppen -- aufgeteilt.
 Das sieht man der R-Tabelle aber nicht wirklich an.
 Aber alle nachfolgenden Berechnungen werden *für jede Teiltabelle* einzeln ausgeführt.
 
@@ -797,7 +806,7 @@ Nach etwas Googeln finden Sie einen Umrechnungskurs von 1:133.
 ```{r}
 mariokart2 <- mutate(mariokart, total_pr_yen = total_pr * 133)
 mariokart2 <- select(mariokart2, total_pr_yen, total_pr)
-mariokart2
+mariokart2 |> head()  # nur die ersten paar Zeilen
 ```
 
 Sicherlich werden Sie Ihre Gesprächspartner schwer beeindrucken.$\square$
@@ -825,7 +834,7 @@ mariokart_duration_wochen <-
 
 mariokart_duration_wochen <-
    select(mariokart_duration_wochen, duration, duration_week)
-mariokart_duration_wochen
+mariokart_duration_wochen |> head()  # nur die ersten paar Zeilen
 ```
 :::
 :::
@@ -850,7 +859,7 @@ mariokart_duration_wochen_gerundet <-
 mariokart_duration_wochen_schmal <-
   select(mariokart_duration_wochen_gerundet, duration, 
          duration_week, duration_week_gerundet)
-mariokart_duration_wochen_schmal
+mariokart_duration_wochen_schmal |> head()
 ```
 :::
 :::
@@ -924,7 +933,12 @@ flowchart LR
 
 ## Die Pfeife {#sec-pipe}
 
-🚬 👈 Das ist keine Pfeife, wie René Magritte 1929 in seinem [berühmten Bild](https://en.wikipedia.org/wiki/File:MagrittePipe.jpg) schrieb, s. @fig-pfeifen [@m7_savinellis_2004-1].^[Vgl. <https://en.wikipedia.org/wiki/The_Treachery_of_Images>]
+[🚬 👈 ]{.content-visible when-format="html"}Das ist keine Pfeife, 
+wie René Magritte 1929 in seinem [berühmten Bild](https://en.wikipedia.org/wiki/File:MagrittePipe.jpg) schrieb, 
+s. @fig-pfeifen [@m7_savinellis_2004-1].^[Vgl. <https://en.wikipedia.org/wiki/The_Treachery_of_Images>]
+
+
+
 
 :::::{#fig-pfeifen}
 
@@ -958,14 +972,17 @@ flowchart LR
 
 ::::
 
-So sieht die Pfeife in R aus^[Jaja, das ist keine Pfeife, sondern ein Symbol einer Pfeife...]. Links: Ein Bild einer Pfeife. Mitte und Rechts: Die zwei R-Symbole für eine "Pfeife" (pipe).
+
+So sieht die Pfeife in R aus (Jaja, das ist keine Pfeife, sondern ein Symbol einer Pfeife...). Links: Ein Bild einer Pfeife. Mitte und Rechts: Die zwei R-Symbole für eine "Pfeife" (pipe).
 
 :::::
 
 
 ### Russische Puppen
 
-Computerbefehle, und im Speziellen R-Befehle kann man "aufeinander" -- oder vielmehr: ineinander -- stapeln, so ähnlich wie eine russische Puppe (vgl. @sec-first-fun).
+Computerbefehle, und im Speziellen R-Befehle kann man "aufeinander" 
+-- oder vielmehr: ineinander -- stapeln, 
+so ähnlich wie eine russische Puppe (vgl. @sec-first-fun).
 Schauen wir uns das in einem Beispiel an.
 Dazu definieren wir zuerst einen Vektor `x` aus drei Zahlen:
 
@@ -979,7 +996,8 @@ Und dann kommt unser verschachtelter Befehl:
 sum(x - mean(x))
 ```
 
-Wie schon erwähnt, arbeitet R so einen "verschachtelten" Befehl *von innen nach außen* ab:
+Wie schon erwähnt, arbeitet R so einen "verschachtelten"
+Befehl *von innen nach außen* ab:
 
 
 Start: `sum(x - mean(x))`
@@ -1007,7 +1025,10 @@ Schauen Sie sich mal folgende (Pseudo-)Syntax an:^[Ein beliebter Fehler ist es �
 
 
 ```{#lst-schachtel .r lst-cap="Eine wild verschachtelte Sequenz von R-Befehlen"}
-fasse_zusammen(gruppiere(wähle_spalten(filter_zeilen(meine_daten))))
+fasse_zusammen(
+  gruppiere(
+    wähle_spalten(
+      filter_zeilen(meine_daten))))
 ```
 
 
@@ -1016,7 +1037,8 @@ fasse_zusammen(gruppiere(wähle_spalten(filter_zeilen(meine_daten))))
 ### Die Pfeife zur Rettung
 
 @lst-schachtel ist schon harter Tobak, was für echte Fans.
-Wäre es nicht einfacher, man könnte @lst-schachtel wie folgt schreiben:
+Wäre es nicht einfacher, 
+man könnte @lst-schachtel wie folgt schreiben:
 
 
 ```
@@ -1046,7 +1068,8 @@ die sieht so aus: `|>`.
 Die eingebaute Pfeife funktioniert praktisch gleich zur anderen Pfeife ` %>% `,
 hat aber den Vorteil, dass Sie nicht `{tidyverse}` starten müssen.
 Da wir `{tidyverse}` aber sowieso praktisch immer starten werden, 
-bringt es uns keinen Vorteil, die neuere Pfeife des Standard-R `|>` zu verwenden.^[Aber auch keinen Nachteil. Unter *Tools > Global Options...* können Sie einstellen, dass der Shortcut Strg-Shift-M die eingebaute Pfeife verwendet.] 
+bringt es uns keinen Vorteil, die neuere Pfeife des Standard-R `|>` zu verwenden.^[Aber auch keinen Nachteil. Unter *Tools > Global Options...* können Sie einstellen, 
+dass der Shortcut Strg-Shift-M die eingebaute Pfeife verwendet.] 
 
 ::::{.columns}
 
@@ -1131,7 +1154,8 @@ Ja, ich weiß, es ist hart, nicht gleich auf die Lösungen zu schauen! $\square$
 :::
 
 
-Sie arbeiten als ~~Diener~~ strategischer Assistent der Geschäftsführerin und sind für Faktenchecks und andere Daten-Aufgaben zuständig. 
+Sie arbeiten als ~~Diener~~ strategischer Assistent der Geschäftsführerin 
+und sind für Faktenchecks und andere Daten-Aufgaben zuständig.
 Heute sollen Sie zeigen, was Sie können (Schluck).
 
 
@@ -1141,7 +1165,9 @@ Heute sollen Sie zeigen, was Sie können (Schluck).
 
 ### Frage
 
->   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} Ich würde von Ihnen  gerne wissen, was das teuerste Spiel ist, aber jeweils für neue und gebrauchte Spiele. Aber nur für Spiele, die mit Foto verkauft wurden!
+>   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} Ich würde von Ihnen  gerne wissen, 
+was das teuerste Spiel ist, aber jeweils für neue und gebrauchte Spiele. 
+Aber nur für Spiele, die mit Foto verkauft wurden!
 
 ### Antwort
 
@@ -1167,19 +1193,25 @@ max(x)
 
 ### Frage
 
->   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"}  ️ Ich würde gerne die mittlere Versandpauschale wissen, aber getrennt nach Anzahl der Lenkräder, die dem Spiel beigelegt sind. Und ich will nur Gruppen berücksichtigen, die aus mindestens 10 Spielen bestehen!
+>   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} Ich würde gerne die mittlere Versandpauschale wissen, 
+aber getrennt nach Anzahl der Lenkräder, die dem Spiel beigelegt sind. 
+Und ich will nur Gruppen berücksichtigen, die aus mindestens 10 Spielen bestehen!
 
 ### Antwort
 
-Wenn wir die Anzahl der Spiele zählen in Abhängigkeit der beigelegten Lenkräder (`wheels`), bekommen wir eine Tabelle mit zwei Spalten: `wheels` und `n`.
-`n` zählt, wie viele Spiele (Zeilen) in der jeweiligen Gruppe ("Teiltabelle") von `wheels` sind.
+Wenn wir die Anzahl der Spiele zählen in Abhängigkeit der beigelegten Lenkräder (`wheels`), 
+bekommen wir eine Tabelle mit zwei Spalten: `wheels` und `n`.
+`n` zählt, wie viele Spiele (Zeilen) 
+in der jeweiligen Gruppe ("Teiltabelle") von `wheels` sind.
 
 ```{r}
 mariokart %>%
   count(wheels)
 ```
 
-Aus dieser Tabellet sehen wir, dass 3 oder 4 Lenkräder nur selten (2 bzw. 1 Mal) beigelegt wurden und wir solche Spiele herausfiltern sollten, bevor wir den Mittelwert der Versankosten ausrechnen:
+Aus dieser Tabellet sehen wir, dass 3 oder 4 Lenkräder nur selten (2 bzw. 1 Mal) 
+beigelegt wurden und wir solche Spiele herausfiltern sollten, 
+bevor wir den Mittelwert der Versankosten ausrechnen:
 
 ```{r}
 mariokart %>%
@@ -1200,7 +1232,9 @@ Die Funktion `n()` gibt die Anzahl der Zeilen pro Teiltabelle zurück.
 
 ### Frage
 
->   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} Ich würde gerne den Verkaufspreis in Yen wissen, nicht in Euro. Dann rechne mal den mittleren Verkaufspreis aus und ziehe 10% ab, die wir als Provision unseren Verkäufern zahlen müssen.
+>   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} Ich würde gerne den Verkaufspreis in Yen wissen, nicht in Euro. 
+Dann rechne mal den mittleren Verkaufspreis aus und ziehe 10% ab, 
+die wir als Provision unseren Verkäufern zahlen müssen.
 
 
 ### Antwort
@@ -1215,7 +1249,8 @@ mariokart %>%
 ```
 
 Wie man sieht kann man in `summarise` auch mehr als eine Berechnung einstellen.
-In diesem Fall haben wir zwei Berechnungen angestellt: Einmal den Mittelwert und einmal den Mittelwert minus 10% (des Mittelwerts).
+In diesem Fall haben wir zwei Berechnungen angestellt: 
+Einmal den Mittelwert und einmal den Mittelwert minus 10% (des Mittelwerts).
 
 :::
 
@@ -1223,19 +1258,24 @@ In diesem Fall haben wir zwei Berechnungen angestellt: Einmal den Mittelwert und
 :::{#exr-diy}
 ### Do It Yourself
 Denken Sie sich selber ähnliche Forschungsfragen aus.
-Stellen Sie diese einer vertrauenswürdigen Kommilitonen bzw. einem vertrauenswürdigen Kommilitonen. DIY!
+Stellen Sie diese einer vertrauenswürdigen Kommilitonen bzw. einem vertrauenswürdigen Kommilitonen. 
+DIY!
 Schauen Sie, ob Ihre Aufgabe richtig gelöst wird. $\square$
 :::
 
 ## Praxisbezug
 
 
-Die Covid19-Epidemie hatte weltweit massive Auswirkungen; auch psychologischer Art wie Vereinsamung, Angst oder Depression.
+Die Covid19-Epidemie hatte weltweit massive Auswirkungen; auch psychologischer Art wie Vereinsamung, 
+Angst oder Depression.
 Eine Studie, die die psychologischen Auswirkungen von @mulukom_psychological_2020,
 die [unter der Projekt-ID tsjnb bei der Open Science Foundation (OSF), <https://osf.io/tsjnb/>, angemeldet ist](https://osf.io/tsjnb/).
-Die Daten wurden mit R ausgewertet. Beispielhaft ist unter <https://osf.io/4b9p2> die R-Syntax zu sehen, die die Autoren zur Datenaufbereitung verwendet haben. 
+Die Daten wurden mit R ausgewertet. 
+Beispielhaft ist unter <https://osf.io/4b9p2> die R-Syntax zu sehen, die die Autoren zur Datenaufbereitung verwendet haben.
 Einen guten Teil dieser Syntax kennen Sie aus diesem Kapitel.
-Diese Studie ist, neben einigen vergleichbaren, ein schönes Beispiel, wie Forschung und Praxis ineinander  greifen können: Angewandte Forschung als Beitrag zur Lösung eines akuten Problems, der Corona-Pandemie.
+Diese Studie ist, neben einigen vergleichbaren, ein schönes Beispiel, wie Forschung und Praxis ineinander 
+greifen können: Angewandte Forschung als Beitrag zur Lösung eines akuten Problems, 
+der Corona-Pandemie.
 
 
 ## Wie man mit Statistik lügt
@@ -1251,12 +1291,17 @@ pr_mean <- round(mean(mariokart$total_pr), 0)
 ```
 
 
-Eine Analystin [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} möchte zeigen, dass der Verkaufspreis von Mariokart-Spielen "viel zu niedrig" ist. Es muss ein höherer Wert rauskommen, findet dis Analysti. Der mittlere Verkaufspreis (im Datensatz `mariokart`) liegt bei 50 Euro. 
+Eine Analystin [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} möchte zeigen, dass der Verkaufspreis von Mariokart-Spielen "viel zu niedrig" ist. 
+Es muss ein höherer Wert rauskommen, findet dis Analysti. Der mittlere Verkaufspreis (im Datensatz `mariokart`) 
+liegt bei 50 Euro. 
 
 
->   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"}  Kann man den Wert nicht ... "kreativ verbessern"? Ein paar Statistik-Tricks anwenden?
+>   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"}  Kann man den Wert nicht ... "kreativ verbessern"? 
+Ein paar Statistik-Tricks anwenden?
 
-Um dieses Ziel zu erreichen, teilt dis Analysti den Datensatz in Gruppen nach Anzahl der dem Spiel beigelegten Lenkräder (`wheels`). Dann wird der Mittelwert pro Gruppe berechnet.
+Um dieses Ziel zu erreichen, teilt die Analystin den Datensatz in Gruppen 
+nach Anzahl der dem Spiel beigelegten Lenkräder (`wheels`).
+Dann wird der Mittelwert pro Gruppe berechnet.
 
 ```{r}
 mariokart_wheels <- 

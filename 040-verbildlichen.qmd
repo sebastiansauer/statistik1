@@ -33,8 +33,6 @@ source("_common.R")
 
 
 
-### Standort im Lernpfad
-
 Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
 
 
@@ -83,8 +81,6 @@ mariokart_path <- "https://vincentarelbundock.github.io/Rdatasets/csv/openintro/
 ::: {.content-visible when-format="pdf"}
 
 Zuerst definieren wir den Pfad, wo wir die Daten finden, s. @lst-mariokart-path-pdf.
-
-
 ```{r mariokart-path-pdf}
 #| lst-label: lst-mariokart-path-pdf
 #| lst-cap: Pfad zu den Mariokart-Daten
@@ -93,23 +89,47 @@ mariokart_path <- paste0(
   "/csv/openintro/mariokart.csv")
 ```
 :::
-
-Dann importieren wir die Mariokart-Daten:
+Dann importieren wir die Mariokart-Daten, s. @lst-imp-mario-verbild:
 
 ```{r import-mariokar}
+#| lst-cap: "Wir importieren die Mariokart-Daten"
+#| lst-label: lst-imp-mario-verbild
 mariokart <- read.csv(mariokart_path)
 ```
+
+
+::: {.content-visible when-format="html"}
 
 ### R-Code zum Copy-Pasten
 
 Sie finden den R-Code für jedes Kapitel [hier](https://github.com/sebastiansauer/statistik1/tree/main/R-code-for-all-chapters). $\square$
 
-
+:::
 
 
 ### Quiz zum Einstieg
 
-Vielleicht fordert Sie die Lehrkraft zu einem Einstiegsquiz auf, etwas mittels der Plattform [antworte.jetzt](https://antworte.jetzt/).^[https://antworte.jetzt/] Alternativ überlegen Sie sich selber 10 Quiz-Aufgaben zum Stoff des letzten Kapitels.
+:::: {layout="[ 80, 20 ]"}
+::: {#first-column}
+Vielleicht fordert Sie die Lehrkraft zu einem Einstiegsquiz auf, etwas mittels der Plattform [antworte.jetzt](https://antworte.jetzt/).
+Alternativ überlegen Sie sich selber 10 Quiz-Aufgaben zum Stoff des letzten Kapitels.
+:::
+
+::: {#second-column}
+
+```{r}
+#| echo: false
+
+qr <- qrcode::qr_code("https://antworte.jetzt")
+plot(qr)
+```
+:::
+::::
+
+
+
+
+
 
 
 
@@ -138,7 +158,13 @@ Vielleicht fordert Sie die Lehrkraft zu einem Einstiegsquiz auf, etwas mittels d
 Es heißt, ein Bild sage mehr als 1000 Worte. 
 Schon richtig, aber ein Dinosaurier sagt auch mehr als 1000 Worte,
 s. @fig-dino1.^[Quelle: <https://towardsdatascience.com/how-to-turn-a-dinosaur-dataset-into-a-circle-dataset-with-the-same-statistics-64136c2e2ca0>]
-
+In @fig-dino1 sieht man verschiedene "Bilder", also Datensätze: etwa einen Dino und einmal einen Kreis.
+Obwohl die Bilder grundverschiedene sind, sind die zentralen statistischen Kennwerte (praktisch) identisch.
+In die gleiche Bresche schlägt "Anscombes Quartett" [@Anscombe_1973], s. @fig-dino2:
+Es zeigt vier Datensätze, in denen die zentralen Statistiken fast identisch sind,    
+also Mittelwerte, Streuungen, Korrelationen.
+Aber die Streudiagramme sind grundverschieden.^[Quelle: <https://en.wikipedia.org/wiki/Anscombe%27s_quartet>]
+Anscombes Beispiel zeigt (zugespitzt): Eine Visualisierung enthüllt, was der Statistik (als Kennzahl) verhüllt bleibt.
 
 
 
@@ -166,35 +192,14 @@ ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset))+
 
 
 
-In @fig-dino1 sieht man verschiedene "Bilder", also Datensätze: etwa einen Dino und einmal einen Kreis.
-Obwohl die Bilder grundverschiedene sind, sind die zentralen statistischen Kennwerte (praktisch) identisch.
 
-
-
-In die gleiche Bresche schlägt "Anscombes Quartett" [@Anscombe_1973], s. @fig-dino2:
-Es zeigt vier Datensätze, in denen die zentralen Statistiken fast identisch sind,    
-also Mittelwerte, Streuungen, Korrelationen.
-Aber die Streudiagramme sind grundverschieden.^[Quelle: <https://en.wikipedia.org/wiki/Anscombe%27s_quartet>]
-
-Anscombes Beispiel zeigt (zugespitzt): Eine Visualisierung enthüllt, was der Statistik (als Kennzahl) verhüllt bleibt.
 
 :::{.callout-important}
 Statistische Diagramme können Einblicke geben, die sich nicht (leicht) in grundlegenden Statistiken (Kennwerten) abbilden. $\square$
 :::
 
 
-![Anscombes Quartet: Gleiche statistischen Kennwerte in vier Datensätzen](img/anscombe.png){#fig-dino2}
-
-
-
-
-
-
-
-
-
-
-
+![Anscombes Quartet: Gleiche statistischen Kennwerte in vier Datensätzen](img/anscombe.png){#fig-dino2 width=75%}
 
 
 
@@ -225,11 +230,23 @@ Erkenntnisse daraus zu ziehen.
 
 ### Aus der Forschung: Ein aufwändiges (und ansprechendes) Datendiagramm
 
-[Hier](https://besjournals.onlinelibrary.wiley.com/cms/asset/22fa2646-002f-4890-800d-2717cc12bce8/jane13070-fig-0002-m.jpg) finden Sie ein Beispiel für ein Datendiagramm,
- das mit R erzeugt wurde [@scherer_seasonal_2019].
+
+:::: {layout="[ 80, 20 ]"}
+::: {#first-column}
+Auf Basis des Korruptionsindex von Transparency International [-@transparency_international_corruption_2017] erstellt Wilke [-@wilke_wilkelabpracticalgg_2024 ein Diagramm zum Zusammenhang vom Entwicklungsindex (Lebenserwartung, Bildung, Einkommen; @vgl. @hou_dynamics_2015) und Korruption, jeweils auf Landesebene, s. @fig-develop-corrupt.
+
+
+Es finden sich in der Literatur (im Internet) viele weitere Beispiele für handwerklich meisterhaft erstelle Datendiagramme, die in vielen Fällen mit R erstellt werden [vgl. @scherer_seasonal_2019].
+
 :::
 
- 
+::: {#second-column}
+
+![](img/develop-corrupt.png){#fig-develop-corrupt}
+
+:::
+::::
+
 
 
 ### Ein Bild hat nicht so viele Dimensionen
@@ -296,11 +313,10 @@ s. @fig-3d-earth.^[Quelle: Paul Buffa, d3js, <https://observablehq.com/@pstuffa/
 ## Nomenklatur von Datendiagrammen
 
 @tbl-nom-plots zeigt eine -- sehr kurze Nomenklatur -- an 
-Datendiagrammen.^[Weitere Nomenklaturen sind möglich, 
+Datendiagrammen. Weitere Nomenklaturen sind möglich, 
 aber wir halten hier die Sache einfach. 
-Wer an Vertiefung interessiert ist, f
-indet bei data-to-vis einen Überblick über verschiedene Typen an Diagrammen, 
-sogar in Form einer systematischen Nomenklatur: <https://www.data-to-viz.com/>.]
+Wer an Vertiefung interessiert ist, 
+findet bei data-to-vis einen Überblick über verschiedene Typen an Diagrammen, sogar in Form einer systematischen Nomenklatur: <https://www.data-to-viz.com/>.
 
 ```{r}
 #| echo: false
@@ -404,37 +420,25 @@ mariokart %>%
 ```
 
 Es gibt viele Methoden, sich mit R ein Balkendiagramm ausgeben zu lassen.
-Eine einfache, komfortable ist die mit dem Paket `DataExplorer`,
-s. @fig-de1.
+Eine einfache, komfortable ist die mit dem Paket `DataExplorer`, s. @fig-mario-n-plot-cond;
+wir betrachten gleich die Syntax.
+
 
 ::: {.content-visible when-format="html"}
-Zuerst importieren wir die Daten, s.  @lst-mariokart und @lst-mariokart-path.
+Zuerst importieren wir die Daten, s.  @lst-mariokart-path.
 :::
 
 ::: {.content-visible when-format="pdf"}
-Zuerst importieren wir die Daten, s. @lst-mariokart und @lst-mariokart-path-pdf.
+Zuerst importieren wir die Daten, s. @lst-mariokart-path-pdf.
 :::
 
 
-```{r}
-#| lst-cap: "Mariokart-Daten importieren von einer Webseite"
-#| lst-label: lst-mariokart
-#| eval: false
-mariokart <- read.csv(mariokart_path)
-```
-
-
-Außerdem nicht vergessen, das Paket `DataExplorer` zu starten, s. @lst-dataexplorer.^[Natürlich müssen Sie das Paket einmalig installiert haben, bevor Sie es starten können.]
-In diesem Paket "wohnen" die Befehle, die wir zum Erstellen der Datendiagramme nutzen werden. @lst-de1 zeigt die Syntax, um ein Balkendiagramm zu erstellen.^[Auf der Hilfeseite der Funktion finden Sie weitere Details zur Funktion.]
-
-
-```{r}
-#| lst-label: lst-dataexplorer
-#| lst-cap: "Wir starten das R-Paket DataExplorer"
-#| eval: false
-library(DataExplorer)
-```
-
+Außerdem nicht vergessen, das Paket `DataExplorer` mit dem Befehle `library` zu starten.
+(Natürlich müssen Sie das Paket einmalig installiert haben, 
+bevor Sie es starten können.)
+In diesem Paket "wohnen" die Befehle, die wir zum Erstellen der Datendiagramme nutzen werden. 
+@lst-de1 zeigt die Syntax, um ein Balkendiagramm zu erstellen. 
+Auf der Hilfeseite der Funktion finden Sie weitere Details zur Funktion.
 
 
 
@@ -463,17 +467,18 @@ Hätten wir andere Spalten ausgewählt, so würde das Balkendiagramm die Verteil
 
 
 ::::{#exr-balken}
-:::{.panel-tabset}
-### Aufgabe
-Visualisieren Sie die Verteilung von `stock_photo`!
 
-### Lösung
+### Visualisieren Sie die Verteilung von `stock_photo`!
+
+
+**Lösung**
 ```{r}
+#| eval: "knitr::is_html_output()"
 mariokart |> 
   select(stock_photo) |> 
   plot_bar()
 ```
-:::
+
 ::::
 
 
@@ -485,7 +490,8 @@ mariokart |>
 
 #### Histogramm
 
-Bei einer quantitativen Variablen mit vielen Ausprägungen wäre ein Balkendiagramm nicht so aussagekräftig, s. @fig-balken-hist (links). Es gibt einfach zu viele Ausprägungen.
+Bei einer quantitativen Variablen mit vielen Ausprägungen wäre ein Balkendiagramm nicht so aussagekräftig, 
+s. @fig-balken-hist (links). Es gibt einfach zu viele Ausprägungen.
 
 ```{r}
 #| echo: false
@@ -617,17 +623,17 @@ mariokart %>%
 
 
 ::::{#exr-histo-ship-pr}
-:::{.panel-tabset}
-### Aufgabe
-Visualisieren Sie die Verteilung von `ship_pr` anhand eines Histogramms!
 
-### Lösung
+### Visualisieren Sie die Verteilung von `ship_pr` anhand eines Histogramms!
+
+**Lösung**
 ```{r}
+#| eval: "knitr::is_html_output()"
 mariokart |> 
   select(ship_pr) |> 
   plot_histogram()
 ```
-:::
+
 ::::
 
 
@@ -635,7 +641,8 @@ mariokart |>
 
 #### Dichtediagramm
 
-@fig-balken-total-pr-hist-dens fügt zu @fig-balken-total-pr-hist ein *Dichtediagramm* hinzu (rote Linie). Ein Dichtediagramm ähnelt einem "glattgeschmirgeltem" Histogramm.
+@fig-balken-total-pr-hist-dens fügt zu @fig-balken-total-pr-hist ein *Dichtediagramm* hinzu (rote Linie). 
+Ein Dichtediagramm ähnelt einem "glattgeschmirgeltem" Histogramm.
 
 
 :::{#def-dichtediagramm}
@@ -670,8 +677,7 @@ Erstellen Sie das Diagramm @fig-de-hist-density, rechtes Teildiagramm!^[Grob ges
 
 #### Eigenschaften von Verteilungen
 
-Verteilungen unterscheiden sich z.B. einerseits in ihrem "typischen" oder "mittleren" Wert^[vgl. @sec-lage] und anderseits in ihrer Streuung^[vgl. @sec-streuung.]
-
+Verteilungen unterscheiden sich z.B. einerseits in ihrem "typischen" oder "mittleren" Wert (vgl. @sec-lage) und anderseits in ihrer Streuung  (vgl. @sec-streuung.)
 (Diagramme von) Verteilungen können symmetrisch oder schief (nicht symmetrisch) sein, s. @fig-symm-schief.
 
 
@@ -710,11 +716,10 @@ p_distribs
 
 
 ::::{#exr-verteilungsform-total-pr}
-:::{.panel-tabset}
-### Aufgabe 
-Bennenen Sie die am besten passende Verteilungsform für die Variable `total_pr`.
 
-### Lösung
+### Bennenen Sie die am besten passende Verteilungsform für die Variable `total_pr`.
+
+**Lösung**
 
 Die Verteilung ist rechtschief.
 
@@ -723,7 +728,7 @@ mariokart |>
   select(total_pr) |> 
   plot_density()
 ```
-:::
+
 ::::
 
 
@@ -756,7 +761,26 @@ Die Normalverteilung ist von hoher Bedeutung, da sich  diese Verteilung unter (r
 Wenn sich eine Variable $X$ als Summe mehrerer, unabhängiger, etwa gleich starker Summanden, dann kann man erwarten, dass sich diese Variable $X$ tendenziell normalverteilt. $\square$
 :::
 
+
+:::: {layout="[ 80, 20 ]"}
+::: {#first-column}
 Dieses Phänomen kann man gut anhand des [Galton-Bretts](https://www.youtube.com/watch?v=3m4bxse2JEQ) veranschaulichen.
+:::
+
+::: {#second-column}
+
+```{r}
+#| echo: false
+
+qr <- qrcode::qr_code("https://www.youtube.com/watch?v=3m4bxse2JEQ")
+plot(qr)
+```
+:::
+::::
+
+
+
+
 
 
 
@@ -813,10 +837,10 @@ Interaktives Beispiel für Normalverteilungen.
 
 Kennt man diese beiden Parameter, 
 so kann man einfach angeben, welcher Anteil der Fläche sich in einem bestimmten Bereich befindet, 
-s. @fig-norm-perc.^[Quelle: Ainali -- Own work, CC BY-SA 3.0, <https://commons.wikimedia.org/w/index.php?curid=3141713>]
+s. @fig-norm-perc [@ainali_standard_2007].
 
 
-Davon leitet sich die "68-95-99-Prozentregel" ab:
+Davon leitet sich die "68-95-99.7-Prozentregel" ab:
 
 - $68\,\%$ der Werte im Bereich $\mu\pm 1 \cdot \sigma$ 
 - $95\,\%$ der Werte im Bereich $\mu\pm 2 \cdot \sigma$ 
@@ -826,7 +850,7 @@ Davon leitet sich die "68-95-99-Prozentregel" ab:
 
 
 
-![Die Flächeninhalte (Wahrscheinlichkeitsmasse) einer Normalverteilung in Abhängigkeit der SD-Einheiten](img/Standard_deviation_diagram_micro.svg.png){#fig-norm-perc}
+![Die Flächeninhalte (Wahrscheinlichkeitsmasse) einer Normalverteilung in Abhängigkeit der SD-Einheiten  [@ainali_standard_2007]](img/Standard_deviation_diagram_micro.svg.png){#fig-norm-perc}
 
 
 
@@ -910,11 +934,10 @@ sonst sind die Zusammenhänge nicht mehr so gut zu erkennen.$\square$
 
 
 ::::{#exr-zsmnhang-cond-wheels}
-:::{.panel-tabset}
-### Aufgabe
-Visualisieren Sie den Zusammenhang der beiden nominalen Variablen `cond` und `wheels`!
 
-### Lösung
+### Aufgabe Visualisieren Sie den Zusammenhang der beiden nominalen Variablen `cond` und `wheels`!
+
+**Lösung**
 
 `wheels` ist als metrische Variable (`int`: Integer, d.h. Ganzzahl) formatiert im Datensatz `mariokart`. Wir müssen Sie zunächst als Faktorvariable umformatieren, damit R sie als nominal skalierte Variable erkennt.
 
@@ -927,7 +950,7 @@ mariokart |>
   plot_bar(by = "cond")
 ```
 
-:::
+
 ::::
 
 ### Zusammenhang: metrisch {#sec-zshg-metr}
@@ -1024,19 +1047,7 @@ plots(p1, p2, p3, p4, n_rows = 2, tags = "A")
 
 
 Starke Zusammenhänge erkennt man an schmalen Ellipsen ("Baguette" [🥖]{.content-visible when-format="html"});
-schwache Zusammenhänge an breiten Ellipsen ("Torte" [🥮] {.content-visible when-format="html"})
-
-
-
-
-
-
-
-
-
-
-
-
+schwache Zusammenhänge an breiten Ellipsen ("Torte" [🥮]{.content-visible when-format="html"}).
 @fig-cors bietet einen Überblick über verschiedene Beispiele von Richtung und Stärke von Zusammenhängen.^[Quelle: Aufbauend auf FOM/ifes, Autor: Norman Markgraf]
 
 
@@ -1070,7 +1081,7 @@ Der (Absolut-)Wert gibt die Stärke des linearen Zusammenhangs an [@cohen_power_
 - ±1: perfekter Zusammenhang
 
 
-@fig-cors2 hat die gleiche Aussage, 
+@fig-cors2 hat die gleiche Aussage wie @@fig-cors, 
 ist aber plakativer, 
 indem *Stärke* (schwach, stark) 
 und *Richtung* (positiv, negativ) gegenübergestellt sind.
@@ -1088,8 +1099,7 @@ fig_cors2
 
 
 Man sieht in @fig-cors und @fig-cors2, 
-dass ein *negativer* Korrelationskoeffizient mit einer *absinkenden* Trendgerade^[synonym: Regressionsgerade] 
-(blaue Linie) einhergeht.
+dass ein *negativer* Korrelationskoeffizient mit einer *absinkenden* Trendgerade (synonym: Regressionsgerade; blaue Linie) einhergeht.
 Umgekehrt geht ein *positiver* Trend mit einer *ansteigenden* Trendgerade einher.
 Zweitens erkennt man, dass *starke* Zusammenhänge mit einer *schmaler* Ellipse einhergehen
 und *schwache* Zusammenhänge mit einer *breiten* Ellipse einhergehen.
@@ -1189,6 +1199,7 @@ Das Argument `by = "total_pr"` bei `plot_scatterplot` weist R an, als Y-Variable
 
 :::
 
+::::: {.content-visible when-format="html"}
 
 ::::{#exr-zsmnhang-metrisch}
 :::{.panel-tabset}
@@ -1206,7 +1217,31 @@ mariokart_no_extreme |>
 
 :::
 ::::
+:::::
 
+
+
+
+::::: {.content-visible when-format="pdf"}
+
+::::{#exr-zsmnhang-metrisch}
+
+### Aufgabe Visualisieren Sie den Zusammenhang der beiden metrischen Variablen `start_pr` und `total_pr`.
+
+Verwenden Sie den Datensatz ohne Extremwerte wie oben definiert.
+
+
+**Lösung**
+
+```{r}
+mariokart_no_extreme |> 
+  select(start_pr, total_pr) |> 
+  plot_scatterplot(by = "total_pr")
+```
+
+
+::::
+:::::
 
 
 
@@ -1260,12 +1295,15 @@ ggplot(mariokart_no_extreme, aes(x = cond, y = total_pr)) +
 
 
 
-Das linke Teildiagramm von @fig-compare-groups1 zeigt das Histogramm von `total_pr`, getrennt für neue und gebrauchte Spiele, vgl. @fig-de-hist-density.
+Das linke Teildiagramm von @fig-compare-groups1 zeigt das Histogramm von `total_pr`, 
+getrennt für neue und gebrauchte Spiele, vgl. @fig-de-hist-density.
 Das rechte Teildiagramm zeigt die gleichen Verteilungen, aber mit einer vereinfachten, groberen Darstellungsfrom, den *Boxplot*.^[Übrigens: Freunde lassen Freunde nicht Balkendiagramme verwenden, um Mittelwerte darzustellen: <https://github.com/cxli233/FriendsDontLetFriends#1-friends-dont-let-friends-make-bar-plots-for-means-separation>.]
+Was ein "deutlicher"^["substanzieller", "bedeutsamer", "relevanter" oder "(inhaltlich) signifikanter"] Zusammenhang ist, ist keine statistische, sondern inhaltliche Frage, die man mit Sachverstand zum Forschungsgegenstand beantworten muss.
 
 
 ```{r}
 #| echo: false
+#| eval: false
 #| fig-cap: "Unterschiede zwischen zwei Gruppen: Metrische Y-Variable, nominale X-Variable"
 #| fig-subcap:
 #|   - "Y: Abschlusspreis, X: Zustand"
@@ -1283,9 +1321,8 @@ mariokart %>%
 
 
 
-Das linke Teildiagramm von @fig-compare-groups zeigt den Unterschied in den Verteilungen von `total_pr`, einmal für die neuen Computerspiele (`cond == new`) und einmal für gebrauchte Spiele (`cond == used`).
+<!-- Das linke Teildiagramm von @fig-compare-groups zeigt den Unterschied in den Verteilungen von `total_pr`, einmal für die neuen Computerspiele (`cond == new`) und einmal für gebrauchte Spiele (`cond == used`). -->
 
-Was ein "deutlicher"^["substanzieller", "bedeutsamer", "relevanter" oder "(inhaltlich) signifikanter"] Zusammenhang ist, ist keine statistische, sondern inhaltliche Frage, die man mit Sachverstand zum Forschungsgegenstand beantworten muss.
 
 :::{#def-boxplot}
 
@@ -1381,29 +1418,30 @@ so dass wir die Belastbarkeit dieses Ergebnisses skeptisch betrachten sollten.
 
 
 ::::{#exm-diff-plot}
-:::{.panel-tabset}
-### Aufgabe
-Visualisieren Sie den Unterschied im Verkaufspreis zwischen gebrauchten und neuen Spielen.
 
-### Lösung
+### Visualisieren Sie den Unterschied im Verkaufspreis zwischen gebrauchten und neuen Spielen.
+
+**Lösung**
 
 ```{r}
+#| eval: "knitr::is_html_output()"
 mariokart_no_extreme |> 
   select(cond, total_pr) |> 
   plot_boxplot(by = "cond")
 ```
-:::
+
 ::::
 
 
 
 
 ::::{#exm-diff-plot}
-:::{.panel-tabset}
-### Aufgabe
+
+### Verkaufspreis im Vergleich
+
 Visualisieren Sie den Unterschied im Verkaufspreis abhängig von `ship_pr`; betrachten Sie `ship_pr` als ein Gruppierungsvariable. Interpretieren Sie das Ergebnis.
 
-### Lösung
+**Lösung**
 
 ```{r}
 mariokart_no_extreme |> 
@@ -1414,7 +1452,7 @@ mariokart_no_extreme |>
 `plot_boxplot` gruppiert *metrische* Variablen, wie `ship_pr` automatisch in fünf Gruppen (mit gleichen Ranges). Wir müssen also nichts tun, um die metrische Variable `ship_pr` in eine Gruppierungsvariable (Faktorvariable) umzuwandeln.
 
 Es sieht so aus, als würde der Median zwischen den Gruppen leicht steigen, mit Ausnahme der mittleren Gruppe.
-:::
+
 ::::
 
 
@@ -1427,7 +1465,8 @@ Es sieht so aus, als würde der Median zwischen den Gruppen leicht steigen, mit 
 
 ## So lügt man mit Statistik
 
-Diagramme werden häufig eingesetzt, um die Wahrheit "aufzuhübschen". 
+Diagramme werden miunter eingesetzt, um die Wahrheit "aufzuhübschen". 
+Hier folgen einige gebräuchlichen Täuschungsmanöver.
 
 
 ### Achsen manipulieren
@@ -1520,15 +1559,15 @@ So könnte auch eine Drittvariable im Hintergrund die gleichzeitige Ursache von 
 ## Praxisbezug
 
 
-Ein, wie ich finde schlagendes Beispiel zur Stärke von Datendiagrammen ist @fig-vaccine.
-Das Diagramm zeigt die Häufigkeit von Masern, vor und nach der Einführung der Impfung.
+Ein, wie ich finde schlagendes Beispiel zur Stärke von Datendiagrammen ist @fig-vaccine [@debold_battling_2015].
+Das Diagramm zeigt die Häufigkeit von Masern, 
+vor und nach der Einführung der Impfung.
 Die Daten und die Idee zur Visualisierung gehen auf @van_panhuis_contagious_2013 zurück.
-Das Diagramm und weitere finden sich in ähnlicher Form im [Wall Street Journal](http://graphics.wsj.com/infectious-diseases-and-vaccines/).
 
 
-![Häufigkeit von Masern und Impfung in den USA, Lizenz: MIT](img/vaccine.jpg){#fig-vaccine width=75%}
 
-[Quellcode](https://github.com/blmoore/blogR/blob/master/R/measles_incidence_heatmap.R)^[Datenquelle: <https://www.tycho.pitt.edu>]
+![Häufigkeit von Masern und Impfung in den USA [moore_recreating_2015]](img/vaccine.jpg){#fig-vaccine width=75%}
+
 
 
 
@@ -1641,10 +1680,7 @@ immer eine Vereinfachung,
 lassen also Informationen weg.
 Manchmal auch wichtige Informationen. [Dieses Beispiel](https://www.autodesk.com/research/publications/same-stats-different-graphs) zeigt, 
 wie etwa Histogramme wichtige Informationen unter den Tisch fallen lassen.^[<https://www.autodesk.com/research/publications/same-stats-different-graphs>]
-
-
 Ein weiteres R-Paket zur Erstellung ansprechender Datenvisualisierung heißt [`ggstatsplot`](https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md).^[<https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md>]
-
 @fig-ggstatsplot zeigt ein [Histogramm](https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md#gghistostats), das mit `ggstatsplot` erstellt wurde.^[<https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md#gghistostats>]
 
 
@@ -1662,7 +1698,7 @@ gghistostats(
 ```
 
 Die Menge der statistischen Kennzahlen bei `ggstatsplot` schindet ordentlich Eindruck. 
-Möchte man auf die Kennzahlen verzichten, so nutzt man den Schalter `results.subtitle = FALSE`.^[Weitere Hinweise finden sich [auf der Hilfeseite der Funktion: <https://indrajeetpatil.github.io/ggstatsplot/articles/web_only/gghistostats.html>].
+Möchte man auf die Kennzahlen verzichten, so nutzt man den Schalter `results.subtitle = FALSE`. (Weitere Hinweise finden sich auf der Hilfeseite der Funktion der Funktion.)
 
 
 
@@ -1678,7 +1714,8 @@ Möchte man auf die Kennzahlen verzichten, so nutzt man den Schalter `results.su
 ### Farbwahl {#sec-farbwahl}
 
 Einige Überlegungen zur Farbwahl findet sich bei @wilke_fundamentals_2019, s. [Kap. 4](https://clauswilke.com/dataviz/color-basics.html).^[Siehe auch:  <https://data-se.netlify.app/2023/06/30/farbpaletten/>]
-Die Farbpalette von Okabe und Ito ist [vgl. @ichihara_color_2008] empfehlenswert, da sie auch bei Schwarz-Weiß-Druck und bei Sehschwächen die Farben noch recht gut unterscheiden lässt, s. @fig-okabe.
+Die Farbpalette von Okabe und Ito ist [vgl. @ichihara_color_2008] empfehlenswert, 
+da sie auch bei Schwarz-Weiß-Druck und bei Sehschwächen die Farben noch recht gut unterscheiden lässt, s. @fig-okabe.
 
 ```{r}
 #| label: fig-okabe

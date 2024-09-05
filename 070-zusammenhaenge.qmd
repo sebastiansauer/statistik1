@@ -99,7 +99,7 @@ $$\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} + \begin{array}{
 
 Wo wir in @sec-punktmodelle1 eine Variable mit Hilfe eines Lagemaßes beschrieben (bzw. dargestellt, zusammengefasst, modelliert) haben, tun wir hier das Gleiche für zwei Variablen.
 Beschreibt man aber zwei Variablen, so geht es um die Frage, was die beiden Variablen miteinander zu tun haben:
-Wie die beiden Variablen von einander *abhängen* bzw. miteinander (irgendwie) *zusammenhängen.*
+Wie die beiden Variablen voneinander (statistisch) *abhängen* bzw. miteinander (in welcher Form auch immer) *zusammenhängen.*
 Wir begrenzen auf *metrische* Variablen.
 
 
@@ -114,7 +114,7 @@ Wir begrenzen auf *metrische* Variablen.
 - Umweltschutz und Biodiversifität $\square$
 :::
 
-Die Verbildlichung^[Visualisierung] zweier metrischer Variablen haben wir bereits in @sec-zshg-metr kennengelernt.
+Die Verbildlichung (Visualisierung) zweier metrischer Variablen haben wir bereits in @sec-zshg-metr kennengelernt.
 Zur Verdeutlichung, wie ein Zusammenhang zweier metrischer Variablen aussehen kann, helfe noch einmal @fig-zshg.
 
 
@@ -186,7 +186,7 @@ cov_xy <- cov(d$y, d$x)
 ### Wieder Statistiknoten
 
 Anton, Bert, Carl und Daniel haben ihre Statistikklausur zurückbekommen.
-Die Lernzeit $X$ scheint mit der erreichten Punktzahl $Y$ (0-100, je mehr desto besser) zusammenzuhängen.^[>   [🧑‍🎓]{.content-visible when-format="html"}  Typisches Lehrerbeispiel!!]
+Die Lernzeit $X$ scheint mit der erreichten Punktzahl $Y$ (0-100, je mehr desto besser) zusammenzuhängen.^[>    [🧑‍🎓]{.content-visible when-format="html"}  Typisches Lehrerbeispiel!!]
 Gar nicht so schlecht ausgefallen wie gedacht ..., s. @tbl-noten2.$\square$
 :::
 
@@ -250,16 +250,22 @@ p_cov
 
 Stellen Sie sich vor, wir legen alle Rechtecke zusammen aus @fig-delta-rect.
 Nennen wir das resultierende Rechteck das "Summenrechteck".
-Ja, ich weiß, ich strapaziere mal wieder Ihre Phantasie^[hoffentlich nicht Ihre Geduld].
-Jetzt kommt's: Je größer die Fläche des Summenrechtecks, desto stärker der (lineare) Zusammenhang.
+Ja, ich weiß, ich strapaziere mal wieder Ihre Phantasie.
+Jetzt kommt's: Je größer die Fläche des Summenrechtecks, 
+desto stärker der (lineare) Zusammenhang.
 Beachten Sie, dass die Flächen Vorzeichen haben, positiv oder negativ (Plus oder Minus), je nach dem, in welchem der vier Quadranten sie stehen. Die Füllfarben der Rechtecke verdeutlichen dies, s. @fig-delta-rect.
 Das *Vorzeichen* der Summe zeigt an, ob der Zusammenhang positiv (gleichsinnig, ansteigende Trendlinie) oder negativ (gegensinnig, absinkende Trendl≥inie) ist.
 So zeigt @fig-kov links eine positive Summe der Abweichungsrechtecke und rechts eine negative Summe. Man sieht im linken Diagramme, dass die Summe der Rechtecke mit positivem Vorzeigen (rot) überwiegt; im rechten Diagramm ist es umgekehrt (blau, negativ überwiegt).
+
+
+
+
 
 ```{r}
 #| label: fig-kov
 #| fig-cap: "Positive und negative Kovarianz: Einmal resultiert eine positive Summe, einmal eine negative Summe, wenn man die Flächen der Abweichungsrechtecke addiert."
 #| layout-ncol: 2
+#| out-width: 80%
 #| fig-subcap: 
 #|   - Positive Vorzeichen (Quadranten 1 und 3) überwiegen, was in einer positiven Kovarianz resultiert
 #|    - Negative Vorzeichen (Quadranten 2 und 4) überwiegen, was in einer negativen Kovarianz resultiert
@@ -338,14 +344,14 @@ Sie ist ein Maß für die Stärke und Richtung des linearen Zusammenhangs zweier
 
 
 @tbl-kov2 zeigt die Werte für die X- und Y-Abweichung und die resultierenden Flächen der Abweichungsrechtecke.
-Wenn Sie die Werte selber nachrechnen wollen, finden Sie den Noten-Datensatz in der Datei [noten.csv](https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv)^[<https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv>].
+Wenn Sie die Werte selber nachrechnen wollen, finden Sie den Noten-Datensatz in der Datei [noten.csv](https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv)^[<https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv>]
 
 
 
 ```{r}
 #| echo: false
 #| label: tbl-kov2
-#| tbl-cap: "Werte der Abweichungsrechtecke. avg: average (Mittelwert), cov_sign: Vorzeichen der Kovarianz,_pos: positiver Wert auf der entsprechenden Achse (x/y)?, xy_area: Produkt von x_delta und y_delta"
+#| tbl-cap: "Werte der Abweichungsrechtecke. avg: average (Mittelwert), cov_sign: Vorzeichen der Kovarianz,_pos: positiver Wert auf der entsprechenden Achse (x/y), xy_area: Produkt von x_delta und y_delta"
 
 d %>% 
   select(-x_pos, -y_pos) |> 
@@ -528,13 +534,13 @@ Die Korrelation berechnet sich wie folgt:
 
 Teilt man nämlich alle $x_i$ bzw. $y_i$ durch ihre Standardabweichung,
 so führt man mit $X$ bzw. $Y$ eine z-Transformation durch.
-Daher kann man den Korrelationskoeffizienten $r$ so definieren:
+Daher kann man den Korrelationskoeffizienten $r$ definieren wie in @def-r.
 
 
 :::{#def-r}
 ### Korrelationskoeffizient r
 
-Der Korrelationskoeffizient $r$ (nach Pearson) ist definiert als das mittlere Produkt der z-Wert-Paare, s. @eq-r-def, vgl. @cohen_applied_2003. Er ist ein Maß des linearen Zusammenhangs zweier metrischer Variablen. Der Wertebereich ist $[-1;1]$, wobei 0 keinen Zusammenhang anzeigt und $|r|=1$ perfekten Zusammenhang. $\quad \square$
+Der Korrelationskoeffizient $r$ (nach Pearson) ist definiert als das mittlere Produkt der z-Wert-Paare, s. @eq-r-def, vgl. @cohen_applied_2003. Er ist ein Maß des linearen Zusammenhangs zweier metrischer Variablen. Der Wertebereich ist $[-1;1]$, wobei 0 keinen Zusammenhang anzeigt und $|r|=1$ perfekten Zusammenhang. $\square$
 :::
 
 $$r_{xy}=\frac{1}{n}\sum_{i=1}^n z_{x_i} z_{y_i}$${#eq-r-def}
@@ -546,7 +552,7 @@ Man beachte, dass eine Korrelation (genauso wie eine Kovarianz) nur für metrisc
 Aus dem Korrelationskoeffizienten können Sie zwei Informationen ableiten:
 
 1. *Vorzeichen*: Ein positives Vorzeichen bedeutet positiver (gleichsinniger) linearer Zusammenhang (und umgekehrt: negatives Vorzeichen, negativer, also gegensinniger linearer Zusammenhang).
-2. *Absolutwert* der Korrelation: Der Absolutwert^[Betrag] des Korrelationskoeffizienten gibt die Stärke des linearen Zusammenhangs an. Je näher der Wert bei 1 liegt desto stärker der Zusammenhang. 
+2. *Absolutwert* der Korrelation: Der Absolutwert (Betrag) des Korrelationskoeffizienten gibt die Stärke des linearen Zusammenhangs an. Je näher der Wert bei 1 liegt, desto stärker ist der (lineare) Zusammenhang. 
   - $r = 0$: kein linearer Zusammenhang
   - $r = 1$: perfekter linearer Zusammenhang$\square$
 :::

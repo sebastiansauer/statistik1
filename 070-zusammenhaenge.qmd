@@ -90,7 +90,7 @@ mariokart <- read.csv(mariokart_path)
 
 
 In @sec-punktmodelle1 haben wir gelernt,
-dass das Wesen eines Punktmodells als Zusammenfassung *einer* Spalte (eines Vektors) zu einer einzelnen Zahl^[auch Skalar genannt], zu einem "Punkt" sozusagen, zusammengefasst werden kann.
+dass das Wesen eines Punktmodells als Zusammenfassung *einer* Spalte (eines Vektors) zu einer einzelnen Zahl, zu einem "Punkt" sozusagen, zusammengefasst werden kann.
 
 In diesem Kapitel fassen wir *zwei* Spalten zusammen, wieder zu *einer* Zahl, s. @eq-desk2.
 
@@ -444,10 +444,16 @@ cor.rect.plot(y = points3$y, x = points3$x,
 
 
 
-Bei einer Kovarianz von (ungefähr) 0 ist die Gesamt-Fläche der Abweichungsrechtecke^[Bei der Varianz waren es Quadrate, bei der Kovarianz sind es Rechtecke.], wenn man sie pro *Quadrant* aufsummiert, ungefähr gleich groß, s. @fig-covnull.
-Addiert man die Abweichungsrechtecke (unter Beachtung der Vorzeichen: rot = positiv; blau = negativ), so beträgt die Summe in etwa (oder genau) Null.
+Bei einer Kovarianz von (ungefähr) Null ist die Gesamt-Fläche der Abweichungsrechtecke, wenn man sie pro *Quadrant* aufsummiert, 
+ungefähr gleich groß, s. @fig-covnull.
+Zur Erinnerung: Bei der Varianz waren es Quadrate; bei der Kovarianz sind es jetzt Rechtecke.
+Addiert man die Abweichungsrechtecke (unter Beachtung der Vorzeichen: rot = positiv; blau = negativ), 
+so beträgt die Summe in etwa (oder genau) Null.
 
-Damit ist die Kovarianz in diesem Fall etwa (bzw. genau) Null, s. @eq-cov-is-zero: Wenn die Summe der Aweichungsrechtecke Null ist, dann ist auch ihr Mittelwert (MW) Null. Damit ist die Kovarianz Null.
+Damit ist die Kovarianz in diesem Fall etwa (bzw. genau) Null, s. @eq-cov-is-zero: 
+Wenn die Summe der Aweichungsrechtecke Null ist, 
+dann ist auch ihr Mittelwert (MW) Null. 
+Damit ist die Kovarianz Null.
 
 
 
@@ -568,7 +574,7 @@ Wie man sieht, liegt in diesen Beispielen kein linearer Zusammenhang vor ($r=0$)
 
 :::{#exr-corrgame}
 ### Korrelationsspiel
-Spielen Sie das [Korrelationsspiel](https://gallery.shinyapps.io/correlation_game/): Sie Sehen ein Streudiagramm und müssen den richtigen Korrelationskoeffizienten eingeben.$\square$
+Spielen Sie das [Korrelationsspiel](https://gallery.shinyapps.io/correlation_game/)^[<https://gallery.shinyapps.io/correlation_game/>]: Sie Sehen ein Streudiagramm und müssen den richtigen Korrelationskoeffizienten eingeben.$\square$
 :::
 
 
@@ -577,7 +583,7 @@ Spielen Sie das [Korrelationsspiel](https://gallery.shinyapps.io/correlation_gam
 :::{#exr-corrvis}
 ### Interaktive Visualisierung der Korrelation
 
-Auf der Seite von [RPsychologist](https://rpsychologist.com/correlation/) findet sich eine ansprechende dynamische Visualisierung der Korrelation.
+Auf der Seite von [RPsychologist](https://rpsychologist.com/correlation/)^[<https://rpsychologist.com/correlation/>] findet sich eine ansprechende dynamische Visualisierung der Korrelation.
 Nutzen Sie sie, um Ihr Gefühl für die Stärke des Korrelationskoeffizienten zu entwickeln.$\square$
 :::
 
@@ -585,7 +591,7 @@ Nutzen Sie sie, um Ihr Gefühl für die Stärke des Korrelationskoeffizienten zu
 ### Korrelation mit R berechnen
 
 Ob der Verkaufspreis (`total_pr`) wohl mit der Dauer der Auktion (`duration`) oder mit der Anzahl der Gebote (`n_bids)` (linear) zusammenhängt? 
-Schauen wir nach! Die Funktion `correlation()` (aus dem Paket `{easystats}`) erledigt das Rechnen für uns, s. @tbl-mario-corr1.
+Schauen wir nach! Die Funktion `correlation()` (aus dem Paket `easystats`) erledigt das Rechnen für uns, s. @tbl-mario-corr1.
 
 
 
@@ -601,18 +607,20 @@ mariokart |>
 
 ```{r mario-corr1}
 #| echo: false
+#| label: tbl-mario-corr1
 #| tbl-cap: "Korrelation berechnen mittels der Funktion `correlation` aus `easystats`"
 mariokart |> 
   select(total_pr, duration, n_bids) |> 
   correlation() |> 
   summary() |> 
-  print_md()
+  display(format="markdown", footer="", caption="")
 ```
 
 
 
 
-Sie können auch auf die letzte Zeile, also dem Befehl `summary()` verzichten. Dann ist die Ausgabe ausführlicher.
+Sie können auch auf die letzte Zeile, 
+also dem Befehl `summary()` verzichten. Dann ist die Ausgabe ausführlicher.
 
 
 ### Korrelation ≠ Kausation
@@ -639,21 +647,32 @@ Liegt Korrelation ohne Kausation vor, so spricht man von einer Scheinkorrelation
 
 
 :::{#exm-scheinkorr}
-### Scheinkorrelation
+### Scheinkorrelation: Störche und Babies
+
+Eine Urban Myth besagt: Die Anzahl der Störche pro Landkreis korreliert mit der Anzahl der Babies in diesem Landkreis [vgl. @matthews_storks_2000].
+
+Eine mögliche Erklärung für dieses (nur scheinbare) Paradoxon ist, 
+dass die "Naturbelassenheit" des Landkreises die gemeinsame Ursache für Störche ist (Störche lieben Natur) 
+und für Babies ist (die  Gegebenheiten bei hoher Naturbelassenheit eine höhere Zahl von Kindern pro Frau begünstigt).
+Wir müssen die Erklärung keinesfalls glauben; sie soll das Beispiel nur konkreter machen.
+Uns geht es hier nur um die Erkennung von Scheinkorrelation.
+:::
 
 
-*Störche und Babies*: Eine Urban Myth besagt: Die Anzahl der Störche pro Landkreis korreliert mit der Anzahl der Babies in diesem Landkreis.
+:::{#exm-corona-glatze}
 
-Eine Erklärung für dieses (nur scheinbare) Paradoxon ist, dass die "Naturbelassenheit" des Landkreises die gemeinsame Ursache für Störche ist (Störche lieben Natur) und für Babies ist (die dortige Kultur begünstigt, mehr Kinder pro Frau). 
+### Glatze macht Corona?
 
-
-*Corona und Glatze*:
-
-Macht die Glatze krank? Männer mit Glatze bekommen häufiger Corona [@goren_preliminary_2020].
+Kahle Männer aufgepasst!
+Macht eine Glatze krank? 
+Männer mit Glatze bekommen häufiger Corona [@goren_preliminary_2020].
 
 >   Bald men at higher risk of severe case of Covid-19, research finds^[<https://www.telegraph.co.uk/global-health/science-and-disease/bald-men-higher-risk-severe-case-covid-19-research-finds/>, Abruf 2023-03-24]
 
-Eine Erklärung lautet, dass Alter einen Effekt hat auf Glatze (je älter ein Mann, desto wahrscheinlicher ist es, dass er eine Glatz hat) und auf die Schwere des Corona-Verlaufs (ältere Menschen haben deutlich schwerere Corona-Verläufe). $\square$
+Eine alternative Erklärung lautet, 
+dass Alter einen Effekt hat auf Glatze (je älter ein Mann, desto wahrscheinlicher ist es, dass er eine Glatz hat) 
+und auf die Schwere des Corona-Verlaufs 
+(ältere Menschen haben deutlich schwerere Corona-Verläufe). $\square$
 
 :::
 
@@ -666,10 +685,11 @@ Eine Erklärung lautet, dass Alter einen Effekt hat auf Glatze (je älter ein Ma
 Durch (nicht-randomisierte) Einschränkung (Restriktion) des Ranges einer (oder beider) Variablen sinkt die Stärke (der Absolutwert) einer Korrelation, vgl. @cohen_applied_2003 und @fig-corr-range.
 
 
-Erstellen wir uns dazu zwei Datensätze mit je zwei Variablen, $X$ und $Y$ der Größe $n=100$.
-Ein Datensatz ist ohne Einschränkung des Ranges und einer mit.
+Erstellen wir uns dazu *zwei* Datensätze mit je zwei Variablen, $X$ und $Y$ und mit Umfang $n=100$.
+Einer der beiden Datensätze sei mit  Einschränkung des Ranges und einer ohne ohne.
 $X$ und $Y$ seien normalverteilt mit $\mu=0$ (Mittelwert) und  $\sigma=1$ (Streuung); s. Datensatz `d` in @lst-corr-range.
-Wir schränken dann den Range von $X$ ein auf, sagen wir, den Bereich von $[-0.5, .5]$ (Datensatz `d_filtered`).
+Man kann sich mit dem Befehl `rnorm(n, m, sd)` $n$ normalverteilte Variablen mit Mittelwert $m$ und Streuung $sd$ von R erzeugen lassen.
+Wir schränken dann den Range von $X$ ein auf, sagen wir, den Bereich von $[-0.5, .5]$ (Datensatz `d_filtered`), s. @lst-corr-range.
 
 
 ::: {#lst-corr-range}
@@ -737,22 +757,26 @@ Glauben Sie nicht, prüfen Sie nach! Berechnen Sie die Korrelation von $X$ und $
 In Ihrer Arbeit beim Online-Auktionshaus analysieren Sie, welche Variablen mit dem Verkaufspreis von Computerspielen zusammenhängen.
 
 
-Falls der Datensatz auf Ihrem Computer (am besten in Ihrem Projektverzeichnis in RStudio) abgelegt ist, können Sie die Daten so (in mittlerweile gewohnter Manier) importieren:
+Falls der Datensatz auf Ihrem Computer (am besten in Ihrem Projektverzeichnis in RStudio) abgelegt ist, können Sie die Daten so (in mittlerweile gewohnter Manier) importieren, s. @lst-mario-nopath.
 
 ```{r}
+#| lst-label: lst-mario-nopath
+#| lst-cap: Mariokart importieren, wenn die CSV-Datei im aktuellen Projektordner liegt.
 #| eval: false
 mariokart <- read.csv("mariokart.csv")
 ```
 
 
-Falls der Datensatz im Unterordner mit Namen "Mein_Unterordner" liegt, so würden Sie folgenden Pfad eingeben:
+Falls der Datensatz im Unterordner mit Namen "Mein_Unterordner" liegt, so würden Sie folgenden Pfad eingeben, s. @lst-mario-unterordner.
 
 ```{r}
+#| lst-label: lst-mario-unterordner
+#| lst-cap: Mariokart importieren, wenn die CSV-Datei im Unterornder "Mein_Unterordner" liegt.
 #| eval: false
 mariokart <- read.csv("Mein_Unterordner/mariokart.csv")
 ```
 
-Man beachte, dass solche sog. relativen Pfade (relativ zu Ihrem Arbeitsverzeichnis, d.h. Ihr Projektverzeichnis in R-Studio) *nicht* mit einem Schrägstrich (Slash) beginnen.
+Man beachte, dass solche sog. relativen Pfade, wie `Mein_Unterordner/`, die relativ zu Ihrem Arbeitsverzeichnis, d.h. Ihr Projektverzeichnis in R-Studio, liegen, *nicht* mit einem Schrägstrich (Slash) beginnen.
 
 Falls Sie die Daten nicht auf Ihrem Computer haben,
 können Sie sie komfortable von z.B. der Webseite von [Vincent Arel-Bundock](https://vincentarelbundock.github.io/Rdatasets) herunterladen:
@@ -817,7 +841,7 @@ Auf Errisch spricht sich das so: `dplyr::select(...)`.$\square$
 
 ::: {.content-visible when-format="html"}
 
-Etwas schöner sieht die Ausgabe mit dem Befehl `correlation` aus `{easystats}` aus, s. @tbl-mario-corr.
+Etwas schöner sieht die Ausgabe mit dem Befehl `correlation` aus `easystats` aus, s. @tbl-mario-corr.
 
 ```{r}
 #| eval: false
@@ -828,16 +852,21 @@ mariokart %>%
 ```
 
 
+
 ```{r}
 #| label: tbl-mario-corr
 #| echo: false
+#| message: false
 #| tbl-cap: Korrelationstabelle (tidy) im Datensatz mariokart
 mariokart %>% 
   dplyr::select(duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels) |> 
   correlation() |> 
   summary() |> 
-  print_md()
+  display(format="markdown", footer="", caption="")
 ```
+
+
+
 
 :::
 
@@ -849,8 +878,7 @@ Etwas schöner sieht die Ausgabe mit dem Befehl `correlation` aus `{easystats}` 
 mariokart %>% 
   dplyr::select(start_pr, ship_pr, total_pr) %>% 
   correlation() |> 
-  summary() |> 
-  print_md()
+  summary() 
 ```
 
 ```{r}
@@ -861,7 +889,7 @@ mariokart %>%
   dplyr::select(start_pr, ship_pr, total_pr) %>% 
   correlation() |> 
   summary() |> 
-  print_md()
+  display(format="markdown", footer="", caption="")
 ```
 
 :::
@@ -869,7 +897,7 @@ mariokart %>%
 
 
 Neben einigen Statistiken, die wir einfach geflissentlich ausblenden (`t` und `p`) beinhaltet die Tabelle eine interessante Information: den Schätzbereich für die Korrelation, gekennzeichnet als `95% CI`.
-*Grob* gesagt können wir diese Information so interpretieren: "Mit 95% Wahrscheinlichkeit liegt der echte Wert der Korrelation in folgendem Bereich."^[Bayesianische Interpretation]
+*Grob* gesagt können wir diese Information so interpretieren: "Mit 95% Wahrscheinlichkeit liegt der echte Wert der Korrelation in folgendem Bereich." (Das ist die sog. bayesianische Interpretation.)
 
 
 Möchte man nur einzelne Korrelationskoeffizienten ausrechnen, können wir die Idee des Zusammenfassens, s. @eq-desk2, nutzen:
@@ -896,7 +924,7 @@ mariokart %>%
 
 ::: {.content-visible when-format="html"}
 
-Mit dem Befehl `plot_correlation` aus dem R-Paket `{dataExplorer}` bekommt man eine ansehnliche Heatmap zur Verdeutlichung der Korrelationswerte, s. @fig-mario-corr.
+Mit dem Befehl `plot_correlation` aus dem R-Paket `dataExplorer` bekommt man eine ansehnliche Heatmap zur Verdeutlichung der Korrelationswerte, s. @fig-mario-corr.
 
 ```{r}
 #| label: fig-mario-corr
@@ -913,7 +941,7 @@ mariokart %>%
 
 ::: {.content-visible when-format="pdf"}
 
-Mit dem Befehl `plot_correlation` aus dem R-Paket `{dataExplorer}` bekommt man eine ansehnliche Heatmap zur Verdeutlichung der Korrelationswerte, s. @fig-mario-corr-pdf.
+Mit dem Befehl `plot_correlation` aus dem R-Paket `dataExplorer` bekommt man eine ansehnliche Heatmap zur Verdeutlichung der Korrelationswerte, s. @fig-mario-corr-pdf.
 
 ```{r}
 #| label: fig-mario-corr-pdf
@@ -927,14 +955,6 @@ mariokart %>%
 
 :::
 
-
-
-## Vertiefung
-
-
-
-Dieser [TED-Vortrag](https://www.youtube.com/watch?v=8B271L3NtAw) informiert zum Thema Scheinkorrelation.
-[Hier](https://scheinkorrelation.jimdofree.com/) finden Sie weitere Beispiele für Scheinkorrelationen.
 
 
 
@@ -952,11 +972,28 @@ Schauen Sie sich auch mal auf der Webseite *Datenwerk*^[<https://datenwerk.netli
 
 ## Halbzeitquiz
 
-Testen Sie Ihr Wissen mit [diesem Quiz](https://forms.gle/w7eTW3ftKy8Hv3nw8) zur deskriptiven Statistik (Maße der zentralen Tendenz, Variabilität, Verteilungsformen, Normalverteilung, Korrelation).^[<https://forms.gle/w7eTW3ftKy8Hv3nw8>]
+:::: {layout="[ 80, 20 ]"}
+::: {#first-column}
+Testen Sie Ihr Wissen mit [diesem Quiz](https://forms.gle/w7eTW3ftKy8Hv3nw8) zur deskriptiven Statistik (Maße der zentralen Tendenz, Variabilität, Verteilungsformen, Normalverteilung, Korrelation).
+:::
+
+::: {#second-column}
+
+```{r}
+#| echo: false
+
+qr <- qrcode::qr_code("https://forms.gle/w7eTW3ftKy8Hv3nw8")
+plot(qr)
+```
+:::
+::::
+
+
+
 
 ## Fallstudien
 
-1. [YACSDA: EDA zu Flugverspätungen](https://datenwerk.netlify.app/posts/flights-yacsda-eda/)^[<https://datenwerk.netlify.app/posts/flights-yacsda-eda>]
+1. [YACSDA: EDA zu Flugverspätungen](https://datenwerk.netlify.app/posts/flights-yacsda-eda/)^[<https://datenwerk.netlify.app/posts/flights-yacsda-eda>] im Datenwerk unter dem Tag `flights-yacsda-eda` zu finden.
 
 :::{.callout-note}
 Einige der Fallstudien oder Übungsaufgaben können theoretische Inhalte (Konzepte der Statistik) oder praktische Inhalte (R-Befehle) enthalten, die Sie (noch) nicht kennen.
@@ -989,6 +1026,14 @@ Schauen Sie doch mal, was Ihre Bibliothek Ihnen zu bieten hat.
 Wer eine unorthodoxe (geometrische!) Herangehensweise an die Korrelation (und Regression) sucht, darf sich auf eine Menge Aha-Momente bei @kaplan_statistical_2009 freuen.
 Ein schönes, modernes Statistikbuch bietet der Psychologie-Prof Russel Poldrack von der Princeton University [-@poldrack_statistical_2023]; auch dieses Buch ist frei online verfügbar. Tipp: Nutzen Sie die Übersetzungfunktion Ihres Browsers, wenn Sie das Buch nicht in Englisch lesen wollen.
 Ein Klassiker, wenn auch nicht mehr ganz frisch, ist  @cohen_applied_2003; immer noch sehr empfehlenswert, aber etwas höheren Anspruchs.
+Was ist Scheinkorrelation und was ist "echte" Korrelation?
+Dieser Unterschied -- der für die Wissenschaft zentral ist -- wird von @pearl_book_2018 auf entspannte Art erläutert;
+nebenbei lernt man einiges zur Geschichte der Wissenshaft.
+[Hier](https://scheinkorrelation.jimdofree.com/) finden Sie weitere Beispiele für Scheinkorrelationen.
+
+::: {.content-visible when-format="html"}
+Dieser [TED-Vortrag](https://www.youtube.com/watch?v=8B271L3NtAw) informiert zum Thema Scheinkorrelation.
+:::
 
 
 

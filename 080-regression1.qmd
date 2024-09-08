@@ -6,9 +6,6 @@
 
 
 
-
-### Standort im Lernpfad
-
 Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
 
 
@@ -50,6 +47,13 @@ scale_colour_discrete <- function(...)
   scale_color_okabeito()
 ```
 
+
+
+```{r}
+#| include: false
+
+source("_common.R")
+```
 
 
 
@@ -108,17 +112,17 @@ nennt man auch *lineare Regression*.
 
 :::{#exm-noten-prognose}
 Nach intensiver Beschäftigung mit Statistik sind Sie allgemein als Checker bekannt.
-Viele jüngere Studentis fragen Sie um Rat.
-eines Tages kommt ei Studenti, Toni, und fragt: "Welche Statistiknote kann ich in der Klausur erwarten?"
+Viele jüngere Studis fragen Sie um Rat.
+eines Tages kommt eine Studentin, Toni, und fragt: "Welche Statistiknote kann ich in der Klausur erwarten?"
 Sie entgegnen: "Wie viel hast du denn gelernt?".
 Die Antwort: "Sag ich nicht."
 
 Nach kurzem Überlegen geben sie den Notenschnitt der letzten Klausur als Prognose für diese Person. 
 Dazu rechnen Sie schnell den Notenschnitt (Mittelwert) aus.
 
-Zuerst importieren Sie die Daten der letzten Klausur^[Diese Syntax wird bei Ihnen nur funktionieren, 
+Zuerst importieren Sie die Daten der letzten Klausur. Die Syntax in @lst-noten2-lokal wird bei Ihnen nur funktionieren, 
 wenn auf *Ihrem Computer* dieser Ordner mit dieser Datei existiert. 
-Andernfalls müssen Sie die Daten erst herunterladen: <https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv>.]:
+Andernfalls müssen Sie die Daten erst herunterladen^[<https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv>]:
 
 ```{r}
 #| echo: false
@@ -134,6 +138,8 @@ Andernfalls müssen Sie die Daten erst herunterladen: <https://raw.githubusercon
 
 
 ```{r}
+#| lst-label: lst-noten2-lokal
+#| lst-caption: "Der Datensatz 'noten2' liegt im Unterordner 'Noten.'"
 noten2 <- read.csv("daten/noten2.csv")
 ```
 
@@ -214,7 +220,7 @@ Toni entschließt sich dann doch noch, die Lernzeit zu verraten:
 Jetzt müssen Sie erstmal nachdenken: 
 "Wie viele Klausurpunkte sag ich vorher, wenn Toni 42 Stunden gelernt hat?"
 
-Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. @fig-noten4, a).^[Die Daten stehen [hier](https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten2.csv) zum Download bereit.]
+Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. @fig-noten4, a).^[Die Daten stehen hier  zum Download bereit:  <https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten2.csv>]
 
 
 ```{r}
@@ -253,7 +259,7 @@ Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einz
 #| layout-ncol: 2
 #| fig-subcap: 
 #|   - "Gemeinsame Verteilung (Zusammenhang) von Lernzeit (X) und Noten (Y)"
-#|   - "Eine 'Trendgerade' (blau) im Datensatz noten2. Mittelwerte sind mit gestrichelten Linien eingezeichnet. Tonis Vorhersage ist mit einem roten Punkt gekennzeichnet."
+#|   - "Eine 'Trendgerade' (blau) im Datensatz `noten2`. Mittelwerte sind mit gestrichelten Linien eingezeichnet. Tonis Vorhersage ist mit einem Punkt gekennzeichnet."
 
 #noten2 <- read.csv(noten2, "daten/noten2.csv")
 
@@ -277,7 +283,7 @@ noten2 %>%
            label = paste0("MW: ", round(mean(noten2$x))), vjust = "bottom") +
   annotate("label", y = mean(noten2$y), x = -Inf, 
            label = paste0("MW: ", round(mean(noten2$y))), hjust = "left")   +
-  annotate("point", x = 42, y = toni_punkte, color = "red",
+  annotate("point", x = 42, y = toni_punkte, color = ycol,
            alpha = .7, size = 7) +
   scale_x_continuous(breaks = c(40, 42, 60, 80, 100)) +
   labs(x = "Lernzeit",
@@ -293,7 +299,7 @@ Eine Gerade eignet sich, um einen linearen Trend zusammenzufassen.
 
 ### Achsenabschnitt und Steigung definieren eine Gerade
 
-Wir verwenden eine Gerade als Modell für die Daten, s. @fig-noten4, rechts.
+Wir verwenden eine Gerade als Modell für die Daten, s. @fig-noten4, b.
 Anders gesagt: Wir modellieren die Daten (bzw. deren Zusammenhang) mit einer Geraden.
 
 Ein *Geradenmodell* ist eine Verallgemeinerung des Punktmodells:
@@ -304,19 +310,30 @@ einem Geradenmodell gegenüber.
 In einem Geradenmodell wird nicht mehr (notwendig) 
 für jede Beobachtung die gleiche Vorhersage $\hat{y}$ gemacht (wie das bei einem Punktmodell der Fall ist).
 
-
-:::{#def-gerade}
+::::{#def-gerade}
 ### Gerade
+
+
+
+
 Eine Gerade ist das, was man bekommt, 
 wenn man eine lineare Funktion in ein Koordinatensystem einzeichnet.
 Man kann sie durch durch zwei *Koeffizienten* festlegen: 
 Achsenabschnitt (engl. *intercept*), und Steigung (engl. *slope*).
-Häufig wird (z.B. im Schulunterricht) der Achsenabschnitt mit $t$ und die Steigung mit $m$ bezeichnet: $f(\color{xcol}{x})=\color{ycol}{y}=\color{beta1col}{m} \color{xcol}{x} + \color{beta0col}{t}$.
+Häufig wird (z.B. im Schulunterricht) der Achsenabschnitt mit $t$ und die Steigung mit $m$ bezeichnet:
+ 
+::: {.content-visible unless-format="epub"}
 
-In der Statistik wird folgende Nomenklatur bevorzugt:  $f(\color{xcol}{x})=\color{ycol}{\hat{y}}=\color{beta0col}{\beta_0} + \color{beta1col}{\beta_1} \color{xcol}{x}$ oder $f(\color{xcol}{x})=\color{ycol}{\hat{y}}= \color{beta0col}{b_0} + \color{beta1col}{b_1} \color{xcol}{x}$ .^[Die Nomenklatur mit $b_0, b_1$ hat den Vorteil, dass man das Modell einfach erweitern kann: $b_2, b_3, ...$. Anstelle von $b$ liest man auch oft $\beta$. 
+<!-- HTML, PDF: -->
+
+$f(\color{xcol}{x})=\color{ycol}{y}={m} \color{xcol}{x} + \color{beta0col}{t}$.
+
+In der Statistik wird folgende Nomenklatur bevorzugt:  $f(\color{xcol}{x})=\color{ycol}{\hat{y}}=\color{beta0col}{\beta_0} + {\beta_1} \color{xcol}{x}$ oder $f(\color{xcol}{x})=\color{ycol}{\hat{y}}= \color{beta0col}{b_0} + {b_1} \color{xcol}{x}$ .
+
+Die Nomenklatur mit $b_0, b_1$ hat den Vorteil, dass man das Modell einfach erweitern kann: $b_2, b_3, ...$. Anstelle von $b$ liest man auch oft $\beta$. 
 Griechische Buchstaben werden meist verwendet, um zu zeigen, 
 dass man an einer Aussage über eine Population, 
-nicht nur über eine Stichprobe, machen möchte.]
+nicht nur über eine Stichprobe, machen möchte.
 
 Das "Dach" über y, $\color{modelcol}{\hat{y}}$, 
 drückt aus, dass es sich den den geschätzten, bzw. vom Modell vorhergesagten ("modellierten") 
@@ -324,14 +341,41 @@ Wert für $\color{ycol}{y}$ handelt, nicht das tatsächliche (empirische, beobac
 :::
 
 
-@fig-regrtex skizziert die Elemente einer Regression.^[Bildquelle: Basierend auf einem Diagramm von Henri Menke, <https://texample.net/tikz/examples/linear-regression/>]
+
+ 
+::: {.content-visible when-format="epub"}
+
+<!-- NUR EPUB: -->
+
+
+$f(x)={y}=mx + t.$
+
+In der Statistik wird folgende Nomenklatur bevorzugt:  $f(x)={\hat{y}}={\beta_0} + {\beta_1}$ oder $f(x)=y= {b_0} + {b_1}.$ 
+
+Die Nomenklatur mit $b_0, b_1$ hat den Vorteil, dass man das Modell einfach erweitern kann: $b_2, b_3, ...$. Anstelle von $b$ liest man auch oft $\beta$. 
+Griechische Buchstaben werden meist verwendet, um zu zeigen, 
+dass man an einer Aussage über eine Population, 
+nicht nur über eine Stichprobe, machen möchte.
+
+Das "Dach" über y, $\hat{y}$, 
+drückt aus, dass es sich den den geschätzten, bzw. vom Modell vorhergesagten ("modellierten") 
+Wert für ${y}$ handelt, nicht das tatsächliche (empirische, beobachtete) ${y}$. $\square$
+:::
+
+::::
 
 
 
-![Achsenabschnitt und Steigung einer Regressionsgeraden](img/regr.png){#fig-regrtex width="70%"}
+
+@fig-regrtex skizziert die Elemente einer Regression. (Bildquelle: Basierend auf TikZ-Quellcode von Henri Menke.)
 
 
+![Achsenabschnitt und Steigung einer Regressionsgeraden [@menk_linear_2014]](img/regr.png){#fig-regrtex width="70%"}
 
+
+::::: {.content-visible unless-format="epub"}
+
+<!-- HTML, PDF -->
 
 
 :::{.callout-important}
@@ -352,6 +396,11 @@ Mit:
 - $\color{beta0col}{\beta_0}$: geschätzter y-Achsenabschnitt laut Modell
 - $\color{beta1col}{\beta_1}$: geschätzte Steigung laut Modell
 - $\color{errorcol}{\epsilon}$: Fehler des Modells
+
+
+:::::
+
+
 
 
 
@@ -412,7 +461,7 @@ ggplot(d2, aes(x2, y2)) +
 
 ::::: {.content-visible when-format="html"}
 
-@fig-linfun zeigt ein interaktives Beispiel einer linearen Funktion. 
+@fig-linfun [@yi_interactive_2021] zeigt ein interaktives Beispiel einer linearen Funktion. 
 Sie können Punkte per Klick/Touch hinzufügen.
 
 
@@ -420,13 +469,11 @@ Sie können Punkte per Klick/Touch hinzufügen.
 
 ::: {.figure-content}
 
-<!-- ```{=html} -->
-<!-- <iframe width="500" height="400" src="https://www.geogebra.org/m/vfjW1dZt" title="Visualisierung eines Geradenmodells"></iframe> -->
-<!-- ``` -->
-
 
 
 {{< include children/regression-interactive.qmd >}}
+
+
 
 :::
 
@@ -525,7 +572,7 @@ lm(y ~ x, data = meine_daten)
 ```
 
 `lm` steht für "lineares Modell", also eine Gerade als Modell.
-Die Gerade nennt man auch *Regressionsgerade*^[an anderer Stelle in diesem Buch unscharf als "Trendgerade" bezeichnet.].
+Die Gerade nennt man auch *Regressionsgerade* (an anderer Stelle in diesem Buch unscharf als "Trendgerade" bezeichnet).
 
 :::{#exm-noten5}
 ### Zahlen für Toni
@@ -634,7 +681,7 @@ noten2 %>%
 Wie ist es mit den Vorhersagefehlern von beiden Modellen bestellt?
 
 Lassen wir uns von R die Streuung (Residuen) 
-in Form der mittleren Absolutabweichung (MAE) ausgeben^[aus dem Paket `easystats`]:
+in Form der mittleren Absolutabweichung (MAE) ausgeben (aus dem Paket `easystats`):
 
 ```{r}
 mae(lm0)
@@ -672,8 +719,9 @@ solange X mit Y korreliert ist.$\square$
 
 
 Natürlich können wir - in Analogie zur Varianz - 
-auch den mittleren Quadratfehlerbalken (Mean Squared Error, MSE) berechnen^[Wer mag, 
-kann den MSE auch von Hand berechnen: `mean((noten2$y-mean(noten2$y))^2)`].
+auch den mittleren Quadratfehlerbalken (Mean Squared Error, MSE) berechnen.
+Wer mag, 
+kann den MSE auch von Hand berechnen: `mean((noten2$y-mean(noten2$y))^2)`.
 
 ```{r}
 mse(lm0)
@@ -693,7 +741,7 @@ verhaeltnis_fehler_mse
 
 Aber wie legt man die Regressionsgerade in das Streudiagramm, bildlich gesprochen?
 
-Die Regressionskoeffizienten^[hier synonym: Modellparameter] b0 und b1 wählt man so, dass die *Residuen* *minimal* sind,
+Die Regressionskoeffizienten (hier synonym: Modellparameter) b0 und b1 wählt man so, dass die *Residuen* *minimal* sind,
 
 
 ::::: {.content-visible when-format="html"}
@@ -725,7 +773,7 @@ Genauer gesagt wird die Summe der quadrierten [Residuen]{.green} minimiert, s. @
 $$\text{min}\sum_i \color{errorcol}{e_i}^2$${#eq-min}
 
 Es gibt verschiedene Möglichkeiten, 
-um die Koeffizienten zu berechnen^[die sind aber nicht in diesem Buch zu finden].
+um die Koeffizienten zu berechnen (die sind aber nicht in diesem Buch zu finden).
 Eine schöne Darstellung dazu findet sich bei @kaplan_statistical_2009.
 
 
@@ -758,7 +806,7 @@ ines Modells $m$ ist definiert als die Verringerung der Streuung,
 wenn man das Modell $m$ mit dem Nullmodell $m_0$ vergleicht: $R^2 =1-  \frac{\text{MSE}_{m}}{\text{MSE}_{m0}}$. 
 R-Quadrat ist ein Maß der *Modellgüte*: 
 Je größer $R^2$, desto besser die Vorhersage. 
-Da es ein Anteilsmaß^[Prozentzahl] ist, 
+Da es ein Anteilsmaß ist, 
 liegt der Wertebereich zwischen 0 uns 1.
 Im Nullmodell liegt R-Quadrat per Definition bei 0.
 Im Fall von Modellen des Typs $y\sim x$ gilt: $R^2 = r_{xy}^2$.
@@ -777,9 +825,11 @@ r2(lm1)
 ```
 
 Bei einer perfekten Korrelation ist $r=1$, 
-daher ist dann auch $R^2 = 1$^[Bei Modellen mit einem Prädiktor; 
-gibt es mehrere Prädiktoren gilt die Beziehung nur wenn die Prädiktoren alle paarweise unabhängig sind.], 
-s. @fig-r2-extreme.
+daher ist dann auch $R^2 = 1$.
+Das gilt bei Modellen mit einem Prädiktor; 
+gibt es mehrere Prädiktoren 
+gilt die Beziehung nur, wenn die Prädiktoren alle paarweise unabhängig sind, 
+vgl. @fig-r2-extreme.
 
 
 ```{r}
@@ -853,12 +903,12 @@ Je größer R-Quadrat, desto besser erklärt das Modell die Daten
 
 Die Residuen (Vorhersagefehler) bestimmen die Modellgüte:
 Sind die Residuen im Schnitt groß, so ist die Modellgüte gering (schlecht), und umgekehrt.
-Verschiedenen Koeffizienten stehen zur Verfügung: R-Quadrat, r^[als Korrelation von tatsächlichem $y$ und vorhergesagten $\hat{y}$], MSE, RMSE, MAE, ...
+Verschiedenen Koeffizienten stehen zur Verfügung: R-Quadrat, r (als Korrelation von tatsächlichem $y$ und vorhergesagten $\hat{y}$), MSE, RMSE, MAE, ...
 
 
 ### Koeffizienten
 
-Die Modellkoeffizienten, also Achsenabschnitt ($\beta_0$^[lies: "beta Null"]) und Steigung ($beta_1$) sind nur eingeschränkt zu interpretieren, 
+Die Modellkoeffizienten, also Achsenabschnitt ($\beta_0$;lies: "beta Null") und Steigung ($beta_1$) sind nur eingeschränkt zu interpretieren, 
 wenn man die zugrundeliegenden kausalen Abhängigkeiten nicht kennt.
 Nur aufgrund eines statistischen Zusammenhangs darf man keine kausalen Abhängigkeiten annehmen.
 Ohne eine guten Grund für eine Kausalbehauptung kann man kann nur *deskriptiv* argumentieren.
@@ -908,8 +958,9 @@ als Maß der Modellgüte interpretiert werden. @fig-r-r2 zeigt den Zusammenhang 
 
 ```{r}
 #| echo: false
-#| fig-cap: Zusammenhang von r und R-Quadrat
+#| fig-cap: "Der Zusammenhang von r und R-Quadrat ist nicht linear."
 #| label: fig-r-r2
+#| out-width: 50%
 d <-
   tibble(r = seq(from = -1, to = 1, by = .01))
 
@@ -922,8 +973,7 @@ d |>
   ggplot(aes(x = r, y = r2)) +
   geom_line() +
   theme_modern() +
-  labs(y = "R-Quadrat",
-       title = "Der Zusammenhang von r und R-Quadrat ist nicht linear.")
+  labs(y = "R-Quadrat")
 ```
 
 
@@ -945,7 +995,7 @@ Genaue Vorhersagen,
 das ist etwas von hoher betriebswirtschaftlicher Relevanz.
 Auf geht's!
 
-Daten laden:^[Und die üblichen Pakete starten, nicht vergessen.]
+Daten laden (und die üblichen Pakete starten, nicht vergessen):
 
 ::: {.content-visible when-format="html"}
 
@@ -988,10 +1038,11 @@ Der Achsenabschnitt liegt bei ca. 36 Euro,
 wie man in @tbl-lm3 sieht: Ein Spiel, 
 das mit Null Euro Preis startet, kann laut `lm3` etwa 36 Euro finaler Verkaufspreis erwarten.
 *Pro Euro an Versandkosten* (`ship_pr`) steigt der zu erwartende finale Verkaufspreis 
-um ca. 4 Euro.^[Die Spalte `95 CI` gibt einen Schätzbereich für den jeweiligen Modellkoeffizienten an,
+um ca. 4 Euro.
+(Die Spalte `95 CI` gibt einen Schätzbereich für den jeweiligen Modellkoeffizienten an,
 denn es handelt sich bei den Koeffizienten um Schätzwerte;
 der wahre Wert in der Population ist unbekannt. 
-Wir kennen schließlich nur eine Stichprobe der Größe $n=143$.].
+Wir kennen schließlich nur eine Stichprobe der Größe $n=143$.)
 
 Die Regressionsgleichung von `lm3` lautet demnach:
 
@@ -1004,13 +1055,14 @@ In Worten:
 
 ### Vertiefung
 
-Man kann sich die erwarteten Werte ("expectations") des Verkaufspreises in Abhängigkeit vom Wert der UV (`ship_pr`) auch schätzen ("to estimate") lassen, und zwar so^[Die Funktion stammt aus easystats]: 
+Man kann sich die erwarteten Werte ("expectations") des Verkaufspreises in Abhängigkeit vom Wert der UV (`ship_pr`) auch schätzen ("to estimate") lassen, und zwar so:
 
 
 
 ```{r}
 #| eval: false
-estimate_expectation(lm3) %>% head()  # nur die ersten paar vorhergesagten Werte
+estimate_expectation(lm3) %>%  # aus dem Paket 'easystats'
+  head()  # nur die ersten paar vorhergesagten Werte
 ```
 
 

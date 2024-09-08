@@ -52,6 +52,13 @@ source("children/colors.R")
 
 
 
+```{r}
+#| include: false
+
+source("_common.R")
+```
+
+
 
 
 
@@ -142,7 +149,7 @@ das Ihnen sinnvoll erscheint: Die Analyse des Klimawandels.
 
 Beim [Deutschen Wetterdienst, DWD](https://www.dwd.de/DE/Home/home_node.html) haben Sie sich Wetterdaten von Deutschland heruntergeladen.
 Nach etwas [Datenjudo, auf das wir hier nicht eingehen wollen](https://data-se.netlify.app/2022/07/24/preparing-german-weather-data/) 
-resultiert ein schöner Datensatz, den Sie jetzt analysieren wollen^[Temperatur: Grad Celcius, Niederschlag (`precip`) mm Niederschlag pro Quadratmeter]:
+resultiert ein schöner Datensatz, den Sie jetzt analysieren wollen (Temperatur: Grad Celcius, Niederschlag (`precip`) mm Niederschlag pro Quadratmeter):
 
 ::: {.content-visible when-format="html"}
 
@@ -176,7 +183,7 @@ was die Spalte bedeutet.$\square$
 
 ::::: {.content-visible when-format="html"}
 
-@fig-wetter-anim zeigen die Daten von @tbl-wetter animiert.
+@fig-wetter-anim zeigen die Wetterdaten animiert.
 
 
 ::::{#fig-wetter-anim}
@@ -370,7 +377,7 @@ Wie gut erklärt unser Modell die Daten?
 r2(lm_wetter1_zentriert)  # aus `{easystats}`
 ```
 
-Viel Varianz des Wetters erklärt das Modell mit `year_c`^[`year` und `year_c` sind gleich stark mit `temp` korreliert, daher wird sich die Modellgüte nicht unterscheiden.] aber nicht.
+Viel Varianz des Wetters erklärt das Modell mit `year_c` aber nicht. (`year` und `year_c` sind gleich stark mit `temp` korreliert, daher wird sich die Modellgüte nicht unterscheiden.).
 Macht auch Sinn: Abgesehen von der Jahreszahl spielt z.B. die Jahreszeit eine große Rolle für die Temperatur. Das haben wir nicht berücksichtigt.
 
 
@@ -393,7 +400,7 @@ Links ist eine grobe Temperaturrasterung zu sehen (Daten ab 1753)^[Quelle: <http
 
 
 :::{#fig-temp-de}
-![Temperaturverlauf in Deutschland von 1753 bis 2020](img/temp-de.gif){width="50%"}
+![Temperaturverlauf in Deutschland von 1753 bis 2020 [@earth_deutsch_2021]](img/temp-de.gif){width="50%"}
 
 ![](img/legende.png)
 
@@ -401,7 +408,6 @@ Links ist eine grobe Temperaturrasterung zu sehen (Daten ab 1753)^[Quelle: <http
 :::
 
 
-[Bildquelle; Lizenz: GeoNutzV](https://de.wikipedia.org/wiki/Zeitreihe_der_Lufttemperatur_in_Deutschland)
 
 ::::
 
@@ -487,7 +493,7 @@ den R für uns ohne viel Ankündigung durchführt:
 Umwandling in mehrere binäre Variablen.
 
 
-Hat ein nominaler Prädiktor zwei Stufen, so überführt^[synonym: transformiert] `lm()` diese Variable in eine binäre Variable.
+Hat ein nominaler Prädiktor zwei Stufen, so überführt (synonym: transformiert) `lm()` diese Variable in eine binäre Variable.
 Da eine binäre Variable metrisch ist, 
 kann die Regression in gewohnter Weise durchgeführt werden.
 Wenn Sie die Ausgabe der Parameter betrachten, 
@@ -668,11 +674,13 @@ Bei *nominalen* (und auch bei *binären*) Variablen ist $\color{beta1col}{\beta_
 
 ### Nominale UV
 
-In diesem Abschnitt betrachten wir ein lineare Modell^[für uns synonym: Regressionsmodell] mit einer mehrstufigen^[drei oder mehr Stufen bzw. Ausprägungen] (nominalskalierten) UV.^[So ein Modell ist von den Ergebnissen her praktisch identisch zu einer einfachen *Varianzanalyse*.]
+In diesem Abschnitt betrachten wir ein lineare Modell )für uns synonym: Regressionsmodell) mit einer mehrstufigen (nominalskalierten) UV. 
+So ein Modell ist von den Ergebnissen her praktisch identisch zu einer einfachen *Varianzanalyse*.
 
 
 :::{#exm-wetter2}
-Ob es wohl substanzielle^[wie könnte man dieses Wort eigentlich definieren?] Temperaturunterschiede zwischen den Bundesländern gibt?
+Ob es wohl substanzielle
+(wie könnte man dieses Wort eigentlich definieren) Temperaturunterschiede zwischen den Bundesländern gibt?
 :::
 
 Befragen wir dazu ein lineares Modell, s. @tbl-lm_wetter_region.
@@ -982,7 +990,8 @@ Okay.
 Wie spezifiziert man jetzt das lineare Modell?$\square$
 :::
 
-Hat man mehrere ("multiple") X-Variablen^[Prädiktoren, unabhängige Variablen, X-Variablen], so trennt man sich mit einem Plus-Zeichen in der Regressionsformel, z.B. `temp ~ year_c + month`.
+Hat man mehrere ("multiple") X-Variablen (Prädiktoren, unabhängige Variablen, X-Variablen), 
+so trennt man sich mit einem Plus-Zeichen in der Regressionsformel, z.B. `temp ~ year_c + month`.
 
 
 :::{.callout-important}
@@ -1202,7 +1211,8 @@ Im Juli nahm der Niederschlag ab, im Januar zu.$\square$
 Liegt ein Interaktionseffekt vor, 
 kann man nicht mehr von "dem" (statistischen) Effekt eines Prädiktors (afu die Y-Variable) sprechen.
 Vielmehr muss man unterscheiden: 
-Je nach Gruppe (z.B. Monat) unterscheidet der Effekt.^[Effekt ist hier immer statistisch, nie kausal gemeint.]
+Je nach Gruppe (z.B. Monat) unterscheidet der Effekt.
+("Effekt" ist hier immer statistisch, nie kausal gemeint.)
 
 
 ::: {.content-visible when-format="html"}
@@ -1805,7 +1815,7 @@ außerdem Kürze und aussagekräftige Namen.
 ### Train- vs. Test-Sample
 
 :::{#def-trainsample}
-### Train-Sample
+### Trainsample
 Den Datensatz, für die Sie sowohl UV *als auch AV* vorliegen haben, nennt man Train-Sample. $\square$
 :::
 
@@ -1813,15 +1823,17 @@ Den Datensatz, für die Sie sowohl UV *als auch AV* vorliegen haben, nennt man T
 Das Train-Sample stellt die bekannten Daten dar; aus denen können wir lernen, d.h. unser Modell berechnen.
 
 :::{#def-testsample}
-### Test-Sample
+### Testsample
 Den Datensatz, für den Sie *nur* Daten der UV, aber nicht zu der AV vorliegen haben, nennt man *Test-Sample*. $\square$
 :::
 
 
-Das Test-Sample  stellt das Problem der wirklichen Welt dar: Neue Beobachtungen, von denen man (noch) nicht weiß, was der Wert der AV ist.
+Das Test-Sample  stellt das Problem der wirklichen Welt dar: 
+Neue Beobachtungen, von denen man (noch) nicht weiß, was der Wert der AV ist.
 
 
-Der Zusammenhang dieser verschiedenen, aber zusammengehörigen Arten von Stichproben ist in @fig-sample-types dargestellt.
+Der Zusammenhang dieser verschiedenen, 
+aber zusammengehörigen Arten von Stichproben ist in @fig-sample-types dargestellt.
 
 
 ```{mermaid}

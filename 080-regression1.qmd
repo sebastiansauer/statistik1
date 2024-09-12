@@ -404,6 +404,37 @@ Mit:
 
 
 
+::::: {.content-visible when-format="epub"}
+
+<!-- epub -->
+
+
+:::{.callout-important}
+
+### Das einfache lineare Modell
+Das einfache lineare Modell nimmt den Wert einer [abhängigen metrischen Variablen, y]{.orange} 
+als lineare Funktion von [unabhängigen Variablen, x]{.lightblue} an, plus einem [Fehlerterm, e]{.green}. $\square$
+:::
+
+
+$$\begin{aligned}
+{y} &= f({x}) + {\epsilon} \\
+{y_i} &= {\beta_0} + {\beta_1} \cdot {x_i} + {\epsilon_i} \square
+\end{aligned}$$
+
+Mit:
+
+- ${\beta_0}$: geschätzter y-Achsenabschnitt laut Modell
+- ${\beta_1}$: geschätzte Steigung laut Modell
+- ${\epsilon}$: Fehler des Modells
+
+
+:::::
+
+
+
+
+
 
 Je nach Datenlage können sich Regressionsgerade in Steigung oder Achsenabschnitt unterscheiden, s. @fig-regr-div.
 
@@ -551,6 +582,8 @@ predict(lm1, newdata = tonis_lernzeit)
 Ein Geradenmodell kann man im einfachsten Fall so spezifizieren, s. @eq-mod1 :
 
 
+::: {.content-visible unless-format="epub"}
+
 $$\color{ycol}{\hat{y}} \sim \color{xcol}{\text{x}}$$ {#eq-mod1}
 
 Lies: "Laut meinem Modell ist mein (geschätztes) $\color{ycol}{\hat{y}}$ irgendeine Funktion von $\color{xcol}{\text{x}}$".
@@ -558,6 +591,22 @@ Lies: "Laut meinem Modell ist mein (geschätztes) $\color{ycol}{\hat{y}}$ irgend
 Wir erinnern uns, dass $\color{ycol}{Y}$ die $\color{ycol}{AV}$ und $\color{xcol}{X}$ die $\color{xcol}{UV}$ ist:
 
 $$\color{ycol}{AV} \sim \color{xcol}{UV}$$ {#eq-mod1}
+
+:::
+
+
+::: {.content-visible when-format="epub"}
+
+$${\hat{y}} \sim {\text{x}}$$ {#eq-mod1}
+
+Lies: "Laut meinem Modell ist mein (geschätztes) ${\hat{y}}$ irgendeine Funktion von ${\text{x}}$".
+
+Wir erinnern uns, dass ${Y}$ die ${AV}$ und ${X}$ die ${UV}$ ist:
+
+$${AV} \sim {UV}$$ {#eq-mod1}
+
+:::
+
 
 Wir werden als Funktion (erstmal) nur Geraden verwenden.
 Die genauen Werte der Gerade lassen wir uns (erstmal) vom Computer ausrechnen.
@@ -591,6 +640,9 @@ Den Namen des Objekts können Sie frei aussuchen, z.B. `mein_erstes_lm`.
 Die Regressionsgleichung lautet demnach:
 `y_pred = 8.6 + 0.88*x`
 
+
+::: {.content-visible unless-format="epub"}
+
 `8.6` ist der Achsenabschnitt, d.h. der Wert von $\color{ycol}{Y}$ wenn $\color{xcol}{x}=0$.
 `0.88` ist das Regressionsgewicht, d.h. die Steigung der Regressionsgeraden: Für jede Stunde Lernzeit steigt der vorhergesagte Klausurerfolg um `0.88` Punkte.
 
@@ -603,6 +655,24 @@ lernzeit <- 10
 y_pred <- 8.6 + 0.88*lernzeit
 y_pred
 ```
+:::
+
+
+::: {.content-visible when-format="epub"}
+
+`8.6` ist der Achsenabschnitt, d.h. der Wert von ${Y}$ wenn ${x}=0$.
+`0.88` ist das Regressionsgewicht, d.h. die Steigung der Regressionsgeraden: Für jede Stunde Lernzeit steigt der vorhergesagte Klausurerfolg um `0.88` Punkte.
+
+Mit Kenntnis der beiden Koeffizienten kann man beliebige ${Y}$-Werte ausrechnen gegeben bestimmte ${X}$-Werte.
+Hat jemand zum Beispiel 10 Stunden gelernt, 
+würden wir folgendes Klausurergebnis vorhersagen:
+
+```{r}
+lernzeit <- 10
+y_pred <- 8.6 + 0.88*lernzeit
+y_pred
+```
+:::
 
 
 :::{#exm-noten6}
@@ -642,9 +712,20 @@ Mit `predict` bekommt man eine Vorhersage; im Standard eine "Punkt-Vorhersage", 
 
 ### Vorhersagefehler
 
+
+::: {.content-visible unless-format="epub"}
 Die Differenz zwischen vorhergesagten Wert für eine (neue) Beobachtung, $\color{modelcol}{\hat{y_0}}$ 
 und ihrem tatsächlichen Wert nennt man Vorhersagefehler (error, $e_i$) oder *Residuum*: 
 $\color{errorcol}{e_i} = \color{ycol}{y_i} - \color{modelcol}{\hat{y}_i}$.
+:::
+
+
+
+::: {.content-visible when-format="epub"}
+Die Differenz zwischen vorhergesagten Wert für eine (neue) Beobachtung, ${\hat{y_0}}$ 
+und ihrem tatsächlichen Wert nennt man Vorhersagefehler (error, $e_i$) oder *Residuum*: 
+${e_i} = {y_i} - {\hat{y}_i}$.
+:::
 
 
 
@@ -770,7 +851,15 @@ Bildquelle: [Karsten Lübke, FOM Hochschule](https://www.fom-blog.de/autorinnen-
 
 Genauer gesagt wird die Summe der quadrierten [Residuen]{.green} minimiert, s. @eq-min.
 
+
+::: {.content-visible unless-format="epub"}
 $$\text{min}\sum_i \color{errorcol}{e_i}^2$${#eq-min}
+:::
+
+
+::: {.content-visible when-format="epub"}
+$$\text{min}\sum_i {e_i}^2$${#eq-min}
+:::
 
 Es gibt verschiedene Möglichkeiten, 
 um die Koeffizienten zu berechnen (die sind aber nicht in diesem Buch zu finden).
@@ -864,11 +953,13 @@ d_r1 %>%
 
 Bei einer perfekten Korrelation $R^2=1$ liegen die Punkte auf der Geraden.
 Im gegenteiligen Extremfall von $R^2=0$ ist die Vorhersage genauso gut, 
-wie wenn man für jedes $y$ den Mittelwert, $\color{ycol}{\bar{y}}$, vorhersagen würde. 
+wie wenn man für jedes $y$ den Mittelwert, [$\color{ycol}{\bar{y}}$]{.content-visible unless-format="epub"}
+[${\bar{y}}$]{.content-visible when-format="epub"}, vorhersagen würde. 
+
 
 
 :::{.callout-note}
-Je größer R-Quadrat, desto besser erklärt das Modell die Daten 
+Je größer R-Quadrat, desto besser passt das Modell zu den Daten; desto besser "erklärt" das Modell die Daten 
 (desto besser der "Fit", sagt man).
 :::
 
@@ -908,17 +999,23 @@ Verschiedenen Koeffizienten stehen zur Verfügung: R-Quadrat, r (als Korrelation
 
 ### Koeffizienten
 
-Die Modellkoeffizienten, also Achsenabschnitt ($\beta_0$;lies: "beta Null") und Steigung ($beta_1$) sind nur eingeschränkt zu interpretieren, 
+Die Modellkoeffizienten, also Achsenabschnitt ($\beta_0$;lies: "beta Null") und Steigung ($\beta_1$) sind nur eingeschränkt zu interpretieren, 
 wenn man die zugrundeliegenden kausalen Abhängigkeiten nicht kennt.
 Nur aufgrund eines statistischen Zusammenhangs darf man keine kausalen Abhängigkeiten annehmen.
 Ohne eine guten Grund für eine Kausalbehauptung kann man kann nur *deskriptiv* argumentieren.
-Oder sich mit der Modellgüte und den Vorhersagen begnügen. Was auch was wert ist.
+Oder sich mit der Modellgüte und den Vorhersagen begnügen. 
+Was auch was wert ist.
 
 #### Achsenabschnitt (b0)
 
-"Im Modell `lm1` liegt der Achsenabschnitt bei $\textcolor{ycol}{y}=`r round(coef(lm1)[1], 2)`$. 
+[Im Modell `lm1` liegt der Achsenabschnitt bei $\textcolor{ycol}{y}=`r round(coef(lm1)[1], 2)`$. 
 Beobachtungen mit $\color{xcol}{x}=0$ 
-können also diesen $\textcolor{ycol}{Y}$-Wert erwarten."
+können also diesen $\textcolor{ycol}{Y}$-Wert erwarten.]{.content-visible unless-format="epub"}
+
+
+[Im Modell `lm1` liegt der Achsenabschnitt bei ${y}=`r round(coef(lm1)[1], 2)`$. 
+Beobachtungen mit ${x}=0$ 
+können also diesen ${Y}$-Wert erwarten.]{.content-visible when-format="epub"}
 Leider ist es häufig so, dass Prädiktorwerte von 0 in der Praxis nicht realistisch sind, 
 so dass der Achsenabschnitt dann wenig nützt.
 
@@ -1186,7 +1283,8 @@ Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine 
 
 Schauen Sie sich die Aufgaben beim [Datenwerk](https://datenwerk.netlify.app/) an, vor allem die Tags [regression](https://datenwerk.netlify.app/#category=regression) und [lm](https://datenwerk.netlify.app/#category=lm).
 
-*Nicht alle Aufgaben* aus dieser Sammlung passen zum Stoff; vielleicht können Sie einige Aufgaben nicht lösen.
+*Nicht alle Aufgaben* aus dieser Sammlung passen zum Stoff; 
+vielleicht können Sie einige Aufgaben nicht lösen.
 Ignorieren Sie einfach diese Aufgaben.
 
 Beachten Sie die [Hinweise zu den Aufgaben](https://datenwerk.netlify.app/hinweise).^[<https://datenwerk.netlify.app/hinweise>]
@@ -1194,7 +1292,8 @@ Beachten Sie die [Hinweise zu den Aufgaben](https://datenwerk.netlify.app/hinwei
 
 ## Literaturhinweise
 
-@gelman_regression_2021 liefert eine deutlich umfassendere Einführung in die Regressionsanalyse als dieses Kapitel es tut.
+@gelman_regression_2021 liefert eine deutlich umfassendere Einführung 
+in die Regressionsanalyse als dieses Kapitel es tut.
 Eine moderne, R-orientierte Einführung in Statistik inklusive der Regressionsanalyse findet sich bei @cetinkaya-rundel_introduction_2021.
 Ein Klassiker mit viel Aha-Potenzial ist @cohen_applied_2003
 

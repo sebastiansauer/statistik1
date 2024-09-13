@@ -95,28 +95,18 @@ Erkennen Sie, dass die *Unterschiedlichkeit* der Größe in Gruppe *Gleich-Groß
 Prof. Weiss-Ois hat eine Erfindung gemacht, eine Schlankheitspille[💊]{.content-visible when-format="html"} [@flaticon_professor_2024].
   
 
-:::: {layout-ncol="3"}
-::: {.column width="45%"}
-
-**Was er sagt**
-
-!["Ich habe eine Schlankheitspille entwickelt, die pro Einnahme das Gewicht im Schnitt um 1kg reduziert!"](img/teacher.png){width="25%"}
-
-:::
+:::{#fig-prof layout="[10,-2,10]"}
 
 
-::: {.column width="10%"}
-<!-- empty column to create gap -->
-:::
+![**Was er sagt:** "Ich habe eine Schlankheitspille entwickelt, die pro Einnahme das Gewicht im Schnitt um 1kg reduziert!"](img/teacher.png){width="25%"}
 
 
-::: {.column width="45%"}
-**Was er NICHT sagt**
-!["Allerdings streuten die Werte der Gewichtsveränderung um 10kg um den Mittelwert herum."](img/teacher.png){width="25%"}
+
+![**Was er NICHT sagt:** "Allerdings streuten die Werte der Gewichtsveränderung um 10kg um den Mittelwert herum."](img/teacher.png){width="25%"}
 
 :::
 
-::::
+
 
 
 
@@ -176,11 +166,16 @@ Die Streuung ihrer Daten zu kennen ist eine wesentliche Information. $\square$
 
 @fig-streuung zeigt ein einfaches Modell (Mittelwert) mit wenig Streuung (links) vs. ein einfaches Modell mit viel Streuung (rechts).
 Links ist die Streuung der Schlankheitspille *Dicktableitin* und rechts von der Schlankheitspille *Pfundafliptan* abgetragen.
+Die vertikalen grauen Balken in @fig-streuung kennzeichnen den (absoluten) Abstand von jeweils einem Datenpunkt zum Mittelwert (horizontale orange Linie). Je länger die vertikalen 'Abstandsbalken' insgesamt, desto größer die Streuung."
+
 
 ```{r viel-wenig-streuung}
 #| echo: false
 #| label: fig-streuung
-#| fig-cap: "Ein Modell mit wenig Streuung (links) vs. ein Modell mit viel Streuung (rechts). Die vertikalen grauen Balken kennzeichnen den (absoluten) Abstand von jeweils einem Datenpunkt zum Mittelwert (horizontale orange Linie). Je länger die vertikalen 'Abstandsbalken' insgesamt, desto größer die Streuung."
+#| out-width: 75%
+#| fig-cap: "Wenig (links) vs. viel Streuung (rechts). 
+
+
 set.seed(42)
 d <-
   tibble(
@@ -567,7 +562,7 @@ Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist, grob gesagt, 
 
 
 
-:::: {layout="[ 60, 30 ]"}
+:::: {layout="[ 60, 40 ]"}
 
 ::: {.column}
 
@@ -979,7 +974,7 @@ gghistogram(mariokart_no_extreme, x = "total_pr",
 gghistogram(mariokart_no_extreme, x = "abw",
             add = "mean",  # Mittelwert wird hinzugefügt
             add.params = list(color =  okabeito_colors()[1], size = 3))  +# Schnickschnack zur Verschönerung
-  annotate("label", x= 0, y = 0, label = "Mittelwert")
+  annotate("label", x = 0, y = 0, label = "Mittelwert")
 ```
 
 
@@ -1017,6 +1012,7 @@ Daher ist der neue Mittelwert (der zentrierten Verteilung) gleich Null. $\square
 #| label: fig-norm-dev
 #| fig-cap: Die Abweichungen zum Mittelwert (MW) einer normalverteilten Variable sind selber normalverteilt
 #| fig-asp: 0.5
+#| out-width: 75%
 
 mw <- 47.4
 streuung <- 9.11
@@ -1073,7 +1069,8 @@ Woher weiß man, ob 10 Euro oder 20 Euro "viel" Abweichung vom Verkaufspreis ist
 Man müsste die Abweichung eines Verkaufpreis zu irgendetwas in Bezug setzen.
 Wieder! Ein Geistesblitz!
 Man könnte doch die jeweilige Abweichung  in Bezug setzen zur *mittleren (absoluten) Abweichung* (MAA)!
-Ein alternativer, ähnlicher Kennwert zur mittlerer absolute Abweichung ist die SD.
+Ein alternativer,
+ähnlicher Kennwert zur mittlerer absolute Abweichung ist die SD.
 Sie haben gehört, dass die SD gebräuchlicher ist als die MAA. 
 Um sich als Checker zu präsentieren, berechnen Sie also auch die SD; die beiden Koeffizienten sind ja ähnlich.
 
@@ -1097,19 +1094,20 @@ die wir hier als *standardisiert* bezeichnen, da wir sie in Bezug zur "typischen
 #| warning: false
 #| echo: false
 #| label: fig-z-transf
+#| out-width: 75%
 #| fig-cap: "Standardisierung von Abweichungswerten bzw. einer Verteilung; der vertikale Balken zeigt den Mittelwert"
 
 p1 <- gghistogram(mariokart_no_extreme, x = "abw",
             add = "mean",  # Mittelwert wird hinzugefügt
             add.params = list(color = okabeito_colors()[1], size = 3)) +
   labs(title = "Rohwerte") +
-  annotate("label", x = 0, y = 0, label = "MW", hjust = "bottom")
+  annotate("label", x = 0, y = 20, label = "MW")
 
 p2 <-  gghistogram(mariokart_no_extreme, x = "abw_std",
             add = "mean",  # Mittelwert wird hinzugefügt
             add.params = list(color = okabeito_colors()[1], size = 3)) +
   labs(title = "Standardisierte Werte") +
-  annotate("label", x = 0, y = 0, label = "MW", hjust = "bottom")
+  annotate("label", x = 0, y = 20, label = "MW")
 
 arrow_down <- png::readPNG("img/arrow-down.png", native = TRUE)
 p_ad <- ggplot() + inset_element(arrow_down, 0, 0, 1, 1)
@@ -1199,7 +1197,8 @@ Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine 
 
 ```{r}
 #| echo: false
-
+#| out-width: "75%"
+#| fig-align: center
 qr <- qrcode::qr_code("https://docs.google.com/forms/d/e/1FAIpQLSfM6oDLHX4_lqWq-bXw39drTkdGAvecE6ow2HIKoxdrVygp2A/viewform")
 plot(qr)
 ```

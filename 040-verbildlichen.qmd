@@ -64,36 +64,17 @@ library(ggstatsplot)  # optional
 
 ### Benötigte Daten
 
-::: {.content-visible when-format="html"}
-
-Zuerst definieren wir den Pfad, wo wir die Daten finden, s. @lst-mariokart-path.
-
-
-```{r mariokart-path}
-#| lst-label: lst-mariokart-path
-#| lst-cap: Pfad zu den Mariokart-Daten
-mariokart_path <- "https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"
-```
-:::
 
 
 
-::: {.content-visible when-format="pdf"}
-
-Zuerst definieren wir den Pfad, wo wir die Daten finden, s. @lst-mariokart-path-pdf.
+Zuerst definieren wir den Pfad, wo wir die Daten finden, s. @lst-mariokart. Dann importieren wir die Mariokart-Daten.
 ```{r mariokart-path-pdf}
-#| lst-label: lst-mariokart-path-pdf
+#| lst-label: lst-mariokart
 #| lst-cap: Pfad zu den Mariokart-Daten
 mariokart_path <- paste0(
   "https://vincentarelbundock.github.io/Rdatasets",
   "/csv/openintro/mariokart.csv")
-```
-:::
-Dann importieren wir die Mariokart-Daten, s. @lst-imp-mario-verbild:
 
-```{r import-mariokar}
-#| lst-cap: "Wir importieren die Mariokart-Daten"
-#| lst-label: lst-imp-mario-verbild
 mariokart <- read.csv(mariokart_path)
 ```
 
@@ -119,7 +100,8 @@ Alternativ überlegen Sie sich selber 10 Quiz-Aufgaben zum Stoff des letzten Kap
 
 ```{r}
 #| echo: false
-
+#| out-width: "75%"
+#| fig-align: center
 qr <- qrcode::qr_code("https://antworte.jetzt")
 plot(qr)
 ```
@@ -157,20 +139,20 @@ plot(qr)
 
 Es heißt, ein Bild sage mehr als 1000 Worte. 
 Schon richtig, aber ein Dinosaurier sagt auch mehr als 1000 Worte,
-s. @fig-dino1.^[Quelle: <https://towardsdatascience.com/how-to-turn-a-dinosaur-dataset-into-a-circle-dataset-with-the-same-statistics-64136c2e2ca0>]
+s. @fig-dino1 [@fitzmaurice_same_2017].
 In @fig-dino1 sieht man verschiedene "Bilder", also Datensätze: etwa einen Dino und einmal einen Kreis.
 Obwohl die Bilder grundverschiedene sind, sind die zentralen statistischen Kennwerte (praktisch) identisch.
 In die gleiche Bresche schlägt "Anscombes Quartett" [@Anscombe_1973], s. @fig-dino2:
 Es zeigt vier Datensätze, in denen die zentralen Statistiken fast identisch sind,    
 also Mittelwerte, Streuungen, Korrelationen.
-Aber die Streudiagramme sind grundverschieden.^[Quelle: <https://en.wikipedia.org/wiki/Anscombe%27s_quartet>]
+Aber die Streudiagramme sind grundverschieden.
 Anscombes Beispiel zeigt (zugespitzt): Eine Visualisierung enthüllt, was der Statistik (als Kennzahl) verhüllt bleibt.
 
 
 
 
 ::: {.content-visible when-format="html"}
-![Dinosaurier und Kreis: Gleiche statistischen Kennwerte](img/dino-corr.gif){#fig-dino1}
+![Dinosaurier und Kreis: Gleiche statistischen Kennwerte [@fitzmaurice_same_2017]](img/dino-corr.gif){#fig-dino1}
 :::
 
 ::: {.content-visible when-format="pdf"}
@@ -226,12 +208,14 @@ Erkenntnisse daraus zu ziehen.
 
 
 
+
+
 :::{#exm-datendiagramm}
 
 ### Aus der Forschung: Ein aufwändiges (und ansprechendes) Datendiagramm
 
 
-:::: {layout="[ 50, 50 ]"}
+:::: {layout="[ 50, -5, 50 ]"}
 ::: {#first-column}
 Auf Basis des Korruptionsindex von Transparency International [-@transparency_international_corruption_2017] erstellt Wilke [-@wilke_wilkelabpracticalgg_2024 ein Diagramm zum Zusammenhang vom Entwicklungsindex (Lebenserwartung, Bildung, Einkommen; vgl. @hou_dynamics_2015) und Korruption, jeweils auf Landesebene, s. @fig-develop-corrupt.
 
@@ -242,7 +226,7 @@ Es finden sich in der Literatur (im Internet) viele weitere Beispiele für handw
 
 ::: {#second-column}
 
-![](img/develop-corrupt.png){#fig-develop-corrupt}
+![Der Zusammenhang von Entwicklungindex und und Korruption](img/develop-corrupt.png){#fig-develop-corrupt}
 
 :::
 ::::
@@ -370,19 +354,27 @@ mariokart |>
 Zugegeben, das Datendiagramm von `cond` ist nicht so aufregend, 
 s. @fig-mario-n-plot-cond.
 Wie man sieht, besteht so ein Diagramm als *Balken*, daher heißt es *Balkendiagramm* (synonym: Säulendiagramm).
-Man kann so ein Diagramm um 90° drehen; keine Ausrichtung ist unbedingt besser als die andere.
+Man kann so ein Diagramm um 90° drehen; 
+keine Ausrichtung ist unbedingt besser als die andere.
 
 
 :::{#def-balken}
 ### Balkendiagramm
-Ein Balkendiagramm eignet sich, um Häufigkeiten darzustellen
+Ein Balkendiagramm ist eine grafische Darstellung von Werten, zumeist für die Häufigkeiten bestimmter Kategorien (Ausprägungen nominaler Variablen). 
+Dabei werden rechteckige Balken verwendet werden, und die Länge eines Balkens ist proportional zur dargestellten Häufigkeit. $\square$
 :::
+
 
 
 ```{r p-mariokart-n-cond}
 #| echo: false
+#| layout-ncol: 2
 #| label: fig-mario-n-plot-cond
 #| fig-cap: "Häufigkeitsverteilung der Variable `cond`"
+#| out-width: "75%"
+#| fig-subcap: 
+#|   - horizontale Balken
+#|   - vertikale Balken
 
 mario_n1 <-
   mariokart |> 
@@ -390,35 +382,24 @@ mario_n1 <-
   ggplot(aes(y = n, x = cond)) + 
   geom_col() +
   coord_flip() +
-  theme_modern() + 
-  labs(title = "horizontale Balken")
+  theme_modern() 
 
 mario_n2 <-
   mariokart |> 
   count(cond) |> 
   ggplot(aes(y = n, x = cond)) + 
   geom_col()   +
-  theme_modern() + 
-  labs(title = "vertikale Balken")
+  theme_modern()
 
-plots(mario_n1, mario_n2)
+
+mario_n1
+mario_n2
+
+# plots(mario_n1, mario_n2)
 ```
 
 
 
-
-
-```{r}
-#| label: fig-de1
-#| echo: false
-#| fig-cap: "Balkendiagramm mit dem R-Paket `DataExplorer`"
-library(DataExplorer)
-mariokart <- read.csv(mariokart_path)
-
-mariokart %>% 
-  select(cond) %>% 
-  plot_bar()
-```
 
 Es gibt viele Methoden, sich mit R ein Balkendiagramm ausgeben zu lassen.
 Eine einfache, komfortable ist die mit dem Paket `DataExplorer`, s. @fig-mario-n-plot-cond;
@@ -444,16 +425,28 @@ Auf der Hilfeseite der Funktion finden Sie weitere Details zur Funktion.
 
 
 
-```{r }
+
+
+```{r}
+#| label: fig-de1
+#| echo: true
+#| eval: true
 #| lst-label: lst-de1
 #| lst-cap: "Syntax zur Erstellung eines Balkendiagramms"
+#| out-width: 50%
+library(DataExplorer)
+mariokart <- read.csv(mariokart_path)
+
 mariokart %>% 
   select(cond) %>% 
   plot_bar()
 ```
 
 
-Die Syntax ist in @lst-de1 abgedruckt (Zur Erinnerung: ` %>% ` nennt man die "Pfeife und lässt sich als "und dann" übersetzen, vgl. @sec-pipe.). Übersetzen wir die Syntax ins Deutsche:
+
+Die Syntax ist in @lst-de1 abgedruckt 
+(Zur Erinnerung: ` %>% ` nennt man die "Pfeife und lässt sich als "und dann" übersetzen, vgl. @sec-pipe.). 
+Übersetzen wir die Syntax ins Deutsche:
 
 ```
 Nimm den Datensatz mariokart *und dann*
@@ -472,7 +465,6 @@ Hätten wir andere Spalten ausgewählt, so würde das Balkendiagramm die Verteil
 ### Visualisieren Sie die Verteilung von `stock_photo`!
 
 
-**Lösung**
 ```{r}
 #| eval: !expr knitr::is_html_output()
 mariokart |> 
@@ -631,7 +623,7 @@ mariokart %>%
 
 ### Visualisieren Sie die Verteilung von `ship_pr` anhand eines Histogramms!
 
-**Lösung**
+
 ```{r}
 #| eval: !expr knitr::is_html_output()
 mariokart |> 
@@ -663,6 +655,7 @@ so kann Rauschen (Zufallsschwankung) besser ausgeblendet werden. (Mit *Dichte* i
 #| echo: false
 #| fig-cap: "Histogramm (graue Balken) und Dichtediagramm (orange Linie) für `total_pr`"
 #| label: fig-balken-total-pr-hist-dens
+#| out-width: 75%
 
 m1a |> 
   ggplot(aes(x = total_pr, y = ..density..)) +
@@ -722,17 +715,22 @@ p_distribs
 
 ::::{#exr-verteilungsform-total-pr}
 
-### Bennenen Sie die am besten passende Verteilungsform für die Variable `total_pr`.
+### Verteilungform von `total_pr?
+
+Bennenen Sie die am besten passende Verteilungsform für die Variable `total_pr`.
 
 **Lösung**
 
 Die Verteilung ist rechtschief.
+
+::: {.content-visible when-format="html"}
 
 ```{r}
 mariokart |> 
   select(total_pr) |> 
   plot_density()
 ```
+:::
 
 ::::
 
@@ -776,7 +774,8 @@ Dieses Phänomen kann man gut anhand des [Galton-Bretts](https://www.youtube.com
 
 ```{r}
 #| echo: false
-
+#| out-width: "75%"
+#| fig-align: center
 qr <- qrcode::qr_code("https://www.youtube.com/watch?v=3m4bxse2JEQ")
 plot(qr)
 ```
@@ -804,7 +803,7 @@ Eine Normalverteilung lässt sich exakt beschreiben anhand zweier Parameter: ihr
 
 
 
-::::: {.content-visible when-format="html"}
+::::: {.content-visible when-format="html" unless-format="epub"}
 
 
 @fig-normal-interactive zeigt  interaktive Beispiele für Normalverteilung. Wählen Sie einfach Mittelwert ($\mu$) und Streuung ($\sigma$) anhand der Schieberegler.^[Quelle: <https://observablehq.com/@mcmcclur/the-normal-model>]
@@ -855,7 +854,7 @@ Davon leitet sich die "68-95-99.7-Prozentregel" ab:
 
 
 
-![Die Flächeninhalte (Wahrscheinlichkeitsmasse) einer Normalverteilung in Abhängigkeit der SD-Einheiten  [@ainali_standard_2007]](img/Standard_deviation_diagram_micro.svg.png){#fig-norm-perc}
+![Die Flächeninhalte (Wahrscheinlichkeitsmasse) einer Normalverteilung in Abhängigkeit der SD-Einheiten  [@ainali_standard_2007]](img/Standard_deviation_diagram_micro.svg.png){#fig-norm-perc width=50%}
 
 
 
@@ -940,11 +939,16 @@ sonst sind die Zusammenhänge nicht mehr so gut zu erkennen.$\square$
 
 ::::{#exr-zsmnhang-cond-wheels}
 
-### Aufgabe Visualisieren Sie den Zusammenhang der beiden nominalen Variablen `cond` und `wheels`!
+### Zusammenhang visualisieren
+
+Aufgabe Visualisieren Sie den Zusammenhang der beiden nominalen Variablen `cond` und `wheels`!
 
 **Lösung**
 
-`wheels` ist als metrische Variable (`int`: Integer, d.h. Ganzzahl) formatiert im Datensatz `mariokart`. Wir müssen Sie zunächst als Faktorvariable umformatieren, damit R sie als nominal skalierte Variable erkennt.
+`wheels` ist als metrische Variable (`int`: Integer, d.h. Ganzzahl) 
+formatiert im Datensatz `mariokart`. 
+Wir müssen Sie zunächst als Faktorvariable umformatieren, 
+damit R sie als nominal skalierte Variable erkennt.
 
 
 ```{r}
@@ -1113,7 +1117,7 @@ und *schwache* Zusammenhänge mit einer *breiten* Ellipse einhergehen.
 
 
 
-::::: {.content-visible when-format="html"}
+:::::  {.content-visible when-format="html" unless-format="epub"}
 
 
 @fig-scatter-interactive zeigt interaktive Beispiele für (lineare) Zusammenhänge.^[Quelle: <https://observablehq.com/d/bb7ad3ecfb1ac2a6>]
@@ -1204,7 +1208,7 @@ Das Argument `by = "total_pr"` bei `plot_scatterplot` weist R an, als Y-Variable
 
 :::
 
-::::: {.content-visible when-format="html"}
+:::::  {.content-visible when-format="html" unless-format="epub"}
 
 ::::{#exr-zsmnhang-metrisch}
 :::{.panel-tabset}
@@ -1601,7 +1605,7 @@ Zwar sind sie beliebt, doch ist [von ihrer Verwendung zumeist abzuraten](https:/
 Mehr Informationen zu `{DataExplorer}` finden Sie [hier](https://boxuancui.github.io/DataExplorer/index.html).
 
 
-::: {.content-visible when-format="html"}
+:::  {.content-visible when-format="html" unless-format="epub"}
 
 ### Animation
 
@@ -1620,7 +1624,7 @@ Außerdem sind sie mitunter nett anzuschauen, s. @fig-anim1.
 ![Veränderung des Zusammenhangs von Lebenswertung und Bruttosozialprodukt pro Land, gegliedert nach Kontinenten](img/animate1.gif){#fig-anim1 width="75%"}
 
 
-Weniger spektakulär als @fig-3d-earth, aber näher an der Datenanalyse ist @fig-mario-3d.
+Um den gemeinsamen Zusammenhang dreier metrischer Variablen darzustellen, bietet sich ein 3D-Streudiagramm an; s. @fig-mario-3d.
 
 
 ```{r mario3d}

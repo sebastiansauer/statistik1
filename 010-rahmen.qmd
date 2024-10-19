@@ -209,7 +209,7 @@ d |>
   geom_hline(yintercept = 0, linetype = "dashed") +
   annotate("point", size = 7, x = 1, y = 0,
            color = modelcol) +
-  annotate("label", x = 0, y = 0, label = "MW", hjust = 0) +
+  annotate("label", x = 0, y = 0, label = "MW", hjust = 0, size = 6) +
   labs(caption = "MW: Mittelwert") +
   theme_modern()  +
   theme(strip.text = element_text(size = 16)) +
@@ -771,7 +771,7 @@ Im Folgenden sind zwei Tabellen dargestellt, die die gleichen Informationen dars
 d <-
   tribble(
     ~Produkt, ~Umsatz_2021, ~Umsatz_2022, ~Umsatz_2023,
-    "Hammer", 10, 11, 12,
+    "Hämmer", 10, 11, 12,
     "Nägel", 15, 10, 5
   )
 kable(d)
@@ -786,7 +786,7 @@ d_long <-
   d |> 
   pivot_longer(cols = c(Umsatz_2021, Umsatz_2022, Umsatz_2023), names_to = "Jahr2", values_to = "Umsatz") |> 
   separate(Jahr2, into = c("k", "Jahr")) |> 
-  select(-k)
+  dplyr::select(-k)
 
 kable(d_long)
 ```
@@ -824,8 +824,9 @@ d_long |>
   scale_color_okabeito() +
   theme_modern() +
   geom_text(data = last_points, aes(label = Produkt), 
-            hjust = -0.1, vjust = 0.5, size = 4, show.legend = FALSE) +
-  theme(legend.position = "none")
+            hjust = -0.2, vjust = 0.5, size = 4, show.legend = FALSE) +
+  theme(legend.position = "none") +
+  scale_y_continuous(limits = c(0,15))
 ```
 
 

@@ -6,9 +6,10 @@
 ```{r libs-hidden}
 #| include: false
 library("tidyverse")
-library("ganttrify")
+#library("ganttrify")
 library("easystats")
 library("googlesheets4")
+library(see)
 
 theme_set(theme_minimal())
 ```
@@ -145,6 +146,31 @@ Das geht fast allen so.
 Ihren Lernerfolg kann nur eine Sache gefährden: 
 Wenn Sie aufgaben. 
 Bleiben Sie dran, und der Erfolg wird sich einstellen!
+@fig-lernen zeigt Daten von N=1646 Studentis, die zeigen, dass regelmäßiges Üben und Dranbleiben der Schlüssel zum Erfolg ist.
+
+
+
+```{r}
+#| echo: false
+#| label: fig-lernen
+#| fig-cap: "Der Zusammenhang von Lernzeit (1: gering bis 5:hoch) von Klausurerfolg"
+data(stats_test, package = "pradadata")
+
+
+ggplot(stats_test, aes(x = study_time, y = score)) +
+  labs(x = "Lernzeit",
+       y = "Klausurerfolg",
+       caption = ("N = 1646")) +
+  theme_minimal() +
+  geom_violin(aes(group = study_time)) +
+  geom_point2(alpha = .5,
+              position = position_jitter(width = 0.3, height = 0.1)) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_y_continuous(breaks = c(0, .25, .5, .75, 1))
+
+```
+
+
 
 :::: {.content-visible when-format="html"}
 :::{.callout-important}
@@ -317,7 +343,7 @@ plot(qr)
 ::::
 
 
-#### Hervorhebungen
+### Hervorhebungen
 
 Im Buch sind Beispiele, Fehlerquellen, Definitionen und Hinweise visuell hervorgehoben (und verlinkt), so dass Sie schnell finden können.
 

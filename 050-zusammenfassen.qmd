@@ -428,7 +428,8 @@ p_mean_deltas <-
                size = 2
                ) +
   geom_point(size = 5) + 
-  labs(linetype = "Richtung der Abweichung") +
+  labs(linetype = "Richtung der Abweichung",
+       color = "Richtung der Abweichung") +
   theme(legend.position =  "bottom",
         legend.justification = c(1, 1)) +
   annotate(geom = "label",
@@ -440,8 +441,7 @@ p_mean_deltas <-
   labs(x = "",
        y = "") +
   scale_x_continuous(breaks = 1:4, labels = d$names) +
-  scale_color_okabeito() +
-  guides(color = FALSE)
+  scale_color_okabeito() 
 
 p_mean_deltas
 ```
@@ -586,7 +586,7 @@ ggplot(mariokart) +
        x = "Nr. des Spiel") +
   scale_y_continuous(limits = c(0, 400)) +
   theme_minimal() +
-  annotate("label", x = 0, y = 50, label = "MW", hjust = "left", size = 8) +
+  annotate("label", x = 0, y = 50, label = paste0("MW: ", 50), hjust = "left", size = 8) +
   theme(axis.title = element_text(size = 18)) +
   theme(caption.title = element_text(size = 14))
 
@@ -604,7 +604,7 @@ ggplot(mariokart2) +
        x = "Nr. des Spiel") + 
   scale_y_continuous(limits = c(0, 400)) +
   theme_minimal()  +
-  annotate("label", x = 0, y = 47, label = "MW", hjust = "left", size = 8) +
+  annotate("label", x = 0, y = 47, label = paste0("MW: ", 47), hjust = "left", size = 8) +
   theme(axis.title = element_text(size = 18)) +
   theme(caption.title = element_text(size = 14))
 
@@ -1348,7 +1348,7 @@ p1 <- ggplot(mariokart2) +
        x = "Nr. des Spiel") +
   theme_minimal() +
   scale_y_continuous(limits = c(0, 100)) +
-  annotate("label", x = 0, y = 47, label = "MW")
+  annotate("label", x = 0, y = 47, label = paste0("MW: 47"))
 
   
 p2 <- mariokart3 |> 
@@ -1359,7 +1359,13 @@ p2 <- mariokart3 |>
                                          color = wheels),
              size = 2) +
   scale_color_okabeito() +
-  labs(caption = paste0("MWs: ", round(mariokart3_summ$total_pr, 2)),
+  annotate("label", x = -Inf, y = round(mariokart3_summ$total_pr[1], 2),
+           label = paste0("MW: ", round(mariokart3_summ$total_pr[1], 0)),
+           hjust = 0) +
+    annotate("label", x = -Inf, y = round(mariokart3_summ$total_pr[2], 2),
+           label = paste0("MW: ", round(mariokart3_summ$total_pr[2], 0)),
+           hjust = 0) +
+  labs(caption = paste0("MWs: 39 bzw. 56"),
        x = "Nr. des Spiel")  +
   theme_minimal()  +
   scale_y_continuous(limits = c(0, 100)) +

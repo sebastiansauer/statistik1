@@ -935,7 +935,7 @@ rmse(lm_mario1)  # Root mean squared error
 ## z-Transformation
 
 Sie arbeiten immer noch als Datenknecht, Moment, *Datenhecht* bei dem Online-Auktionshaus.
-Heute untersuchen Sie die Frage, wie gut sich die Verkaufspreise mit einer einzeigen Zahl, dem mittleren Verkaufspreis, beschreiben lassen.
+Heute untersuchen Sie die Frage, wie gut sich die Verkaufspreise mit einer einzigen Zahl, dem mittleren Verkaufspreis, beschreiben lassen.
 Einige widerspenstige Werte haben Sie dabei einfach des Datensatzes verwiesen.
 Schon ist das Leben leichter, s. `mariokart_no_extreme`.
 
@@ -974,7 +974,9 @@ gghistogram(mariokart_no_extreme, x = "total_pr",
 gghistogram(mariokart_no_extreme, x = "abw",
             add = "mean",  # Mittelwert wird hinzugefügt
             add.params = list(color =  okabeito_colors()[1], size = 3))  +# Schnickschnack zur Verschönerung
-  annotate("label", x = 0, y = 0, label = "Mittelwert")
+  annotate("label", x = 0, y = 0, label = "Mittelwert"
+           ) +
+  labs(x = "Abweichung vom Mittelwert")
 ```
 
 
@@ -1094,6 +1096,7 @@ die wir hier als *standardisiert* bezeichnen, da wir sie in Bezug zur "typischen
 #| warning: false
 #| echo: false
 #| label: fig-z-transf
+#| fig-aspect: 0.8
 #| out-width: 75%
 #| fig-cap: "Standardisierung von Abweichungswerten bzw. einer Verteilung; der vertikale Balken zeigt den Mittelwert"
 
@@ -1101,13 +1104,16 @@ p1 <- gghistogram(mariokart_no_extreme, x = "abw",
             add = "mean",  # Mittelwert wird hinzugefügt
             add.params = list(color = okabeito_colors()[1], size = 3)) +
   labs(title = "Rohwerte") +
-  annotate("label", x = 0, y = 20, label = "MW")
+  annotate("label", x = 0, y = 25, label = "MW", vjust = 1) +
+  labs(x = "Abweichung vom Mittelwert") 
+  
 
 p2 <-  gghistogram(mariokart_no_extreme, x = "abw_std",
             add = "mean",  # Mittelwert wird hinzugefügt
             add.params = list(color = okabeito_colors()[1], size = 3)) +
   labs(title = "Standardisierte Werte") +
-  annotate("label", x = 0, y = 20, label = "MW")
+  annotate("label", x = 0, y = 25, label = "MW", vjust = 1)  +
+  labs(x = "z-standardisierte Abweichung vom Mittelwert")
 
 arrow_down <- png::readPNG("img/arrow-down.png", native = TRUE)
 p_ad <- ggplot() + inset_element(arrow_down, 0, 0, 1, 1)

@@ -1,0 +1,65 @@
+# Vorwort {.unnumbered}
+
+
+
+
+
+
+
+Dieses Buch führt in die Statistik ein; es soll Freude am Lernen bereiten und hat nur ein Thema: Vorhersagen mittels moderner statistischen Methoden. 
+Alle Inhalte dieses Buch erklären einen Aspekt der statistischen (Vorhersage-)Modellierung.
+Es wendet sich an Studierende ohne Vorkenntnisse in Statistik. 
+Viele Statistikbücher gibt es schon auf dieser Welt, braucht es da noch eines? 
+Kritische Stimmen würden vielleicht anmerken, 
+dass schon ein einziges Statistikbuch eines zu viel wäre. 
+Ja, es gibt viele Statistikbücher, aber (meines Wissens)  in deutscher Sprache keines, dass Freude beim Lernen vermittelt, sich auf statistische Vohersage-Modellierung konzentriert und moderne Werkzeuge einsetzt. 
+Diese Lücke soll dieses Buch schließen.
+Freude am Lernen, beim Angstgegner Statistik, wie soll das gehen? 
+Viele Verständnisschwierigkeiten rühren daher, 
+dass Lehrbücher kompliziert geschrieben sind. 
+Solcher Schreibweise liegt wohl die
+Überlegung zugrunde, dass die Konzepte präzise und nuanciert erläutert sein müssten. 
+Meiner Ansicht nach wird da das Ziel mit dem Weg verwechselt: 
+Am Anfang darf eine Erklärung ruhig etwas grober und detailärmer sein.
+Überblicken die Leser und Leserinnen die Materie einigermaßen, 
+können sie sich im nächsten Schritt mit den Details vertraut machen, was Präzision und Tiefe verlangt. 
+Darüber hinaus verwendet dieses Buch eine lockere Sprache für einen entspannten Lesefluss. 
+Für einigen Komfort beim Lesen wurde gesorgt: 
+Lernziele, Definitionen, Beispiele, Übungen, Hinweise, Fehlerquellen, Tipps, Literatur, Querverweise und mehr werden im Buch hervorgehoben;
+an Erklärbildern wurde nicht gespart. 
+
+Der Inhalt des Buches ist ganz auf statistische Modelle zur Vorhersage ausgerichtet.
+"Statistische Modelle" ist ein sperriger Begriff, aber er sagt nur, dass es darum geht, 
+fachliche Fragen in statistisch greifbare Bausteine zu gießen. 
+Ein Beispiel: Studentin Anna fragt sich, ob sie die Prüfung besteht, wenn Sie 42 Stunden büffelt?
+Student Bert meint, dass motivierte Studis am meisten vom Lernen profitieren. 
+Studentin Carla ist hingegen überzeugt, dass Lernen nix bringt, sondern dass die Intelligenz allein für den Prüfungserfolg verantwortlich sei.
+Damit haben wir drei (noch recht unpräzise wissenschaftliche) Modelle. 
+Die Statistik hat nun die Aufgabe, möglichst präzise Antworten zu liefern; dafür sind Zahlen hilfreich. 
+Wenn Anna, Bert und Carla ihre Überlegungen fachlich schärfen und dann in statistische Sprache übersetzen, 
+können wir mit Antworten rechnen, manchmal sogar mit präzisen. 
+Was nicht heißt, dass diese Antworten immer richtig oder nützlich sind. 
+Tja, das Leben ist nicht leicht. 
+
+Mit Blick auf den Spagat zwischen Theorie und Anwendung irrt das Buch (bzw. sein Autor) zugunsten der Seite der Anwendung. 
+Ich wollte lieber befähigen, praktische Probleme zu lösen, als tiefen theoretischen Einblick zu vermitteln. 
+Meine Hoffnung ist, dass die Freude am Können beflügelt, 
+sich im nächsten Schritt tiefer mit der Materie zu beschäftigen. 
+Ist es nicht auch so im Alltag? Was Freude macht, 
+wo sich Erfolge einstellen, dort arbeiten wir gerne weiter.
+
+Da sich das Buch auf ein Thema, Modellierung, konzentriert, bleiben andere Themen außen vor, vor allem Inferenzstatistik. 
+Vielleicht freut sich die eine oder der andere, von diesem Thema verschont zu sein. 
+Ich denke, dass Modellierung für die Forschung und für die Praxis ein zentraler Gedanke ist; für zwei große Themen erscheint mir dieses Buch zu eng. 
+Wenn Sie Fragen oder Feedback haben, bin ich für Ihre Hinweise dankbar. Stellen Sie sie gerne hier ein: <https://github.com/sebastiansauer/statistik1/issues>.
+
+Ich wünsche Ihnen viel Freude und Erfolg beim Statistik lernen!
+
+
+Ihr
+
+Sebastian Sauer
+
+
+
+

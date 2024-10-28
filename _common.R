@@ -15,9 +15,13 @@ ggplot2::theme_set(see::theme_modern())
 knitr::opts_chunk$set(tidy = FALSE, 
                       width = 60, 
                       fig.retina = 2,
-                      fig.asp = 2/3,
                       max.print = 100,
-                      warning = FALSE)
+                      warning = FALSE,
+                      out.width = "70%", # enough room to breath
+                      fig.width = 6,     # reasonable size
+                      fig.asp = 0.618,   # golden ratio
+                      fig.align = "center" # mostly what I want
+)
 
 
 options(

@@ -1,13 +1,6 @@
 set.seed(42)  # For reproducibility
 
-df_3d <-
-  tibble(x1 = rnorm(mean = 0, sd = 1, n=  100), 
-         x2 =  rnorm(mean = 0, sd = 1, n=  100), 
-         y = 3 + 2*x1 + x2 + rnorm(mean = 0, sd = 0.1, n = 100) 
-         )
 
-
-lm3d <- lm(y ~ x1 + x2, data = df_3d)
 
 
 

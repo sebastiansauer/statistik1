@@ -54,7 +54,7 @@ definitions <- definitions[order(sapply(definitions, `[`, 1))]
 
 
 # Write the definitions to a new Quarto file:
-output_file <- file.path(quarto_dir, "1300-definitions.qmd")
+output_file <- file.path(quarto_dir, "definitions.qmd")
 fileConn <- file(output_file, "w")
 writeLines("# Definitionen\n\n", fileConn)
 #writeLines("### Definitions\n\n", fileConn) # Adding a heading for the definitions section
@@ -65,5 +65,5 @@ for (definition in definitions) {
 }
 close(fileConn)
 
-cat("Extracted", length(definitions), "definitions to definitions.qmd\n")
+cat("Extracted", length(definitions), "definitions to definitions file\n")
 

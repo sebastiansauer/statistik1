@@ -111,20 +111,21 @@ Ihren Lernerfolg kann man als von drei Faktoren abhängig betrachten:
 3) Ihrem Eigenstudium zuhause (Vor- bzw. Nachbereitung des Unterrichts), s. @fig-erfolgsrezept.
 
 ```{mermaid}
-%%| fig-cap: "Ihr Lernerfolg besteht aus drei Komponenten: Der Lehrkraft, Ihrer Konzentration im Unterricht und Ihrer Vor- bzw. Nachbereitung zuhause."
+%%| fig-cap: "Ihr Lernerfolg besteht aus drei Komponenten: Der Lehrkraft, Ihrer Mitarbeit im Unterricht und Ihrem Eigenstudium, d.h. Ihrer Vor- bzw. Nachbereitung zuhause."
 %%| label: fig-erfolgsrezept
 %%| fig-width: 4
+ 
+
 flowchart TD
   subgraph Lehrkraft
     F["🔥"]
   end
-  subgraph A[Konzentration im Unterricht]
+  subgraph A[Mitarbeit]]
     C["🪵"]
   end
   subgraph E[Eigenstudium]
     D["🌳"] 
   end  
-
 ```
 
 Eine gute Lehrkraft ist wie der Funke, der eine (Lern-)Flamme entzündet. 
@@ -266,14 +267,26 @@ groesse <-
      5L,     204L, "Basketball 🏀",
      1L,     161L,     "Schach ♟️",
      2L,     198L,        "Schach ♟️",
-     3L,     177L,      "Schach ♟️",
+     3L,     151L,      "Schach ♟️",
      4L,     171L,        "Schach ♟️",
      5L,     192L,    "Schach ♟️",
      )
 
-groesse <- groesse %>%
-  mutate(label = if_else(team == "Basketball 🏀", "geringe Variation", "hohe Variation"))
+groesse <- 
+  groesse %>%
+  mutate(label = 
+           if_else(team == "Basketball 🏀", 
+                   "geringe Variation", 
+                   "hohe Variation")) |> 
+  group_by(team) %>% 
+  mutate(groesse_mw = mean(groesse)) %>% 
+  mutate(abweichung = groesse - groesse_mw) %>% 
+  mutate(Vorzeichen = factor(sign(abweichung)))
 
+groesse_summ <-
+  groesse %>% 
+  group_by(team) %>% 
+  summarise(groesse_mw = mean(groesse))
 
 
 groesse %>% 
@@ -288,18 +301,28 @@ groesse %>%
             size = 5, vjust = 0) +
   theme(strip.text = element_text(size = 16)) +
   theme_modern()  +
-  theme(plot.caption = element_text(size = 16))
+  theme(plot.caption = element_text(size = 16)) +
+  geom_hline(aes(yintercept = groesse_mw), data = groesse_summ) + 
+  geom_label(x = 5.5, label = "MW",
+            aes(y = groesse_mw),
+            hjust = "left",
+            size = 3)  +
+  geom_segment(aes(x = id, xend = id, y = groesse, yend = groesse_mw, color = Vorzeichen)) +
+  geom_point(aes(x = id, y = groesse), color = "grey60", alpha = .7, size = 2) +
+  scale_x_continuous(limits = c(0, 7), breaks = 1:5) +
+  scale_color_okabeito() 
 ```
 
 
 Bei den Basketballern gibt es *geringe* Variation in der Körpergröße - alle sind groß, ähnlich groß.
 Bei den Schachspielern gibt es (im Verhältnis) *hohe* Variation: Einige Personen sind groß, andere klein.
 
-Die Variation (auch "Variabilität" genannt) kann man auch gut so darstellen wie in s. @fig-variab gezeigt.
+<!-- Die Variation (auch "Variabilität" genannt) kann man auch gut so darstellen wie in s. @fig-variab gezeigt. -->
 
 
 ```{r}
 #| echo: false
+#| eval: false
 #| label: fig-variab
 #| out-width: "100%"
 #| fig-cap: "Die Abweichungen der einzelnen Personen von der mittleren Körpergröße ihres Teams"
@@ -420,7 +443,7 @@ graph LR
 
 :::{#exm-fofrage1}
 
-### Forschungsfrage 1
+### Forschungsfrage 1 - Lernen und Prüfungserfolg
 
 >   Hat Lernen (X) einen Einfluss auf den Prüfungserfolg (Y)?
 >   Verringert Joggen (X) die Menge des Hüftgolds (Y)?
@@ -430,30 +453,30 @@ graph LR
 
 
 
-:::{#exm-fofrage2}
-
-### Forschungsfrage 2
-
-Nach dem Studium haben Sie bei einem großen Online-Auktionshaus angeheuert. 
-Da Sie angaben, sich im Studium ~~intensiv~~ etwas mit Statistik beschäftigt zu haben,
-hat man Sie in die Abteilung für Forschung und Entwicklung (F&E) gesteckt. 
-Heute ist es Ihre Aufgabe, Auktionen zur Spielekonsole [Wii](https://www.nintendo.de/Wii/Wii-94559.html) zu untersuchen,^[<https://www.nintendo.de/Wii/Wii-94559.html>]
-genauer gesagt geht es um das Spiel [Mariokart](https://www.nintendo.de/Spiele/Wii/Mario-Kart-Wii-281848.html#_bersicht).^[y<https://www.nintendo.de/Spiele/Wii/Mario-Kart-Wii-281848.html#_bersicht>]
-Ihre Forschungsfrage lautet:
-
->   Welche Produktmerkmale stehen mit einem hohen Verkaufserlös in Zusammenhang?$\square$
-:::
-
-
 :::{#exm-braindrain}
-### Handynutzung und Konzentrationsfähigkeit
+### Forschungsfrage 2 - Handynutzung und Konzentration
+
 Eine Forschungsfrage könnte lauten zum Thema Handynutzung: 
 
 >    Verringert intensive Handynutzung die Konzentrationsfähigkeit? $\square$
 :::
 
 
-:::{#exm-braindrain2}
+
+:::{#exm-fofrage2}
+
+### Forschungsfrage 3 - Produktmerkmale und Verkaufserlös
+
+Nach dem Studium haben Sie bei einem großen Online-Auktionshaus angeheuert. 
+Da Sie angaben, sich im Studium ~~intensiv~~ etwas mit Statistik beschäftigt zu haben,
+hat man Sie in die Abteilung für Forschung und Entwicklung (F&E) gesteckt. 
+Heute ist es Ihre Aufgabe, Auktionen zur Spielekonsole Wii zu analysieren,
+genauer gesagt geht es um das Spiel Mariokart.
+Ihre Forschungsfrage lautet:
+
+>   Welche Produktmerkmale stehen mit einem hohen Verkaufserlös in Zusammenhang?$\square$
+:::
+
 
 
 ::: {.content-visible when-format="html"}
@@ -469,11 +492,11 @@ ob die bloße Gegenwart eines Handies (z.B. wenn es vor Ihnen auf dem Tisch lieg
 dass man abgelenkt wird und daher schlechtere kognitive Leistungen zeigt.
 
 Leider schreiben die Autoren Ihre Hypothese nicht glasklar, 
-aber implizit ist obige Hypothese herauszulesen:
+aber implizit ist obige Hypothese herauszulesen (S. 142):
 
 >   First, smartphones may redirect the orientation of conscious attention away from the focal task and toward thoughts or behaviors associated with one’s phone. Prior research provides ample evidence that ... this digital distraction adversely affects both performance ... and enjoyment.
 
-Später formulieren Sie Ihre Hypothese noch genauer:
+Später formulieren Sie Ihre Hypothese noch genauer (S. 143):
 
 >   In two experiments, we test the hypothesis that the mere presence of one’s own smartphone reduces available cognitive capacity.
 
@@ -488,7 +511,7 @@ Am besten ist die kognitive Leistung, wenn das Handy nicht im Raum ist.$\square$
 
 
 
-![Handy in Sichtweite verringert die kognitiven Ressourcen, @ward_brain_2017](img/braindrain1.jpg){#fig-braindrain}
+![Handy in Sichtweite verringert die kognitiven Ressourcen, @ward_brain_2017, S. 145](img/braindrain1.jpg){#fig-braindrain}
 
 :::
 
@@ -540,7 +563,7 @@ Diesen Ablauf nennt man auch das PPDAC-Modell [@mackay_scientific_2000]:
 - P: *Plan* (Vorgehen planen)
 - D: *Data* (Daten erheben und aufbereiten)
 - A: *Analysis* (Daten analysieren)
-- C: *Conclusions* (Schlussfolgerungen ziehen; Daten interpretieren)
+- C: *Conclusions* (Schlussfolgerungen ziehen)
 
 
 
@@ -560,7 +583,7 @@ graph LR
 
 :::{#def-daten}
 
-### Hallo, Daten
+### Daten
 
 Daten kann man als eine geordnete Folge von Zeichen definieren.$\square$
 
@@ -616,7 +639,7 @@ data("mariokart", package = "openintro")
 #mariokart <- as_tibble("mariokart")
 
 head(mariokart) |> 
-  select(-id, - title) |> 
+  select(n_bids, start_pr, total_pr, wheels) |> 
   kable()
 
 # if (knitr:::is_html_output()) {
@@ -744,17 +767,13 @@ in der die Namen der Variablen stehen.)$\square$
 :::
 
 @tbl-daten ist ein Beispiel für Tidy-Data. 
-@fig-tidy1 zeigt ein Sinnbild für Tidy-Data [@wickham_r_2018]. Und @fig-tidy-hadley erläutert das Tidy-Prinzip genauer.
+@fig-tidy1 zeigt ein Sinnbild für Tidy-Data [@wickham_r_2018]. Und 
 
 
-:::{#fig-tidy-all layout-ncol=2}
-![Tidy-Data-Sinnbild [@wickham_tidy-data-sinnbild_2023]](img/tidy-1.png){#fig-tidy1}
+![Tidy-Data-Sinnbild [@wickham_tidy-data-sinnbild_2023]](img/tidy-1.png){#fig-tidy1 width="75%"}
 
-![Was ist Tidy-Data, fragt @horst_tidy_2023](img/tidydata_1.jpg){#fig-tidy-hadley}
 
-Stay Tidy!
 
-:::
 
 :::callout-important
 Für eine statistische Analyse ist es oft sinnvoll, dass die Daten im Tidy-Format vorliegen.
@@ -778,19 +797,18 @@ Außerdem können Statistikprogramme oft mit dieser Form am besten umgehen, s. @
 
 
 
-Das Tidy-Format wird auch als "langes" Format bezeichnet.
 
-@fig-long-wide-anim zeigt einen Datensatz in der "langen" Form, also tidy, und den gleichen Datensatz, umformatiert in der "breiten" Form, nicht-tidy.
-
-
-::: {.content-visible when-format="pdf"}
-![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ("long") ist "tidy".](img/wide-long.png){#fig-long-wide-anim width="50%"}
-:::
+<!-- @fig-long-wide-anim zeigt einen Datensatz in der "tidy" Form, also tidy, und den gleichen Datensatz, umformatiert in der "breiten" Form, nicht-tidy. -->
 
 
-::: {.content-visible when-format="html"}
-![Eine Tabelle, einmal im Format Format "wide" (nicht "tidy") und einmal im Format "long" ("tidy") [@aden-buie_wide_2018].](img/tidyr-pivoting.gif){#fig-long-wide-anim width="50%"}
-:::
+<!-- ::: {.content-visible when-format="pdf"} -->
+<!-- ![Links: Eine Tabelle mit Format "wide" - nicht "tidy". Rechts: Das "Langformat" ("long") ist "tidy".](img/wide-long.png){#fig-long-wide-anim width="50%"} -->
+<!-- ::: -->
+
+
+<!-- ::: {.content-visible when-format="html"} -->
+<!-- ![Eine Tabelle, einmal im Format Format "wide" (nicht "tidy") und einmal im Format "long" ("tidy") [@aden-buie_wide_2018].](img/tidyr-pivoting.gif){#fig-long-wide-anim width="50%"} -->
+<!-- ::: -->
 
 
 
@@ -1037,24 +1055,20 @@ Angenommen, Ihre Forschungsfrage lautet:
 
 In dem Fall gilt:
 
-- *Lernen* ist die Inputvariable/X-Variable/Ursache/unabhängig Variable (UV)
-- *Prüfungserfolg*  ist die Outputvariable/Y-Variable/Wirkung/abhängige Variable (AV)
+- *Lernen* ist die Input-Variable, X-Variable, Ursache, unabhängig Variable (UV)
+- *Prüfungserfolg*  ist die Output-Variable, Y-Variable, Wirkung, abhängige Variable (AV)
 
 @fig-ueberblick-fragen stellt diese beiden "Positionen" einer Variable dar. Die erste Position ist vor dem Pfeil.
 Die zweite Position ist nach dem Pfeil.
 
 ```{mermaid}
-%%| fig-cap: Synonyme Bezeichnungen für Input- und Output-Variablen einer Forschungsfrage
+%%| fig-cap: X und Y als synonyme Bezeichnungen für Input- und Output-Variablen einer Forschungsfrage
 %%| label: fig-ueberblick-fragen
 %%| fig-width: 4
 
 
 graph LR
-    Input --> Output
     X --> Y
-    P[Prädiktor] --> K[Kriterium]
-    Ursache --> Wirkung
-    UV[unabhängige Variable] --> AV[abhängige Variable]
 ```
 
 
@@ -1180,7 +1194,7 @@ Schauen wir uns für jedes Skalenniveau ein "Rechenbeispiel" an.
 *Nominalskala*: Die Variable *Geschlecht* ist nominalskaliert. 
 Das bedeutet, dass ihre Ausprägungen *Frau* und *Mann* z.B. nicht (sinnvoll) addiert oder sonstwie "verrechnet" werden können. 
 Man könnte, z.B. um das Eintippen zu erleichtern, Frauen mit `1` kodieren und Männer mit `2`. 
-Damit darf man aber nicht rechnen! Nicht addieren, multiplizieren ... 
+Damit darf man aber nicht rechnen! Nicht addieren, nicht multiplizieren, etc. 
 Es macht keinen Sinn zu sagen: "Ich habe eine Frau und einen Mann in meiner Tabelle, das ist im Schnitt ein diverses Geschlecht, weil der Mittelwert von 1 und 2 ist 1,5!"
 Die *einzige* "Rechenoperation", die man auf der Nominalskala machen darf, 
 ist die Prüfung auf *Gleichheit*: 
@@ -1361,7 +1375,7 @@ Woran denken Sie beim Wort "Modell"?
 Vielleicht an Spielzeugautos, s. @fig-matchbox.
 
 
-![Matchbox-Autos sind Modelle für Autos](img/matchbox.jpg){#fig-matchbox width="25%"}
+![Matchbox-Autos sind Modelle für Autos, @spurzem2017](img/matchbox.jpg){#fig-matchbox width="25%"}
 
 :::{#def-modelle}
 
@@ -1375,12 +1389,12 @@ Modelle sind ein vereinfachtes Abbild der Realität, eine *Repräsentation* [@ka
 :::{#exm-Modelle}
 
 ## Beispiele für Modelle
-Puppen sind Modelle für Babies, Landkarten für Landstriche und [das Atommodell von Nils Bohr](https://de.wikipedia.org/wiki/Bohrsches_Atommodell) ist ein Modell für Atome.^[<https://de.wikipedia.org/wiki/Bohrsches_Atommodell>]$\square$
+Puppen sind Modelle für Babies, Landkarten für Landstriche und das Atommodell von Nils Bohrist ein Modell für Atome. $\square$
 
 :::
 
 Auch in der Statistik nutzen wir Modelle.
-Helfen Sie Prof. Weiss-Ois: Er blickt nicht durch.
+Helfen Sie Prof. Weiss-Ois: Er blickt nicht durch, s. @fig-prof.
 Gerne würde er wissen, wie viele Stunden seine Studentis auf die Prüfung lernen. 
 Aber mit so vielen Zahlen kann er nicht umgehen ...
 Geben Sie ihm ein Modell: Sagen Sie ihm, wie lang die Studis typischerweise lernen (sagen Sie ihm ein einfach den *Mittelwert* der Lernzeiten, 9.6 Stunden).
@@ -1548,6 +1562,7 @@ Wir werden die Daten im weiteren Verlauf auswerten.
 
 
 
+::: {.content-visible when-format="html" unless-format="epub"}
 
 ### Datenprofi plaudert aus dem Nähkästchen
 
@@ -1555,7 +1570,7 @@ Inspiration von einer Praktikerin der Datenanalyse: Caitlin Hudon verrät [in di
 welche Fehler Sie sie in in den acht Jahren ihrer Berufserfahrung gemacht hat und was sie daraus gelernt hat.^[<https://youtu.be/O5lP6XcopdQ?si=7UsS6xbeYjnorGhx>]
 
 
-::: {.content-visible when-format="html" unless-format="epub"}
+
 {{< video https://www.youtube.com/watch?v=O5lP6XcopdQ&list=PL9HYL-VRX0oQchs7dqFICoxMgnvFO10tC&index=15&t=1s >}}
 :::
 

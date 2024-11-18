@@ -57,8 +57,8 @@ Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt dam
 library(tidyverse)
 library(easystats)
 library(DataExplorer)  # nicht vergessen zu installieren
-library(ggpubr)  # optional
-library(ggstatsplot)  # optional
+library(ggpubr)  # optional, Datenvisualisierung
+library(ggstatsplot)  # optional, Datenvisualisierung
 ```
 
 
@@ -89,6 +89,8 @@ Sie finden den R-Code für jedes Kapitel [hier](https://github.com/sebastiansaue
 :::
 
 
+::::: {.content-visible when-format="html"}
+
 ### Quiz zum Einstieg
 
 :::: {layout="[ 80, 20 ]"}
@@ -108,6 +110,8 @@ plot(qr)
 ```
 :::
 ::::
+
+:::::
 
 
 
@@ -217,22 +221,22 @@ Erkenntnisse daraus zu ziehen.
 ### Aus der Forschung: Ein aufwändiges (und ansprechendes) Datendiagramm
 
 
-:::: {layout="[ 50, -5, 50 ]"}
-::: {#first-column}
+<!-- :::: {layout="[ 50, -5, 50 ]"} -->
+<!-- ::: {#first-column} -->
 Auf Basis des Korruptionsindex von Transparency International [-@transparency_international_corruption_2017] erstellt Wilke [-@wilke_wilkelabpracticalgg_2024] ein Diagramm zum Zusammenhang vom Entwicklungsindex (Lebenserwartung, Bildung, Einkommen; vgl. @hou_dynamics_2015) und Korruption, jeweils auf Landesebene, s. @fig-develop-corrupt.
 
 
 Es finden sich in der Literatur (im Internet) viele weitere Beispiele für handwerklich meisterhaft erstelle Datendiagramme, 
 die in vielen Fällen mit R erstellt werden [vgl. @scherer_seasonal_2019].
 
-:::
+<!-- ::: -->
 
-::: {#second-column}
+<!-- ::: {#second-column} -->
 
-![Der Zusammenhang von Entwicklungindex und und Korruption](img/develop-corrupt.png){#fig-develop-corrupt}
+![Der Zusammenhang von Entwicklungindex und und Korruption](img/develop-corrupt.png){#fig-develop-corrupt width=75%}
 
-:::
-::::
+<!-- ::: -->
+<!-- :::: -->
 :::::
 
 
@@ -387,19 +391,10 @@ mario_n2
 
 
 Es gibt viele Methoden, sich mit R ein Balkendiagramm ausgeben zu lassen.
-Eine einfache, komfortable ist die mit dem Paket `DataExplorer`, s. @fig-mario-n-plot-cond;
+Eine einfache, komfortable ist die mit dem Paket `DataExplorer`, 
+s. @fig-mario-n-plot-cond;
 wir betrachten gleich die Syntax.
-
-
-::: {.content-visible when-format="html"}
-Zuerst importieren wir die Daten, s.  @lst-mariokart-path.
-:::
-
-::: {.content-visible when-format="pdf"}
-Zuerst importieren wir die Daten, s. @lst-mariokart-path-pdf.
-:::
-
-
+Zuerst importieren wir die Daten, s.  @lst-mariokart.
 Außerdem nicht vergessen, das Paket `DataExplorer` mit dem Befehle `library` zu starten.
 (Natürlich müssen Sie das Paket einmalig installiert haben, 
 bevor Sie es starten können.)
@@ -551,7 +546,7 @@ s. @fig-zu-wenig-viele links bzw. @fig-zu-wenig-viele, rechts.
 #| echo: false
 #| label: fig-zu-wenig-viele
 #| layout-ncol: 2
-#| fig-cap: "Nicht zu wenig und nicht zu viele Balken im Balkendiagramm"
+#| fig-cap: "Nicht zu wenig und nicht zu viele Balken im Histogramm"
 #| fig-subcap: 
 #|   - "Zu viele Gruppen (Balken)"
 #|   - "Zu wenige Gruppen (Balken)"
@@ -629,7 +624,7 @@ mariokart |>
 
 #### Dichtediagramm
 
-@fig-balken-total-pr-hist-dens fügt zu @fig-balken-total-pr-hist ein *Dichtediagramm* hinzu (rote Linie). 
+@fig-balken-total-pr-hist-dens fügt zum Histogramm ein *Dichtediagramm* hinzu (durchgezogene Linie). 
 Ein Dichtediagramm ähnelt einem "glattgeschmirgeltem" Histogramm.
 
 
@@ -652,7 +647,7 @@ m1a |>
   ggplot(aes(x = total_pr, y = ..density..)) +
   geom_histogram(binwidth = 5, alpha = .7, center = 0)  +
   #geom_dotplot(binwidth = 1, method = "histodot") +
-  geom_density(color = okabeito_colors()[1])
+  geom_density(color = okabeito_colors()[1], size = 2)
   #geom_dotplot(binwidth = 1, method = "histodot")
 ```
 
@@ -885,11 +880,12 @@ Dazu betrachten Sie wieder die `mariokart`-Daten, s. @fig-zshg-nom1.
 ```{r fig-zshg-nom1}
 #| echo: false
 #| label: fig-zshg-nom1
+#| fig-asp: 0.7
 #| fig-cap: "Zusammenhang zwischen nominalskalierten Variablen verbildlichen"
 #| fig-subcap: 
 #|   - "Es findet sich ein Zusammenhang von Foto und Zustand in den Daten"
 #|   - "Es findet sich (fast) kein Zusammenhang von `wheel` und Foto in den Daten"
-#| layout-ncol: 2
+#| layout: [[45,-10, 45], [100]]
 #| 
 mariokart %>% 
   ggplot(aes(x = cond, fill = stock_photo)) +
@@ -942,7 +938,8 @@ mariokart %>%
 
 :::{.callout-note}
 *Gefüllte Balkendiagramme* eignen sich zur Analyse eines Zusammenhangs zwischen nominalskalierten Variablen. Allerdings sollte eine der beiden Variablen nur zwei Ausprägungen aufweisen,
-sonst sind die Zusammenhänge nicht mehr so gut zu erkennen.$\square$
+sonst sind die Zusammenhänge nicht mehr so gut zu erkennen. 
+Außerdem sollten die Balken auf gleiche Länge (100%) ausgerichtet sein.$\square$
 :::
 
 
@@ -1273,8 +1270,10 @@ mariokart_no_extreme |>
 
 Gute Nachrichten: Für nominale Variablen bieten sich Balkendiagramme sowohl zur Darstellung von Zusammenhängen als auch von Unterschieden an. 
 Genau genommen zeigt ja @fig-zshg-nom1 (links) den *Unterschied* zwischen neuen und gebrauchten Spielen hinsichtlich der Frage, ob Photos beiliegen. 
-Und wie man in @fig-zshg-nom1 sieht, ist der Anteil der Spiele mit Foto bei den neuen Spielen höher als bei gebrauchten Spielen.^[Aber Freunde lassen Freunde keine Tortendiagramme verwenden: <https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart>.]
-
+Und wie man in @fig-zshg-nom1 sieht, ist der Anteil der Spiele mit Foto bei den neuen Spielen höher als bei gebrauchten Spielen.
+::: {.content-visible when-format="html"}
+[Aber Freunde lassen Freunde keine Tortendiagramme verwenden](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart).
+:::
 
 
 
@@ -1447,7 +1446,10 @@ so dass wir die Belastbarkeit dieses Ergebnisses skeptisch betrachten sollten.
 
 ### Visualisieren Sie den Unterschied im Verkaufspreis zwischen gebrauchten und neuen Spielen.
 
-**Lösung**
+Es gibt mehrere Diagrammtypen, die sich anbieten;
+mehrere Lösungen sind also mögliche.
+
+*Lösung*
 
 ```{r}
 #| eval: !expr knitr::is_html_output()
@@ -1512,7 +1514,7 @@ Achsen zu stauchen ist ein einfacher Trick, s. @fig-lie1.
 #| fig-subcap: 
 #|   - "Oh nein, dramatischer Einbruch des Umsatzes!"
 #|   - "Kaum der Rede wert, ist nur ein bisschen Schwankung!"
-#| layout-ncol: 2
+#| layout: [[45,-10, 45], [100]]
 #| 
 d <- tibble(
   Jahr = c(1, 2, 3, 4, 5),
@@ -1597,31 +1599,36 @@ Die Daten und die Idee zur Visualisierung gehen auf @van_panhuis_contagious_2013
 
 
 
-![Häufigkeit von Masern und Impfung in den USA [moore_recreating_2015]](img/vaccine.jpg){#fig-vaccine width=75%}
+![Häufigkeit von Masern und Impfung in den USA [@moore_recreating_2015]](img/vaccine.jpg){#fig-vaccine width=75%}
 
 
 
 
 
 In der "freien Wildbahn" findet man häufig sog. "Tortendiagramme".
-Zwar sind sie beliebt, doch ist [von ihrer Verwendung zumeist abzuraten](https://www.data-to-viz.com/caveat/pie.html); vgl. auch [hier](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart).^[<https://www.data-to-viz.com/caveat/pie.html>; <https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart>]
+Zwar sind sie beliebt, doch ist [von ihrer Verwendung zumeist abzuraten](https://www.data-to-viz.com/caveat/pie.html),
+denn bei Tortenstücken ist es schwer, die Größe zu vergleichen.
 
-
+::: {.content-visible when-format="html"}
+Freunde lassen Freunde  [keine Tortendiagramme zeichnen](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart).
+:::
 
 
 
 ## Vertiefung
 
-
+::: {.content-visible when-format="html" unless-format="epub"}
 Mehr Informationen zu `{DataExplorer}` finden Sie [hier](https://boxuancui.github.io/DataExplorer/index.html).
-
+:::
 
 ::: {.content-visible when-format="html" unless-format="epub"}
 
 ### Animation
 
 
-Eine weitere nützliche Art von Visualisierung sind *Karten*, *3D-Bilder* und *Animationen.* So zeigt z.B. @fig-le-world die Veränderung der Lebenserwartung (in Jahren) über die letzten Dekaden.^[Der Quellcode der Animation ist hier  zu finden: <https://gist.github.com/rafapereirabr/0d68f7ccfc3af1680c4c8353cf9ab345>.]
+Eine weitere nützliche Art von Visualisierung sind *Karten*, *3D-Bilder* und *Animationen.*
+So zeigt z.B. @fig-le-world die Veränderung der Lebenserwartung (in Jahren)
+über die letzten Dekaden.^[Der Quellcode der Animation ist hier  zu finden: <https://gist.github.com/rafapereirabr/0d68f7ccfc3af1680c4c8353cf9ab345>.]
 
 ![Animation zur Veränderung der Lebenserwartung](img/life-exp-world.gif){#fig-le-world width="75%"}
 
@@ -1687,7 +1694,7 @@ mariokart %>%
 
 
 Möchte man Mittelwerte vergleichen, so sind Boxplots nicht ideal, 
-da diese ja nicht den Mittelwert, sondern den *Median* heraustellen.
+da diese ja nicht den Mittelwert, sondern den *Median* herausstellen.
 Eine Abhilfe (also eine Darstellung des Mittelwerts) schafft man (z.B.) mit `ggpubr`,
 s. @fig-comp-means-ggpubr.
 
@@ -1703,8 +1710,10 @@ ggviolin(mariokart_no_extreme,
 
 Ein "Violinenplot" hat die gleiche Aussage wie ein Dichtediagramm:
 Je breiter die "Violine", desto mehr Beobachtungen gibt es an dieser Stelle.
-Weitere Varianten zum Violinenplot mit `ggpubr` finden sich [hier](https://rpkgs.datanovia.com/ggpubr/reference/ggviolin.html).^[<https://rpkgs.datanovia.com/ggpubr/reference/ggviolin.html>]
 
+::: {.content-visible when-format="html" unless-format="epub"}
+Weitere Varianten zum Violinenplot mit `ggpubr` finden sich [hier](https://rpkgs.datanovia.com/ggpubr/reference/ggviolin.html).^[<https://rpkgs.datanovia.com/ggpubr/reference/ggviolin.html>]
+:::
 
 
 
@@ -1713,7 +1722,11 @@ Weitere Varianten zum Violinenplot mit `ggpubr` finden sich [hier](https://rpkgs
 Übrigens sind Modelle -- und Diagramme sind Modelle -- 
 immer eine Vereinfachung,
 lassen also Informationen weg.
-Manchmal auch wichtige Informationen. [Dieses Beispiel](https://www.autodesk.com/research/publications/same-stats-different-graphs) zeigt, 
+Manchmal auch wichtige Informationen. 
+
+
+::: {.content-visible when-format="html" unless-format="epub"}
+[Dieses Beispiel](https://www.autodesk.com/research/publications/same-stats-different-graphs) zeigt, 
 wie etwa Histogramme wichtige Informationen unter den Tisch fallen lassen.^[<https://www.autodesk.com/research/publications/same-stats-different-graphs>]
 Ein weiteres R-Paket zur Erstellung ansprechender Datenvisualisierung heißt [`ggstatsplot`](https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md).^[<https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md>]
 @fig-ggstatsplot zeigt ein [Histogramm](https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md#gghistostats), das mit `ggstatsplot` erstellt wurde.^[<https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md#gghistostats>]
@@ -1734,21 +1747,21 @@ gghistostats(
 
 Die Menge der statistischen Kennzahlen bei `ggstatsplot` schindet ordentlich Eindruck. 
 Möchte man auf die Kennzahlen verzichten, so nutzt man den Schalter `results.subtitle = FALSE`. (Weitere Hinweise finden sich auf der Hilfeseite der Funktion der Funktion.)
+:::
 
 
 
 
-
-
-
+::: {.content-visible when-format="html" unless-format="epub"}
 >   [👩‍🏫]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Ich würde gerne mal Beispiele von *schlechten* Datendiagrammen sehen.
 
 >   [🧑‍🎓]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Auf der Seite von [Flowingdata](https://flowingdata.com/category/visualization/ugly-visualization/) findet sich eine nette Liste mit schlechten Datendiagrammen.^[<https://flowingdata.com/category/visualization/ugly-visualization/>]
+:::
 
 
 ### Farbwahl {#sec-farbwahl}
 
-Einige Überlegungen zur Farbwahl findet sich bei @wilke_fundamentals_2019, s. [Kap. 4](https://clauswilke.com/dataviz/color-basics.html).^[Siehe auch:  <https://data-se.netlify.app/2023/06/30/farbpaletten/>]
+Einige Überlegungen zur Farbwahl findet sich bei @wilke_fundamentals_2019, Kap. 4.
 Die Farbpalette von Okabe und Ito ist [vgl. @ichihara_color_2008] empfehlenswert, 
 da sie auch bei Schwarz-Weiß-Druck und bei Sehschwächen die Farben noch recht gut unterscheiden lässt, s. @fig-okabe.
 

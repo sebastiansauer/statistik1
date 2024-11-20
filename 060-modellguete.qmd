@@ -165,9 +165,12 @@ Die Streuung ihrer Daten zu kennen ist eine wesentliche Information. $\square$
 
 
 @fig-streuung zeigt ein einfaches Modell (Mittelwert) mit wenig Streuung (links) vs. ein einfaches Modell mit viel Streuung (rechts).
-Links ist die Streuung der Schlankheitspille *Dicktableitin* und rechts von der Schlankheitspille *Pfundafliptan* abgetragen.
-Die vertikalen grauen Balken in @fig-streuung kennzeichnen den (absoluten) Abstand von jeweils einem Datenpunkt zum Mittelwert (horizontale orange Linie). Je länger die vertikalen 'Abstandsbalken' insgesamt, desto größer die Streuung."
-
+Links ist die Streuung der Schlankheitspille *Dicktableitin* 
+und rechts von der Schlankheitspille *Pfundafliptan* abgetragen.
+Die vertikalen grauen Balken in @fig-streuung kennzeichnen den (absoluten) 
+Abstand von jeweils einem Datenpunkt zum Mittelwert (horizontale orange Linie). 
+Je länger die vertikalen 'Abstandsbalken' insgesamt, desto größer die Streuung.
+Die X-Achse (`id`) reiht die Versuchspersonen auf.
 
 ```{r viel-wenig-streuung}
 #| echo: false
@@ -261,11 +264,12 @@ von weniger als 100 Euros berücksichtigt und nur Spiele mit 0 oder mit 2 Lenkr�
 ```{r fehlerbalken}
 #| echo: false
 #| label: fig-fehler-red
-#| fig-cap: Fehlerbalken in einem einfachen und komplexeren Modell
+#| fig-cap: "Fehlerbalken in einem einfachen und komplexeren Modell. Links: Fehlerbalken im einfachen Modell: Ein Mittelwert; viel Streuung insgesamt - y ~ 1. Fehlerbalken im komplexen Modell: Zwei Mittelwerte; weniger Streuung in jeder Gruppe. Das erkennt man daran, dass die vertikalen, grauen Abstandsbalken im Schnitt kürzer sind als im einfachen Modell (links). y ~ G"
 #| layout-ncol: 2
 #| fig-subcap:
-#|   - "Fehlerbalken im einfachen Modell: Ein Mittelwert; viel Streuung insgesamt. y ~ 1"
-#|   - "Fehlerbalken im komplexen Modell: Zwei Mittelwerte; weniger Streuung in jeder Gruppe. Das erkennt man daran, dass die vertikalen, grauen Abstandsbalken im Schnitt kürzer sind als im einfachen Modell (links). y ~ G"
+#|   - "Einfaches Modell mit viel Fehlerstreuung"
+#|   - "Komplexres Modell mit wenig Fehlerstreuung"
+#|   
 data(mariokart, package = "openintro")
 m <-
   mariokart %>%
@@ -341,7 +345,7 @@ Ein Streuungsmaß quantifiziert die Variabilität (Unterschiedlichkeit, Streuung
 
 :::{#def-range}
 Ein einfaches Streuungsmaß ist der *Range* $R$, 
-definiert als Abstand von größtem und kleinsten Wert eines Merkmals $X: R = X_{max} - X_{min}. \square$
+definiert als Abstand von größtem und kleinsten Wert eines Merkmals X: $R := X_{max} - X_{min}. \square$
 :::
 
 :::{#exm-range}
@@ -371,14 +375,18 @@ bzw. als *Mittlere Absolutabweichung* (MAA).
 Er ist so definiert, s. @eq-mae.
 
 
-$${\displaystyle \mathrm {MAE} ={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}=\bar{e}.}$$ {#eq-mae}
+
 
 :::{#def-mae}
 ### Mittlere Absolutabweichung
 Die Mittlere Absolutabweichung (MAA, MAE) ist definiert als die Summe der Absolutwerte 
 der Differenzen eines Messwerts zum Mittelwert, 
 geteilt durch die Anzahl der Messwerte. (Wenn man solche Sätze liest, 
-fühlt sich die Formel fast einfacher an.)$\square$
+fühlt sich die Formel fast einfacher an.)
+
+
+$${\displaystyle \mathrm {MAE} :={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}=\bar{e}. \square}$$ {#eq-mae}
+
 :::
 
 :::{#exm-mae}
@@ -450,7 +458,7 @@ Der IQR ist robuster als z.B. der MAA oder die Varianz und die Standardabweichun
 
 :::{#def-iqr}
 ### Interquartilsabstand
-Der Interquartilsabstand ist definiert als der die (absolute) Differenz vom 3. Quartil und 1. Quartil: $IQR = Q_3-Q_1. \; \square$
+Der Interquartilsabstand ist definiert als der die (absolute) Differenz vom 3. Quartil und 1. Quartil: $IQR := Q_3-Q_1. \; \square$
 :::
 
 
@@ -526,11 +534,71 @@ mariokart %>%
 Normalverteilungen sind recht häufig anzutreffen in der Praxis der Datenanalyse.
 Daher lohnt es sich, zu überlegen,
 wie man diese Verteilungen gut zusammenfasst.
-Man kann zeigen, dass eine Normalverteilung sich komplett über ihren *Mittelwert* sowie ihre *Standardabweichung* beschreiben lässt [@lyon_why_2014].
+Man kann zeigen, dass eine Normalverteilung sich 
+komplett über ihren *Mittelwert* sowie ihre *Standardabweichung* beschreiben lässt [@lyon_why_2014].
 Außerdem gilt: Sind Ihre Daten normalverteilt, 
 dann sind die Abweichungen vom Mittelwert auch normalverteilt.
-Denn wenn man eine Konstante zu einer Verteilung addiert (bzw. subtrahiert), "verschiebt man den Berg" ja nur zur Seite, 
+Denn wenn man eine Konstante zu einer Verteilung addiert (bzw. subtrahiert), 
+"verschiebt man den Berg" ja nur zur Seite, 
 ohne seine Form zu verändern, s. @fig-norm-dev.
+
+
+
+```{r fig-norm-verschieb-pfeil}
+#| echo: false
+#| label: fig-norm-dev
+#| fig-cap: Die Abweichungen zum Mittelwert (MW) einer normalverteilten Variable sind selber normalverteilt
+#| fig-asp: 0.5
+#| out-width: 75%
+
+mw <- 47.4
+streuung <- 9.11
+
+d <- 
+  tibble(groesse = rnorm(1e5, mw, streuung),
+         groesse_zentriert = groesse - mean(groesse))
+
+d_sum <-
+  d %>% 
+  pivot_longer(everything()) %>%
+  group_by(name) %>% 
+  summarise(MW = mean(value))
+  
+
+d %>% 
+  ggplot() +
+  geom_density(aes(x = groesse), color = "#E69F00FF", size = 2) +
+  geom_density(aes(x = groesse_zentriert), color = "#56B4E9FF", size = 2) +
+  theme_minimal() +
+  geom_vline(data = d_sum,
+             aes(xintercept = MW),
+             color = "grey") +
+  geom_label(data = d_sum,
+             aes(label = paste0("MW: ", round(MW, 0)), x = MW),
+             y = 0) +
+  labs(x = "(zentrierte) Variable", 
+       y = "") +
+  annotate("segment", x = mw, xend = 0, y = 0.01, yend = 0.01,
+           arrow = arrow(type = "closed", length = unit(0.02, "npc")))
+
+
+
+# d %>% 
+#   pivot_longer(everything()) %>% 
+#   ggplot() +
+#   aes(x = value) +
+#   geom_density() +
+#   facet_wrap(~ name) +
+#   theme_minimal() +
+#   geom_vline(data = d_sum,
+#              aes(xintercept = MW), color = "red") +
+#   geom_label(data = d_sum,
+#              aes(label = paste0("MW: ", round(MW, 0)), x = MW),
+#              y = 0) +
+#   labs(x = "(zentrierte) Körpergröße", 
+#        y = "")
+```
+
 
 
 :::callout-note
@@ -559,14 +627,14 @@ Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist, grob gesagt, 
 
 
 
-
+Illustration zur Varianz als "mittlerer Quadratfehler
 
 
 :::: {layout="[ 60, 40 ]"}
 
 ::: {.column}
 
-@fig-var illustriert die Varianz:
+@fig-var illustriert die Varianz als "mittlerer Quadratfehler":
 
 1. Man gehe von der Häufigkeitsverteilung der Daten aus.
 2. Betrachtet man die Daten als Gewichte auf einer Wippe, so ist der Schwerpunkt der Wippe der Mittelwert.
@@ -578,7 +646,7 @@ Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist, grob gesagt, 
 ::: {.column}
 
 
-![Illustration zur Varianz als "mittlerer Quadratfehler" [@cmglee_english_2015]](img/Variance_visualisation.svg.png){#fig-var}
+![Varianz [@cmglee_english_2015]](img/Variance_visualisation.svg.png){#fig-var}
 
 :::
 
@@ -748,12 +816,12 @@ mariokart %>%
 
 ```{r}
 #| echo: false
-#| fig-cap: Die Verteilung des Verkaufspreises von Mariokart-Spielen 
+#| fig-cap: "Die Verteilung des Verkaufspreises von Mariokart-Spielen mit MW±SD in roter Farbe"
 #| label: fig-var
 #| layout-ncol: 2
 #| fig-subcap: 
-#|   - Dichtediagramm mit MW±SD in roter Farbe
-#|   - Violindiagramm mit MW±SD in roter Farbe
+#|   - Dichtediagramm 
+#|   - Violindiagramm
 mariokart %>% 
   select(total_pr) %>% 
   filter(total_pr < 100) %>%  # ohne Extremwerte
@@ -812,7 +880,7 @@ Um die Standardabweichung zu berechnen, berechnet man zunächst die *Varianz*, $
 Als Formel ausgedrückt, lautet die Definition der Varianz einer Stichprobe wie folgt, s. @eq-var (hier geht es um die sog. unkorrigierte Stichprobenvarianz; um anhand einer Stichprobe die Varianz der zugehörigen Population zu schätzen, teilt man nicht durch $N$, sondern durch $N-1$) .
 
 
-$${\displaystyle s^{2}={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{N}}\sum _{i=1}^{n}e_i^{2}.}$$ {#eq-var}
+$${\displaystyle s^{2}:={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{N}}\sum _{i=1}^{n}e_i^{2}.}$$ {#eq-var}
 
 
 :::{#def-var}
@@ -826,7 +894,7 @@ Die Varianz kann auch verstehen als den *mittleren Quadratfehler* (Mean Squared 
 
 
 
-$${\displaystyle MSE={\frac {1}{N}}\sum _{i=1}^{N}\left(y_{i}-{\hat {y}}\right)^{2}.}$$ {#eq-mse}
+$${\displaystyle MSE:={\frac {1}{N}}\sum _{i=1}^{N}\left(y_{i}-{\hat {y}}\right)^{2}.}$$ {#eq-mse}
 
 Im Fall eines Punktmodells ist der Mittelwert der vorhergesagte Wert eines Modells.
 
@@ -1023,61 +1091,6 @@ Daher ist der neue Mittelwert (der zentrierten Verteilung) gleich Null. $\square
 :::
 
 
-```{r fig-norm-verschieb-pfeil}
-#| echo: false
-#| label: fig-norm-dev
-#| fig-cap: Die Abweichungen zum Mittelwert (MW) einer normalverteilten Variable sind selber normalverteilt
-#| fig-asp: 0.5
-#| out-width: 75%
-
-mw <- 47.4
-streuung <- 9.11
-
-d <- 
-  tibble(groesse = rnorm(1e5, mw, streuung),
-         groesse_zentriert = groesse - mean(groesse))
-
-d_sum <-
-  d %>% 
-  pivot_longer(everything()) %>%
-  group_by(name) %>% 
-  summarise(MW = mean(value))
-  
-
-d %>% 
-  ggplot() +
-  geom_density(aes(x = groesse), color = "#E69F00FF", size = 2) +
-  geom_density(aes(x = groesse_zentriert), color = "#56B4E9FF", size = 2) +
-  theme_minimal() +
-  geom_vline(data = d_sum,
-             aes(xintercept = MW),
-             color = "grey") +
-  geom_label(data = d_sum,
-             aes(label = paste0("MW: ", round(MW, 0)), x = MW),
-             y = 0) +
-  labs(x = "(zentrierte) Variable", 
-       y = "") +
-  annotate("segment", x = mw, xend = 0, y = 0.01, yend = 0.01,
-           arrow = arrow(type = "closed", length = unit(0.02, "npc")))
-
-
-
-# d %>% 
-#   pivot_longer(everything()) %>% 
-#   ggplot() +
-#   aes(x = value) +
-#   geom_density() +
-#   facet_wrap(~ name) +
-#   theme_minimal() +
-#   geom_vline(data = d_sum,
-#              aes(xintercept = MW), color = "red") +
-#   geom_label(data = d_sum,
-#              aes(label = paste0("MW: ", round(MW, 0)), x = MW),
-#              y = 0) +
-#   labs(x = "(zentrierte) Körpergröße", 
-#        y = "")
-```
-
 
 
 Aber irgendwie sind Sie noch nicht am Ziel Ihrer Überlegungen:
@@ -1111,7 +1124,7 @@ die wir hier als *standardisiert* bezeichnen, da wir sie in Bezug zur "typischen
 #| echo: false
 #| label: fig-z-transf
 #| fig-aspect: 0.8
-#| out-width: 75%
+#| out-width: 1
 #| fig-cap: "Standardisierung von Abweichungswerten bzw. einer Verteilung; der vertikale Balken zeigt den Mittelwert"
 
 p1 <- gghistogram(mariokart_no_extreme, x = "abw",
@@ -1150,14 +1163,14 @@ Diese Art von Transformation bezeichnet man als
 ### z-Werte
 z-Werte sind das Resultat der z-Transformation.
 Für die Variable $X$ berechnet sich der 
-z-Wert der $i$-ten Beobachtung so: $z_i = \frac{x_i - \bar{x}}{sd_x}.\square$
+z-Wert der $i$-ten Beobachtung so: $z_i := \frac{x_i - \bar{x}}{sd_x}.\square$
 :::
 
 z-Werte sind nützlich, weil sie die "relative" Abweichung
 einzelner Beobachtungen vom Mittelwert anzeigen.
 
 Nach einer *Faustregel* spricht man von extremen Abweichungen
-(Extremwerten, Ausreißern), wenn $z_i > 2$ oder $z_i > 3$.
+(Extremwerten, Ausreißern), wenn $z_i \ge 2.5$ [@shimizu2022].
 
 
 ## Fazit
@@ -1199,6 +1212,8 @@ Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine 
 - [summarise06](https://sebastiansauer.github.io/Datenwerk/posts/summarise06/summarise06)
 - [mariokart-desk01](https://sebastiansauer.github.io/Datenwerk/posts/mariokart-desk01/mariokart-desk01)
 
+::::::: {.content-visible when-format="html" unless-format="epub"}
+
 
 
 :::::{#exr-handy}
@@ -1210,7 +1225,8 @@ Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine 
 
 :::: {layout="[ 80, 20 ]"}
 ::: {#first-column}
- Das ist die Forschungsfrage [dieser Umfrage](https://docs.google.com/forms/d/e/1FAIpQLSfM6oDLHX4_lqWq-bXw39drTkdGAvecE6ow2HIKoxdrVygp2A/viewform). Nehmen Sie ggf. an dieser Umfrage teil (sie ist anonym und dauert drei Minuten).
+Die Forschungsfrage [einer Studie](https://docs.google.com/forms/d/e/1FAIpQLSfM6oDLHX4_lqWq-bXw39drTkdGAvecE6ow2HIKoxdrVygp2A/viewform) fragt, ob Handynutzung die Konzentrationsfähigkeit verringert. 
+Nehmen Sie ggf. an der Studie (Umfrage) teil (sie ist anonym und dauert drei Minuten).
 :::
 
 ::: {#second-column}
@@ -1229,13 +1245,13 @@ plot(qr)
 
 
 
- 
+**Aufgabe**
  
  
 Laden Sie den [Datensatz zur Handynutzung](https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing) von Google-Docs herunter.^[<https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing>] 
 Berechnen Sie dann gängige deskriptive Statistiken und visualisieren Sie sie. $\square$
 
-### Lösung: Daten importieren
+**Lösung: Daten importieren**
 
 Sie können die Daten entweder selber herunterladen oder aber die folgende Version des Datensatzes verwenden.
 In beiden Fällen ist es nützlich, den (absoluten oder relativen) Pfad anzugeben:
@@ -1248,15 +1264,15 @@ data_path <- "https://raw.githubusercontent.com/sebastiansauer/statistik1/main/d
 :::
 
 
-::: {.content-visible when-format="pdf"}
+<!-- ::: {.content-visible when-format="pdf"} -->
 
-```{r}
-data_path <- paste0(
-  "https://raw.githubusercontent.com/sebastiansauer/",
-  "statistik1/main/daten/Smartphone-Nutzung%20",
-  "(Responses)%20-%20Form%20responses%201.csv")
-```
-:::
+<!-- ```{r} -->
+<!-- data_path <- paste0( -->
+<!--   "https://raw.githubusercontent.com/sebastiansauer/", -->
+<!--   "statistik1/main/daten/Smartphone-Nutzung%20", -->
+<!--   "(Responses)%20-%20Form%20responses%201.csv") -->
+<!-- ``` -->
+<!-- ::: -->
 
 Dann können Sie die Daten wie gewohnt importieren:
 
@@ -1264,7 +1280,7 @@ Dann können Sie die Daten wie gewohnt importieren:
 smartphone_raw <- read.csv(data_path)
 ```
 
-### Lösung: Daten aufbereiten
+**Lösung: Daten aufbereiten**
 
 Die Spaltennamen sind sehr unschön. Lassen Sie uns daher die Spaltennamen umbenennen (aber vorab sichern):
 
@@ -1274,31 +1290,33 @@ item_labels <- names(smartphone_raw)
 names(smartphone_raw) <- paste0("item",1:ncol(smartphone_raw))
 ```
 
-::: {.content-visible when-format="html"}
 
 Check:
 
 ```{r}
 glimpse(smartphone_raw)
 ```
-:::
 
 
-::: {.content-visible when-format="html"}
+
 
 ### Komplette Lösung
 
 😁
 
-:::
+
 
 :::::
+
+
 
 ### Fallstudie zur Lebenszufriedenheit
 
 Die OECD führt eine [weltweite Studie zur Lebenszufriedenheit](https://www.oecd.org/wise/measuring-well-being-and-progress.htm) durch.^[<https://www.oecd.org/wise/measuring-well-being-and-progress.htm>]
 Arbeiten Sie die die [Fallstudie "oecd-yacsda" im Datenwerk](https://sebastiansauer.github.io/Datenwerk/posts/oecd-yacsda/) durch, 
 um ein tieferes Verständnis für die Lebenszufriedenheit in verschiedenen Ländern der Welt zu bekommen. 
+
+:::::::
 
 
 

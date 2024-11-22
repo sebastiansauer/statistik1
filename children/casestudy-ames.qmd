@@ -1,25 +1,31 @@
 <!-- ## Fallstudie Immobilienpreise -->
 
+:::: {.content-visible when-format="html" unless-format="epub"}
+
 
 :::{.callout-caution}
 Diese Fallstudie stellt die Prüfungsleistung "Prognosewettbewerb" einführend dar. 
 Es empfiehlt sich für Sie, diese Fallstudie sorgsam zu bearbeiten.$\square$
 :::
 
+::::
+
 
 ### Hintergrund
 
 In dieser Fallstudie geht es darum, die Preise von Immobilien vorherzusagen.
-Kurz gesagt: Sagen Sie die Hauspreise vorher, und reichen Sie Ihre Vorhersagen als CSV bei [Kaggle](https://www.kaggle.com/) ein.
-
+Kurz gesagt: Sagen Sie die Hauspreise vorher, und reichen Sie Ihre Vorhersagen als CSV bei [kaggle.com](https://www.kaggle.com/) ein.
 Kaggle ist eine Webseite, die Prognosewettbewerbe veranstaltet. 
+In dieser Fallstudie nehmen Sie teil an der Kaggle-Competition ["House Prices - Advanced Regression Techniques"](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview), die Sie auf der Kaggle-Webseite finden.
+Dort finden Sie auch eine nähere Beschreibung, das Ziel und die Spielregeln des Wettbewerbs.
 
+::: {.content-visible when-format="html"}
 
-In dieser Fallstudie nehmen Sie teil an der Kaggle-Competition [Ames House Prices](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview).^[<https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview>]
+- [Beschreibung](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/description)
+- [Ziel/Aufgabe](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/evaluation)
+- [Spielregeln](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/rules)
 
-- [Beschreibung](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/description)^[<https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/description>]
-- [Ziel/Aufgabe](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/evaluation)^[<https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/evaluation>]
-- [Spielregeln](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/rules)^[<https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/rules>]
+:::
 
 
 ### Benötigte R-Pakete
@@ -34,8 +40,7 @@ library(easystats)
 
 ### Daten
 
-Wenn Sie sich nicht bei Kaggle einloggen möchten, 
-können Sie die Daten von Kaggle herunterladen und zwar [hier](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data).
+Sie können die Daten von [Kaggle herunterladen](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data).
 
 Im Einzelnen müssen Sie folgende Dateien herunterladen:
 
@@ -45,17 +50,17 @@ Im Einzelnen müssen Sie folgende Dateien herunterladen:
 - *sample_submission.csv*: Beispielhafte Prognosedatei, die Datei also, mit der Sie Ihre Vorhersagen einreichen
 
 
-Sie können auch so auf die Daten zugreifen:
+Sie können auch über das Github-Repo `statistik1`, Ordner die Daten zugreifen:
 
 
 ```{r import-ames-data}
 d_train_path_online <- paste0(
-    "https://raw.githubusercontent.com/sebastiansauer/",
-    "Lehre/main/data/ames-kaggle/train.csv")
+    "https://raw.githubusercontent.com/sebastiansauer/statistik1/",
+    "refs/heads/main/data/kaggle-train.csv")
 
 d_test_path_online <- paste0(
-  "https://raw.githubusercontent.com/sebastiansauer/",
-  "Lehre/main/data/ames-kaggle/test.csv")
+"https://raw.githubusercontent.com/sebastiansauer/statistik1/",
+    "refs/heads/main/data/kaggle-test.csv")
 
 d_train <- read.csv(d_train_path_online)
 d_test <- read.csv(d_test_path_online)
@@ -90,7 +95,7 @@ tribble( ~id, ~SalePrice,
 
 ```{r read-data-ames}
 #| echo: false
-#sample_subm_path <- "daten/ames-kaggle/sample_submission.csv"
+#sample_subm_path <- "data/ames-kaggle/sample_submission.csv"
 #sample_subm <- readr::read_csv(sample_subm_path)
 #head(sample_subm)
 ```
@@ -116,8 +121,8 @@ Wir können die Daten auch von der Festplatte importieren; oft müssen wir das a
 ```{r read-data-local}
 #| message: false
 #| eval: false
-d_train_path <- "daten/ames-kaggle/train.csv"
-d_test_path <- "daten/ames-kaggle/test.csv"
+d_train_path <- "data/ames-kaggle/train.csv"
+d_test_path <- "data/ames-kaggle/test.csv"
 d_train <- read.csv(d_train_path)
 d_test <- read.csv(d_test_path)
 ```
@@ -125,7 +130,7 @@ d_test <- read.csv(d_test_path)
 
 
 
-In diesem Beispiel gehen wir davon aus, dass die Dateien `train.csv` und `test.csv` in einem Unterordner namens `daten/ames-kaggle` liegen.
+In diesem Beispiel gehen wir davon aus, dass die Dateien `train.csv` und `test.csv` in einem Unterordner namens `data/ames-kaggle` liegen.
 Sie müssen sie dort abspeichern.
 Dieser Ordner muss ein Unterordner Ihres aktuellen R-Projekts sein.$\square$
 
@@ -465,7 +470,7 @@ Diesen Tibble speichern wir als CSV-Datei an geeigneter Stelle ab.^[Es bietet si
 
 ```{r}
 #| eval: false
-write_csv(m2_subm, "daten/ames-kaggle/m1-subm.csv")
+write_csv(m2_subm, "data/ames-kaggle/m1-subm.csv")
 ```
 
 Und dann laden Sie diese Datei, `m1_subm.csv` bei Kaggle hoch und hoffen auf einen Hauptgewinn.

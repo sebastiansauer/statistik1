@@ -44,13 +44,13 @@ Sie können die Daten von [Kaggle herunterladen](https://www.kaggle.com/competit
 
 Im Einzelnen müssen Sie folgende Dateien herunterladen:
 
-- *Data_description.txt*: Code book, d.h. Beschreibung der Variablen im Datensatz
+- *Data_description.txt*: Codebook, d.h. Beschreibung der Variablen im Datensatz
 - *train.csv*: Daten von Häusern, die Sie nutzen, um Modelle zu erstellen
 - *test.csv*:  Daten von Häusern, von denen Sie den Kaufpreis vorhersagen sollen
 - *sample_submission.csv*: Beispielhafte Prognosedatei, die Datei also, mit der Sie Ihre Vorhersagen einreichen
 
 
-Sie können auch über das Github-Repo `statistik1`, Ordner die Daten zugreifen:
+Sie können auch über das Github-Repo `statistik1`, Ordner `data` auf die Daten zugreifen:
 
 
 ```{r import-ames-data}
@@ -68,9 +68,39 @@ d_test <- read.csv(d_test_path_online)
 
 
 
-Laden Sie diese Daten am besten herunter und speichern Sie sie in einem passenden Unterverzeichnis (Ihres Projektordners in RStudio) ab.
+Laden Sie diese Daten am besten herunter und speichern Sie sie in einem passenden 
+Unterverzeichnis (Ihres Projektordners in RStudio) ab.
 
-Das Code Book können Sie [hier einsehen und herunterladen](https://github.com/sebastiansauer/Lehre/blob/main/data/ames-kaggle/data_description.txt).^[<ttps://github.com/sebastiansauer/Lehre/blob/main/data/ames-kaggle/data_description.txt>]
+
+
+Importieren wir die Daten von der Festplatte, aus dem Unterordner `data` in R
+(davon ausgehend, dass der Unterordner `data` ein Unterordner Ihres aktuellen R-Projekts ist):
+
+
+
+```{r read-data-local}
+#| message: false
+#| eval: false
+d_train_path <- "data/kaggle-train.csv"
+d_test_path <- "data/kaggle-test.csv"
+d_train <- read.csv(d_train_path)
+d_test <- read.csv(d_test_path)
+```
+
+
+
+
+
+
+
+
+Wenn das Importieren von der Festplatte nicht klappt ... 
+Es ist zwar hilfreich, wenn man Daten von der eigenen Festplatte importieren kann.
+Aber fürs Erste können Sie die Daten auch von oben angegeben Online-Pfad importieren.
+
+
+
+
 
 
 ### Prognosedatei
@@ -101,56 +131,20 @@ tribble( ~id, ~SalePrice,
 ```
 
 Die Prognosedatei besteht also aus zwei Spalten: der Spalte `id` und der Spalte `Saleprice`.
-Die Spalte `id` gibt an, welches Haus in einer bestimmten Zeile Ihrer Prognosedatei gemeint ist - für welches Haus Sie also gerade einen Kaufpreis vorhersagen.
+Die Spalte `id` gibt an, welches Haus in einer bestimmten Zeile Ihrer Prognosedatei gemeint ist -- 
+für welches Haus Sie also gerade einen Kaufpreis vorhersagen.
 die Spalte `SalePrice` ist Ihre Vorhersage für den Kaufpreis das Hauses mit der Id, die in der betreffenden Zeile steht.
-Insgesamt soll die Prognosedatei genau so viele Zeilen haben wie der Test-Datensatz, also die Tabelle, die die vorherzusagenden Werte angibt.
+Insgesamt soll die Prognosedatei genau so viele Zeilen haben wie der Test-Datensatz, 
+also die Tabelle, die die vorherzusagenden Werte angibt.
+Alles klar? Los geht's!
 
 
-
-Alles klar? 
-
-Los geht's!
-
-
-### Daten importieren von der Festplatte
-
-Wir können die Daten auch von der Festplatte importieren; oft müssen wir das auch - wenn die Daten nämlich nicht öffentlich zugreifbar auf einem Server liegen.
-
-
-
-```{r read-data-local}
-#| message: false
-#| eval: false
-d_train_path <- "data/ames-kaggle/train.csv"
-d_test_path <- "data/ames-kaggle/test.csv"
-d_train <- read.csv(d_train_path)
-d_test <- read.csv(d_test_path)
-```
-
-
-
-
-In diesem Beispiel gehen wir davon aus, dass die Dateien `train.csv` und `test.csv` in einem Unterordner namens `data/ames-kaggle` liegen.
-Sie müssen sie dort abspeichern.
-Dieser Ordner muss ein Unterordner Ihres aktuellen R-Projekts sein.$\square$
-
-
-:::{.callout-caution}
-Wenn das Importieren von der Festplatte nicht klappt ... 
-Es ist hilfreich, wenn man Daten von der eigenen Festplatte importieren kann.
-Aber fürs Erste können Sie die Daten auch von oben angegeben Online-Pfad importieren.$\square$
-:::
 
 
 ### Ein erster Blick in die Daten
 
-Schauen wir uns einmal die Verteilung der metrischen Variablen an, 
-@tbl-ames1.
-
-```{r}
-#| eval: false
-describe_distribution(d_train)
-```
+Schauen Sie sich zu Beginn einmal die Verteilung der metrischen Variablen,
+z.B. mit `describe_distribution(d_train)` an.
 
 
 ::: {.content-visible when-format="html"}
@@ -204,9 +198,14 @@ d_train %>%
   print_md()
 ```
 
-Aha! Ein Menge Information.^[Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: Im Zweifel einfach ignorieren. Wenn Sie die R-Syntax nicht verstehen: Führen Sie die Syntax schrittweise aus. Zuerst `d_train` ausführen und das Ergebnis betrachten. Dann `d_train %>% select(-Id)` ausführen, wieder die Ausgabe betrachten, usw.]
+Aha! Ein Menge Information ... Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: 
+Im Zweifel einfach ignorieren. 
+Wenn Sie die R-Syntax nicht verstehen: 
+Führen Sie die Syntax schrittweise aus. Zuerst `d_train` ausführen und das Ergebnis betrachten. 
+Dann `d_train %>% select(-Id)` ausführen, wieder die Ausgabe betrachten, usw.
 
-Diese Variablen sind einigermaßen stark mit unserer Zielvariablen `SalePrice` korreliert.
+Die als Output von @lst-get-high-corrs aufgeführten Variablen sind
+einigermaßen stark mit unserer Zielvariablen `SalePrice` korreliert.
 Nutzen wir also diese Variablen (oder einige von ihnen) zur Vorhersage.
 
 
@@ -383,8 +382,7 @@ d_test <-
 
 So, wir haben unsere Vorhersagen!
 Jetzt reichen wir diese Vorhersagen ein.
-
-Für die Prognosedatei (submission file) zum Einreichen brauchen wir nur die Spalten `id` und `SalePrice`:
+Für die Prognosedatei (submission file) brauchen wir nur die Spalten `id` und `SalePrice`:
 
 
 ```{r}
@@ -465,7 +463,9 @@ nrow(d_test)
 
 #### Hochladen
 
-Diesen Tibble speichern wir als CSV-Datei an geeigneter Stelle ab.^[Es bietet sich an `write_csv` zu verwenden, da `write.csv` automatisch (ungefragt) noch eine Id-Spalte  ohne Namen einfügt (mit den Zeilennummern), das mag aber Kaggle nicht. Kaggle erwartet exakt zwei Spalten und zwar mit den Namen `Id` und `SalePrice`.]
+Diesen Tibble speichern wir als CSV-Datei an geeigneter Stelle ab.
+Es bietet sich an `write_csv` zu verwenden, da `write.csv` automatisch (ungefragt) noch eine Id-Spalte  ohne Namen einfügt (mit den Zeilennummern), das mag aber Kaggle nicht. 
+Kaggle erwartet exakt zwei Spalten und zwar mit den Namen `Id` und `SalePrice`.
 
 
 ```{r}

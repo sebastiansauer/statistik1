@@ -1,25 +1,31 @@
 <!-- ## Fallstudie Immobilienpreise -->
 
+:::: {.content-visible when-format="html" unless-format="epub"}
+
 
 :::{.callout-caution}
 Diese Fallstudie stellt die Prüfungsleistung "Prognosewettbewerb" einführend dar. 
 Es empfiehlt sich für Sie, diese Fallstudie sorgsam zu bearbeiten.$\square$
 :::
 
+::::
+
 
 ### Hintergrund
 
 In dieser Fallstudie geht es darum, die Preise von Immobilien vorherzusagen.
-Kurz gesagt: Sagen Sie die Hauspreise vorher, und reichen Sie Ihre Vorhersagen als CSV bei [Kaggle](https://www.kaggle.com/) ein.
-
+Kurz gesagt: Sagen Sie die Hauspreise vorher, und reichen Sie Ihre Vorhersagen als CSV bei [kaggle.com](https://www.kaggle.com/) ein.
 Kaggle ist eine Webseite, die Prognosewettbewerbe veranstaltet. 
+In dieser Fallstudie nehmen Sie teil an der Kaggle-Competition ["House Prices - Advanced Regression Techniques"](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview), die Sie auf der Kaggle-Webseite finden.
+Dort finden Sie auch eine nähere Beschreibung, das Ziel und die Spielregeln des Wettbewerbs.
 
+::: {.content-visible when-format="html"}
 
-In dieser Fallstudie nehmen Sie teil an der Kaggle-Competition [Ames House Prices](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview).^[<https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview>]
+- [Beschreibung](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/description)
+- [Ziel/Aufgabe](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/evaluation)
+- [Spielregeln](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/rules)
 
-- [Beschreibung](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/description)^[<https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/description>]
-- [Ziel/Aufgabe](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/evaluation)^[<https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview/evaluation>]
-- [Spielregeln](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/rules)^[<https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/rules>]
+:::
 
 
 ### Benötigte R-Pakete
@@ -34,28 +40,27 @@ library(easystats)
 
 ### Daten
 
-Wenn Sie sich nicht bei Kaggle einloggen möchten, 
-können Sie die Daten von Kaggle herunterladen und zwar [hier](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data).
+Sie können die Daten von [Kaggle herunterladen](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data).
 
 Im Einzelnen müssen Sie folgende Dateien herunterladen:
 
-- *Data_description.txt*: Code book, d.h. Beschreibung der Variablen im Datensatz
+- *Data_description.txt*: Codebook, d.h. Beschreibung der Variablen im Datensatz
 - *train.csv*: Daten von Häusern, die Sie nutzen, um Modelle zu erstellen
 - *test.csv*:  Daten von Häusern, von denen Sie den Kaufpreis vorhersagen sollen
 - *sample_submission.csv*: Beispielhafte Prognosedatei, die Datei also, mit der Sie Ihre Vorhersagen einreichen
 
 
-Sie können auch so auf die Daten zugreifen:
+Sie können auch über das Github-Repo `statistik1`, Ordner `data` auf die Daten zugreifen:
 
 
 ```{r import-ames-data}
 d_train_path_online <- paste0(
-    "https://raw.githubusercontent.com/sebastiansauer/",
-    "Lehre/main/data/ames-kaggle/train.csv")
+    "https://raw.githubusercontent.com/sebastiansauer/statistik1/",
+    "refs/heads/main/data/kaggle-train.csv")
 
 d_test_path_online <- paste0(
-  "https://raw.githubusercontent.com/sebastiansauer/",
-  "Lehre/main/data/ames-kaggle/test.csv")
+"https://raw.githubusercontent.com/sebastiansauer/statistik1/",
+    "refs/heads/main/data/kaggle-test.csv")
 
 d_train <- read.csv(d_train_path_online)
 d_test <- read.csv(d_test_path_online)
@@ -63,9 +68,39 @@ d_test <- read.csv(d_test_path_online)
 
 
 
-Laden Sie diese Daten am besten herunter und speichern Sie sie in einem passenden Unterverzeichnis (Ihres Projektordners in RStudio) ab.
+Laden Sie diese Daten am besten herunter und speichern Sie sie in einem passenden 
+Unterverzeichnis (Ihres Projektordners in RStudio) ab.
 
-Das Code Book können Sie [hier einsehen und herunterladen](https://github.com/sebastiansauer/Lehre/blob/main/data/ames-kaggle/data_description.txt).^[<ttps://github.com/sebastiansauer/Lehre/blob/main/data/ames-kaggle/data_description.txt>]
+
+
+Importieren wir die Daten von der Festplatte, aus dem Unterordner `data` in R
+(davon ausgehend, dass der Unterordner `data` ein Unterordner Ihres aktuellen R-Projekts ist):
+
+
+
+```{r read-data-local}
+#| message: false
+#| eval: false
+d_train_path <- "data/kaggle-train.csv"
+d_test_path <- "data/kaggle-test.csv"
+d_train <- read.csv(d_train_path)
+d_test <- read.csv(d_test_path)
+```
+
+
+
+
+
+
+
+
+Wenn das Importieren von der Festplatte nicht klappt ... 
+Es ist zwar hilfreich, wenn man Daten von der eigenen Festplatte importieren kann.
+Aber fürs Erste können Sie die Daten auch von oben angegeben Online-Pfad importieren.
+
+
+
+
 
 
 ### Prognosedatei
@@ -90,63 +125,26 @@ tribble( ~id, ~SalePrice,
 
 ```{r read-data-ames}
 #| echo: false
-#sample_subm_path <- "daten/ames-kaggle/sample_submission.csv"
+#sample_subm_path <- "data/ames-kaggle/sample_submission.csv"
 #sample_subm <- readr::read_csv(sample_subm_path)
 #head(sample_subm)
 ```
 
 Die Prognosedatei besteht also aus zwei Spalten: der Spalte `id` und der Spalte `Saleprice`.
-Die Spalte `id` gibt an, welches Haus in einer bestimmten Zeile Ihrer Prognosedatei gemeint ist - für welches Haus Sie also gerade einen Kaufpreis vorhersagen.
+Die Spalte `id` gibt an, welches Haus in einer bestimmten Zeile Ihrer Prognosedatei gemeint ist -- 
+für welches Haus Sie also gerade einen Kaufpreis vorhersagen.
 die Spalte `SalePrice` ist Ihre Vorhersage für den Kaufpreis das Hauses mit der Id, die in der betreffenden Zeile steht.
-Insgesamt soll die Prognosedatei genau so viele Zeilen haben wie der Test-Datensatz, also die Tabelle, die die vorherzusagenden Werte angibt.
+Insgesamt soll die Prognosedatei genau so viele Zeilen haben wie der Test-Datensatz, 
+also die Tabelle, die die vorherzusagenden Werte angibt.
+Alles klar? Los geht's!
 
 
-
-Alles klar? 
-
-Los geht's!
-
-
-### Daten importieren von der Festplatte
-
-Wir können die Daten auch von der Festplatte importieren; oft müssen wir das auch - wenn die Daten nämlich nicht öffentlich zugreifbar auf einem Server liegen.
-
-
-
-```{r read-data-local}
-#| message: false
-#| eval: false
-d_train_path <- "daten/ames-kaggle/train.csv"
-d_test_path <- "daten/ames-kaggle/test.csv"
-d_train <- read.csv(d_train_path)
-d_test <- read.csv(d_test_path)
-```
-
-
-
-
-:::{.callout-note}
-In diesem Beispiel gehen wir davon aus, dass die Dateien `train.csv` und `test.csv` in einem Unterordner namens `daten/ames-kaggle` liegen.
-Sie müssen sie dort abspeichern.
-Dieser Ordner muss ein Unterordner Ihres aktuellen R-Projekts sein.$\square$
-:::
-
-:::{.callout-caution}
-Wenn das Importieren von der Festplatte nicht klappt ... 
-Es ist hilfreich, wenn man Daten von der eigenen Festplatte importieren kann.
-Aber fürs Erste können Sie die Daten auch von oben angegeben Online-Pfad importieren.$\square$
-:::
 
 
 ### Ein erster Blick in die Daten
 
-Schauen wir uns einmal die Verteilung der metrischen Variablen an, 
-@tbl-ames1.
-
-```{r}
-#| eval: false
-describe_distribution(d_train)
-```
+Schauen Sie sich zu Beginn einmal die Verteilung der metrischen Variablen,
+z.B. mit `describe_distribution(d_train)` an.
 
 
 ::: {.content-visible when-format="html"}
@@ -167,7 +165,9 @@ describe_distribution(d_train) |> print_md()
 
 
 Eine einfache Antwort auf die Frage, welche Variablen sich zur Vorhersage eignen, ist, 
-die Korrelation aller Prädiktoren mit der abhängigen Variablen^[die vorherzusagende Variable, auch Ziel- oder Outcome-Variable genannt] zu berechnen, s. @tbl-d_train_corr und @lst-get-high-corrs.
+die Korrelation aller Prädiktoren mit der abhängigen Variablen^[die vorherzusagende Variable, auch Ziel- oder Outcome-Variable genannt] zu berechnen, s. 
+<!-- @tbl-d_train_corr und -->
+@lst-get-high-corrs.
 
 
 
@@ -198,9 +198,14 @@ d_train %>%
   print_md()
 ```
 
-Aha! Ein Menge Information.^[Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: Im Zweifel einfach ignorieren. Wenn Sie die R-Syntax nicht verstehen: Führen Sie die Syntax schrittweise aus. Zuerst `d_train` ausführen und das Ergebnis betrachten. Dann `d_train %>% select(-Id)` ausführen, wieder die Ausgabe betrachten, usw.]
+Aha! Ein Menge Information ... Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: 
+Im Zweifel einfach ignorieren. 
+Wenn Sie die R-Syntax nicht verstehen: 
+Führen Sie die Syntax schrittweise aus. Zuerst `d_train` ausführen und das Ergebnis betrachten. 
+Dann `d_train %>% select(-Id)` ausführen, wieder die Ausgabe betrachten, usw.
 
-Diese Variablen sind einigermaßen stark mit unserer Zielvariablen `SalePrice` korreliert.
+Die als Output von @lst-get-high-corrs aufgeführten Variablen sind
+einigermaßen stark mit unserer Zielvariablen `SalePrice` korreliert.
 Nutzen wir also diese Variablen (oder einige von ihnen) zur Vorhersage.
 
 
@@ -377,8 +382,7 @@ d_test <-
 
 So, wir haben unsere Vorhersagen!
 Jetzt reichen wir diese Vorhersagen ein.
-
-Für die Prognosedatei (submission file) zum Einreichen brauchen wir nur die Spalten `id` und `SalePrice`:
+Für die Prognosedatei (submission file) brauchen wir nur die Spalten `id` und `SalePrice`:
 
 
 ```{r}
@@ -459,12 +463,14 @@ nrow(d_test)
 
 #### Hochladen
 
-Diesen Tibble speichern wir als CSV-Datei an geeigneter Stelle ab.^[Es bietet sich an `write_csv` zu verwenden, da `write.csv` automatisch (ungefragt) noch eine Id-Spalte  ohne Namen einfügt (mit den Zeilennummern), das mag aber Kaggle nicht. Kaggle erwartet exakt zwei Spalten und zwar mit den Namen `Id` und `SalePrice`.]
+Diesen Tibble speichern wir als CSV-Datei an geeigneter Stelle ab.
+Es bietet sich an `write_csv` zu verwenden, da `write.csv` automatisch (ungefragt) noch eine Id-Spalte  ohne Namen einfügt (mit den Zeilennummern), das mag aber Kaggle nicht. 
+Kaggle erwartet exakt zwei Spalten und zwar mit den Namen `Id` und `SalePrice`.
 
 
 ```{r}
 #| eval: false
-write_csv(m2_subm, "daten/ames-kaggle/m1-subm.csv")
+write_csv(m2_subm, "data/ames-kaggle/m1-subm.csv")
 ```
 
 Und dann laden Sie diese Datei, `m1_subm.csv` bei Kaggle hoch und hoffen auf einen Hauptgewinn.

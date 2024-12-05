@@ -118,11 +118,13 @@ Sie entgegnen: "Wie viel hast du denn gelernt?".
 Die Antwort: "Sag ich nicht."
 
 Nach kurzem Überlegen geben sie den Notenschnitt der letzten Klausur als Prognose für diese Person. 
-Dazu rechnen Sie schnell den Notenschnitt (Mittelwert) aus.
+
+:::: {.content-visible when-format="html" unless-format="epub"}
+
 
 Zuerst importieren Sie die Daten der letzten Klausur. Die Syntax in @lst-noten2-lokal wird bei Ihnen nur funktionieren, 
 wenn auf *Ihrem Computer* dieser Ordner mit dieser Datei existiert. 
-Andernfalls müssen Sie die Daten erst herunterladen^[<https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten.csv>]:
+Andernfalls müssen Sie die Daten erst herunterladen^[<https://raw.githubusercontent.com/sebastiansauer/statistik1/main/data/noten.csv>]:
 
 ```{r}
 #| echo: false
@@ -133,20 +135,21 @@ Andernfalls müssen Sie die Daten erst herunterladen^[<https://raw.githubusercon
 #     x = rnorm(100, mean = 73, sd = 10),
 #     y = x + rnorm(100, 0, 10)
 #   )
-# write.csv(noten2, "daten/noten2.csv")
+# write.csv(noten2, "data/noten2.csv")
 ```
 
 
 ```{r}
 #| lst-label: lst-noten2-lokal
-#| lst-caption: "Der Datensatz 'noten2' liegt im Unterordner 'Noten.'"
-noten2 <- read.csv("daten/noten2.csv")
+#| lst-cap: "Der Datensatz 'noten2' liegt im Unterordner 'Noten.'"
+noten2 <- read.csv("data/noten2.csv")
 ```
 
-{{< downloadthis daten/noten2.csv dname = "noten2.csv" >}}
+{{< downloadthis data/noten2.csv dname = "noten2" >}}
 
+::::
 
-Dann rechnen Sie den Mittelwert aus:
+Dazu rechnen Sie schnell den Notenschnitt (Mittelwert) aus.
 
 ```{r}
 noten2 %>% 
@@ -154,23 +157,23 @@ noten2 %>%
 ```
 
 Ihre Antwort lautet also: 
-"Im Schnitt haben die Studis bei der letzten Klausur gut 70% der Punkte erzielt. 
+"Im Schnitt haben die Studis bei der letzten Klausur ungefähr `r mean(noten2$y)`  der Punkte erzielt. 
 Diesen Wert kannst du erwarten. 
 Solange ich keine genaueren Infos habe, 
 z.B. wieviel du gelernt hast, kann ich dir keine genauere Vorhersage machen, sorry!"$\square$
 :::
 
-:::{.callout-note}
+
 Ohne Kenntnis eines Prädiktors (UV) (wie z.B. Lernzeit) 
 ist der Mittelwert ein geeigneter Vorhersagewert für jede Beobachtung, s. @fig-noten3.
 Wir nutzen den Mittelwert als Punktmodell für den Klausurerfolg.$\square$
-:::
+
 
 ```{r p-punktmodell}
 #| echo: false
 #| fig-cap: "Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmodell"
 #| label: fig-noten3
-#| out-width: 75%
+
 
 ggplot(noten2) +
   aes(id, y) +
@@ -192,19 +195,18 @@ nennt man es auch manchmal "Nullmodell".
 Auf Errisch kann man dieses Nullmodell so spezifizieren:
 
 ```{r lm0}
+#| results: show
 lm0 <- lm(y ~ 1, data = noten2)
 lm0
 ```
 
 `lm` steht für "lineares Modell", die `1` sagt, 
 dass es keine Prädiktoren gibt.
-In dem Fall wird der Mittelwert als Gerade verwendet.
+In dem Fall wird der Mittelwert, `r mean(noten2$y)`, als Gerade verwendet.
 Der zurückgemeldete Koeffizient `(Intercept)` 
 ist hier der Modell des Punktmodells.
 Da es ein Punktmodell ist, sagt es für alle Beobachtungen (hier Studentis) den gleichen Wert vorher.
-
-Die Regressionsgleichung lautet demnach: `y_pred = 71.08`.
-In Worten: "Wir sagen für jede Beobachtung einen Wert von ca. 71 vorher".
+Wir sagen für jede Beobachtung einen Wert von `r mean(noten2$y)` vorher.
 
 
 ### Vorhersagen mit Prädiktor
@@ -220,7 +222,7 @@ Toni entschließt sich dann doch noch, die Lernzeit zu verraten:
 Jetzt müssen Sie erstmal nachdenken: 
 "Wie viele Klausurpunkte sag ich vorher, wenn Toni 42 Stunden gelernt hat?"
 
-Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. @fig-noten4, a).^[Die Daten stehen hier  zum Download bereit:  <https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/noten2.csv>]
+Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. @fig-noten4, a).
 
 
 ```{r}
@@ -261,7 +263,7 @@ Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einz
 #|   - "Gemeinsame Verteilung (Zusammenhang) von Lernzeit (X) und Noten (Y)"
 #|   - "Eine 'Trendgerade' (blau) im Datensatz `noten2`. Mittelwerte sind mit gestrichelten Linien eingezeichnet. Tonis Vorhersage ist mit einem Punkt gekennzeichnet."
 
-#noten2 <- read.csv(noten2, "daten/noten2.csv")
+#noten2 <- read.csv(noten2, "data/noten2.csv")
 
 
 
@@ -330,7 +332,7 @@ $f(\color{xcol}{x})=\color{ycol}{y}={m} \color{xcol}{x} + \color{beta0col}{t}$.
 
 In der Statistik wird folgende Nomenklatur bevorzugt:  $f(\color{xcol}{x})=\color{ycol}{\hat{y}}=\color{beta0col}{\beta_0} + {\beta_1} \color{xcol}{x}$ oder $f(\color{xcol}{x})=\color{ycol}{\hat{y}}= \color{beta0col}{b_0} + {b_1} \color{xcol}{x}$ .
 
-Die Nomenklatur mit $b_0, b_1$ hat den Vorteil, dass man das Modell einfach erweitern kann: $b_2, b_3, ...$. Anstelle von $b$ liest man auch oft $\beta$. 
+Die Nomenklatur mit $\color{beta0col}{b_0}, \color{beta1col}{b_1}$ hat den Vorteil, dass man das Modell einfach erweitern kann: $b_2, b_3, ...$. Anstelle von $b$ liest man auch oft $\beta$. 
 Griechische Buchstaben werden meist verwendet, um zu zeigen, 
 dass man an einer Aussage über eine Population, 
 nicht nur über eine Stichprobe, machen möchte.
@@ -338,6 +340,7 @@ nicht nur über eine Stichprobe, machen möchte.
 Das "Dach" über y, $\color{modelcol}{\hat{y}}$, 
 drückt aus, dass es sich den den geschätzten, bzw. vom Modell vorhergesagten ("modellierten") 
 Wert für $\color{ycol}{y}$ handelt, nicht das tatsächliche (empirische, beobachtete) $\color{ycol}{y}$. $\square$
+@fig-regrtex skizziert die Elemente einer Regression. (Bildquelle: Basierend auf TikZ-Quellcode von Henri Menke.)
 :::
 
 
@@ -360,6 +363,7 @@ nicht nur über eine Stichprobe, machen möchte.
 Das "Dach" über y, $\hat{y}$, 
 drückt aus, dass es sich den den geschätzten, bzw. vom Modell vorhergesagten ("modellierten") 
 Wert für ${y}$ handelt, nicht das tatsächliche (empirische, beobachtete) ${y}$. $\square$
+@fig-regrtex skizziert die Elemente einer Regression. (Bildquelle: Basierend auf TikZ-Quellcode von Henri Menke.)
 :::
 
 ::::
@@ -367,7 +371,7 @@ Wert für ${y}$ handelt, nicht das tatsächliche (empirische, beobachtete) ${y}$
 
 
 
-@fig-regrtex skizziert die Elemente einer Regression. (Bildquelle: Basierend auf TikZ-Quellcode von Henri Menke.)
+
 
 
 ![Achsenabschnitt ($\beta_0$) und Steigung ($\beta_1$) einer Regressionsgeraden [@menk_linear_2014]](img/regr.png){#fig-regrtex width="70%"}
@@ -381,15 +385,17 @@ Wert für ${y}$ handelt, nicht das tatsächliche (empirische, beobachtete) ${y}$
 :::{#def-einfache-lineare-modell}
 
 ### Das einfache lineare Modell
-Das einfache lineare Modell nimmt den Wert einer [abhängigen metrischen Variablen, y]{.orange} 
-als lineare Funktion von einer [unabhängigen Variablen, x]{.lightblue} an, plus einem [Fehlerterm, e]{.green}. $\square$
+
+Das einfache lineare Modell nimmt den Wert einer abhängigen metrischen Variablen, \color{ycol}{y},
+als lineare Funktion von unabhängigen Variablen, \color{xcol}{x}, an, plus einem Fehlerterm, \color{errorcol}{e} bzw. \color{errorcol}{\epsilon}, s. @eq-linear-model.  $\square$
+
 :::
 
 
 $$\begin{aligned}
 \color{ycol}{y} &= f(\color{xcol}{x}) + \color{errorcol}{\epsilon} \\
 \color{ycol}{y_i} &= \color{beta0col}{\beta_0} + \color{beta1col}{\beta_1} \cdot \color{modelcol}{x_i} + \color{errorcol}{\epsilon_i} \square
-\end{aligned}$$
+\end{aligned}$${#eq-linear-model}
 
 Mit:
 
@@ -546,18 +552,20 @@ noten2 %>%
   geom_hline(yintercept = mean(noten2$y), linetype = "dashed", color = "grey") +   
   geom_abline(slope = coef(lm1)[2], intercept = coef(lm1)[1], color = okabeito_colors()[8], size = 1.5) +
   theme_minimal() +
-  scale_x_continuous(limits = c(0, 100)) +
-  scale_y_continuous(limits = c(0, 100)) +
+  #scale_x_continuous(limits = c(0, 100)) +
+  #scale_y_continuous(limits = c(0, 100)) +
   annotate("point", x = 0, y = lm1_b0, color = "red", size = 7, alpha = .7) +
   annotate("label", x = mean(noten2$x), y = 0, vjust = "bottom",
-           label = "MW Noten") +
+           label = "MW Lernzeit") +
   annotate("label", y = mean(noten2$y), x = 12, vjust = "left",
            label = "MW Klausurpunkte") +
   geom_text_repel(data = tibble(x = 0, y = predict(lm1, newdata = tibble(x = 0))), 
                   aes(x = x, y = y,), 
                   label = "Toni",
                   point.padding = 5,
-                  size = 8)
+                  size = 8) +
+  labs(x = "Lernzeit",
+       y = "Klausurpunkte")
 ```
 
 
@@ -656,7 +664,7 @@ würden wir folgendes Klausurergebnis vorhersagen:
 
 ```{r}
 lernzeit <- 10
-y_pred <- 8.6 + 0.88*lernzeit
+y_pred <- 46 + 0.88*lernzeit
 y_pred
 ```
 :::
@@ -735,12 +743,12 @@ ${e_i} = {y_i} - {\hat{y}_i}$.
 
 ```{r p-abweichungsbalken}
 #| echo: false
-#| fig-cap: "Vorhersagefehler als Abweichungsbalken"
+#| fig-cap: "Vorhersagefehler als Abweichungsbalken: Beim Geradenmodell, links, sind die Vorhersagefehler (Abweichungsbalken) kleiner (kürzer) als beim Punktmodell, rechts."
 #| label: fig-resid
 #| layout-ncol: 2
 #| fig-subcap: 
-#|   - Residuen beim Geradenmodell (lm1)
-#|   - Residuen beim Punktmodell (lm0)
+#|   - Geradenmodell (lm1)
+#|   - Punktmodell (lm0)
 
 noten2 <-
   noten2 %>% 
@@ -803,10 +811,10 @@ solange X mit Y korreliert ist.$\square$
 :::
 
 
-Natürlich können wir - in Analogie zur Varianz - 
+Natürlich können wir -- in Analogie zur Varianz -- 
 auch den mittleren Quadratfehlerbalken (Mean Squared Error, MSE) berechnen.
 Wer mag, 
-kann den MSE auch von Hand berechnen: `mean((noten2$y-mean(noten2$y))^2)`.
+kann den MSE auch von Hand berechnen: `mean((noten2$y - mean(noten2$y))^2)`.
 
 ```{r}
 mse(lm0)
@@ -826,7 +834,8 @@ verhaeltnis_fehler_mse
 
 Aber wie legt man die Regressionsgerade in das Streudiagramm, bildlich gesprochen?
 
-Die Regressionskoeffizienten (hier synonym: Modellparameter) b0 und b1 wählt man so, dass die *Residuen* *minimal* sind,
+Die Regressionskoeffizienten (hier synonym: Modellparameter) b0 und b1 wählt man so, dass die *Residuen* *minimal* sind.
+Genauer gesagt wird die Summe der quadrierten [Residuen]{.green} minimiert, s. @eq-min.
 
 
 :::: {.content-visible when-format="html" unless-format="epub"}
@@ -854,7 +863,7 @@ Bildquelle: [Karsten Lübke, FOM Hochschule](https://www.fom-blog.de/autorinnen-
 ::::
 :::::
 
-Genauer gesagt wird die Summe der quadrierten [Residuen]{.green} minimiert, s. @eq-min.
+
 
 
 ::: {.content-visible unless-format="epub"}
@@ -871,8 +880,11 @@ um die Koeffizienten zu berechnen (die sind aber nicht in diesem Buch zu finden)
 Eine schöne Darstellung dazu findet sich bei @kaplan_statistical_2009.
 
 
+::: {.content-visible when-format="html" unless-format="epub"}
 "Von Hand" können Sie die Optimierung von b0 und b1 in 
  dieser App der FOM-Hochschule^[<https://fomshinyapps.shinyapps.io/KleinsteQuadrate/>] ausprobieren.
+:::
+
 
 
 
@@ -930,10 +942,12 @@ vgl. @fig-r2-extreme.
 #| echo: false
 #| fig-cap: "Extremfälle von R-Quadrat: 0 und 1"
 #| fig-subcap:
-#|   - "Keine Korrelation, r ≅ 0 und R2 ≅ 0. Prognose durch Mittelwert; die Regressionsgerade ist (ungefähr) parallel zur X-Achse"
+#|   - "Keine Korrelation, r = 0 und R2 = 0. Prognose durch Mittelwert; die Regressionsgerade ist (ungefähr) parallel zur X-Achse"
 #|   - "Perfekte Korrelation, r = 1 und R2 = 1. Prognose gleich beobachtetem Wert"
 #| label: fig-r2-extreme
-#| layout-ncol: 2
+#| layout: [[45,-10, 45], [100]]
+
+
 d0 <-
   tibble(x = rnorm(100),
          y = rnorm(100))
@@ -999,19 +1013,19 @@ Je größer R-Quadrat, desto besser passt das Modell zu den Daten; desto besser 
 
 Die Residuen (Vorhersagefehler) bestimmen die Modellgüte:
 Sind die Residuen im Schnitt groß, so ist die Modellgüte gering (schlecht), und umgekehrt.
-Verschiedenen Koeffizienten stehen zur Verfügung: R-Quadrat, r (als Korrelation von tatsächlichem $y$ und vorhergesagten $\hat{y}$), MSE, RMSE, MAE, ...
+Verschiedenen Koeffizienten stehen zur Verfügung: R-Quadrat, $r$ (als Korrelation von tatsächlichem $y$ und vorhergesagten $\hat{y}$), MSE, RMSE, MAE, ...
 
 
 ### Koeffizienten
 
-Die Modellkoeffizienten, also Achsenabschnitt ($\beta_0$;lies: "beta Null") und Steigung ($\beta_1$) sind nur eingeschränkt zu interpretieren, 
+Die Modellkoeffizienten, also Achsenabschnitt ($\beta_0$; lies: "beta Null") und Steigung ($\beta_1$) sind nur eingeschränkt zu interpretieren, 
 wenn man die zugrundeliegenden kausalen Abhängigkeiten nicht kennt.
 Nur aufgrund eines statistischen Zusammenhangs darf man keine kausalen Abhängigkeiten annehmen.
 Ohne eine guten Grund für eine Kausalbehauptung kann man kann nur *deskriptiv* argumentieren.
 Oder sich mit der Modellgüte und den Vorhersagen begnügen. 
 Was auch was wert ist.
 
-#### Achsenabschnitt (b0)
+#### Achsenabschnitt
 
 [Im Modell `lm1` liegt der Achsenabschnitt bei $\textcolor{ycol}{y}=`r round(coef(lm1)[1], 2)`$. 
 Beobachtungen mit $\color{xcol}{x}=0$ 
@@ -1030,7 +1044,7 @@ Nutzt man Körpergröße und das Gewicht von Menschen vorherzusagen, ist der Ach
 :::
 
 
-#### Geradensteigung (b1)
+#### Geradensteigung
 
 ```{r}
 #| echo: false
@@ -1038,7 +1052,7 @@ lm1_b1 <- coef(lm1)[2] %>% round(2)
 ```
 
 
-"Im Modell `lm1` beträgt der Regressionskoeffizient `b1` $`r lm1_b1`$. Zwei Studenti, deren Lernzeit sich um eine Stunde unterscheidet, unterscheiden sich *laut Modell* um den Wert von b1."
+"Im Modell `lm1` beträgt der Regressionskoeffizient `beta1` $`r lm1_b1`$. Zwei Studenti, deren Lernzeit sich um eine Stunde unterscheidet, unterscheiden sich *laut Modell* um den Wert von beta1."
 
 :::{.callout-caution}
 Häufig liest man, der "Effekt des Prädiktors" auf die AV betrage z.B. $`r lm1_b1`$. "Effekt" ist aber ein Wort, 
@@ -1121,7 +1135,7 @@ r2(lm2)
 ```
 
 
-Oh nein! Unterirdisch schlecht. Anstelle von bloßem Rumprobieren überlegen Sie und schauen dann in @fig-mario-corr nach, welche Variable am stärksten korreliert mit `total_pr`;
+Oh nein! Unterirdisch schlecht. Anstelle von bloßem Rumprobieren überlegen Sie und schauen dann nach, welche Variable am stärksten korreliert mit `total_pr`;
 es resultiert `lm3`: 
 
 ```{r}
@@ -1267,8 +1281,7 @@ Kann man da noch was machen?
 
 ## Aufgaben
 
-Eine Aufgabe, die eine Einführung zum [Kaggle-Wettbewerb Ames House Prices](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview) bietet^[<https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview>], 
-finden Sie [im Datenwerk](https://datenwerk.netlify.app/posts/ames-kaggle1/ames-kaggle1.html).^[<https://datenwerk.netlify.app/posts/ames-kaggle1/ames-kaggle1.html>]
+
 
 Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine Reihe von einschlägigen Übungsaufgaben bereit. 
 Sie können die Suchfunktion der Webseite nutzen, 
@@ -1289,16 +1302,16 @@ um die Aufgaben mit den folgenden Namen zu suchen:
 - Regression4
 - Regression5
 - Regression6
-    
+- ames-kaggle1    
     
 
-Schauen Sie sich die Aufgaben beim [Datenwerk](https://datenwerk.netlify.app/) an, vor allem die Tags [regression](https://datenwerk.netlify.app/#category=regression) und [lm](https://datenwerk.netlify.app/#category=lm).
+Schauen Sie sich auch weitere Aufgaben des [Datenwerks](https://sebastiansauer.github.io/Datenwerk/) an, 
+vor allem mit den Tags [regression](https://sebastiansauer.github.io/Datenwerk/#category=regression) und [lm](https://sebastiansauer.github.io/Datenwerk/#category=lm).
 
-*Nicht alle Aufgaben* aus dieser Sammlung passen zum Stoff; 
+*Nicht alle Aufgaben* aus dieser Sammlung passen zum Stoff dieses Kapitels; 
 vielleicht können Sie einige Aufgaben nicht lösen.
 Ignorieren Sie einfach diese Aufgaben.
 
-Beachten Sie die [Hinweise zu den Aufgaben](https://datenwerk.netlify.app/hinweise).^[<https://datenwerk.netlify.app/hinweise>]
 
 
 ## Literaturhinweise

@@ -81,8 +81,13 @@ mariokart <- read.csv(mariokart_path)
 wetter_path <- "https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/precip_temp_DWD.csv"
 wetter <- read.csv(wetter_path)
 ```
+
+
+{{< downloadthis data/wetter.csv dname = "wetter" >}}
+
 :::
 
+ 
 
 ::: {.content-visible when-format="pdf"}
 
@@ -104,7 +109,7 @@ wetter <- read.csv(wetter_path)
 
 
 
-{{< downloadthis daten/wetter.csv dname = "wetter.csv" >}}
+
 
 Die Wetterdaten stammen vom [DWD](https://opendata.dwd.de/).^[Lizenzhinweis: Datenbasis: Deutscher Wetterdienst, eigene Elemente ergänzt.]
 
@@ -112,14 +117,15 @@ Die Wetterdaten stammen vom [DWD](https://opendata.dwd.de/).^[Lizenzhinweis: Dat
 ## Forschungsbezug: Gläserne Kunden
 
 
-Lineare Modelle^[synonym: Regressionsanalysen] sind ein altes, aber mächtiges Werkzeug.
-Sie gehören immernoch zum Standard-Repertoire moderner Analystis.
+Lineare Modelle (synonym: Regressionsanalysen) sind ein altes, aber mächtiges Werkzeug.
+Sie gehören immernoch zum Standard-Repertoire moderner Analystinnen und Analysten.
 
 :::{#exm-kosinski}
 ### Wie gut kann man Ihre Persönlchkeit auf Basis des Facebook-Profils vorhersagen?
 
-In einer Studie mit viel Medienresonanz untersuchten @youyou_computer-based_2015, wie gut Persönlichkeitszüge durch Facebook-Daten (Likes etc.) vorhergesagt werden können.
-Die Autoren resümieren:
+In einer Studie mit viel Medienresonanz untersuchten kosinski2013, w
+ie gut Persönlichkeitszüge durch Facebook-Daten (Likes etc.) vorhergesagt werden können.
+Die Autoren resümieren im Abstract:
 
 >   We show that easily accessible digital records of behavior, Facebook Likes, can be used to automatically and accurately predict a range of highly sensitive personal attributes including: sexual orientation, ethnicity, religious and political views, personality traits, intelligence, happiness, use of addictive substances, parental separation, age, and gender.
 
@@ -145,7 +151,8 @@ Viel Geld verdienen und Ruhm und Anerkennung sind ja schon ganz nett,
 aber dann fiel Ihnen ein, dass Sie ja zu Generation Z gehören, 
 und daher den schnöden Mammon nicht so hoch schätzen sollten.
 Sie entschließen sich, Ihre hochgeschätzten Analyse-Skills für etwas einzusetzen,
-das Ihnen sinnvoll erscheint: Die Analyse des Klimawandels.
+das Ihnen sinnvoll erscheint: Die Analyse des Klimawandels. $\square$
+:::
 
 Beim [Deutschen Wetterdienst, DWD](https://www.dwd.de/DE/Home/home_node.html) haben Sie sich Wetterdaten von Deutschland heruntergeladen.
 Nach etwas [Datenjudo, auf das wir hier nicht eingehen wollen](https://data-se.netlify.app/2022/07/24/preparing-german-weather-data/) 
@@ -154,7 +161,7 @@ resultiert ein schöner Datensatz, den Sie jetzt analysieren wollen (Temperatur:
 ::: {.content-visible when-format="html"}
 
 ```{r}
-wetter_path <- "https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/precip_temp_DWD.csv"
+wetter_path <- "https://raw.githubusercontent.com/sebastiansauer/statistik1/main/data/wetter-dwd/precip_temp_DWD.csv"
 wetter <- read.csv(wetter_path)
 ```
 :::
@@ -164,7 +171,7 @@ wetter <- read.csv(wetter_path)
 ```{r}
 wetter_path <- paste0(
   "https://raw.githubusercontent.com/sebastiansauer/",
-  "Lehre/main/data/wetter-dwd/precip_temp_DWD.csv")
+  "statistik1/main/data/wetter-dwd/precip_temp_DWD.csv")
 
 wetter <- read.csv(wetter_path)
 ```
@@ -173,11 +180,7 @@ wetter <- read.csv(wetter_path)
 Ein *Data-Dictionary* für den Datensatz können Sie [hier](https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/wetter-dwd-data-dict.md) herunterladen.^[<https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/wetter-dwd-data-dict.md>]
 
 
-:::{.callout-note}
-Ein *Data-Dictionary* (Codebook) erklärt einen Datensatz.
-Oft bedeutet das, das für jede Spalte der Datentabelle erklärt wird,
-was die Spalte bedeutet.$\square$
-:::
+
 
 <!-- In @tbl-wetter  kann man sich die Daten en Detail anschauen (Temperatur und Niederschlag im Zeitverlauf). -->
 
@@ -208,13 +211,11 @@ was die Spalte bedeutet.$\square$
 Veränderung der Temperatur und Niederschlag (10-Jahres-Mittel) in Deutschland im Verlauf des 20. Jahrhunderts
 
 ::::
-
 :::::
 
 
 Hervorragend! An die Arbeit!  
 
-:::
 
 
 ### metrische UV
@@ -252,13 +253,13 @@ Laut Ihrem Modell wurde es pro Jahr um 0.01 Grad wärmer, pro Jahrzehnt also 0.1
 
 #### Punkt- vs. Bereichsschätzung
 
-In tbl-lm-wetter1 finden sich zwei Arten von Information für den Wert des Achsenabschnitts (b0) und des Regressionsgewichts von `year`(b1):
+In tbl-lm-wetter1 finden sich zwei Arten von Information für den Wert des Achsenabschnitts ($\beta 0$) und des Regressionsgewichts von `year` ($\beta _1$):
 
 1. *Punktschätzungen* In der Spalte `Coefficient` sehen Sie den "Best-Guess" für den entsprechenden Koeffizienten in der Population. Das is sozusagen der Wert für den sich das Modell festlegen würde, wenn es sonst nichts sagen dürfte.
 
 2. *Bereichschätzungen* Cleverer als Punktschätzungen sind Bereichsschätzungen (Intervallschätzungen): Hier wird ein Bereich plausibler Werte für den entsprechenden Wert angegeben. Der "Bereich plausibler Werte" wird auch als Konfidenzintervall (engl. confidence intervall, CI) bezeichnet. Entsprechend gibt `CI_low` die Untergrenze des Bereichs plausibler Werte und `CI_high` die Obergrenze aus. So können wir ablesen, dass das Regressionsgewicht von `year` irgendwo zwischen praktisch Null (0.009) und ca. 0.01 Grad geschätzt wird.
 
-💡 Merke: Je schmaler das Konfidenzintervall, desto genauer wird der Effekt geschätzt.
+Merke: Je schmaler das Konfidenzintervall, desto genauer wird der Effekt geschätzt.
 
 #### Modell Wetter1a
 
@@ -293,11 +294,11 @@ parameters(lm_wetter1a) %>% print_md()
 
 ```{r}
 #| label: fig-wetter1
-#| fig-cap: "Die Veränderung der mittleren Temperatur in Deutschland im Zeitverlauf (Datenquelle: DWD)"
-#| layout-ncol: 2
+#| fig-cap: "Die Veränderung der mittleren Temperatur in Deutschland im Zeitverlauf (Datenquelle: DWD). Links: Jeder Punkt ist ein Tag (viel Overplotting, wenig nützlich). Rechts: Jeder Punkt ist ein Jahr (wetter_summ)"
+#| layout: [[45,-10, 45], [100]]
 #| fig-subcap:
-#|   - Jeder Punkt ist ein Tag (viel Overplotting, wenig nützlich)
-#|   - Jeder Punkt ist ein Jahr (wetter_summ)
+#|   - Ein Punkt pro Tag
+#|   - Ein Punkt pro Jahr
 plot(estimate_relation(lm_wetter1)) 
 plot(estimate_relation(lm_wetter1a))
 ```
@@ -392,7 +393,7 @@ predict(lm_wetter1_zentriert, newdata = tibble(year_c = 100))
 ```
 
 
->    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Moment! Die Vorhersage ist doch Quatsch! Schon im Jahr 2022 lag die Durchschnittstemperatur bei 10,5° Celcius.^[[Quelle: Umweltbundesamt](https://www.umweltbundesamt.de/daten/klima/trends-der-lufttemperatur#steigende-durchschnittstemperaturen-weltweit)]
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Moment! Die Vorhersage ist doch Quatsch! Schon im Jahr 2022 lag die Durchschnittstemperatur bei 10,5° Celcius [@wilke2013].
 
 
 >    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Wir brauchen ein besseres Modell! Zum Glück haben wir ambitionierte Nachwuchs-Wissenschaftler:innen.
@@ -438,7 +439,8 @@ Hier interessiert Sie folgende Forschungsfrage:
 :::
 
 Aber wie erstellen Sie eine Variable `after_1950`, um die zweite Hälfte des 20. Jahrhunderts (und danach) zu fassen?
-Nach einigem Überlegen kommen Sie auf die Idee, das vektorisierte Rechnen von R (s. @sec-veccalc) auszunutzen:
+Nach einigem Überlegen kommen Sie auf die Idee, 
+das vektorisierte Rechnen von R (s. @sec-veccalc) auszunutzen:
 
 ```{r}
 year <- c(1940, 1950, 1960)
@@ -474,12 +476,12 @@ Die Parameter des Modells lassen darauf schließen, dass es tatsächlich wärmer
 
 ![Wie man sieht, überlappen die Temperaturen dennoch beträchtlich; aufgrund des starken Overplotting ist dieses Diagramm alles andere als ideal](img/fig-temp-after1950.png)
 
-Modell `temp ~ after_1950`
+Modell: `temp ~ after_1950`
 
 :::
 
 
-Leider zeigt ein Blick zum `r2`, dass die Vorhersagegüte des Modells zu wünschen übrig lässt^[`r2(lm_wetter_bin_uv)`]. $\square$
+Leider zeigt ein Blick zum `r2`, dass die Vorhersagegüte des Modells zu wünschen übrig lässt (`r2(lm_wetter_bin_uv)`).
 
 
 
@@ -487,7 +489,7 @@ Leider zeigt ein Blick zum `r2`, dass die Vorhersagegüte des Modells zu wünsch
 ### Lineare Modelle verkraften nur metrische Variablen
 Um die Koeffizienten eines linearen Modells auszurechnen,
 benötigt man eine metrische X- und eine metrische Y-Variable.
-Hier haben wir aber keine richtige metrische X-Variable^[UV],
+Hier haben wir aber keine richtige metrische X-Variable (UV),
 sondern eine *logische* Variable mit den Werten `TRUE` und `FALSE`.$\square$
 :::
 
@@ -659,8 +661,8 @@ wetter4 %>%
 
 Fassen wir die Interpretation der Koeffizienten für das Modell mit binärer UV zusammen:
 
-1. Mittelwert der 1. Gruppe (bis 1950): [Achsenabschnitt (b0)]{.beta0col}
-2. Mittelwert der 2. Gruppe (nach 1950): [Achsenabschnitt (b0)]{.beta0col} + [Steigung der Regressionsgeraden (b1)]{.beta1col}
+1. Mittelwert der 1. Gruppe (bis 1950): [Achsenabschnitt ($\beta_0$)]{.beta0col}
+2. Mittelwert der 2. Gruppe (nach 1950): [Achsenabschnitt ($\beta_0$)]{.beta0col} + [Steigung der Regressionsgeraden ($\beta_1$)]{.beta1col}
 
 
 ::: {.content-visible unless-format="epub"}
@@ -876,7 +878,7 @@ parameters(lm_wetter_month) %>% print_md()
 
 
 Ja, da scheint es deutliche Unterschied im Niederschlag zu geben. 
-Wir brauchen ein Diagramm zur Verdeutlichung, s. @fig-wetter-month, links.^[`plot(estimate_expectation(lm_wetter_month)`]
+Wir brauchen ein Diagramm zur Verdeutlichung, s. @fig-wetter-month, links (`plot(estimate_expectation(lm_wetter_month)`).
 Oh nein:  R betrachtet `month` als numerische Variable! 
 Aber "Monat" bzw. "Jahreszeit" sollte nominal sein.
 
@@ -921,17 +923,18 @@ Sehr schön! Jetzt haben wir eine Referenzgruppe (Monat 1, d.h. Januar) und 11 U
 
 :::{#fig-wetter-month layout-ncol=2}
 
-![`lm_wetter_month`, Monat fälschlich als metrische Variable](img/fig-precip-month-num.png)
+![`lm_wetter_month`](img/fig-precip-month-num.png)
 
-![`lm_wetter_month_text`, Monat korrekt als nominale Variable (aber mit viel Overplotting, das müsste man besser machen)](img/fig-precip-month.png)
+![`lm_wetter_month_text`](img/fig-precip-month.png)
 
 
-Niederschlagsunterschiede pro Monat (ein Punkt ist ein Jahr); aufgrund der vielen Datenpunkte ist das Diagramm wenig übersichtlich (Overplotting).
+Niederschlagsunterschiede pro Monat (ein Punkt ist ein Jahr). Links: Die Variable *Monat* ist fälschlich als metrische Variable definiert. Rechts:  *Monat* ist korrekt als nominale Variable definiert (aber mit viel Overplotting, das müsste man besser machen).
 
 :::
 
 
-Möchte man die Referenzgruppe eines Faktors ändern, kann man dies mit `relevel` tun:
+Möchte man die Referenzgruppe eines Faktors ändern, 
+kann man dies mit `relevel` tun:
 
 ```{r}
 wetter <-
@@ -949,7 +952,7 @@ levels(wetter$month_factor)
 
 ### Binäre plus metrische UV {#sec-faktorvar}
 
-In diesem Abschnitt untersuchen wir ein lineares Modell mit zwei UV: einer *zweistufigen* (binären) UV plus einer *metrischen* UV.^[So ein Modell kann auch als *Kovarianzanalyse* (engl. analysis of covariance, ancova) bezeichnet werden.]
+In diesem Abschnitt untersuchen wir ein lineares Modell mit zwei UV: einer *zweistufigen* (binären) UV plus einer *metrischen* UV. (So ein Modell kann auch als *Kovarianzanalyse* (engl. analysis of covariance, ancova) bezeichnet werden.)
 
 :::{#exm-rain1}
 Ob sich die Niederschlagsmenge wohl unterschiedlich zwischen den Monaten entwickelt hat in den letzten gut 100 Jahren?
@@ -964,13 +967,13 @@ wetter_month_1_7 <-
 
 >    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Ich muss mal kurz auf eine Sache hinweisen...
 
-:::{.callout-note}
-### Faktorvariable
-Eine Faktorvariable ist einer der beiden Datentypen in R, die sich für nominalskalierte Variablen anbieten: Textvariablen (`character`) und Faktor-Variablen (`factor`).
-Ein wichtiger Unterschied ist, dass die erlaubten Ausprägungen ("Faktorstufen") bei einer Faktor-Variable mitgespeichert werden, bei der Text-Variable nicht.
 
-Das kann praktisch sein, denn bei einer Faktorvariable ist immer klar, welche Ausprägungen in Ihrer Variable möglich sind.$\square$
-:::
+Eine Faktorvariable ist einer der beiden Datentypen in R, die sich für nominalskalierte Variablen anbieten: 
+Textvariablen (`character`) und Faktor-Variablen (`factor`).
+Ein wichtiger Unterschied ist, dass die erlaubten Ausprägungen ("Faktorstufen") bei einer Faktor-Variable mitgespeichert werden, 
+bei der Text-Variable nicht.
+Das kann praktisch sein, denn bei einer Faktorvariable ist immer klar, welche Ausprägungen in Ihrer Variable möglich sind.
+
 
 :::{#exm-factor1}
 ### Beispiel für eine Faktorvariable
@@ -1011,13 +1014,13 @@ Hat man mehrere ("multiple") X-Variablen (Prädiktoren, unabhängige Variablen, 
 so trennt man sich mit einem Plus-Zeichen in der Regressionsformel, z.B. `temp ~ year_c + month`.
 
 
-:::{.callout-important}
+:::{#def-mult-regr}
 ### Multiple Regression
 Eine multiple Regression beinhaltet mehr als eine X-Variable. Die Modellformel spezifiziert man so:
 
 $y ~ x_1 + x_2 + \ldots + x_n \qquad \square$
-
 :::
+
 
 
 ::: {.content-visible when-format="html"}
@@ -1028,12 +1031,11 @@ Die Veränderung der monatlichen Temperatur (10-Jahres-Mittel) ist in @fig-wette
 
 
 
-:::{.callout-note}
-### Modellgleichung
-Das Pluszeichen hat in der Modellgleichung^[synonym: Regressionsformel] *keine* arithmetische Funktion. 
+
+Das Pluszeichen hat in der Modellgleichun ([synonym: Regressionsformel) *keine* arithmetische Funktion. 
 Es wird nichts addiert.
 In der Modellgleichung sagt das Pluszeichen nur "und noch folgende UV...".$\square$
-:::
+
 
 Die obige Modellgleichung liest sich also so:
 
@@ -1041,7 +1043,8 @@ Die obige Modellgleichung liest sich also so:
 
 
 ```{r lm-year-month-def}
-lm_year_month <- lm(precip ~ year_c + month_factor, data = wetter_month_1_7)
+lm_year_month <- lm(precip ~ year_c + month_factor, 
+                    data = wetter_month_1_7)
 ```
 
 Die Modellparameter sind in @tbl-lm_year_month zu sehen.
@@ -1057,9 +1060,9 @@ parameters(lm_year_month) %>% print_md()
 
 Die Modellkoeffizienten sind so zu interpretieren:
 
-1. Achsenabschnitt (b0, `(Intercept`)): Im Referenzjahr (1951) im *Referenzmonat Januar* lag die Niederschlagsmenge bei 57 mm pro Quadratmeter.
-2. Regressionskoeffizient für Jahr (b1, `year_c`): Pro Jahr ist die Niederschlagsmenge im Schnitt um 0.02 mm an (im Referenzmonat).
-3. Regressionskoeffizient für Monat (b2, `month [7]`) Im Monat `7` (Juli) lag die mittlere Niederschlagsmenge (im Referenzjahr) knapp 25 mm über dem mittleren Wert des Referenzmonats (Januar).
+1. Achsenabschnitt ($\beta_0$, `(Intercept`)): Im Referenzjahr (1951) im *Referenzmonat Januar* lag die Niederschlagsmenge bei 57 mm pro Quadratmeter.
+2. Regressionskoeffizient für Jahr ($\beta_1$, `year_c`): Pro Jahr ist die Niederschlagsmenge im Schnitt um 0.02 mm an (im Referenzmonat).
+3. Regressionskoeffizient für Monat ($\beta_2$, `month [7]`) Im Monat `7` (Juli) lag die mittlere Niederschlagsmenge (im Referenzjahr) knapp 25 mm über dem mittleren Wert des Referenzmonats (Januar).
 
 
 Die Regressiongleichung von `lm_year_month` lautet: 
@@ -1124,8 +1127,7 @@ ggplot(wetter_month_1_7) +
 
 ```
 
-Mit `scale_color_okabeito` haben wir die Standard-Farbpalette durch die von  [@okabeito] ersetzt^[s. Hinweise
-hier: <https://malcolmbarrett.github.io/ggokabeito/reference/palette_okabe_ito.html>].
+Mit `scale_color_okabeito` haben wir die Standard-Farbpalette durch die von  [@okabeito] ersetzt [s. @barrett2021].
 Das ist nicht unbedingt nötig, 
 aber robuster bei Schwarz-Weiß-Druck und bei Sehschwächen, vgl. @sec-farbwahl.
 
@@ -1197,11 +1199,12 @@ in diesem Fall die Interaktion von Jahr (`year_c`) und Monat (`month_factor`):
 `precip ~ year_c + month_factor + year_c:month_factor`
 
 
-:::{.callout-important}
+:::{#def-interakt}
+### Interaktionseffekt
 Einen Interaktionseffekt von x1 und x2 kennzeichnet man in R mit dem Doppelpunkt-Operator, `x1:x2`:
 
 `y ~ x1 + x2 + x1:x2` $\square$
-:::
+
 
 In Worten: 
 
@@ -1226,7 +1229,7 @@ Im Juli nahm der Niederschlag ab, im Januar zu.$\square$
 :::
 
 Liegt ein Interaktionseffekt vor, 
-kann man nicht mehr von "dem" (statistischen) Effekt eines Prädiktors (afu die Y-Variable) sprechen.
+kann man nicht mehr von "dem" (statistischen) Effekt eines Prädiktors (auf die Y-Variable) sprechen.
 Vielmehr muss man unterscheiden: 
 Je nach Gruppe (z.B. Monat) unterscheidet der Effekt.
 ("Effekt" ist hier immer statistisch, nie kausal gemeint.)
@@ -1287,7 +1290,7 @@ r2(lm_year_month_interaktion)  # aus `{easystats}`
 
 
 
-::::: {.content-visible when-format="html" unless-format="epub"}
+:::::{.content-visible when-format="html" unless-format="epub"}
 
 
 Ein Modell mit zwei metrischen UV kann man sich im 3D-Raum visualisieren, s. @fig-3d-regr.
@@ -1304,11 +1307,24 @@ Im 3D-Raum wird die Regressionsgerade zu einer *Regressionsebene.*
 
 #### 3D-Diagramme für Modelle mit zwei Prädiktoren
 
+```{r}
+#| include: false
+
+df_3d <-
+  tibble(x1 = rnorm(mean = 0, sd = 1, n=  100), 
+         x2 =  rnorm(mean = 0, sd = 1, n=  100), 
+         y = 3 + 2*x1 + x2 + rnorm(mean = 0, sd = 0.1, n = 100) 
+         )
+
+lm3d <- lm(y ~ x1 + x2, data = df_3d)
+```
+
 
 
 ```{r}
 #| label: Ein interaktives 3D-Diagramm und Regressionsebene
 #| echo: false
+#| eval: !expr knitr::is_html_output()
 
 source("children/3d.R")
 scatterplot_3d_with_trace
@@ -1390,7 +1406,7 @@ lm_mario_2uv <- lm(total_pr ~ start_pr + ship_pr, data = mariokart %>% filter(to
 
 ```{r fig-mario-2uv}
 #| echo: false
-#| eval: true
+#| eval: !expr knitr::is_html_output()
 #| label: fig-mario-2uv-dyn
 #| fig-cap: "Das Modell `lm_mario2v` mit 2 metrischen UV (und 1 metrische AV) als 3D-Diagramm"
 
@@ -1428,9 +1444,9 @@ d.h. die Steigung für `start_pr` bzw. die Steigung für `ship_pr`.
 
 
 
-::: {.content-visible when-format="pdf"}
+:::: {.content-visible when-format="pdf"}
 
-@fig-mario-2uv visualisiert das Modell `lm_mario2v` in einem 3D-Diagramm (betrachtet aus verschiedenen Winkeln).
+@fig-3d-regr-statisch visualisiert das Modell `lm_mario2v` in einem 3D-Diagramm (betrachtet aus verschiedenen Winkeln).
 
 
 
@@ -1447,6 +1463,7 @@ d.h. die Steigung für `start_pr` bzw. die Steigung für `ship_pr`.
 Das Modell `lm_mario2v` mit 2 metrischen UV (und 1 metrische AV) als 3D-Diagramm
 
 :::
+::::
 
 
 ### Viele UV ins Modell?
@@ -1480,7 +1497,7 @@ Also gut, das Honorar ist phantastisch, Sie sind jung und brauchen das Geld.$\sq
 Um die Güte Ihrer Vorhersagen zu prüfen, teilt Ihr Chef den Datensatz in zwei zufällige Teile.
 
 
->    🧔‍♂️ Ich teile den Datensatz `mariokart` zufällig in zwei Teile.
+>    [👴]{.content-visible when-format="html"}[\emoji{old-man}]{.content-visible when-format="pdf"} Ich teile den Datensatz `mariokart` zufällig in zwei Teile.
 Den ersten Teil kannst du nutzehn, um Modelle zu berechnen ("trainieren") und ihre Güte zu prüfen. Den Teil nenne ich "Trainingssample", hört sich cool an, oder? 
 Im Train-Sample ist ein Anteil (`frac`tion) von 70% der Daten, okay? 
 Die restlichen Daten behalte ich. Wenn du ein gutes Modell hast, 
@@ -1492,8 +1509,8 @@ Diesen Teil nennen wir Test-Sample, alles klar?
 #| echo: false
 #| eval: false
 # library(readr)
-#write_csv(mariokart_train, "daten/mariokart_train.csv")
-#write_csv(mariokart_test, "daten/mariokart_test.csv")
+#write_csv(mariokart_train, "data/mariokart_train.csv")
+#write_csv(mariokart_test, "data/mariokart_test.csv")
 ```
 
 Wenn die Daten auf Ihrer Festplatte liegen, z.B. im Unterordner `daten`,
@@ -1501,7 +1518,7 @@ dann könne Sie sie von dort importieren:
 
 ```{r}
 #| eval: false
-mariokart_train <- read.csv("daten/mariokart_train.csv")
+mariokart_train <- read.csv("data/mariokart_train.csv")
 ```
 
 Alternativ können Sie sie auch von diesem Pfad von einem Rechner in der Cloud herunterladen:
@@ -1509,13 +1526,13 @@ Alternativ können Sie sie auch von diesem Pfad von einem Rechner in der Cloud h
 ::: {.content-visible when-format="html"}
 
 ```{r}
-mariokart_train <- read.csv("https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/mariokart_train.csv")
+mariokart_train <- read.csv("https://raw.githubusercontent.com/sebastiansauer/statistik1/main/data/mariokart_train.csv")
 ```
 
 Dann importieren wir auf gleiche Weise Test-Sample in R:
 
 ```{r}
-mariokart_test <- read.csv("https://raw.githubusercontent.com/sebastiansauer/statistik1/main/daten/mariokart_test.csv")
+mariokart_test <- read.csv("https://raw.githubusercontent.com/sebastiansauer/statistik1/main/data/mariokart_test.csv")
 ```
 
 :::
@@ -1525,7 +1542,7 @@ mariokart_test <- read.csv("https://raw.githubusercontent.com/sebastiansauer/sta
 
 ```{r import-mariokart-train-pdf}
 mariokart_train_path <- paste0( "https://raw.githubusercontent.com/sebastiansauer/",
-"statistik1/main/daten/mariokart_train.csv")
+"statistik1/main/data/mariokart_train.csv")
 
 mariokart_train <- read.csv(mariokart_train_path)
 ```
@@ -1535,7 +1552,7 @@ Dann importieren wir auf gleiche Weise Test-Sample in R:
 ```{r import-mariokart-test-pdf}
 mariokart_test_path <- paste0(
  "https://raw.githubusercontent.com/sebastiansauer/",
- "statistik1/main/daten/mariokart_test.csv")
+ "statistik1/main/data/mariokart_test.csv")
 
 mariokart_test <- read.csv(mariokart_test_path)
 ```
@@ -1566,8 +1583,7 @@ Der Punkt in `total_pr ~ . ` heißt "alle Variablen in der Tabelle (außer `tota
 
 
 
-:::{.callout-note}
-### Overfitting
+
 Der Grund für den fast perfekten Modellfit ist die Spalte `Title`.
 Unser Modell hat einfach den Titel jeder Auktion auswendig gelernt.
 Weiß man, welcher Titel zu welcher Auktion gehört, 
@@ -1575,9 +1591,10 @@ kann man perfekt die Auktion aufsagen bzw. das Verkaufsgebot perfekt vorhersagen
 Leider nützen die Titel der Auktionen im Train-Sample *nichts* für andere Auktionen.
 Im Test-Sample werden unsere Vorhersagen also grottenschlecht sein,
 wenn wir uns auf die Titel der Auktionen im Test-Sample stützen.
-Merke: Höchst idiografische Informationen wie Namen, Titel etc. sind nicht nützlich,
+Merke: Höchst idiografische Informationen wie Namen, 
+Titel etc. sind nicht nützlich,
 um allgemeine Muster zu erkennen und damit exakte Prognosen zu erstellen.$\square$
-:::
+
 
 
 
@@ -1592,13 +1609,12 @@ predict(lm_allin, newdata = mariokart_test)
 
 Oh nein! Was ist los!? Eine Fehlermeldung!
 
-:::{.callout-caution}
+
 Nominalskalierte Prädiktorvariablen mit vielen Ausprägungen, wie `title` sind problematisch.
 Kommt eine Ausprägung von `title` im Test-Sample vor,
 die es *nicht* im Train-Sample gab, so resultiert ein Fehler beim `predict`en.
 Häufig ist es sinnvoll, auf diese Variable zu verzichten,
 da diese Variablen oft zu Overfitting führen.$\square$
-:::
 
 
 ### Modell "all-in", ohne Titelspalte
@@ -1625,7 +1641,7 @@ r2(lm_allin_no_title)
 
 
 Das R-Quadrat ist ja durchaus ordentlich.
-Schauen wir uns noch den `rmse` (die SD der Vorhersagefehler) an^[der Befehl wohnt im Paket `performance`, Teil des Metapakets `easystats`]:
+Schauen wir uns noch den `rmse()` (die SD der Vorhersagefehler) an; der Befehl wohnt im Paket `performance`, Teil des Metapakets `easystats`:
 
 
 >    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Gut gemacht!
@@ -1636,19 +1652,19 @@ performance::rmse(lm_allin_no_title)
 ```
 
 
-:::{.callout-caution}
-### Name Clash
-Im Paket `yardstick` gibt es eine Funktion namens `rmse` und im Paket `performance`, Teil des Meta-Pakets `easystats` ebenfalls.
-Da sind Probleme vorprogrammiert.
-Das ist so als würde die Lehrerin rufen: "Schorsch, komm her!". 
-Dabei gibt es zwei Schorsche in der Klasse: Den Müllers Schorsch und den Meiers Schorsch.
-Sonst kommen beide, was die Lehrerin nicht will.
-Die Lehrerin müsste also rufen: "Müller Schorsch, komm her!".
-Genau dasselbe machen wir, wenn wir das R-Paket eines Befehls mitschreiben, sozusagen den "Nachnamen" des Befehls:
-`paketname::funktion` ist wie `Müller::Schorsch`. 
-In unserem Fall also: `performance::rmse`
-Endlich weiß R wieder, was zu tun ist!$\square$
-:::
+<!-- :::{.callout-caution} -->
+<!-- ### Name Clash -->
+<!-- Im Paket `yardstick` gibt es eine Funktion namens `rmse` und im Paket `performance`, Teil des Meta-Pakets `easystats` ebenfalls. -->
+<!-- Da sind Probleme vorprogrammiert. -->
+<!-- Das ist so als würde die Lehrerin rufen: "Schorsch, komm her!".  -->
+<!-- Dabei gibt es zwei Schorsche in der Klasse: Den Müllers Schorsch und den Meiers Schorsch. -->
+<!-- Sonst kommen beide, was die Lehrerin nicht will. -->
+<!-- Die Lehrerin müsste also rufen: "Müller Schorsch, komm her!". -->
+<!-- Genau dasselbe machen wir, wenn wir das R-Paket eines Befehls mitschreiben, sozusagen den "Nachnamen" des Befehls: -->
+<!-- `paketname::funktion` ist wie `Müller::Schorsch`.  -->
+<!-- In unserem Fall also: `performance::rmse` -->
+<!-- Endlich weiß R wieder, was zu tun ist!$\square$ -->
+<!-- ::: -->
 
 
 Sie rennen zu Ihrem Chef, der jetzt die Güte Ihrer Vorhersagen in den *restlichen* Daten bestimmen soll.
@@ -1667,7 +1683,7 @@ mariokart_test %>%
 
 >    [👴]{.content-visible when-format="html"}[\emoji{old-man}]{.content-visible when-format="pdf"}️ Okay, hier sind die ersten paar echten Verkaufspreise. Jetzt mach mal deine Vorhersagen auf Basis deines besten Modells!
 
-Hier sind Ihre Vorhersagen^[engl. predictions; to predict: vorhersagen]:
+Hier sind Ihre Vorhersagen (engl. predictions; to predict: vorhersagen):
 
 ```{r}
 lm_allin_predictions <- predict(lm_allin_no_title, newdata = mariokart_test)
@@ -1680,7 +1696,8 @@ Hier sind Ihre ersten paar Vorhersagen:
 head(lm_allin_predictions)
 ```
 
-Dies Vorhersagen fügen wir noch der Ordnung halber in die Tabelle mit den Test-Daten:
+Dies Vorhersagen fügen wir noch der Ordnung halber in die Tabelle 
+mit den Test-Daten:
 
 ```{r}
 mariokart_test <-
@@ -1693,8 +1710,8 @@ mariokart_test <-
 Okay, was ist jetzt der mittlere Vorhersagefehler?
 
 
-Um die Vorhersagegüte im Test-Sample auszurechnen^[wir verwenden dazu die Funktionen `mae` und `rsq`], 
-nutzen wir die Funktionen des R-Paketes `yardstick`^[welches Sie vielleicht noch installieren müssen.]:
+Um die Vorhersagegüte im Test-Sample auszurechnen (wir verwenden dazu die Funktionen `mae()` und `rsq()`, 
+nutzen wir die Funktionen des R-Paketes `yardstick` (welches Sie vielleicht noch installieren müssen):
  
 ```{r}
 #| eval: false
@@ -1723,11 +1740,11 @@ yardstick::rmse(data = mariokart_test,
 ```
 
 
-Ihr mittlerer Vorhersagefehler (RMSE) liegt bei ca. 13 Euro.^[Wir haben hier `yardstick::rmse` geschrieben und nicht nur `rmse`, 
+Ihr mittlerer Vorhersagefehler (RMSE) liegt bei ca. 13 Euro.^[Wir haben hier `yardstick::rmse()` geschrieben und nicht nur `rmse()`, 
 da es sowohl im Paket `performance` ( Teil des Metapakets `easystats`) als auch im Paket `yardstick` (Teil des Metapakets `tidymodels`) 
-einen Befehl des Namens `rmse` gibt. Name-Clash-Alarm! 
-R könnte daher den anderen `rmse`` meinen als Sie, 
-was garantiert zu Verwirrung führt.^[Entweder bei R oder bei Ihnen.]
+einen Befehl des Namens `rmse()` gibt. Name-Clash-Alarm! 
+R könnte daher den anderen `rmse()`` meinen als Sie, 
+was garantiert zu Verwirrung führt. (Entweder bei R oder bei Ihnen.)
 
 >    [👴]{.content-visible when-format="html"}[\emoji{old-man}]{.content-visible when-format="pdf"} Ganz okay.
 
@@ -1758,17 +1775,13 @@ knitr::kable()
 >    [👴]{.content-visible when-format="html"}[\emoji{old-man}]{.content-visible when-format="pdf"}️ 17%, nicht berauschend, aber immerhin!
 
 
-:::{.callout-note}
-### Modellgüte im Test-Sample meist geringer als im Train-Sample
+
 Wie das Beispiel zeigt, ist die Modellgüte im Test-Sample (leider) oft *geringer* als im Train-Sample. 
 Die Modellgüte im Train-Sample ist mitunter übermäßig optimistisch.
 Dieses Phänomen bezeichnet man als *Overfitting*.$\square$
-:::
-
-:::{.callout-tip}
 Bevor man Vorhersagen eines Modells einreicht, 
 bietet es sich, die Modellgüte in einem neuen Datensatz, als einem Test-Sample, zu überprüfen.$\square$
-:::
+
 
 ## Vertiefung: Das Aufteilen Ihrer Daten
 
@@ -1794,7 +1807,7 @@ Diese Aufteilung Ihres Datensatzatzes in diese zwei Teile nennt man auch *Validi
 
 ```{r}
 library(rsample)
-mariokart <- read_csv("daten/mariokart.csv")  # Wenn die CSV-Datei in einem Unterordner mit Namen "daten" liegt
+mariokart <- read_csv("data/mariokart.csv")  # Wenn die CSV-Datei in einem Unterordner mit Namen "daten" liegt
 
 meine_aufteilung <- initial_split(mariokart, strata = total_pr)
 ```
@@ -1808,19 +1821,21 @@ meine_aufteilung <- initial_split(mariokart, strata = total_pr)
 ```
 
 
-`initial_split` *bestimmt* für jede Zeile (Beobachtung) zufällig aus, ob diese Zeile in das Analyse- oder in das Assessment-Sample kommen soll.
+`initial_split()` *bestimmt* für jede Zeile (Beobachtung) zufällig aus, ob diese Zeile in das Analyse- oder in das Assessment-Sample kommen soll.
 Im Standard werden 75% der Daten in das Analyse- und 25% in das Assessment-Sample eingeteilt^[vgl. `help(initial_split)`];
 das ist eine sinnvolle Aufteilung.
 Das Argument `strata` sorgt dafür, dass die Verteilung der AV in beiden Stichproben gleich ist.
-Es wäre nämlich blöd für Ihr Modell, wenn im Train-Sample z.B. nur die teuren, und im Test-Sample nur die günstigen Spiele landen würde.^[Anderes Beispiel: In den ersten Zeilen stehen nur Kunden aus Land A und in den unteren Zeilen nur aus Land B.] 
+Es wäre nämlich blöd für Ihr Modell, wenn im Train-Sample z.B. nur die teuren, und im Test-Sample nur die günstigen Spiele landen würde. Anderes Beispiel: In den ersten Zeilen stehen nur Kunden aus Land A und in den unteren Zeilen nur aus Land B.
 In so einem Fall würde sich Ihr Modell unnötig schwer tun.
 
-Im nächsten Schritt können Sie anhand anhand der von `initial_split` bestimmten Aufteilung die Daten tatsächlich aufteilen.^[initial_split sagt nur, welche Zeile in welche der beiden Stichproben kommen *soll*. Die eigentliche Aufteilung wird aber noch nicht durchgeführt.]
+Im nächsten Schritt können Sie anhand anhand der von `initial_split()` bestimmten Aufteilung die Daten tatsächlich aufteilen. `initial_split()` sagt nur, welche Zeile in welche der beiden Stichproben kommen *soll*. Die eigentliche Aufteilung wird aber noch nicht durchgeführt.
 
 
 ```{r}
-mariokart_train <- training(meine_aufteilung)  # Analyse-Sample
-mariokart_test <- testing(meine_aufteilung)  # Assessment-Sample
+mariokart_train <- 
+  training(meine_aufteilung)  # Analyse-Sample
+mariokart_test <- 
+  testing(meine_aufteilung)  # Assessment-Sample
 ```
 
 
@@ -1857,6 +1872,9 @@ aber zusammengehörigen Arten von Stichproben ist in @fig-sample-types dargestel
 ```{mermaid}
 %%| label: fig-sample-types
 %%| fig-cap: Verschiedene Arten von zusammengehörigen Stichprobenarten im Rahmen einer Prognosemodellierung
+%%| fig-width: 4
+
+
 flowchart TD
   S[Samples] 
   TS[Train-Sample]
@@ -1879,10 +1897,10 @@ flowchart TD
 Ein Anwendungsbezug von moderner Datenanalyse ist es vorherzusagen, welche Kunden "abwanderungsgefährdet" sind, 
 also vielleicht in Zukunft bald nicht mehr unsere Kunden sind ("customer churn").
 Es gibt eine ganze Reihe von Untersuchungen dazu, 
-z.B. die von @lalwani_customer_2022.
+z.B. die von @lalwani2022.
 Die Forschis versuchen anhand von Daten und u.a. auch der linearen Regression vorherzusagen, 
 welche Kunden abgewandert sein werden. 
-Die Autoren berichten von einer Genauigkeit von über 80% in Ihrem (besten) Vorhersagemodell.
+Die Autoren berichten von einer Genauigkeit von über 80 % in Ihrem (besten) Vorhersagemodell.
 
 
 ## Wie man mit Statistik lügt
@@ -1980,13 +1998,11 @@ parameters(lm2) |> print_md()
 
 
 
-:::{.callout-caution}
-### Daten alleine reichen nicht
+
 Ohne Hintergrundwissen oder ohne weitere Analysen kann *nicht* entschieden werden,
 welche Analyse -- Gesamtdaten oder Subgruppen -- die richtige ist.
 Nicht-exprimentelle Studien können zu grundverschiedenen Ergebnissen führen,
-je nachdem ob Prädiktoren dem Modell hinzugefügt oder weggenommen werden. $\square$
-:::
+je nachdem ob Prädiktoren dem Modell hinzugefügt oder weggenommen werden. 
 
 
 
@@ -2000,17 +2016,17 @@ Interpretiere nie Modellkoeffizienten kausal ohne ein Kausalmodell.$\square$
 Nur wenn man die Ursache-Wirkungs-Beziehungen in einem System kennt,
 macht es Sinn, die Modellkoeffizienten kausal zu interpretieren.
 Andernfalls lässt man besser die Finger von der Interpretation der Modellkoeffizienten und
-begnügt sich mit der Beschreibung der Modellgüte und mit Vorhersage^[synonym: Prognose].
-Wer das nicht glaubt, der betrachte @fig-confounder, links.^[[Quelle](https://data-se.netlify.app/2021/12/01/simulation-on-controlling-confounders/)]
+begnügt sich mit der Beschreibung der Modellgüte und mit Vorhersage (synonym: Prognose).
+Wer das nicht glaubt, der betrachte @fig-confounder, links.
 Ei Forschi stellt das Modell `m1: y ~ x` auf und  interpretiert dann `b1`: "Ist ja klar, X hat einen starken positiven Effekt auf Y!".
 
-In der nächsten Studie nimmt dis Forschi dann eine zweite Variable, `group` (z.B. Geschlecht) in das Modell auf: `m2: y ~ x + g`.
+In der nächsten Studie nimmt der Forscher dann eine zweite Variable, `group` (z.B. Geschlecht) in das Modell auf: `m2: y ~ x + g`.
 Oh Schreck! Jetzt ist `b1` auf einmal nicht mehr stark positiv, sondern praktisch Null, und zwar in jeder Gruppe, s. @fig-confounder, rechts!
 
 Dieses Umschwenken der Regressionskoeffizienten kann *nicht* passieren,
 wenn der Effekt "echt", also kausal, ist. 
 Handelt es sich aber um "nicht echte", also nicht-kausale Zusammenhänge, um Scheinzusammenhänge also,
-so können sich die Modellkoeffizienten dramatisch verändern (sogar das Vorzeichen kann wechseln^[das nennt man dann *Simpsons Paradox*]),
+so können sich die Modellkoeffizienten dramatisch verändern (sogar das Vorzeichen kann wechseln; das nennt man dann *Simpsons Paradox*),
 wenn man das Modell verändert, also Variablen hinzufügt oder aus dem Modell entfernt.
 
 Wenn man die kausalen Abhängigkeiten nicht kennt,
@@ -2021,7 +2037,7 @@ Man weiß also nicht, ob die Modellkoeffizienten belastbar, robust, stichhaltig 
 #| echo: false
 #| label: fig-confounder
 #| fig-cap: "Fügt man in ein Modell eine Variable hinzu, können sich die Koeffizienten massiv ändern. In beiden Diagrammen wurden die gleichen Daten verwendet."
-#| layout-ncol: 2
+#| layout: [[45,-10, 45], [100]]
 #| fig-subcap: 
 #|   - "Modell: `y ~ x`, starker Zusammenhang; b1 ist stark positiv"
 #|   - "Modell: `y ~ x + g`, in jeder der beiden Gruppen ist der Zusammenhang praktisch Null, b1 = 0"
@@ -2102,31 +2118,34 @@ Wenn Sie dran bleiben an der Statistik, wird der Erfolg sich einstellen, s. @fig
 
 :::{#fig-dranbleiben layout-ncol=2}
 
-![So ging es Ihnen gestern](img/meme-stat1.jpg){#fig-gestern}
+![Sie gestern](img/meme-stat1.jpg){#fig-gestern}
 
-![So wird es Ihnen morgen ergehen, wenn Sie dran bleiben](img/meme-stat2.jpg){#fig-morgen}
+![Sie mrogen](img/meme-stat2.jpg){#fig-morgen}
 
-Statistik, Sie und Party: Gestern und (vielleicht) morgen.^[Quelle: imgflip,  <https://imgflip.com/memegenerator/Distracted-Boyfriend>]
+Statistik, Sie und Party: Gestern und (vielleicht) morgen. Wenn Sie dran bleiben, wird die Statistik Ihr bester Freund [@imgflip2024].
 
 :::
 
+
+::: {.content-visible when-format="html" unless-format="epub"}
+
 ## Fallstudien
 
-Die folgenden Fallstudien zeigen auf recht anspruchsvollem Niveau (bezogen auf diesen Kurs) beispielhalft zwei ausführlichere Entwicklungen eines Prognosemodells.
+Die folgenden Fallstudien zeigen auf recht anspruchsvollem Niveau (bezogen auf diesen Kurs) 
+beispielhalft zwei ausführlichere Entwicklungen eines Prognosemodells.
 
 Nutzen Sie diese Fallstudien, um sich intensiver mit der Entwicklung eines Prognosemodells auseinander zu setzen.
 
 ### New Yorker Flugverspätungen 2023
 
-::: {.content-visible when-format="html"}
 
 {{< video https://youtu.be/4hM6Z-yrduw >}}
 
 [Source](https://aistudios.com/share/64eef3e7d6644f00142d7285)
 
-:::
 
-[Vorhersage von Flugverspätungen](https://datenwerk.netlify.app/posts/flights-delay-simplified//)
+
+[Vorhersage von Flugverspätungen](https://sebastiansauer.github.io/Datenwerk/posts/flights-delay-simplified//)
 
 
 ### Filmerlöse
@@ -2138,28 +2157,31 @@ Nutzen Sie diese Fallstudien, um sich intensiver mit der Entwicklung eines Progn
 
 
 [Allison Horst](https://allisonhorst.com/linear-regression-dragons) erklärt die lineare Regression mit Hilfe von Drachen. 
-[🐉]{.content-visible when-format="html"}  Sehenswert.
+[🐉]{.content-visible when-format="html"} Sehenswert.
 
+
+:::
 
 ## Aufgaben
 
-Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app)^[<https://datenwerk.netlify.app>] stellt eine Reihe von einschlägigen Übungsaufgaben bereit. Sie können die Suchfunktion der Webseite nutzen, um die Aufgaben mit den folgenden Namen zu suchen:
+Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine Reihe von einschlägigen Übungsaufgaben bereit. 
+Sie können die Suchfunktion der Webseite nutzen, um die Aufgaben mit den folgenden Namen zu suchen:
 
 
-- [interpret-koeff-lm](https://datenwerk.netlify.app/posts/interpret-koeff-lm/interpret-koeff-lm.html) 
-- [Aussagen-einfache-Regr](https://datenwerk.netlify.app/posts/aussagen-einfache-regr/aussagen-einfache-regr)
-- [interpret-koeff](https://datenwerk.netlify.app/posts/interpret-koeff/interpret-koeff.html)
-- [regression1b](https://datenwerk.netlify.app/posts/regression1b/regression1b.html)
-- [mtcars-regr01](https://datenwerk.netlify.app/posts/mtcars-regr01/mtcars-regr01.html)
-- [regression1a](https://datenwerk.netlify.app/posts/regression1a/regression1a.html)
-- [lm1](https://datenwerk.netlify.app/posts/lm1/lm1.html)
-- [Regression5](https://datenwerk.netlify.app/posts/regression5/regression5)
-- [Regression6](https://datenwerk.netlify.app/posts/regression6/regression6)
-- [lm-mario1](https://datenwerk.netlify.app/posts/lm-mario1/lm-mario1.html)
-- [lm-mario2](https://datenwerk.netlify.app/posts/lm-mario2/lm-mario2.html)
-- [lm-mario3](https://datenwerk.netlify.app/posts/lm-mario3/lm-mario3.html)
-- [ausreisser1](https://datenwerk.netlify.app/posts/ausreisser1/ausreisser1.html)
-- [mario-compare-models](https://datenwerk.netlify.app/posts/mario-compare-models/)
+- [interpret-koeff-lm](https://sebastiansauer.github.io/Datenwerk/posts/interpret-koeff-lm/interpret-koeff-lm.html) 
+- [Aussagen-einfache-Regr](https://sebastiansauer.github.io/Datenwerk/posts/aussagen-einfache-regr/aussagen-einfache-regr)
+- [interpret-koeff](https://sebastiansauer.github.io/Datenwerk/posts/interpret-koeff/interpret-koeff.html)
+- [regression1b](https://sebastiansauer.github.io/Datenwerk/posts/regression1b/regression1b.html)
+- [mtcars-regr01](https://sebastiansauer.github.io/Datenwerk/posts/mtcars-regr01/mtcars-regr01.html)
+- [regression1a](https://sebastiansauer.github.io/Datenwerk/posts/regression1a/regression1a.html)
+- [lm1](https://sebastiansauer.github.io/Datenwerk/posts/lm1/lm1.html)
+- [Regression5](https://sebastiansauer.github.io/Datenwerk/posts/regression5/regression5)
+- [Regression6](https://sebastiansauer.github.io/Datenwerk/posts/regression6/regression6)
+- [lm-mario1](https://sebastiansauer.github.io/Datenwerk/posts/lm-mario1/lm-mario1.html)
+- [lm-mario2](https://sebastiansauer.github.io/Datenwerk/posts/lm-mario2/lm-mario2.html)
+- [lm-mario3](https://sebastiansauer.github.io/Datenwerk/posts/lm-mario3/lm-mario3.html)
+- [ausreisser1](https://sebastiansauer.github.io/Datenwerk/posts/ausreisser1/ausreisser1.html)
+- [mario-compare-models](https://sebastiansauer.github.io/Datenwerk/posts/mario-compare-models/)
 
 ## Literaturhinweise
 

@@ -97,9 +97,11 @@ In @sec-punktmodelle1 haben wir gelernt,
 dass das Wesen eines Punktmodells als Zusammenfassung *einer* Spalte (eines Vektors) zu einer einzelnen Zahl, 
 zu einem "Punkt" sozusagen, zusammengefasst werden kann.
 
-In diesem Kapitel fassen wir *zwei* Spalten zusammen, wieder zu *einer* Zahl, s. @eq-desk2.
+In diesem Kapitel fassen wir *zwei* Spalten zusammen, wieder zu *einer* Zahl, s. @fig-desk2.
 
-$$\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} + \begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarrow \qquad \begin{array}{|c|} \hline \\ \hline  \hline \end{array}$$ {#eq-desk2}
+![Zwei Spalten werden zu einer Zahl zusammengefasst](img/desk-stat-zsmnfassen-cor-crop.png){#fig-desk2 width=25%}
+
+<!-- $$\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} + \begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarrow \qquad \begin{array}{|c|} \hline \\ \hline  \hline \end{array}$$ {#eq-desk2} -->
 
 
 Wo wir in @sec-punktmodelle1 eine Variable mit Hilfe eines Lagemaßes beschrieben (bzw. dargestellt, zusammengefasst, modelliert) haben, 
@@ -141,13 +143,15 @@ mariokart %>%
             y = "total_pr",
             add = "reg.line",
             add.params = list(color = "blue"),
-            ellipse = TRUE)
+            ellipse = TRUE) +
+  theme_large_text()
 
 mariokart %>% 
   filter(total_pr < 100) %>% 
   ggplot() +
   aes(x = wheels, y = total_pr) +
-  geom_jitter()
+  geom_jitter()  +
+  theme_large_text()
 ```
 
 
@@ -194,7 +198,7 @@ cov_xy <- cov(d$y, d$x)
 
 Anton, Bert, Carl und Daniel haben ihre Statistikklausur zurückbekommen.
 Die Lernzeit $X$ scheint mit der erreichten Punktzahl $Y$ (0-100, je mehr desto besser) zusammenzuhängen.^[[🧑‍🎓]{.content-visible when-format="html"}  Typisches Lehrerbeispiel!!]
-Gar nicht so schlecht ausgefallen wie gedacht ..., s. @tbl-noten2.$\square$
+Gar nicht so schlecht ausgefallen wie gedacht ..., s. @tbl-noten2. $\square$
 :::
 
 ```{r}
@@ -217,7 +221,7 @@ Im zweidimensionalen Fall spannt sich ein Abweichungsrechteck vom Mittelwert $\b
 bis zum Messwert $x_i$ und genauso für $Y$.
 Wir bezeichnen mit $dx_i$ die Distanz (Abweichung) vom Mittelwert $\bar{x}$ 
 bis zum Messwert $x_i$ (und analog $dy_i$), also $dx_i = x_i - \bar{x}$.
-Die Fläche des Abweichungsrechtecks ist dann das Produkt der Abweichungen: $dx_i \cdot dy_i$.$\square$
+Die Fläche des Abweichungsrechtecks ist dann das Produkt der Abweichungen: $dx_i \cdot dy_i$. $\square$
 :::
 
 ```{r}
@@ -345,7 +349,7 @@ p_cov2
 :::{#def-kov}
 ### Kovarianz
 Die Kovarianz ist definiert als die Fläche des mittleren Abweichungsrechtecks.
-Sie ist ein Maß für die Stärke und Richtung des linearen Zusammenhangs zweier metrischer Variablen, s. @fig-cov2.$\square$
+Sie ist ein Maß für die Stärke und Richtung des linearen Zusammenhangs zweier metrischer Variablen, s. @fig-cov2. $\square$
 :::
 
 
@@ -490,6 +494,7 @@ $$\begin{aligned}
 #| label: fig-covnull
 #| fig-cap: "Wenn die Kovarianz 0 ist, gleichen sich die Abweichungsrechtecke auf 0 aus; d.h. , ihre Fläche addiert  zu 0."
 #| layout: [[45,-10, 45], [100]]
+#| fig-asp: 0.8
 #| fig-subcap: 
 #|   - 4 Abweichungsrechtecke
 #|   - 200 Abweichungsrechtecke
@@ -597,7 +602,7 @@ Wie man sieht, liegt in diesen Beispielen kein linearer Zusammenhang vor ($r=0$)
 
 :::{#exr-corrgame}
 ### Korrelationsspiel
-Spielen Sie das [Korrelationsspiel](https://gallery.shinyapps.io/correlation_game/)^[<https://gallery.shinyapps.io/correlation_game/>]: Sie Sehen ein Streudiagramm und müssen den richtigen Korrelationskoeffizienten eingeben.$\square$
+Spielen Sie das [Korrelationsspiel](https://gallery.shinyapps.io/correlation_game/)^[<https://gallery.shinyapps.io/correlation_game/>]: Sie Sehen ein Streudiagramm und müssen den richtigen Korrelationskoeffizienten eingeben. $\square$
 :::
 
 
@@ -607,7 +612,7 @@ Spielen Sie das [Korrelationsspiel](https://gallery.shinyapps.io/correlation_gam
 ### Interaktive Visualisierung der Korrelation
 
 Auf der Seite von [RPsychologist](https://rpsychologist.com/correlation/)^[<https://rpsychologist.com/correlation/>] findet sich eine ansprechende dynamische Visualisierung der Korrelation.
-Nutzen Sie sie, um Ihr Gefühl für die Stärke des Korrelationskoeffizienten zu entwickeln.$\square$
+Nutzen Sie sie, um Ihr Gefühl für die Stärke des Korrelationskoeffizienten zu entwickeln. $\square$
 :::
 
 ::::
@@ -723,10 +728,9 @@ Wir schränken dann den Range von $X$ ein auf, sagen wir, den Bereich von $[-0.5
 
 set.seed(42)
 n <- 1e2
-d <-
-  tibble(x = rnorm(n = n, mean = 0, sd = 1),
-         e = rnorm(n = n, mean = 0, sd = .5),
-         y = x + e)
+d <- tibble(x = rnorm(n = n, mean = 0, sd = 1),
+            e = rnorm(n = n, mean = 0, sd = .5),
+            y = x + e)
 
 x_min <- -0.5
 x_max <- 0.5
@@ -740,8 +744,10 @@ d |> filter(between(x, x_min, x_max))
 ```{r}
 #| echo: false
 #| label: fig-corr-range
+#| out-width: 100%
 #| fig-cap: Schränkt man den Range einer (oder beider) Variablen ein, so sinkt die Stärke der Korrelation
 #| layout: [[45,-10, 45], [100]]
+#| fig-asp: 0.8
 #| fig-subcap: 
 #|   - "Ohne Einschränkung des Range: Starke Korrelation"
 #|   - "Mit Einschränkung des Range: Schwächere Korrelation"
@@ -751,7 +757,8 @@ ggplot(aes(x = x, y = y)) +
   geom_point() +
   labs(title = paste0("r: ", round(cor(d$x, d$y), 2))) +
   theme_modern() +
-  theme(plot.title = element_text(size = 16))
+  theme(plot.title = element_text(size = 16)) +
+  theme_large_text()
 
 d_filtered |>   
 ggplot(aes(x = x, y = y)) +
@@ -759,7 +766,8 @@ ggplot(aes(x = x, y = y)) +
   geom_point(data = d, color = "grey80") +
   geom_point() +
   labs(title = paste0("r: ", round(cor(d_filtered$x, d_filtered$y), 2))) +
-  theme_modern()
+  theme_modern() +
+  theme_large_text()
   
 ```
 
@@ -858,7 +866,7 @@ Auf Errisch: `Error in select(., duration, n_bids, start_pr, ship_pr, total_pr, 
 Eine einfache Abhilfe ist es, R zu sagen: 
 "Hey R, nimm gefälligst `select` aus dem Paket `dplyr`, 
 dort "wohnt" nämlich `select`. 
-Auf Errisch spricht sich das so: `dplyr::select(...)`.$\square$
+Auf Errisch spricht sich das so: `dplyr::select(...)`. $\square$
 :::
 
 
@@ -1023,7 +1031,7 @@ plot(qr)
 :::{.callout-note}
 Einige der Fallstudien oder Übungsaufgaben können theoretische Inhalte (Konzepte der Statistik) oder praktische Inhalte (R-Befehle) enthalten, die Sie (noch) nicht kennen.
 In dem Fall: Einfach ignorieren. 
-Oder Sie suchen nach einer Lösung anhand von Konzepten bzw. R-Befehlen, die Sie kennen.$\square$
+Oder Sie suchen nach einer Lösung anhand von Konzepten bzw. R-Befehlen, die Sie kennen. $\square$
 :::
 
 
@@ -1039,7 +1047,7 @@ Oder Sie suchen nach einer Lösung anhand von Konzepten bzw. R-Befehlen, die Sie
 Bitte verstehen Sie die folgende Auswahl an Fallstudien als Auswahl.
 Es ist nicht nötig, dass Sie alle Fallstudien bearbeiten.
 Sehen Sie die Fallstudien eher als Angebot zur selektiven
-Vertiefung und Übung, dort, wo Sie es nötig haben.$\square$
+Vertiefung und Übung, dort, wo Sie es nötig haben. $\square$
 :::
 
 ::::

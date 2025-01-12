@@ -85,7 +85,7 @@ mariokart <- read.csv(mariokart_path)
 :::{#exr-los}
 Importieren Sie den Datensatz `mariokart`. 
 Probieren Sie alle vorgestellten Verben des Datenjudos aus,
-zunächst in dem Sie einfach den R-Code kopieren und selber ausführen.$\square$
+zunächst in dem Sie einfach den R-Code kopieren und selber ausführen. $\square$
 :::
 
 
@@ -168,10 +168,11 @@ Beispiele für typische Tätigkeiten des Datenjudos sind:
 ### Mach's einfach
 
 Es gibt einen (einfachen) Trick, wie man umfangreiche Datenaufbereitung elegant geregelt kriegt.
-Flingt fast zu schön, um wahr zu sein (s. @fig-that-would-be-great).
 
-![Mach's einfach [@imgflip_imageflip_2024] ](img/thatwouldbegreat.jpg){#fig-that-would-be-great width="50%"}
-
+::: {.content-visible when-format="html"}
+Klingt fast zu schön, um wahr zu sein (s. @fig-that-would-be-great).
+![Mach's einfach [@imgflip_simply] ](img/thatwouldbegreat.jpg){#fig-that-would-be-great width="50%"}
+:::
 Der Trick besteht darin, komplexe Operationen in mehrere einfache Teilschritte zu zergliedern.
 (In gewisser Weise besteht das Wesen einer Analyse eben darin: 
 die Zerlegung eines Gegenstands in seine Bestandteile.)
@@ -216,7 +217,7 @@ Vielleicht weil Sie behauptet haben, Data Science sei zu 80% Datenjudo,
 das hat irgendwie Eindruck geschindet...
 Naja, jedenfalls müssen Sie jetzt mal zeigen, dass Sie nicht nur schlaue Sprüche draufhaben, 
 sondern auch die Daten ordentlich abbürsten können.
-Sie analysieren dafür im Folgenden den Datensatz `mariokart`. Na, dann los.$\square$
+Sie analysieren dafür im Folgenden den Datensatz `mariokart`. Na, dann los. $\square$
 :::
 
 
@@ -250,16 +251,16 @@ p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1)
 #| echo: false
 #| tbl-cap: "Ein einfacher Datensatz von schlichtem Gemüt"
 #| label: tbl-datenjudo
-d |> gt()
+d |> knitr::kable()
 ```
 
 
-:::{.callout-important}
+
 Die Verben des Datenjudos wohnen im Paket `dplyr`,
 welches gestartet wird, wenn Sie `library(tidyverse)` eingeben.
 Falls Sie vergessen , das Paket `tidyverse` zu starten, 
-dann funktionieren diese Befehle nicht.$\square$
-:::
+dann funktionieren diese Befehle nicht.
+
 
 <!-- :::{.callout-note} -->
 <!-- Zur Erinnerung: In RStudio können Sie per Klick auf das kleine Tabellen-Icon im Bereich *Environment* die Tabellenansicht einer Tabelle öffnen, s. @sec-viewtab. $\square$ -->
@@ -369,7 +370,7 @@ Hey R,
 arrangiere (sortiere) `mariokart` nach der Spalte `total_pr` (aufsteigend).
 ```
 
-Gar nicht so schwer.$\square$
+Gar nicht so schwer. $\square$
 :::
 
 
@@ -385,7 +386,7 @@ mario_sortiert <- arrange(mariokart, -total_pr)
 
 
 :::{#exr-arrange2}
-Sortieren Sie die Mariokart-Daten absteigend nach der Anzahl der beigelegten Lenkräder.$\square$
+Sortieren Sie die Mariokart-Daten absteigend nach der Anzahl der beigelegten Lenkräder. $\square$
 :::
 
 ### Zeilen filtern: `filter()`
@@ -464,7 +465,7 @@ mariokart_neu
 Sie filtern also die Tabelle so,
 dass *nur* diese Auktionen im Datensatz verbleiben,
 welche mind. ein Photo haben,
-mit anderen Worten, Auktionen (Beobachtungen) bei denen gilt: `stock_photo == TRUE`.$\square$
+mit anderen Worten, Auktionen (Beobachtungen) bei denen gilt: `stock_photo == TRUE`. $\square$
 :::
 
 
@@ -511,7 +512,7 @@ Hier könnte man noch viele interessante Hypothesen prüfen, denken Sie sich und
 
 
 :::{#exr-filter2}
-Filtern Sie die Spiele mit nur einem Lenkrad und ohne Versandkosten.$\square$
+Filtern Sie die Spiele mit nur einem Lenkrad und ohne Versandkosten. $\square$
 :::
 
 
@@ -665,7 +666,7 @@ mariokart_mittelwert <- summarise(mariokart,
 mariokart_mittelwert
 ```
 
-Aha! Etwa 50€ erzielt so eine Auktion im Schnitt.$\square$
+Aha! Etwa 50€ erzielt so eine Auktion im Schnitt. $\square$
 
 :::
 
@@ -677,22 +678,23 @@ Aha! Etwa 50€ erzielt so eine Auktion im Schnitt.$\square$
 
 
 Ein bisschen abstrakter gesprochen, fasst `summarise()` 
-also eine *Spalte* zu einer (einzelnen) *Zahl* zusammen, s. @eq-desk-summ.
+also eine *Spalte* zu einer (einzelnen) *Zahl* zusammen, s. @fig-desk-summ.
 
 
-:::{.callout-note}
+![`summarise` fasst eine Spalte (oder mehrere) zu einer einzelnen Zahl zusammen](img/desk-stats-zsmnfassen-crop.png){#fig-desk-summ width=25%}
+
+
 Eine Alternative, um eine Spalte zu einer Zahl zusammenzufassen, bietet der "Dollar-Operator" (`$`):  `mean(mariokart$total_pr)`.
 Der Dollar-Operator trennt hier die Tabelle von der Spalte: `tibble$spalte`.
 Im Gegensatz zu den Verben des Tidyverse (die immer einer Tabelle zurückliefern),
-liefert der Dollar-Operator einen Vektor (Spalte) zurück. (Diese wird von `mean` dann zu einer einzelnen Zahl zusammengefasst.) $\square$
-:::
+liefert der Dollar-Operator einen Vektor (Spalte) zurück. (Diese wird von `mean` dann zu einer einzelnen Zahl zusammengefasst.)
 
 
 *Auf welche Art* zusammengefasst werden soll, z.B. anhand des Mittelwerts oder Maximalwerts, muss noch zusätzlich innerhalb von `summarise()` angegeben werden.
 
 
 
-$$\begin{array}{|c|} \hline \\ \hline \\  \\  \\ \\ \hline \end{array} \qquad \rightarrow  \qquad \begin{array}{|c|} \hline \\  \hline \end{array}$$ {#eq-desk-summ}
+<!-- $$\begin{array}{|c|} \hline \\ \hline \\  \\  \\ \\ \hline \end{array} \qquad \rightarrow  \qquad \begin{array}{|c|} \hline \\  \hline \end{array}$$ {#eq-desk-summ} -->
 
 
 
@@ -797,7 +799,7 @@ Langsam fühlen Sie sich als Datenchecker ... [🥷 🦹‍♀]{.content-visible
 
 
 :::::{#exr-groupby}
-:::: {.content-visible when-format="html"}
+:::: {.content-visible when-format="html" unless-format="epub"}
 :::{.panel-tabset}
 ### Aufgabe
 Berechnen Sie den mittleren und maximalen Verkaufspreis getrennt für Spiele mit und ohne Foto!
@@ -818,9 +820,7 @@ mariokart_verkaufspreis_foto
 ::::
 
 :::: {.content-visible when-format="pdf"}
-
 **Aufgabe**
-
 Berechnen Sie den mittleren und maximalen Verkaufspreis getrennt für Spiele mit und ohne Foto!
 
 **Lösung**
@@ -834,11 +834,24 @@ mariokart_verkaufspreis_foto <-
 
 mariokart_verkaufspreis_foto
 ```
-
-
 ::::
 
+:::: {.content-visible when-format="epub"}
+**Aufgabe**
+Berechnen Sie den mittleren und maximalen Verkaufspreis getrennt für Spiele mit und ohne Foto!
 
+**Lösung**
+```{r}
+mariokart_gruppiert_foto <- group_by(mariokart, stock_photo)
+
+mariokart_verkaufspreis_foto <- 
+  summarise(mariokart_gruppiert_foto,
+            total_pr_avg = mean(total_pr),
+            total_pr_max = max(total_pr))
+
+mariokart_verkaufspreis_foto
+```
+::::
 
 :::::
 
@@ -895,7 +908,7 @@ mariokart_yen <- select(mariokart_yen, total_pr_yen, total_pr)
 mariokart_yen |> head()  # nur die ersten paar Zeilen
 ```
 
-Sicherlich werden Sie Ihre Gesprächspartner schwer beeindrucken.$\square$
+Sicherlich werden Sie Ihre Gesprächspartner schwer beeindrucken. $\square$
 :::
 
 
@@ -986,7 +999,7 @@ mariocart_counted
 ```
 
 
-Aha! Es gibt mehr gebrauchte als neue Spiele.$\square$
+Aha! Es gibt mehr gebrauchte als neue Spiele. $\square$
 :::
 
 Jetzt könnte man noch den *Anteil* (engl. *proportion*) ergänzen:
@@ -1177,27 +1190,19 @@ Da wir `tidyverse` aber sowieso praktisch immer starten werden,
 bringt es uns keinen Vorteil, die neuere Pfeife des Standard-R `|>` zu verwenden. Aber auch keinen Nachteil. Unter *Tools > Global Options...* können Sie einstellen, 
 dass der Shortcut Strg-Shift-M die eingebaute Pfeife verwendet.
 
-::::{.columns}
-
-:::{.column width="50%"}
 
 ```{mermaid}
 %%| fig-cap: Illustration für eine Pfeifensequenz, es geht vorwärts wie am Fließband.
 %%| label: fig-pfeife
-%%| fig-height: 3.5
+%%| fig-height: 0.3
 
-
-flowchart TD
-  A["meine Daten 🗳"] --filter_zeilen-->B["▥"] 
-  B --wähle_spalten--> C["▥"]
+flowchart LR
+  A["▥"] --filter<br>zeilen-->B["▥"] 
+  B --wähle<br>spalten--> C["▥"]
   C --gruppiere--> D["▥"]
-  D --fasse_zusammen--> E["▥ Fertig. 🤩"]
-
+  D --fasse<br>zusammen--> E["▥"]
 ```
 
-:::
-
-:::{.column width="50%"}
 
 
 Und jetzt kommt's: So eine Art von Befehls-Verkettung gibt es in R.
@@ -1217,8 +1222,6 @@ an dem es mehrere Arbeitsstationen gibt, s. @fig-pfeife.
 Unser Datensatz wird am Fließband von Station zu Station weitergereicht und
 an jeder Stelle weiterverarbeitet.
 
-:::
-::::
 
 <!-- TODO  -->
 <!-- ## Praxisprobleme des Datenaufbereitens -->
@@ -1247,11 +1250,9 @@ mariokart %>%
 ```
 
 
-:::{.callout-important}
 Die Syntax `filter(mariokart, total_pr < 100)` und die Syntax `mariokart |> filter(total_pr < 100)` sind identisch.
-
 Allgemeiner: `d |> f(x)` = `f(d, x)`.
-:::
+
 
 
 ## Beispiele für Forschungsfragen
@@ -1372,7 +1373,7 @@ Denken Sie sich selber ähnliche Forschungsfragen aus.
 Stellen Sie diese einer vertrauenswürdigen Kommilitonen bzw. einem vertrauenswürdigen Kommilitonen. 
 DIY!
 Schauen Sie, ob Ihre Aufgabe richtig gelöst wird.
-Prüfen Sie streng.$\square$
+Prüfen Sie streng. $\square$
 :::
 
 ## Praxisbezug
@@ -1435,7 +1436,7 @@ mariokart_wheels %>%
 Und das Ergebnis lautet: 56 Euro! Das ist doch schon etwas "besser" als 50 Euro.
 
 Natürlich ist es *falsch* und irreführend, hier einen ungewichteten Mittelwert zu berechnen.
-Der gewichtete Mittelwert würde wiederum zum korrekten Ergebnis, 50 Euro, führen.$\square$
+Der gewichtete Mittelwert würde wiederum zum korrekten Ergebnis, 50 Euro, führen. $\square$
 :::
 
 ## Fallstudien
@@ -1663,14 +1664,14 @@ Mit `Strg-v` können Sie die schön formatierte Syntax (sowie die Ausgabe, auch 
 
 ::: {.content-visible unless-format="pdf"}
 <center>
-![Help me help you [@imgflip_imageflip_2024]](img/help-me-help-you.gif){width=50%}
+![Help me help you [@imgflip_helpme]](img/help-me-help-you.gif){width=50%}
 </center>
 :::
 
 :::::{.callout-tip}
 :::: {layout="[ 80, 20 ]"}
 ::: {#first-column}
-Posten Sie Ihr Erbie bei <https://gist.github.com/> als "public gist". [Hier](https://gist.github.com/sebastiansauer/0649a0453b5cc7c6a1d16ac760667215) ist ein Beispiel.$\square$
+Posten Sie Ihr Erbie bei <https://gist.github.com/> als "public gist". [Hier](https://gist.github.com/sebastiansauer/0649a0453b5cc7c6a1d16ac760667215) ist ein Beispiel. $\square$
 :::
 
 ::: {#second-column}
@@ -1703,6 +1704,7 @@ Sie können zu den Inhalten dieses Kapitels Zertifikate erwerben (teilweise kost
 :::
 
 
+::: {.content-visible when-format="html"}
 
 ## Exkurs
 
@@ -1719,10 +1721,10 @@ Sie können zu den Inhalten dieses Kapitels Zertifikate erwerben (teilweise kost
 
 ![Bild erzeugt von künstlicher Intelligenz, Quelle: DALL-E 2, 2023-02-09](img/mix-prof-robot.png){#fig-mix-rob-prof width="50%"}
 
-:::{.callout-note}
+
 Der Nutzen künstlicher Intelligenz für die Datenanalyse ist natürlich breiter:
 Wenn Sie sich z.B. über die Syntax eines bestimmten Befehls (oder allgemeiner: Vorhabens) nicht sicher sind, fragen Sie sich doch mal einen Bot wie ChatGPT.
-::: 
+:::
 
 ## Literaturhinweise
 

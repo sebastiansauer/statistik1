@@ -10,12 +10,31 @@ knit_print.head = function(x, ...) {
 # register the method
 registerS3method("knit_print", "data.frame", knit_print.head)
 
+
+
+# Define a custom ggplot theme with larger text
+theme_large_text <- function(base_size = 18, base_family = "") {
+  theme_minimal(base_size = base_size, base_family = base_family) +
+    theme(
+      text = element_text(size = base_size + 4),          # Base text size
+      axis.title = element_text(size = base_size + 6),    # Axis title text size
+      axis.text = element_text(size = base_size + 4),     # Axis tick text size
+      plot.title = element_text(size = base_size + 10, face = "bold"), # Plot title size
+      plot.subtitle = element_text(size = base_size + 8), # Subtitle text size
+      legend.text = element_text(size = base_size + 4),   # Legend text size
+      legend.title = element_text(size = base_size + 6)   # Legend title text size
+    )
+}
+
+
+
 ggplot2::theme_set(see::theme_modern())
 
 knitr::opts_chunk$set(tidy = FALSE, 
                       width = 60, 
                       fig.retina = 2,
                       max.print = 100,
+                      fig.dpi = 300,
                       warning = FALSE,
                       out.width = "70%", # enough room to breath
                       fig.width = 6,     # reasonable size
@@ -51,5 +70,7 @@ xcol <- "#CC79A7"
 ggplot2::theme_set(ggplot2::theme_minimal())
 
 #ggplot2::theme_set(see::theme_modern(axis.title.size = 18))
+
+labeltextsize <- 8
 
 

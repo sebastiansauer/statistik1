@@ -78,7 +78,9 @@ source("_common.R")
 mariokart_path <- "https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"
 mariokart <- read.csv(mariokart_path)
 
-wetter_path <- "https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/precip_temp_DWD.csv"
+wetter_path <- paste0(
+  "https://raw.githubusercontent.com/sebastiansauer/",
+  "statistik1/main/data/wetter-dwd/precip_temp_DWD.csv")
 wetter <- read.csv(wetter_path)
 ```
 
@@ -100,18 +102,22 @@ mariokart_path <- paste0(
   "csv/openintro/mariokart.csv")
 mariokart <- read.csv(mariokart_path)
 
-wetter_path <- paste0( "https://raw.githubusercontent.com/sebastiansauer/",
-"Lehre/main/data/wetter-dwd/precip_temp_DWD.csv")
+wetter_path <- paste0(
+  "https://raw.githubusercontent.com/sebastiansauer/",
+  "statistik1/main/data/wetter-dwd/precip_temp_DWD.csv")
 wetter <- read.csv(wetter_path)
 ```
 
 :::
 
-
-
-
-
 Die Wetterdaten stammen vom [DWD](https://opendata.dwd.de/).^[Lizenzhinweis: Datenbasis: Deutscher Wetterdienst, eigene Elemente ergänzt.]
+
+
+Ein *Data-Dictionary* für den Datensatz können Sie [hier](https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/wetter-dwd-data-dict.md) herunterladen.^[<https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/wetter-dwd-data-dict.md>]
+
+
+
+
 
 
 ## Forschungsbezug: Gläserne Kunden
@@ -132,7 +138,7 @@ Die Autoren resümieren im Abstract:
 Die Autoren berichten über hohe Modellgüte ($r$) zwischen den tatsächlichen persönlichen Attributen und den vorhergesagten Werten Ihres Modells, s. @fig-pnas1.
 Das eingesetzte statistische Modell beruht auf einem linearen Modell, also ähnlich zu dem in diesem Kapitel vorgestellten Methoden.
 
-Neben der analytischen Stärke der Regressionsanalyse zeigt das Beispiel auch, wie gläsern Konsument:innen im Internet sind.$\square$
+Neben der analytischen Stärke der Regressionsanalyse zeigt das Beispiel auch, wie gläsern Konsument:innen im Internet sind. $\square$
 :::
 
 
@@ -155,30 +161,9 @@ das Ihnen sinnvoll erscheint: Die Analyse des Klimawandels. $\square$
 :::
 
 Beim [Deutschen Wetterdienst, DWD](https://www.dwd.de/DE/Home/home_node.html) haben Sie sich Wetterdaten von Deutschland heruntergeladen.
-Nach etwas [Datenjudo, auf das wir hier nicht eingehen wollen](https://data-se.netlify.app/2022/07/24/preparing-german-weather-data/) 
-resultiert ein schöner Datensatz, den Sie jetzt analysieren wollen (Temperatur: Grad Celcius, Niederschlag (`precip`) mm Niederschlag pro Quadratmeter):
-
-::: {.content-visible when-format="html"}
-
-```{r}
-wetter_path <- "https://raw.githubusercontent.com/sebastiansauer/statistik1/main/data/wetter-dwd/precip_temp_DWD.csv"
-wetter <- read.csv(wetter_path)
-```
-:::
-
-::: {.content-visible when-format="pdf"}
-
-```{r}
-wetter_path <- paste0(
-  "https://raw.githubusercontent.com/sebastiansauer/",
-  "statistik1/main/data/wetter-dwd/precip_temp_DWD.csv")
-
-wetter <- read.csv(wetter_path)
-```
-:::
-
-Ein *Data-Dictionary* für den Datensatz können Sie [hier](https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/wetter-dwd-data-dict.md) herunterladen.^[<https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/wetter-dwd-data-dict.md>]
-
+Nach etwas [Datenjudo, auf das wir hier nicht eingehen wollen,](https://data-se.netlify.app/2022/07/24/preparing-german-weather-data/) 
+resultiert ein schöner Datensatz, den Sie jetzt analysieren möchten.
+(Im Datensatz ist die Temperatur ist in Grad Celcius angegeben; der Niederschlag  (`precip`) in mm Niederschlag pro Quadratmeter.)
 
 
 
@@ -276,7 +261,7 @@ wetter_summ <-
             precip = mean(precip))  # precipitation: engl. für Niederschlag
 ```
 
-Auf dieser Basis erstellen wir ein neues lineares Modell, s. @tbl-lm-wetter1a.
+Auf dieser Basis erstellen wir ein neues lineares Modell, `lm_wetter1a`,  s. @tbl-lm-wetter1a.
 
 ```{r}
 #| results: hide
@@ -291,16 +276,19 @@ parameters(lm_wetter1a)
 parameters(lm_wetter1a) %>% print_md()
 ```
 
+Dann plotten wir das Modell mit `plot(estimate_relation(lm_wetter1a))` und das Modell `lm_wetter1` entsprechend, s. @fig-wetter1.
 
 ```{r}
 #| label: fig-wetter1
+#| echo: false
 #| fig-cap: "Die Veränderung der mittleren Temperatur in Deutschland im Zeitverlauf (Datenquelle: DWD). Links: Jeder Punkt ist ein Tag (viel Overplotting, wenig nützlich). Rechts: Jeder Punkt ist ein Jahr (wetter_summ)"
 #| layout: [[45,-10, 45], [100]]
+#| out-width: 100%
 #| fig-subcap:
 #|   - Ein Punkt pro Tag
 #|   - Ein Punkt pro Jahr
-plot(estimate_relation(lm_wetter1)) 
-plot(estimate_relation(lm_wetter1a))
+plot(estimate_relation(lm_wetter1)) + theme_large_text()
+plot(estimate_relation(lm_wetter1a)) + theme_large_text()
 ```
 
 
@@ -369,12 +357,7 @@ Jetzt ist die Interpretation des Achsenabschnitts komfortabel:
 Im Jahr 1951 (x=0) lag die mittlere Temperatur in Deutschland (laut DWD) bei ca. 8.5 Grad Celcius.
 Die Regressionsgleichung lautet: `temp_pred = 8.49 + 0.01*year_c`.
 In Worten: Wir sagen eine Temperatur vorher, die sich als Summe von 8.49 Grad plus 0.01 mal das Jahr (in zentrierter Form) berechnet.
-
-
-:::{.callout-important}
-### Referenzwert entspricht Null
-Der Referenzwert bzw. der Wert der Referenzgruppe entspricht dem Y-Wert bei x=0 im Regressionsmodell.$\square$
-:::
+Zur Erinnerung: Der Referenzwert bzw. der Wert der Referenzgruppe entspricht dem Y-Wert bei x=0 im Regressionsmodell.
 
 Wie gut erklärt unser Modell die Daten?
 
@@ -422,20 +405,20 @@ Links ist eine grobe Temperaturrasterung zu sehen (Daten ab 1753)^[Quelle: <http
 :::{#def-binvar}
 ### Binäre Variable
 Eine *binäre* UV, auch *Indikatorvariable* oder *Dummyvariable* genannt, 
-hat nur zwei Ausprägungen: 0 und 1.$\square$
+hat nur zwei Ausprägungen: 0 und 1. $\square$
 :::
 
 
 :::{#exm-bin}
 ### Binäre Variablen 
-Das sind zum Beispiel *weiblich* mit den Ausprägungen `0` (nein) und `1` (ja) oder *before_1950* mit `1` für Jahre früher als 1950 und `0` ansonsten.$\square$
+Das sind zum Beispiel *weiblich* mit den Ausprägungen `0` (nein) und `1` (ja) oder *before_1950* mit `1` für Jahre früher als 1950 und `0` ansonsten. $\square$
 :::
 
 :::{#exm-binuv}
 
 Hier interessiert Sie folgende Forschungsfrage: 
 
->    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Ob es in der zweiten Hälfte des 20. Jahrhunderts wohl wärmer warm, im Durchschnitt, als vorher?$\square$
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Ob es in der zweiten Hälfte des 20. Jahrhunderts wohl wärmer warm, im Durchschnitt, als vorher? $\square$
 :::
 
 Aber wie erstellen Sie eine Variable `after_1950`, um die zweite Hälfte des 20. Jahrhunderts (und danach) zu fassen?
@@ -481,18 +464,13 @@ Modell: `temp ~ after_1950`
 :::
 
 
-Leider zeigt ein Blick zum `r2`, dass die Vorhersagegüte des Modells zu wünschen übrig lässt (`r2(lm_wetter_bin_uv)`).
+Leider zeigt ein Blick zum Ergebnis der Funktion `r2`, dass die Vorhersagegüte des Modells zu wünschen übrig lässt (`r2(lm_wetter_bin_uv)`).
 
 
-
-:::{.callout-important}
-### Lineare Modelle verkraften nur metrische Variablen
 Um die Koeffizienten eines linearen Modells auszurechnen,
 benötigt man eine metrische X- und eine metrische Y-Variable.
 Hier haben wir aber keine richtige metrische X-Variable (UV),
-sondern eine *logische* Variable mit den Werten `TRUE` und `FALSE`.$\square$
-:::
-
+sondern eine *logische* Variable mit den Werten `TRUE` und `FALSE`.
 Um die X-Variable in eine metrische Variable umzuwandeln, 
 gibt es einen einfachen Trick,
 den R für uns ohne viel Ankündigung durchführt: 
@@ -500,53 +478,22 @@ Umwandling in mehrere binäre Variablen.
 
 
 Hat ein nominaler Prädiktor zwei Stufen, so überführt (synonym: transformiert) `lm()` diese Variable in eine binäre Variable.
-Da eine binäre Variable metrisch ist, 
+Da eine binäre Variable wie eine metrische , 
 kann die Regression in gewohnter Weise durchgeführt werden.
 Wenn Sie die Ausgabe der Parameter betrachten, 
 so sehen Sie die neu erstellte binäre Variable.
 Man beachte, dass der ursprüngliche Datensatz nicht geändert wird, 
 nur während der Analyse von `lm` wird die Umwandlung der Variable ^[Transformation] durchgeführt.
 
+In unserem Fall liegt mit `after_1950` eine logische Variable mit den Werten `TRUE` und `FALSE` vor.
+`TRUE` und `FALSE` werden von R automatisch als `1` bzw. als `0` verstanden. 
+Also: Eine logische Variable ist schon eine binäre Variable
+
+
 >    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Eine `1` kannst du als "Ja! Richtig!" verstehen und eine`0` als "Nein! Falsch!"
 
-`after_1950` wird in eine Indikatorvariable umgewandelt:
 
-:::: {layout-ncol=3}
-
-
-
-::: {.column width="40%"}
-
-```{r}
-#| echo: false
-
-d <- tribble(
-  ~id, ~after_1950, ~after_1950TRUE,
-  1,   TRUE,       1,
-  2,  FALSE,       0
-)
-
-d[1:2] |> knitr::kable()
-```
-
-:::
-
-::: {.column width="20%"}
-
-$\qquad \rightarrow$
-
-:::
-
-::: {.column width="40%"}
-```{r}
-#| echo: false
-
-d[c(1,3)] |> knitr::kable()
-```
-:::
-
-::::
-
+::::: {.content-visible when-format="html"}
 
 :::{#exm-bin-trans}
 ### Beispiel: 'Geschlecht' in eine binäre Variable umwandeln.
@@ -559,15 +506,12 @@ nimmt R "Frau" als *erste* Stufe bzw. als *Referenzgruppe*.
 "Mann" ist dann die zweite Stufe, 
 die in der Regression dann in Bezug zur Referenzgruppe gesetzt wird.
 `lm` wandelt uns diese Variable in `geschlechtMann` 
-um mit den zwei Stufen `0` (kein Mann, also Frau) und `1` (Mann).$\square$
+um mit den zwei Stufen `0` (kein Mann, also Frau) und `1` (Mann). $\square$
 :::
 
 
-:::: {layout-ncol=3}
-
-
-
-::: {.column width="40%"}
+:::: {layout="[ 40, 20, 40 ]"}
+::: {#first-column}
 
 
 ```{r}
@@ -584,14 +528,11 @@ d2[1:2] %>% knitr::kable()
 
 :::
 
-::: {.column width="20%"}
-
+::: {#sec-col}
 $\qquad \rightarrow$
-
 :::
 
-::: {.column width="40%"}
-
+::: {#third-col}
 ```{r}
 #| echo: false
 
@@ -604,9 +545,9 @@ d2 <- tribble(
 d2[c(1,3)] %>% knitr::kable()
 
 ```
-
 :::
 ::::
+:::::
 
 
 Ein lineares Modell mit binärer UV ist nichts anderes die Differenz der Gruppenmittelwerte zu berechnen:
@@ -686,20 +627,18 @@ Für die Modellwerte ${\hat{y}}$ gilt also:
 
 
 
-:::{.callout-note}
-Bei *nominalen* (und auch bei *binären*) Variablen ist ${\beta_1}$ ein *Schalter*; bei *metrischen* Variablen ein *Dimmer*.^[Ich danke Karsten Lübke für diese Idee.] $\square$
-:::
+
+Bei *nominalen* (und auch bei *binären*) Variablen kann man ${\beta_1}$ als einen *Schalter* verstehen; bei *metrischen* Variablen als einen *Dimmer*.^[Ich danke Karsten Lübke für diese Idee.] $\square$
 
 
 ### Nominale UV
 
-In diesem Abschnitt betrachten wir ein lineare Modell )für uns synonym: Regressionsmodell) mit einer mehrstufigen (nominalskalierten) UV. 
+In diesem Abschnitt betrachten wir ein lineare Modell ) für uns synonym: Regressionsmodell) mit einer mehrstufigen (nominalskalierten) UV. 
 So ein Modell ist von den Ergebnissen her praktisch identisch zu einer einfachen *Varianzanalyse*.
 
 
 :::{#exm-wetter2}
-Ob es wohl substanzielle
-(wie könnte man dieses Wort eigentlich definieren) Temperaturunterschiede zwischen den Bundesländern gibt?
+Ob es wohl substanzielle Temperaturunterschiede zwischen den Bundesländern gibt?
 :::
 
 Befragen wir dazu ein lineares Modell, s. @tbl-lm_wetter_region.
@@ -729,11 +668,11 @@ weniger als es Stufen in der nominalskalierten Variablen gibt.
 
 
 Betrachten wir ein einfaches Beispiel, eine Tabelle mit der Spalte `Bundesland` -- aus Gründen der Einfachheit hier nur mit *drei* Bundesländern. 
-Damit `lm` arbeiten kann, wird `Bundesland` in *zwei* Indikatorvariablen umgewandelt:
+Damit `lm` arbeiten kann, wird `Bundesland` in *zwei* Indikatorvariablen umgewandelt.
 
-:::: {layout-ncol=3}
 
-::: {.column width="40%"}
+:::: {layout="[ 30, 10, 60 ]"}
+::: {#first-column-bu}
 
 ```{r}
 #| echo: false
@@ -750,17 +689,14 @@ d[1:2] %>% knitr::kable()
 
 :::
 
-::: {.column width="20%"}
-
-</br>
-</br>
-
-
-$\qquad \rightarrow$
-
+::: {#second-column-bu}
+<br />
+<br />
+$\quad \rightarrow$
 :::
 
-::: {.column width="40%"}
+
+::: {#third-column-bu}
 ```{r}
 #| echo: false
 
@@ -769,6 +705,8 @@ d[c(1,3, 4)] %>% knitr::kable()
 :::
 ::::
 
+
+Allgemein gilt: Hat eine nominale Variable $k$ Stufen, so wird diese Variable von `lm`in $k-1$ binäre Variablen umgewandelt.
 
 
 
@@ -784,18 +722,16 @@ Auch im Fall mehrerer Ausprägungen einer nominalen Variablen gilt die gleiche L
 Es kann nervig sein, dass das Bundesland, 
 welches als *Referenzgruppe* (sprich als Gruppe des Achsenabschnitts ausgewählt wurde) nicht explizit in der Ausgabe angegeben ist.
 Der Wert der Referenzgruppe findet seinen Niederschlag im Achsenabschnitt.
-
-:::{.callout-note}
 Bei einer Variable vom Typ `character` wählt R den alphabetisch ersten Wert als Referenzgruppe für ein lineares Modell aus. Bei einer Variable vom Typ `factor` ist die Reihenfolge bereits festgelegt, vgl. @sec-faktorvar.
 Der Mittelwert dieser Gruppe entspricht dem Achsenabschnitt. $\square$
-:::
+
 
 
 
 
 :::{#exm-bawü}
 ### Achsenabschnitt in wetter_lm2
-Da Baden-Württemberg das alphabetisch erste Bundesland ist, wird es von R als Referenzgruppe ausgewählt, dessen Mittelwert als Achsenabschnitt im linearen Modell hergenommen wird.$\square$
+Da Baden-Württemberg das alphabetisch erste Bundesland ist, wird es von R als Referenzgruppe ausgewählt, dessen Mittelwert als Achsenabschnitt im linearen Modell hergenommen wird. $\square$
 :::
 
 
@@ -807,6 +743,7 @@ Am einfachsten verdeutlicht sich `lm_wetter_region` vielleicht mit einem Diagram
 ```{r}
 #| echo: false
 #| label: fig-bin-nom
+#| out-width: 100%
 #| fig-cap: Sinnbild zur Interpretation eines linearen Modells mit nominaler UV (reingezoomt, um den Mittelwertsunterschied hervorzuheben). Die Achsen wurden um 90° gedreht, damit man die Namen der Bundesländer besser lessen kann.
 
 wetter_summ <- 
@@ -857,10 +794,11 @@ wetter_summ %>%
 ### Niederschlagsmenge im Vergleich der Monate
 
 Eine weitere Forschungsfrage, die Sie nicht außer acht lassen wollen, ist die Frage nach den jahreszeitlichen Unterschieden im Niederschlag (engl. precipitation).
-Los R, rechnen!
-
->    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Endlich geht's weiter! Ergebnisse in @tbl-lm_wetter-month! $\square$
+Los R, rechnen!$ \square$
 :::
+
+>    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Endlich geht's weiter! Ergebnisse in @tbl-lm_wetter-month! 
+
 
 
 ```{r}
@@ -871,6 +809,7 @@ parameters(lm_wetter_month)
 
 ```{r}
 #| echo: false
+#| eval: !expr knitr:::is_html_output()
 #| label: tbl-lm_wetter-month
 #| tbl-cap: Modellparameter für lm_wetter_month
 parameters(lm_wetter_month) %>% print_md()
@@ -892,7 +831,7 @@ Aber "Monat" bzw. "Jahreszeit" sollte nominal sein.
 
 :::{#exm-factor}
 Transformiert man `42` mit `factor`, so wird aus `42` `"42"`. Aus der Zahl wird ein Text.
-Alle metrischen Eigenschaften gehen verloren; die Variable ist jetzt auf nominalen Niveau.$\square$
+Alle metrischen Eigenschaften gehen verloren; die Variable ist jetzt auf nominalen Niveau. $\square$
 :::
 
 ```{r}
@@ -929,7 +868,6 @@ Sehr schön! Jetzt haben wir eine Referenzgruppe (Monat 1, d.h. Januar) und 11 U
 
 
 Niederschlagsunterschiede pro Monat (ein Punkt ist ein Jahr). Links: Die Variable *Monat* ist fälschlich als metrische Variable definiert. Rechts:  *Monat* ist korrekt als nominale Variable definiert (aber mit viel Overplotting, das müsste man besser machen).
-
 :::
 
 
@@ -991,7 +929,7 @@ Wenn Sie von der Faktorvariablen^[synonym: nominalskalierte Variable] `geschlech
 
 Genaus so ist es, wenn Sie aus `wetter` nur die Monate  `"1"` und `"7"` herausfiltern:
 R merkt sich, dass es 12 Faktorstufen gibt. 
-Möchten Sie die herausgefilterten Faktorstufen "löschen", so können Sie einfach die Faktorvariable neu berechnen (mit `factor`).$\square$
+Möchten Sie die herausgefilterten Faktorstufen "löschen", so können Sie einfach die Faktorvariable neu berechnen (mit `factor`). $\square$
 :::
 
 
@@ -1007,7 +945,7 @@ wetter_month_1_7 <-
 ```
 
 Okay.
-Wie spezifiziert man jetzt das lineare Modell?$\square$
+Wie spezifiziert man jetzt das lineare Modell? $\square$
 :::
 
 Hat man mehrere ("multiple") X-Variablen (Prädiktoren, unabhängige Variablen, X-Variablen), 
@@ -1018,7 +956,7 @@ so trennt man sich mit einem Plus-Zeichen in der Regressionsformel, z.B. `temp ~
 ### Multiple Regression
 Eine multiple Regression beinhaltet mehr als eine X-Variable. Die Modellformel spezifiziert man so:
 
-$y ~ x_1 + x_2 + \ldots + x_n \qquad \square$
+$y \sim x_1 + x_2 + \ldots + x_n \qquad \square$
 :::
 
 
@@ -1032,9 +970,9 @@ Die Veränderung der monatlichen Temperatur (10-Jahres-Mittel) ist in @fig-wette
 
 
 
-Das Pluszeichen hat in der Modellgleichun ([synonym: Regressionsformel) *keine* arithmetische Funktion. 
+Das Pluszeichen hat in der Modellgleichung ([synonym: Regressionsformel) *keine* arithmetische Funktion. 
 Es wird nichts addiert.
-In der Modellgleichung sagt das Pluszeichen nur "und noch folgende UV...".$\square$
+In der Modellgleichung sagt das Pluszeichen nur "und noch folgende UV...". $\square$
 
 
 Die obige Modellgleichung liest sich also so:
@@ -1089,9 +1027,8 @@ predict(lm_year_month, newdata = neue_daten)
 :::
 
 
-:::{.callout-note}
-Alle Regressionskoeffizienten beziehen sich auf den Y-Wert *unter der Annahme, dass alle übrigen Prädiktoren den Wert Null (bzw. Referenzwert) aufweisen*.$\square$
-:::
+
+Alle Regressionskoeffizienten beziehen sich auf den Y-Wert *unter der Annahme, dass alle übrigen Prädiktoren den Wert Null (bzw. Referenzwert) aufweisen*.
 
 
 
@@ -1213,11 +1150,9 @@ In Worten:
 
 
 Wie man in @fig-wetter-interakt sieht, sind die beiden Regressionsgeraden *nicht parallel*.
-
-:::{.callout-note}
 Sind die Regressionsgeraden von zwei (oder mehr) Gruppen nicht parallel,
-so liegt ein Interaktionseffekt vor.$\square$
-:::
+so liegt ein *Interaktionseffekt* vor. $\square$
+
 
 :::{#exm-interakt-precip}
 ### Interaktionseffekt von Niederschlag und Monat
@@ -1225,7 +1160,7 @@ so liegt ein Interaktionseffekt vor.$\square$
 Wie ist die Veränderung der Niederschlagsmenge (Y-Achse) im Verlauf der Jahre (X-Achse)?
 *Das kommt darauf an, welchen Monat man betrachtet*.
 Der Effekt der Zeit ist *unterschiedlich* für die Monate:
-Im Juli nahm der Niederschlag ab, im Januar zu.$\square$
+Im Juli nahm der Niederschlag ab, im Januar zu. $\square$
 :::
 
 Liegt ein Interaktionseffekt vor, 
@@ -1261,13 +1196,13 @@ Sie gibt die Stärke des Interaktionseffekts an.
 Die Zeile zeigt, wie unterschiedlich sich die die Niederschlagsmenge zwischen den beiden Monaten im Verlauf der Jahre ändert: Im Monat `"7"` ist der Effekt von `year_c` um 0.20 mm geringer: Die Regressionsgerade neigt sich mehr nach "unten" im Monat Juli, da der Koeffizient kleiner als Null ist.
 
 Die Regressionsgleichung lautet:
-`precip_pred = 56.91 + 0.13*year_c + 24.37*month_factor_7 - 0.20*year_c:month_factor_7`.
+`precip_pred = 56.91 + 0.13 * year_c + 24.37 * month_factor_7 - 0.20 * year_c:month_factor_7`.
 
 
 :::{.callout-important}
 Der Achsenabschnitt gibt den Wert für Y an unter der Annahme, dass alle Prädiktoren den Wert Null aufweisen. 
 In diesem Fall gibt der Achsenabschnitt also den Niederschlag für den Janur des Jahres 1951 an.
-Die Regressionskoeffizienten geben die Zunahme in Y an, wenn der jeweilige Prädiktorwert um 1 steigt, die übrigen Prädiktoren aber den Wert 0 aufweisen.$\square$
+Die Regressionskoeffizienten geben die Zunahme in Y an, wenn der jeweilige Prädiktorwert um 1 steigt, die übrigen Prädiktoren aber den Wert 0 aufweisen. $\square$
 
 
 :::
@@ -1305,15 +1240,15 @@ Im 3D-Raum wird die Regressionsgerade zu einer *Regressionsebene.*
 
 ![Animation eines Regeressionsmodells mit zwei metrischen UV, x1 und x2; y wird gut von den beiden UV erklärt](img/regression_plane_rotation.gif){#fig-regression-plane-rotation}
 
-#### 3D-Diagramme für Modelle mit zwei Prädiktoren
+<!-- #### 3D-Diagramme für Modelle mit zwei Prädiktoren -->
 
 ```{r}
 #| include: false
 
 df_3d <-
-  tibble(x1 = rnorm(mean = 0, sd = 1, n=  100), 
-         x2 =  rnorm(mean = 0, sd = 1, n=  100), 
-         y = 3 + 2*x1 + x2 + rnorm(mean = 0, sd = 0.1, n = 100) 
+  tibble(x1 = rnorm(mean = 0, sd = 1, n=  100),
+         x2 =  rnorm(mean = 0, sd = 1, n=  100),
+         y = 3 + 2*x1 + x2 + rnorm(mean = 0, sd = 0.1, n = 100)
          )
 
 lm3d <- lm(y ~ x1 + x2, data = df_3d)
@@ -1321,14 +1256,14 @@ lm3d <- lm(y ~ x1 + x2, data = df_3d)
 
 
 
-```{r}
-#| label: Ein interaktives 3D-Diagramm und Regressionsebene
-#| echo: false
-#| eval: !expr knitr::is_html_output()
+<!-- ```{r} -->
+<!-- #| label: Ein interaktives 3D-Diagramm und Regressionsebene -->
+<!-- #| echo: false -->
+<!-- #| eval: !expr knitr::is_html_output() -->
 
-source("children/3d.R")
-scatterplot_3d_with_trace
-```
+<!-- source("children/3d.R") -->
+<!-- scatterplot_3d_with_trace -->
+<!-- ``` -->
 
 #### 2D-Diagramm für 3D-Modell
 
@@ -1400,16 +1335,14 @@ lm_mario_2uv <- lm(total_pr ~ start_pr + ship_pr, data = mariokart %>% filter(to
 
 <!-- , s. auch @fig-mario-2uv. -->
 
-::: {.content-visible when-format="html"}
+::: {.content-visible when-format="html" unless-fromat="epub"}
 
-@fig-mario-2uv-dyn visualisiert das Modell `lm_mario2v` in einem 3D-Diagramm.
 
-```{r fig-mario-2uv}
-#| echo: false
-#| eval: !expr knitr::is_html_output()
-#| label: fig-mario-2uv-dyn
-#| fig-cap: "Das Modell `lm_mario2v` mit 2 metrischen UV (und 1 metrische AV) als 3D-Diagramm"
+<!-- @fig-mario-2uv-dyn visualisiert das Modell `lm_mario2v` in einem 3D-Diagramm. -->
 
+
+```{r}
+#| include: false
 lm_coefs <- coef(lm_mario_2uv)
 
 mariokart_no_extreme <- 
@@ -1421,18 +1354,26 @@ ship_seq <- seq(0, 10, by = 1)
 
 Verkaufspreis <- t(outer(start_seq, ship_seq,
             function(x,y) {lm_coefs[1] + lm_coefs[2]*x + lm_coefs[3]*y}))
-
-plot_ly(x = ~ start_seq,
-        y = ~ ship_seq,
-        z = ~ Verkaufspreis,
-        type = "surface") %>% 
-  add_trace(data = mariokart_no_extreme,
-            x = ~start_pr,
-            y = ~ship_pr,
-            z = ~total_pr,
-            mode = "markers",
-            type = "scatter3d")
 ```
+
+
+<!-- ```{r fig-mario-2uv} -->
+<!-- #| echo: false -->
+<!-- #| eval: !expr knitr::is_html_output() -->
+<!-- #| label: fig-mario-2uv-dyn -->
+<!-- #| fig-cap: "Das Modell `lm_mario2v` mit 2 metrischen UV (und 1 metrische AV) als 3D-Diagramm" -->
+
+<!-- plot_ly(x = ~ start_seq, -->
+<!--         y = ~ ship_seq, -->
+<!--         z = ~ Verkaufspreis, -->
+<!--         type = "surface") %>%  -->
+<!--   add_trace(data = mariokart_no_extreme, -->
+<!--             x = ~start_pr, -->
+<!--             y = ~ship_pr, -->
+<!--             z = ~total_pr, -->
+<!--             mode = "markers", -->
+<!--             type = "scatter3d") -->
+<!-- ``` -->
 
 
 
@@ -1489,7 +1430,7 @@ Hier sind einige Richtlinien, die helfen, welche Prädiktoren (und wie viele) ma
 Ganz können Sie von Business-Welt und ihren Gratifikationen nicht lassen, 
 trotz Ihrer wissenschaftlichen Ambitionen.
 Sie haben den Auftrag bekommen, den Verkaufspreis von Mariokart-Spielen möglichst exakt vorherzusagen. 
-Also gut, das Honorar ist phantastisch, Sie sind jung und brauchen das Geld.$\square$
+Also gut, das Honorar ist phantastisch, Sie sind jung und brauchen das Geld. $\square$
 :::
 
 ### Modell "all-in"
@@ -1593,7 +1534,7 @@ Im Test-Sample werden unsere Vorhersagen also grottenschlecht sein,
 wenn wir uns auf die Titel der Auktionen im Test-Sample stützen.
 Merke: Höchst idiografische Informationen wie Namen, 
 Titel etc. sind nicht nützlich,
-um allgemeine Muster zu erkennen und damit exakte Prognosen zu erstellen.$\square$
+um allgemeine Muster zu erkennen und damit exakte Prognosen zu erstellen. $\square$
 
 
 
@@ -1614,7 +1555,7 @@ Nominalskalierte Prädiktorvariablen mit vielen Ausprägungen, wie `title` sind 
 Kommt eine Ausprägung von `title` im Test-Sample vor,
 die es *nicht* im Train-Sample gab, so resultiert ein Fehler beim `predict`en.
 Häufig ist es sinnvoll, auf diese Variable zu verzichten,
-da diese Variablen oft zu Overfitting führen.$\square$
+da diese Variablen oft zu Overfitting führen. $\square$
 
 
 ### Modell "all-in", ohne Titelspalte
@@ -1740,7 +1681,7 @@ yardstick::rmse(data = mariokart_test,
 ```
 
 
-Ihr mittlerer Vorhersagefehler (RMSE) liegt bei ca. 13 Euro.^[Wir haben hier `yardstick::rmse()` geschrieben und nicht nur `rmse()`, 
+Ihr mittlerer Vorhersagefehler (RMSE) liegt bei ca. 13 Euro. Übrigens haben wir hier `yardstick::rmse()` geschrieben und nicht nur `rmse()`, 
 da es sowohl im Paket `performance` ( Teil des Metapakets `easystats`) als auch im Paket `yardstick` (Teil des Metapakets `tidymodels`) 
 einen Befehl des Namens `rmse()` gibt. Name-Clash-Alarm! 
 R könnte daher den anderen `rmse()`` meinen als Sie, 
@@ -1778,9 +1719,9 @@ knitr::kable()
 
 Wie das Beispiel zeigt, ist die Modellgüte im Test-Sample (leider) oft *geringer* als im Train-Sample. 
 Die Modellgüte im Train-Sample ist mitunter übermäßig optimistisch.
-Dieses Phänomen bezeichnet man als *Overfitting*.$\square$
+Dieses Phänomen bezeichnet man als *Overfitting*. $\square$
 Bevor man Vorhersagen eines Modells einreicht, 
-bietet es sich, die Modellgüte in einem neuen Datensatz, als einem Test-Sample, zu überprüfen.$\square$
+bietet es sich, die Modellgüte in einem neuen Datensatz, als einem Test-Sample, zu überprüfen. $\square$
 
 
 ## Vertiefung: Das Aufteilen Ihrer Daten
@@ -1872,7 +1813,7 @@ aber zusammengehörigen Arten von Stichproben ist in @fig-sample-types dargestel
 ```{mermaid}
 %%| label: fig-sample-types
 %%| fig-cap: Verschiedene Arten von zusammengehörigen Stichprobenarten im Rahmen einer Prognosemodellierung
-%%| fig-width: 4
+%%| fig-height: 2
 
 
 flowchart TD
@@ -1912,7 +1853,7 @@ Das Team ist am Zusammenhang von Schnabellänge (*bill length*)
 und Schnabeltiefe (*bill depth*) interessiert, s. @fig-peng-bill.
 
 
-![Schnabellänge und Schnabeltiefe](https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png){#fig-peng-bill width="50%"}
+![Schnabellänge und Schnabeltiefe; @horst_statistics_2024](https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png){#fig-peng-bill width="50%"}
 
 Das Team hat in ~~schweißtreibender~~ eiszapfentreibender Arbeit $n=344$ Tiere
 vermessen bei antarktischen Temperaturen. Hier sind die Daten:
@@ -1943,7 +1884,7 @@ penguins <- read.csv(penguins_path)
 
 Man untersucht, rechnet und überlegt. Ah! Jetzt haben wir es!
 Klarer Fall: Ein *negativer* Zusammenhang von Schnabellänge und Schnabeltiefe. 
-Das könnte einen Nobelpreis wert sein. Schnell publizieren!
+Das ist bestimmt einen Nobelpreis wert  Schnell publizieren!
 
 ```{r}
 ggscatter(penguins, x = "bill_length_mm", y = "bill_depth_mm", 
@@ -1959,6 +1900,7 @@ lm1 <- lm(bill_depth_mm ~ bill_length_mm, data = penguins)
 ```{r}
 #| echo: false
 #| label: tbl-peng-simpson1
+#| out-width: 75%
 #| tbl-cap: "Koeffizienten des Modells 1: Negativer Effekt von bill_length_mm"
 parameters(lm1) |> print_md()
 ```
@@ -1970,11 +1912,18 @@ parameters(lm1) |> print_md()
 Kurz darauf veröffentlicht eine verfeindete Forscherin auch einen Aufsatz zum gleichen Thema. Gleiche Daten. 
 Aber mit *gegenteiligem* Ergebnis: 
 Bei *jeder Rasse* von (untersuchten) Pinguinen gilt: 
-Es gibt einen *positiven* Zusammenhang von Schnabelllänge und Schnabeltiefe.
+Es gibt einen *positiven* Zusammenhang von Schnabelllänge und Schnabeltiefe, s. @fig-penguins-groups.
 
 ```{r}
+#| fig-cap: "Der Zusammenhang von Schnabelllänge und Schnabeltiefe pro Gruppe von Pinguinen: Die Regressionsgruppe pro Gruppe steigt. Hingegen sinkt die Regressionsgerade ohne Beachtung der Gruppen (schwarze gestrichelte Linie)"
+#| label: fig-penguins-groups
+#| out-width: 75% 
+#| echo: false
 ggscatter(penguins, x = "bill_length_mm", y = "bill_depth_mm", 
-          add = "reg.line", color = "species")
+          add = "reg.line", color = "species") +
+          geom_abline(slope = coef(lm1)[2], 
+          intercept = coef(lm1)[1],
+          linetype = "dashed")
 ```
 
 
@@ -1982,7 +1931,7 @@ Oh nein! Was ist hier nur los? Daten lügen nicht, oder doch?
 
 
 Hier sind die statistischen Details der zweiten Analyse, s. @tbl-peng-simpson2. 
-Im zweiten Modell kam `species` als zweiter Prädiktor 
+Im zweiten Modell (`lm2`) kam `species` als zweiter Prädiktor 
 neu ins Modell (zusätlzich zur Schnabellänge).
 
 ```{r}
@@ -2010,7 +1959,7 @@ je nachdem ob Prädiktoren dem Modell hinzugefügt oder weggenommen werden.
 ### Vorsicht bei der Interpretation von Regressionskoeffizienten
 
 :::{.callout-important}
-Interpretiere nie Modellkoeffizienten kausal ohne ein Kausalmodell.$\square$
+Interpretiere nie Modellkoeffizienten kausal ohne ein Kausalmodell. $\square$
 :::
 
 Nur wenn man die Ursache-Wirkungs-Beziehungen in einem System kennt,
@@ -2036,11 +1985,13 @@ Man weiß also nicht, ob die Modellkoeffizienten belastbar, robust, stichhaltig 
 ```{r}
 #| echo: false
 #| label: fig-confounder
-#| fig-cap: "Fügt man in ein Modell eine Variable hinzu, können sich die Koeffizienten massiv ändern. In beiden Diagrammen wurden die gleichen Daten verwendet."
+#| fig-asp: 0.8
+#| fig-cap: "Fügt man in ein Modell eine Variable hinzu, können sich die Koeffizienten massiv ändern. In beiden Diagrammen wurden die gleichen Daten verwendet. (a): starker positiver Zusammenhang, (b) kein Zusammenhang in beiden Gruppen"
 #| layout: [[45,-10, 45], [100]]
+#| out-width: 100%
 #| fig-subcap: 
-#|   - "Modell: `y ~ x`, starker Zusammenhang; b1 ist stark positiv"
-#|   - "Modell: `y ~ x + g`, in jeder der beiden Gruppen ist der Zusammenhang praktisch Null, b1 = 0"
+#|   - "Modell: `y ~ x`, starker positiver Zusammenhang"
+#|   - "Modell: `y ~ x + g`, kein Zusammenhang in beiden Gruppe"
 
 n <- 100
 
@@ -2066,7 +2017,8 @@ d_sim %>%
   geom_smooth(method = "lm") +
   labs(title = "Oh yeah, super Korrelation!") +
   theme_minimal() +
-  theme(plot.title = element_text(size = 16))
+  theme(plot.title = element_text(size = 12)) +
+  theme_large_text()
 
 p_super_korr
 
@@ -2076,14 +2028,15 @@ d_sim %>%
   ggplot(aes(x = x, y = y, color = group)) +
   geom_point() +
   geom_smooth(method = "lm") +
-  labs(title = "Oh nein, in beiden Gruppen keine Korrelation!") +
+  labs(title = "Oh nein, keine Korrelation!") +
   theme(legend.position = "bottom") +
   theme_minimal() +
   scale_color_okabeito() +
   theme(
     legend.position = c(0.97, 0.05),  # Adjust these values to position the legend
     legend.justification = c(1, 0)) +
-  theme(plot.title = element_text(size = 16))
+  theme(plot.title = element_text(size = 12)) +
+  theme_large_text()
 ```
 
 
@@ -2110,10 +2063,7 @@ als dass ein gutes Modell im Train-Sample nicht (notwendig) zu guten Vorhersagen
 
 
 
-
-:::{.callout-important}
-Wenn Sie dran bleiben an der Statistik, wird der Erfolg sich einstellen, s. @fig-dranbleiben. $\square$
-:::
+Wenn Sie dran bleiben an der Statistik, wird der Erfolg sich einstellen, s. @fig-dranbleiben. 
 
 
 :::{#fig-dranbleiben layout-ncol=2}
@@ -2137,6 +2087,7 @@ beispielhalft zwei ausführlichere Entwicklungen eines Prognosemodells.
 Nutzen Sie diese Fallstudien, um sich intensiver mit der Entwicklung eines Prognosemodells auseinander zu setzen.
 
 ### New Yorker Flugverspätungen 2023
+
 
 
 {{< video https://youtu.be/4hM6Z-yrduw >}}

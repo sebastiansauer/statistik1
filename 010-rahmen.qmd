@@ -75,7 +75,7 @@ ggplot2::theme_set(theme_minimal())
 - Sie können Beispiele für verschiedene Skalenniveaus nennen.
 
 
-::::: {.content-visible when-format="html"}
+::::: {.content-visible when-format="html" unless-format="epub"}
 
 ### Einstieg
 
@@ -91,7 +91,7 @@ Stellen Sie sich anhand der Schlagworte einander vor:
 3. Vorkenntnisse in Statistik (und in R)
 
 
-Wenn Sie wollen, fügen Sie einen *Fun Fact* hinzu.$\square$
+Wenn Sie wollen, fügen Sie einen *Fun Fact* hinzu. $\square$
 ::::
 
 
@@ -173,7 +173,7 @@ hier ist eine, s. @def-statistik.
 
 :::{#def-statistik}
 ### Statistik
-Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entnehmen und beschreibt die Ungewissheit unserer Schlüsse [@poldrack_statistical_2023; @kaplan_statistical_2009] .$\square$
+Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entnehmen und beschreibt die Ungewissheit unserer Schlüsse [@poldrack_statistical_2023; @kaplan_statistical_2009] . $\square$
 :::
 
 
@@ -182,10 +182,7 @@ Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entneh
 
 
 
-Betrachten wir die zwei Bestimmungsstücke einer Definition von Statistik genauer:
-
-1. Daten zusammenfassen
-2. Ungewissheit beschreiben
+Betrachten wir die zwei Bestimmungsstücke einer Definition von Statistik genauer: 1. Daten zusammenfassen, 2. Ungewissheit beschreiben.
 
 
 ### Daten zusammenfassen
@@ -198,12 +195,12 @@ Eine einzelne Zahl ist wesentlich besser zu verstehen als eine große Menge von 
 ```{r}
 #| echo: false
 #| label: fig-zsmnfassen
-#| fig-cap: "Daten zusammenfassen"
+#| fig-cap: "Daten zusammenfassen. (a) Zusammenfassen einer Variable zu einem Punktwert, hier zum Mittelwert. (b) Zusammenfassen zweier Variablen zu einer Geraden."
 #| layout: [[45,-10, 45], [100]]
 #| out-width: "100%"
 #| fig-subcap: 
-#|   - "Zusammenfassen einer Variable zu einem Punktwert, hier zum Mittelwert"
-#|   - "Zusammenfassen zweier Variablen zu einer Geraden"
+#|   - "Zusammengefasst zu einem Punkt"
+#|   - "Zusammengefasst zu einer Geraden"
 
 
 d <- 
@@ -222,7 +219,8 @@ d |>
   labs(caption = "MW: Mittelwert") +
   theme_modern()  +
   theme(strip.text = element_text(size = 16)) +
-  theme(plot.caption = element_text(size = 16))
+  theme(plot.caption = element_text(size = 16))+
+  theme_large_text()
 
 
 
@@ -231,7 +229,8 @@ d |>
   ggplot(aes(x = x, y = y)) +
   geom_point2() +
   geom_smooth(method = "lm", color = modelcol) +
-  theme_modern()
+  theme_modern() +
+  theme_large_text()
 ```
 
 
@@ -256,7 +255,7 @@ Betrachten wir dazu das Beispiel in s. @fig-groesse.
 #| label: fig-groesse
 #| fig-cap: "Wenig Variation in der Körpergröße bei den Basketballern. Alles lange Kerle. Viel Variation bei den Schachspielern: Manche sind klein, ander groß."
 #| dev: "ragg_png"
-#| out-width: "100%"
+#| out-width: "75%"
 
 groesse <- 
   tibble::tribble(
@@ -299,7 +298,8 @@ groesse %>%
        x = "Spielernummer") +
   geom_label(data = distinct(groesse, team, .keep_all = TRUE), 
             aes(label = label, x = 3, y = 50), 
-            size = 5, vjust = 0) +
+            size = labeltextsize-4, 
+            vjust = 0) +
   theme(strip.text = element_text(size = 16)) +
   theme_modern()  +
   theme(plot.caption = element_text(size = 16)) +
@@ -307,12 +307,12 @@ groesse %>%
   geom_label(x = 5.5, label = "MW",
             aes(y = groesse_mw),
             hjust = "left",
-            size = 3)  +
+            size = labeltextsize-4)  +
   geom_segment(aes(x = id, xend = id, y = groesse, yend = groesse_mw, color = Vorzeichen)) +
   geom_point(aes(x = id, y = groesse), color = "grey60", alpha = .7, size = 2) +
   scale_x_continuous(limits = c(0, 7), breaks = 1:5) +
   scale_color_okabeito() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "none")
 ```
 
 
@@ -371,9 +371,7 @@ dann können wir knapp und präzise das Residuum der $i$-ten Person mit $r_i$ be
 :::{#def-residuum}
 ### Residuum
 Das Residuum des Merkmals $X$ der $i$-ten Beobachtung ist definiert als 
-die Differenz vom Wert $x_i$ und einem Referenzwert, etwa dem Mittelwert, $\bar{x}$:
-
-$r_i = x_i - \bar{x}$. $\square$
+die Differenz vom Wert $x_i$ und einem Referenzwert, etwa dem Mittelwert ($\bar{x}$), d.h.: $r_i = x_i - \bar{x}.\square$
 :::
 
 
@@ -506,7 +504,7 @@ Die Ergebnisse unterstützen Ihre Hypothese, s. @fig-braindrain.
 Im Diagramm ist ersichtlich, 
 dass die kognitive Leistung (Y-Achse) sowohl in der Kapazität des Arbeitsgedächtnisses (links) 
 als auch in der fluiden Intelligenz (rechts) am geringsten ist, wenn das Handy auf dem Schreibtisch (Desk) liegt. 
-Am besten ist die kognitive Leistung, wenn das Handy nicht im Raum ist.$\square$
+Am besten ist die kognitive Leistung, wenn das Handy nicht im Raum ist. $\square$
 
 
 
@@ -584,7 +582,7 @@ graph LR
 
 :::{#def-daten}
 ### Daten
-Daten kann man als eine geordnete Folge von Zeichen definieren.$\square$
+Daten kann man als eine geordnete Folge von Zeichen definieren. $\square$
 :::
 
 
@@ -610,7 +608,7 @@ d <-
           3, "Carla", 3)
 
 d |> 
-  gt::gt()
+  knitr::kable()
 ```
 
 
@@ -661,7 +659,7 @@ Eine Erklärung (Data-Dictionary) aller Variablen des Datensatzes `mariokart` fi
 ### Data-Dictionary
 
 Eine Erklärung, was die Namen einer Datentabelle bedeuten,
-nennt man *Codebook* or *Data-Dictionary*.$\square$
+nennt man *Codebook* or *Data-Dictionary*. $\square$
 
 :::
 
@@ -672,7 +670,7 @@ nennt man *Codebook* or *Data-Dictionary*.$\square$
 :::{#def-var}
 ### Variable
 Eine Variable ist ein Platzhalter, der für ein Merkmal steht, 
-das verschiedene Werte annehmen kann.$\square$
+das verschiedene Werte annehmen kann. $\square$
 :::
 
 
@@ -681,7 +679,7 @@ auf dem mit einem Stift geschrieben steht, was für eine Art Inhalt darin ist,
 s. @fig-var-zuweisen.
 
 
-![Wir definieren eine Variable "temp" mit dem Inhalt "9"](img/Variablen_zuweisen.png){#fig-var-zuweisen width="25%"}
+![Wir definieren eine Variable "temp" mit dem Inhalt "9".](img/Variablen_zuweisen.png){#fig-var-zuweisen width="25%"}
 
 
 
@@ -693,7 +691,7 @@ s. @fig-var-zuweisen.
 ### Beobachtungseinheit
 
 Beobachtungseinheiten sind die Dinge, die wir untersuchen (beobachten).
-Beobachtungseinheiten sind die Träger von Variablen.$\square$
+Beobachtungseinheiten sind die Träger von Variablen. $\square$
 :::
 
 
@@ -705,7 +703,7 @@ Es gibt auch drei Beobachtungseinheiten: *Anna*, *Berta* und *Carla.*
 
 :::{#def-wert}
 ### Wert
-Ein *Wert* ist der Inhalt einer Variablen.$\square$
+Ein *Wert* ist der Inhalt einer Variablen. $\square$
 :::
 
 
@@ -731,7 +729,7 @@ geschlecht
 ```
 
 In dieser Variable (die aus 10 Werten besteht) finden sich drei Ausprägungen:
-divers, Frau, Mann.$\square$
+divers, Frau, Mann. $\square$
 
 :::
 
@@ -766,10 +764,8 @@ in der die Namen der Variablen stehen.)$\square$
 
 
 
-:::callout-important
-Für eine statistische Analyse ist es oft sinnvoll, dass die Daten im Tidy-Format vorliegen.
-:::
 
+Für eine statistische Analyse ist es oft sinnvoll, dass die Daten im Tidy-Format vorliegen.
 Der Vorteil des Tidy-Formats ist es, 
 dass man weiß, wie die Daten aufgebaut sind. 
 Außerdem können Statistikprogramme oft mit dieser Form am besten umgehen, s. @fig-tidy3.
@@ -860,7 +856,7 @@ Suchen Sie ein Beispiel für eine Konfiguration einer Tabelle im Long- vs. Wide-
 #| echo: false
 #| label: fig-tidy
 #| fig-asp: 0.5
-#| out-width: "100%"
+#| out-width: "75%"
 #| fig-cap: "Beispiel für eine Visualisierung auf Basis einer Tidy-Tabelle,  vgl. @tbl-tidy1"
 
 last_points <- d_long %>%
@@ -903,7 +899,7 @@ wie viel Ihre Nebensitzerinner und Nebensitzer im Hörsaal so lernen.
 Sie blicken nach links und fragen "wie viel lernst du so?".
 Sie blicken nach recht und wiederholen die Frage gerichtet an den Kommilitonen, der rechts neben Ihnen sitzt.
 Dann addieren Sie die zwei Zahlen (unter der Annahme, dass Sie zwei Zahlen bekommen haben),
-und teilen durch zwei, um den Mittelwert zu erhalten.$\square$
+und teilen durch zwei, um den Mittelwert zu erhalten. $\square$
 :::
 
 
@@ -1046,8 +1042,7 @@ Angenommen, Ihre Forschungsfrage lautet:
 
 In dem Fall gilt:
 
-- *Lernen* ist die Input-Variable, X-Variable, Ursache, unabhängig Variable (UV)
-- *Prüfungserfolg*  ist die Output-Variable, Y-Variable, Wirkung, abhängige Variable (AV)
+*Lernen* ist die Input-Variable, X-Variable, Ursache, unabhängig Variable (UV). *Prüfungserfolg*  ist die Output-Variable, Y-Variable, Wirkung, abhängige Variable (AV)
 
 @fig-ueberblick-fragen stellt diese beiden "Positionen" einer Variable dar. Die erste Position ist vor dem Pfeil.
 Die zweite Position ist nach dem Pfeil.
@@ -1055,7 +1050,7 @@ Die zweite Position ist nach dem Pfeil.
 ```{mermaid}
 %%| fig-cap: X und Y als synonyme Bezeichnungen für Input- und Output-Variablen einer Forschungsfrage
 %%| label: fig-ueberblick-fragen
-%%| fig-width: 4
+%%| fig-height: 0.5
 
 
 graph LR
@@ -1303,11 +1298,12 @@ ist das das Bilden von Verhältnissen -- Multiplizieren, s. @fig-verhaeltnis.
 #| fig-cap: "Puh! Der rote Flitzer ist 10 Mal so teuer wie die blaue Möhre. Kohlen zusammenkratzen."
 tibble(Preis = c(1e4, 1e5),
        id = c(1, 2),
-       Auto = c("🚙", "🏎️")  ) %>% 
+       Auto = c("🚙", "🏎️"  )) %>% 
   ggplot(aes(y = Preis, x = id)) +
   geom_col() +
   scale_x_discrete() +
-  geom_bar_text()+
+  #geom_bar() +
+  # geom_bar_text()+
   #geom_label(aes(x = id, y = Preis, label = Preis)) +
   scale_y_continuous(labels = scales::dollar_format(),
                      limits = c(-5000, 110000),
@@ -1356,7 +1352,7 @@ Fragen nach Skalenniveaus gehören zu den Lieblingsprüfungsfragen in diesem The
 
 
 :::{#exr-skalenniveaus}
-Überlegen Sie sich für einige Variablen die Skalenniveaus und befragen Sie dann eine:n Kommilitonen dazu. $\square$
+Überlegen Sie sich für einige Variablen die Skalenniveaus und befragen Sie dann interessierte Mitmenschen dazu. $\square$
 :::
 
 ## Modelle
@@ -1368,34 +1364,37 @@ Vielleicht an Spielzeugautos, s. @fig-matchbox.
 ![Matchbox-Autos sind Modelle für Autos, @spurzem2017](img/matchbox.jpg){#fig-matchbox width="25%"}
 
 :::{#def-modelle}
-
 ### Modelle
-
-Modelle sind ein vereinfachtes Abbild der Realität, eine *Repräsentation* [@kaplan_statistical_2009].$\square$
-
+Modelle sind ein vereinfachtes Abbild der Realität, eine *Repräsentation* [@kaplan_statistical_2009]. $\square$
 :::
 
 
 :::{#exm-Modelle}
-
 ## Beispiele für Modelle
 Puppen sind Modelle für Babies, Landkarten für Landstriche und das Atommodell von Nils Bohrist ein Modell für Atome. $\square$
-
 :::
 
 Auch in der Statistik nutzen wir Modelle.
-Helfen Sie Prof. Weiss-Ois: Er blickt nicht durch, s. @fig-prof.
+Helfen Sie Prof. Weiss-Ois: Er blickt nicht durch, s. @fig-prof-mw.
 Gerne würde er wissen, wie viele Stunden seine Studentis auf die Prüfung lernen. 
 Aber mit so vielen Zahlen kann er nicht umgehen ...
 Geben Sie ihm ein Modell: Sagen Sie ihm, wie lang die Studis typischerweise lernen (sagen Sie ihm ein einfach den *Mittelwert* der Lernzeiten, 9.6 Stunden).
 
 
-:::{#fig-prof layout="[10,-2,10]"}
+:::{#fig-prof-mw}
+
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Vorher: 12, 8, 10, 11, 10, 9, 13, 9, 14, 9, 12, 14, 7, 9, 9, 11, 9, 4, 5, 12, 9, 6, 9, 12, 13, 9, 9, 6, 10... Oh je, so viele Zahlen! Ich check nix! Wie viel lernen denn jetzt meine Studis?!
 
 
-![Vorher: </br> 12, 8, 10, 11, 10, 9, 13, 9, 14, 9, 12, 14, 7, 9, 9, 11, 9, 4, 5, 12, 9, 6, 9, 12, 13, 9, 9, 6, 10... Oh je, so viele Zahlen! Ich check nix! Wie viel lernen denn jetzt meine Studis?! [@flaticon_professor_2024]](img/teacher.png){width="25%"}
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Ah, 9.6 Stunden! Yeah, jetzt weiß ich, wie viel die Studis so typischerweise lernen. Viel zu wenig natürlich!
 
-![Nachher: </br> Ah, 9.6 Stunden! Yeah, jetzt weiß ich, wie viel die Studis so typischerweise lernen. Viel zu wenig natürlich! [@flaticon_professor_2024]](img/teacher.png){width="25%"}
+
+<!-- :::{#fig-prof layout="[10,-2,10]"} -->
+
+
+<!-- ![Vorher: </br> 12, 8, 10, 11, 10, 9, 13, 9, 14, 9, 12, 14, 7, 9, 9, 11, 9, 4, 5, 12, 9, 6, 9, 12, 13, 9, 9, 6, 10... Oh je, so viele Zahlen! Ich check nix! Wie viel lernen denn jetzt meine Studis?! [@flaticon_professor_2024]](img/teacher.png){width="25%"} -->
+
+<!-- ![Nachher: </br> Ah, 9.6 Stunden! Yeah, jetzt weiß ich, wie viel die Studis so typischerweise lernen. Viel zu wenig natürlich! [@flaticon_professor_2024]](img/teacher.png){width="25%"} -->
 
 Prof. I. Ch. Weiss-Ois hat den Mittelwert verstanden.
 

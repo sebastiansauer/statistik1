@@ -159,13 +159,13 @@ Ihre Antwort lautet also:
 "Im Schnitt haben die Studis bei der letzten Klausur ungefähr `r mean(noten2$y)`  der Punkte erzielt. 
 Diesen Wert kannst du erwarten. 
 Solange ich keine genaueren Infos habe, 
-z.B. wieviel du gelernt hast, kann ich dir keine genauere Vorhersage machen, sorry!"$\square$
+z.B. wieviel du gelernt hast, kann ich dir keine genauere Vorhersage machen, sorry!" $\square$
 :::::
 
 
 Ohne Kenntnis eines Prädiktors (UV) (wie z.B. Lernzeit) 
 ist der Mittelwert ein geeigneter Vorhersagewert für jede Beobachtung, s. @fig-noten3.
-Wir nutzen den Mittelwert als Punktmodell für den Klausurerfolg.$\square$
+Wir nutzen den Mittelwert als Punktmodell für den Klausurerfolg. $\square$
 
 
 ```{r p-punktmodell}
@@ -179,7 +179,7 @@ ggplot(noten2) +
   geom_point() +
   geom_hline(yintercept = mean(noten2$y), color = modelcol) +
   annotate("label", x = -Inf, y = mean(noten2$y), 
-           label = paste0("MW: ", round(mean(noten2$y))), hjust = "left") +
+           label = paste0("MW: ", round(mean(noten2$y))), hjust = 0) +
   theme_minimal()
 ```
 
@@ -245,7 +245,7 @@ toni_punkte <- predict(lm1, newdata = data.frame(x=42))
 Auf dieser Basis antworten Sie Toni: 
 "Bei 42 Stunden Lernzeit solltest du so `r round(toni_punkte, 0)` Punkte bekommen. 
 Könnte mit dem Bestehen eng werden."
-Toni ist nicht begeistert von Ihrer Prognose und zieht von dannen.$\square$
+Toni ist nicht begeistert von Ihrer Prognose und zieht von dannen. $\square$
 :::
 
 
@@ -256,11 +256,11 @@ Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einz
 ```{r fig-noten}
 #| label: fig-noten4
 #| echo: false
-#| fig-cap: "Noten und Lernzeit: Rohdaten und Modell"
+#| fig-cap: "Noten und Lernzeit: Rohdaten (a) und mit Modell (b). Mittelwerte sind mit gestrichelten Linien eingezeichnet. Tonis Vorhersage ist mit einem Punkt gekennzeichnet."
 #| layout-ncol: 2
 #| fig-subcap: 
-#|   - "Gemeinsame Verteilung (Zusammenhang) von Lernzeit (X) und Noten (Y)"
-#|   - "Eine 'Trendgerade' (blau) im Datensatz `noten2`. Mittelwerte sind mit gestrichelten Linien eingezeichnet. Tonis Vorhersage ist mit einem Punkt gekennzeichnet."
+#|   - "Streudiagramm"
+#|   - "Streudigramm mit 'Trendgerade' (blau)"
 
 #noten2 <- read.csv(noten2, "data/noten2.csv")
 
@@ -271,7 +271,8 @@ ggplot(noten2) +
   geom_point() +
   labs(x = "Lernzeit",
        y = "Klausurpunkte") +
-  theme_minimal()
+  theme_minimal() +
+  theme_large_text()
 
 noten2 %>% 
   ggplot(aes(x, y)) +
@@ -288,7 +289,8 @@ noten2 %>%
            alpha = .7, size = 7) +
   scale_x_continuous(breaks = c(40, 42, 60, 80, 100)) +
   labs(x = "Lernzeit",
-       y = "Klausurpunkte")
+       y = "Klausurpunkte") +
+  theme_large_text()
 ```
 
 Eine Gerade eignet sich, um einen linearen Trend zusammenzufassen.
@@ -383,8 +385,10 @@ Wert für ${y}$ handelt, nicht das tatsächliche (empirische, beobachtete) ${y}$
 ### Das einfache lineare Modell
 
 Das einfache lineare Modell nimmt den Wert einer abhängigen metrischen Variablen, \color{ycol}{y},
-als lineare Funktion von unabhängigen Variablen, \color{xcol}{x}, an, plus einem Fehlerterm, \color{errorcol}{e} bzw. \color{errorcol}{\epsilon}, s. @eq-linear-model.$\square$
+als lineare Funktion von unabhängigen Variablen, \color{xcol}{x}, an, plus einem Fehlerterm, \color{errorcol}{e} bzw. \color{errorcol}{$\epsilon$}, s. @eq-linear-model. $\square$
 :::
+
+
 
 
 $$\begin{aligned}
@@ -410,12 +414,6 @@ Mit:
 <!-- epub -->
 
 
-:::{.callout-important}
-
-### Das einfache lineare Modell
-Das einfache lineare Modell nimmt den Wert einer [abhängigen metrischen Variablen, y]{.orange} 
-als lineare Funktion von [unabhängigen Variablen, x]{.lightblue} an, plus einem [Fehlerterm, e]{.green}. $\square$
-:::
 
 
 $$\begin{aligned}
@@ -529,12 +527,13 @@ Zweitens, wie viele Punkte bekomme ich pro gelernte Stunde? Ist immerhin meine L
 
 
 Schnell skizzieren Sie dazu ein Diagramm, s. @fig-beta0.
-Puh, die Antwort wird Toni nicht gefallen ...$\square$
+Puh, die Antwort wird Toni nicht gefallen ... $\square$
 :::
 
 ```{r fig-beta0}
 #| echo: false
 #| label: fig-beta0
+#| out-width: 75%
 #| fig-cap: "Der Achsenabschnitt: Wie viele Punkt kann Toni erwarten bei 0 Lernstunden? (roter Punkt bei x=0)"
 
 lm1 <- lm(y ~ x, data = noten2)
@@ -586,7 +585,7 @@ predict(lm1, newdata = tonis_lernzeit)
 ### Spezifikation eines Geradenmodells
 
 
-Ein Geradenmodell kann man im einfachsten Fall so spezifizieren, s. @eq-mod1 :
+Ein Geradenmodell kann man im einfachsten Fall so spezifizieren, s. @eq-mod1:
 
 
 ::: {.content-visible unless-format="epub"}
@@ -643,7 +642,7 @@ R gibt Ihnen die beiden Koeffizienten für die Gerade aus.
 Den Namen des Objekts können Sie frei aussuchen, z.B. `mein_erstes_lm`.
 
 Die Regressionsgleichung lautet demnach:
-`y_pred = 8.6 + 0.88*x`
+`y_pred = 8.6 + 0.88*x`.
 
 
 ::: {.content-visible unless-format="epub"}
@@ -709,9 +708,8 @@ Die Syntax von `predict` lautet:
 predict(name_des_objekts, newdata = tabelle_mit_prädiktorwerten)
 ```
 
-:::{.callout-note}
-Mit `predict` bekommt man eine Vorhersage; im Standard eine "Punkt-Vorhersage", eine einzelne Zahl.$\square$
-:::
+Die Funktion `predict` liefert eine Vorhersage für eine Vorhersage.
+
 
 
 ### Vorhersagefehler
@@ -751,20 +749,21 @@ noten2 %>%
   geom_point(color = ycol) +
   geom_abline(slope = coef(lm1)[2], intercept = coef(lm1)[1], color = modelcol, size = 1.5) +
   theme_minimal() +
-  geom_segment(aes(xend = x, yend = yhat), color = errorcol)
+  geom_segment(aes(xend = x, yend = yhat), color = errorcol) +
+theme_large_text()
 
 noten2 %>% 
   ggplot(aes(x, y)) +
   geom_point(color = ycol) +
   geom_hline(yintercept = mean(noten2$y), color = modelcol, size = 1.5) +
   theme_minimal() +
-  geom_segment(aes(xend = x, yend = mean(noten2$y)), color = errorcol)
+  geom_segment(aes(xend = x, yend = mean(noten2$y)), color = errorcol)  +
+theme_large_text()
 
 ```
 
 
 Wie ist es mit den Vorhersagefehlern von beiden Modellen bestellt?
-
 Lassen wir uns von R die Streuung (Residuen) 
 in Form der mittleren Absolutabweichung (MAE) ausgeben (aus dem Paket `easystats`):
 
@@ -784,13 +783,13 @@ verhaeltnis_fehler_mae
 
 
 Ah! Das Geradenmodell ist viel besser:
-Von `lm0` zu `lm1` haben die mittlere (Absolut-)Länge des Fehlerbalkens auf `r round(verhaeltnis_fehler_mae, 2)*100` Prozent verbessert.
+Von `lm0` zu `lm1` haben die mittlere Absolutlänge des Fehlerbalkens auf `r round(verhaeltnis_fehler_mae, 2)*100` Prozent verbessert.
 Nicht schlecht!
 
 
 :::{#def-fehlerstreung}
 ### Fehlerstreuung
-Als Fehlerstreuung bezeichnen wir die Gesamtheit der Abweichungen der beobachteten Werte ($y_i$) vom vorhergesagten Wert ($\hat{y}_i$).$\square$
+Als Fehlerstreuung bezeichnen wir die Gesamtheit der Abweichungen der beobachteten Werte ($y_i$) vom vorhergesagten Wert ($\hat{y}_i$). $\square$
 :::
 
 Zur Berechnung der Fehlerstreuung gibt es mehrere Kenngrößen 
@@ -799,7 +798,7 @@ wie MAE oder MSE.
 
 :::{.callout-note}
 Ein Geradenmodell ist immer besser als ein Punktmodell (im Hinblick auf die Verringerung der Fehlerstreuung), 
-solange X mit Y korreliert ist.$\square$
+solange X mit Y korreliert ist. $\square$
 :::
 
 
@@ -886,7 +885,7 @@ Eine schöne Darstellung dazu findet sich bei @kaplan_statistical_2009.
 
 ## R-Quadrat als Maß der Modellgüte
 
-Anders gesagt, wir haben uns um $1 - `r round(verhaeltnis_fehler_mse, 2)`$ verbessert:
+Anders gesagt, wir haben uns ( (bzw. das Modell hat sich) um $1 - `r round(verhaeltnis_fehler_mse, 2)`$ verbessert.
 
 ```{r}
 1 - verhaeltnis_fehler_mse
@@ -932,10 +931,10 @@ vgl. @fig-r2-extreme.
 
 ```{r}
 #| echo: false
-#| fig-cap: "Extremfälle von R-Quadrat: 0 und 1"
+#| fig-cap: "Extremfälle von R-Quadrat: 0 und 1. (a) Keine Korrelation, r = 0 und R2 = 0. Prognose durch Mittelwert; die Regressionsgerade ist (ungefähr) parallel zur X-Achse. (b) Perfekte Korrelation, r = 1 und $R2$ = 1: Die Prognose ist gleich dem beobachtetem Wert."
 #| fig-subcap:
-#|   - "Keine Korrelation, r = 0 und R2 = 0. Prognose durch Mittelwert; die Regressionsgerade ist (ungefähr) parallel zur X-Achse"
-#|   - "Perfekte Korrelation, r = 1 und R2 = 1. Prognose gleich beobachtetem Wert"
+#|   - "Keine Korrelation"
+#|   - "Perfekte Korrelation"
 #| label: fig-r2-extreme
 #| layout: [[45,-10, 45], [100]]
 
@@ -948,7 +947,8 @@ d0 %>%
   ggplot(aes(x,y)) + 
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, color = modelcol) +
-  theme_modern()
+  theme_modern() + 
+theme_large_text()
 
 
 d_r1 =
@@ -959,23 +959,20 @@ d_r1 %>%
   ggplot(aes(x,y)) + 
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, color = modelcol) +
-  theme_modern()
+  theme_modern() + 
+theme_large_text()
 ```
 
 Bei einer perfekten Korrelation $R^2=1$ liegen die Punkte auf der Geraden.
 Im gegenteiligen Extremfall von $R^2=0$ ist die Vorhersage genauso gut, 
 wie wenn man für jedes $y$ den Mittelwert, [$\color{ycol}{\bar{y}}$]{.content-visible unless-format="epub"}
 [${\bar{y}}$]{.content-visible when-format="epub"}, vorhersagen würde. 
-
-
-
-:::{.callout-note}
 Je größer R-Quadrat, desto besser passt das Modell zu den Daten; desto besser "erklärt" das Modell die Daten 
 (desto besser der "Fit", sagt man).
-:::
 
+::: {.content-visible when-format="html"}
 [Diese App der FOM-Hochschule](https://fomshinyapps.shinyapps.io/Variationszerlegung/) erlaubt es Ihnen mit der Größe der Residuen eines linearen Modells zu spielen.
-
+:::
 
 
 
@@ -1032,7 +1029,7 @@ so dass der Achsenabschnitt dann wenig nützt.
 
 :::{#exm-groesse}
 ### Regression Größe und Gewicht
-Nutzt man Körpergröße und das Gewicht von Menschen vorherzusagen, ist der Achsenabschnitt von Körpergröße wenig nützlich, da es keine Menschen gibt der Größe 0.$\square$
+Nutzt man Körpergröße und das Gewicht von Menschen vorherzusagen, ist der Achsenabschnitt von Körpergröße wenig nützlich, da es keine Menschen gibt der Größe 0. $\square$
 :::
 
 
@@ -1043,15 +1040,15 @@ Nutzt man Körpergröße und das Gewicht von Menschen vorherzusagen, ist der Ach
 lm1_b1 <- coef(lm1)[2] %>% round(2)
 ```
 
-
-"Im Modell `lm1` beträgt der Regressionskoeffizient `beta1` $`r lm1_b1`$. Zwei Studenti, deren Lernzeit sich um eine Stunde unterscheidet, unterscheiden sich *laut Modell* um den Wert von beta1."
+So interpretiert man die Geradensteigung, $\beta_1$:
+"Im Modell `lm1` beträgt der Regressionskoeffizient $\beta1 = `r lm1_b1`$. Zwei Studentinnen, deren Lernzeit sich um eine Stunde unterscheidet, unterscheiden sich *laut Modell* um den Wert von $\beta_1$"
 
 :::{.callout-caution}
 Häufig liest man, der "Effekt des Prädiktors" auf die AV betrage z.B. $`r lm1_b1`$. "Effekt" ist aber ein Wort, 
-dass man kausal verstehen kann.
+das man kausal verstehen kann.
 Ohne weitere Absicherung kann man aber Regressionskoeffizienten nicht kausal verstehen. 
 Daher sollte man das Wort "Effekt" mit Vorsicht genießen. 
-Manche sprechen daher auch von einem "statistischen Effekt".$\square$.
+Manche sprechen daher auch von einem "statistischen Effekt". $\square$
 :::
 
 
@@ -1083,7 +1080,8 @@ d |>
   ggplot(aes(x = r, y = r2)) +
   geom_line() +
   theme_modern() +
-  labs(y = "R-Quadrat")
+  labs(y = "R-Quadrat") + 
+  theme_large_text()
 ```
 
 
@@ -1155,7 +1153,6 @@ der wahre Wert in der Population ist unbekannt.
 Wir kennen schließlich nur eine Stichprobe der Größe $n=143$.)
 
 Die Regressionsgleichung von `lm3` lautet demnach:
-
 `total_pr_pred = 36.25 + 4.34*ship_pr`.
 
 In Worten: 
@@ -1165,21 +1162,16 @@ In Worten:
 
 ### Vertiefung
 
-Man kann sich die erwarteten Werte ("expectations") des Verkaufspreises in Abhängigkeit vom Wert der UV (`ship_pr`) auch schätzen ("to estimate") lassen, und zwar so:
+Man kann sich die erwarteten Werte ("expectations") des Verkaufspreises in Abhängigkeit vom Wert der UV (`ship_pr`) auch schätzen ("to estimate") lassen, und zwar so mit `estimate_expectation(lm3)`, s. @tbl-lm3-expect.
 
-
-
-```{r}
-#| eval: false
-estimate_expectation(lm3) %>%  # aus dem Paket 'easystats'
-  head()  # nur die ersten paar vorhergesagten Werte
-```
 
 
 
 
 ```{r}
 #| echo: false
+#| label: tbl-lm3-expect
+#| tbl-cap: "Die vorhergesagten (predicted) Werte und die Abweichungen vom vorhergesagten Wert (Residuals)"
 estimate_expectation(lm3) %>% head() |> print_md()  # nur die ersten paar vorhergesagten Werte
 ```
 
@@ -1311,7 +1303,7 @@ Ignorieren Sie einfach diese Aufgaben.
 @gelman_regression_2021 liefert eine deutlich umfassendere Einführung 
 in die Regressionsanalyse als dieses Kapitel es tut.
 Eine moderne, R-orientierte Einführung in Statistik inklusive der Regressionsanalyse findet sich bei @cetinkaya-rundel_introduction_2021.
-Ein Klassiker mit viel Aha-Potenzial ist @cohen_applied_2003
+Ein Klassiker mit viel Aha-Potenzial ist @cohen_applied_2003.
 
 
 

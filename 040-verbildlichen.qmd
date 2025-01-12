@@ -89,7 +89,7 @@ Sie finden den R-Code für jedes Kapitel [hier](https://github.com/sebastiansaue
 :::
 
 
-::::: {.content-visible when-format="html"}
+::::: {.content-visible when-format="html" unless-format="epub"}
 
 ### Quiz zum Einstieg
 
@@ -128,7 +128,7 @@ plot(qr)
 
 ::: {.content-visible when-format="html"}
 
-![Große Aufgaben warten ... [@imgflip_imageflip_2024]](img/kermit-curse.gif){width=50%}
+![Große Aufgaben warten ... [@imgflip_kermit]](img/kermit-curse.gif){width=50%}
 
 :::
 
@@ -147,7 +147,7 @@ Schon richtig, aber ein Dinosaurier sagt auch mehr als 1000 Worte,
 s. @fig-dino1 [@fitzmaurice_same_2017].
 In @fig-dino1 sieht man verschiedene "Bilder", also Datensätze: etwa einen Dino und einmal einen Kreis.
 Obwohl die Bilder grundverschiedene sind, sind die zentralen statistischen Kennwerte (praktisch) identisch.
-In die gleiche Bresche schlägt "Anscombes Quartett" [@Anscombe_1973], s. @fig-dino2:
+In die gleiche Bresche schlägt "Anscombes Quartett" [@Anscombe_1973].
 Es zeigt vier Datensätze, in denen die zentralen Statistiken fast identisch sind,    
 also Mittelwerte, Streuungen, Korrelationen.
 Aber die Streudiagramme sind grundverschieden.
@@ -159,6 +159,9 @@ Eine Visualisierung enthüllt, was der Statistik (als Kennzahl) verhüllt bleibt
 
 ::: {.content-visible when-format="html"}
 ![Dinosaurier und Kreis: Gleiche statistischen Kennwerte [@fitzmaurice_same_2017]](img/dino-corr.gif){#fig-dino1}
+
+@fig-dino2 zeigt Anscombes Quartet.
+![Anscombes Quartet: Gleiche statistischen Kennwerte in vier Datensätzen](img/anscombe.png){#fig-dino2 width=75%}
 :::
 
 ::: {.content-visible when-format="pdf"}
@@ -166,9 +169,14 @@ Eine Visualisierung enthüllt, was der Statistik (als Kennzahl) verhüllt bleibt
 #| echo: false
 #| label: fig-dino1
 #| fig-cap: "Alle Diagramme haben gleiche statistische Koeffizienten, wie Mittelwert und Streuung und Korrelation, aber die Datengrundlage sind komplett verschieden."
+# out-width: 50%
+#| fig-asp: 0.5
 library("ggplot2")
 library("datasauRus")
-ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset))+
+
+datasaurus_dozen |> 
+  filter(dataset %in% c("dino", "circle", "star", "bullseye")) |> 
+  ggplot(aes(x = x, y = y, colour = dataset))+
   geom_point() +
   theme_void() +
   theme(legend.position = "none")+
@@ -182,28 +190,22 @@ ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset))+
 
 
 
-:::{.callout-important}
+
+
+
+
+
+
+
+
+
 Statistische Diagramme können Einblicke geben, die sich nicht (leicht) in grundlegenden Statistiken (Kennwerten) abbilden. $\square$
-:::
-
-
-![Anscombes Quartet: Gleiche statistischen Kennwerte in vier Datensätzen](img/anscombe.png){#fig-dino2 width=75%}
-
-
-
-
-
 
 Unter visueller Cortex ist sehr leistungsfähig. Wir können ohne Mühe eine große Anzahl
 an Informationen aufnehmen und parallel verarbeiten.
 Aus diesem Grund sind Datendiagramme eine effektive und einfache Art,
 aus Daten Erkenntnisse zu ziehen.
-
-
-
-::: {.callout-tip}
 Nutzen Sie Datendiagramme umfassend; sie sind einfach zu verstehen und doch sehr mächtig.
-:::
 
 
 :::{def-datendiagramm}
@@ -269,12 +271,10 @@ Möchten wir den Zusammenhang von vielen Variablen, z.B. mehr als 5, verstehen,
 kommen wir mit Bildern nicht weiter.
 Dann brauchen wir andere Werkzeuge: statistics to the rescue.
 
-
-:::{.callout-note}
 Bei klaren Zusammenhängen und wenig Variablen braucht man keine (aufwändige) Statistik.
 Ein Bild (Datendiagramm) ist dann (oft) ausreichend.
 Man könnte sagen, dass es Statistik nur deshalb gibt, weil unser Auge mit mehr als ca. 4-6 Variablen nicht gleichzeitig umgehen kann.
-:::
+
 
 :::{#exr-anz-dims}
 Wie viele Variablen sind in @fig-many-dims dargestellt?^[5]
@@ -318,14 +318,14 @@ Hilfe bzw. ein Data-Dictionary (Codebook) finden Sie [hier](https://www.rdocumen
 :::{#def-verteilung}
 ### Verteilung
 Eine (Häufigkeits-)Verteilung einer Variablen $X$ schlüsselt auf, 
-wie häufig jede Ausprägung von $X$ ist.$\square$
+wie häufig jede Ausprägung von $X$ ist. $\square$
 :::
 
 :::{#exm-verteilung1}
 @tbl-wheels-n zeigt die Häufigkeitsverteilung von `cond` (condition, also der Zustand des Artikels, neu oder gebraucht) 
 aus dem Datensatz `mariokart`.
 Die Variable hat 5 Ausprägungen; 
-z.B. kommt die Ausprägung `new`  59 mal vor.$\square$
+z.B. kommt die Ausprägung `new`  59 mal vor. $\square$
 :::
 
 
@@ -358,9 +358,9 @@ Dabei werden rechteckige Balken verwendet werden, und die Länge eines Balkens i
 ```{r p-mariokart-n-cond}
 #| echo: false
 #| layout-ncol: 2
+#| out-width: "75%"
 #| label: fig-mario-n-plot-cond
 #| fig-cap: "Häufigkeitsverteilung der Variable `cond`"
-#| out-width: "75%"
 #| fig-subcap: 
 #|   - horizontale Balken
 #|   - vertikale Balken
@@ -371,14 +371,16 @@ mario_n1 <-
   ggplot(aes(y = n, x = cond)) + 
   geom_col() +
   coord_flip() +
-  theme_modern() 
+  theme_modern() +
+  theme_large_text()
 
 mario_n2 <-
   mariokart |> 
   count(cond) |> 
   ggplot(aes(y = n, x = cond)) + 
   geom_col()   +
-  theme_modern()
+  theme_modern() +
+  theme_large_text()
 
 
 mario_n1
@@ -441,18 +443,15 @@ Hätten wir andere Spalten ausgewählt, so würde das Balkendiagramm die Verteil
 Ja, Sie können auch mehrere Variablen auf einmal auswählen. 
 Probieren Sie das doch mal aus!
 :::
-```{r}
 
-```
 
 
 ::::{#exr-balken}
-
 ### Visualisieren Sie die Verteilung von `stock_photo`!
 
-
 ```{r}
-#| eval: !expr knitr::is_html_output()
+#| eval: !expr knitr:::is_html_output()
+#| out-width: 50%
 mariokart |> 
   select(stock_photo) |> 
   plot_bar()
@@ -474,7 +473,6 @@ s. @fig-balken-hist (links). Es gibt einfach zu viele Ausprägungen.
 
 ```{r}
 #| echo: false
-
 mariokart_bar_total_pr <- 
 mariokart |> 
   filter(total_pr < 200) |> 
@@ -518,8 +516,10 @@ m1a |>
     name = "Anzahl",
     sec.axis = sec_axis(trans = ~. / 141, name = "Anteil"))
 
-mariokart_bar_total_pr
-mariokart_hist_total_pr
+mariokart_bar_total_pr +
+  theme_large_text()
+mariokart_hist_total_pr +
+  theme_large_text()
 ```
 
 
@@ -556,7 +556,8 @@ p_mario_zu_viele <-
   mariokart |> 
   filter(total_pr < 100) |> 
   ggplot(aes(x = total_pr)) +
-  geom_histogram(binwidth = 1) 
+  geom_histogram(binwidth = 1)  +
+  theme_large_text()
 
 p_mario_zu_viele
 
@@ -564,7 +565,8 @@ p_mario_zu_wenige <-
   mariokart |> 
   filter(total_pr < 100) |> 
   ggplot(aes(x = total_pr)) +
-  geom_histogram(bins = 2) 
+  geom_histogram(bins = 2) +
+  theme_large_text()
 
 p_mario_zu_wenige
 ```
@@ -600,7 +602,7 @@ mariokart %>%
 mariokart %>% 
   select(total_pr) %>% 
   filter(total_pr < 100) %>%  # ohne Extremwerte
-  plot_density(ggtheme = theme_minimal())
+  plot_density(ggtheme = theme_minimal()) 
 ```
 
 
@@ -612,7 +614,8 @@ mariokart %>%
 
 
 ```{r}
-#| eval: !expr knitr::is_html_output()
+#| eval: !expr knitr:::is_html_output()
+#| out-width: 50%
 mariokart |> 
   select(ship_pr) |> 
   plot_histogram()
@@ -677,13 +680,15 @@ Verteilungen unterscheiden sich z.B. einerseits in ihrem "typischen" oder "mittl
 p_norm <- 
   ggplot(NULL) +
   stat_function(fun = dnorm, args = list(mean = 0, sd = 1)) +
-  scale_x_continuous(limits = c(-3, 3))
+  scale_x_continuous(limits = c(-3, 3)) +
+  scale_y_continuous(NULL, breaks = NULL)
 
 p_norm
 
 ggplot(NULL) +
   stat_function(fun = dgamma, args = list(shape = 2, rate = 3))  +
-  scale_x_continuous(limits = c(0, 3))
+  scale_x_continuous(limits = c(0, 3)) +
+  scale_y_continuous(NULL, breaks = NULL)
 ```
 
 
@@ -738,7 +743,7 @@ Sie hat u.a. folgende Eigenschaften:
 - Mittelwert, Median und Modus sind identisch
 
 :::{#exm-norm}
-Beispiele für normalverteilte Variablen sind Körpergröße von Männern oder Frauen, IQ-Werte, Prüfungsergebnisse, Messfehler, Lebensdauer von Glühbirnen, Gewichte von Brotlaiben, Milchproduktion von Kühen, Brustumfang schottischer Soldaten [@lyon_why_2014].$\square$
+Beispiele für normalverteilte Variablen sind Körpergröße von Männern oder Frauen, IQ-Werte, Prüfungsergebnisse, Messfehler, Lebensdauer von Glühbirnen, Gewichte von Brotlaiben, Milchproduktion von Kühen, Brustumfang schottischer Soldaten [@lyon_why_2014]. $\square$
 :::
 
 
@@ -791,11 +796,8 @@ plot(qr)
 :::
 
 
-:::callout-important
-### Parameter der Normalverteilung
-Eine Normalverteilung lässt sich exakt beschreiben anhand zweier Parameter: ihres zentralen Werts (Mittelwerts), $\mu$, und ihrer Streuung (Standardabweichung), $\sigma$. $\square$
-:::
 
+Eine Normalverteilung lässt sich exakt beschreiben anhand zweier Parameter: ihres zentralen Werts (Mittelwerts), $\mu$, und ihrer Streuung (Standardabweichung), $\sigma$. 
 
 
 ::::: {.content-visible when-format="html" unless-format="epub"}
@@ -850,7 +852,7 @@ Davon leitet sich die "68-95-99.7-Prozentregel" ab:
 
 
 
-![Die Flächeninhalte (Wahrscheinlichkeitsmasse) einer Normalverteilung in Abhängigkeit der SD-Einheiten  [@ainali_standard_2007]](img/Standard_deviation_diagram_micro.svg.png){#fig-norm-perc width=50%}
+![Die Flächeninhalte (Wahrscheinlichkeitsmasse) einer Normalverteilung in Abhängigkeit der SD-Einheiten  [@ainali_standard_2007]](img/Standard_deviation_diagram_micro.svg.png){#fig-norm-perc width=75%}
 
 
 
@@ -893,14 +895,17 @@ mariokart %>%
   geom_bar(position = "fill") +
   scale_fill_okabeito() +
   theme(legend.position = "bottom") +
-  theme_minimal()
+  theme_minimal() +
+  theme_large_text() +
+  theme(legend.position = "none")
 
 mariokart %>% 
   ggplot(aes(x = wheels > 0, fill = stock_photo)) +
   geom_bar(position = "fill") +
   scale_fill_okabeito() +
   theme(legend.position = "bottom") +
-  theme_minimal()
+  theme_minimal() +
+  theme_large_text()
 ```
 
 Tatsächlich: Es findet sich ein Zusammenhang zwischen der Tatsache, ob dem versteigerten Produkt ein Foto bei lag und ob es neuwertig oder gebraucht war (@fig-zshg-nom1, links).
@@ -930,6 +935,8 @@ Die verschiedenen Werte der Füllfarbe werden den Stufen der Variablen `cond` zu
 #| lst-cap: "R-Syntax für ein gefülltes Balkendiagramm"
 #| lst-label: lst-plot-bar
 #| label: fig-de-bar-filled
+#| eval: !expr knitr:::is_html_output()
+#| out-width: 50%
 #| fig-cap: "Ein gefülltes Balkendiagramm zur Untersuchung eines Zusammenhangs zwischen nominalskalierter Variablen"
 mariokart %>% 
   select(cond, stock_photo) %>% 
@@ -937,18 +944,17 @@ mariokart %>%
 ```
 
 
-:::{.callout-note}
+
 *Gefüllte Balkendiagramme* eignen sich zur Analyse eines Zusammenhangs zwischen nominalskalierten Variablen. Allerdings sollte eine der beiden Variablen nur zwei Ausprägungen aufweisen,
 sonst sind die Zusammenhänge nicht mehr so gut zu erkennen. 
-Außerdem sollten die Balken auf gleiche Länge (100%) ausgerichtet sein.$\square$
-:::
+Außerdem sollten die Balken auf gleiche Länge (100%) ausgerichtet sein. $\square$
 
 
 ::::{#exr-zsmnhang-cond-wheels}
 
 ### Zusammenhang visualisieren
 
-Aufgabe Visualisieren Sie den Zusammenhang der beiden nominalen Variablen `cond` und `wheels`!
+Visualisieren Sie den Zusammenhang der beiden nominalen Variablen `cond` und `wheels`!
 
 **Lösung**
 
@@ -959,6 +965,8 @@ damit R sie als nominal skalierte Variable erkennt.
 
 
 ```{r}
+#| out-width: 50%
+#| eval: false
 mariokart |> 
   # Mache aus einer metrischen eine nominale Variable: 
   mutate(wheels = factor(wheels)) |> 
@@ -1011,7 +1019,8 @@ mariokart %>%
             y = "total_pr",
             add = "reg.line",
             add.params = list(color = "blue"),
-            ellipse = TRUE)
+            ellipse = TRUE) +
+  theme_large_text()
 
 
 mariokart %>% 
@@ -1022,7 +1031,9 @@ mariokart %>%
             y = "total_pr",
             add = "reg.line",
             add.params = list(color = "blue"),
-            ellipse = TRUE)
+            ellipse = TRUE) +
+  theme_large_text()
+
 
 ```
 
@@ -1043,6 +1054,7 @@ Beispiele für nicht-lineare Zusammenhänge sind in @fig-nonlinear zu sehen.
 #| label: fig-nonlinear
 #| fig-cap: "Beispiele nichtlinearer Zusammenhänge"
 #| echo: false
+#| fig-width: 7
 
 data <- read.csv("data/nonlinear_datasets.csv")
 
@@ -1077,6 +1089,7 @@ schwache Zusammenhänge an breiten Ellipsen ("Torte" [🥮]{.content-visible whe
 #| label: fig-cors
 #| fig-cap: "Lineare Zusammenhänge verschiedener Stärke und Richtung"
 #| out-width: "75%"
+#| fig-asp: 0.5
 source("funs/plot-different-cors.R")
 fig_cors <- plot_different_cors(plot_it = FALSE)
 fig_cors +
@@ -1175,6 +1188,7 @@ Das Ergebnis sieht man in @fig-mario-scatter bzw. @lst-scatterplot. $\square$
 #| lst-label: lst-scatterplot
 #| lst-cap: "Streudiagramm erstellen mit dem R-Paket 'DataExplorer'"
 #| label: fig-mario-scatter
+#| out-width: 50%
 #| fig-cap: Der Zusammenhang metrischer Variablen mit Abschlusspreis
 mariokart %>% 
   select(duration, n_bids, start_pr,
@@ -1188,17 +1202,22 @@ Aha... Was sagt uns das Bild? Hm. Es scheint einige Extremwerte zu geben, die
 dafür sorgen, dass der Rest der Daten recht zusammengequetscht auf dem Bild erscheint.
 Vielleicht sollten Sie solche Extremwerte lieber entfernen?
 Sie entscheiden sich, nur Verkäufe mit einem Abschlusspreis von weniger als 100 Dollar anzuschauen (`total_pr < 100`).
-Das Ergebnis ist in @fig-mario-scatter2 zu sehen.
 
+```{r}
+mariokart_no_extreme <-
+  mariokart %>% 
+  filter(total_pr < 100)
+```
+
+
+[Das Ergebnis ist in @fig-mario-scatter2 zu sehen.]{.content-visible when-format="html"}
 
 
 ```{r}
 #| label: fig-mario-scatter2
+#| eval: !expr knitr:::is_html_output()
+#| out-width: 50%
 #| fig-cap: Der Zusammenhang metrischer Variablen mit Abschlusspreis
-mariokart_no_extreme <-
-  mariokart %>% 
-  filter(total_pr < 100)
-
 mariokart_no_extreme %>% 
   select(duration, n_bids, start_pr, 
          ship_pr, total_pr, 
@@ -1207,9 +1226,8 @@ mariokart_no_extreme %>%
 ```
 
 
-Ohne Extremwerte schält sich ein deutlicheres Bild (@fig-mario-scatter2) hervor: Startpreis (`start_pr`) und Anzahl  der Räder (`wheels`) scheinen am stärksten mit dem Abschlusspreis zusammenzuhängen.
-
-Das Argument `by = "total_pr"` bei `plot_scatterplot` weist R an, als Y-Variable stets `total_pr` zu verwenden. Alle übrigen Variablen kommen jeweils einmal als X-Variable vor.$\square$
+Ohne Extremwerte schält sich ein deutlicheres Bild hervor: Startpreis (`start_pr`) und Anzahl  der Räder (`wheels`) scheinen am stärksten mit dem Abschlusspreis zusammenzuhängen.
+Das Argument `by = "total_pr"` bei `plot_scatterplot` weist R an, als Y-Variable stets `total_pr` zu verwenden. Alle übrigen Variablen kommen jeweils einmal als X-Variable vor. $\square$
 
 
 
@@ -1227,6 +1245,7 @@ Visualisieren Sie den Zusammenhang der beiden metrischen Variablen `start_pr` un
 ### Lösung
 
 ```{r}
+#| eval: !expr knitr:::is_html_output()
 mariokart_no_extreme |> 
   select(start_pr, total_pr) |> 
   plot_scatterplot(by = "total_pr")
@@ -1251,6 +1270,8 @@ Verwenden Sie den Datensatz ohne Extremwerte wie oben definiert.
 **Lösung**
 
 ```{r}
+#| eval: !expr knitr:::is_html_output()
+#| out-width: 50%
 mariokart_no_extreme |> 
   select(start_pr, total_pr) |> 
   plot_scatterplot(by = "total_pr")
@@ -1305,12 +1326,14 @@ Am besten wir schauen uns einige Beispiele an, s. @fig-compare-groups1.
 
 ggplot(mariokart_no_extreme, aes(x = cond, y = total_pr)) +
   geom_violinhalf() +
-  theme_minimal()
+  theme_minimal() +
+  theme_large_text()
 
 
 ggplot(mariokart_no_extreme, aes(x = cond, y = total_pr)) +
   geom_boxplot() +
-  theme_minimal()
+  theme_minimal()  +
+  theme_large_text()
 ```
 
 
@@ -1353,7 +1376,7 @@ mariokart %>%
 
 ### Boxplot
 Der Boxplot ist eine Vereinfachung bzw. eine Zusammenfassung eines Histograms.
-Damit stellt der Boxplot auch eine Verteilung (einer metrischen Variablen) dar.$\square$
+Damit stellt der Boxplot auch eine Verteilung (einer metrischen Variablen) dar. $\square$
 :::
 
 
@@ -1365,7 +1388,7 @@ In @fig-hist-to-box sieht man die "Übersetzung" von Histogramm (oben) zu einem 
 #| label: fig-hist-to-box
 #| fig-cap: "Übersetzung eines Histogramms zu einem Boxplot"
 #| message: false
-#| fig-asp: .8
+# fig-asp: 0.68
 #| echo: false
 source("funs/histogram-to-boxplot.R")
 hist_to_box <- histogram_to_boxplot(mariokart_no_extreme, "total_pr", plot_it = FALSE)
@@ -1414,8 +1437,8 @@ Das kann man mit dem Befehle `factor(wheels)` erreichen (verpackt in `mutate`), 
 #| echo: true
 #| fig-cap: "Abschlusspreis nach Anzahl von beigelegten Lenkrädern"
 #| fig-subcap: 
-#|   - "wheels als metrische Variable"
-#|   - "wheels als nominale Variable"
+#|   - "`wheels` als metrische Variable"
+#|   - "`wheels` als nominale Variable"
 #| layout-ncol: 2
 mariokart_no_extreme %>% 
   select(total_pr, wheels) %>% 
@@ -1453,7 +1476,8 @@ mehrere Lösungen sind also mögliche.
 *Lösung*
 
 ```{r}
-#| eval: !expr knitr::is_html_output()
+#| eval: !expr knitr:::is_html_output()
+#| out-width: 50%
 mariokart_no_extreme |> 
   select(cond, total_pr) |> 
   plot_boxplot(by = "cond")
@@ -1475,6 +1499,8 @@ Interpretieren Sie das Ergebnis.
 **Lösung**
 
 ```{r}
+#| eval: !expr knitr:::is_html_output()
+#| out-width: 50%
 mariokart_no_extreme |> 
   select(ship_pr, total_pr) |> 
   plot_boxplot(by = "ship_pr")
@@ -1509,7 +1535,8 @@ Achsen zu stauchen ist ein einfacher Trick, s. @fig-lie1.
 ```{r}
 #| echo: false
 #| label: fig-lie1
-#| fig-cap: "Stauchen der Y-Achse, um mit Statistik zu lügen"
+#| fig-cap: "Strecken und Stauchen der Y-Achse, um mit Statistik zu lügen"
+#| out-width: "100%"
 #| fig-subcap: 
 #|   - "Oh nein, dramatischer Einbruch des Umsatzes!"
 #|   - "Kaum der Rede wert, ist nur ein bisschen Schwankung!"
@@ -1546,6 +1573,7 @@ Natürlich kann man auch durch "Abschneiden" der Y-Achse einen eindrucksvollen E
 #| echo: false
 #| label: fig-lie2
 #| fig-cap: "Abschneiden der Y-Achse, um mit Statistik zu lügen"
+#| out-width: "100%"
 #| fig-subcap: 
 #|   - "Oh nein, dramatischer Einbruch des Umsatzes!"
 #|   - "Kaum der Rede wert, ist nur ein bisschen Schwankung!"
@@ -1638,29 +1666,29 @@ Außerdem sind sie mitunter nett anzuschauen, s. @fig-anim1.
 ![Veränderung des Zusammenhangs von Lebenswertung und Bruttosozialprodukt pro Land, gegliedert nach Kontinenten](img/animate1.gif){#fig-anim1 width="75%"}
 
 
-Um den gemeinsamen Zusammenhang dreier metrischer Variablen darzustellen, 
-bietet sich ein 3D-Streudiagramm an; s. @fig-mario-3d.
+<!-- Um den gemeinsamen Zusammenhang dreier metrischer Variablen darzustellen,  -->
+<!-- bietet sich ein 3D-Streudiagramm an; s. @fig-mario-3d. -->
 
 
-```{r mario3d}
-#| echo: false
-#| eval: !expr knitr::is_html_output()
-#| label: fig-mario-3d
-#| fig-cap: "3D-Punktediagramm zum Datensatz mariokart"
+<!-- ```{r mario3d} -->
+<!-- #| echo: false -->
+<!-- #| eval: !expr knitr:::is_html_output() -->
+<!-- #| label: fig-mario-3d -->
+<!-- #| fig-cap: "3D-Punktediagramm zum Datensatz mariokart" -->
 
-fig2 <- plot_ly(mariokart |> filter(total_pr < 100), 
-                x = ~duration, y = ~n_bids, z = ~total_pr, 
-                color = ~cond, colors = c('#BF382A', '#0C4B8E'))
-fig2 <- fig2 %>% add_markers()
-fig2 <- fig2 %>% layout(scene = list(xaxis = list(title = 'duration'),
-                     yaxis = list(title = 'number of bids'),
-                     zaxis = list(title = 'total price')))
+<!-- fig2 <- plot_ly(mariokart |> filter(total_pr < 100),  -->
+<!--                 x = ~duration, y = ~n_bids, z = ~total_pr,  -->
+<!--                 color = ~cond, colors = c('#BF382A', '#0C4B8E')) -->
+<!-- fig2 <- fig2 %>% add_markers() -->
+<!-- fig2 <- fig2 %>% layout(scene = list(xaxis = list(title = 'duration'), -->
+<!--                      yaxis = list(title = 'number of bids'), -->
+<!--                      zaxis = list(title = 'total price'))) -->
 
-fig2
-```
+<!-- fig2 -->
+<!-- ``` -->
 
 
-Leider ist @fig-mario-3d nicht sehr aufschlussreich.
+<!-- Leider ist @fig-mario-3d nicht sehr aufschlussreich. -->
 
 
 
@@ -1697,6 +1725,7 @@ s. @fig-comp-means-ggpubr.
 
 ```{r}
 #| label: fig-comp-means-ggpubr
+#| out-width: 50%
 #| fig-cap: Vergleich der Verteilungen zweier Gruppen mit Mittelwert und Standardabweichung pro Gruppe hervorgehoben
 ggviolin(mariokart_no_extreme, 
          x = "cond", 
@@ -1763,6 +1792,7 @@ da sie auch bei Schwarz-Weiß-Druck und bei Sehschwächen die Farben noch recht 
 
 ```{r}
 #| label: fig-okabe
+#| out-width: 50%
 #| fig-cap: "Die Farbskala von Okabe und Ito: Geeignet bei Farbseh-Schwächen und für Schwarz-Weiß-Druck. Außerdem nett anzuschauen."
 
 mariokart %>% 

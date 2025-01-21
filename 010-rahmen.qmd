@@ -155,7 +155,7 @@ In diesem Buch werden die Begriffe *Statistik*, *Datenanalyse* und *Data Science
 
 
 
-Hm. Vielleicht fragen wir mal ChatGPT, was es unter Statistik versteht:
+Hm. Vielleicht fragen wir mal einen Chatbot wie ChatGPT, was es unter Statistik versteht:
 
 
 
@@ -173,7 +173,7 @@ hier ist eine, s. @def-statistik.
 
 :::{#def-statistik}
 ### Statistik
-Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entnehmen und beschreibt die Ungewissheit unserer Schlüsse [@poldrack_statistical_2023; @kaplan_statistical_2009] . $\square$
+Statistik fasst Werte zusammen, quantifiziert deren Unterschiedlichkeit von und beschreibt die Ungewissheit unserer Schlüsse [@poldrack_statistical_2023; @kaplan_statistical_2009] . $\square$
 :::
 
 
@@ -182,7 +182,7 @@ Statistik fasst Daten zusammen, um wesentliche Informationen den Daten zu entneh
 
 
 
-Betrachten wir die zwei Bestimmungsstücke einer Definition von Statistik genauer: 1. Daten zusammenfassen, 2. Ungewissheit beschreiben.
+Betrachten wir die drei Bestimmungsstücke einer Definition von Statistik genauer: 1. Daten zusammenfassen, 2. Unterschiedlichkeit quantifizieren und 3. Ungewissheit beschreiben.
 
 
 ### Daten zusammenfassen
@@ -236,7 +236,7 @@ d |>
 
 
 
-### Unterschiedlichkeit messen 
+### Unterschiedlichkeit quantifizieren 
 
 Eine allgegenwärtige Tatsache ist, dass die Dinge der Welt sich unterscheiden, 
 etwa, dass Exemplare einer Gattung sich unterscheiden. 
@@ -247,7 +247,7 @@ nicht alle Bücher gleich lang oder nicht alle Tage gleich warm.
 Ein zentrales Vorgehen bei statistischen Analysen ist es, 
 die *Unterschiedlichkeit der Dinge* zu beschreiben,
 präziser gesagt: die *Variation zu quantifizieren*. 
-Betrachten wir dazu das Beispiel in s. @fig-groesse.
+Betrachten wir dazu das Beispiel in @fig-groesse.
 
 
 ```{r}
@@ -316,7 +316,7 @@ groesse %>%
 ```
 
 
-Bei den Basketballern gibt es *geringe* Variation in der Körpergröße - alle sind groß, ähnlich groß.
+Bei den Basketballern gibt es *geringe* Variation in der Körpergröße -- alle sind groß, ähnlich groß.
 Bei den Schachspielern gibt es (im Verhältnis) *hohe* Variation: Einige Personen sind groß, andere klein.
 
 <!-- Die Variation (auch "Variabilität" genannt) kann man auch gut so darstellen wie in s. @fig-variab gezeigt. -->
@@ -376,6 +376,47 @@ die Differenz vom Wert $x_i$ und einem Referenzwert, etwa dem Mittelwert ($\bar{
 
 
 
+### Ungewissheit beschreiben
+
+:::{#exm-ungewiss1}
+Anna hat eine Statistik-Klausur geschrieben. Sie hat keine Ahnung, ob sie bestehen wird. Berta hingegen ist sich sehr sicher, dass sie bestanden hat. Die beiden Studentinnen unterscheiden sich also stark in der Ungewissheit hinsichtlich ihrer Einschätzung zum Klausurerfolg, s. @fig-ungewiss-anna-berta. $\square$
+:::
+
+```{r}
+#| echo: false
+#| layout-ncol: 2
+#| fig-cap: "Die Ungewissheit, die wir Ereignissen zuschreiben, kann variieren"
+#| label: fig-ungewiss-anna-berta
+
+
+d1 <- tibble(
+  x = c("Bestehen", "Durchfallen"),
+  p1 = c(0.5, 0.5),
+  p2  = c(0.9, .1)
+)
+
+ggplot(d1) +
+  aes(x = x, y = p1) +
+  geom_col() +
+  geom_bar_text() +
+  labs(y = "Wahrscheinlichkeit",
+       title = "Was Anna denkt")
+
+ggplot(d1) +
+  aes(x = x, y = p2) +
+  geom_col() +
+  geom_bar_text() +
+  labs(y = "Wahrscheinlichkeit",
+       title = "Was Berta denkt")
+```
+
+
+:::{#exm-ungewiss2}
+Sagen wir, Sie haben sich mit einem zwielichten Statistiker auf ein Glücksspiel eingelassen: Er wirft eine Münze 10 Mal; bei Kopf gewinnt er, bei Zahl sie. Nun hat der Staistiker von den 10 Würfen 8 Mal gewonnen. 
+*Sie* sind sich *ziemlich* sicher, dass dieser Typ Sie über den Tisch gezogen hat. 
+Allerdings sind Sie nicht ganz sicher, und beweisen können Sie es leider auch nicht.
+*Der zwielichte Statistiker* ist sich *ganz sicher*: Er weiß, dass er Sie über den Tisch gezogen hat, er weiß, dass seine Münze gezinkt ist. $\square$
+:::
 
 
 
@@ -383,6 +424,9 @@ die Differenz vom Wert $x_i$ und einem Referenzwert, etwa dem Mittelwert ($\bar{
 
 
 ### Arten von Zielen
+
+Die Arten von Zielen, die man mit einer statistichen Analyse verfolgen kann, lassen sich in drei Gruppen einteilen, s. @fig-ziele.
+
 
 ```{mermaid}
 %%| fig-cap: Zielarten einer Datenanalyse
@@ -398,11 +442,12 @@ graph TD
 ```
 
 
-Beispiele für die einzelnen Zielarten der Datenanalyse:
+:::{#exm-zielarten}
 
 - *Beschreiben*: Wie groß ist der Gender-Paygap in der Branche X im Zeitraum Y?
 - *Vorhersagen*: Wenn ich 100 Stunden auf die Statistikklausur lernen, welche Note kann ich dann erwarten?
-- *Erklären*: Wie viel bringt mir das Lernen auf die Statistikklausur?
+- *Erklären*: Wie viel bringt mir das Lernen auf die Statistikklausur? $\square$
+:::
 
 
 :::{#exr-ziele-stat}
@@ -413,9 +458,7 @@ Benennen Sie Beispiele für die die drei Zielarten von Datenanalysen! $\square$
 
 Eine Forschungsfrage ist die Leitfrage Ihrer Analyse.
 Sie definiert, was Sie herausfinden wollen.
-Häufig sind Forschungsfragen so aufgebaut:
-
->   Hat X einen Einfluss auf Y?
+Häufig fragen Forschungsfragen: "Hat X einen (kausalen) Einfluss auf Y?"
 
 
 
@@ -432,31 +475,20 @@ Eine Forschungsfrage weist häufig folgende Struktur auf, s. @fig-fo-struktur.
 %%| fig-width: 4
 
 graph LR
-    I[Input bzw. X] --> X[hier passiert irgendwas]
-    subgraph "Schwarze Kiste"
-      X
-    end
-    X --> O[Output bzw. Y]
+    I[Input bzw. X] --> O[Output bzw. Y]
 ```
 
 
 
 :::{#exm-fofrage1}
 
-### Forschungsfrage 1 - Lernen und Prüfungserfolg
+### Forschungsfragen
 
 >   Hat Lernen (X) einen Einfluss auf den Prüfungserfolg (Y)?
+
 >   Verringert Joggen (X) die Menge des Hüftgolds (Y)?
->   Um welchen Betrag erhöht sich der Umsatz (Y), wenn wir 1000€ mehr Werbung ausgeben? (X)$\square$
 
-:::
-
-
-
-:::{#exm-braindrain}
-### Forschungsfrage 2 - Handynutzung und Konzentration
-
-Eine Forschungsfrage könnte lauten zum Thema Handynutzung: 
+>   Um welchen Betrag erhöht sich der Umsatz (Y), wenn wir 1000€ mehr für Werbung ausgeben? (X)
 
 >    Verringert intensive Handynutzung die Konzentrationsfähigkeit? $\square$
 :::
@@ -465,7 +497,7 @@ Eine Forschungsfrage könnte lauten zum Thema Handynutzung:
 
 :::{#exm-fofrage2}
 
-### Forschungsfrage 3 - Produktmerkmale und Verkaufserlös
+### Forschungsfrage: Produktmerkmale und Verkaufserlös
 
 Nach dem Studium haben Sie bei einem großen Online-Auktionshaus angeheuert. 
 Da Sie angaben, sich im Studium ~~intensiv~~ etwas mit Statistik beschäftigt zu haben,
@@ -474,7 +506,7 @@ Heute ist es Ihre Aufgabe, Auktionen zur Spielekonsole Wii zu analysieren,
 genauer gesagt geht es um das Spiel Mariokart.
 Ihre Forschungsfrage lautet:
 
->   Welche Produktmerkmale stehen mit einem hohen Verkaufserlös in Zusammenhang?$\square$
+>   Welche Produktmerkmale stehen mit einem hohen Verkaufserlös in Zusammenhang? $\square$
 :::
 
 
@@ -528,14 +560,14 @@ Diskutieren Sie die Antwort, auch in ihren Grenzen. $\square$
 
 
 
-:::{.callout-caution}
-Es ist ein häufiger Fehler, in der Forschungsfrage zu formulieren "X führt zu Y", 
-aber in der Analyse keine Methode zu verwenden, die geeignet ist, 
-kausale Zusammenhänge aufzudecken. Es reicht nicht, dass man z.B. einen (negativen) Zusammenhang zwischen der Häufigkeit von Smartphone-Nutzung und Konzentrationsfähigkeit findet [@schwaiger_impact_2022], 
-um zu sagen: "Daddeln macht dumm!". 
-Es könnte ja z.B. auch umgekehrt sein. Platt gesagt: "Dummheit führt zu Daddeln". Weitere Erklärungen sind möglich. 
-Vorsicht also mit (vor)schnellen Aussagen zu kausalen Abhängigkeiten.
-:::
+<!-- :::{.callout-caution} -->
+<!-- Es ist ein häufiger Fehler, in der Forschungsfrage zu formulieren "X führt zu Y",  -->
+<!-- aber in der Analyse keine Methode zu verwenden, die geeignet ist,  -->
+<!-- kausale Zusammenhänge aufzudecken. Es reicht nicht, dass man z.B. einen (negativen) Zusammenhang zwischen der Häufigkeit von Smartphone-Nutzung und Konzentrationsfähigkeit findet [@schwaiger_impact_2022],  -->
+<!-- um zu sagen: "Daddeln macht dumm!".  -->
+<!-- Es könnte ja z.B. auch umgekehrt sein. Platt gesagt: "Dummheit führt zu Daddeln". Weitere Erklärungen sind möglich.  -->
+<!-- Vorsicht also mit (vor)schnellen Aussagen zu kausalen Abhängigkeiten. -->
+<!-- ::: -->
 
 
 
@@ -546,7 +578,8 @@ Vorsicht also mit (vor)schnellen Aussagen zu kausalen Abhängigkeiten.
 
 
 Datenanalyse ist eine Art des Problemlösens.
-Anders gesagt, man macht es nicht zum Spaß (jedenfalls nicht alle von uns), sondern um ein Ziel zu erreichen, d.h. ein Problem zu lösen.
+Anders gesagt, man macht es nicht zum Spaß (jedenfalls nicht alle von uns), sondern um ein Ziel zu erreichen, 
+also ein Problem zu lösen.
 Daher analysiert man nicht gleich zu Anfang wild drauf los. 
 Zunächst 1) klärt man das Problem und das Ziel. 
 Dann 2) plant man das Vorgehen, z.B. welche Daten man erheben möchte. 
@@ -588,12 +621,12 @@ Daten kann man als eine geordnete Folge von Zeichen definieren. $\square$
 
 
 Daten kommen häufig in Tabellenform vor; 
-so sind sie (oft) am besten zu untersuchen,
-s. @tbl-daten.
+so sind sie (oft) am besten zu untersuchen.
+@tbl-daten zeigt ein Beispiel für Daten.
 Die erste Spalte `id` ist nur eine laufende Nummer.
 Sie dient dazu, die einzelnen Beobachtungen (hier Studentis) 
 identifizieren zu können und birgt ansonsten keine Information.
-Beispiele für ID-Variablen sind z.B. Matrikulationsnummer, 
+Beispiele für ID-Variablen sind z.B. Matrikelnummer, 
 Personalausweisnummern oder Bestellnummern.
 
 
@@ -658,14 +691,17 @@ Eine Erklärung (Data-Dictionary) aller Variablen des Datensatzes `mariokart` fi
 :::{#def-datadict}
 ### Data-Dictionary
 
-Eine Erklärung, was die Namen einer Datentabelle bedeuten,
+Eine Erklärung, was die Variablen (Spalten) einer Datentabelle bedeuten,
 nennt man *Codebook* or *Data-Dictionary*. $\square$
 
 :::
 
+In den Spalten einer Tabelle stehen Merkmale (Variablen) von den Dingen, die untersucht werden, z.B. Patienten, Kunden oder Videospiele.
+Die untersuchten Dinge nennt man Beobachtungseinheiten.
+Die Beobachtungseinheiten stehen in den Zeilen einer Tabelle.
 
 
-### Was ist eine Variable?
+
 
 :::{#def-var}
 ### Variable
@@ -684,7 +720,7 @@ s. @fig-var-zuweisen.
 
 
 
-### Beobachtungseinheit
+
 
 :::{#def-beobeinheit}
 
@@ -697,9 +733,9 @@ Beobachtungseinheiten sind die Träger von Variablen. $\square$
 
 In @tbl-daten gibt es drei Variablen: `id`, `Name` und `Note`. 
 Es gibt auch drei Beobachtungseinheiten: *Anna*, *Berta* und *Carla.*
+Beobachtungseinheiten werden auch kurz als *Beobachtungen* bezeichnet.
 
 
-### Wert
 
 :::{#def-wert}
 ### Wert
@@ -708,12 +744,11 @@ Ein *Wert* ist der Inhalt einer Variablen. $\square$
 
 
 In  @fig-var-zuweisen ist der Wert von `temp` 9.
-In @tbl-daten hat die Variable `name` drei Elemente: Anna, Berta, Carla.
-Der Wert des 2. Elements ist Berta.
+In @tbl-daten hat die Variable `name` drei Elemente mit den Werten Anna, Berta, Carla.
 
 :::{#def-auspraegung}
 ### Ausprägung
-Als *Ausprägungen* bezeichnet man die verschiedenen Werte einer Variablen. $\square$
+Als *Ausprägungen* bezeichnet man die *verschiedenen* Werte einer Variablen. $\square$
 :::
 
 
@@ -738,7 +773,7 @@ Gerade haben Sie etwas Computer-Syntax gesehen, genauer gesagt,
 Befehle aus der Programmiersprache *R*. 
 Bisher haben wir diese Befehle nicht kennengelernt. 
 Sie verstehen Sie vermutlich (nicht ganz).
-Ignorieren Sie diese Befehle einfach erstmal. 
+Ignorieren Sie diese Befehle einfach erst einmal. 
 :::
 
 
@@ -748,7 +783,7 @@ Ignorieren Sie diese Befehle einfach erstmal.
 
 :::{#def-tidy}
 ### Tidy Data
-Unter *Tidy-Data* (tidy data, "Normalform") versteht man eine Tabelle,
+Unter *Tidy Data* (tidy data, "Normalform") versteht man eine Tabelle,
 in der jede Zeile eine Beobachtungseinheit darstellt,
 jede Spalte eine Variable und jede Zelle der Tabelle einen Wert, s. @fig-tidy1.
 (Zusätzlich ist noch eine "Kopfzeile" erlaubt, 
@@ -756,20 +791,14 @@ in der die Namen der Variablen stehen.)$\square$
 :::
 
 @tbl-daten ist ein Beispiel für Tidy-Data. 
-@fig-tidy1 zeigt ein Sinnbild für Tidy-Data [@wickham_r_2018]. Und 
-
-
-![Tidy-Data-Sinnbild [@wickham_tidy-data-sinnbild_2023]](img/tidy-1.png){#fig-tidy1 width="75%"}
-
-
-
-
-
+@fig-tidy1 zeigt ein Sinnbild für Tidy-Data [@wickham_r_2018].  
 Für eine statistische Analyse ist es oft sinnvoll, dass die Daten im Tidy-Format vorliegen.
 Der Vorteil des Tidy-Formats ist es, 
 dass man weiß, wie die Daten aufgebaut sind. 
 Außerdem können Statistikprogramme oft mit dieser Form am besten umgehen, s. @fig-tidy3.
 
+
+![Tidy-Data-Sinnbild [@wickham_tidy-data-sinnbild_2023]](img/tidy-1.png){#fig-tidy1 width="75%"}
 
 
 ![Immer schön Ordnung halten... [@horst_tidy_2023]](img/tidydata_3.jpg){#fig-tidy3 width="75%"}
@@ -802,10 +831,10 @@ Außerdem können Statistikprogramme oft mit dieser Form am besten umgehen, s. @
 
 
 :::{#exm-widelong}
-Ihre Firmat produziert zwei Produkte: Hämmer und Nägel. 
+Ihre Firma produziert zwei Produkte: Hämmer und Nägel. 
 Im Folgenden sind zwei Tabellen dargestellt, die die gleichen Informationen darstellen:
-den Umsatz für die Jahre 2021 und 2022. 
-Einmal ist dazu eine Nicht-Tidy-Tabelle (@tbl-untidy1) und einmal eine Tidy-Tabelle (@tbl-tidy1) verwendet. $\square$
+den Umsatz Ihrer Firma für zwei Jahre.
+Einmal ist dazu eine Nicht-Tidy-Tabelle (@tbl-untidy1; Breitformat) und einmal eine Tidy-Tabelle (@tbl-tidy1; Langformat) verwendet. $\square$
 ::: 
 
 
@@ -841,11 +870,11 @@ kable(d_long)
 
 
 :::{#exr-widelong}
-Suchen Sie ein Beispiel für eine Konfiguration einer Tabelle im Long- vs. Wide-Format. $\square$
+Suchen Sie ein Beispiel für eine Konfiguration einer Tabelle im Lang- vs. Breitformat. $\square$
 :::
 
 
->    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Wozu braucht man das Tidy-Format?
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Wozu braucht man Tidy Data?
 
 >    [👩‍🏫]{.content-visible when-format="html"}[\emoji{woman-teacher}]{.content-visible when-format="pdf"} In vielen Software-Programmen der Datenanalyse weißt man z.B. der X- oder Y-Variable eine Spalte einer Tabelle zu. Möchte man etwa die Veränderung des Umsatzes im Verlauf der Jahre visualisieren oder analysieren, so braucht es die Spalten 'Jahr' und 'Umsatz', also ein Tidy-Format, @tbl-untidy1 bzw. @tbl-tidy1.
 
@@ -907,7 +936,7 @@ Ein kritischer Geist könnte anmerken,
 dass Sie besser die Untersuchung nicht gemacht hätten 
 (auch wenn Sie, vielleicht ohne zu wollen, 
 eine statistische Untersuchung angestellt haben).
-Denn bei so wenig befragten Personen ist die Ungenauigkeit Ihrer Schätzung der typischen Lernzeit bei Studentis einfach zu hoch.
+Denn bei so wenig befragten Personen ist die Ungenauigkeit Ihrer Schätzung der typischen Lernzeit bei Studierenden einfach zu hoch.
 
 
 
@@ -921,7 +950,7 @@ Wie man sieht, ist im linken Teilbild die Streuung (Variation) höher als im rec
 
 ```{r}
 #| label: fig-sample-estimate
-#| fig-cap: "Schätzgenauigkeit als Funktion der Stichprobengröße. Jeder Punkt stellt eine Stichprobe dar, entweder mit n=20 (links) oder mit n=200 (rechts). Kleine Stichproben (links) haben im Schnitt eine größere Abweichung vom wahren Mittelwert als größere Stichproben (rechts). "
+#| fig-cap: "Schätzgenauigkeit als Funktion der Stichprobengröße. Jeder Punkt stellt eine Stichprobe dar, entweder mit $n=20$ (links) oder mit $n=200$ (rechts). Kleine Stichproben (links) haben im Schnitt eine größere Abweichung vom wahren Mittelwert als größere Stichproben (rechts). "
 #| echo: false
 #| fig-asp: 0.5
 
@@ -983,12 +1012,12 @@ In diesem Live-Experiment untersuchen wir den Effekt der *Stichprobengröße* au
 
 In diesem Experiment werfen Sie (in kleinen Gruppen) eine Münze (auf faire Art und Weise) und notieren das Ergebnis (Kopf oder Zahl).
 Uns interessiert dabei die Frage, ob die Ergebnisse bei kleinen Stichproben 
-(n=5 Münzwürfe) anders streuen als in großen Stichproben (n=20 Münzwürfe).
+($n=5$ Münzwürfe) anders streuen als in großen Stichproben ($n=20$ Münzwürfe).
 
 :::: {layout="[ 80, 20 ]"}
 ::: {#first-column}
 Sie brauchen nur experimentierfreudige Partner (Kleingruppen mit 2-4 Personen), eine faire Münze und dann kann's los gehen! 
-[Klicken Sie hier, um mit dem Experiment zu starten](https://docs.google.com/forms/d/e/1FAIpQLSeAwqNyZtyQwttq5JrQdQ2AO7w5vzcVDXjiejKnyFNxiWtEag/viewform?usp=sf_link).
+[Scannen Sie den QR-Code, um mit dem Experiment zu starten](https://docs.google.com/forms/d/e/1FAIpQLSeAwqNyZtyQwttq5JrQdQ2AO7w5vzcVDXjiejKnyFNxiWtEag/viewform?usp=sf_link).
 :::
 
 ::: {#second-column}
@@ -1011,16 +1040,16 @@ Die Daten aller Versuche können Sie [hier](https://docs.google.com/spreadsheets
 
 
 :::{#exm-schule-samplesize}
-### Dorfschulen machen die schlauesten Schüler!
-In einer Pressemitteilung sei zu lesen, dass die besten Schüler in den Dorfschulen zu finden seien (Das ist eine fiktive Geschichte). 
+### Dorfschulen machen die schlauesten Schüler?!
+In einer Pressemitteilung sei zu lesen, dass die besten Schüler in den Dorfschulen zu finden seien. (Das ist eine fiktive Geschichte.) 
 Mit etwas Recherche finden Sie heraus, 
-dass diese Aussage für belastbaren Daten beruht: 
+dass diese Aussage auf belastbaren Daten beruht: 
 Tatsächlich sind die Notendurchschnitte auf den kleinen Dorfschulen deutlich besser als in den großen Schulen in der Stadt. 
 Also stimmt die Behauptung der Pressemitteilung? Die gute Landluft lässt das Hirn wachsen?
 Sie recherchieren noch etwas weiter in den Daten. 
 Dann fällt Ihnen auf: Die *schlechtesten* Schüler kommen auch aus den Dorfschulen!
 Eine statistische Erklärung bietet sich an: 
-In den Dorfschulen gibt es nur wenig Kinder und kleine Klassen -- die Stichproben sind also klein.
+In den Dorfschulen gibt es nur wenig Kinder und vergleichsweise‚ kleine Klassen -- die Stichproben sind also klein.
 Bei kleinen Stichproben gibt es viel Variation um den Mittelwert herum, s. @fig-sample-estimate, 
 und zwar nach oben (guter Notenschnitt) und nach unten (schlechter Notenschnitt). $\square$
 :::

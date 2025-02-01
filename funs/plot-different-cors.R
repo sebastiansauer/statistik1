@@ -1,5 +1,5 @@
 
-plot_different_cors <- function(plot_it = FALSE, short = FALSE){
+plot_different_cors <- function(plot_it = FALSE, short = FALSE, alpha = .7){
   
   #### Quelle http://moderndive.com/scripts/06-regression.R
   ## Leichte Anpassungen durch N. Markgraf
@@ -57,7 +57,7 @@ plot_different_cors <- function(plot_it = FALSE, short = FALSE){
   
   if (!short){
     out <- ggplot(data = values, mapping = aes(V1, V2)) +
-      geom_point() + 
+      geom_point2(alpha = alpha) + 
       # stat_ellipse(level=0.999, type="norm", color="darkgreen", linetype="dotted", alpha=0.25) +
       # geom_lm(level=0.999) +
       facet_wrap(~ correlation, ncol = 3)  +
@@ -81,7 +81,7 @@ plot_different_cors <- function(plot_it = FALSE, short = FALSE){
       mutate(Richtung = ifelse(correlation > 0, "positiv", "negativ"),
              Staerke = ifelse(abs(correlation) > .5, "stark", "schwach"))
     out <- ggplot(data = values, mapping = aes(V1, V2)) +
-      geom_point() + 
+      geom_point2(alpha = alpha) + 
       facet_grid(Staerke ~ Richtung ) +
       labs(x = "", y = "") + 
       coord_fixed(ratio=25/40) + # (30-5)/(60-20)

@@ -1073,17 +1073,16 @@ In dem Fall gilt:
 
 *Lernen* ist die Input-Variable, X-Variable, Ursache, unabhängig Variable (UV). *Prüfungserfolg*  ist die Output-Variable, Y-Variable, Wirkung, abhängige Variable (AV)
 
-@fig-ueberblick-fragen stellt diese beiden "Positionen" einer Variable dar. Die erste Position ist vor dem Pfeil.
-Die zweite Position ist nach dem Pfeil.
+@fig-ueberblick-fragen stellt diese beiden "Positionen" einer Variable dar. Die erste Position ist vor dem Pfeil (X).
+Die zweite Position ist nach dem Pfeil (Y).
 
 ```{mermaid}
 %%| fig-cap: X und Y als synonyme Bezeichnungen für Input- und Output-Variablen einer Forschungsfrage
 %%| label: fig-ueberblick-fragen
 %%| fig-height: 0.5
 
-
 graph LR
-    X --> Y
+    X["Lernen<br>(UV, X)"] --> Y["gute Note<br>(AV, Y)"]
 ```
 
 
@@ -1182,22 +1181,23 @@ skalenniveaus |>
 
 ::: {.content-visible when-format="pdf"}
 
+
+
 ```{r p-skalen-pdf}
-#| dev: "ragg_png"
 #| echo: false
-#| tbl-cap: "Erlaubte Rechenoperationen nach Skalenniveau"
+#| tbl-cap: "Erlaubte Rechenoperationen nach Skalenniveau (ja, erlaubt: ✓; nein, nicht erlaubt: ✕)"
 #| label: tbl-skalenniveaus-pdf
 skalenniveaus <-
   tibble::tribble(
-       ~Skalenniveau, ~Quantitativ, ~Gleichheit, ~Reihenfolge, ~Addition, ~Multiplikation,
-     "Nominalniveau",       "nein",  "ja",  "nein",  "nein",  "nein",
-     "Ordinalniveau",       "nein",  "ja",  "ja",  "nein",  "nein",
-   "Intervallniveau",         "ja",  "ja",  "ja",  "ja",  "nein",
-  "Verhältnisniveau",         "ja",  "ja",  "ja",  "ja",  "ja"
+       ~Skalenniveau, ~Quantitativ, ~`≠`, ~`≼`, ~`+`, ~`×`,
+     "Nominalniveau",       "✕",  "✓",  "✕",  "✕",  "✕",
+     "Ordinalniveau",       "✕",  "✓",  "✓",  "✕",  "✕",
+   "Intervallniveau",         "✓",  "✓",  "✓",  "✓",  "✕",
+  "Verhältnisniveau",         "✓",  "✓",  "✓",  "✓",  "✓"
   )
 
 skalenniveaus |> 
-  kable()
+  knitr::kable()
 ```
 
 :::
@@ -1231,9 +1231,9 @@ Anders ausgedrückt:
 :::
 
 
-*Ordinalskala*: Diese Skala entspricht einer Rangordnung. 
+*Ordinalskala*: Diese Skala stellt einer Rangordnung dar. 
 Eine Rangordnung ist etwa die geordnete Abfolge Ihres Leibgerichte (1. Pizza, 2. Spagetthi, 3. Schnitzel). 
-Etwas "formaler" ausgedrückt:
+Etwas "formaler" ausgedrückt, z.B.:
 
 ::: {.content-visible when-format="html"}
 - 🍕 $\succ$  🍝 $\succ$ 🥩
@@ -1246,14 +1246,10 @@ Etwas "formaler" ausgedrückt:
 Das komische Zeichen $\succ$ soll heißen: "Ist auf meiner Liste von Leibgerichten weiter oben, mag ich lieber".
 Man kann aber *nicht* sagen, "Ich mag aber Pizza um 42% mehr als die Spagetthi und die wieder um 73% mehr als ein Schnitzel!". 
 Zumindest kann man das nicht ohne weitere Informationen und Annahmen. 
-Es gibt also Dinge auf der Welt, die man leicht in eine Rangordnung bringen kann, 
+Es gibt also Dinge auf der Welt, die man (leicht in eine Rangordnung bringen kann, 
 aber die man nur schwer in der Größe der Unterschiede bemessen kann. 
 Das ist die Ordinalskala.
-
-:::{.callout-important}
-Die Ordinalskale erlaubt, Objekte zu ordnen (hinsichtlich eines Merkmals). Die Abstände zwischen den Objekten können nicht quantifiziert werden. $\square$
-:::
-
+Die Ordinalskale erlaubt also, Objekte zu ordnen (hinsichtlich eines Merkmals). Die Abstände zwischen den Objekten können dabei nicht quantifiziert werden. 
 
 ```{r p-ordinal}
 #| dev: "ragg_png"
@@ -1284,7 +1280,7 @@ Das ist normal, so geht es vielen Leuten, wenn sie das zum ersten Mal hören.
 Der Grund, dass es nicht erlaubt ist, 
 Verhältnisse (wie doppelt/halb so viel etc.) auf der Celcius-Skala zu bilden,
 ist, dass der Nullpunkt der Skala, 0° C, kein echter, physikalischer Nullpunkt ist. Bei 0° C liegt eben nicht Null Wärmeenergie vor. 
-Stattdessen wurde eine Wärmenergiemenge gewählt, die für uns Menschen ganz praktisch, da augenfällig ist: der Gefrierpunkt von Wasser. 
+Stattdessen wurde mit  0° C eine Wärmenergiemenge gewählt, die für uns Menschen ganz praktisch, da augenfällig ist: der Gefrierpunkt von Wasser. 
 Was bei der Intervallskala erlaubt ist, ist das Addieren (und Subtrahieren): heute 10°C, morgen 5°C, das ist ein Unterschied von 5°C. 
 Oder: Im Schnitt waren es 7,5°C, das ist genau in der Mitte von 5 und 10°C. @fig-intervall versinnbildlicht die Intervallskala.
 
@@ -1317,7 +1313,7 @@ was man sich gemeinhin unter einer metrische Variable vorstellt:
 Man kann "normal" rechnen, alle Rechenoperationen sind erlaubt. 
 Zuzüglich zu denen, 
 die auch in anderen, "niedrigeren" Skalenniveaus erlaubt sind, 
-ist das das Bilden von Verhältnissen -- Multiplizieren, s. @fig-verhaeltnis.
+ist das das Bilden von Verhältnissen -- Multiplizieren (und damit auch Dividieren), s. @fig-verhaeltnis.
 
 ```{r p-verhaeltnis}
 #| dev: "ragg_png"
@@ -1368,16 +1364,14 @@ plot(qr)
 :::
 
 
-Außerdem können quantitative Variablen untergliedert werden in:
+Außerdem können quantitative Variablen wie folgt untergliedert werden:
 
 - *stetige* Variablen, das sind Variablen, bei denen man zwischen zwei Ausprägungen immer noch eine weitere quetschen kann. So gibt es einen Wert für die Köpergröße zwischen 1.60&#8239;m und 1.61&#8239;m. Und einen Wert zwischen 1.601&#8239;m und 1.602&#8239;m, etc.
 - *diskrete* Variablen, das sind metrische Variablen, die nur bestimmte Ausprägungen haben, häufig sind das die natürlichen Zahlen: $1,2,...$. Ein Beispiel wäre die Anzahl der Kinder in einer Familie.
 
 
-
-:::{.callout-tip}
 Fragen nach Skalenniveaus gehören zu den Lieblingsprüfungsfragen in diesem Themenbereich. Sie sind gut beraten, sich gerade mit dieser Frage intensiver zu beschäftigen. Auch in thematisch angrenzenden Fächern wird immer wieder die Frage nach dem Skalennvieau aufgeworfen. Das zeigt natürlich auch die hohe Relevanz des Themas.
-:::
+
 
 
 :::{#exr-skalenniveaus}
@@ -1404,13 +1398,15 @@ Puppen sind Modelle für Babies, Landkarten für Landstriche und das Atommodell 
 :::
 
 Auch in der Statistik nutzen wir Modelle.
-Helfen Sie Prof. Weiss-Ois: Er blickt nicht durch, s. @fig-prof-mw.
+Helfen Sie Prof. Weiss-Ois: Er blickt nicht durch, s. @exm-weiss-ois.
 Gerne würde er wissen, wie viele Stunden seine Studentis auf die Prüfung lernen. 
 Aber mit so vielen Zahlen kann er nicht umgehen ...
 Geben Sie ihm ein Modell: Sagen Sie ihm, wie lang die Studis typischerweise lernen (sagen Sie ihm ein einfach den *Mittelwert* der Lernzeiten, 9.6 Stunden).
 
 
-:::{#fig-prof-mw}
+:::{#exm-weiss-ois}
+
+### Prof Weiss-Ois blickt nicht durch
 
 >    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Vorher: 12, 8, 10, 11, 10, 9, 13, 9, 14, 9, 12, 14, 7, 9, 9, 11, 9, 4, 5, 12, 9, 6, 9, 12, 13, 9, 9, 6, 10... Oh je, so viele Zahlen! Ich check nix! Wie viel lernen denn jetzt meine Studis?!
 
@@ -1425,8 +1421,7 @@ Geben Sie ihm ein Modell: Sagen Sie ihm, wie lang die Studis typischerweise lern
 
 <!-- ![Nachher: </br> Ah, 9.6 Stunden! Yeah, jetzt weiß ich, wie viel die Studis so typischerweise lernen. Viel zu wenig natürlich! [@flaticon_professor_2024]](img/teacher.png){width="25%"} -->
 
-Prof. I. Ch. Weiss-Ois hat den Mittelwert verstanden.
-
+Prof. I. Ch. Weiss-Ois hat den Mittelwert verstanden ... $\square$
 :::
 
 
@@ -1454,11 +1449,6 @@ Weniger ist mehr?!
 
 
 Wir leben im Datenzeitalter; Daten durchdringen alle Bereiche des beruflichen, gesellschaftlichen und privaten Lebens. Die Datenanalyse hat sich in den letzten Jahren massiv verändert, da Datenmengen und Methoden einen regelrechten Boom erlebt haben.
-
-
-
-
-
 Diese Entwicklung ist durchaus auch kritisch zu betrachten;
 viele Menschen betrachten die Entwicklung im Datenzeitalter -- Stichwort künstliche Intelligenz -- mit Sorge.
 Egal ob man Daten als Segen oder Fluch betrachtet, in beiden Fällen ist es wichtig, mit Daten umgehen zu können.
@@ -1492,13 +1482,17 @@ Dann könnten Sie stattdessen als Ergebnis nur die eine Variable mit schönen Er
 ganz ohne widersprechende Befunde. 
 
 Dieser Versuchung nicht zu erliegen, kann schwer sein. Es ist aber gefährlich, 
-missliebige Ergebnisse zu verschweigen: Die anderen Menschen bekommen dann ein falsches Bild der Ergebnislage; man spricht von [Publikationsbias](https://de.wikipedia.org/wiki/Publikationsbias) [@marksanglin_historical_2020]. Wer Ergebnisse verschweig, verzerrt die insgesamte Befundlage [@rothstein_publication_2014] -- klarer Fall von wissenschaftlichem Fehlverhalten.
+missliebige Ergebnisse zu verschweigen: Die anderen Menschen bekommen dann ein falsches Bild der Ergebnislage; man spricht von [Publikationsbias](https://de.wikipedia.org/wiki/Publikationsbias) [@marksanglin_historical_2020]. Wer Ergebnisse verschweig, verzerrt die insgesamte Befundlage [@rothstein_publication_2014] -- ein Fall von wissenschaftlichem Fehlverhalten.
 
 
 
 ## Fazit
 
-Die Aufgabe von Statistik ist es, durch Zusammenfassen von Daten Modelle zu bilden, die es uns einfacher machen, schwierige Sachverhalte zu verstehen. Zentral ist dabei, die Analyse von Variabilität der Daten. Daten kommen in verschiedenen Varianten vor, typischerweise in Tabellenform, möglichst im Tidy-Format.
+Die Aufgabe von Statistik ist es, durch Zusammenfassen von Daten Modelle zu bilden, 
+die es uns einfacher machen, schwierige Sachverhalte zu verstehen. 
+Zentral ist dabei die Analyse von Variabilität der Daten. 
+Daten kommen in verschiedenen Varianten vor, 
+typischerweise in Tabellenform, möglichst im Tidy-Format.
 
 
 
@@ -1528,19 +1522,32 @@ Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine 
 
 
 In vielen Organisationen werden Exceltabellen für bestimmte Zwecke der Datenverarbeitung verwendet. 
-Excel (und ähnliche Programme) hat bestimmte Stärken und Vorteile, aber auch gewisse Nachteile und Schwäche;
+Excel und ähnliche Programme haben bestimmte Stärken und Vorteile, 
+aber auch gewisse Nachteile und Schwäche;
 das liegt z.T. daran, dass Excel für bestimmte Aufgaben besser und für andere weniger gut geeignet ist.
-Wenn man mit Excel arbeitet, wiederholen sich erfahrungsgemäß immer wieder die gleichen Fehler bzw. suboptimalen Vorgehensweise zum Aufbau einer Exceltabelle.
+Wenn man mit Excel arbeitet, 
+wiederholen sich erfahrungsgemäß immer wieder die gleichen Fehler bzw. kommt es wiederholt zu einer suboptimalen Vorgehensweise zum Aufbau einer Exceltabelle.
 
 [Dieser Artikel](https://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989) von @broman_data_2018 zeigt anhand einiger praktischer Tipps, wie man Exceltabellen so aufbaut, dass Fehler minimiert werden. 
 
 
+:::: {.content-visible when-format="html"}
+
 :::{#exr-xls-paper}
 ### Fassen Sie den Artikel von @broman_data_2018 zusammen
 Die Lehrkraft teilt Sie dazu in Gruppen ein und weist jeder Gruppe einen Abschnitt des Artikels zu.
-Fassen Sie das *Wesentliche* (und nur das Wesentliche) an einem geeigneten Ort zusammen (z.B. auf einem Miro-Board).
+Fassen Sie das *Wesentliche* (und nur das Wesentliche) zum Artikel an einem geeigneten Ort zusammen (z.B. auf einem Miro-Board).
 $\square$
 :::
+::::
+
+:::: {.content-visible when-format="pdf"}
+:::{#exr-xls-paper}
+### Fassen Sie den Artikel von @broman_data_2018 zusammen
+Fassen Sie das *Wesentliche* (und nur das Wesentliche) zum Artike lan einem geeigneten Ort zusammen .
+$\square$
+:::
+::::
 
 
 
@@ -1571,9 +1578,9 @@ plot(qr)
 
 
 Kernstück der Umfrage ist die Smartphone-Sucht-Skala [@kwon_smartphone_2013]. 
-Eine Studie fand, dass ca. ein Siebtel der Studierenden süchtig nach ihrem Smartphone sind [@haug_smartphone_2015]; 
+Eine Studie fand, dass ca. ein Siebtel der Studierenden süchtig nach ihrem Smartphone ist [@haug_smartphone_2015]; 
 demnach könnte dem Thema eine hohe Bedeutsamkeit zukommen.
-Wir werden die Daten im weiteren Verlauf auswerten. 
+
 
 
 
@@ -1593,7 +1600,7 @@ welche Fehler Sie sie in in den acht Jahren ihrer Berufserfahrung gemacht hat un
 ## Literaturhinweise
 
 Einen Einblick in die  Fundamente statistischer Analyse bietet @stigler_seven_2016. 
-@cetinkaya-rundel_introduction_2021, 
+@cetinkaya-rundel_introduction_2021
 stellen grundlegende Konzepte der Analyse von Daten im Kapitel 1, 
 "Hello data", vor.
 @downey_probably_2023 illustriert statistische Überraschungsmoment auf unterhaltsame, und vor allem: sofataugliche Art.

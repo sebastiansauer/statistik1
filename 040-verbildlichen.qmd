@@ -33,8 +33,6 @@ source("_common.R")
 
 
 
-Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
-
 
 
 
@@ -50,7 +48,9 @@ Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt dam
 - Sie können zentrale Ergebnisse aus Datendiagrammen herauslesen.
 
 
-### Benötigte R-Pakete
+### Benötigte R-Pakete und Daten
+
+Neben den üblichen Paketen `tidyverse` und `easystats` benötigen Sie in diesem Kapitel noch `DataExplorer` und optional `ggpubr` und `ggstatsplot`.
 
 ```{r}
 #| message: false
@@ -61,32 +61,8 @@ library(ggpubr)  # optional, Datenvisualisierung
 library(ggstatsplot)  # optional, Datenvisualisierung
 ```
 
+Wir arbeiten wieder mit den Datensatz `mariokart`, s. @sec-import-mariokart.
 
-### Benötigte Daten
-
-
-
-
-Zuerst definieren wir den Pfad, wo wir die Daten finden, s. @lst-mariokart. Dann importieren wir die Mariokart-Daten.
-
-```{r mariokart-path-pdf}
-#| lst-label: lst-mariokart
-#| lst-cap: Pfad zu den Mariokart-Daten
-mariokart_path <- paste0(
-  "https://vincentarelbundock.github.io/Rdatasets",
-  "/csv/openintro/mariokart.csv")
-
-mariokart <- read.csv(mariokart_path)
-```
-
-
-::: {.content-visible when-format="html"}
-
-### R-Code zum Copy-Pasten
-
-Sie finden den R-Code für jedes Kapitel [hier](https://github.com/sebastiansauer/statistik1/tree/main/R-code-for-all-chapters). $\square$
-
-:::
 
 
 ::::: {.content-visible when-format="html" unless-format="epub"}
@@ -153,7 +129,12 @@ also Mittelwerte, Streuungen, Korrelationen.
 Aber die Streudiagramme sind grundverschieden.
 Anscombes Beispiel zeigt (zugespitzt): 
 Eine Visualisierung enthüllt, was der Statistik (als Kennzahl) verhüllt bleibt.
-
+Statistische Diagramme können Einblicke geben, die sich nicht (leicht) in grundlegenden Statistiken (Kennwerten) abbilden. 
+Unter visueller Cortex ist sehr leistungsfähig. Wir können ohne Mühe eine große Anzahl
+an Informationen aufnehmen und parallel verarbeiten.
+Aus diesem Grund sind Datendiagramme eine effektive und einfache Art,
+aus Daten Erkenntnisse zu ziehen.
+Nutzen Sie Datendiagramme umfassend; sie sind einfach zu verstehen und doch sehr mächtig.
 
 
 
@@ -180,7 +161,8 @@ datasaurus_dozen |>
   geom_point() +
   theme_void() +
   theme(legend.position = "none")+
-  facet_wrap(~dataset, ncol = 4)
+  facet_wrap(~dataset, ncol = 4) +
+  theme(strip.text = element_text(size = 16))
 ```
 :::
 
@@ -199,16 +181,10 @@ datasaurus_dozen |>
 
 
 
-Statistische Diagramme können Einblicke geben, die sich nicht (leicht) in grundlegenden Statistiken (Kennwerten) abbilden. $\square$
-
-Unter visueller Cortex ist sehr leistungsfähig. Wir können ohne Mühe eine große Anzahl
-an Informationen aufnehmen und parallel verarbeiten.
-Aus diesem Grund sind Datendiagramme eine effektive und einfache Art,
-aus Daten Erkenntnisse zu ziehen.
-Nutzen Sie Datendiagramme umfassend; sie sind einfach zu verstehen und doch sehr mächtig.
 
 
-:::{def-datendiagramm}
+
+:::{#def-datendiagramm}
 ### Datendiagramm
 Ein *Datendiagramm* (kurz: Diagramm) ist ein Diagramm, das Daten und Statistiken zeigt, mit dem Zweck,
 Erkenntnisse daraus zu ziehen.
@@ -242,8 +218,6 @@ die in vielen Fällen mit R erstellt werden [vgl. @scherer_seasonal_2019].
 :::::
 
 
-### Ein Bild hat nicht so viele Dimensionen
-
 
 @fig-many-dims zeigt ein Bild mit mehreren (5) Variablen, 
 die jeweils einer "Dimension" entsprechen.
@@ -251,7 +225,12 @@ Wie man (nicht) sieht, wird es langsam unübersichtlich.
 Offenbar kann man in einem Bild nicht beliebig viele Variablen sinnvoll reinquetschen.
 Die "Dimensionalität" eines Diagramms hat ihre Grenzen,
 vielleicht bei 4-6 Variablen.
-
+Möchten wir den Zusammenhang von vielen Variablen, z.B. mehr als 5, verstehen,
+kommen wir mit Bildern nicht weiter.
+Dann brauchen wir andere Werkzeuge: Statistik komm zu Hilfe.
+Bei klaren Zusammenhängen und wenig Variablen braucht man keine (aufwändige) Statistik.
+Ein Bild (Datendiagramm) ist dann (oft) ausreichend.
+Man könnte sagen, dass es Statistik nur deshalb gibt, weil unser Auge mit mehr als ca. 4-6 Variablen nicht gleichzeitig umgehen kann.
 ```{r}
 #| echo: false
 #| label: fig-many-dims
@@ -267,13 +246,7 @@ mariokart |>
   geom_point()
 ```
 
-Möchten wir den Zusammenhang von vielen Variablen, z.B. mehr als 5, verstehen,
-kommen wir mit Bildern nicht weiter.
-Dann brauchen wir andere Werkzeuge: statistics to the rescue.
 
-Bei klaren Zusammenhängen und wenig Variablen braucht man keine (aufwändige) Statistik.
-Ein Bild (Datendiagramm) ist dann (oft) ausreichend.
-Man könnte sagen, dass es Statistik nur deshalb gibt, weil unser Auge mit mehr als ca. 4-6 Variablen nicht gleichzeitig umgehen kann.
 
 
 :::{#exr-anz-dims}
@@ -306,14 +279,13 @@ nom_plots |> knitr::kable()
 
 
 
-:::{.callout-note}
-Wir arbeiten hier mit dem Datensatz `mariokart`. 
-Hilfe bzw. ein Data-Dictionary (Codebook) finden Sie [hier](https://www.rdocumentation.org/packages/openintro/versions/2.4.0/topics/mariokart).
+
+
 :::
 
 ## Verteilungen verbildlichen
 
-### Verteilung: nominale Variable
+### Verteilung einr nominalen Variable
 
 :::{#def-verteilung}
 ### Verteilung
@@ -441,13 +413,15 @@ Nimm den Datensatz mariokart *und dann*
 ### Spalten wählen für das Balkendiagramm
 Hätten wir andere Spalten ausgewählt, so würde das Balkendiagramm die Verteilung jener Variablen zeigen. 
 Ja, Sie können auch mehrere Variablen auf einmal auswählen. 
-Probieren Sie das doch mal aus!
+Probieren Sie das doch mal aus! $\square$
 :::
 
 
 
 ::::{#exr-balken}
 ### Visualisieren Sie die Verteilung von `stock_photo`!
+
+**Lösung**
 
 ```{r}
 #| eval: !expr knitr:::is_html_output()
@@ -457,6 +431,8 @@ mariokart |>
   plot_bar()
 ```
 
+Mit `plot_bar` aus `DataExplorer` kann man Balkendiagramme darstellen. $\square$
+
 ::::
 
 
@@ -464,9 +440,9 @@ mariokart |>
 <!-- So können Sie  -->
 
 
-### Verteilung: quantitative Variable
+### Verteilung einer quantitativen Variable
 
-#### Histogramm
+
 
 Bei einer quantitativen Variablen mit vielen Ausprägungen wäre ein Balkendiagramm nicht so aussagekräftig, 
 s. @fig-balken-hist (links). Es gibt einfach zu viele Ausprägungen.
@@ -487,7 +463,7 @@ Oder, um noch weniger Ausprägungen zu bekommen, können wir einfach Gruppen def
 - Gruppe 1: 0-5 Dollar
 - Gruppe 2: 6-10 Dollar
 - Gruppe 2: 11-15 Dollar
-...
+- ...
 
 
 In @fig-balken-hist (rechts) sind z.B. die Ausprägungen des Verkaufspreis (`total_pr`) in in Gruppen der Breite von 5 Dollar aufgeteilt worden. 
@@ -541,6 +517,7 @@ Es gibt keine klare Regel, in wie viele Balken ein Histogramm
 gegliedert sein sollte.
 Nur: Es sollten nicht sehr viele und nicht sehr wenig sein, 
 s. @fig-zu-wenig-viele links bzw. @fig-zu-wenig-viele, rechts.
+Zur Erstellung eines Histogramms können Sie die Syntax @lst-de2 nützen, vgl. @fig-de-hist-density, links. 
 
 
 ```{r}
@@ -572,7 +549,7 @@ p_mario_zu_wenige
 ```
 
 
-Zur Erstellung eines Histogramms können Sie die Syntax @lst-de2 nützen, vgl. @fig-de-hist-density, links. 
+
 
 
 
@@ -626,7 +603,7 @@ mariokart |>
 
 
 
-#### Dichtediagramm
+
 
 @fig-balken-total-pr-hist-dens fügt zum Histogramm ein *Dichtediagramm* hinzu (durchgezogene Linie). 
 Ein Dichtediagramm ähnelt einem "glattgeschmirgeltem" Histogramm.
@@ -636,7 +613,7 @@ Ein Dichtediagramm ähnelt einem "glattgeschmirgeltem" Histogramm.
 ### Dichtediagramm
 Ein Dichtediagramm visualisiert die Verteilung einer stetigen Variablen.
 Im Gegensatz zum Histogramm wird der Verlauf der Kurve geglättet,
-so kann Rauschen (Zufallsschwankung) besser ausgeblendet werden. (Mit *Dichte* ist die Anzahl der Beobachtungen pro Einheit der Variablen auf der X-Achse gemeint.)
+so kann Rauschen (Zufallsschwankung) besser ausgeblendet werden. (Mit *Dichte* ist die relative Anzahl der Beobachtungen pro Einheit der Variablen auf der X-Achse gemeint.)
 :::
 
 
@@ -663,7 +640,6 @@ Erstellen Sie das Diagramm @fig-de-hist-density, rechtes Teildiagramm!^[Grob ges
 
 
 
-#### Eigenschaften von Verteilungen
 
 Verteilungen unterscheiden sich z.B. einerseits in ihrem "typischen" oder "mittleren" Wert (vgl. @sec-lage) und anderseits in ihrer Streuung  (vgl. @sec-streuung.)
 (Diagramme von) Verteilungen können symmetrisch oder schief (nicht symmetrisch) sein, s. @fig-symm-schief.
@@ -713,7 +689,7 @@ Benennen Sie die am besten passende Verteilungsform für die Variable `total_pr`
 
 **Lösung**
 
-Die Verteilung ist rechtsschief.
+
 
 ::: {.content-visible when-format="html"}
 
@@ -723,12 +699,12 @@ mariokart |>
   plot_density()
 ```
 :::
-
+Die Verteilung ist rechtsschief. $\square$
 ::::
 
 
 
-### Normalverteilung
+### Spezialfall Normalverteilung
 
 Eine Normalverteilung ist eine bestimmte Art von Verteilung einer quantitativen Variablen.
 Aber sie ist besonders wichtig, und ist daher hier herausgestellt.
@@ -861,7 +837,7 @@ Davon leitet sich die "68-95-99.7-Prozentregel" ab:
 
 ## Zusammenhänge verbildlichen
 
-### Zusammenhang: nominale Variablen
+### Zusammenhang nominaler Variablen
 
 
 :::{#exm-nom-zshg}
@@ -884,10 +860,10 @@ Dazu betrachten Sie wieder die `mariokart`-Daten, s. @fig-zshg-nom1.
 #| echo: false
 #| label: fig-zshg-nom1
 #| fig-asp: 0.7
-#| fig-cap: "Zusammenhang zwischen nominalskalierten Variablen verbildlichen"
+#| fig-cap: "Zusammenhang zwischen nominalskalierten Variablen verbildlichen. (a) Es findet sich ein Zusammenhang von Foto und Zustand in den Daten. (b) Es findet sich (fast) kein Zusammenhang von `wheel` und Foto in den Daten"
 #| fig-subcap: 
-#|   - "Es findet sich ein Zusammenhang von Foto und Zustand in den Daten"
-#|   - "Es findet sich (fast) kein Zusammenhang von `wheel` und Foto in den Daten"
+#|   - "starker Zusammenhang"
+#|   - "schwacher Zusammenhang"
 #| layout: [[45,-10, 45], [100]]
 #| 
 mariokart %>% 
@@ -919,15 +895,16 @@ der Anteil betrug jeweils ca. 70%.
 Das zeigt, dass es keinen Zusammenhang zwischen Foto und Neuwertigkeit 
 des Spiels gibt (laut unseren Daten).
 
-Anders gesagt: Unterscheiden sich die "Füllhöhe" in den Diagrammen, 
+Bildlich gesprochen: Unterscheiden sich die "Füllhöhe" in den Diagrammen, 
 so gibt es einen Unterschied hinsichtlich "Foto ist dabei" zwischen 
 den beiden Gruppen (linker vs. rechter Balken).
 Unterscheiden sich die Anteile in den Gruppen (neuwertige vs. gebrauchte Spiele), 
 so spielt z.B. die Variable "Foto dabei" offenbar eine Rolle. 
 Dann hängen Neuwertigkeit und "Foto dabei" also zusammen!
 
-So können Sie sich in R ein gefülltes Balkendiagramm ausgeben lassen,
-s. @fig-de-bar-filled. Diese Darstellung eignet sich, 
+So können Sie sich in R ein gefülltes Balkendiagramm ausgeben lassen, 
+z.B. mit `plot_bar(mariokart, by = "cond")` (Paket `DataExplorer`). 
+Diese Darstellung eignet sich, 
 um Zusammenhänge zwischen zwei zweistufigen nominal skalierten Variablen zu verbildlichen. 
 Die verschiedenen Werte der Füllfarbe werden den Stufen der Variablen `cond` zugewiesen, s. @lst-plot-bar.
 
@@ -947,7 +924,7 @@ mariokart %>%
 
 *Gefüllte Balkendiagramme* eignen sich zur Analyse eines Zusammenhangs zwischen nominalskalierten Variablen. Allerdings sollte eine der beiden Variablen nur zwei Ausprägungen aufweisen,
 sonst sind die Zusammenhänge nicht mehr so gut zu erkennen. 
-Außerdem sollten die Balken auf gleiche Länge (100%) ausgerichtet sein. $\square$
+Außerdem sollten die Balken auf gleiche Länge (100%) ausgerichtet sein. 
 
 
 ::::{#exr-zsmnhang-cond-wheels}
@@ -955,13 +932,6 @@ Außerdem sollten die Balken auf gleiche Länge (100%) ausgerichtet sein. $\squa
 ### Zusammenhang visualisieren
 
 Visualisieren Sie den Zusammenhang der beiden nominalen Variablen `cond` und `wheels`!
-
-**Lösung**
-
-`wheels` ist als metrische Variable (`int`: Integer, d.h. Ganzzahl) 
-formatiert im Datensatz `mariokart`. 
-Wir müssen Sie zunächst als Faktorvariable umformatieren, 
-damit R sie als nominal skalierte Variable erkennt.
 
 
 ```{r}
@@ -975,9 +945,15 @@ mariokart |>
 ```
 
 
+**Lösung**
+
+`wheels` ist als metrische Variable (`int`: Integer, d.h. Ganzzahl) 
+formatiert im Datensatz `mariokart`. 
+Wir müssen Sie zunächst als Faktorvariable umformatieren, 
+damit R sie als nominal skalierte Variable erkennt. $\square$
 ::::
 
-### Zusammenhang: metrisch {#sec-zshg-metr}
+### Zusammenhang bei metrischen Variablen {#sec-zshg-metr}
 
 
 Den (etwaigen) Zusammenhang zweier metrischer Variablen kann man mit einem *Streudiagramm* visualisieren (engl. scatterplot). 
@@ -990,12 +966,9 @@ Je höher der Startpreis, desto *höher* der Abschlusspreis, zumindest tendenzie
 Diese Gerade liegt "mittig" in den Daten (wir definieren dies später genauer).
 Diese Trendgerade gibt Aufschluss über "typische" Werte: 
 Welcher Y-Wert ist "typisch" für einen bestimmten X-Wert?
-
-
 @fig-streu1 rechts untersucht den Zusammenhang zwischen Anzahl der Gebote (X-Achse) und Abschlusspreises (Y-Achse).
 Es handelt sich um einen negativen Zusammenhang: Je mehr Gebote, desto *geringer* der Abschlusspreis.
 Das erkennt man an der sinkenden Trendgeraden.
-
 Die Ellipse zeigt an, wie eng die Daten um die Trendgerade streuen. Daraus kann man ableiten, wie stark der Absolutwert des Zusammenhangs ist, vgl. @fig-cors.
 
 
@@ -1007,7 +980,7 @@ Die Ellipse zeigt an, wie eng die Daten um die Trendgerade streuen. Daraus kann 
 #| label: fig-streu1
 #| fig-subcap:
 #|   - "positiver, mittelstarker Zusammenhang"
-#|   - "negativer, eher schwacher Zusammenhang"
+#|   - "negativer, schwacher Zusammenhang"
 #| layout-ncol: 2
 
 library(ggpubr)
@@ -1081,26 +1054,6 @@ plots(p1, p2, p3, p4, n_rows = 2, tags = "A")
 Starke Zusammenhänge erkennt man an schmalen Ellipsen ("Baguette" [🥖]{.content-visible when-format="html"});
 schwache Zusammenhänge an breiten Ellipsen ("Torte" [🥮]{.content-visible when-format="html"}).
 @fig-cors bietet einen Überblick über verschiedene Beispiele von Richtung und Stärke von Zusammenhängen.^[Quelle: Aufbauend auf FOM/ifes, Autor: Norman Markgraf]
-
-
-```{r}
-#| message: false
-#| echo: false
-#| label: fig-cors
-#| fig-cap: "Lineare Zusammenhänge verschiedener Stärke und Richtung"
-#| out-width: "75%"
-#| fig-asp: 0.5
-source("funs/plot-different-cors.R")
-fig_cors <- plot_different_cors(plot_it = FALSE)
-fig_cors +
-  theme_void()
-```
-
-
-
-
-
-
 In @fig-cors ist für jedes Teildiagramm eine Zahl angegeben: der *Korrelationskoeffizient*.
 Diese Statistik quantifiziert Richtung und Stärke des Zusammenhangs (mehr dazu in Kap. @sec-zusammenhaenge).
 Ein positives Vorzeichen steht für einen positiven Zusammenhang, 
@@ -1112,6 +1065,21 @@ Der (Absolut-)Wert gibt die Stärke des linearen Zusammenhangs an [@cohen_power_
 - ±0.3: mittlerer Zusammenhang
 - ±0.5: starker Zusammenhang
 - ±1: perfekter Zusammenhang
+
+```{r}
+#| message: false
+#| echo: false
+#| label: fig-cors
+#| fig-cap: "Lineare Zusammenhänge verschiedener Stärke und Richtung"
+#| out-width: "75%"
+#| fig-asp: 0.5
+source("funs/plot-different-cors.R")
+fig_cors <- plot_different_cors(plot_it = FALSE, alpha = .7)
+fig_cors +
+  theme_void()
+```
+
+
 
 
 @fig-cors2 hat die gleiche Aussage wie @fig-cors, 
@@ -1192,18 +1160,19 @@ Das Ergebnis sieht man in @fig-mario-scatter bzw. @lst-scatterplot. $\square$
 #| fig-cap: Der Zusammenhang metrischer Variablen mit Abschlusspreis
 mariokart %>% 
   select(duration, n_bids, start_pr,
-         ship_pr, total_pr, 
-         seller_rate, wheels) %>% 
-  plot_scatterplot(by = "total_pr")
+         total_pr, wheels) %>% 
+  plot_scatterplot(by = "total_pr", nrow = 1)
 ```
 
 
 Aha... Was sagt uns das Bild? Hm. Es scheint einige Extremwerte zu geben, die 
 dafür sorgen, dass der Rest der Daten recht zusammengequetscht auf dem Bild erscheint.
 Vielleicht sollten Sie solche Extremwerte lieber entfernen?
-Sie entscheiden sich, nur Verkäufe mit einem Abschlusspreis von weniger als 100 Dollar anzuschauen (`total_pr < 100`).
+Sie entscheiden sich, nur Verkäufe mit einem Abschlusspreis von weniger als 100 Dollar anzuschauen (`total_pr < 100`), s. @lst-no-extreme.
 
 ```{r}
+#| lst-label: lst-no-extreme
+#| lst-cap: Mariokart ohne Extremwerte
 mariokart_no_extreme <-
   mariokart %>% 
   filter(total_pr < 100)
@@ -1238,7 +1207,8 @@ Das Argument `by = "total_pr"` bei `plot_scatterplot` weist R an, als Y-Variable
 
 ::::{#exr-zsmnhang-metrisch}
 :::{.panel-tabset}
-### Aufgabe
+### Zuammenhang visualisieren
+
 Visualisieren Sie den Zusammenhang der beiden metrischen Variablen `start_pr` und `total_pr`. Verwenden Sie den Datensatz ohne Extremwerte wie oben definiert.
 
 
@@ -1251,6 +1221,10 @@ mariokart_no_extreme |>
   plot_scatterplot(by = "total_pr")
 ```
 
+Zuerst wählt man die Spalten (mit `select`), die man visualisieren möchte, dann ruft man die Funktion `plot_scatterplot` auf. $\square$
+
+
+
 :::
 ::::
 :::::
@@ -1262,9 +1236,9 @@ mariokart_no_extreme |>
 
 ::::{#exr-zsmnhang-metrisch}
 
-### Aufgabe Visualisieren Sie den Zusammenhang der beiden metrischen Variablen `start_pr` und `total_pr`.
+### Zuammenhang visualisieren
 
-Verwenden Sie den Datensatz ohne Extremwerte wie oben definiert.
+Visualisieren Sie den Zusammenhang der beiden metrischen Variablen `start_pr` und `total_pr`. Verwenden Sie den Datensatz ohne Extremwerte wie oben definiert.
 
 
 **Lösung**
@@ -1277,6 +1251,8 @@ mariokart_no_extreme |>
   plot_scatterplot(by = "total_pr")
 ```
 
+Zuerst wählt man die Spalten (mit `select`), die man visualisieren möchte, dann ruft man die Funktion `plot_scatterplot` auf. $\square$
+
 
 ::::
 :::::
@@ -1287,11 +1263,10 @@ mariokart_no_extreme |>
 
 ## Unterschiede verbildlichen
 
-### Unterschied: nominale Variablen
+### Unterschiede bei nominalen Variablen
 
 
-Gute Nachrichten: Für nominale Variablen bieten sich Balkendiagramme sowohl zur Darstellung von Zusammenhängen als auch von Unterschieden an. 
-Genau genommen zeigt ja @fig-zshg-nom1 (links) den *Unterschied* zwischen neuen und gebrauchten Spielen hinsichtlich der Frage, ob Photos beiliegen. 
+Gute Nachrichten: Für nominale Variablen bieten sich Balkendiagramme sowohl zur Darstellung von Zusammenhängen als auch von Unterschieden an. Genau genommen zeigt ja @fig-zshg-nom1 (links) den *Unterschied* zwischen neuen und gebrauchten Spielen hinsichtlich der Frage, ob Photos beiliegen. 
 Und wie man in @fig-zshg-nom1 sieht, ist der Anteil der Spiele mit Foto bei den neuen Spielen höher als bei gebrauchten Spielen.
 
 ::: {.content-visible when-format="html"}
@@ -1305,7 +1280,7 @@ Und wie man in @fig-zshg-nom1 sieht, ist der Anteil der Spiele mit Foto bei den 
 
 
 
-### Unterschied: quantitative Variablen
+### Unterschiede bei quantitativen Variablen
 
 
 Eine typische Analysefrage ist, ob sich zwei Gruppen hinsichtlich einer metrischen Zielvariablen deutlich unterscheiden. 
@@ -1388,12 +1363,13 @@ In @fig-hist-to-box sieht man die "Übersetzung" von Histogramm (oben) zu einem 
 #| label: fig-hist-to-box
 #| fig-cap: "Übersetzung eines Histogramms zu einem Boxplot"
 #| message: false
-# fig-asp: 0.68
 #| echo: false
+
 source("funs/histogram-to-boxplot.R")
 hist_to_box <- histogram_to_boxplot(mariokart_no_extreme, "total_pr", plot_it = FALSE)
 hist_to_box +
-  labs(caption = "Md: Median; Q1/3: 1./3. Quartil")
+  labs(caption = "Md: Median; Q1/3: 1./3. Quartil",
+       x = "total_pr (Gesamtpreis)")
 ```
 
 
@@ -1426,11 +1402,18 @@ Es wäre eigentlich ganz einfach,
 wenn R die Gruppen `0`, `1`, `2`, `3` und `4` aufteilen würde.
 Aber schaut man sich die Y-Achse (im linken Teildiagramm von @fig-box-wheels1) an,
 so erkennt man, 
-dass R `wheels` als stetige Zahl betrachtet und nicht in ganze Zahlen gruppiert. Vielleicht so, dass in jeder Gruppe gleich viele Wert sind?]
+dass R `wheels` als stetige Zahl betrachtet und nicht in ganze Zahlen gruppiert. Vielleicht so, dass in jeder Gruppe gleich viele Wert sind?
 Aber wir möchten jeden einzelnen Wert von `wheels` (0, 1, 2, 3, 4) als *Gruppe* verstehen.
 Mit anderen Worten, wir möchten `wheels` als nominale Variable definieren.
 Das kann man mit dem Befehle `factor(wheels)` erreichen (verpackt in `mutate`), s.
 @fig-box-wheels1 rechts.
+
+```{r}
+mariokart_no_extreme |> 
+  ggplot(aes(x = total_pr, y = wheels)) +
+  geom_boxplot()
+```
+
 
 ```{r}
 #| label: fig-box-wheels1
@@ -1442,12 +1425,12 @@ Das kann man mit dem Befehle `factor(wheels)` erreichen (verpackt in `mutate`), 
 #| layout-ncol: 2
 mariokart_no_extreme %>% 
   select(total_pr, wheels) %>% 
-  plot_boxplot(by = "wheels")
+  plot_boxplot(by = "wheels") 
 
 mariokart_no_extreme %>% 
   select(total_pr, wheels) %>% 
   mutate(wheels = factor(wheels)) %>% 
-  plot_boxplot(by = "wheels")
+  plot_boxplot(by = "wheels") 
 ```
 
 Sie schließen aus dem Bild, dass Lenkräder und Preis (positiv) zusammenhängen.
@@ -1461,8 +1444,6 @@ mariokart_no_extreme %>%
 
 Tatsächlich gibt es (in `mariokart_no_extreme`) auch für 3 Lenkräder schon wenig Daten,
 so dass wir die Belastbarkeit dieses Ergebnisses skeptisch betrachten sollten.
-
-
 Übrigens bezeichnet Sie Ihre Chefin nur noch als "Datengott".
 
 
@@ -1473,7 +1454,7 @@ so dass wir die Belastbarkeit dieses Ergebnisses skeptisch betrachten sollten.
 Es gibt mehrere Diagrammtypen, die sich anbieten;
 mehrere Lösungen sind also mögliche.
 
-*Lösung*
+**Lösung**
 
 ```{r}
 #| eval: !expr knitr:::is_html_output()
@@ -1483,8 +1464,12 @@ mariokart_no_extreme |>
   plot_boxplot(by = "cond")
 ```
 
+Boxplots sind eine gute Möglichkeit, die Verteilung einer metrischen Variablen, aufgebrochen auf mehrere Gruppen, zu visualisieren. $\square$
+
 ::::
 
+
+<!-- TODO MW-Unterschiede visualisieren -->
 
 
 
@@ -1509,9 +1494,9 @@ mariokart_no_extreme |>
 `plot_boxplot` gruppiert *metrische* Variablen, wie `ship_pr` automatisch in fünf Gruppen (mit gleichen Ranges). 
 Wir müssen also nichts tun, um die metrische Variable `ship_pr` 
 in eine Gruppierungsvariable (Faktorvariable) umzuwandeln.
-
 Es sieht so aus, als würde der Median zwischen den Gruppen leicht steigen, 
-mit Ausnahme der mittleren Gruppe.
+mit Ausnahme der mittleren Gruppe. $\square$
+
 
 ::::
 
@@ -1529,7 +1514,7 @@ Diagramme werden mitunter eingesetzt, um die Wahrheit "aufzuhübschen".
 Hier folgen einige gebräuchlichen Täuschungsmanöver.
 
 
-Achsen zu stauchen ist ein einfacher Trick, s. @fig-lie1.
+
 
 
 ```{r}
@@ -1564,7 +1549,6 @@ ggplot(d, aes(Jahr, Umsatz)) +
 ```
 
 
-Natürlich kann man auch durch "Abschneiden" der Y-Achse einen eindrucksvollen Effekt erzielen, s. @fig-lie2.
 
 
 
@@ -1597,18 +1581,15 @@ ggplot(d, aes(Jahr, Umsatz)) +
 ```
 
 
-
+Achsen zu stauchen ist ein einfacher Trick, s. @fig-lie1.
+Natürlich kann man auch durch "Abschneiden" der Y-Achse einen eindrucksvollen Effekt erzielen, s. @fig-lie2.
 Scheinkorrelationen als "echte", also kausale Effekte zu verkaufen, ist ein anderer Trick, den man immer mal wieder beobachten kann. Ein Beispiel: 
 @messerli_chocolate_2012 berichtet von einem Zusammenhang von Schokoladenkonsum und Anzahl von Nobelpreisen (Beobachtungseinheit: Länder), s. @fig-choc.
 Das ist doch ganz klar: Schoki futtern macht schlau und Nobelpreise! (?)
-
-![Schokolodenkonsum und Nobelpreise](img/choc.jpeg){#fig-choc width="75%"}
-
-
 Leider ist hier von einer *Scheinkorrelation* auszugehen: Auch wenn die beiden Variablen *Schokoladenkonsum* und *Nobelpreise* zusammenhängen, heißt das *nicht*, dass die Variable die Ursache und die andere die Wirkung sein muss. 
 So könnte auch eine Drittvariable im Hintergrund die gleichzeitige Ursache von Schokoladenkonsum und Nobelpreise sein, etwa der *allgemeine Entwicklungsstand* des Landes: In höher entwickelten Ländern wird mehr Schokolade konsumiert und es werden mehr Nobelpreise gewonnen im Vergleich zu Ländern mit geringerem Entwicklungsstand.
 
-
+![Schokolodenkonsum und Nobelpreise](img/choc.jpeg){#fig-choc width="75%"}
 
 
 
@@ -1719,7 +1700,7 @@ mariokart %>%
 
 Möchte man Mittelwerte vergleichen, so sind Boxplots nicht ideal, 
 da diese ja nicht den Mittelwert, sondern den *Median* herausstellen.
-Eine Abhilfe (also eine Darstellung des Mittelwerts) schafft man (z.B.) mit `ggpubr`,
+Eine Abhilfe (also eine Darstellung des Mittelwerts) schafft man (z.B.) mit `ggpubr` und der Funktion `ggviolin`,
 s. @fig-comp-means-ggpubr.
 
 
@@ -1728,9 +1709,7 @@ s. @fig-comp-means-ggpubr.
 #| out-width: 50%
 #| fig-cap: Vergleich der Verteilungen zweier Gruppen mit Mittelwert und Standardabweichung pro Gruppe hervorgehoben
 ggviolin(mariokart_no_extreme, 
-         x = "cond", 
-         y = "total_pr",
-         add = "mean_sd") 
+         x = "cond", y = "total_pr", add = "mean_sd") 
 ```
 
 Ein "Violinenplot" hat die gleiche Aussage wie ein Dichtediagramm:
@@ -1802,6 +1781,8 @@ mariokart %>%
 ```
 
 
+Mit `fill = cond` erreicht man, dass die Füllfarbe der Variable `cond` zugeordnet wird: Jeder Wert von `cond` (new/used) bekommt eine eigene Farbe. Welche das ist, hängt von verwendeten Farbschema ab. 
+Hier wird das Farbscheme von Okabe und Ito verwendet [@ichihara_color_2008].
 
 
 ## Aufgaben
@@ -1836,8 +1817,6 @@ Sowohl `ggpubr` als auch `DataExplorer` (und viele andere R-Pakete) bauen auf de
 Das Buch zur Software (vom Autor von `ggplot2`) ist empfehlenswert [@wickham_ggplot2_2016].
 Eine neuere, gute Einführung in Datenvisualisierung findet sich bei @wilke_fundamentals_2019.
 Beide Bücher sind kostenfrei online lesbar.
-
-
 @wilke_fundamentals_2019 gibt einen hervorragenden Überblick über praktische Aspekte der Datenvisualisierung; gut geeignet, wenn man mit R arbeitet.
 In ähnlicher Richtung geht @fisher_making_2018.
 

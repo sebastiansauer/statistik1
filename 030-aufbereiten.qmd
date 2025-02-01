@@ -42,45 +42,10 @@ Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt dam
 ### Lernziele
 
 
-- Sie können folgende Verben des Datenjudo anwenden: `arrange()`, `filter()`,  `select()`, `summarise()`, `group_by()`, `mutate()`.
+- Sie können folgende Verben des Datenjudo anwenden: `arrange`, `filter`,  `select`, `summarise`, `group_by`, `mutate`.
 - Sie können R-Befehle mit der "Pfeife" verketten.
 
 
-### Benötigte R-Pakete
-
-```{r}
-#| message: false
-library(tidyverse)
-library(easystats)
-```
-
-
-
-
-### Benötigte Daten
-
-::: {.content-visible when-format="html"}
-
-```{r import-mariokart-csv}
-mariokart_path <- "https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"
-
-mariokart <- read.csv(mariokart_path)
-```
-:::
-
-
-::: {.content-visible when-format="pdf"}
-
-
-```{r import-mariokart-csv2}
-mariokart <- paste0(
-  "https://vincentarelbundock.github.io/Rdatasets/",
-  "csv/openintro/mariokart.csv")
-
-mariokart <- read.csv(mariokart_path)
-```
-
-:::
 
 :::{#exr-los}
 Importieren Sie den Datensatz `mariokart`. 
@@ -168,7 +133,6 @@ Beispiele für typische Tätigkeiten des Datenjudos sind:
 ### Mach's einfach
 
 Es gibt einen (einfachen) Trick, wie man umfangreiche Datenaufbereitung elegant geregelt kriegt.
-
 ::: {.content-visible when-format="html"}
 Klingt fast zu schön, um wahr zu sein (s. @fig-that-would-be-great).
 ![Mach's einfach [@imgflip_simply] ](img/thatwouldbegreat.jpg){#fig-that-would-be-great width="50%"}
@@ -267,7 +231,7 @@ dann funktionieren diese Befehle nicht.
 <!-- ::: -->
 
 
-### Tabelle sortieren: `arrange()`
+### Tabelle sortieren: `arrange`
 
 *Sortieren* der Zeilen ist eine einfache, aber häufige Tätigkeit des Datenjudos, s. @fig-arrange.
 
@@ -275,7 +239,7 @@ dann funktionieren diese Befehle nicht.
 #| echo: false
 #| label: fig-arrange
 #| fig-asp: .5
-#| fig-cap: "Sinnbild für das Sortieren einer Tabelle mit `arrange()`"
+#| fig-cap: "Sinnbild für das Sortieren einer Tabelle mit `arrange`"
 d_arranged <-
   d %>% 
   arrange(note)
@@ -284,9 +248,10 @@ p_d_arranged <- ggtexttable(d_arranged, rows=NULL)
 
 p_d_arranged <-
   p_d_arranged %>% 
-  table_cell_bg(column = 4, fill = "red", row = 2:tab_nrow(p_d_arranged))
+  table_cell_bg(column = 4, fill = okabeito_colors()[1], 
+                row = 2:tab_nrow(p_d_arranged))
 
-p_text <- grid::textGrob("arrange()")
+p_text <- grid::textGrob("arrange")
 
 design <- 
   "
@@ -318,7 +283,7 @@ Was sind denn eigentlich die höchsten Preise, für die das Spiel *Mariokart* ü
 Die Spalte des Verkaufspreis heißt offenbar `total_pr` (s. Datensatz `mariokart`).
 In Excel kann die Spalte, nach der man die Tabelle sortieren möchte,
 einfach anklicken. Ob das in R auch so einfach geht?
-Die Funktion `arrange()` macht es uns ziemlich einfach, s. tbl-arrange.
+Die Funktion `arrange` macht es uns ziemlich einfach, s. @tbl-arrange.
 
 ```{r}
 #| echo: false
@@ -330,7 +295,7 @@ mariokart <-
 
 ::: {.content-visible when-format="html"}
 
-Die Funktion `arrange()` macht es uns ziemlich einfach, s. tbl-arrange-pdf.
+Die Funktion `arrange` macht es uns ziemlich einfach, s. tbl-arrange-pdf.
 
 
 ```{r}
@@ -343,7 +308,7 @@ arrange(mariokart, total_pr)
 
 ::: {.content-visible when-format="pdf"}
 
-Die Funktion `arrange()` macht es uns ziemlich einfach, s. tbl-arrange-pdf.
+Die Funktion `arrange` macht es uns ziemlich einfach, s. tbl-arrange-pdf.
 
 ```{r}
 #| eval: false
@@ -375,7 +340,7 @@ Gar nicht so schwer. $\square$
 
 
 
-Übrigens wird in `arrange()` per Voreinstellung aufsteigend sortiert.
+Übrigens wird in `arrange` per Voreinstellung aufsteigend sortiert.
 Setzt man ein Minus vor der zu sortierenden Spalte,
 wird umgekehrt, also *absteigend* sortiert:
 
@@ -389,9 +354,8 @@ mario_sortiert <- arrange(mariokart, -total_pr)
 Sortieren Sie die Mariokart-Daten absteigend nach der Anzahl der beigelegten Lenkräder. $\square$
 :::
 
-### Zeilen filtern: `filter()`
+### Zeilen filtern: `filter`
 
-#### Nur bestimmte Zeilen behalten
 
 Zeilen *filtern* bedeutet, dass man nur *bestimmte* *Zeilen* (Beobachtungen) *behalten* möchte, 
 die restlichen Zeilen brauchen wir nicht, weg mit ihnen.
@@ -402,7 +366,7 @@ anhand dessen wir die Tabelle filern, s. @fig-filter.
 ```{r plot-filter}
 #| echo: false
 #| label: fig-filter
-#| fig-cap: "Sinnbild für das Filtern einer Tabelle mit `filter()`"
+#| fig-cap: "Sinnbild für das Filtern einer Tabelle mit `filter`"
 d_filter <-
   d %>% 
   filter(note > 2)
@@ -414,9 +378,9 @@ p_d_filter <- ggtexttable(d_filter, rows=NULL)
 
 p_d_filter <- 
   p_d_filter %>% 
-  table_cell_bg(column = 1:4, fill = "red", row = 2:tab_nrow(p_d_filter))
+  table_cell_bg(column = 1:4, fill = okabeito_colors()[1], row = 2:tab_nrow(p_d_filter))
 
-p_text_filter <- grid::textGrob("filter()")
+p_text_filter <- grid::textGrob("filter")
 
 design <- 
   "
@@ -469,7 +433,7 @@ mit anderen Worten, Auktionen (Beobachtungen) bei denen gilt: `stock_photo == TR
 :::
 
 
-#### Komplexeres Filtern
+
 
 Angestachelt von Ihren Erfolgen möchten Sie jetzt komplexere Hypothesen prüfen:
 Ob wohl Auktionen von *neuen* Spielen und zwar *mit* Photo einen höheren Preis erzielen als die übrigen Auktionen?
@@ -523,17 +487,17 @@ Tipp: Nutzen Sie die Funktion `describe_distribution`, um den Mittelwert einer V
 :::
 
 
-### Spalten auswählen mit `select()`
+### Spalten auswählen mit `select`
 
 Eine Tabelle mit vielen Spalten kann schnell unübersichtlich werden.
 Da lohnt es sich, eine alte goldene Regel zu beachten: Mache die Dinge so einfach wie möglich, aber nicht einfacher.
-Wählen wir also *nur* die Spalten aus, die uns interessieren und entfernen wir die restlichen, s. @fig-select.
+Wählen wir also *nur* die Spalten aus, die uns interessieren und entfernen wir die restlichen, s. @fig-select als Beispiel.
 
 ```{r select}
 #| echo: false
 #| label: fig-select
 #| fig-asp: 0.5
-#| fig-cap: "Sinnbild für das Auswählen von Spalten mit `select()`"
+#| fig-cap: "Sinnbild für das Auswählen von Spalten mit `select`"
 d_select <-
   d %>% 
   select(id, note)
@@ -544,9 +508,9 @@ p_d_select <- ggtexttable(d_select, rows=NULL)
 
 p_d_select2 <- 
   p_d1 %>% 
-  table_cell_bg(column = 2, fill = "red", row = 2:tab_nrow(p_d_select))
+  table_cell_bg(column = 2, fill = okabeito_colors()[1], row = 2:tab_nrow(p_d_select))
 
-p_text_select <- grid::textGrob("select()")
+p_text_select <- grid::textGrob("select")
 
 design <- 
   "
@@ -570,7 +534,8 @@ p_select
 ### Fokus auf nur zwei Spalten
 
 Ob wohl gebrauchte Spiele deutlich geringere Preise erzielen im Vergleich zu neuwertigen Spielen?
-Sie entschließen sich, mal ein Stündchen auf die relevanten Daten zu starren.
+Sie entschließen sich, mal ein Stündchen auf die relevanten Daten zu starren. Dafür wählen Sie mit `select` die relevanten Spalten aus. $\square$
+:::
 
 ```{r}
 #| eval: false
@@ -579,16 +544,14 @@ mario_select1 <- select(mariokart, cond, total_pr)
 
 
 
-Aha (?)$\square$
-:::
 
-Der Befehl `select()` erwartet als Input eine Tabelle und gibt (als Output) eine Tabelle zurück 
+
+Der Befehl `select` erwartet als Input eine Tabelle und gibt (als Output) eine Tabelle zurück 
 -- genau wie die meisten anderen Befehle des Datenjudos.
 Auch wenn Sie nur eine Spalte auswählen, bleibt es eine Tabelle,
 eben eine Tabelle mit nur einer Spalte.
 
-`select()` erlaubt Komfort; Sie können Spalten auf mehrere Arten auswählen,
-z.B.
+`select` erlaubt Komfort; Sie können Spalten auf mehrere Arten auswählen:
 
 ```{r}
 #| eval: false
@@ -605,10 +568,10 @@ Wählen Sie die Spalten `total_pr`, `cond` sowie die zweite Spalte der Tabelle `
 
 
 
-Vertiefte Informationen zum Auswählen von Spalten mit `select()` findet sich [hier](https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html).^[<https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html>]
+Vertiefte Informationen zum Auswählen von Spalten mit `select` findet sich [hier](https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html).^[<https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html>]
 
 
-### Spalten zu einer Zahl zusammenfassen mit `summarise()`
+### Spalten zu einer Zahl zusammenfassen mit `summarise`
 
 So eine lange Spalte mit Zahlen -- mal ehrlich: wer blickt da schon durch?
 Viel besser wäre es doch, die Spalte `total_pr` zu einer Zahl zusammenzufassen,
@@ -620,7 +583,7 @@ zum Mittelwert zusammen, s. @fig-summarise.
 #| echo: false
 #| label: fig-summarise
 #| fig-asp: 0.5
-#| fig-cap: "Spalten zu einer einzelnen Zahl zusammenfassen mit `summarise()`"
+#| fig-cap: "Spalten zu einer einzelnen Zahl zusammenfassen mit `summarise`"
 d_summ <-
   d %>% 
   summarise(note_mw = round(mean(note), 1))
@@ -630,7 +593,7 @@ p_d1 <- ggtexttable(d, rows=NULL)
 p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1)
 p_d_summ <- ggtexttable(d_summ, rows=NULL) 
 
-p_text_summ <- grid::textGrob("summarise()",
+p_text_summ <- grid::textGrob("summarise",
                               gp=grid::gpar(fontsize=8))
 
 design <- 
@@ -654,7 +617,8 @@ p_summ
 
 ### Was ist der mittlere Verkaufspreis?
 
-Mit `summarise()`, s. @lst-summarise, können wir den mittleren Verkaufspreis der Mariokart-Spiele berechnen.
+Mit `summarise`, s. @lst-summarise, können wir den mittleren Verkaufspreis der Mariokart-Spiele berechnen (`r round(mean(mariokart$total_pr), 0)`.  $\square$
+:::
 
 
 
@@ -666,31 +630,28 @@ mariokart_mittelwert <- summarise(mariokart,
 mariokart_mittelwert
 ```
 
-Aha! Etwa 50€ erzielt so eine Auktion im Schnitt. $\square$
-
-:::
-
-
+Aha! Etwa 50€ erzielt so eine Auktion im Schnitt.
 Übersetzen wir @lst-summarise vom Errischen ins Deutsche:
 
 >   [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Hey R, fasse die Zeilen von `total_pr` aus `mariokart` zu einer Zahl zusammen, und zwar mit Hilfe des Mittelwerts. Die resultierende Tabelle nennen wir `mariokart_mittelwert`, sehr kreativ. Und die resultierende Spalte, die einzige in `mariokart_mittelwert`, nennen wir `preis_mw`.
 
 
 
-Ein bisschen abstrakter gesprochen, fasst `summarise()` 
-also eine *Spalte* zu einer (einzelnen) *Zahl* zusammen, s. @fig-desk-summ.
+Ein bisschen abstrakter gesprochen, fasst `summarise` 
+ eine *Spalte* zu einer (einzelnen) *Zahl* zusammen, s. @fig-desk-summ.
 
 
 ![`summarise` fasst eine Spalte (oder mehrere) zu einer einzelnen Zahl zusammen](img/desk-stats-zsmnfassen-crop.png){#fig-desk-summ width=25%}
 
+::: {.content-visible when-format="html"}
 
 Eine Alternative, um eine Spalte zu einer Zahl zusammenzufassen, bietet der "Dollar-Operator" (`$`):  `mean(mariokart$total_pr)`.
 Der Dollar-Operator trennt hier die Tabelle von der Spalte: `tibble$spalte`.
 Im Gegensatz zu den Verben des Tidyverse (die immer einer Tabelle zurückliefern),
 liefert der Dollar-Operator einen Vektor (Spalte) zurück. (Diese wird von `mean` dann zu einer einzelnen Zahl zusammengefasst.)
+:::
 
-
-*Auf welche Art* zusammengefasst werden soll, z.B. anhand des Mittelwerts oder Maximalwerts, muss noch zusätzlich innerhalb von `summarise()` angegeben werden.
+*Auf welche Art* zusammengefasst werden soll, z.B. anhand des Mittelwerts oder Maximalwerts, muss noch zusätzlich innerhalb von `summarise` angegeben werden.
 
 
 
@@ -714,6 +675,9 @@ Aber viel interessanter wäre es doch, denken Sie sich,
 zu wissen, ob die neuen Spiele im Schnitt mehr kosten als die alten?
 Ob R Ihnen so etwas ausrechnen kann?
 
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Hallo R, kannst du mir die mittleren Verkaufspreise von alten und neuen Spielen ausrechnen?
+
+
 >   [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"}  Ich tue fast alles für dich. [🧡]{.content-visible when-format="html"}[\emoji{heart}]{.content-visible when-format="pdf"} 
 
 Also gut, R, dann gruppiere die Tabelle, s. @fig-group.
@@ -722,7 +686,7 @@ Also gut, R, dann gruppiere die Tabelle, s. @fig-group.
 ```{r plot-group}
 #| echo: false
 #| label: fig-group
-#| fig-cap: "Gruppieren von Datensätzen mit `group_by()`"
+#| fig-cap: "Gruppieren von Datensätzen mit `group_by`"
 d_groupby <-
   d %>% 
   group_by(gruppe)
@@ -742,11 +706,11 @@ p_d_g2 <- ggtexttable(d_g2, rows=NULL)
 
 p_d_g1 <- 
   p_d_g1 %>% 
-  table_cell_bg(column = 3, fill = "lightblue", row = 2:tab_nrow(p_d_g1))
+  table_cell_bg(column = 3, fill = okabeito_colors()[1], row = 2:tab_nrow(p_d_g1))
 
 p_d_g2 <- 
   p_d_g2 %>% 
-  table_cell_bg(column = 3, fill = "green", row = 2:tab_nrow(p_d_g2))
+  table_cell_bg(column = 3, fill = okabeito_colors()[2], row = 2:tab_nrow(p_d_g2))
 
 p_text_summ <- grid::textGrob("group_by(gruppe)",
                               gp=grid::gpar(fontsize=8))
@@ -794,6 +758,7 @@ Jetzt können Sie an jeder Teiltabelle Ihre weiteren Berechnungen vornehmen, etw
 summarise(mariokart_gruppiert, preis_mw = mean(total_pr))
 ```
 
+Ah, die neuen Spiele sind teuerer, wer hätt's gedacht!
 Langsam fühlen Sie sich als Datenchecker ... [🥷 🦹‍♀]{.content-visible when-format="html"}$\square$
 :::
 
@@ -853,10 +818,12 @@ mariokart_verkaufspreis_foto
 ```
 ::::
 
+Bei Auktionen mit Foto wird im Schnitt ein höhrer Preis erzielt als ohne Foto. $\square$
+
 :::::
 
 
-### Spalten verändern mit `mutate()`
+### Spalten verändern mit `mutate`
 
 Immer mal wieder möchte man *Spalten verändern*, bzw. deren Werte umrechnen, s. @fig-mutate.
 
@@ -864,7 +831,7 @@ Immer mal wieder möchte man *Spalten verändern*, bzw. deren Werte umrechnen, s
 #| echo: false
 #| label: fig-mutate
 #| fig-asp: 0.5
-#| fig-cap: "Spalten verändern/neu berechnen mit `mutate()`"
+#| fig-cap: "Spalten verändern/neu berechnen mit `mutate`"
 d_mutate <-
   d %>% 
   mutate(punkte = c(73, 72, 89))
@@ -873,9 +840,9 @@ p_d_mutate <- ggtexttable(d_mutate, rows=NULL)
 
 p_d_mutate <- 
   p_d_mutate %>% 
-  table_cell_bg(column = 5, fill = "red", row = 2:tab_nrow(p_d_select))
+  table_cell_bg(column = 5, fill = okabeito_colors()[1], row = 2:tab_nrow(p_d_select))
 
-p_text_mutate <- grid::textGrob("mutate()",
+p_text_mutate <- grid::textGrob("mutate",
                               gp=grid::gpar(fontsize=7))
 
 design <- 
@@ -912,12 +879,12 @@ Sicherlich werden Sie Ihre Gesprächspartner schwer beeindrucken. $\square$
 :::
 
 
-Mit  `mutate()` berechnen Sie eine Spalte `x` (in einer Tabelle) neu.
-Die Funktion, die Sie in `mutate()` benennen wird für jede Zeile der Spalte `x` angewendet.
+Mit  `mutate` berechnen Sie eine Spalte `x` (in einer Tabelle) neu.
+Die Funktion, die Sie in `mutate` benennen wird für jede Zeile der Spalte `x` angewendet.
 
 :::{#exm-mutate2}
-### Beispiele für Funktionen für `mutate()`
-`mutate()` eignet sich, z.B. um Spalten zu addieren, 
+### Beispiele für Funktionen für `mutate`
+`mutate` eignet sich, z.B. um Spalten zu addieren, 
 zu multiplizieren oder sonst wie zu transformieren 
 (z.B. den Logarithmus anwenden oder den Mittelwert der Spalte von jeder Zeile abziehen). $\square$
 :::
@@ -970,15 +937,15 @@ mariokart_duration_wochen_schmal |> head()
 ::::
 :::::
 
-
+::: {.content-visible when-format="html"}
 
 >   [🧟‍♀️]{.content-visible when-format="html"}[\emoji{woman-zombie}]{.content-visible when-format="pdf"}️ Statistik, wann braucht man schon sowas!?
 
 >   [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Eigentlich nur dann, wenn man die Fakten gut verstehen will, sonst nicht.
+:::
 
 
-
-### Zeilen zählen mit `count()`
+### Zeilen zählen mit `count`
 
 
 Arbeitet man mit nominalskalierten Daten, ist (fast) alles, was man tun kann,
@@ -1028,7 +995,7 @@ Die Befehle ("Verben") des Tidyverse sind jeweils für einzelne,
 typische Aufgaben des Datenaufbereitens ("Datenjudo") zuständig.
 Typischerweise erwarten diese Befehle eine Tabelle ({{< fa table >}}) 
 als Input und liefern eine Tabelle aus Output zurück, s. @fig-tbl-in-out.
-
+Die Verben des Datenjudos werden beim ["Tidydatatutor"](https://tidydatatutor.com/) anschaulich illustriert.^[<https://tidydatatutor.com>]
 
 ```{mermaid}
 %%| label: fig-tbl-in-out
@@ -1039,6 +1006,10 @@ als Input und liefern eine Tabelle aus Output zurück, s. @fig-tbl-in-out.
 flowchart LR
   A["▥"] --> B[tidyverse-Befehl] --> C["▥"] 
 ```
+
+
+
+
 
 
 ## Die Pfeife {#sec-pipe}
@@ -1194,7 +1165,7 @@ dass der Shortcut Strg-Shift-M die eingebaute Pfeife verwendet.
 ```{mermaid}
 %%| fig-cap: Illustration für eine Pfeifensequenz, es geht vorwärts wie am Fließband.
 %%| label: fig-pfeife
-%%| fig-height: 0.3
+%%| fig-height: 0.4
 
 flowchart LR
   A["▥"] --filter<br>zeilen-->B["▥"] 
@@ -1205,8 +1176,7 @@ flowchart LR
 
 
 
-Und jetzt kommt's: So eine Art von Befehls-Verkettung gibt es in R.
-Schauen Sie sich mal @lst-pfeife an.
+
 
 ```{#lst-pfeife .r lst-cap="Eine Pfeifen-Befehlssequenz (Pseudo-Syntax)"}
 meine_daten %>%
@@ -1216,27 +1186,17 @@ meine_daten %>%
   fasse_zusammen() 
 ```
 
-
+Und jetzt kommt's: So eine Art von Befehls-Verkettung gibt es in R.
+Schauen Sie sich mal @lst-pfeife an.
 So eine Pfeifen-Befehlsequenz ist ein wie ein Fließband,
 an dem es mehrere Arbeitsstationen gibt, s. @fig-pfeife. 
 Unser Datensatz wird am Fließband von Station zu Station weitergereicht und
 an jeder Stelle weiterverarbeitet.
-
-
-<!-- TODO  -->
-<!-- ## Praxisprobleme des Datenaufbereitens -->
-
-<!-- ### Fehlende Werte  -->
-
-<!-- ### Spalten umbenennen -->
-
-<!-- ### Werte umkodieren -->
-
-
-
-So könnte Ihre "Pfeifen-Sequenz" aussehen:
+So könnte Ihre "Pfeifen-Sequenz" für den Mariokart-Datensatz aussehen, s. @lst-ihre-pfeife.
 
 ```{r}
+#| lst-label: lst-ihre-pfeife
+#| lst-cap: "Mariokart am Fließband: Die 'Pfeifen-Syntax'"
 # Hey R, nimm die Tabelle "mariokart":
 mariokart %>%  
    # filter nur die günstigen Spiele:
@@ -1253,6 +1213,15 @@ mariokart %>%
 Die Syntax `filter(mariokart, total_pr < 100)` und die Syntax `mariokart |> filter(total_pr < 100)` sind identisch.
 Allgemeiner: `d |> f(x)` = `f(d, x)`.
 
+
+<!-- TODO  -->
+<!-- ## Praxisprobleme des Datenaufbereitens -->
+
+<!-- ### Fehlende Werte  -->
+
+<!-- ### Spalten umbenennen -->
+
+<!-- ### Werte umkodieren -->
 
 
 ## Beispiele für Forschungsfragen
@@ -1277,7 +1246,7 @@ Heute sollen Sie zeigen, was Sie können (Schluck).
 was das teuerste Spiel ist, aber jeweils für neue und gebrauchte Spiele. 
 Aber nur für Spiele, die mit Foto verkauft wurden!
 
-**Antwort**
+**Lösung**
 
 ```{r}
 mariokart %>% 
@@ -1292,7 +1261,10 @@ Die Funktion `max` liefert den größten Wert eines Vektors zurück:
 x <- c(1, 2, 10)
 max(x)
 ```
+
+Das teuerste Spiel mit Foto kostet `75` Dollar, wenn es neu ist und `62`, wenn es gebraucht ist. $\square$
 :::
+
 
 
 
@@ -1308,7 +1280,7 @@ max(x)
 aber getrennt nach Anzahl der Lenkräder, die dem Spiel beigelegt sind. 
 Und ich will nur Gruppen berücksichtigen, die aus mindestens 10 Spielen bestehen!
 
-**Antwort**
+**Lösung**
 
 Wenn wir die Anzahl der Spiele zählen in Abhängigkeit der beigelegten Lenkräder (`wheels`), 
 bekommen wir eine Tabelle mit zwei Spalten: `wheels` und `n`.
@@ -1320,7 +1292,7 @@ mariokart %>%
   count(wheels)
 ```
 
-Aus dieser Tabellet sehen wir, dass 3 oder 4 Lenkräder nur selten (2 bzw. 1 Mal) 
+Aus dieser Tabelle sehen wir, dass 3 oder 4 Lenkräder nur selten (2 bzw. 1 Mal) 
 beigelegt wurden und wir solche Spiele herausfiltern sollten, 
 bevor wir den Mittelwert der Versandkosten ausrechnen:
 
@@ -1332,9 +1304,9 @@ mariokart %>%
             anzahl_spiele = n())
 ```
 
-Die Funktion `n()` gibt die Anzahl der Zeilen pro Teiltabelle zurück.
+Die Funktion `n` gibt die Anzahl der Zeilen pro Teiltabelle zurück.
 
-
+Die mittleren Versankosten bewegen sich also zwichen 2.7 Dollar und 3.6 Dollar, je nach Anzahl der beigelegten Lenkräder. $\square$
 :::
 
 
@@ -1349,7 +1321,7 @@ Dann rechne mal den mittleren Verkaufspreis aus und ziehe 10% ab,
 die wir als Provision unseren Verkäufern zahlen müssen.
 
 
-**Antwort**
+**Lösung**
 
 ```{r}
 mariokart %>% 
@@ -1360,7 +1332,7 @@ mariokart %>%
     preis_yen_mw_minus_10proz = preis_yen_mw - 0.1*preis_yen_mw)
 ```
 
-Wie man sieht kann man in `summarise()` auch mehr als eine Berechnung einstellen.
+Wie man sieht kann man in `summarise` auch mehr als eine Berechnung einstellen.
 In diesem Fall haben wir zwei Berechnungen angestellt: 
 Einmal den Mittelwert und einmal den Mittelwert minus 10% (des Mittelwerts).
 
@@ -1373,7 +1345,7 @@ Denken Sie sich selber ähnliche Forschungsfragen aus.
 Stellen Sie diese einer vertrauenswürdigen Kommilitonen bzw. einem vertrauenswürdigen Kommilitonen. 
 DIY!
 Schauen Sie, ob Ihre Aufgabe richtig gelöst wird.
-Prüfen Sie streng. $\square$
+Prüfen Sie streng... $\square$
 :::
 
 ## Praxisbezug
@@ -1421,7 +1393,7 @@ mariokart_wheels <-
 mariokart %>% 
   group_by(wheels) %>% 
   summarise(pr_mean = mean(total_pr),
-            count_n = n())  # n() gibt die Anzahl der Zeilen pro Gruppe an
+            count_n = n())  # `n` gibt die Anzahl der Zeilen pro Gruppe an
 
 mariokart_wheels
 ```
@@ -1591,9 +1563,6 @@ Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine 
 
 ## Vertiefung
 
-### Tidydatatutor
-
-Die Verben des Datenjudos werden beim ["Tidydatatutor"](https://tidydatatutor.com/) anschaulich illustriert.^[<https://tidydatatutor.com>]
 
 
 
@@ -1610,7 +1579,7 @@ Einfach ignorieren. 😄
 
 
 Häufig ist es nützlich, die Werte einer Variablen umzukodieren, z.B. "weiblich" in "w" oder in `0`. 
-Eine gute Möglichkeit, dies in R umzusetzen, bietet der Befehl `case_when()`;
+Eine gute Möglichkeit, dies in R umzusetzen, bietet der Befehl `case_when`;
 der Befehl wohnt im Tidyverse.^[<https://www.statology.org/dplyr-case_when/>]
 Im Datenwerk finden Sie dazu Übungen, etwa [mutate03](https://sebastiansauer.github.io/Datenwerk/posts/mutate03/mutate03.html).
 
@@ -1635,11 +1604,11 @@ Das nennt man auch ein *ERBie*, ein *einfaches, reproduzierbare Beispiel* Ihres 
 :::{#exm-erbie}
 ### Beispiel für ein Erbie
 
-*Problem:* Ich verstehe nicht, warum eine Fehlermeldung kommt
+*Problem:* Ich verstehe nicht, warum eine Fehlermeldung kommt.
 
-*Ziel:* Ich möchte die Automatikautos filtern (am = 0)
+*Ziel:* Ich möchte die Automatikautos filtern (am = 0).
 
-*Was ich schon versucht habe:* Ich habe folgende Posts gelesen ..., aber ohne Erfolg
+*Was ich schon versucht habe:* Ich habe folgende Posts gelesen ..., aber ohne Erfolg.
 
 *Erbie*:
 
@@ -1730,9 +1699,9 @@ Wenn Sie sich z.B. über die Syntax eines bestimmten Befehls (oder allgemeiner: 
 
 
 @sauer_moderne_2019, Kap. 7, gibt eine Einführung in die Datenaufbereitung (mit Hilfe von R), ähnlich zu den Inhalten dieses Kapitels.
-Mehr in die Tiefe des "Datenjudo" führen @wickham_r_2018;
-der Autor Hadley Wickham ist die Leitfigur in der R-Community schlechthin. Kap. 5 behandelt (etwas ausführlicher) die Themen dieses Kapitels.
-Er ist einer der Hauptautoren von  beliebten R-Paketen wie `dplyr` und `ggplot2`.
+Mehr in die Tiefe des "Datenjudo" führen ;
+der Autor Hadley Wickham ist in der R-Community sehr bekannt. 
+Er ist einer der Hauptautoren von  beliebten R-Paketen wie `dplyr` und `ggplot2`. @wickham_r_2018 Kap. 5 behandelt (etwas ausführlicher) die Themen dieses Kapitels.
 
 
 ::: {.content-visible when-format="html"}

@@ -74,3 +74,5 @@ ggplot2::theme_set(ggplot2::theme_minimal())
 labeltextsize <- 8
 
 
+
+utils::data("mariokart", package = "openintro")

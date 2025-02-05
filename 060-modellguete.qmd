@@ -1,12 +1,55 @@
 # Modellgüte
 
 
+
+
+```{r libs-hideen}
+#| echo: false
+library(patchwork)
+library(ggpubr)
+library(tidyverse)
+library(easystats)
+library(DataExplorer)
+```
+
+
+
+```{r}
+#| echo: false
+source("_common.R")
+```
+
+
+
+
+{{< include children/colors.qmd >}}
+
+
+
+
+
+
 ## Einstieg
 
 
 
+In diesem Kapitel benötigen Sie üblichen R-Pakete (`tidyverse`, `easystats`) und Daten (`mariokart`),  s. @sec-import-mariokart.
 
-@fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
+
+::: {.content-visible when-format="html"}
+
+```{r}
+#| message: false
+library(tidyverse)
+library(easystats)
+```
+
+
+```{r import-mariokart-csv}
+mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+```
+:::
+
 
 
 
@@ -18,64 +61,11 @@
 - Sie können gängige Maße der Streuung einer Stichprobe mit R berechnen.
 - Sie können die Bedeutung von Streuung für die Güte eines Modells erläutern.
 
-### Benötigte R-Pakete
-
-In diesem Kapitel benötigen Sie folgende R-Pakete.
-
-```{r}
-library(tidyverse)
-library(easystats)
-library(DataExplorer)
-```
-
-```{r libs-hideen}
-#| echo: false
-library(patchwork)
-library(ggpubr)
-```
-
-
-```{r}
-#| echo: false
-source("_common.R")
-```
-
-
-
-
-### Benötigte Daten
-
-
-::: {.content-visible when-format="html"}
-
-```{r import-mariokart-csv}
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
-```
-:::
-
-
-::: {.content-visible when-format="pdf"}
-
-@lst-mario-path definiert den Pfad zum Datensatz `mariokart` und importiert die zugehörige CSV-Datei in R, so dass wir einen Tibble mit Namen `mariokart` erhalten.
-
-```{r import-mariokart-csv2}
-#| lst-cap: "Pfad zum Datensatz 'mariokart'"
-#| lst-label: lst-mario-path
-mariokart_path <- paste0(
-  "https://vincentarelbundock.github.io/Rdatasets/",
-  "csv/openintro/mariokart.csv")
-
-mariokart <- read.csv(mariokart_path)
-```
-
-:::
 
 
 
 
 
-
-### Zum Einstieg
 
 
 :::: {.content-visible when-format="html" unless-format="epub"}
@@ -88,8 +78,6 @@ Erkennen Sie, dass die *Unterschiedlichkeit* der Größe in Gruppe *Gleich-Groß
 :::
 ::::
   
-
-## Warum Sie die Streuung Ihrer Daten kennen sollten
 
 
 
@@ -115,10 +103,10 @@ Prof. Weiss-Ois hat eine Erfindung gemacht, eine Schlankheitspille[💊]{.conten
 
 
 
-:::{exr-weisoiss2}
+:::{#exr-weisoiss2}
 Würden Sie die Pille von Prof. I. Ch. Weiss-Ois nehmen?
 
-a) ja, ich zahle 1000 Euro!
+a) ja, ich zahle 1000 Euro
 b) ja
 c) nein
 d) Nur wenn ich 100 Euro bekomme
@@ -127,7 +115,9 @@ e) Okay, für 1000 Euro$\square$
 
 
 
-Wie sehr die Werte eines Modells streuen, ist eine wichtige Information.
+Wie sehr die Werte eines Modells streuen, ist eine wichtige Information:
+Bei Prof. Weiss-Ois' Pille kann es sein, dass Sie 10 kg *zunehmen*, 
+wenn Sie die Pille einnehmen.
 
 
 
@@ -142,7 +132,7 @@ Fritz will mit seiner Kuh einen Fluss überqueren, nur kann die Kuh nicht schwim
 >    [👩‍🌾]{.content-visible when-format="html"}[\emoji{woman-farmer}]{.content-visible when-format="pdf"} (Karla): Nö, im Schnitt nur einen Meter.
 
 
-Also führt Fritz seine Kuh durch den Fluss, leider kam die Kuh nicht am anderen Ufer an, im Floß ersoffen, s. @fig-fluss-tief.
+Also führt Fritz seine Kuh durch den Fluss, leider kam die Kuh nicht am anderen Ufer an, da fim Floß ersoffen, s. @fig-fluss-tief.
 
 ![Der Fluss ist im Schnitt nur einen Meter tief, trotzdem ist die Kuh ersoffen.](img/fluss-tief.png){#fig-fluss-tief}
 
@@ -152,8 +142,9 @@ Also führt Fritz seine Kuh durch den Fluss, leider kam die Kuh nicht am anderen
 >    [👨‍🌾]{.content-visible when-format="html"}[\emoji{man-farmer}]{.content-visible when-format="pdf"} (Fritz): Läuft die Kuh durch den Fluss, kann sie schwimmen oder 's ist Schluss.
 
 
-
-Die Streuung ihrer Daten zu kennen ist eine wesentliche Information. 
+:::{.callout-important}
+Die Streuung ihrer Daten zu kennen ist eine wesentliche Information. $\square$
+:::
 
 
 
@@ -228,7 +219,7 @@ Bei einem Modell mit *viel* Streuung ist der Modellfehler $e$ (im Vergleich dazu
 :::{#exm-weiss-ois}
 ### Daten zur Schlankheitskur von Prof. Weiss-Ois
 In @fig-streuung sind die Daten zu der Gewichtsveränderung nach Einnahme von "Schlankheitspillen" zweier verschiedener Präparate. 
-Wie man sieht unterscheidet sich die typische (vorhergesagte) Gewichtsveränderung zwischen den beiden Präparaten kaum. Die Streuung allerdings schon.
+Wie man sieht, unterscheidet sich die typische (vorhergesagte, mittlere) Gewichtsveränderung zwischen den beiden Präparaten kaum. Die Streuung allerdings schon.
 Links sieht man die Gewichtsveränderungen nach Einnahme des Präparats "Dickableibtin extra mild" (c) und rechts das Präparat von Prof. Weiss-Ois "Pfundafliptan Forte".
 Welches Präparat würden Sie lieber einnehmen?$\square$
 :::
@@ -236,11 +227,12 @@ Welches Präparat würden Sie lieber einnehmen?$\square$
 
 
 
-:::{.callout-important}
-Wir wollen ein präzises Modell, also kurze Fehlerbalken: Das Modell soll die Daten gut erklären, also wenig vom tatsächlichen Wert abweichen.
-Jedes Modell sollte Informationen über die Präzision des Modellwerts bzw. der Modellwerte (Vorhersagen) angeben. Ein Modell ohne Angaben der Modellgüte, d.h. der Präzision der Schätzung des Modellwerts, ist wenig nütze. $\square$
-:::
 
+Wir wollen ein präzises Modell, also kurze Fehlerbalken: 
+Das Modell soll die Daten gut erklären, 
+also wenig vom tatsächlichen Wert abweichen.
+Jedes Modell sollte Informationen über die Präzision des Modellwerts bzw. der Modellwerte (Vorhersagen) angeben. 
+Ein Modell ohne Angaben der Modellgüte, d.h. der Präzision der Schätzung des Modellwerts, ist wenig nütze.
 
 
 
@@ -253,7 +245,10 @@ Ich frage mich, ob man so ein Modell nicht verbessern kann?
 
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Naja, kürzere Fehlerbalken, ist doch klar!
 
-Im Beispiel von Marikoart: Da die Anzahl der Lenkräder mit dem Verkaufsgebot zusammenhängt, könnte es vielleicht sein, dass wir die Lenkräder-Anzahl da irgendwie nutzen könnten.
+Im Beispiel von Mariokart: 
+Da die Anzahl der Lenkräder mit dem Verkaufspreis zusammenhängt, 
+könnte es vielleicht sein, 
+dass wir die Lenkräder-Anzahl da irgendwie nutzen zur Vorhersage könnten.
 Das sollten wir ausprobieren.
 @fig-fehler-red zeigt, dass die Fehlerbalken *kürzer* werden, wenn wir ein (sinnvolles) komplexeres Modell finden.
 Innerhalb jeder der beiden Gruppen (mit 2 Lenkrädern vs. mit 0 Lenkrädern) 
@@ -267,11 +262,11 @@ von weniger als 100 Euros berücksichtigt und nur Spiele mit 0 oder mit 2 Lenkr�
 ```{r fehlerbalken}
 #| echo: false
 #| label: fig-fehler-red
-#| fig-cap: "Fehlerbalken in einem einfachen und komplexeren Modell. Links: Fehlerbalken im einfachen Modell: Ein Mittelwert; viel Streuung insgesamt - y ~ 1. Fehlerbalken im komplexen Modell: Zwei Mittelwerte; weniger Streuung in jeder Gruppe. Das erkennt man daran, dass die vertikalen, grauen Abstandsbalken im Schnitt kürzer sind als im einfachen Modell (links). y ~ G"
+#| fig-cap: "Fehlerbalken in einem einfachen und komplexeren Modell. (a) Fehlerbalken im einfachen Modell. Ein Mittelwert; viel Streuung insgesamt, y ~ 1. (b) Fehlerbalken im komplexen Modell. Zwei Mittelwerte; weniger Streuung in jeder Gruppe, y ~ G. Das erkennt man daran, dass die vertikalen, grauen Abstandsbalken im Schnitt kürzer sind als im einfachen Modell."
 #| layout-ncol: 2
 #| fig-subcap:
-#|   - "Einfaches Modell mit viel Fehlerstreuung"
-#|   - "Komplexeres Modell mit wenig Fehlerstreuung"
+#|   - "Einfaches Modell"
+#|   - "Komplexeres Modell"
 #| out-width: 100%
  
 data(mariokart, package = "openintro")
@@ -330,7 +325,10 @@ m %>%
   labs(color = "wheels") +
   theme(legend.position = "none") +
   geom_label(data = m_sum,
-    aes(label = paste0("MW bei ", wheels, " Räder"), y = total_pr, color = factor(wheels)), x = max(m$ID), hjust = 1, size = 6) +
+    aes(label = paste0("MW bei ", wheels, " Räder"), 
+        y = total_pr, color = factor(wheels)), 
+    x = max(m$ID), hjust = 1, size = 6,
+    show.legend = FALSE) +
   scale_color_okabeito() +
   scale_x_continuous(limits = c(-10, 90)) +
   theme_large_text()
@@ -350,9 +348,9 @@ Ein Streuungsmaß quantifiziert die Variabilität (Unterschiedlichkeit, Streuung
 :::
 
 :::{#def-range}
-### Range
-Ein einfaches Streuungsmaß ist der *Range* $R$, 
-definiert als Abstand von größtem und kleinsten Wert eines Merkmals X: $R := X_{max} - X_{min}. \square$
+### Spannweite
+Ein einfaches Streuungsmaß ist die *Spannweite* (Range) $R$, 
+definiert als Differenz von größtem und kleinsten Wert eines Merkmals X: $R := X_{max} - X_{min}. \square$
 :::
 
 :::{#exm-range}
@@ -362,7 +360,7 @@ Das bedeutet, dass die Werte des Merkmals über 99 Einheiten (Jahre in diesem Fa
 verteilt sind. $\square$
 :::
 
-Dieses Mermals ist aber nicht robust (gegenüber Extremwerten) und sollte daher nur mit Einschränkung verwendet werden.
+Die Spannweite ist aber nicht robust (gegenüber Extremwerten) und sollte daher nur mit Einschränkung verwendet werden.
 
 
 ### Der mittlere Abweichungsbalken
@@ -378,8 +376,7 @@ Legen wir (gedanklich) alle Abweichungsbalken $e$ aneinander und teilen durch di
 so erhalten wir wir den "mittleren Abweichungsbalken",
 den wir mit $\bar{e}$ bezeichnen könnten.
 Diesen Kennwert bezeichnet man als *Mean Absolute Error* (MAE) 
-bzw. als *Mittlere Absolutabweichung* (MAA).
-Er ist so definiert, s. @eq-mae.
+bzw. als *mittlere Absolutabweichung* (MAA), s. @eq-mae.
 
 
 
@@ -392,7 +389,7 @@ geteilt durch die Anzahl der Messwerte. (Wenn man solche Sätze liest,
 fühlt sich die Formel fast einfacher an.)
 
 
-$${\displaystyle \mathrm {MAE} :={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}=\bar{e}. \square}$$ {#eq-mae}
+$${\displaystyle \mathrm {MAE} :={\frac {\sum _{i=1}^{n}\left|y_{i}-\bar{y}\right|}{n}}={\frac {\sum _{i=1}^{n}\left|e_{i}\right|}{n}}=\bar{e}.  \; \square}$$ {#eq-mae}
 
 :::
 
@@ -430,11 +427,9 @@ Natürlich können wir R auch die Rechenarbeit überlassen.
 
 
 Schauen Sie: Den Mittelwert (s. @fig-mae) kann man doch mit Fug und Recht als ein *lineares Modell*, eine Gerade, betrachten, oder nicht?
-Schließlich erklären wir $y$ anhand einer Gerade (die parallel zur X-Achse ist).
-
+Schließlich erklären wir $y$ anhand einer Gerade (die parallel zur X-Achse verläuft).
 In R gibt es einen Befehl, um ein *l*ineares *M*odell zu berechnen,
 er heißt `lm`.
-
 Die Syntax von `lm()` lautet: `lm(y ~ 1, data = meine_daten)`.
 
 In Worten: 
@@ -449,7 +444,7 @@ lm1 <- lm(y ~ 1, data = d)
 Den MAE können wir uns jetzt so ausgeben lassen:
 
 ```{r}
-mae(lm1)
+mae(lm1)  # aus dem Paket easystats
 ```
 
 
@@ -458,8 +453,12 @@ mae(lm1)
 ### Der Interquartilsabstand
 
 
-Der Interquartilsabstand (IQA; engl. inter quartile range, IQR) ist ein Streuungsmaß, das nicht auf dem Mittelwert aufbaut.
+Der Interquartilsabstand (IQA; engl. inter quartile range, IQR) 
+ist ein Streuungsmaß, das nicht auf dem Mittelwert aufbaut.
 Der IQR ist robuster als z.B. der MAA oder die Varianz und die Standardabweichung.
+@fig-iqr-mario stellt den IQR (und einige Quantile) 
+für den Verkaufspreise von Mariokart-Spielen dar.
+
 
 :::{#def-iqr}
 ### Interquartilsabstand
@@ -470,11 +469,10 @@ Der Interquartilsabstand ist definiert als der die (absolute) Differenz vom 3. Q
 :::{#exm-iqr}
 ### IQR im Hörsaal
 In einem Statistikkurs betragen die Quartile der Körpergröße: Q1: 1.65m, Q2 (Median): 1,70m, Q3: 1.75m. 
-Der IQR beträgt dann: $IQR = Q_3-Q_1 = 1.75m - 1.65m = 0.10m$, d.h. 10 cm. $\square$
+Der IQR beträgt dann: $IQR = Q_3-Q_1 = 1.75 \; m - 1.65\;  m = 0.10\; m$, d.h. 10 cm. $\square$
 :::
 
 
-@fig-iqr-mario stellt den IQR (und einige Quantile) für den Verkaufspreise von Mariokart-Spielen dar.
 
 
 
@@ -513,7 +511,8 @@ mariokart %>%
            y = 5, yend = 5, color = "#56B4E9",
            data = mario_quantile2, size = 3) +
   annotate("label", x = mario_quantile2$q50, y = 5,
-           label = "IQR", color = "#56B4E9")
+           label = "IQR", color = "#56B4E9") +
+  theme_large_text()
 
 mariokart %>% 
   filter(total_pr < 100) %>%  
@@ -522,13 +521,15 @@ mariokart %>%
   geom_vline(xintercept = mario_quantile$qs) +
   annotate("label", x =  mario_quantile$qs, y = 0, label =  mario_quantile$qs) +
   annotate("label", x =  mario_quantile$qs, y = Inf, label =  c("Q1", "Median", "Q3"), vjust = 2) +
-  labs(y = "Anzahl") +
+  labs(y = "Anteil") +
   geom_segment( 
            aes(x = q25, xend = q75), 
            y = 0.01, yend = 0.01, color = "#56B4E9",
            data = mario_quantile2, size = 3) +
   annotate("label", x = mario_quantile2$q50, y = .01,
-           label = "IQR", color = "#56B4E9")
+           label = "IQR", color = "#56B4E9")  +
+  scale_y_continuous(labels = NULL) +
+  theme_large_text()
 ```
 
 
@@ -538,7 +539,7 @@ mariokart %>%
 
 Normalverteilungen sind recht häufig anzutreffen in der Praxis der Datenanalyse.
 Daher lohnt es sich, zu überlegen,
-wie man diese Verteilungen gut zusammenfasst.
+wie man diese Verteilungen gut zusammenfassen kann.
 Man kann zeigen, dass eine Normalverteilung sich 
 komplett über ihren *Mittelwert* sowie ihre *Standardabweichung* beschreiben lässt [@lyon_why_2014].
 Außerdem gilt: Sind Ihre Daten normalverteilt, 
@@ -572,20 +573,29 @@ d_sum <-
 
 d %>% 
   ggplot() +
-  geom_density(aes(x = groesse), color = "#E69F00FF", size = 2) +
-  geom_density(aes(x = groesse_zentriert), color = "#56B4E9FF", size = 2) +
+  stat_function(fun = dnorm,
+                args = list(mean = 0, sd = streuung), 
+                color = okabeito_colors()[1]) +
+  stat_function(fun = dnorm,
+                args = list(mean = mw, sd = streuung), 
+                color = okabeito_colors()[2]) +
+  #geom_density(aes(x = groesse), color = "#E69F00FF", size = 2) +
+  #geom_density(aes(x = groesse_zentriert), color = "#56B4E9FF", size = 2) +
   theme_minimal() +
-  geom_vline(data = d_sum,
-             aes(xintercept = MW),
+  geom_vline(
+             xintercept = mw,
              color = "grey") +
-  geom_label(data = d_sum,
-             aes(label = paste0("MW: ", round(MW, 0)), x = MW),
-             y = 0) +
+  geom_vline(
+             xintercept = 0,
+             color = "grey") +
+  annotate("label", x = 0, y = 0, label = "MW: 0") +
+  annotate("label", x = mw, y = 0, label = paste0("MW: ", mw)) +
   labs(x = "(zentrierte) Variable", 
        y = "") +
   annotate("segment", x = mw, xend = 0, y = 0.01, yend = 0.01,
            arrow = arrow(type = "closed", length = unit(0.02, "npc"))) +
-  scale_y_continuous(breaks = NULL)
+  scale_y_continuous(labels = NULL) +
+  scale_x_continuous(limits = c(-50, 100))
 
 
 
@@ -625,15 +635,14 @@ denn damit lässt sich die Streuung (Abweichung vom Mittelwert, Residuen) der No
 ### Varianz
 
 
-#### Intuition
-
-:::{.callout-note}
-Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist, grob gesagt, der typische Abstand eines Verkaufspreis vom mittleren Verkaufspreis. $\square$
-:::
 
 
 
-Illustration zur Varianz als "mittlerer Quadratfehler
+Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist der mittlere quadrierte Abstand eines Verkaufspreis vom mittleren Verkaufspreis.
+
+
+
+
 
 
 :::: {layout="[ 60, 40 ]"}
@@ -663,8 +672,9 @@ Illustration zur Varianz als "mittlerer Quadratfehler
 
 
 
-@fig-mse visualisiert die Varianz für @exm-mae.^[Die Abweichungsquadrate wirken optisch nicht quadratisch, da die X-Achse breiter skaliert dargestellt ist als die Y-Achse. Trotzdem sind es Quadrate, nur nicht optisch, wenn Sie wissen, was ich meine...]
-
+@fig-mse visualisiert die Varianz für @exm-mae.^[Die Abweichungsquadrate wirken optisch nicht quadratisch, 
+da die X-Achse breiter skaliert dargestellt ist als die Y-Achse. 
+Trotzdem sind es Quadrate, nur nicht optisch, wenn Sie wissen, was ich meine...]
 Links sind die *Abweichungsquadrate* dargestellt, rechts die Varianz als "*typisches Abweichungsquadrat*".
 
 :::{.callout-note}
@@ -774,14 +784,15 @@ p_var
 :::{#exm-var}
 Sie arbeiten immer noch bei einem Online-Auktionshaus und untersuchen den Verkauf von Videospielen.
 Natürlich mit dem Ziel, dass Ihre Firma mehr von dem Zeug verkaufen kann.
-
-Dazu berechnen Sie die Streuung in den Verkaufspreisen, s. @lst-mario-streu. $\square$
+Dazu berechnen Sie die Streuung in den Verkaufspreisen, s. @lst-mario-streu bzw. @tbl-mario-streu. $\square$
 :::
 
 
 :::{#lst-mario-streu}
 
 ```{r}
+#| label: tbl-mario-streu
+#| tbl-cap: Kennwerte der Streuung für den Mariokart-Datensatz
 mariokart_no_extreme <-
   mariokart %>%
   filter(total_pr < 100)  # ohne Extremwerte
@@ -813,17 +824,16 @@ Statistiken sind ja schön ... aber Bilder sind auch gut, s. @fig-var. Datendiag
 ```{r}
 #| eval: false
 mariokart %>% 
-  mariokart %>% 
+  mariokart_no_extreme %>%   # ohne Extremwerte
   select(total_pr) %>% 
-  filter(total_pr < 100) %>%  # ohne Extremwerte
-  plot_density()
+  plot_density()  # oder plot_violin
 ```
 
 
 
 ```{r}
 #| echo: false
-#| fig-cap: "Die Verteilung des Verkaufspreises von Mariokart-Spielen mit MW±SD in roter Farbe"
+#| fig-cap: "Die Verteilung des Verkaufspreises von Mariokart-Spielen mit MW±SD farblich markiert"
 #| label: fig-var
 #| layout-ncol: 2
 #| fig-subcap: 
@@ -842,7 +852,7 @@ mariokart %>%
                  ymax = Inf
                ),
             alpha = .5,
-            fill = "red") +
+            fill = okabeito_colors()[1]) +
   theme_large_text()
 
 mariokart %>% 
@@ -865,7 +875,7 @@ mariokart %>%
                  xmax = Inf
                ),
             alpha = .5,
-            fill = "red") +
+            fill = okabeito_colors()[1]) +
   theme_large_text()
 
 ```
@@ -876,26 +886,26 @@ mariokart %>%
 Wer sich die Berechnung von Hand für `pr_maa` sparen möchte (s. @lst-mario-streu), kann die [Funktion `MeanAD` aus dem Paket `DescTools`](https://rdrr.io/cran/DescTools/man/MeanAD.html) nutzen.
 
 
-#### Kochrezept für die Varianz
+
 
 
 Um die Standardabweichung zu berechnen, berechnet man zunächst die *Varianz*, $s^2$ abgekürzt. Hier ist ein "Kochrezept" (Algorithmus) zur Berechnung der Varianz:
 
-1. Für alle Datenpunkte $x_i$: Berechne die Abweichungen vom Mittelwert, $\bar{x}$
-2. Quadriere diese Werte
-3. Summiere dann auf
-4. Teile durch die Anzahl $N$ der Werte
+1. Für alle Datenpunkte $x_i$: Berechne die Abweichungen vom Mittelwert, $\bar{x}$.
+2. Quadriere diese Werte.
+3. Summiere dann auf.
+4. Teile durch die Anzahl $n$ der Werte.
 
 
-Als Formel ausgedrückt, lautet die Definition der Varianz einer Stichprobe wie folgt, s. @eq-var (hier geht es um die sog. unkorrigierte Stichprobenvarianz; um anhand einer Stichprobe die Varianz der zugehörigen Population zu schätzen, teilt man nicht durch $N$, sondern durch $N-1$) .
+Als Formel ausgedrückt lautet die Definition der Varianz einer Stichprobe der Größe $n$ wie folgt, s. @eq-var. (Hier geht es um die sog. unkorrigierte Stichprobenvarianz; um anhand einer Stichprobe die Varianz der zugehörigen Population zu schätzen, teilt man nicht durch $n$, sondern durch $n-1$.)
 
 
-$${\displaystyle s^{2}:={\frac {1}{N}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{N}}\sum _{i=1}^{n}e_i^{2}.}$$ {#eq-var}
+$${\displaystyle s^{2}:={\frac {1}{n}}\sum _{i=1}^{n}\left(y_{i}-{\bar {y}}\right)^{2}={\frac {1}{n}}\sum _{i=1}^{n}e_i^{2}.}$$ {#eq-var}
 
 
 :::{#def-var}
 ### Varianz
-Die Varianz ($s^2, \sigma^2$) ist definiert als der Mittelwert der quadrierten Abweichungen, $e_i^2$, (vom Mittelwert). $\square$
+Die Varianz ($s^2, \sigma^2$) ist definiert als der Mittelwert der quadrierten Abweichungen (vom Mittelwert), $e_i^2$. $\square$
 :::
 
 
@@ -904,7 +914,7 @@ Die Varianz kann auch verstehen als den *mittleren Quadratfehler* (Mean Squared 
 
 
 
-$${\displaystyle MSE:={\frac {1}{N}}\sum _{i=1}^{N}\left(y_{i}-{\hat {y}}\right)^{2}.}$$ {#eq-mse}
+$${\displaystyle MSE:={\frac {1}{n}}\sum _{i=1}^{N}\left(y_{i}-{\hat {y}}\right)^{2}.}$$ {#eq-mse}
 
 Im Fall eines Punktmodells ist der Mittelwert der vorhergesagte Wert eines Modells.
 
@@ -912,7 +922,7 @@ Im Fall eines Punktmodells ist der Mittelwert der vorhergesagte Wert eines Model
 
 ### Die Standardabweichung
 
-Kennt man die Varianz, so lässt sich die Standardabweichung einfach als Quadratwurzel der Varianz berechnen.
+
 
 
 :::{#def-sd}
@@ -924,10 +934,8 @@ $$s := \sqrt{s^2} \square$$ {#eq-sd}
 
 :::
 
-
+Kennt man die Varianz, so lässt sich die Standardabweichung einfach als Quadratwurzel der Varianz berechnen.
 Durch das Wurzelziehen besitzt die Standardabweichung wieder *in etwa* die gleiche Größenordnung wie die Daten (im Gegensatz zur Varianz, die durch das Quadrieren sehr groß werden kann).
-
-
 Aus einem Modellierungsblickwinkel kann man die SD definieren als die Wurzel von MSE.
 Dann nennt man sie *Root Mean Squared Error* (RMSE): $RMSE := \sqrt{MSE}$.
 
@@ -985,7 +993,7 @@ Das spezifizieren Sie so:
 
 ```{r}
 lm1 <- lm(total_pr ~ 1, data = mariokart)
-mae(lm1)
+mae(lm1)  # Modellgüte bzw. Modellfehler
 ```
 
 
@@ -997,7 +1005,7 @@ lm2 <- lm(total_pr ~ wheels, data = mariokart)
 mae(lm2)
 ```
 
-Ah! Sehr schön, Sie haben mit `lm2` ein besseres Modell als einfach nur den Mittelwert gefunden. Ab nach Hause!$\square$
+Ah! Sehr schön, Sie haben mit `lm2` ein besseres Modell als einfach nur den Mittelwert gefunden. Ab nach Hause! $\square$
 :::
 
 
@@ -1024,7 +1032,7 @@ rmse(lm_mario1)  # Root mean squared error
 
 
 
-## z-Transformation
+## Die z-Transformation
 
 Sie arbeiten immer noch als Datenknecht, Moment, *Datenhecht* bei dem Online-Auktionshaus.
 Heute untersuchen Sie die Frage, wie gut sich die Verkaufspreise mit einer einzigen Zahl, dem mittleren Verkaufspreis, beschreiben lassen.
@@ -1061,14 +1069,14 @@ mariokart_no_extreme <-
 gghistogram(mariokart_no_extreme, x = "total_pr", 
             add = "mean",  # Mittelwert wird hinzugefügt
             add.params = list(color = okabeito_colors()[1], size = 3))  +# Schnickschnack zur Verschönerung
-  annotate("label", x=47, y = 0, label = "Mittelwert",
+  annotate("label", x=47, y = 5, label = "Mittelwert",
            size = labeltextsize) +
   theme_large_text()
 
 gghistogram(mariokart_no_extreme, x = "abw",
             add = "mean",  # Mittelwert wird hinzugefügt
             add.params = list(color =  okabeito_colors()[1], size = 3))  +# Schnickschnack zur Verschönerung
-  annotate("label", x = 0, y = 0, 
+  annotate("label", x = 0, y = 5, 
            label = "Mittelwert", size = labeltextsize
            ) +
   labs(x = "Abweichung vom Mittelwert") +
@@ -1088,9 +1096,11 @@ Sie überlegen ... und überlegen. Da! Eine Idee!
 
 Man könnte vielleicht angeben, wie viel Euro jedes Spiel vom Mittelwert entfernt ist.
 Je größer diese Abweichung, desto schlechter die Modellgüte!
-Also rechnen Sie diese Abweichung aus.
+Also rechnen Sie diese Abweichung aus, @lst-zentrieren.
 
 ```{r}
+#| lst-label: lst-zentrieren
+#| lst-cap: Zentrieren einer Variablen
 mariokart_no_extreme <-
   mariokart_no_extreme %>% 
   mutate(abw = 47.4 - total_pr)
@@ -1119,8 +1129,7 @@ Um sich als Checker zu präsentieren, berechnen Sie also auch die SD; die beiden
 
 Also: Wenn ein Spiel 10 Euro vom Mittelwert abweicht und die SD 10 Euro betragen sollte,
 dann hätten wir eine "standardisierte" (abgekürzt manchmal mit `std`) Abweichung von 1, weil 10/10=1.
-
-Begeistert über Ihre Schlauheit machen Sie sich ans Werk.
+Begeistert über Ihre Geistesblitze machen Sie sich ans Werk.
 
 ```{r}
 mariokart_no_extreme <-
@@ -1131,7 +1140,8 @@ mariokart_no_extreme <-
 
 Zufrieden betrachten Sie Ihr Werk, s. @fig-z-transf. 
 In @fig-z-transf sieht man oben die Rohwerte und unten die transformierten Werte,
-die wir hier als *standardisiert* bezeichnen, da wir sie in Bezug zur "typischen Abweichung", der SD, gesetzt haben.
+die wir hier als *z-standardisiert* bezeichnen, 
+da wir sie in Bezug zur "typischen Abweichung", der SD, gesetzt haben.
 
 ```{r}
 #| warning: false
@@ -1178,12 +1188,11 @@ Diese Art von Transformation bezeichnet man als
 ### z-Werte
 z-Werte sind das Resultat der z-Transformation.
 Für die Variable $X$ berechnet sich der 
-z-Wert der $i$-ten Beobachtung so: $z_i := \frac{x_i - \bar{x}}{sd_x}.\square$
+z-Wert der $i$-ten Beobachtung so: $z_i := \frac{x_i - \bar{x}}{sd_x}.\;\square$
 :::
 
 z-Werte sind nützlich, weil sie die "relative" Abweichung
 einzelner Beobachtungen vom Mittelwert anzeigen.
-
 Nach einer *Faustregel* spricht man von extremen Abweichungen
 (Extremwerten, Ausreißern), wenn $z_i \ge 2.5$ [@shimizu2022].
 
@@ -1194,12 +1203,11 @@ Der "gesunde Menschenverstand" würde spontan den mittleren Absolutabstand (MAA 
 der Varianz (oder der Standardabweichung, SD) vorziehen. 
 Das ist vernünftig, 
 denn die MAA ist anschaulicher und damit nützlicher als die Varianz und die SD.
-
 Warum sollte man überhaupt ein unanschauliches Maß wie die Varianz verwenden? 
 Wenn es nur um deskriptive Statistik geht, braucht man die Varianz (oder die SD) nicht unbedingt.
 Gründe, warum Sie die Varianz (bzw. SD) kennen und nutzen sollten, sind:
 
-- Die SD ist sehr nützlich zur Beschreibung der Normalverteilung
+- Die SD ist nützlich zur Beschreibung der Normalverteilung.
 - Die Varianz wird häufig verwendet bzw. in Forschungsarbeiten berichtet, also müssen Sie die Varianz kennen.
 
 
@@ -1210,7 +1218,6 @@ den IQR vorzuziehen gegenüber Mittelwert basierten Streuungsmaßen (MAA, Varian
 ## Aufgaben
 
 
-### Datenwerk
 
 Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine Reihe von einschlägigen Übungsaufgaben bereit. Sie können die Suchfunktion der Webseite nutzen, um die Aufgaben mit den folgenden Namen zu suchen:
 

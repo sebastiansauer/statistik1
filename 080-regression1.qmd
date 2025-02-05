@@ -1,37 +1,6 @@
 # Geradenmodelle 1 {#sec-gerade1}
 
 
-
-## Einstieg
-
-
-
-Abb. @fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
-
-
-
-
-
-
-
-### Lernziele
-
-
-- Sie können ein Punktmodell von einem Geradenmodell begrifflich unterscheiden.
-- Sie können die Bestandteile eines Geradenmodells aufzählen und erläutern.
-- Sie können die Güte eines Geradenmodells anhand von Kennzahlen bestimmen.
-- Sie können Geradenmodelle sowie ihre Modellgüte in R berechnen.
-
-
-### Benötigte R-Pakete
-
-```{r}
-#| message: false
-library(tidyverse)
-library(easystats)
-```
-
-
 ```{r libs-hideen}
 #| include: false
 library(gt)
@@ -64,7 +33,26 @@ source("_common.R")
 
 
 
-### Benötigte Daten
+## Einstieg
+
+
+
+In diesem Kapitel benötigen Sie üblichen R-Pakete (`tidyverse`, `easystats`) und Daten (`mariokart`),  s. @sec-import-mariokart.
+
+
+
+
+
+
+### Lernziele
+
+
+- Sie können ein Punktmodell von einem Geradenmodell begrifflich unterscheiden.
+- Sie können die Bestandteile eines Geradenmodells aufzählen und erläutern.
+- Sie können die Güte eines Geradenmodells anhand von Kennzahlen bestimmen.
+- Sie können Geradenmodelle sowie ihre Modellgüte in R berechnen.
+
+
 
 
 
@@ -76,22 +64,6 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 :::
 
 
-::: {.content-visible when-format="pdf"}
-
-@lst-mario-path definiert den Pfad zum Datensatz `mariokart` und importiert die zugehörige CSV-Datei in R, so dass wir einen Tibble mit Namen `mariokart` erhalten.
-
-
-```{r import-mariokart-csv2}
-mariokart_path <- paste0(
-  "https://vincentarelbundock.github.io/Rdatasets/",
-  "csv/openintro/mariokart.csv")
-
-mariokart <- read.csv(mariokart_path)
-```
-
-:::
-
-
 
 ## Vorhersagen
 
@@ -99,9 +71,9 @@ mariokart <- read.csv(mariokart_path)
 Vorhersagen sind eine nützliche Sache, 
 unter (mindestens) folgenden Voraussetzungen:
 
-1. Sie sind präzise
-2. Wir kennen die Präzision
-3. Jemand interessiert sich für die Vorhersage
+1. Sie sind präzise.
+2. Wir wissen, wie präzise.
+3. Jemand interessiert sich für die Vorhersage.
 
 
 Die Methode des Vorhersagens, die wir hier betrachten, 
@@ -116,8 +88,10 @@ Viele jüngere Studis fragen Sie um Rat.
 eines Tages kommt eine Studentin, Toni, und fragt: "Welche Statistiknote kann ich in der Klausur erwarten?"
 Sie entgegnen: "Wie viel hast du denn gelernt?".
 Die Antwort: "Sag ich nicht."
-
 Nach kurzem Überlegen geben sie den Notenschnitt der letzten Klausur als Prognose für diese Person. 
+Dazu rechnen Sie schnell den Notenschnitt (Mittelwert) aus.
+
+
 
 :::: {.content-visible when-format="html" unless-format="epub"}
 
@@ -146,17 +120,19 @@ noten2 <- read.csv("data/noten2.csv")
 ```
 
 {{< downloadthis data/noten2.csv dname = "noten2" >}}
-::::
 
-Dazu rechnen Sie schnell den Notenschnitt (Mittelwert) aus.
 
 ```{r}
 noten2 %>% 
   summarise(mw = mean(y))  # y ist der Punktwert in der Klausur
 ```
+::::
 
-Ihre Antwort lautet also: 
-"Im Schnitt haben die Studis bei der letzten Klausur ungefähr `r mean(noten2$y)`  der Punkte erzielt. 
+
+
+
+Ihre Antwort lautet: 
+"Im Schnitt haben die Studis bei der letzten Klausur ungefähr `r mean(round(noten2$y))`  der Punkte erzielt. 
 Diesen Wert kannst du erwarten. 
 Solange ich keine genaueren Infos habe, 
 z.B. wieviel du gelernt hast, kann ich dir keine genauere Vorhersage machen, sorry!" $\square$
@@ -183,7 +159,7 @@ ggplot(noten2) +
   theme_minimal()
 ```
 
-:::{def-nullmodell}
+:::{#def-nullmodell}
 ### Nullmodell (Punktmodell)
 Modelle ohne Prädiktor, Punktmodelle also, 
 kann man so bezeichnen: `y ~ 1`. 
@@ -201,11 +177,10 @@ lm0
 
 `lm` steht für "lineares Modell", die `1` sagt, 
 dass es keine Prädiktoren gibt.
-In dem Fall wird der Mittelwert, `r mean(noten2$y)`, als Gerade verwendet.
+In dem Fall wird der Mittelwert, `r round(mean(noten2$y))`, als Gerade verwendet.
 Der zurückgemeldete Koeffizient `(Intercept)` 
 ist hier der Modell des Punktmodells.
-Da es ein Punktmodell ist, sagt es für alle Beobachtungen (hier Studentis) den gleichen Wert vorher.
-Wir sagen für jede Beobachtung einen Wert von `r mean(noten2$y)` vorher.
+Da es ein Punktmodell ist, sagt es für alle Beobachtungen (hier Studentis) den gleichen Wert vorher, nämlich `r round(mean(noten2$y))`.
 
 
 ### Vorhersagen mit Prädiktor
@@ -221,7 +196,7 @@ Toni entschließt sich dann doch noch, die Lernzeit zu verraten:
 Jetzt müssen Sie erstmal nachdenken: 
 "Wie viele Klausurpunkte sag ich vorher, wenn Toni 42 Stunden gelernt hat?"
 
-Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. @fig-noten4, a).
+Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. @fig-noten4, (a).
 
 
 ```{r}
@@ -249,8 +224,9 @@ Toni ist nicht begeistert von Ihrer Prognose und zieht von dannen. $\square$
 :::
 
 
-Der Trend (im Sinne eines linearen Zusammenhangs) von *Lernzeit* und *Klausurpunkte* ist deutlich zu erkennen.
-Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einzeichnen, s. @fig-noten4, b).
+Der "Trend" (im Sinne eines linearen Zusammenhangs) von *Lernzeit* und *Klausurpunkte* ist deutlich zu erkennen:
+Je mehr Lernzeit, desto mehr Klausurpunkte.
+Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einzeichnen, s. @fig-noten4, (b).
 
 
 ```{r fig-noten}
@@ -293,7 +269,6 @@ noten2 %>%
   theme_large_text()
 ```
 
-Eine Gerade eignet sich, um einen linearen Trend zusammenzufassen.
 
 
 
@@ -303,8 +278,8 @@ Eine Gerade eignet sich, um einen linearen Trend zusammenzufassen.
 ### Achsenabschnitt und Steigung definieren eine Gerade
 
 Wir verwenden eine Gerade als Modell für die Daten, s. @fig-noten4, b.
-Anders gesagt: Wir modellieren die Daten (bzw. deren Zusammenhang) mit einer Geraden.
-
+Anders gesagt: 
+Wir modellieren die Daten (bzw. deren Zusammenhang) mit einer Geraden.
 Ein *Geradenmodell* ist eine Verallgemeinerung des Punktmodells:
 Ein Punktmodell sagt für alle Beobachtungen den gleichen Wert vorher.
 @fig-noten3 und @fig-noten4 stellen ein Punktmodell 
@@ -320,7 +295,7 @@ Eine Gerade ist das, was man bekommt,
 wenn man eine lineare Funktion in ein Koordinatensystem einzeichnet.
 Man kann sie durch durch zwei *Koeffizienten* festlegen: 
 Achsenabschnitt (engl. *intercept*), und Steigung (engl. *slope*).
-Häufig wird (z.B. im Schulunterricht) der Achsenabschnitt mit $t$ und die Steigung mit $m$ bezeichnet:
+Manchmal wird (z.B. im Schulunterricht) der Achsenabschnitt mit $t$ und die Steigung mit $m$ bezeichnet:
  
 ::: {.content-visible unless-format="epub"}
 
@@ -337,8 +312,8 @@ nicht nur über eine Stichprobe, machen möchte.
 
 Das "Dach" über y, $\color{modelcol}{\hat{y}}$, 
 drückt aus, dass es sich den den geschätzten, bzw. vom Modell vorhergesagten ("modellierten") 
-Wert für $\color{ycol}{y}$ handelt, nicht das tatsächliche (empirische, beobachtete) $\color{ycol}{y}$. $\square$
-@fig-regrtex skizziert die Elemente einer Regression. (Bildquelle: Basierend auf TikZ-Quellcode von Henri Menke.)
+Wert für $\color{ycol}{y}$ handelt, nicht das tatsächliche (empirische, beobachtete) $\color{ycol}{y}$. 
+@fig-regrtex skizziert die Elemente einer Regression. 
 :::
 
 
@@ -347,6 +322,7 @@ Wert für $\color{ycol}{y}$ handelt, nicht das tatsächliche (empirische, beobac
 ::: {.content-visible when-format="epub"}
 
 <!-- NUR EPUB: -->
+<!-- KEINE FARBEN -->
 
 
 $f(x)={y}=mx + t.$
@@ -360,8 +336,8 @@ nicht nur über eine Stichprobe, machen möchte.
 
 Das "Dach" über y, $\hat{y}$, 
 drückt aus, dass es sich den den geschätzten, bzw. vom Modell vorhergesagten ("modellierten") 
-Wert für ${y}$ handelt, nicht das tatsächliche (empirische, beobachtete) ${y}$. $\square$
-@fig-regrtex skizziert die Elemente einer Regression. (Bildquelle: Basierend auf TikZ-Quellcode von Henri Menke.)
+Wert für $y$ handelt, nicht das tatsächliche (empirische, beobachtete) $y$. $\square$
+@fig-regrtex skizziert die Elemente einer Regression. 
 :::
 
 ::::
@@ -384,8 +360,8 @@ Wert für ${y}$ handelt, nicht das tatsächliche (empirische, beobachtete) ${y}$
 
 ### Das einfache lineare Modell
 
-Das einfache lineare Modell nimmt den Wert einer abhängigen metrischen Variablen, \color{ycol}{y},
-als lineare Funktion von unabhängigen Variablen, \color{xcol}{x}, an, plus einem Fehlerterm, \color{errorcol}{e} bzw. \color{errorcol}{$\epsilon$}, s. @eq-linear-model. $\square$
+Das einfache lineare Modell nimmt den Wert einer abhängigen metrischen Variablen, $\color{ycol}{y}$,
+als lineare Funktion von einer (oder mehreren) unabhängigen Variablen, $\color{xcol}{x}$, an, plus einem Fehlerterm, $\color{errorcol}{e}$ bzw. $\color{errorcol}{\epsilon}$, s. @eq-linear-model. $\square$
 :::
 
 
@@ -402,6 +378,9 @@ Mit:
 - $\color{beta1col}{\beta_1}$: geschätzte Steigung (Regressionsgewicht) laut Modell (engl. *slope*)
 - $\color{errorcol}{\epsilon}$: Fehler des Modells
 
+In @eq-linear-model schreiben wir $\color{ycol}{y}$ und nicht $\color{modelcol}{\hat{y}}$, 
+weil wir den tatsächlichen, beobachteten Wert von  $\color{ycol}{y}$  als Summe von vorhergesagtem Wert, $\color{modelcol}{\hat{y}}$ und Modellfehler, $\color{errorcol}{\epsilon}$ beschreiben.
+
 
 :::::
 
@@ -412,6 +391,7 @@ Mit:
 ::::: {.content-visible when-format="epub"}
 
 <!-- epub -->
+<!-- KEINE FARBEN -->
 
 
 
@@ -478,14 +458,16 @@ ggplot(d1, aes(x1, y1)) +
   geom_smooth(method = "lm", se = TRUE, color = okabeito_colors()[8]) +
   scale_y_continuous(limits = c(-4, 4)) +
   labs(title = paste0("b0 = ",round(lm11_coef[1], 2), "; b1 = ", round(lm11_coef[2]), 2)) +
-  theme_modern()
+  theme_modern() +
+theme(plot.title = element_text(size = 16))
 
 ggplot(d2, aes(x2, y2)) + 
   geom_point() +
   geom_smooth(method = "lm", se = TRUE, color = okabeito_colors()[8]) +
   scale_y_continuous(limits = c(-4, 4)) +
   labs(title = paste0("b0 = ",round(lm12_coef[1], 1), "; b1 = ", round(lm12_coef[2]), 2)) +
-  theme_modern()
+  theme_modern() +
+theme(plot.title = element_text(size = 16))
 ```
 
 
@@ -515,17 +497,13 @@ Interaktives Beispiel für eines lineares Modell. Fügen Sie Punkte per Klick/To
 
 :::{#exm-noten5}
 ### Toni will es genau wissen
-Da Toni Sie als Statistik-Profi abgespeichert hat, w
-erden Sie wieder konsultiert.
+Da Toni Sie als Statistik-Profi abgespeichert hat, 
+werden Sie wieder konsultiert:
 "Okay, ich hab noch zwei Fragen. 
 Erstens: Wie viele Punkte bekomme ich, wenn ich gar nicht lerne? 
 Zweitens, wie viele Punkte bekomme ich pro gelernte Stunde? Ist immerhin meine Lebenszeit, krieg ich nicht zurück!"
-
-[Das sind gute Fragen. Den $\color{ycol}{Y}$-Wert (Klausurpunkte) bei $\color{xcol}{X}=0$ gibt der Achsenabschnitt zurück. ]{.content-visible unless-format="epub"}
-
-[Das sind gute Fragen. Den ${Y}$-Wert (Klausurpunkte) bei ${X}=0$ gibt der Achsenabschnitt zurück. ]{.content-visible when-format="epub"}
-
-
+[Das sind gute Fragen. Den $\color{ycol}{Y}$-Wert (Klausurpunkte) bei $\color{xcol}{x}=0$ gibt der Achsenabschnitt zurück. ]{.content-visible unless-format="epub"}
+[Das sind gute Fragen. Den ${Y}$-Wert (Klausurpunkte) bei ${x}=0$ gibt der Achsenabschnitt zurück. ]{.content-visible when-format="epub"}
 Schnell skizzieren Sie dazu ein Diagramm, s. @fig-beta0.
 Puh, die Antwort wird Toni nicht gefallen ... $\square$
 :::
@@ -548,7 +526,7 @@ noten2 %>%
   theme_minimal() +
   #scale_x_continuous(limits = c(0, 100)) +
   #scale_y_continuous(limits = c(0, 100)) +
-  annotate("point", x = 0, y = lm1_b0, color = "red", size = 7, alpha = .7) +
+  annotate("point", x = 0, y = lm1_b0, color = modelcol, size = 7, alpha = .7) +
   annotate("label", x = mean(noten2$x), y = 0, vjust = "bottom",
            label = "MW Lernzeit") +
   annotate("label", y = mean(noten2$y), x = 12, vjust = "left",
@@ -556,7 +534,7 @@ noten2 %>%
   geom_text_repel(data = tibble(x = 0, y = predict(lm1, newdata = tibble(x = 0))), 
                   aes(x = x, y = y,), 
                   label = "Toni",
-                  point.padding = 5,
+                  point.padding = .5,
                   size = 8) +
   labs(x = "Lernzeit",
        y = "Klausurpunkte")
@@ -573,7 +551,7 @@ können Sie sich auch von R Tonis Klausurerfolg vorhersagen (to predict) lassen:
 >    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Okay, ich predicte mit Modell "lm1" und nehme als neue Datentabelle Tonis Lernzeit (x=0)!
 
 ```{r}
-tonis_lernzeit <- tibble(x = 0)  # `tibble` erstellt eine Tabelle
+tonis_lernzeit <- tibble(x = 0)  # `tibble` erstellt einen Dataframe
 ```
 
 
@@ -582,10 +560,13 @@ predict(lm1, newdata = tonis_lernzeit)
 ```
 
 
+`predict` erwartet für das Argument `newdata` einen Dataframe.
+In diesem Beispiel heißt er `tonis_lernzeit`.
+
 ### Spezifikation eines Geradenmodells
 
 
-Ein Geradenmodell kann man im einfachsten Fall so spezifizieren, s. @eq-mod1:
+Ein Geradenmodell kann man im einfachsten Fall spezifizieren wie s. @eq-mod1 dargestellt.
 
 
 ::: {.content-visible unless-format="epub"}
@@ -612,10 +593,8 @@ $${AV} \sim {UV}$$ {#eq-mod1}
 :::
 
 
-Wir werden als Funktion (erstmal) nur Geraden verwenden.
-Die genauen Werte der Gerade lassen wir uns (erstmal) vom Computer ausrechnen.
-
-
+Wir werden als Funktion nur Geraden verwenden.
+Die genauen Werte der Gerade lassen wir uns  vom Computer ausrechnen.
 @eq-mod1 können Sie so ins Errische übersetzen:
 
 
@@ -640,7 +619,6 @@ lm1
 
 R gibt Ihnen die beiden Koeffizienten für die Gerade aus. 
 Den Namen des Objekts können Sie frei aussuchen, z.B. `mein_erstes_lm`.
-
 Die Regressionsgleichung lautet demnach:
 `y_pred = 8.6 + 0.88*x`.
 
@@ -649,7 +627,7 @@ Die Regressionsgleichung lautet demnach:
 `8.6` ist der Achsenabschnitt, d.h. der Wert von $\color{ycol}{Y}$ wenn $\color{xcol}{x}=0$.
 `0.88` ist das Regressionsgewicht, d.h. die Steigung der Regressionsgeraden: Für jede Stunde Lernzeit steigt der vorhergesagte Klausurerfolg um `0.88` Punkte.
 
-Mit Kenntnis der beiden Koeffizienten kann man beliebige $\color{ycol}{Y}$-Werte ausrechnen gegeben bestimmte $\color{xcol}{X}$-Werte.
+Mit Kenntnis der beiden Koeffizienten kann man beliebige $\color{ycol}{Y}$-Werte ausrechnen, gegeben bestimmte $\color{xcol}{X}$-Werte.
 Hat jemand zum Beispiel 10 Stunden gelernt, 
 würden wir folgendes Klausurergebnis vorhersagen:
 
@@ -687,7 +665,7 @@ Sie dürfen es aber auch selber rechnen, wenn Ihnen das lieber ist.
 
 
 ```{r}
-tonis_lernzeit2 <- tibble(x = 73)  # Der Befehl `tibble` erstellt eine Tabelle in R.
+tonis_lernzeit2 <- tibble(x = 73)  
 ```
 
 `tonis_lernzeit2` ist eine Tabelle mit einer Zeile und einer Spalte:
@@ -705,10 +683,11 @@ predict(lm1, newdata = tonis_lernzeit2)
 Die Syntax von `predict` lautet:
 
 ```
-predict(name_des_objekts, newdata = tabelle_mit_prädiktorwerten)
+predict(modell, newdata = tabelle_mit_prädiktorwerten)
 ```
 
-Die Funktion `predict` liefert eine Vorhersage für eine Vorhersage.
+Die Funktion `predict` liefert eine Vorhersage für ein ein Modell,
+z.B. `lm1` und für einen bestimmten Dataframe (der die Prädiktorwerte enthalten muss).
 
 
 
@@ -716,8 +695,8 @@ Die Funktion `predict` liefert eine Vorhersage für eine Vorhersage.
 
 
 ::: {.content-visible unless-format="epub"}
-Die Differenz zwischen vorhergesagten Wert für eine (neue) Beobachtung, $\color{modelcol}{\hat{y_0}}$ 
-und ihrem tatsächlichen Wert nennt man Vorhersagefehler (error, $e_i$) oder *Residuum*: 
+Die Differenz zwischen vorhergesagtem Wert für eine (neue) Beobachtung, $\color{modelcol}{\hat{y_0}}$ 
+und ihrem tatsächlichen Wert nennt man Vorhersagefehler (error, $e$) oder *Residuum*: 
 $\color{errorcol}{e_i} = \color{ycol}{y_i} - \color{modelcol}{\hat{y}_i}$.
 :::
 
@@ -733,7 +712,7 @@ ${e_i} = {y_i} - {\hat{y}_i}$.
 
 ```{r p-abweichungsbalken}
 #| echo: false
-#| fig-cap: "Vorhersagefehler als Abweichungsbalken: Beim Geradenmodell, links, sind die Vorhersagefehler (Abweichungsbalken) kleiner (kürzer) als beim Punktmodell, rechts."
+#| fig-cap: "Vorhersagefehler als Abweichungsbalken. (a) Beim Geradenmodell, sind die Vorhersagefehler (Abweichungsbalken) kleiner (kürzer) als in (b), beim Punktmodell."
 #| label: fig-resid
 #| layout-ncol: 2
 #| fig-subcap: 
@@ -794,12 +773,9 @@ Als Fehlerstreuung bezeichnen wir die Gesamtheit der Abweichungen der beobachtet
 
 Zur Berechnung der Fehlerstreuung gibt es mehrere Kenngrößen 
 wie MAE oder MSE.
-
-
-:::{.callout-note}
-Ein Geradenmodell ist immer besser als ein Punktmodell (im Hinblick auf die Verringerung der Fehlerstreuung), 
-solange X mit Y korreliert ist. $\square$
-:::
+Ein Geradenmodell ist immer besser als ein Punktmodell 
+(im Hinblick auf die Verringerung der Fehlerstreuung), 
+solange X mit Y korreliert ist. 
 
 
 Natürlich können wir -- in Analogie zur Varianz -- 
@@ -818,14 +794,14 @@ verhaeltnis_fehler_mse <- mse(lm1)/mse(lm0)
 verhaeltnis_fehler_mse
 ```
 
-
+Betrachtet man die MSE, so kann man eine Verbesserung um `r 1-verhaeltnis_fehler_mse` auf `r verhaeltnis_fehler_mse` feststellen.
 
 
 ### Berechnung der Modellkoeffizienten
 
 Aber wie legt man die Regressionsgerade in das Streudiagramm, bildlich gesprochen?
 
-Die Regressionskoeffizienten (hier synonym: Modellparameter) b0 und b1 wählt man so, dass die *Residuen* *minimal* sind.
+Die Regressionskoeffizienten (hier synonym: Modellparameter) $\bat_0$ und $\beta_1$ wählt man so, dass die *Residuen* *minimal* sind.
 Genauer gesagt wird die Summe der quadrierten [Residuen]{.green} minimiert, s. @eq-min.
 
 
@@ -866,8 +842,8 @@ $$\text{min}\sum_i \color{errorcol}{e_i}^2$${#eq-min}
 $$\text{min}\sum_i {e_i}^2$${#eq-min}
 :::
 
-Es gibt verschiedene Möglichkeiten, 
-um die Koeffizienten zu berechnen (die sind aber nicht in diesem Buch zu finden).
+Es gibt verschiedene Methoden, 
+um die Koeffizienten zu berechnen (die aber nicht in diesem Buch zu finden sind).
 Eine schöne Darstellung dazu findet sich bei @kaplan_statistical_2009.
 
 
@@ -885,6 +861,7 @@ Eine schöne Darstellung dazu findet sich bei @kaplan_statistical_2009.
 
 ## R-Quadrat als Maß der Modellgüte
 
+Das Modell `lm1` weist noch `r verhaeltnis_fehler_mse` der Fehlerstreuung (MSE) des Nullmodells auf.
 Anders gesagt, wir haben uns ( (bzw. das Modell hat sich) um $1 - `r round(verhaeltnis_fehler_mse, 2)`$ verbessert.
 
 ```{r}
@@ -896,10 +873,9 @@ Anders gesagt, wir haben uns ( (bzw. das Modell hat sich) um $1 - `r round(verha
 
 :::{#def-r2}
 ### R-Quadrat
-Die Verringerung (als Anteil) der Fehlerstreuung der Zielvariablen  von `lm0` 
-zum gerade untersuchten Modell nennt man  *R-Quadrat* ($R^2$).
-R-Quadrat ($R^2$) e
-ines Modells $m$ ist definiert als die Verringerung der Streuung, 
+Der Anteil der Verringerung (als Anteil) der Fehlerstreuung der Zielvariablen  zwischen `lm0` und dem
+ gerade untersuchten Modell nennt man  *R-Quadrat* ($R^2$).
+Das R-Quadrat ($R^2$) eines Modells $m$ ist definiert als die Verringerung der Streuung, 
 wenn man das Modell $m$ mit dem Nullmodell $m_0$ vergleicht: $R^2 =1-  \frac{\text{MSE}_{m}}{\text{MSE}_{m0}}$. 
 R-Quadrat ist ein Maß der *Modellgüte*: 
 Je größer $R^2$, desto besser die Vorhersage. 
@@ -912,9 +888,7 @@ $\square$
 
 
 Einfach gesagt: $R^2$ gibt an, wie gut (zu welchem Anteil) 
-ein Modell die Zielvariable erklärt. 
-
-
+ein Modell die Zielvariable, $y$, erklärt. 
 Wir können R-Quadrat ($R^2$) uns von R z.B. so ausgeben lassen:
 
 ```{r}
@@ -922,10 +896,7 @@ r2(lm1)
 ```
 
 Bei einer perfekten Korrelation ist $r=1$, 
-daher ist dann auch $R^2 = 1$.
-Das gilt bei Modellen mit einem Prädiktor; 
-gibt es mehrere Prädiktoren 
-gilt die Beziehung nur, wenn die Prädiktoren alle paarweise unabhängig sind, 
+daher ist dann auch $R^2 = 1$, 
 vgl. @fig-r2-extreme.
 
 
@@ -1007,10 +978,10 @@ Verschiedenen Koeffizienten stehen zur Verfügung: R-Quadrat, $r$ (als Korrelati
 
 ### Koeffizienten
 
-Die Modellkoeffizienten, also Achsenabschnitt ($\beta_0$; lies: "beta Null") und Steigung ($\beta_1$) sind nur eingeschränkt zu interpretieren, 
+Die Modellkoeffizienten, also Achsenabschnitt ($\beta_0$) und Steigung ($\beta_1$) sind nur eingeschränkt zu interpretieren, 
 wenn man die zugrundeliegenden kausalen Abhängigkeiten nicht kennt.
-Nur aufgrund eines statistischen Zusammenhangs darf man keine kausalen Abhängigkeiten annehmen.
-Ohne eine guten Grund für eine Kausalbehauptung kann man kann nur *deskriptiv* argumentieren.
+Allein aufgrund eines statistischen Zusammenhangs darf man keine kausalen Abhängigkeiten annehmen.
+Ohne eine zugrundeliegende Theorie für eine Kausalbehauptung kann man kann nur *deskriptiv* argumentieren.
 Oder sich mit der Modellgüte und den Vorhersagen begnügen. 
 Was auch was wert ist.
 
@@ -1018,12 +989,10 @@ Was auch was wert ist.
 
 [Im Modell `lm1` liegt der Achsenabschnitt bei $\textcolor{ycol}{y}=`r round(coef(lm1)[1], 2)`$. 
 Beobachtungen mit $\color{xcol}{x}=0$ 
-können also diesen $\textcolor{ycol}{Y}$-Wert erwarten.]{.content-visible unless-format="epub"}
-
-
-[Im Modell `lm1` liegt der Achsenabschnitt bei ${y}=`r round(coef(lm1)[1], 2)`$. 
+können also diesen $\textcolor{ycol}{Y}$-Wert erwarten, laut `lm1`.]{.content-visible unless-format="epub"}
+[Im Modell `lm1` liegt der Achsenabschnitt (engl. intercept) bei ${y}=`r round(coef(lm1)[1], 2)`$.
 Beobachtungen mit ${x}=0$ 
-können also diesen ${Y}$-Wert erwarten.]{.content-visible when-format="epub"}
+können also diesen ${Y}$-Wert erwarten, laut `lm1`.]{.content-visible when-format="epub"}
 Leider ist es häufig so, dass Prädiktorwerte von 0 in der Praxis nicht realistisch sind, 
 so dass der Achsenabschnitt dann wenig nützt.
 
@@ -1041,7 +1010,7 @@ lm1_b1 <- coef(lm1)[2] %>% round(2)
 ```
 
 So interpretiert man die Geradensteigung, $\beta_1$:
-"Im Modell `lm1` beträgt der Regressionskoeffizient $\beta1 = `r lm1_b1`$. Zwei Studentinnen, deren Lernzeit sich um eine Stunde unterscheidet, unterscheiden sich *laut Modell* um den Wert von $\beta_1$"
+"Im Modell `lm1` beträgt der Regressionskoeffizient $\beta_1 = `r lm1_b1`$. Zwei Studentinnen, deren Lernzeit sich um eine Stunde unterscheidet, unterscheiden sich *laut Modell* um den Wert von $\beta_1$"
 
 :::{.callout-caution}
 Häufig liest man, der "Effekt des Prädiktors" auf die AV betrage z.B. $`r lm1_b1`$. "Effekt" ist aber ein Wort, 
@@ -1057,8 +1026,9 @@ Manche sprechen daher auch von einem "statistischen Effekt". $\square$
 
 Der Unterschied in Modellgüte zwischen, 
 sagen wir, $r=.1$ und $r=.2$ ist *viel kleiner* als zwischen $r=.7$ und $r=.8$.
-$R^2$ ist ein (lineares) Maß der Modellgüte und da $r = \sqrt{R^2}$, darf $r$ nicht wie $R^2$ 
-als Maß der Modellgüte interpretiert werden. @fig-r-r2 zeigt den Zusammenhang von $r$ und $R^2$.
+$R^2$ ist ein (lineares) Maß der Modellgüte und da $r = \sqrt{R^2}$, 
+dürfen Unterschiede in $r$ nicht gleich interpretiert werden wie Unterschiede in $R^2$. 
+@fig-r-r2 zeigt den Zusammenhang von $r$ und $R^2$.
 
 
 ```{r}
@@ -1101,9 +1071,7 @@ Sie möchten eine genaue Vorhersage von Verkaufspreisen erzielen.
 Als Sie von diesem Plan berichteten, leuchteten die Augen Ihrer Chefin.
 Genaue Vorhersagen, 
 das ist etwas von hoher betriebswirtschaftlicher Relevanz.
-Auf geht's!
-
-Daten laden (und die üblichen Pakete starten, nicht vergessen):
+Mariokart-Daten laden, am besten ohne Extremwerte, s. @ lst-no-extreme und los geht's (und die üblichen Pakete starten, nicht vergessen)!
 
 ::: {.content-visible when-format="html"}
 
@@ -1112,11 +1080,6 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 ```
 :::
 
-::: {.content-visible when-format="pdf"}
-```{r}
-mariokart <- read.csv(mariokart_path)
-```
-:::
 
 
 ```{r}
@@ -1142,22 +1105,21 @@ parameters(lm3) %>% print_md()
 ```
 
 
-Der Achsenabschnitt liegt bei ca. 36 Euro, 
+Der Achsenabschnitt liegt bei ca. `r round(coef(lm3)[1])` Dollar, 
 wie man in @tbl-lm3 sieht: Ein Spiel, 
-das mit Null Euro Preis startet, kann laut `lm3` etwa 36 Euro finaler Verkaufspreis erwarten.
-*Pro Euro an Versandkosten* (`ship_pr`) steigt der zu erwartende finale Verkaufspreis 
-um ca. 4 Euro.
+das mit null Dollar Preis startet, kann laut `lm3` etwa  `r round(coef(lm3)[1])` Dollar finaler Verkaufspreis erwarten.
+*Pro Dollar an Versandkosten* (`ship_pr`) steigt der zu erwartende finale Verkaufspreis 
+um ca. `r round(coef(lm3)[2])` Dollar.
 (Die Spalte `95 CI` gibt einen Schätzbereich für den jeweiligen Modellkoeffizienten an,
 denn es handelt sich bei den Koeffizienten um Schätzwerte;
 der wahre Wert in der Population ist unbekannt. 
-Wir kennen schließlich nur eine Stichprobe der Größe $n=143$.)
-
+Wir kennen schließlich nur eine Stichprobe der Größe $n = `r nrow(mariokart)`$.)
 Die Regressionsgleichung von `lm3` lautet demnach:
-`total_pr_pred = 36.25 + 4.34*ship_pr`.
+`total_pr_pred = `r round(coef(lm3)[1])` + `r round(coef(lm3)[2])`*ship_pr`.
 
 In Worten: 
 
->    Der vorhergesagte Gesamptreis eines Spiels liegt bei 36.25€ "Sockelbetrag" plus 4.34 mal die Versandkosten.
+>    Der vorhergesagte Gesamptreis eines Spiels liegt bei `r round(coef(lm3)[1])` Dollar "Sockelbetrag" plus `r round(coef(lm3)[2])` mal die Versandkosten.
 
 
 ### Vertiefung
@@ -1175,15 +1137,21 @@ Man kann sich die erwarteten Werte ("expectations") des Verkaufspreises in Abhä
 estimate_expectation(lm3) %>% head() |> print_md()  # nur die ersten paar vorhergesagten Werte
 ```
 
+```{r}
+#| echo: false
 
-Ah, bei 4 Euro Versandkosten ist laut dem Modell knapp 54 Euro Verkaufspreis zu erwarten, 
+pred_value <- predict(lm3, newdata=tibble(ship_pr = 4)) |> round()
+```
+
+
+"Ah, bei 4 Dollar Versandkosten ist laut dem Modell knapp `r pred_value` Dollar Verkaufspreis zu erwarten", 
 fassen Sie sich die Ausgabe zusammen.
 
 
 >    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Das sieht man in der Spalte `Predicted`, dort steht der vorhersagte Wert für `total_pr` für einen bestimmten Wert von `ship_pr`.
 
 
->    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Kann ich auch `predict` benutzen? Ich würde gerne den Verkaufspreis wissen, wenn die Versandkosten bei 1 und bei 4 Euro liegen.
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Kann ich auch `predict` benutzen? Ich würde gerne den Verkaufspreis wissen, wenn die Versandkosten bei 1 und bei 4 Dollar liegen.
 
 >    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Ja, klar!
 

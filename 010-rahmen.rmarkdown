@@ -4,6 +4,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 ```{r libs}
 #| include: false
 library(tibble)
@@ -13,7 +23,6 @@ library(ggfittext)
 library(see)
 ```
 
-
 ```{r}
 #| include: false
 
@@ -22,7 +31,26 @@ source("_common.R")
 
 
 
-{{< include children/colors.qmd >}}
+
+
+
+
+
+
+
+::: {.content-visible unless-format="epub"}
+$$
+\definecolor{ycol}{RGB}{230,159,0}
+\definecolor{modelcol}{RGB}{86,180,233}
+\definecolor{errorcol}{RGB}{0,158,115}
+\definecolor{beta0col}{RGB}{213,94,0}
+\definecolor{beta1col}{RGB}{0,114,178}
+\definecolor{xcol}{RGB}{204,121,167}
+$$
+:::
+
+
+
 
 <!-- ```{css, echo = FALSE} -->
 <!-- .justify { -->
@@ -60,10 +88,30 @@ vom Anfang bis Ende, erarbeiten wir unser "Datenprodukt".
 
 
 
+
+
+
+
+
+
+
+
+
+
 ```{r}
 #| echo: false
 ggplot2::theme_set(theme_minimal())
 ```
+
+
+
+
+
+
+
+
+
+
 
 
 ### Lernziele
@@ -110,6 +158,16 @@ Ihren Lernerfolg kann man als von drei Faktoren abhängig betrachten:
 1) Ihrer Lehrkraft, 2) Ihrer Mitarbeit im Unterricht und 
 3) Ihrem Eigenstudium zuhause (Vor- bzw. Nachbereitung des Unterrichts), s. @fig-erfolgsrezept.
 
+
+
+
+
+
+
+
+
+
+
 ```{mermaid}
 %%| fig-cap: "Ihr Lernerfolg besteht aus drei Komponenten: Der Lehrkraft, Ihrer Mitarbeit im Unterricht und Ihrem Eigenstudium, d.h. Ihrer Vor- bzw. Nachbereitung zuhause."
 %%| label: fig-erfolgsrezept
@@ -127,6 +185,16 @@ flowchart TD
     D["🌳"] 
   end  
 ```
+
+
+
+
+
+
+
+
+
+
 
 Eine gute Lehrkraft ist wie der Funke, der eine (Lern-)Flamme entzündet. 
 Aber es braucht Brennmaterial, einen Holzscheit, das ist Ihre Konzentration im Unterricht. 
@@ -192,6 +260,16 @@ Anschaulich gesprochen:
 Eine Menge von Zahlen wird zu einer einzelnen Zahl "zusammengedampft".
 Eine einzelne Zahl ist wesentlich besser zu verstehen als eine große Menge von Zahlen. Bei vielen Zahlen würde man den Überblick verlieren.
 
+
+
+
+
+
+
+
+
+
+
 ```{r}
 #| echo: false
 #| label: fig-zsmnfassen
@@ -227,11 +305,21 @@ d |>
 
 d |> 
   ggplot(aes(x = x, y = y)) +
-  geom_smooth(method = "lm", color = modelcol, se = FALSE, size = 2) +
   geom_point2() +
+  geom_smooth(method = "lm", color = modelcol, se = FALSE, size = 2) +
   theme_modern() +
   theme_large_text()
 ```
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -248,6 +336,16 @@ Ein zentrales Vorgehen bei statistischen Analysen ist es,
 die *Unterschiedlichkeit der Dinge* zu beschreiben,
 präziser gesagt: die *Variation zu quantifizieren*. 
 Betrachten wir dazu das Beispiel in @fig-groesse.
+
+
+
+
+
+
+
+
+
+
 
 
 ```{r}
@@ -316,10 +414,30 @@ groesse %>%
 ```
 
 
+
+
+
+
+
+
+
+
+
+
 Bei den Basketballern gibt es *geringe* Variation in der Körpergröße -- alle sind groß, ähnlich groß.
 Bei den Schachspielern gibt es (im Verhältnis) *hohe* Variation: Einige Personen sind groß, andere klein.
 
 <!-- Die Variation (auch "Variabilität" genannt) kann man auch gut so darstellen wie in s. @fig-variab gezeigt. -->
+
+
+
+
+
+
+
+
+
+
 
 
 ```{r}
@@ -361,6 +479,16 @@ groesse %>%
   theme_modern()
 ```
 
+
+
+
+
+
+
+
+
+
+
 Eine *Abweichung* (auch *Residuum*) genannt, 
 zeigt hier die Differenz von Mittelwert und dem Wert der Körpergröße bei der jeweiligen Person.
 Wenn wir allgemein von einer Person $i$ sprechen,
@@ -381,6 +509,16 @@ die Differenz vom Wert $x_i$ und einem Referenzwert, etwa dem Mittelwert ($\bar{
 :::{#exm-ungewiss1}
 Anna hat eine Statistik-Klausur geschrieben. Sie hat keine Ahnung, ob sie bestehen wird. Berta hingegen ist sich sehr sicher, dass sie bestanden hat. Die beiden Studentinnen unterscheiden sich also stark in der Ungewissheit hinsichtlich ihrer Einschätzung zum Klausurerfolg, s. @fig-ungewiss-anna-berta. $\square$
 :::
+
+
+
+
+
+
+
+
+
+
 
 ```{r}
 #| echo: false
@@ -411,6 +549,16 @@ ggplot(d1) +
 ```
 
 
+
+
+
+
+
+
+
+
+
+
 :::{#exm-ungewiss2}
 Sagen wir, Sie haben sich mit einem zwielichten Statistiker auf ein Glücksspiel eingelassen: Er wirft eine Münze 10 Mal; bei Kopf gewinnt er, bei Zahl sie. Nun hat der Staistiker von den 10 Würfen 8 Mal gewonnen. 
 *Sie* sind sich *ziemlich* sicher, dass dieser Typ Sie über den Tisch gezogen hat. 
@@ -428,6 +576,16 @@ Allerdings sind Sie nicht ganz sicher, und beweisen können Sie es leider auch n
 Die Arten von Zielen, die man mit einer statistichen Analyse verfolgen kann, lassen sich in drei Gruppen einteilen, s. @fig-ziele.
 
 
+
+
+
+
+
+
+
+
+
+
 ```{mermaid}
 %%| fig-cap: Zielarten einer Datenanalyse
 %%| label: fig-ziele
@@ -440,6 +598,16 @@ graph TD
     C[erklären]
   end
 ```
+
+
+
+
+
+
+
+
+
+
 
 
 :::{#exm-zielarten}
@@ -469,6 +637,16 @@ Eine Forschungsfrage weist häufig folgende Struktur auf, s. @fig-fo-struktur.
 
 
 
+
+
+
+
+
+
+
+
+
+
 ```{mermaid}
 %%| fig-cap: Struktur eine Forschungsfrage
 %%| label: fig-fo-struktur
@@ -477,6 +655,16 @@ Eine Forschungsfrage weist häufig folgende Struktur auf, s. @fig-fo-struktur.
 graph LR
     I[Input bzw. X] --> O[Output bzw. Y]
 ```
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -600,6 +788,16 @@ Diesen Ablauf nennt man auch das PPDAC-Modell [@mackay_scientific_2000]:
 
 
 
+
+
+
+
+
+
+
+
+
+
 ```{mermaid}
 %%| fig-cap: "Datenanalyse als Prozess: Das PPDAC-Modell"
 %%| label: fig-ppdac
@@ -608,6 +806,16 @@ Diesen Ablauf nennt man auch das PPDAC-Modell [@mackay_scientific_2000]:
 graph LR
     Problem --> Plan --> Data --> Analysis --> Conclusions --> Problem
 ```
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -628,6 +836,16 @@ Sie dient dazu, die einzelnen Beobachtungen (hier Studentis)
 identifizieren zu können und birgt ansonsten keine Information.
 Beispiele für ID-Variablen sind z.B. Matrikelnummer, 
 Personalausweisnummern oder Bestellnummern.
+
+
+
+
+
+
+
+
+
+
 
 
 ```{r}
@@ -651,10 +869,30 @@ d |>
 
 
 
+
+
+
+
+
+
+
+
+
+
 :::{#exm-daten}
 ### Daten zur Forschungsfrage 2
 
 Hier ist ein Auszug der Daten zur Tabelle `mariokart`, s. @tbl-mariokart.
+
+
+
+
+
+
+
+
+
+
 
 ```{r tbl-mariokart}
 #| echo: false
@@ -683,6 +921,16 @@ head(mariokart) |>
 # }
 
 ```
+
+
+
+
+
+
+
+
+
+
 
 
 Eine Erklärung (Data-Dictionary) aller Variablen des Datensatzes `mariokart` findet sich [hier](https://www.openintro.org/data/index.php?data=mariokart).^[<https://www.openintro.org/data/index.php?data=mariokart>] $\square$
@@ -757,11 +1005,31 @@ Als *Ausprägungen* bezeichnet man die *verschiedenen* Werte einer Variablen. $\
 In einer Studie wurden zehn Probanden untersucht. 
 Die Variable `geschlecht` dokumentiert die Geschlechter der Personen:
 
+
+
+
+
+
+
+
+
+
+
 ```{r}
 geschlecht <- c("Mann", "Frau", "Frau", "Frau", "Mann",
                 "Frau", "Mann", "Mann", "divers", "Frau")
 geschlecht
 ```
+
+
+
+
+
+
+
+
+
+
 
 In dieser Variable (die aus 10 Werten besteht) finden sich drei Ausprägungen:
 divers, Frau, Mann. $\square$
@@ -839,6 +1107,16 @@ Einmal ist dazu eine Nicht-Tidy-Tabelle (@tbl-untidy1; Breitformat) und einmal e
 
 
 
+
+
+
+
+
+
+
+
+
+
 ```{r}
 #| echo: false
 #| label: tbl-untidy1
@@ -851,7 +1129,6 @@ d <-
   )
 kable(d)
 ```
-
 
 ```{r}
 #| echo: false
@@ -869,6 +1146,16 @@ kable(d_long)
 
 
 
+
+
+
+
+
+
+
+
+
+
 :::{#exr-widelong}
 Suchen Sie ein Beispiel für eine Konfiguration einer Tabelle im Lang- vs. Breitformat. $\square$
 :::
@@ -879,6 +1166,16 @@ Suchen Sie ein Beispiel für eine Konfiguration einer Tabelle im Lang- vs. Breit
 >    [👩‍🏫]{.content-visible when-format="html"}[\emoji{woman-teacher}]{.content-visible when-format="pdf"} In vielen Software-Programmen der Datenanalyse weißt man z.B. der X- oder Y-Variable eine Spalte einer Tabelle zu. Möchte man etwa die Veränderung des Umsatzes im Verlauf der Jahre visualisieren oder analysieren, so braucht es die Spalten 'Jahr' und 'Umsatz', also ein Tidy-Format, @tbl-untidy1 bzw. @tbl-tidy1.
 
 @fig-tidy stellt auf Basis einer "Tidy-Tabelle" (@tbl-tidy1) ein Diagramm dar. Ohne Tidy-Daten wäre dieses Diagramm nicht (so einfach) zu erstellen gewesen.
+
+
+
+
+
+
+
+
+
+
 
 
 ```{r}
@@ -905,6 +1202,16 @@ d_long |>
   theme(legend.position = "none") +
   scale_y_continuous(limits = c(0,15))
 ```
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -948,6 +1255,16 @@ Wie man sieht, ist im linken Teilbild die Streuung (Variation) höher als im rec
 
 ::: {.content-visible when-format="pdf"}
 
+
+
+
+
+
+
+
+
+
+
 ```{r}
 #| label: fig-sample-estimate
 #| fig-cap: "Schätzgenauigkeit als Funktion der Stichprobengröße. Jeder Punkt stellt eine Stichprobe dar, entweder mit $n=20$ (links) oder mit $n=200$ (rechts). Kleine Stichproben (links) haben im Schnitt eine größere Abweichung vom wahren Mittelwert als größere Stichproben (rechts). "
@@ -984,6 +1301,16 @@ ggplot(d_long, aes(x = id, y = value)) +
                linetype = "dotted", 
                color = "grey40")
 ```
+
+
+
+
+
+
+
+
+
+
 
 :::
 
@@ -1022,6 +1349,16 @@ Sie brauchen nur experimentierfreudige Partner (Kleingruppen mit 2-4 Personen), 
 
 ::: {#second-column}
 
+
+
+
+
+
+
+
+
+
+
 ```{r}
 #| echo: false
 #| out-width: "75%"
@@ -1030,6 +1367,16 @@ qr <- qrcode::qr_code("https://docs.google.com/forms/d/e/1FAIpQLSeAwqNyZtyQwttq5
 
 plot(qr)
 ```
+
+
+
+
+
+
+
+
+
+
 :::
 ::::
 
@@ -1076,6 +1423,16 @@ In dem Fall gilt:
 @fig-ueberblick-fragen stellt diese beiden "Positionen" einer Variable dar. Die erste Position ist vor dem Pfeil (X).
 Die zweite Position ist nach dem Pfeil (Y).
 
+
+
+
+
+
+
+
+
+
+
 ```{mermaid}
 %%| fig-cap: X und Y als synonyme Bezeichnungen für Input- und Output-Variablen einer Forschungsfrage
 %%| label: fig-ueberblick-fragen
@@ -1084,6 +1441,16 @@ Die zweite Position ist nach dem Pfeil (Y).
 graph LR
     X["Lernen<br>(UV, X)"] --> Y["gute Note<br>(AV, Y)"]
 ```
+
+
+
+
+
+
+
+
+
+
 
 
 :::{#exr-uvav}
@@ -1098,6 +1465,16 @@ Der Begriff *Skalenniveau* wird verwendet, um die Art und Menge der Information,
 :::
 
 @fig-skalenniveau gibt einen Überblick über typisch verwendete Skalenniveaus.
+
+
+
+
+
+
+
+
+
+
 
 
 ```{mermaid}
@@ -1116,11 +1493,31 @@ graph TD
 ```
 
 
+
+
+
+
+
+
+
+
+
+
 :::{.exm-skalen}
 ### Beispiele für Skalenniveaus
 
 Beispiele zu den Skalenniveaus sind in @tbl-skalen-bsps aufgeführt. $\square$
 :::
+
+
+
+
+
+
+
+
+
+
 
 ```{r tbl-skalen-bsps}
 #| echo: false
@@ -1152,12 +1549,32 @@ skalen_bsps |>
 
 
 
+
+
+
+
+
+
+
+
+
+
 Jenachdem über welches Skalenniveau eine Variable verfügt,
 sind verschiedenen Rechenoperationen erlaubt, s. [@tbl-skalenniveaus]{.content-visible when-format="html"}
 [@tbl-skalenniveaus-pdf]{.content-visible when-format="pdf"}.
 
 
 ::: {.content-visible when-format="html"}
+
+
+
+
+
+
+
+
+
+
 
 ```{r p-skalenniveaus}
 #| dev: "ragg_png"
@@ -1177,9 +1594,29 @@ skalenniveaus |>
   kable()
 ```
 
+
+
+
+
+
+
+
+
+
+
 :::
 
 ::: {.content-visible when-format="pdf"}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1199,6 +1636,16 @@ skalenniveaus <-
 skalenniveaus |> 
   knitr::kable()
 ```
+
+
+
+
+
+
+
+
+
+
 
 :::
 
@@ -1251,6 +1698,16 @@ aber die man nur schwer in der Größe der Unterschiede bemessen kann.
 Das ist die Ordinalskala.
 Die Ordinalskale erlaubt also, Objekte zu ordnen (hinsichtlich eines Merkmals). Die Abstände zwischen den Objekten können dabei nicht quantifiziert werden. 
 
+
+
+
+
+
+
+
+
+
+
 ```{r p-ordinal}
 #| dev: "ragg_png"
 #| echo: false
@@ -1271,6 +1728,16 @@ tibble(x = c(1,2,5), Liebling = c("🥩", "🍝", "🍕")) %>%
 ```
 
 
+
+
+
+
+
+
+
+
+
+
 *Intervallskala*: Das ist vielleicht eine Überraschung für Sie: 
 Wenn es heute 10°C hat und morgen 5°C -- dann ist es heute *nicht* doppelt so warm wie morgen. 
 Ja, 10 ist das Doppelte von 5. 
@@ -1283,6 +1750,16 @@ ist, dass der Nullpunkt der Skala, 0° C, kein echter, physikalischer Nullpunkt 
 Stattdessen wurde mit  0° C eine Wärmenergiemenge gewählt, die für uns Menschen ganz praktisch, da augenfällig ist: der Gefrierpunkt von Wasser. 
 Was bei der Intervallskala erlaubt ist, ist das Addieren (und Subtrahieren): heute 10°C, morgen 5°C, das ist ein Unterschied von 5°C. 
 Oder: Im Schnitt waren es 7,5°C, das ist genau in der Mitte von 5 und 10°C. @fig-intervall versinnbildlicht die Intervallskala.
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1308,12 +1785,32 @@ tibble(y = c(10, 20, 30)) %>%
 
 
 
+
+
+
+
+
+
+
+
+
+
 *Verhältnisskala*: Eine Verhältnisskala  ist das,
 was man sich gemeinhin unter einer metrische Variable vorstellt: 
 Man kann "normal" rechnen, alle Rechenoperationen sind erlaubt. 
 Zuzüglich zu denen, 
 die auch in anderen, "niedrigeren" Skalenniveaus erlaubt sind, 
 ist das das Bilden von Verhältnissen -- Multiplizieren (und damit auch Dividieren), s. @fig-verhaeltnis.
+
+
+
+
+
+
+
+
+
+
 
 ```{r p-verhaeltnis}
 #| dev: "ragg_png"
@@ -1340,6 +1837,16 @@ tibble(Preis = c(1e4, 1e5),
 ```
 
 
+
+
+
+
+
+
+
+
+
+
 :::: {layout="[ 80, 20 ]"}
 
 ::: {#first-column}
@@ -1348,6 +1855,16 @@ In [diesem Video](https://www.youtube.com/watch?v=_mN3kFe56ng) gibt es noch ausf
 
 
 ::: {#second-column}
+
+
+
+
+
+
+
+
+
+
 ```{r qr-youtube-skalenniveaus}
 #| echo: false
 #| out-width: "75%"
@@ -1355,12 +1872,51 @@ In [diesem Video](https://www.youtube.com/watch?v=_mN3kFe56ng) gibt es noch ausf
 qr <- qrcode::qr_code("https://www.youtube.com/watch?v=_mN3kFe56ng")
 plot(qr)
 ```
+
+
+
+
+
+
+
+
+
+
 :::
 ::::
 
 
 ::: {.content-visible when-format="html" unless-format="epub"}
+
+
+
+
+
+
+
+
+
+
 {{< video https://youtu.be/_mN3kFe56ng >}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 :::
 
 
@@ -1561,6 +2117,16 @@ Sind Sie süchtig nach Ihrem Handy? Lassen Sie uns eine kleine Studie dazu (ggf.
 
 ::: {#second-column}
 
+
+
+
+
+
+
+
+
+
+
 ```{r qr-google-forms-handysucht}
 #| echo: false
 #| out-width: "75%"
@@ -1568,6 +2134,16 @@ Sind Sie süchtig nach Ihrem Handy? Lassen Sie uns eine kleine Studie dazu (ggf.
 qr <- qrcode::qr_code("https://forms.gle/PP8yb6Ubqq3JU78F")
 plot(qr)
 ```   
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1593,7 +2169,36 @@ welche Fehler Sie sie in in den acht Jahren ihrer Berufserfahrung gemacht hat un
 
 
 
+
+
+
+
+
+
+
+
+
+
 {{< video https://www.youtube.com/watch?v=O5lP6XcopdQ&list=PL9HYL-VRX0oQchs7dqFICoxMgnvFO10tC&index=15&t=1s >}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 :::
 
 
@@ -1604,6 +2209,7 @@ Einen Einblick in die  Fundamente statistischer Analyse bietet @stigler_seven_20
 stellen grundlegende Konzepte der Analyse von Daten im Kapitel 1, 
 "Hello data", vor.
 @downey_probably_2023 illustriert statistische Überraschungsmoment auf unterhaltsame, und vor allem: sofataugliche Art.
+
 
 
 

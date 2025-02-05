@@ -2,31 +2,6 @@
 
 
 
-## Einstieg
-
-### Standort im Lernpfad
-
-@fig-ueberblick zeigt den Standort dieses Kapitels im Lernpfad und 
-gibt damit einen Überblick über das Thema dieses Kapitels im Kontext aller Kapitel.
-
-
-
-
-### Lernziele
-
-
-- Sie können die Begriffe Kovarianz und Korrelation definieren und ihren Zusammenhänge erläutern.
-- Sie können die Stärke einer Korrelation einschätzen.
-
-### Benötigte R-Pakete
-
-In diesem Kapitel benötigen Sie folgende R-Pakete.
-
-```{r}
-library(tidyverse)
-library(easystats)
-```
-
 ```{r}
 #| echo: false
 
@@ -44,11 +19,31 @@ library(gt)
 ```
 
 
-### Benötigte Daten
+## Einstieg
+
+
+In diesem Kapitel benötigen Sie üblichen R-Pakete (`tidyverse`, `easystats`) und Daten (`mariokart`),  s. @sec-import-mariokart.
+
+
+
+### Lernziele
+
+
+- Sie können die Begriffe Kovarianz und Korrelation definieren und ihren Zusammenhänge erläutern.
+- Sie können die Stärke einer Korrelation einschätzen.
+
+
 
 
 
 ::: {.content-visible when-format="html"}
+
+```{r}
+#| message: false
+library(tidyverse)
+library(easystats)
+```
+
 
 ```{r import-mariokart-csv}
 mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
@@ -56,22 +51,6 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 :::
 
 
-::: {.content-visible when-format="pdf"}
-
-@lst-mario-path definiert den Pfad zum Datensatz `mariokart` und 
-importiert die zugehörige CSV-Datei in R, 
-so dass wir einen Tibble mit Namen `mariokart` erhalten.
-
-
-```{r import-mariokart-csv2}
-mariokart_path <- paste0(
-  "https://vincentarelbundock.github.io/Rdatasets/",
-  "csv/openintro/mariokart.csv")
-
-mariokart <- read.csv(mariokart_path)
-```
-
-:::
 
 
 
@@ -81,7 +60,7 @@ mariokart <- read.csv(mariokart_path)
 
 1. Suchen Sie sich eine vertrauenwürdige Partnerin oder einen vertrauenswürdigen Partner.
 Im Zweifel reicht die Person, die neben Ihnen sitzt. [😁]{.conten-visible when-format="html"}
-2. Nennen Sie zwei Variablen, die wie folgt zusammenhängen:
+2. Nennen Sie je zwei Variablen, die wie folgt zusammenhängen:
 
 - gleichsinnig (Viel von dem einen, viel von dem anderen)
 - gegensinnig (viel von dem einen, wenig von dem anderen)
@@ -96,14 +75,7 @@ Im Zweifel reicht die Person, die neben Ihnen sitzt. [😁]{.conten-visible when
 In @sec-punktmodelle1 haben wir gelernt,
 dass das Wesen eines Punktmodells als Zusammenfassung *einer* Spalte (eines Vektors) zu einer einzelnen Zahl, 
 zu einem "Punkt" sozusagen, zusammengefasst werden kann.
-
 In diesem Kapitel fassen wir *zwei* Spalten zusammen, wieder zu *einer* Zahl, s. @fig-desk2.
-
-![Zwei Spalten werden zu einer Zahl zusammengefasst](img/desk-stat-zsmnfassen-cor-crop.png){#fig-desk2 width=25%}
-
-<!-- $$\begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} + \begin{array}{|c|} \hline \\ \hline \\\\\\ \hline \end{array} \qquad \rightarrow \qquad \begin{array}{|c|} \hline \\ \hline  \hline \end{array}$$ {#eq-desk2} -->
-
-
 Wo wir in @sec-punktmodelle1 eine Variable mit Hilfe eines Lagemaßes beschrieben (bzw. dargestellt, zusammengefasst, modelliert) haben, 
 tun wir hier das Gleiche für zwei Variablen.
 Beschreibt man aber zwei Variablen, so geht es um die Frage, 
@@ -111,8 +83,9 @@ was die beiden Variablen miteinander zu tun haben:
 Wie die beiden Variablen voneinander (statistisch) *abhängen* bzw. miteinander (in welcher Form auch immer) *zusammenhängen.*
 Wir begrenzen uns auf *metrische* Variablen.
 
+![Zwei Spalten werden zu einer Zahl zusammengefasst](img/desk-stat-zsmnfassen-cor-crop.png){#fig-desk2 width=25%}
 
-:::{.exm-zsmn}
+:::{#exm-zsmn}
 ### Beispiele für Zusammenhänge
 
 - Lernzeit und Klausurerfolg
@@ -124,15 +97,15 @@ Wir begrenzen uns auf *metrische* Variablen.
 :::
 
 Die Verbildlichung (Visualisierung) zweier metrischer Variablen haben wir bereits in @sec-zshg-metr kennengelernt.
-Zur Verdeutlichung, wie ein Zusammenhang zweier metrischer Variablen aussehen kann, helfe noch einmal @fig-zshg.
+Zur Verdeutlichung wie ein Zusammenhang zweier metrischer Variablen aussehen kann, helfe noch einmal @fig-zshg.
 
 
 ```{r}
 #| echo: false
 #| label: fig-zshg
-#| fig-cap: "Visualisierung des Zusammenhangs von wheels und total_pr. Links: Streudiagramm mit Trendlinie (und Ellipse zur Verdeutlichung). Rechts: 'Verwackeltes' Streudiagramm, um die einzelnen Punkte besser zu erkennen"
+#| fig-cap: "Visualisierung des Zusammenhangs von wheels und total_pr. (a) Streudiagramm mit Trendlinie (und Ellipse zur Verdeutlichung). (b) 'Verwackeltes' Streudiagramm, um die einzelnen Punkte besser zu erkennen"
 #| fig-subcap: 
-#|   - Streudiagramm mit Trendlinie und Ellipse
+#|   - Streudiagramm mit Trendlinie
 #|   - Verwackeltes Streudiagramm
 #| layout: [[45,-10, 45], [100]]
 data(mariokart, package = "openintro")
@@ -142,8 +115,8 @@ mariokart %>%
   ggscatter(x = "wheels", 
             y = "total_pr",
             add = "reg.line",
-            add.params = list(color = "blue"),
-            ellipse = TRUE) +
+            add.params = list(color = modelcol),
+            ellipse = FALSWE) +
   theme_large_text()
 
 mariokart %>% 
@@ -204,7 +177,7 @@ Gar nicht so schlecht ausgefallen wie gedacht ..., s. @tbl-noten2. $\square$
 ```{r}
 #| echo: false
 #| label: tbl-noten2
-#| tbl-cap: Punkte in der Statistikklausur (0-100) und Lernzeit (0-100)
+#| tbl-cap: Punkte in der Statistikklausur (x, 0-100) und Lernzeit (y, 0-100)
 
 d %>% 
   select(id, y, x) %>% 
@@ -300,13 +273,10 @@ cor.rect.plot(x,y)
 ```
 
 
-
 Wir können das Summenrechteck noch durch die Anzahl der Datenpunkte teilen,
 das ändert nichts an der Aussage,
 aber der Mittelwert hat gegenüber der Summe den Vorteil, dass er unabhängig ist in seiner Aussage von der Anzahl der eingegangenen Datenpunkte.
 Das resultierende Rechteck nennen wir das *mittlere Abweichungsrechteck*.
-
-
 Ein Maß für den Zusammenhang von Lernzeit und Klausurpunkte ist also die *Fläche des mittleren Abweichungsrechtecks*, s. @fig-cov2.
 
 
@@ -568,7 +538,7 @@ Daher kann man den Korrelationskoeffizienten $r$ definieren wie in @def-r.
 
 
 :::{#def-r}
-### Korrelationskoeffizient r
+### Korrelationskoeffizient $r$
 
 Der Korrelationskoeffizient $r$ (nach Pearson) ist definiert als das mittlere Produkt der z-Wert-Paare, s. @eq-r-def, vgl. @cohen_applied_2003. Er ist ein Maß des linearen Zusammenhangs zweier metrischer Variablen. Der Wertebereich ist $[-1;1]$, wobei 0 keinen Zusammenhang anzeigt und $|r|=1$ perfekten Zusammenhang. $\square$
 :::
@@ -576,15 +546,12 @@ Der Korrelationskoeffizient $r$ (nach Pearson) ist definiert als das mittlere Pr
 $$r_{xy}=\frac{1}{n}\sum_{i=1}^n z_{x_i} z_{y_i}$${#eq-r-def}
 
 Man beachte, dass eine Korrelation (genauso wie eine Kovarianz) nur für metrische Variablen definiert ist.
-
-
-
 Aus dem Korrelationskoeffizienten können Sie zwei Informationen ableiten:
 
 1. *Vorzeichen*: Ein positives Vorzeichen bedeutet positiver (gleichsinniger) linearer Zusammenhang (und umgekehrt: negatives Vorzeichen, negativer, also gegensinniger linearer Zusammenhang).
 2. *Absolutwert* der Korrelation: Der Absolutwert (Betrag) des Korrelationskoeffizienten gibt die Stärke des linearen Zusammenhangs an. Je näher der Wert bei 1 liegt, desto stärker ist der (lineare) Zusammenhang. 
   - $r = 0$: kein linearer Zusammenhang
-  - $r = 1$: perfekter linearer Zusammenhang$\square$
+  - $r = 1$: perfekter linearer Zusammenhang $\square$
 
 
 
@@ -621,7 +588,7 @@ Nutzen Sie sie, um Ihr Gefühl für die Stärke des Korrelationskoeffizienten zu
 ### Korrelation mit R berechnen
 
 Ob der Verkaufspreis (`total_pr`) wohl mit der Dauer der Auktion (`duration`) oder mit der Anzahl der Gebote (`n_bids)` (linear) zusammenhängt? 
-Schauen wir nach! Die Funktion `correlation()` (aus dem Paket `easystats`) erledigt das Rechnen für uns, s. @tbl-mario-corr1.
+Schauen wir nach! Die Funktion `correlation` (aus dem Paket `easystats`) erledigt das Rechnen für uns, s. @tbl-mario-corr1.
 
 
 
@@ -650,7 +617,7 @@ mariokart |>
 
 
 Sie können auch auf die letzte Zeile, 
-also dem Befehl `summary()` verzichten. Dann ist die Ausgabe ausführlicher.
+also dem Befehl `summary` verzichten. Dann ist die Ausgabe ausführlicher.
 
 
 ### Korrelation ≠ Kausation
@@ -679,13 +646,13 @@ Liegt Korrelation ohne Kausation vor, so spricht man von einer Scheinkorrelation
 :::{#exm-scheinkorr}
 ### Scheinkorrelation: Störche und Babies
 
-Eine Urban Myth besagt: Die Anzahl der Störche pro Landkreis korreliert mit der Anzahl der Babies in diesem Landkreis [vgl. @matthews_storks_2000].
+Eine Mythos besagt: Die Anzahl der Störche pro Landkreis korreliert mit der Anzahl der Babies in diesem Landkreis [vgl. @matthews_storks_2000]. 
 
 Eine mögliche Erklärung für dieses (nur scheinbare) Paradoxon ist, 
 dass die "Naturbelassenheit" des Landkreises die gemeinsame Ursache für Störche ist (Störche lieben Natur) 
 und für Babies ist (die  Gegebenheiten bei hoher Naturbelassenheit eine höhere Zahl von Kindern pro Frau begünstigt).
 Wir müssen die Erklärung keinesfalls glauben; sie soll das Beispiel nur konkreter machen.
-Uns geht es hier nur um die Erkennung von Scheinkorrelation.
+Uns geht es hier nur um die Erkennung von Scheinkorrelation. $\square$
 :::
 
 
@@ -696,7 +663,6 @@ Uns geht es hier nur um die Erkennung von Scheinkorrelation.
 Kahle Männer aufgepasst!
 Macht eine Glatze krank? 
 Männer mit Glatze bekommen häufiger Corona [@goren_preliminary_2020]: "Bald men at higher risk of severe case of Covid-19, research finds".
-
 Eine alternative Erklärung lautet, 
 dass Alter einen Effekt hat auf Glatze (je älter ein Mann, desto wahrscheinlicher ist es, 
 dass er eine Glatz hat) 
@@ -735,7 +701,7 @@ d <- tibble(x = rnorm(n = n, mean = 0, sd = 1),
 x_min <- -0.5
 x_max <- 0.5
 
-d_filtered <-
+d_filtered <-  # Range-Einschränkung:
 d |> filter(between(x, x_min, x_max))
 ```
 
@@ -786,8 +752,6 @@ Glauben Sie nicht, prüfen Sie nach! Berechnen Sie die Korrelation von $X$ und $
 
 
 In Ihrer Arbeit beim Online-Auktionshaus analysieren Sie, welche Variablen mit dem Verkaufspreis von Computerspielen zusammenhängen.
-
-
 Falls der Datensatz auf Ihrem Computer (am besten in Ihrem Projektverzeichnis in RStudio) abgelegt ist, können Sie die Daten so (in mittlerweile gewohnter Manier) importieren, s. @lst-mario-nopath.
 
 ```{r}
@@ -852,8 +816,8 @@ mariokart %>%
 :::
 
 
-:::{.callout-caution}
-### Namensverwechslung (name clash)
+
+Achtung, Namensverwechslung!
 Es kann vorkommen, dass Sie zwei R-Pakete geladen haben, 
 in denen es jeweils z.B. eine Funktion mit Namen `select` gibt.
 R wird in dem Fall diejenige Funktion verwenden, 
@@ -866,7 +830,7 @@ Auf Errisch: `Error in select(., duration, n_bids, start_pr, ship_pr, total_pr, 
 Eine einfache Abhilfe ist es, R zu sagen: 
 "Hey R, nimm gefälligst `select` aus dem Paket `dplyr`, 
 dort "wohnt" nämlich `select`. 
-Auf Errisch spricht sich das so: `dplyr::select(...)`. $\square$
+Auf Errisch spricht sich das so: `dplyr::select(...)`.
 :::
 
 
@@ -902,7 +866,7 @@ mariokart %>%
 :::
 
 ::: {.content-visible when-format="pdf"}
-Etwas schöner sieht die Ausgabe mit dem Befehl `correlation` aus `{easystats}` aus, s. @tbl-mario-corr-pdf.
+Etwas schöner sieht die Ausgabe mit dem Befehl `correlation` aus `easystats` aus, s. @tbl-mario-corr-pdf.
 
 ```{r}
 #| eval: false
@@ -927,10 +891,9 @@ mariokart %>%
 
 
 
-Die Sternchen sind einige Aussage zur sog. statistischen Signifikanz der Korrelation.
-Ein Thema, das wir einfach gekonnt ignorieren.
+Die Sternchen in @tbl-mario-corr-pdf geben die sog. statistische Signifikanz der Korrelation an; ein Thema, das wir einfach gekonnt ignorieren.
 Möchte man nur einzelne Korrelationskoeffizienten ausrechnen, 
-können wir die Idee des Zusammenfassens, s. @eq-desk2, nutzen:
+können wir die Idee des Zusammenfassens, s. @fig-desk2, nutzen:
 
 ```{r}
 mariokart %>% 
@@ -938,7 +901,7 @@ mariokart %>%
 ```
 
 
-Im Falle von fehlenden Werte müssen Sie den Befehl `cor()` aus seiner schüchternen Vorsicht befreien und ermutigen, 
+Im Falle von fehlenden Werte müssen Sie den Befehl `cor` aus seiner schüchternen Vorsicht befreien und ermutigen, 
 trotz fehlender Werte einen Korrelationskoeffizienten auszugeben.
 Das geht mit dem Argument `use = "complete.obs"` in `cor`.
 
@@ -954,7 +917,7 @@ mariokart %>%
 
 ::: {.content-visible when-format="html"}
 
-Mit dem Befehl `plot_correlation()` aus dem R-Paket `dataExplorer` bekommt man eine ansehnliche Heatmap zur Verdeutlichung der Korrelationswerte, s. @fig-mario-corr.
+Mit dem Befehl `plot_correlation` aus dem R-Paket `dataExplorer` bekommt man eine ansehnliche Heatmap zur Verdeutlichung der Korrelationswerte, s. @fig-mario-corr.
 
 ```{r}
 #| label: fig-mario-corr
@@ -1001,7 +964,7 @@ Schauen Sie sich auch mal auf der Webseite *Datenwerk*^[<https://sebastiansauer.
 5. [korr01](https://sebastiansauer.github.io/Datenwerk/posts/korr01/korr01.html)
 5. [korr02](https://sebastiansauer.github.io/Datenwerk/posts/korr02/korr02.html)
 
-## Halbzeitquiz
+## Quiz zur deskriptiven Statistik
 
 :::: {layout="[ 80, 20 ]"}
 ::: {#first-column}
@@ -1059,15 +1022,20 @@ Vertiefung und Übung, dort, wo Sie es nötig haben. $\square$
 Auch die Korrelation ist ein Allzeit-Favorit in der Statistik;
 entsprechend wird Ihnen jedes typische Statistik-Buch die Grundlagen erläutern. 
 Schauen Sie doch mal, was Ihre Bibliothek Ihnen zu bieten hat.
-Wer eine unorthodoxe (geometrische!) Herangehensweise an die Korrelation (und Regression) sucht, darf sich auf eine Menge Aha-Momente bei @kaplan_statistical_2009 freuen.
-Ein schönes, modernes Statistikbuch bietet der Psychologie-Prof Russel Poldrack von der Princeton University [-@poldrack_statistical_2023]; auch dieses Buch ist frei online verfügbar. Tipp: Nutzen Sie die Übersetzungfunktion Ihres Browsers, wenn Sie das Buch nicht in Englisch lesen wollen.
+Wer eine unorthodoxe (geometrische!) Herangehensweise an die Korrelation (und Regression) sucht, 
+darf sich auf eine Menge Aha-Momente bei @kaplan_statistical_2009 freuen.
+Ein schönes, modernes Statistikbuch bietet der Psychologie-Prof Russell Poldrack [-@poldrack_statistical_2023];
+auch dieses Buch ist frei online verfügbar.
+Tipp: Nutzen Sie die Übersetzungfunktion Ihres Browsers, wenn Sie das Buch nicht in Englisch lesen wollen.
 Ein Klassiker, wenn auch nicht mehr ganz frisch, ist  @cohen_applied_2003; immer noch sehr empfehlenswert, aber etwas höheren Anspruchs.
 Was ist Scheinkorrelation und was ist "echte" Korrelation?
-Dieser Unterschied -- der für die Wissenschaft zentral ist -- wird von @pearl_book_2018 auf entspannte Art erläutert;
+Dieser Unterschied -- der für die Wissenschaft zentral ist -- 
+wird von @pearl_book_2018 auf entspannte Art erläutert;
 nebenbei lernt man einiges zur Geschichte der Wissenshaft.
-[Hier](https://scheinkorrelation.jimdofree.com/) finden Sie weitere Beispiele für Scheinkorrelationen.
+
 
 ::: {.content-visible when-format="html"}
+[Hier](https://scheinkorrelation.jimdofree.com/) finden Sie weitere Beispiele für Scheinkorrelationen.
 Dieser [TED-Vortrag](https://www.youtube.com/watch?v=8B271L3NtAw) informiert zum Thema Scheinkorrelation.
 :::
 

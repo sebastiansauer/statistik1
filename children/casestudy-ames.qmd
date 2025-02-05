@@ -28,20 +28,11 @@ Dort finden Sie auch eine nähere Beschreibung, das Ziel und die Spielregeln des
 :::
 
 
-### Benötigte R-Pakete
-
-```{r}
-#| message: false
-library(tidyverse)
-library(easystats)
-```
-
 
 
 ### Daten
 
-Sie können die Daten von [Kaggle herunterladen](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data).
-
+Sie können die Daten von [www.kaggle.com herunterladen](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data).
 Im Einzelnen müssen Sie folgende Dateien herunterladen:
 
 - *Data_description.txt*: Codebook, d.h. Beschreibung der Variablen im Datensatz
@@ -161,7 +152,7 @@ describe_distribution(d_train) |> print_md()
 ### Ein erstes Vorhersagemodell
 
 
-#### Welche Variablen eignen sich zur Vorhersage?
+
 
 
 Eine einfache Antwort auf die Frage, welche Variablen sich zur Vorhersage eignen, ist, 
@@ -203,7 +194,6 @@ Im Zweifel einfach ignorieren.
 Wenn Sie die R-Syntax nicht verstehen: 
 Führen Sie die Syntax schrittweise aus. Zuerst `d_train` ausführen und das Ergebnis betrachten. 
 Dann `d_train %>% select(-Id)` ausführen, wieder die Ausgabe betrachten, usw.
-
 Die als Output von @lst-get-high-corrs aufgeführten Variablen sind
 einigermaßen stark mit unserer Zielvariablen `SalePrice` korreliert.
 Nutzen wir also diese Variablen (oder einige von ihnen) zur Vorhersage.
@@ -211,7 +201,7 @@ Nutzen wir also diese Variablen (oder einige von ihnen) zur Vorhersage.
 
 
 
-#### Modell 1
+
 
 Im ersten Modell gehen wir davon aus, dass der Verkaufspreis im Großen und Ganzen durch den Zustand der Immobilie (`OverallQual`) vorhergesagt werden kann.
 Diese Variable ist am stärksten mit der Zielvariable korreliert und ist daher ein guter Kandidat für die Vorhersage.
@@ -254,8 +244,6 @@ r2(m1)  # aus easystats
 
 
 
-#### Model 2
-
 
 
 Mann kann mehrere UV (Prädiktorvariablen) in ein Regressionsmodell aufnehmen. Dazu trennt man sie mit einem Pluszeichen in `lm()`:
@@ -266,8 +254,6 @@ mein_modell <- lm(av ~ uv1 + uv2 + ... + uv_n, data = meine_daten)
 ```
 
 Dabei ist das Pluszeichen kein arithmetischer Operator, sondern sagt nur "als UV nimm UV1 und UV2 und ...". 
-
-
 Berechnen wir als nächstes ein Modell mit mehreren UV, `m2`.
 
 ```{r}
@@ -298,7 +284,6 @@ rmse(m2)
 
 
 Im Schnitt liegen unsere Vorhersagen `r round(coef(m2)[2], 0)` Dollar daneben. Ist das gut?
-
 Betrachten wir noch $R^2$:
 
 ```{r}
@@ -310,7 +295,6 @@ also im Vergleich zu anderen Modellen.
 
 
 
-#### Nullmodell
 
 Zum Vergleich berechnen wir das maximal einfache Modell: ohne Prädiktoren.
 Man nennt es das "Nullmodell".
@@ -359,8 +343,8 @@ Hier sind die Vorhersagen:
 m2_pred <- predict(m2, newdata = d_test)  # <1> 
 head(m2_pred) # <2>
 ```
-1. predicte anhand der Regressionsgerade von m1 und zwar anhand der Daten aus `d_test`
-2. zeige den "Kopf" der Vorhersagen (`m1_pred`), d.h. die ersten paar Vorhersagen
+1. Erstelle eine Vorhersage anhand der Regressionsgerade von `m1` und zwar anhand der Daten aus `d_test`.
+2. Zeige den "Kopf" der Vorhersagen (`m1_pred`), d.h. die ersten paar Vorhersagen.
 
 
 
@@ -376,7 +360,7 @@ d_test <-
 ### Einreichen!
 
 
-#### Wir brauchen zwei Spalten: `Id` und `SalePrice`
+
 
 
 So, wir haben unsere Vorhersagen!
@@ -460,7 +444,7 @@ nrow(d_test)
 <!-- Nein! Die Ergebnistabelle hat null Zeilen.  -->
 <!-- "No NA" - Keine NAs, keine fehlenden Werte mehr. -->
 
-#### Hochladen
+
 
 Diesen Tibble speichern wir als CSV-Datei an geeigneter Stelle ab.
 Es bietet sich an `write_csv` zu verwenden, da `write.csv` automatisch (ungefragt) noch eine Id-Spalte  ohne Namen einfügt (mit den Zeilennummern), das mag aber Kaggle nicht. 
@@ -473,7 +457,6 @@ write_csv(m2_subm, "data/ames-kaggle/m1-subm.csv")
 ```
 
 Und dann laden Sie diese Datei, `m1_subm.csv` bei Kaggle hoch und hoffen auf einen Hauptgewinn.
-
 Das Modell erzielte einen Score von *0.55521*.
 
 
@@ -482,7 +465,6 @@ Das Modell erzielte einen Score von *0.55521*.
 
 Diese Fallstudie hat ein einfaches Prognosemodell vorgestellt.
 Sicherlich gibt es viele Ansätze, dieses Modell zu verbessern.
-
 Hier sind einige Fragen, die Sie sich dazu stellen können:
 
 - Welche Prädiktoren sollte ich in das Modell aufnehmen?

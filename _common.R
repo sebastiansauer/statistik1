@@ -78,3 +78,7 @@ labeltextsize <- 8
 utils::data("mariokart", package = "openintro")
 
 mariokart_no_extreme <- mariokart[mariokart$total_pr < 100, ]
+
+
+mariokart_path <- "https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"
+

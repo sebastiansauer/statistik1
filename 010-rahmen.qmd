@@ -211,7 +211,7 @@ d <-
 d |> 
   ggplot(aes(y = y, x = 1)) +
   geom_jitter(width = .1) +
-  scale_x_continuous(limits = c(0, 2)) +
+  scale_x_continuous(limits = c(0, 2), breaks = c(0,1,2)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   annotate("point", size = 7, x = 1, y = 0,
            color = modelcol) +
@@ -220,8 +220,7 @@ d |>
   theme_modern()  +
   theme(strip.text = element_text(size = 16)) +
   theme(plot.caption = element_text(size = 16))+
-  theme_large_text()
-
+  theme_large_text() 
 
 
 
@@ -1155,7 +1154,7 @@ skalen_bsps |>
 
 
 
-Jenachdem über welches Skalenniveau eine Variable verfügt,
+Jenachdem, über welches Skalenniveau eine Variable verfügt,
 sind verschiedenen Rechenoperationen erlaubt, s. [@tbl-skalenniveaus]{.content-visible when-format="html"}
 [@tbl-skalenniveaus-pdf]{.content-visible when-format="pdf"}.
 
@@ -1177,7 +1176,7 @@ skalenniveaus <-
   )
 
 skalenniveaus |> 
-  kable()
+  knitr::kable()
 ```
 
 :::
@@ -1190,14 +1189,13 @@ skalenniveaus |>
 #| echo: false
 #| tbl-cap: "Erlaubte Rechenoperationen nach Skalenniveau (ja, erlaubt: ✓; nein, nicht erlaubt: ✕)"
 #| label: tbl-skalenniveaus-pdf
-skalenniveaus <-
-  tibble::tribble(
-       ~Skalenniveau, ~Quantitativ, ~`≠`, ~`≼`, ~`+`, ~`×`,
-     "Nominalniveau",       "✕",  "✓",  "✕",  "✕",  "✕",
-     "Ordinalniveau",       "✕",  "✓",  "✓",  "✕",  "✕",
-   "Intervallniveau",         "✓",  "✓",  "✓",  "✓",  "✕",
-  "Verhältnisniveau",         "✓",  "✓",  "✓",  "✓",  "✓"
-  )
+skalenniveaus <- tibble::tribble(
+       ~Skalenniveau, ~Quantitativ, ~`≠`, ~`$\\preceq$`, ~`+`, ~`×`,
+     "Nominalniveau",       "$\\times$",  "$\\checkmark$",  "$\\times$",  "$\\times$",  "$\\times$",
+     "Ordinalniveau",       "$\\times$",  "$\\checkmark$",  "$\\checkmark$",  "$\\times$",  "$\\times$",
+   "Intervallniveau",       "$\\checkmark$",  "$\\checkmark$",  "$\\checkmark$",  "$\\checkmark$",  "$\\times$",
+  "Verhältnisniveau",       "$\\checkmark$",  "$\\checkmark$",  "$\\checkmark$",  "$\\checkmark$",  "$\\checkmark$"
+  ) 
 
 skalenniveaus |> 
   knitr::kable()
@@ -1298,15 +1296,19 @@ Oder: Im Schnitt waren es 7,5°C, das ist genau in der Mitte von 5 und 10°C. @f
 #| label: fig-intervall
 #| fig-cap: "Ein Metermaß steckt im trüben Wasser. Auf dem Metermaß können wir die aufgedruckten Zahlen ablesen. Aber wir wissen nicht, ob der Metermaß auf dem Boden steht. Wir wissen demnach nicht, ob der vom Metermaß angegebene Nullpunkt der wahre Nullpunkt (Meeresboden) ist."
 
-tibble(y = c(10, 20, 30)) %>% 
-  ggplot()+
-  aes(x=x) +
+data_fig_intervall <- tibble(x = 0, y = c(10, 20, 30)) 
+
+ggplot(data_fig_intervall) +
+  aes(x = x) +
   annotate("segment", x = 0, xend = 0, y = 0, yend = 30) +
-  theme_minimal() +
   annotate("rect", fill = "blue", alpha = .8,
-           xmin = -1, xmax = 1, ymin = 10, ymax = 0) +
+           xmin = -1, xmax = 1, ymin = 0, ymax = 10) + # ymin and ymax order fixed
+  geom_label(aes(y = y, label = y), x = 0) + 
   theme_void() +
-  geom_label(x = 0, aes(y = y, label = y))
+  ylim(0, 35) +  # Extend y-axis range to avoid clipping
+  theme(
+    plot.margin = margin(10, 10, 10, 10) # Add margin space
+  )
 ```
 
 
@@ -1547,7 +1549,7 @@ $\square$
 :::: {.content-visible when-format="pdf"}
 :::{#exr-xls-paper}
 ### Fassen Sie den Artikel von @broman_data_2018 zusammen
-Fassen Sie das *Wesentliche* (und nur das Wesentliche) zum Artike lan einem geeigneten Ort zusammen .
+Fassen Sie das *Wesentliche* (und nur das Wesentliche) zum Artikel an einem geeigneten Ort zusammen .
 $\square$
 :::
 ::::

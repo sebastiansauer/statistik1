@@ -10,7 +10,7 @@ library("tidyverse")
 #library("ganttrify")
 library("easystats")
 library("googlesheets4")
-library(see)
+library("see")
 
 theme_set(theme_minimal())
 ```
@@ -163,7 +163,8 @@ dass regelmäßiges Üben und Dranbleiben mit Erfolg einher geht [@sauer2017a].
 data(stats_test, package = "pradadata")
 
 
-ggplot(stats_test, aes(x = study_time, y = score)) +
+p_lernen <- 
+  ggplot(stats_test, aes(x = study_time, y = score)) +
   labs(x = "Lernzeit",
        y = "Klausurerfolg",
        caption = ("N = 1646")) +
@@ -175,11 +176,17 @@ ggplot(stats_test, aes(x = study_time, y = score)) +
   geom_smooth(method = "lm", se = FALSE, color = okabeito_colors()[2], size = 1.25) +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1)) +
   theme(panel.background = element_rect(fill = "transparent",
-                                  colour = NA_character_), # necessary to avoid drawing panel outline
+                                  colour = NA_character_) # necessary to avoid drawing panel outline
+        # plot.margin = margin(1,1,5,1, "in")
 )
 
-ggsave(filename = "img/fig-lernen.png", width = 10, height = 6,
-       bg = "transparent")
+p_lernen
+
+# ggsave(p_lernen,
+#        filename = "img/fig-lernen.png", 
+#        width = 10, height = 10,
+#        dpi = 300,
+#        bg = "transparent")
 ```
 
 

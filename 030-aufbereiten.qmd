@@ -54,7 +54,7 @@ source("_common.R")
 
 Importieren Sie den Datensatz `mariokart`, s @sec-import-mariokart. 
 Probieren Sie alle vorgestellten Verben des Datenjudos aus,
-zunächst in dem Sie einfach den R-Code kopieren und selber ausführen. $\square$
+zunächst, indem Sie einfach den R-Code kopieren und selber ausführen. $\square$
 :::
 
 
@@ -174,7 +174,7 @@ mariokart <- tibble::as_tibble(mariokart)
 ### Der Datenguru in Aktion
 Sie arbeiten immer noch bei dem großen Online-Auktionshaus.
 Mittlerweile haben Sie sich den Ruf des "Datenguru" erworben.
-Vielleicht weil Sie behauptet haben, Data Science sei zu 80% Datenjudo,
+Vielleicht, weil Sie behauptet haben, Data Science sei zu 80% Datenjudo,
 das hat irgendwie Eindruck geschindet...
 Naja, jedenfalls müssen Sie jetzt mal zeigen, dass Sie nicht nur schlaue Sprüche draufhaben, 
 sondern auch die Daten ordentlich abbürsten können.
@@ -186,7 +186,7 @@ Sie analysieren dafür im Folgenden den Datensatz `mariokart`. Na, dann los. $\s
 
 Im R-Paket `dplyr`, das wiederum Teil des R-Pakets `tidyverse` ist,
 gibt es eine Reihe von R-Befehlen,
-die das Datenjudo in eine Handvoll einfacher Verben runterbrechen. 
+die das Datenjudo in eine Handvoll einfacher Verben herunterbrechen. 
 (Falls Sie das R-Paket `tidyverse` noch nicht installiert haben sollten, wäre jetzt ein guter Zeitpunkt dafür.)
 Die wichtigsten Verben des Datenjudos schauen wir uns im Folgenden an.
 
@@ -276,8 +276,9 @@ p_arrange +
 ### Was sind die höchsten Preise?
 
 Sie wollen mal locker anfangen. Daher stellen Sie sich folgende Frage: 
-Was sind denn eigentlich die höchsten Preise, für die das Spiel *Mariokart* über den Online-Ladentisch geht?
-Die Spalte des Verkaufspreis heißt offenbar `total_pr` (s. Datensatz `mariokart`).
+Was sind denn eigentlich die höchsten Preise, 
+für die das Spiel *Mariokart* über den Online-Ladentisch geht?
+Die Spalte für den Verkaufsprei heißt offenbar `total_pr` (s. Datensatz `mariokart`).
 In Excel kann die Spalte, nach der man die Tabelle sortieren möchte,
 einfach anklicken. Ob das in R auch so einfach geht?
 Die Funktion `arrange` macht es uns ziemlich einfach, s. @tbl-arrange.
@@ -433,7 +434,7 @@ mit anderen Worten, Auktionen (Beobachtungen) bei denen gilt: `stock_photo == TR
 
 
 Angestachelt von Ihren Erfolgen möchten Sie jetzt komplexere Hypothesen prüfen:
-Ob wohl Auktionen von *neuen* Spielen und zwar *mit* Photo einen höheren Preis erzielen als die übrigen Auktionen?
+Erzielen Auktionen von *neuen* Spielen und zwar *mit* Photo einen höheren Preis als die übrigen Auktionen?
 
 Anders gesagt haben Sie zwei Filterkriterien im Blick: Neuheit `cond` und Photo `stock_photo`. Nur diejenigen Auktionen, die *sowohl* Neuheit *als auch* Photo erfüllen, möchten Sie näher untersuchen (Filtern mit dem logischen UND):
 
@@ -552,7 +553,7 @@ eben eine Tabelle mit nur einer Spalte.
 
 ```{r}
 #| eval: false
-select(mariokart, 1, 2)  # Spalte 1 und 2
+select(mariokart, 1, 2)  # Spalten 1 und 2
 select(mariokart, 2:5)  #  Spalten 2 *bis* 5 
 select(mariokart, -1)  # Alle Spalte *außer* Spalte 1
 ```
@@ -565,12 +566,13 @@ Wählen Sie die Spalten `total_pr`, `cond` sowie die zweite Spalte der Tabelle `
 
 
 
-Vertiefte Informationen zum Auswählen von Spalten mit `select` findet sich [hier](https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html).^[<https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html>]
+Vertiefte Informationen zum Auswählen von Spalten mit `select` finden sich [hier](https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html).^[<https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html>]
 
 
 ### Spalten zu einer Zahl zusammenfassen mit `summarise`
 
-So eine lange Spalte mit Zahlen -- mal ehrlich: wer blickt da schon durch?
+So eine lange Spalte mit Zahlen -- mal ehrlich: 
+Wer blickt da schon durch?
 Viel besser wäre es doch, die Spalte `total_pr` zu einer Zahl zusammenzufassen,
 das ist doch viel handlicher.
 Kurz entschlossen fassen Sie die Spalte `total_pr`, den Verkaufspreis, 
@@ -627,14 +629,14 @@ mariokart_mittelwert <- summarise(mariokart,
 mariokart_mittelwert
 ```
 
-Aha! Etwa 50€ erzielt so eine Auktion im Schnitt.
+Aha! Etwa 50 € erzielt so eine Auktion im Schnitt.
 Übersetzen wir @lst-summarise vom Errischen ins Deutsche:
 
 >   [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Hey R, fasse die Zeilen von `total_pr` aus `mariokart` zu einer Zahl zusammen, und zwar mit Hilfe des Mittelwerts. Die resultierende Tabelle nennen wir `mariokart_mittelwert`, sehr kreativ. Und die resultierende Spalte, die einzige in `mariokart_mittelwert`, nennen wir `preis_mw`.
 
 
 
-Ein bisschen abstrakter gesprochen, fasst `summarise` 
+Ein bisschen abstrakter gesprochen fasst `summarise` 
  eine *Spalte* zu einer (einzelnen) *Zahl* zusammen, s. @fig-desk-summ.
 
 
@@ -756,7 +758,7 @@ summarise(mariokart_gruppiert, preis_mw = mean(total_pr))
 ```
 
 Ah, die neuen Spiele sind teuerer, wer hätt's gedacht!
-Langsam fühlen Sie sich als Datenchecker ... [🥷 🦹‍♀]{.content-visible when-format="html"}$\square$
+Langsam fühlen Sie sich wie ein Datenchecker ... [🥷 🦹‍♀]{.content-visible when-format="html"}$\square$
 :::
 
 
@@ -815,7 +817,7 @@ mariokart_verkaufspreis_foto
 ```
 ::::
 
-Bei Auktionen mit Foto wird im Schnitt ein höhrer Preis erzielt als ohne Foto. $\square$
+Bei Auktionen mit Foto wird im Schnitt ein höherer Preis erzielt als ohne Foto. $\square$
 
 :::::
 
@@ -872,7 +874,7 @@ mariokart_yen <- select(mariokart_yen, total_pr_yen, total_pr)
 mariokart_yen |> head()  # nur die ersten paar Zeilen
 ```
 
-Sicherlich werden Sie Ihre Gesprächspartner schwer beeindrucken. $\square$
+Sicherlich werden Sie Ihre Gesprächspartner beeindrucken. $\square$
 :::
 
 
@@ -936,7 +938,7 @@ mariokart_duration_wochen_schmal |> head()
 
 ::: {.content-visible when-format="html"}
 
->   [🧟‍♀️]{.content-visible when-format="html"}[\emoji{woman-zombie}]{.content-visible when-format="pdf"}️ Statistik, wann braucht man schon sowas!?
+>   [🧟‍♀️]{.content-visible when-format="html"}[\emoji{woman-zombie}]{.content-visible when-format="pdf"}️ Statist -- wann braucht man schon sowas!?
 
 >   [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Eigentlich nur dann, wenn man die Fakten gut verstehen will, sonst nicht.
 :::
@@ -1060,7 +1062,7 @@ So sieht die Pfeife in R aus (Jaja, das ist keine Pfeife, sondern ein Symbol ein
 
 ### Russische Puppen
 
-Computerbefehle, und im Speziellen R-Befehle kann man "aufeinander" 
+Computerbefehle und im Speziellen R-Befehle kann man "aufeinander" 
 -- oder vielmehr: ineinander -- stapeln, 
 so ähnlich wie eine russische Puppe (vgl. @sec-first-fun).
 Schauen wir uns das in einem Beispiel an.
@@ -1095,7 +1097,7 @@ Schritt 2: `sum(-1, 0, 1)`
 [⬇️]{.content-visible when-format="html"}
 [$\downarrow$]{.content-visible when-format="pdf"}
 
-Schritt 3: `0`. Fertig. Puh. Kompliziert.
+Schritt 3: `0`. Fertig. Ganz schön kompliziert!
 
 
 Soweit kann man noch einigermaßen folgen. 
@@ -1151,7 +1153,7 @@ Also nichts, um das Sie sich kümmern müssten.]
 :::
 
 Mittlerweile (Seit R 4.1) ist auch im Standard-R eine Pfeife eingebaut.
-die sieht so aus: `|>`.
+Die sieht so aus: `|>`.
 Die eingebaute Pfeife funktioniert praktisch gleich zur anderen Pfeife ` %>% `,
 hat aber den Vorteil, dass Sie nicht `tidyverse` starten müssen.
 Da wir `tidyverse` aber sowieso praktisch immer starten werden, 
@@ -1224,7 +1226,7 @@ Allgemeiner: `d |> f(x)` = `f(d, x)`.
 ## Beispiele für Forschungsfragen
 
 :::{#exr-fallbsps}
-Bevor Sie die Lösungen der folgenden Fallbeispiele lesen, versuchen Sie die Aufgaben selber zu lösen.
+Bevor Sie die Lösungen der folgenden Fallbeispiele lesen, versuchen Sie die Aufgaben selbst zu lösen.
 Ja, ich weiß, es ist hart, nicht gleich auf die Lösungen zu schauen! $\square$
 :::
 
@@ -1303,7 +1305,8 @@ mariokart %>%
 
 Die Funktion `n` gibt die Anzahl der Zeilen pro Teiltabelle zurück.
 
-Die mittleren Versankosten bewegen sich also zwichen 2.7 Dollar und 3.6 Dollar, je nach Anzahl der beigelegten Lenkräder. $\square$
+Die mittleren Versandkosten bewegen sich also zwischen 2.7 Dollar und 3.6 Dollar, 
+je nach Anzahl der beigelegten Lenkräder. $\square$
 :::
 
 
@@ -1314,7 +1317,7 @@ Die mittleren Versankosten bewegen sich also zwichen 2.7 Dollar und 3.6 Dollar, 
 ### Verkaufspreis in Yen?
 
 >   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} Ich würde gerne den Verkaufspreis in Yen wissen, nicht in Euro. 
-Dann rechne mal den mittleren Verkaufspreis aus und ziehe 10% ab, 
+Dann rechne mal den mittleren Verkaufspreis aus und ziehe 10 % ab, 
 die wir als Provision unseren Verkäufern zahlen müssen.
 
 
@@ -1350,10 +1353,11 @@ Prüfen Sie streng... $\square$
 
 Die Covid19-Epidemie hatte weltweit massive Auswirkungen; auch psychologischer Art wie Vereinsamung, 
 Angst oder Depression.
-Eine Studie, die die psychologischen Auswirkungen von @mulukom_psychological_2020,
-die [unter der Projekt-ID tsjnb bei der Open Science Foundation (OSF), <https://osf.io/tsjnb/>, angemeldet ist](https://osf.io/tsjnb/).
+ @mulukom_psychological_2020 berichten eine Studie, die die psychologischen Auswirkungen untersucht;
+die Studie ist [unter der Projekt-ID *tsjnb* bei der Open Science Foundation (OSF), <https://osf.io/tsjnb/>, angemeldet](https://osf.io/tsjnb/).
 Die Daten wurden mit R ausgewertet. 
-Beispielhaft ist unter <https://osf.io/4b9p2> die R-Syntax zu sehen, die die Autoren zur Datenaufbereitung verwendet haben.
+Beispielhaft ist unter <https://osf.io/4b9p2> die R-Syntax zu sehen, 
+die die Autoren zur Datenaufbereitung verwendet haben.
 Einen guten Teil dieser Syntax kennen Sie aus diesem Kapitel.
 Diese Studie ist, neben einigen vergleichbaren, ein schönes Beispiel, wie Forschung und Praxis ineinander 
 greifen können: Angewandte Forschung als Beitrag zur Lösung eines akuten Problems, 

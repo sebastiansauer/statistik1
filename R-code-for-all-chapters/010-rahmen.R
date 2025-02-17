@@ -238,7 +238,7 @@ skalen_bsps <-
                      "Uniranking",    "Ordinalskala",
                              "IQ",  "Intervallskala",
                    "Extraversion",  "Intervallskala",
-          "Temperatur in Celcius",  "Intervallskala",
+          "Temperatur in Celsius",  "Intervallskala",
        "Temperatur in Fahrenheit",  "Intervallskala",
            "Temperatur in Kelvin", "Verhältnisskala",
                     "Körpergröße", "Verhältnisskala",

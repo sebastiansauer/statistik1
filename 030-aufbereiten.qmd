@@ -281,7 +281,7 @@ für die das Spiel *Mariokart* über den Online-Ladentisch geht?
 Die Spalte für den Verkaufsprei heißt offenbar `total_pr` (s. Datensatz `mariokart`).
 In Excel kann die Spalte, nach der man die Tabelle sortieren möchte,
 einfach anklicken. Ob das in R auch so einfach geht?
-Die Funktion `arrange` macht es uns ziemlich einfach, s. @tbl-arrange.
+
 
 ```{r}
 #| echo: false
@@ -293,7 +293,7 @@ mariokart <-
 
 ::: {.content-visible when-format="html"}
 
-Die Funktion `arrange` macht es uns ziemlich einfach, s. tbl-arrange-pdf.
+Die Funktion `arrange` macht es uns ziemlich einfach, s. tbl-arrange.
 
 
 ```{r}
@@ -316,7 +316,7 @@ arrange(mariokart, total_pr)
 
 ```{r}
 #| echo: false
-#| tbl-cap: Die Datentabelle, soritert nach `total_pr`
+#| tbl-cap: Die Datentabelle, sortiert nach `total_pr`
 #| label: tbl-arrange-pdf
 mariokart |> 
   select(total_pr, start_pr) |> 
@@ -571,12 +571,25 @@ Vertiefte Informationen zum Auswählen von Spalten mit `select` finden sich [hie
 
 ### Spalten zu einer Zahl zusammenfassen mit `summarise`
 
+:::{#exm-summarise}
+
+### Was ist der mittlere Verkaufspreis?
+
+Mit `summarise`, s. @lst-summarise, können wir den mittleren Verkaufspreis der Mariokart-Spiele berechnen (`r round(mean(mariokart$total_pr), 0)`).  $\square$
+:::
+
+
+
 So eine lange Spalte mit Zahlen -- mal ehrlich: 
 Wer blickt da schon durch?
-Viel besser wäre es doch, die Spalte `total_pr` zu einer Zahl zusammenzufassen,
-das ist doch viel handlicher.
-Kurz entschlossen fassen Sie die Spalte `total_pr`, den Verkaufspreis, 
-zum Mittelwert zusammen, s. @fig-summarise.
+Machen wir uns das Leben leichter,
+indem wir eine lange Spalte mit Zahlen zu einer einzigen Zahl zusammenfassen.
+Sagen wir, drei Studierende -- Anni, Berti, Charli -- haben eine Statistikklausur geschrieben. 
+Die Noten waren 2.7, 2.7 und 1.7. 
+Damit lag der Notenschnitt (der Mittelwert) bei 2.4; s. @fig-summarise. 
+
+
+
 
 ```{r plot-summarise}
 #| echo: false
@@ -612,12 +625,14 @@ p_summ <- wrap_plots(A= p_d1,
 p_summ
 ```
 
-:::{#exm-summarise}
 
-### Was ist der mittlere Verkaufspreis?
 
-Mit `summarise`, s. @lst-summarise, können wir den mittleren Verkaufspreis der Mariokart-Spiele berechnen (`r round(mean(mariokart$total_pr), 0)`.  $\square$
-:::
+
+
+Fassen wir als Nächstes die Spalte `total_pr` zu einer Zahl zusammen,
+und zwar zum Mittelwert.
+Dann wissen wir, für welchen Preis ein Spiel im Durchschnitt verkauft wird,
+s. @lst-summarise.
 
 
 
@@ -630,9 +645,11 @@ mariokart_mittelwert
 ```
 
 Aha! Etwa 50 € erzielt so eine Auktion im Schnitt.
-Übersetzen wir @lst-summarise vom Errischen ins Deutsche:
 
->   [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Hey R, fasse die Zeilen von `total_pr` aus `mariokart` zu einer Zahl zusammen, und zwar mit Hilfe des Mittelwerts. Die resultierende Tabelle nennen wir `mariokart_mittelwert`, sehr kreativ. Und die resultierende Spalte, die einzige in `mariokart_mittelwert`, nennen wir `preis_mw`.
+
+<!-- Übersetzen wir @lst-summarise vom Errischen ins Deutsche: -->
+
+<!-- >   [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Hey R, fasse die Zeilen von `total_pr` aus `mariokart` zu einer Zahl zusammen, und zwar mit Hilfe des Mittelwerts. Die resultierende Tabelle nennen wir `mariokart_mittelwert`, sehr kreativ. Und die resultierende Spalte, die einzige in `mariokart_mittelwert`, nennen wir `preis_mw`. -->
 
 
 
@@ -662,6 +679,10 @@ liefert der Dollar-Operator einen Vektor (Spalte) zurück. (Diese wird von `mean
 Identifizieren Sie den höchsten Kaufpreis eines Mariokart-Spiels!^[`summarise(mariokart, hoechster_preis = max(total_pr))`] $\square$
 :::
 
+
+:::{#exr-summarise2}
+Identifizieren Sie den Mittelwert der Versandkostenpauschale!^[`summarise(mariokart, mw_versand = mean(total_pr))`] $\square$
+:::
 
 
 
@@ -1575,7 +1596,7 @@ In weiterführendem Material werden Sie immer wieder auf Inhalte treffen,
 die Sie noch nicht kennen, die etwa noch nicht im Unterricht behandelt wurden.
 Seien Sie unbesorgt: In der Regel können Sie diese Inhalte einfach auslassen,
 ohne den Anschluss zu verlieren. 
-Einfach ignorieren. 😄
+Einfach ignorieren.
 ::: 
 
 

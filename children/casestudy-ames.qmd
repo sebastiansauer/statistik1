@@ -142,8 +142,6 @@ z.B. mit `describe_distribution(d_train)` an.
 ::: {.content-visible when-format="html" unless-format="epub"}
 
 ```{r}
-#| label: tbl-ames1
-#| tbl-cap: Verteilung der metrischen Variablen im ames-Datensatz 
 #| echo: false
 describe_distribution(d_train) |> print_md()
 ```
@@ -198,7 +196,7 @@ Dann `d_train %>% select(-Id)` ausführen, wieder die Ausgabe betrachten, usw.
 Die als Output von @lst-get-high-corrs aufgeführten Variablen sind
 einigermaßen stark mit unserer Zielvariablen `SalePrice` korreliert.
 Nutzen wir also diese Variablen (oder einige von ihnen) zur Vorhersage.
-
+@tbl-ames-lm1 zeigt die Parameter von `m1`.
 
 
 
@@ -220,8 +218,11 @@ parameters(m1)  # aus easystats
 
 ```{r lm1-ames}
 #| echo: false
+#| label: tbl-ames-lm1
+#| tbl-cap: "Parameter von `lm1`"
 m1 <- lm(SalePrice ~ OverallQual, data = d_train)
-parameters(m1)  |> print_md() # aus easystats
+parameters(m1)  |> 
+select(Parameter, Coefficient) |> print_md() # aus easystats
 ```
 
 
@@ -233,7 +234,7 @@ Wie gut ist das Modell?
 rmse(m1)  # aus easystats
 ```
 
-Im Schnitt liegen wir `r round(coef(m1)[2], 0)` Dollar daneben. 
+Im Schnitt liegen wir `r rmse(m1)` Dollar daneben. 
 Ob das viel oder weniger ist, wird sich im Vergleich mit anderen Modellen zeigen.
 
 R-Quadrat liefert einen anderen Blick auf die Modellgüte:
@@ -270,7 +271,9 @@ parameters(m2)
 #| echo: false
 #| label: tbl-m2-params
 #| tbl-cap: "Modellparameter von m1"
-parameters(m2) %>% print_md()
+parameters(m2) %>% 
+  select(Parameter, Coefficient) |> 
+  print_md()
 ```
 
 
@@ -284,14 +287,16 @@ rmse(m2)
 ```
 
 
-Im Schnitt liegen unsere Vorhersagen `r round(coef(m2)[2], 0)` Dollar daneben. Ist das gut?
+Im Schnitt liegen unsere Vorhersagen `r rmse(m2)` Dollar daneben. 
+Ist das gut?
 Betrachten wir noch $R^2$:
 
 ```{r}
 r2(m2)
 ```
 
-Ob die Modellgüte (R-Quadrat, RMSE, etc.) "gut" bzw. "hoch" ist, beantwortet man am besten *relativ*, 
+Ob die Modellgüte (R-Quadrat, RMSE, etc.) "gut" bzw. "hoch" ist, 
+beantwortet man am besten *relativ*, 
 also im Vergleich zu anderen Modellen. 
 
 

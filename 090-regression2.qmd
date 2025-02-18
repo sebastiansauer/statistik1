@@ -42,6 +42,7 @@ library(ggpubr)  # Daten visualisieren, optional
 #| include: false
 library(ggpubr)
 library(plotly)
+library(ggrepel)
 library(scatterplot3d)
 
 source("children/colors.R")
@@ -270,14 +271,16 @@ Auf dieser Basis erstellen wir ein neues lineares Modell, `lm_wetter1a`,  s. @tb
 ```{r}
 #| results: hide
 lm_wetter1a <- lm(temp ~ year, data = wetter_summ)
-parameters(lm_wetter1a)
+parameters(lm_wetter1a) |> 
+  select(Parameter, Coefficient)
 ```
 
 ```{r}
 #| echo: false
 #| label: tbl-lm-wetter1a
 #| tbl-cap: "Modellparameter von lm_wetter1a"
-parameters(lm_wetter1a) %>% print_md()
+parameters(lm_wetter1a) %>%
+  select(Parameter, Coefficient) |> print_md()
 ```
 
 Dann plotten wir das Modell mit `plot(estimate_relation(lm_wetter1a))` und das Modell `lm_wetter1` entsprechend, s. @fig-wetter1.
@@ -445,7 +448,7 @@ wetter <-
 
 
 Scheint zu klappen!
-Jetzt ein lineares Modell dazu berechnen, s. @tbl_wetter_bin_uv.
+Jetzt ein lineares Modell dazu berechnen, s. @tbl-lm-wetter-bin-uv.
 
 ```{r}
 lm_wetter_bin_uv <- lm(temp ~ after_1950, data = wetter)
@@ -455,7 +458,9 @@ lm_wetter_bin_uv <- lm(temp ~ after_1950, data = wetter)
 #| echo: false
 #| label: tbl-lm-wetter-bin-uv
 #| tbl-cap: "Parameter von `lm_wetter_bin_uv`"
-parameters(lm_wetter_bin_uv) |> print_md()
+parameters(lm_wetter_bin_uv) |>
+  select(Parameter, Coefficient, CI_high, CI_low) |> 
+  print_md()
 ```
 
 
@@ -468,11 +473,12 @@ offenbar ein gutes halbes Grad, s. @fig-wetter2.
 ```{r}
 #| echo: false
 #| label: fig-wetter2
-#| layout-ncol: 2
+#| layout: [[45,-10, 45], [100]]
 #| fig-cap: "Modell: `temp ~ after_1950`, (a) Der Schätzbereich für den Parameter reicht von ca. 0.5 bis 0.8 Grad Unterschied. (b) Der Unterschied sieht in dieser Darstellung nicht groß aus."
 #| fig-subcap: 
 #|   - "Mittelwertsunterschied als Regressionsparameter"
 #|   - "Mittelwertsunterschied als Verteilungsvergleich"
+
 
 lm_wetter_bin_uv |> parameters() |> plot()
 
@@ -482,7 +488,8 @@ wetter |>
   #geom_violin(alpha = .5) +
   stat_summary(fun = mean, 
                geom = "point", color = okabeito_colors()[1], 
-               size = 4) +  # Add mean points
+               alpha = .7,
+               size = 5) +  # Add mean points
   stat_summary(fun = mean, 
                geom = "line", 
                aes(group = 1), color = okabeito_colors()[2], 
@@ -509,7 +516,7 @@ Hat eine nominale UV *zwei* Stufen, so überführt (synonym: transformiert) `lm`
 Da eine binäre Variable wie eine metrische angesehen werden kann, 
 kann die Regression in gewohnter Weise durchgeführt werden.
 Wenn Sie die Ausgabe der Parameter betrachten, 
-so sehen Sie die neu erstellte binäre Variable (s. @tbl_wetter_bin_uv).
+so sehen Sie die neu erstellte binäre Variable (s. @tbl-lm-wetter-bin-uv).
 Man beachte, dass der ursprüngliche Datensatz nicht geändert wird, 
 nur während der Analyse von `lm` wird die Umwandlung der Variable  durchgeführt.
 
@@ -595,6 +602,7 @@ Der Mittelwert der 2. Gruppe entspricht der *Summe* aus Achsenabschnitt und dem 
 ```{r}
 #| echo: false
 #| label: fig-binvar
+#| out-width: "75%"
 #| fig-cap: Sinnbild zur Interpretation eines linearen Modells mit binärer UV (reingezoomt, um den Mittelwertsunterschied hervorzuheben)
 
 wetter4 <-
@@ -1140,24 +1148,41 @@ plot(estimate_expectation(lm_year_month_interaktion)) +
 ```{r plot-precip-interaction}
 #| echo: false
 #| label: fig-wetter-interakt
+#| fig-asp: 0.5
 #| fig-cap: "Niederschlag im Jahresverlauf und Monatsvergleich mit Interaktionseffekt: Die Veränderung im Verlauf der Jahre ist unterschiedlich für die Monate (Januar vs. Juli). Die beiden Regressionsgeraden sind _nicht_ parallel."
+
+d <- tibble(
+    year_c = 100,  # Adjust x-position slightly for better spacing
+    precip = c(
+      predict(lm_year_month_interaktion, newdata = tibble(year_c = 50, month_factor = factor("7"))),
+      predict(lm_year_month_interaktion, newdata = tibble(year_c = 50, month_factor = factor("1")))
+    ),
+    label = c("month 7", "month 1"),
+    month_factor = c("7", "1")
+  )
 
 ggplot(wetter_month_1_7) +
   aes(x = year_c, 
-  y = precip, 
-  color = month_factor,
-  group = month_factor) +
-  geom_point2(alpha = .1) +
+      y = precip, 
+      color = month_factor,
+      group = month_factor) +
+  geom_point(alpha = .1) +  # Removed geom_point2 (assuming it was a typo)
   geom_smooth(method = "lm", size = 2, fullrange = TRUE) +
   scale_color_okabeito() +
-scale_x_continuous(limits = c(-100, 100)) +
+  scale_x_continuous(limits = c(-100, 100)) +
   theme(legend.position = "none") +
-  annotate("label", x = Inf,
-           y = predict(lm_year_month_interaktion, newdata = tibble(year_c = 50, month_factor = factor("7"))),
-           label = "month 7", hjust = 1.1) +
-  annotate("label", x = Inf,
-           y = predict(lm_year_month_interaktion, newdata = tibble(year_c = 50, month_factor = factor("1"))),
-           label = "month 1", hjust = 1.1) 
+  geom_label_repel(
+    data = d,
+
+    aes(x = year_c, y = precip, label = label),
+    hjust = 1.1,
+    nudge_x = 5,  # Nudges labels slightly to the right
+    nudge_y = 0.1,  # Adjusts vertical spacing to reduce overlap
+    direction = "y",  # Moves labels along the y-axis
+    segment.color = "gray50",  # Draws connecting line
+    size = 5
+  ) +
+  scale_x_continuous(limits = c(-100, 125))
 ```
 
 
@@ -1299,7 +1324,7 @@ lm3d <- lm(y ~ x1 + x2, data = df_3d)
 <!-- ```{r} -->
 <!-- #| label: Ein interaktives 3D-Diagramm und Regressionsebene -->
 <!-- #| echo: false -->
-<!-- #| eval: !expr knitr::is_html_output() -->
+<!-- #| eval: !expr knitr:::is_html_output() -->
 
 <!-- source("children/3d.R") -->
 <!-- scatterplot_3d_with_trace -->
@@ -1348,6 +1373,7 @@ Ein lineares Modell, `y ~ x1 + x2` mit zwei Prädiktoren im 3D-Raum.
 ```{r}
 #| fig-cap: 2D-Diagramm für 3D-Modell
 #| echo: false
+#| out-width: 75%
 #| label: fig-3d-regr-2d
 lm3d_expect <- estimate_relation(lm3d)
 plot(lm3d_expect)
@@ -1390,25 +1416,6 @@ ship_seq <- seq(0, 10, by = 1)
 Verkaufspreis <- t(outer(start_seq, ship_seq,
             function(x,y) {lm_coefs[1] + lm_coefs[2]*x + lm_coefs[3]*y}))
 ```
-
-
-<!-- ```{r fig-mario-2uv} -->
-<!-- #| echo: false -->
-<!-- #| eval: !expr knitr::is_html_output() -->
-<!-- #| label: fig-mario-2uv-dyn -->
-<!-- #| fig-cap: "Das Modell `lm_mario2v` mit 2 metrischen UV (und 1 metrische AV) als 3D-Diagramm" -->
-
-<!-- plot_ly(x = ~ start_seq, -->
-<!--         y = ~ ship_seq, -->
-<!--         z = ~ Verkaufspreis, -->
-<!--         type = "surface") %>%  -->
-<!--   add_trace(data = mariokart_no_extreme, -->
-<!--             x = ~start_pr, -->
-<!--             y = ~ship_pr, -->
-<!--             z = ~total_pr, -->
-<!--             mode = "markers", -->
-<!--             type = "scatter3d") -->
-<!-- ``` -->
 
 
 
@@ -1491,7 +1498,7 @@ Diesen Teil nennen wir Test-Sample, alles klar?
 ```
 
 Wenn die Daten auf Ihrer Festplatte liegen, z.B. im Unterordner `daten`,
-dann könne Sie sie von dort importieren:
+dann können Sie sie von dort importieren:
 
 ```{r}
 #| eval: false
@@ -1683,8 +1690,9 @@ mariokart_test <-
 ```
 
 
+[👴]{.content-visible when-format="html"}[\emoji{old-man}]{.content-visible when-format="pdf"}️ Okay, was ist jetzt der mittlere Vorhersagefehler?
 
-Okay, was ist jetzt der mittlere Vorhersagefehler?
+
 
 
 Um die Vorhersagegüte im Test-Sample auszurechnen (wir verwenden dazu die Funktionen `mae` und `rsq`, 
@@ -1755,7 +1763,7 @@ knitr::kable()
 
 Wie das Beispiel zeigt, ist die Modellgüte im Test-Sample (leider) oft *geringer* als im Train-Sample. 
 Die Modellgüte im Train-Sample ist mitunter übermäßig optimistisch.
-Dieses Phänomen bezeichnet man als *Overfitting*. $\square$
+Dieses Phänomen bezeichnet man als *Overfitting*.
 Bevor man Vorhersagen eines Modells einreicht, 
 bietet es sich, die Modellgüte in einem neuen Datensatz, als einem Test-Sample, zu überprüfen. $\square$
 
@@ -1824,26 +1832,25 @@ außerdem Kürze und aussagekräftige Namen.
 
 ### Train- vs. Test-Sample
 
+
+
+Das Train-Sample stellt die bekannten Daten dar; aus denen können wir lernen, 
+d.h. unser Modell berechnen.
+Das Test-Sample  stellt das Problem der wirklichen Welt dar: 
+Neue Beobachtungen, von denen man (noch) nicht weiß, was der Wert der AV ist.
+Der Zusammenhang dieser verschiedenen, 
+aber zusammengehörigen Arten von Stichproben ist in @fig-sample-types dargestellt.
+
+
 :::{#def-trainsample}
 ### Trainsample
 Den Datensatz, für die Sie sowohl UV *als auch AV* vorliegen haben, nennt man Train-Sample. $\square$
 :::
 
-
-Das Train-Sample stellt die bekannten Daten dar; aus denen können wir lernen, d.h. unser Modell berechnen.
-
 :::{#def-testsample}
 ### Testsample
 Den Datensatz, für den Sie *nur* Daten der UV, aber nicht zu der AV vorliegen haben, nennt man *Test-Sample*. $\square$
 :::
-
-
-Das Test-Sample  stellt das Problem der wirklichen Welt dar: 
-Neue Beobachtungen, von denen man (noch) nicht weiß, was der Wert der AV ist.
-
-
-Der Zusammenhang dieser verschiedenen, 
-aber zusammengehörigen Arten von Stichproben ist in @fig-sample-types dargestellt.
 
 
 ```{mermaid}
@@ -1919,10 +1926,14 @@ penguins <- read.csv(penguins_path)
 ### Analyse 1: Gesamtdaten
 
 Man untersucht, rechnet und überlegt. Ah! Jetzt haben wir es!
-Klarer Fall: Ein *negativer* Zusammenhang von Schnabellänge und Schnabeltiefe. 
+Klarer Fall: Ein *negativer* Zusammenhang von Schnabellänge und Schnabeltiefe, 
+s. @fig-peng-simpson1. 
 Das ist bestimmt einen Nobelpreis wert  Schnell publizieren!
 
 ```{r}
+#| label: fig-peng-simpson1
+#| out-width: 75%
+#| fig-cap: "Negativer Zusammenhang von Schanbellänge und Schnabeltiefe"
 ggscatter(penguins, x = "bill_length_mm", y = "bill_depth_mm", 
           add = "reg.line")  # aus `ggpubr`
 ```
@@ -1959,12 +1970,13 @@ ggscatter(penguins, x = "bill_length_mm", y = "bill_depth_mm",
           add = "reg.line", color = "species") +
           geom_abline(slope = coef(lm_ping1)[2], 
           intercept = coef(lm_ping1)[1],
+          size = 2,
           linetype = "dashed")
 ```
 
 
 Oh nein! Was ist hier nur los? 
-Daten lügen nicht, oder doch?
+Daten lügen nicht?! Oder doch?!
 
 
 Hier sind die statistischen Details der zweiten Analyse, s. @tbl-peng-simpson2. 
@@ -2052,7 +2064,8 @@ d_sim %>%
   ggplot(aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, color = modelcol) +
-  labs(title = "Oh yeah, super Korrelation!") +
+  labs(title = "Oh yeah,",
+       subtitle = "super Korrelation!") +
   theme_minimal() +
   theme(plot.title = element_text(size = 12)) +
   theme_large_text()
@@ -2065,7 +2078,8 @@ d_sim %>%
   ggplot(aes(x = x, y = y, color = group)) +
   geom_point() +
   geom_smooth(method = "lm") +
-  labs(title = "Oh nein, keine Korrelation!") +
+  labs(title = "Oh nein",
+       subtitle = "keine Korrelation!") +
   theme(legend.position = "bottom") +
   theme_minimal() +
   scale_color_okabeito() +

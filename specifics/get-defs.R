@@ -6,12 +6,12 @@ quarto_dir <- "."
 
 # Define the pattern to match the definition shortcode:
 pattern_def <- ':::\\{#def-(.+?)\\}'
-pattern_word <- '(.+)'  # that's the definitions following the id of the def.
+pattern_word <- '(.+)'  # Definitions follow the ID of the def.
 
 # Initialize an empty list to store definitions:
 definitions <- list()
 
-# Function to read all files in a directory recursively
+# Function to read all files in a directory recursively:
 read_files <- function(path = ".") {
   files <- list.files(path, recursive = FALSE, full.names = TRUE, pattern = "\\.qmd$")
   return(files)
@@ -52,18 +52,16 @@ for (file in files) {
 # Sort definitions alphabetically by term:
 definitions <- definitions[order(sapply(definitions, `[`, 1))]
 
-
 # Write the definitions to a new Quarto file:
 output_file <- file.path(quarto_dir, "definitions.qmd")
 fileConn <- file(output_file, "w")
 writeLines("# Definitionen\n\n", fileConn)
-#writeLines("### Definitions\n\n", fileConn) # Adding a heading for the definitions section
 
 for (definition in definitions) {
-  line <- paste0("- **", definition[2], "**: @def-", definition[1], "\n\n")
+  line <- paste0("- **", definition[2], "**: @def-", definition[1], " [, S. \\pageref{def-", definition[1], "}]{.content-visible when-format=\"pdf\"}\n\n")
   writeLines(line, fileConn)
 }
+
 close(fileConn)
 
 cat("Extracted", length(definitions), "definitions to definitions file\n")
-

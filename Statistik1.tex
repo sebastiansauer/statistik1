@@ -22,7 +22,7 @@
 \ifPDFTeX\else  
     % xetex/luatex font selection
     \setmainfont[]{Lora}
-    \setsansfont[]{Merriweather Sans}
+    \setsansfont[]{Lato}
     \setmonofont[]{Roboto}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -204,6 +204,8 @@
 
 
 \raggedbottom
+\flushbottom
+
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -360,13 +362,39 @@
 
 
 \title{Statistik1}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Einführung in die Vorhersage-Modellierung}
 \author{Sebastian Sauer}
-\date{2025-02-18}
+\date{2025-02-20}
 
 \begin{document}
 %%%%% begin titlepage extension code
 
   \begin{frontmatter}
+
+
+
+% Half title page:
+\begin{titlepage}
+    \centering
+    \vspace*{5cm}
+    {\Huge STATISTIK 1}
+    \vfill
+\end{titlepage}
+
+
+% empty page:
+\newpage
+\null
+\thispagestyle{empty} % Removes headers and footers
+\newpage
+
+
 
 \begin{titlepage}
 
@@ -386,7 +414,12 @@
 {\fontsize{30}{36.0}\selectfont
 {\uppercase{\nohyphens{Statistik1}}}\par
 }%
-}
+
+\vspace{\betweentitlesubtitle}
+{
+{\Large{\textit{\nohyphens{Einführung in die
+Vorhersage-Modellierung}}}}\par
+}}
 \newcommand{\titlepagetitleblock}{
 \rule{\textwidth}{0.4pt} % Thin horizontal rule
 \vspace{0.025\textheight} % Whitespace between the top rules and title
@@ -423,7 +456,7 @@ ISBN: 9798343798951\\
 Independently published\\}}}
 }
 \newcommand{\datestyled}{%
-{2025-02-18}
+{2025-02-20}
 }
 
 
@@ -438,7 +471,9 @@ Independently published\\}}}
 }
 
 %set up blocks so user can specify order
-\newcommand{\titleblock}{{
+\newcommand{\titleblock}{\newlength{\betweentitlesubtitle}
+\setlength{\betweentitlesubtitle}{\baselineskip}
+{
 
 {\titlepagetitleblock}
 }
@@ -485,10 +520,6 @@ Independently published\\}}}
 \authorblock
 
 \vfill
-
-\logoblock
-
-\footerblock
 \par
 
 \end{minipage}\ifthenelse{\equal{}{right} \OR \equal{}{leftright} }{
@@ -496,12 +527,18 @@ Independently published\\}}}
 \vrulecode}{}
 \clearpage
 %%% TITLE PAGE END
+
+\input{specifics/copyright.tex}
+\clearpage
+\input{specifics/dedication.tex}
+\clearpage
 \end{titlepage}
 \setcounter{page}{1}
 \end{frontmatter}
 
 %%%%% end titlepage extension code
 
+\pagenumbering{roman} 
 
 \mainmatter
 \bookmarksetup{startatroot}
@@ -724,7 +761,7 @@ Geben Sie bei Schwierigkeiten nicht auf. \emoji{person-lifting-weights}
 }
 
 \caption{\label{fig-lernen}Der Zusammenhang von Lernzeit (1: gering bis
-5:hoch) von Klausurerfolg}
+5: hoch) von Klausurerfolg}
 
 \end{figure}%
 
@@ -1138,7 +1175,7 @@ Abbildung~\ref{fig-ungewiss-anna-berta}. \(\square\)
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{010-rahmen_files/figure-pdf/fig-ungewiss-anna-berta-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{010-rahmen_files/figure-pdf/fig-ungewiss-anna-berta-1.pdf}
 
 }
 
@@ -1150,7 +1187,7 @@ Abbildung~\ref{fig-ungewiss-anna-berta}. \(\square\)
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{010-rahmen_files/figure-pdf/fig-ungewiss-anna-berta-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{010-rahmen_files/figure-pdf/fig-ungewiss-anna-berta-2.pdf}
 
 }
 
@@ -1256,8 +1293,8 @@ Verringert Joggen (X) die Menge des Hüftgolds (Y)?
 \end{quote}
 
 \begin{quote}
-Um welchen Betrag erhöht sich der Umsatz (Y), wenn wir 1000 € mehr für
-Werbung ausgeben? (X)
+Um welchen Betrag erhöht sich der Umsatz (Y), wenn wir 1000 Euro mehr
+für Werbung ausgeben? (X)
 \end{quote}
 
 \begin{quote}
@@ -1531,7 +1568,7 @@ Die Variable enthält drei Ausprägungen: divers, Frau, Mann. \(\square\)
 
 \end{example}
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-tip-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-tip-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Tipp}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-tip-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-tip-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Tipp}, coltitle=black]
 
 Gerade haben Sie etwas Computer-Syntax gesehen, genauer gesagt, Befehle
 aus der Programmiersprache \emph{R}. Bisher haben wir diese Befehle
@@ -1711,7 +1748,7 @@ Grundgesamtheit). Wie man sieht, ist im linken Teilbild die Streuung
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{010-rahmen_files/figure-pdf/fig-sample-estimate-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{010-rahmen_files/figure-pdf/fig-sample-estimate-1.pdf}
 
 }
 
@@ -1723,7 +1760,7 @@ größere Stichproben (rechts).}
 
 \end{figure}%
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-important-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-important-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-important-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-important-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, coltitle=black]
 
 Mehr Daten = genauere Ergebnisse (unter sonst gleichen Umständen)
 \(\square\)
@@ -1897,7 +1934,10 @@ Länge & Verhältnisskala \\
 
 Jenachdem, über welches Skalenniveau eine Variable verfügt, sind
 verschiedenen Rechenoperationen erlaubt, s.
-{Tabelle~\ref{tbl-skalenniveaus-pdf}}.
+{Tabelle~\ref{tbl-skalenniveaus-pdf}}. Zu diesen Rechenoperationen
+zählen: Das Testen auf Gleichheit (Symbol: \(=\)), das Ordnen der Größe
+nach (Symbol: \(\preceq\)), das Addieren (und Substahieren; Symbol:
+\(+\)) und das Multiplizieren (und Dividieren; Symbol: \(\cdot\)).
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2073}}
@@ -1919,13 +1959,13 @@ Skalenniveau
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Quantitativ
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-≠
+\(=\)
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 \(\preceq\)
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-+
+\(+\)
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-×
+\(\cdot\)
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
@@ -1970,7 +2010,7 @@ von unterschiedlichem Geschlecht sind. Anders ausgedrückt:
 \end{itemize}
 
 \emph{Ordinalskala}: Diese Skala stellt einer Rangordnung dar. Eine
-Rangordnung ist etwa die geordnete Abfolge Ihres Leibgerichte (1. Pizza,
+Rangordnung ist etwa die geordnete Abfolge Ihrer Leibgerichte (1. Pizza,
 2. Spagetthi, 3. Schnitzel). Etwas \enquote{formaler} ausgedrückt, z.B.:
 
 \begin{itemize}
@@ -1982,7 +2022,7 @@ Rangordnung ist etwa die geordnete Abfolge Ihres Leibgerichte (1. Pizza,
 Das komische Zeichen \(\succ\) soll heißen: \enquote{Ist auf meiner
 Liste von Leibgerichten weiter oben, mag ich lieber}. Man kann aber
 \emph{nicht} sagen, \enquote{Ich mag aber Pizza um 42\% mehr als die
-Spagetthi und die wieder um 73\% mehr als ein Schnitzel!}. Zumindest
+Spaghetti und die wieder um 73\% mehr als ein Schnitzel!}. Zumindest
 kann man das nicht ohne weitere Informationen und Annahmen. Es gibt also
 Dinge auf der Welt, die man (leicht in eine Rangordnung bringen kann,
 aber die man nur schwer in der Größe der Unterschiede bemessen kann. Das
@@ -2034,7 +2074,7 @@ erlaubt sind, ist das das Bilden von Verhältnissen -- Multiplizieren
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{010-rahmen_files/figure-pdf/fig-verhaeltnis-1.png}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{010-rahmen_files/figure-pdf/fig-verhaeltnis-1.png}
 
 }
 
@@ -2491,8 +2531,6 @@ etwas langsamer ist und nur für ein gewisses Zeitvolumen kostenlos. Sie
 müssen sich erst ein Konto beim Anbieter anlegen, um den Dienst nutzen
 zu können.
 
-\subsubsection{Vertiefung}\label{vertiefung-1}
-
 Wenn Ihnen jemand (z.B. eine Lehrkraft) einen
 RStudio-Cloud-Projektordner bzw. einen Link dazu bereitstellt, ist das
 komfortabel, da die Lehrkraft dann schon Pakete installieren, Daten
@@ -2520,7 +2558,7 @@ Sie können auch von der Cloud exportieren, also Ihre Syntaxdatei
 herunterladen. Klicken Sie dazu im Reiter \enquote{Files} auf
 \texttt{More\ \textgreater{}\ Export}.
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-note-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-note-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, coltitle=black]
 
 RStudio starten, nicht R. \(\square\)
 
@@ -2598,7 +2636,7 @@ Damit wir nicht alle Pakete einzeln installieren und starten müssen,
 bietet uns das Paket \texttt{tidyverse} den Komfort, alle die Pakete
 dieser \enquote{Sammlung} auf einmal zu starten. Praktisch.)
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-caution-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-caution-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Vorsicht}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-caution-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-caution-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Vorsicht}, coltitle=black]
 
 Bevor Sie ein R-Paket (oder überhaupt irgendwelche Software)
 installieren/updaten, sollten Sie das entsprechende R-Paket
@@ -3253,7 +3291,7 @@ Trainieren Sie sich mit dem R-Quiz auf der
   \texttt{rm(mariokart)} das Objekt namens \texttt{mariokart}.
 \end{itemize}
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-caution-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-caution-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Vorsicht}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-caution-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-caution-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Vorsicht}, coltitle=black]
 
 R ist penibel: So sind \texttt{name} und \texttt{Name} zwei verschiedene
 Variablen für R. \(\square\)
@@ -3291,13 +3329,12 @@ könnte.
 \end{enumerate}
 
 In beiden Fällen wird der \enquote{Aufenthaltsort} der Datei durch den
-\emph{Pfad} (Der Pfad einer Datei gibt an, in welchem Ordner und
-Unterordner (und Unter-Unterordner) die gesuchte Datei liegt. Ein Pfad
-könnte z.B. so aussehen:
-\enquote{/Users/sebastiansaueruser/github-repos/statistik1/}.) und den
-Namen der Datei definiert.
+\emph{Pfad} und den Namen der Datei definiert. Der Pfad einer Datei gibt
+an, in welchem Ordner und Unterordner (und Unter-Unterordner) die
+gesuchte Datei liegt. Ein Pfad könnte z.B. so aussehen:
+\enquote{/Users/sebastiansaueruser/github-repos/statistik1/}.
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-note-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-note-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, coltitle=black]
 
 Wir werden in diesem Kurs häufiger mit dem Daten \texttt{mariokart}
 arbeiten; Sie finden ihn
@@ -3359,7 +3396,7 @@ diesem R-Paket starten. Das ist die bequemste Option. Zum Beispiel
 \enquote{wohnt} der Datensatz \texttt{mariokart} im R-Paket
 \texttt{openintro}.
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-tip-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-tip-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Tipp}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-tip-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-tip-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Tipp}, coltitle=black]
 
 Häufig wird vergessen, dass ein R-Paket vor der Nutzung installiert
 werden muss. \(\square\)
@@ -3445,9 +3482,6 @@ des Importierens einer Datendatei von Ihrem Computer.\end{minipage}%
 \end{minipage}%
 
 \end{figure}%
-
-\subsubsection{Importieren von Ihrem Computer in RStudio
-Cloud}\label{importieren-von-ihrem-computer-in-rstudio-cloud}
 
 Das Importieren in von Ihrem Computer zu RStudio Cloud ist identisch zum
 Importieren von Ihrem Computer in RStudio Desktop. Nur dass Sie die
@@ -3580,7 +3614,7 @@ Möchte man mit R prüfen, ob eine Variable \texttt{x} einen bestimmten
 Man beachte das \emph{doppelte} Gleichheitszeichen. Zur Prüfung auf
 Gleichheit muss man das doppelte Gleichheitszeichen verwenden.
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-caution-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-caution-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Vorsicht}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-caution-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-caution-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Vorsicht}, coltitle=black]
 
 Ein beliebter Fehler ist es, bei der Prüfung auf Gleichheit, nur ein
 Gleichheitszeichen zu verwenden, z.B. so: \texttt{x\ =\ 73}. Mit einem
@@ -3612,9 +3646,6 @@ Größer als Wert & x \textgreater{} Wert \\
 Größer oder gleich Wert & x \textgreater= Wert \\
 Kleiner als Wert & x \textless{} Wert \\
 Kleiner oder gleich Wert & x \textless= Wert \\
-Logisches UND & (x \textless{} Wert1) \& (x \textgreater{} Wert2) \\
-Logisches ODER & (x \textless{} Wert1) \textbar{} (x \textgreater{}
-Wert2) \\
 
 \end{longtable}
 
@@ -3751,7 +3782,7 @@ Noch nicht genug? Checken Sie alle Aufgaben mit dem Tag
 \href{https://sebastiansauer.github.io/Datenwerk/\#category=R}{R} auf
 dem Datenwerk aus.\footnote{\url{https://sebastiansauer.github.io/Datenwerk/\#category=R}}
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-note-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-note-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, coltitle=black]
 
 Die Webseite
 \href{https://sebastiansauer.github.io/Datenwerk/}{Datenwerk} stellt
@@ -3766,7 +3797,7 @@ Aufgabe nicht lösen können, da Wissen vorausgesetzt wird, das Sie (noch)
 nicht haben. Lassen Sie sich davon nicht ins Boxhorn jagen. Ignorieren
 Sie solche Aufgaben fürs Erste.
 
-\section{Vertiefung}\label{vertiefung-2}
+\section{Vertiefung}\label{vertiefung-1}
 
 \subsection{\texorpdfstring{Alternativen zu
 \texttt{read.csv}}{Alternativen zu read.csv}}\label{alternativen-zu-read.csv}
@@ -4192,7 +4223,7 @@ des Datenjudos, s. Abbildung~\ref{fig-arrange}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{030-aufbereiten_files/figure-pdf/fig-arrange-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{030-aufbereiten_files/figure-pdf/fig-arrange-1.pdf}
 
 }
 
@@ -4283,7 +4314,7 @@ Abbildung~\ref{fig-filter}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{030-aufbereiten_files/figure-pdf/fig-filter-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{030-aufbereiten_files/figure-pdf/fig-filter-1.pdf}
 
 }
 
@@ -4381,7 +4412,7 @@ s. Abbildung~\ref{fig-select} als Beispiel.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{030-aufbereiten_files/figure-pdf/fig-select-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{030-aufbereiten_files/figure-pdf/fig-select-1.pdf}
 
 }
 
@@ -4456,7 +4487,7 @@ Notenschnitt (der Mittelwert) bei 2.4; s. Abbildung~\ref{fig-summarise}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{030-aufbereiten_files/figure-pdf/fig-summarise-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{030-aufbereiten_files/figure-pdf/fig-summarise-1.pdf}
 
 }
 
@@ -4498,7 +4529,7 @@ preis\_mw \\
 50 \\
 \end{longtable}
 
-Aha! Etwa 50 € erzielt so eine Auktion im Schnitt.
+Aha! Etwa 50 Dollar erzielt so eine Auktion im Schnitt.
 
 Ein bisschen abstrakter gesprochen fasst \texttt{summarise} eine
 \emph{Spalte} zu einer (einzelnen) \emph{Zahl} zusammen, s.
@@ -4558,7 +4589,7 @@ Also gut, R, dann gruppiere die Tabelle, s. Abbildung~\ref{fig-group}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{030-aufbereiten_files/figure-pdf/fig-group-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{030-aufbereiten_files/figure-pdf/fig-group-1.pdf}
 
 }
 
@@ -4661,7 +4692,7 @@ umrechnen, s. Abbildung~\ref{fig-mutate}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{030-aufbereiten_files/figure-pdf/fig-mutate-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{030-aufbereiten_files/figure-pdf/fig-mutate-1.pdf}
 
 }
 
@@ -4930,7 +4961,7 @@ R-Befehlen}
 
 \end{codelisting}%
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-caution-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-caution-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Vorsicht}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-caution-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-caution-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Vorsicht}, coltitle=black]
 
 Ein beliebter Fehler ist es übrigens, nicht die richtige Zahl an
 schließenden Klammern hinzuschreiben, z.B.
@@ -4960,7 +4991,7 @@ Nimm "meine_daten" *und dann*
 
 \end{definition}
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-note-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-note-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, coltitle=black]
 
 Der Befehl \texttt{\%\textgreater{}\%} \emph{verknüpft} Befehle. Der
 Shortcut für diesen Befehl ist Strg-Shift-M. Die Pfeife
@@ -5431,7 +5462,7 @@ Daten eigenständig analysieren.
 
 \section{Aufgaben}\label{aufgaben-2}
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-tip-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-tip-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{ChatGPT}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-tip-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-tip-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{ChatGPT}, coltitle=black]
 
 Nutzen Sie einen Chat-Bot wie ChatGPT, um sich Hilfe für die R-Syntax
 geben zu lassen. \(\square\)
@@ -5492,11 +5523,11 @@ Namen zu suchen:
   \href{https://sebastiansauer.github.io/Datenwerk/posts/wrangle3/wrangle3}{wrangle3}
 \end{enumerate}
 
-\section{Vertiefung}\label{vertiefung-3}
+\section{Vertiefung}\label{vertiefung-2}
 
 \subsection{Fortgeschrittenes R}\label{fortgeschrittenes-r}
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-note-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-note-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, coltitle=black]
 
 In weiterführendem Material werden Sie immer wieder auf Inhalte treffen,
 die Sie noch nicht kennen, die etwa noch nicht im Unterricht behandelt
@@ -5571,7 +5602,7 @@ Ausgabe, auch schön formatiert) dann irgendwohin pasten.
 
 \end{example}
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-tip-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-tip-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Tipp}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-tip-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-tip-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Tipp}, coltitle=black]
 
 \begin{figure}[H]
 
@@ -5689,7 +5720,7 @@ mächtig.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-dino1-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-dino1-1.pdf}
 
 }
 
@@ -6016,7 +6047,7 @@ schwarze Punkte gezeigt.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-balken-hist-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-balken-hist-1.pdf}
 
 }
 
@@ -6028,7 +6059,7 @@ schwarze Punkte gezeigt.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-balken-hist-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-balken-hist-2.pdf}
 
 }
 
@@ -6064,7 +6095,7 @@ Abbildung~\ref{fig-de-hist-density}, links.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-zu-wenig-viele-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-zu-wenig-viele-1.pdf}
 
 }
 
@@ -6076,7 +6107,7 @@ Abbildung~\ref{fig-de-hist-density}, links.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-zu-wenig-viele-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-zu-wenig-viele-2.pdf}
 
 }
 
@@ -6114,7 +6145,7 @@ Balken im Histogramm}
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-de-hist-density-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-de-hist-density-1.pdf}
 
 }
 
@@ -6126,7 +6157,7 @@ Balken im Histogramm}
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-de-hist-density-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-de-hist-density-2.pdf}
 
 }
 
@@ -6187,7 +6218,7 @@ Abbildung~\ref{fig-symm-schief}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-symm-schief-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-symm-schief-1.pdf}
 
 }
 
@@ -6199,7 +6230,7 @@ Abbildung~\ref{fig-symm-schief}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-symm-schief-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-symm-schief-2.pdf}
 
 }
 
@@ -6222,7 +6253,7 @@ Verteilungen. \enquote{Bimodal} meint \enquote{zweigipflig} und
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-plot-distribs-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-plot-distribs-1.pdf}
 
 }
 
@@ -6383,7 +6414,7 @@ beiliegt, aber nicht bei gebrauchten? Dazu betrachten Sie wieder die
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-zshg-nom1-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-zshg-nom1-1.pdf}
 
 }
 
@@ -6398,7 +6429,7 @@ beiliegt, aber nicht bei gebrauchten? Dazu betrachten Sie wieder die
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-zshg-nom1-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-zshg-nom1-2.pdf}
 
 }
 
@@ -6515,11 +6546,11 @@ Zusammenhangs ist, vgl. Abbildung~\ref{fig-cors}.
 
 \begin{figure}
 
-\begin{minipage}{0.50\linewidth}
+\begin{minipage}{0.45\linewidth}
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-streu1-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-streu1-1.pdf}
 
 }
 
@@ -6527,11 +6558,14 @@ Zusammenhangs ist, vgl. Abbildung~\ref{fig-cors}.
 
 \end{minipage}%
 %
-\begin{minipage}{0.50\linewidth}
+\begin{minipage}{0.10\linewidth}
+~\end{minipage}%
+%
+\begin{minipage}{0.45\linewidth}
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-streu1-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-streu1-2.pdf}
 
 }
 
@@ -6564,7 +6598,7 @@ sehen.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-nonlinear-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-nonlinear-1.pdf}
 
 }
 
@@ -6665,16 +6699,15 @@ metrische Variablen konzentrieren wollen, wählen Sie (mit
 Scatterplot zu malen (\texttt{plot\_scatterplot}) und zwar jeweils den
 Zusammenhang einer der gewählten Variablen mit dem Abschlusspreis
 (\texttt{total\_pr}), da das die Variable ist, die Sie primär
-interessiert. Das Ergebnis sieht man in \textbf{?@fig-mario-scatter}.
-\(\square\)
+interessiert. Das Ergebnis sieht man in
+Abbildung~\ref{fig-mario-scatter}. \(\square\)
 
 \end{example}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{mariokart }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{select}\NormalTok{(duration, n\_bids, start\_pr,}
-\NormalTok{         total\_pr, wheels) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(n\_bids, start\_pr, total\_pr) }\SpecialCharTok{\%\textgreater{}\%} 
   \FunctionTok{plot\_scatterplot}\NormalTok{(}\AttributeTok{by =} \StringTok{"total\_pr"}\NormalTok{, }\AttributeTok{nrow =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -6687,20 +6720,7 @@ interessiert. Das Ergebnis sieht man in \textbf{?@fig-mario-scatter}.
 
 }
 
-\caption{\label{fig-mario-scatter-1}Der Zusammenhang metrischer
-Variablen mit Abschlusspreis}
-
-\end{figure}%
-
-\begin{figure}[H]
-
-\centering{
-
-\includegraphics[width=0.5\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-mario-scatter-2.pdf}
-
-}
-
-\caption{\label{fig-mario-scatter-2}Der Zusammenhang metrischer
+\caption{\label{fig-mario-scatter}Der Zusammenhang einiger metrischer
 Variablen mit Abschlusspreis}
 
 \end{figure}%
@@ -6789,7 +6809,7 @@ Abbildung~\ref{fig-compare-groups1}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-compare-groups1-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-compare-groups1-1.pdf}
 
 }
 
@@ -6801,7 +6821,7 @@ Abbildung~\ref{fig-compare-groups1}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-compare-groups1-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-compare-groups1-2.pdf}
 
 }
 
@@ -6843,7 +6863,7 @@ horizontal oder vertikal steht, ist Ihrem Geschmack überlassen.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-hist-to-box-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-hist-to-box-1.pdf}
 
 }
 
@@ -6940,7 +6960,7 @@ s. Abbildung~\ref{fig-box-wheels1} rechts.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-box-wheels1-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-box-wheels1-1.pdf}
 
 }
 
@@ -6953,7 +6973,7 @@ Variable}
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-box-wheels1-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{040-verbildlichen_files/figure-pdf/fig-box-wheels1-2.pdf}
 
 }
 
@@ -7178,7 +7198,7 @@ In der \enquote{freien Wildbahn} findet man häufig sog.
 ist zumeist abzuraten}, denn bei Tortenstücken ist es schwer, die Größe
 zu vergleichen.
 
-\section{Vertiefung}\label{vertiefung-4}
+\section{Vertiefung}\label{vertiefung-3}
 
 \subsection{Schicke Diagramme}\label{schicke-diagramme}
 
@@ -7363,18 +7383,18 @@ prototypisches Beispiel für ein Modell in der Statistik.
 \begin{exercise}[]\protect\hypertarget{exr-mw-md-mod}{}\label{exr-mw-md-mod}
 
 Welche Vorstellung haben Sie, wenn Sie hören, dass der \enquote{typische
-deutsche Mann} 1,80m groß ist (vgl. Roser et al., 2013)?
+deutsche Mann} 1.80 m groß ist (vgl. Roser et al., 2013)?
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \tightlist
 \item
-  Die Hälfte der Männer ist größer als 1,80 m, die andere Hälfte
+  Die Hälfte der Männer ist größer als 1.80 m, die andere Hälfte
   kleiner.
 \item
-  Das arithmetische Mittel der Männer beträgt 1,80 m.
+  Das arithmetische Mittel der Männer beträgt 1.80 m.
 \item
-  Die meisten Männer sind 1,80 m groß.
+  Die meisten Männer sind 1.80 m groß.
 \item
   Etwas anderes.
 \item
@@ -7386,7 +7406,7 @@ deutsche Mann} 1,80m groß ist (vgl. Roser et al., 2013)?
 \begin{exercise}[]\protect\hypertarget{exr-mw2}{}\label{exr-mw2}
 
 Laut dem Statistischen Bundesamt (2023-003-27) beträgt der Wert der
-mittleren Größe deutscher Frauen etwa 1,66 m, also 14 cm weniger als bei
+mittleren Größe deutscher Frauen etwa 1.66 m, also 14 cm weniger als bei
 Männern.\footnote{\url{https://en.wikipedia.org/wiki/Average_human_height_by_country}}
 \(\square\)
 
@@ -7408,7 +7428,7 @@ Männern.\footnote{\url{https://en.wikipedia.org/wiki/Average_human_height_by_co
 \emph{Antwort}
 
 Auf dieser Frage gibt es keine Antwort, zumindest nicht ohne weitere
-Annahmen. So könnte man z.B. sagen, \enquote{mehr als 5 cm sind viel}.
+Annahmen. So könnte man z.B. sagen, \enquote{mehr als 5 cm sind viel}.
 So eine Entscheidung ist aber keine statistische Angelegenheit, sondern
 eine inhaltliche.
 
@@ -7516,7 +7536,7 @@ man auch mit \(\bar {x}\). \(\square\)
 
 \begin{example}[]\protect\hypertarget{exm-mw1}{}\label{exm-mw1}
 
-Angenommen, wir haben eine Reihe von Noten: 1,2,3. Der Mittelwert der
+Angenommen, wir haben eine Reihe von Noten: 1, 2, 3. Der Mittelwert der
 Noten beträgt dann 2: \(\bar{X} = \frac{1}{3}\sum (1+2+3) = 6/3 = 2\).
 \(\square\)
 
@@ -7617,8 +7637,8 @@ auch noch die Abweichungsbalken, die nach \emph{unten} ragen, aneinander
 (die mit den durchgezogenen Linien). Wer viel Phantasie hat, erkennt
 (sieht), dass die Gesamtlänge der \enquote{nach oben ragenden Balken}
 identisch ist zur Gesamtlänge der nach \enquote{unten ragenden Balken},
-vgl. Abbildung~\ref{fig-wippe}. Präziser ausgedrückt und ohne Ihre
-Phantasie zu strapazieren (Gleichung~\ref{eq-summenull}):
+vgl. Abbildung~\ref{fig-wippe}. Gleichung~\ref{eq-summenull} drückt das
+präziser und ohne Ihre Phantasie zu strapazieren aus.
 
 \begin{equation}\phantomsection\label{eq-summenull}{\sum_{i=1}^n (x_i-\bar{x})=\sum_{i=1}^n x_i - \sum_{i=1}^n \bar{x} = n\cdot \bar{x} - n\cdot \bar{x}=0}\end{equation}
 
@@ -7721,9 +7741,9 @@ plus Mbappé.}
 
 \end{codelisting}%
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-note-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-note-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, coltitle=black]
 
-1 Million hat 6 Nullernhinter der führenden Eins: 1000000. In
+1 Million hat 6 Nullen hinter der führenden Eins: 1000000. In
 Taschenrechner- oder Computerschreibweise: 1 Mio = \texttt{1e6}, das
 \texttt{1e6} ist zu lesen als \enquote{1 Mal 10 hoch 6, also mit 6 im
 \emph{E}xponenten}.
@@ -7838,7 +7858,7 @@ uns Studis!
 
 Abbildung~\ref{fig-mbappe} stellt die Verteilung des Einkommens im
 Hörsaal dar. Zur Erinnerung: 4.0+e07 bedeutet
-\(4 \cdot 10^{07} = 40000000\), eine 4 gefolgt von 7 Nullern.
+\(4 \cdot 10^{07} = 40000000\), eine 4 gefolgt von 7 Nullen.
 
 \begin{figure}
 
@@ -7868,7 +7888,7 @@ spiegelt der Mittelwert stark diesen Wert wider und weniger die Mehrheit
 der gemäßigten Werte. Man sagt, der Mittelwert ist nicht \emph{robust}
 (gegenüber Extremwerten).
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-important-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-important-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-important-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-important-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, coltitle=black]
 
 Bei (sehr) schiefen Verteilungen (s. Abbildung~\ref{fig-mbappe}) ist der
 Mittelwert (sehr) wenig aussagekräftig, da er nicht mehr
@@ -8187,7 +8207,7 @@ heißt, dass in jedem Dezil gleich viele Werte (nämlich 10 \%) liegen.
 \end{definition}
 
 Oder vielleicht in 1\%-Schritten oder in sonstigen Schritten? Wo die
-Quartile in 25\%-Schritten aufteilen, teilt in \emph{Quantil} in
+Quartile in 25\%-Schritten aufteilen, teilt ein \emph{Quantil} in
 \(p\)-Prozent-Schritten auf.
 
 \begin{definition}[Quantile]\protect\hypertarget{def-quantile}{}\label{def-quantile}
@@ -8210,7 +8230,7 @@ Abbildung~\ref{fig-mario-qs1} zeigt das 1. (Q1), das 2. (Median) und das
 }
 
 \caption{\label{fig-mario-qs1}Q1, Q2 und Q3 für das Schlussgebot (nur
-Spiele für weniger als 100 Euro) in einem Dichediagramm}
+Spiele für weniger als 100 Euro) in einem Dichtediagramm}
 
 \end{figure}%
 
@@ -8219,12 +8239,12 @@ berechnen:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{mario\_quantile }\OtherTok{\textless{}{-}} 
 \NormalTok{mariokart }\SpecialCharTok{\%\textgreater{}\%} 
   \FunctionTok{filter}\NormalTok{(total\_pr }\SpecialCharTok{\textless{}} \DecValTok{100}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{q25 =} \FunctionTok{quantile}\NormalTok{(total\_pr, .}\DecValTok{25}\NormalTok{),}
-            \AttributeTok{q50 =} \FunctionTok{quantile}\NormalTok{(total\_pr, .}\DecValTok{50}\NormalTok{),}
-            \AttributeTok{q75 =} \FunctionTok{quantile}\NormalTok{(total\_pr, .}\DecValTok{75}\NormalTok{))}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{q25 =} \FunctionTok{quantile}\NormalTok{(total\_pr, .}\DecValTok{25}\NormalTok{),  }\CommentTok{\# 1. Quartil}
+    \AttributeTok{q50 =} \FunctionTok{quantile}\NormalTok{(total\_pr, .}\DecValTok{50}\NormalTok{),  }\CommentTok{\# 2. Quartil}
+    \AttributeTok{q75 =} \FunctionTok{quantile}\NormalTok{(total\_pr, .}\DecValTok{75}\NormalTok{))  }\CommentTok{\# 3. Quartil}
 \end{Highlighting}
 \end{Shaded}
 
@@ -8297,7 +8317,7 @@ Gebräuchliche Lagemaße sind:
 \item
   Maximum (größter Wert)
 \item
-  Modus (häufigster Wert) \(\square\)
+  Modus (häufigster Wert)
 \end{itemize}
 
 Berechnen wir Lagemaße für den Mariokart-Datensatz, z.B. mit
@@ -8328,33 +8348,13 @@ Variablen benennen, die Sie berechnen: \texttt{mw} oder
 Häufig möchte man Statistiken wie Lagemaße für mehrere Teilgruppen --
 z.B. Mittlere Körpergröße von Frauen vs.~mittlere Körpergröße von
 Männern -- berechnen und dann vergleichen. Die zugrundeliegende stehende
-\emph{Forschungsfrage} könnte lauten:
-
-\begin{quote}
-Unterscheidet sich der Mittelwert der Körpergröße von Frauen und
-Männern?
-\end{quote}
-
-Oder vielleicht:
-
-\begin{quote}
-Hängt das Geschlecht mit der Körpergröße zusammen?
-\end{quote}
-
-Anders ausgedrückt:
-
-\begin{quote}
-Körpergröße \(\color{ycol}{\text{y}}\) ist eine Funktion des Geschlechts
-\(\color{xcol}{G}\).
-\end{quote}
-
-Die \emph{Modellformel} könnte also lauten:
-
-\[\color{ycol}{y} \; \color{black}{ \sim } \; \color{xcol}{G}\]
-
+\emph{Forschungsfrage} könnte lauten: \enquote{Unterscheidet sich der
+Mittelwert der Körpergröße von Frauen und Männern?} Oder vielleicht:
+\enquote{Hängt das Geschlecht mit der Körpergröße zusammen?} Anders
+ausgedrückt: Körpergröße \(y\) ist eine Funktion des Geschlechts \(G\).
+Die \emph{Modellformel} könnte also lauten: \({y} \;{ \sim } \; {G}\).
 Gruppierte Lagemaße lassen sich in R z.B. so berechnen, s.
-Listing~\ref{lst-mario-lage-gruppiert} und Tabelle~\ref{tbl-group-mean},
-also ähnlich wie in Listing~\ref{lst-mario-lage}.
+Listing~\ref{lst-mario-lage-gruppiert}.
 
 \begin{codelisting}
 
@@ -8374,26 +8374,6 @@ also ähnlich wie in Listing~\ref{lst-mario-lage}.
 }
 
 \end{codelisting}%
-
-\begin{longtable}[]{@{}rr@{}}
-
-\caption{\label{tbl-group-mean}Gruppierte Mittelwerte}
-
-\tabularnewline
-
-\toprule\noalign{}
-wheels & mw \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-0 & 41 \\
-1 & 44 \\
-2 & 61 \\
-3 & 70 \\
-4 & 65 \\
-
-\end{longtable}
 
 Abbildung~\ref{fig-mw3} zeigt ein Beispiel für ungruppierte (links) bzw.
 gruppierte (rechts) Mittelwerte; vgl. Abbildung~\ref{fig-mw2}. Wie man
@@ -8504,7 +8484,7 @@ Stellen Sie hohe Anforderungen an die Transparenz einer statistischen
 Analyse. Nur durch Nachprüfbarkeit können Sie sich von der
 Stichhaltigkeit der Ergebnisse und deren Interpretation überzeugen.
 
-\section{Vertiefung}\label{vertiefung-5}
+\section{Vertiefung}\label{vertiefung-4}
 
 \begin{example}[Survival-Tipp]\protect\hypertarget{exm-survival1}{}\label{exm-survival1}
 
@@ -8540,9 +8520,8 @@ dort bekommt man auch R-Code ausgegegeben.
 \begin{exercise}[Übungsfragen vom
 Chat-Bot]\protect\hypertarget{exr-chatgpt}{}\label{exr-chatgpt}
 
-Fragen Sie einen Chat-Bot wie ChatGPT nach Übungsaufgaben.
-
-Sie können sich an folgenden Prompt orientieren. Empfehlenswert ist mit
+Fragen Sie einen Chat-Bot wie ChatGPT nach Übungsaufgaben. Sie können
+sich an folgenden Prompt orientieren. Empfehlenswert ist mit
 verschiedenen Prompts zu experimentieren.
 
 \begin{quote}
@@ -8603,7 +8582,7 @@ Namen zu suchen:
   \href{https://sebastiansauer.github.io/Datenwerk/posts/summarise02/summarise02.html}{summarise02}
 \end{enumerate}
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-tip-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-tip-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Tipp}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-tip-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-tip-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Tipp}, coltitle=black]
 
 Schauen Sie sich auch mal auf
 \href{https://datenwerk.netlify.app}{datenwerk.netlify.app} die Aufgaben
@@ -8670,7 +8649,7 @@ Prof.~Weiss-Ois hat eine Erfindung gemacht, eine Schlankheitspille
 
 \subcaption{\label{}\textbf{Was er sagt:} \enquote{Ich habe eine
 Schlankheitspille entwickelt, die pro Einnahme das Gewicht im Schnitt um
-1kg reduziert!}}
+1 kg reduziert!}}
 \end{minipage}%
 %
 \begin{minipage}{0.09\linewidth}
@@ -8681,7 +8660,7 @@ Schlankheitspille entwickelt, die pro Einnahme das Gewicht im Schnitt um
 \includegraphics[width=0.25\linewidth,height=\textheight,keepaspectratio]{img/teacher.png}
 
 \subcaption{\label{}\textbf{Was er NICHT sagt:} \enquote{Allerdings
-streuten die Werte der Gewichtsveränderung um 10kg um den Mittelwert
+streuten die Werte der Gewichtsveränderung um 10 kg um den Mittelwert
 herum.}}
 \end{minipage}%
 
@@ -8703,7 +8682,7 @@ Würden Sie die Pille von Prof.~I. Ch. Weiss-Ois nehmen?
 \item
   Nur wenn ich 100 Euro bekomme
 \item
-  Okay, für 1000 Euro\(\square\)
+  Okay, für 1000 Euro \(\square\)
 \end{enumerate}
 
 \end{exercise}
@@ -8753,7 +8732,7 @@ Fritz.
 schwimmen oder 's ist Schluss.
 \end{quote}
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-important-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-important-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-important-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-important-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, coltitle=black]
 
 Die Streuung ihrer Daten zu kennen, ist eine wesentliche Information.
 \(\square\)
@@ -8875,7 +8854,7 @@ einfachen Modell.}
 
 \end{figure}%
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-important-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-important-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-important-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-important-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, coltitle=black]
 
 Durch sinnvolle, komplexere Modelle sinkt die Fehlerstreuung eines
 Modells. \(\square\)
@@ -9158,7 +9137,7 @@ Beispiel~\ref{exm-mae}.\footnote{Die Abweichungsquadrate wirken optisch
 \emph{Abweichungsquadrate} dargestellt, rechts die Varianz als
 \enquote{\emph{typisches Abweichungsquadrat}}.
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-note-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-note-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, coltitle=black]
 
 Die Varianz ist also ein Maß, das die typische Abweichung der
 Beobachtungen vom Mittelwert in eine Zahl fasst. \(\square\)
@@ -9362,7 +9341,7 @@ werden kann). Aus einem Modellierungsblickwinkel kann man die SD
 definieren als die Wurzel von MSE. Dann nennt man sie \emph{Root Mean
 Squared Error} (RMSE): \(RMSE := \sqrt{MSE}\).
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-note-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-note-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Hinweis}, coltitle=black]
 
 Die SD ist i.d.R. \emph{un}gleich zur MAE, aber (fast) gleich zur RMSE.
 Entsprechend ist die Varianz (fast) gleich zur MSE. \(\square\)
@@ -9537,7 +9516,7 @@ Mittelwert: zentrierte Daten}
 
 Tja, das ist doch etwas Streuung um den Mittelwert herum.
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-important-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-important-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-important-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-important-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, coltitle=black]
 
 Je weniger Streuung um den Mittelwert (ca. 47 Euro) herum, desto besser
 eignet sich der Mittelwert als Modell für die Daten und desto höher ist
@@ -9840,7 +9819,7 @@ kann, hilft noch einmal Abbildung~\ref{fig-zshg}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-zshg-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-zshg-1.pdf}
 
 }
 
@@ -9855,7 +9834,7 @@ kann, hilft noch einmal Abbildung~\ref{fig-zshg}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-zshg-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-zshg-2.pdf}
 
 }
 
@@ -9928,7 +9907,7 @@ das Produkt der Abweichungen: \(dx_i \cdot dy_i\). \(\square\)
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-delta-rect-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-delta-rect-1.pdf}
 
 }
 
@@ -10154,7 +10133,7 @@ Abbildung~\ref{fig-demos-cov} dargestellt.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-demos-cov-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-demos-cov-1.pdf}
 
 }
 
@@ -10169,7 +10148,7 @@ Abbildung~\ref{fig-demos-cov} dargestellt.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-demos-cov-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-demos-cov-2.pdf}
 
 }
 
@@ -10206,7 +10185,7 @@ Kovarianz Null.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-covnull-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-covnull-1.pdf}
 
 }
 
@@ -10221,7 +10200,7 @@ Kovarianz Null.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-covnull-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-covnull-2.pdf}
 
 }
 
@@ -10375,7 +10354,8 @@ duration & -0.12 & \\
 Sie können auch auf die letzte Zeile, also dem Befehl \texttt{summary}
 verzichten. Dann ist die Ausgabe ausführlicher.
 
-\subsection{Korrelation ≠ Kausation}\label{korrelation-kausation}
+\subsection{Korrelation ist nicht
+Kausation}\label{korrelation-ist-nicht-kausation}
 
 Eine Studie fand eine starke Korrelation zwischen der (Höhe des)
 Schokoladenkonsums eines Landes und (Anzahl der) Nobelpreise eines
@@ -10720,7 +10700,7 @@ Abbildung~\ref{fig-mario-corr-pdf}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-mario-corr-pdf-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{070-zusammenhaenge_files/figure-pdf/fig-mario-corr-pdf-1.pdf}
 
 }
 
@@ -10961,7 +10941,7 @@ Abbildung~\ref{fig-noten4}, (b).
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-noten4-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-noten4-1.pdf}
 
 }
 
@@ -10973,7 +10953,7 @@ Abbildung~\ref{fig-noten4}, (b).
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-noten4-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-noten4-2.pdf}
 
 }
 
@@ -11096,7 +11076,7 @@ Achsenabschnitt unterscheiden, s. Abbildung~\ref{fig-regr-div}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-regr-div-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-regr-div-1.pdf}
 
 }
 
@@ -11108,7 +11088,7 @@ Achsenabschnitt unterscheiden, s. Abbildung~\ref{fig-regr-div}.
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-regr-div-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-regr-div-2.pdf}
 
 }
 
@@ -11144,8 +11124,8 @@ Abbildung~\ref{fig-beta0}. Puh, die Antwort wird Toni nicht gefallen
 
 }
 
-\caption{\label{fig-beta0}Der Achsenabschnitt: Wie viele Punkt kann Toni
-erwarten bei 0 Lernstunden? (roter Punkt bei x=0)}
+\caption{\label{fig-beta0}Der Achsenabschnitt: Wie viele Punkte kann
+Toni erwarten bei 0 Lernstunden? (roter Punkt bei x=0)}
 
 \end{figure}%
 
@@ -11323,7 +11303,7 @@ Vorhersagefehler (error, \(e\)) oder \emph{Residuum}:
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-resid-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-resid-1.pdf}
 
 }
 
@@ -11335,7 +11315,7 @@ Vorhersagefehler (error, \(e\)) oder \emph{Residuum}:
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-resid-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-resid-2.pdf}
 
 }
 
@@ -11482,7 +11462,7 @@ Bei einer perfekten Korrelation ist \(r=1\), daher ist dann auch
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-r2-extreme-1.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-r2-extreme-1.pdf}
 
 }
 
@@ -11497,7 +11477,7 @@ Bei einer perfekten Korrelation ist \(r=1\), daher ist dann auch
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-r2-extreme-2.pdf}
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{080-regression1_files/figure-pdf/fig-r2-extreme-2.pdf}
 
 }
 
@@ -11564,7 +11544,7 @@ Modell \texttt{lm1} beträgt der Regressionskoeffizient
 Stunde unterscheidet, unterscheiden sich \emph{laut Modell} um den Wert
 von \(\beta_1\)}.
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-caution-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-caution-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Vorsicht}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-caution-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-caution-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Vorsicht}, coltitle=black]
 
 Häufig liest man, der \enquote{Effekt des Prädiktors} auf die AV betrage
 z.B. \(0.88\). \enquote{Effekt} ist aber ein Wort, das man kausal
@@ -11598,7 +11578,7 @@ linear.}
 
 \end{figure}%
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-caution-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-caution-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Vorsicht}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-caution-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-caution-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-caution-color}{\faFire}\hspace{0.5em}{Vorsicht}, coltitle=black]
 
 Unterschiede zwischen Korrelationsdifferenzen dürfen nicht linear
 interpretiert werden. \(\square\)
@@ -11677,7 +11657,7 @@ Der vorhergesagte Gesamptreis eines Spiels liegt bei 36 Dollar
 \enquote{Sockelbetrag} plus 4 mal die Versandkosten.
 \end{quote}
 
-\subsection{Vertiefung}\label{vertiefung-6}
+\subsection{Vertiefung}\label{vertiefung-5}
 
 Man kann sich die erwarteten Werte (\enquote{expectations}) des
 Verkaufspreises in Abhängigkeit vom Wert der UV (\texttt{ship\_pr}) auch
@@ -12458,8 +12438,6 @@ die Arbeit!
 In diesem Abschnitt untersuchen wir lineare Modelle mit einer oder
 mehreren metrischen UV (und einer metrischen AV).
 
-\subsubsection{Modell Wetter1}\label{modell-wetter1}
-
 Sie stellen sich nun folgende Forschungsfrage:
 
 \begin{quote}
@@ -12526,9 +12504,6 @@ Decke!
 {\emoji{teacher}} Mit der Ruhe, das schauen Sie sich später an.
 \end{quote}
 
-\subsubsection{Punkt-
-vs.~Bereichsschätzung}\label{punkt--vs.-bereichsschuxe4tzung}
-
 In Tabelle~\ref{tbl-lm-wetter1} finden sich zwei Arten von Information
 für den Wert des Achsenabschnitts (\(\beta 0\)) und des
 Regressionsgewichts von \texttt{year} (\(\beta _1\)):
@@ -12544,25 +12519,25 @@ Regressionsgewichts von \texttt{year} (\(\beta _1\)):
   \emph{Bereichschätzungen} Cleverer als Punktschätzungen sind
   Bereichsschätzungen (Intervallschätzungen): Hier wird ein Bereich
   plausibler Werte für den entsprechenden Wert angegeben. Der
-  \enquote{Bereich plausibler Werte} wird auch als Konfidenzintervall
-  (engl. confidence interval, CI) bezeichnet. Entsprechend gibt
-  \texttt{CI\_low} die Untergrenze des Bereichs plausibler Werte und
-  \texttt{CI\_high} die Obergrenze aus. So können wir ablesen, dass das
-  Regressionsgewicht von \texttt{year} irgendwo zwischen praktisch Null
-  (0.009) und ca. 0.01 Grad geschätzt wird.
+  \enquote{Bereich plausibler Werte} wird auch als
+  \emph{Konfidenzintervall} (engl. confidence interval, CI) bezeichnet.
+  Entsprechend gibt \texttt{CI\_low} die Untergrenze des Bereichs
+  plausibler Werte und \texttt{CI\_high} die Obergrenze aus. So können
+  wir ablesen, dass das Regressionsgewicht von \texttt{year} irgendwo
+  zwischen praktisch Null (0.009) und ca. 0.01 Grad geschätzt wird. Je
+  schmaler das Konfidenzintervall, desto genauer wird der Effekt
+  geschätzt (unter sonst gleichen Umständen). Die Spalten mit den
+  \emph{t}- und \emph{p}-Werten in der Ausgabe ignorieren wir einfach.
+  Einatmen, ausatmen.
 \end{enumerate}
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-important-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-important-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, bottomrule=.15mm, opacityback=0]
+\begin{definition}[Konfidenzintervall]\protect\hypertarget{def-konfidenzintervall}{}\label{def-konfidenzintervall}
 
-Je schmaler das Konfidenzintervall, desto genauer wird der Effekt
-geschätzt. \(\square\)
+Ein Konfidenzintervall (confidence interval, CI) gibt einen
+Schätzbereich plausibler Werte für einen Populationswert an, auf Basis
+der Schätzung, die uns die Stichprobe liefert. \(\square\)
 
-\end{tcolorbox}
-
-Die Spalten mit den \emph{t}- und \emph{p}-Werten ignorieren wir
-einfach. Einatmen, ausatmen.
-
-\subsubsection{Modell Wetter1a}\label{modell-wetter1a}
+\end{definition}
 
 Das Modell \texttt{lm\_wetter1}, bzw. die Schätzungen zu den erwarteten
 Werten, kann mich sich so ausgeben lassen, s.
@@ -12972,7 +12947,7 @@ eine binäre Variable.
 verstehen und eine \texttt{0} als \enquote{Nein! Falsch!}
 \end{quote}
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-important-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-important-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-important-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-important-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, coltitle=black]
 
 Ein lineares Modell mit binärer UV zeigt nichts anderes, als die
 Differenz der Gruppenmittelwerte. \(\square\)
@@ -13063,8 +13038,10 @@ Bundesländern gibt?
 
 \end{example}
 
-Befragen wir dazu ein lineares Modell, s.
-Tabelle~\ref{tbl-lm_wetter_region}.
+Befragen wir dazu ein lineares Modell; in
+Tabelle~\ref{tbl-lm_wetter_region} sind für jeden Parameter der
+Punktschätzer (Koeffizient) und das zugehörige Schätzbereich
+(Konfidenzintervall) mit Ober- und Untergrenze angegeben.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -13732,7 +13709,7 @@ als im Referenzmonat Januar, da der Koeffizient kleiner als Null ist.
 Die Regressionsgleichung lautet:
 \texttt{precip\_pred\ =\ 56.91\ +\ 0.13\ *\ year\_c\ +\ 24.37\ *\ month\_factor\_7\ -\ 0.20\ *\ year\_c:month\_factor\_7}.
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-important-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-important-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-important-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-important-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, coltitle=black]
 
 Der Achsenabschnitt gibt den Wert für Y an unter der Annahme, dass alle
 Prädiktoren den Wert Null aufweisen. \(\square\)
@@ -13808,7 +13785,7 @@ zu einer \emph{Regressionsebene.}
 \end{figure}%
 
 Grundsätzlich kann man viele Prädiktoren in ein (lineares) Modell
-aufnehmen. Betrachten wir z. B. folgendes lineares Modell mit zwei
+aufnehmen. Betrachten wir z. B. folgendes lineares Modell mit zwei
 metrischen UV.
 
 \begin{Shaded}
@@ -14263,14 +14240,14 @@ weiß, was der Wert der AV ist. Der Zusammenhang dieser verschiedenen,
 aber zusammengehörigen Arten von Stichproben ist in
 Abbildung~\ref{fig-sample-types} dargestellt.
 
-\begin{definition}[Trainsample]\protect\hypertarget{def-trainsample}{}\label{def-trainsample}
+\begin{definition}[Train-Sample]\protect\hypertarget{def-trainsample}{}\label{def-trainsample}
 
 Den Datensatz, für die Sie sowohl UV \emph{als auch AV} vorliegen haben,
 nennt man Train-Sample. \(\square\)
 
 \end{definition}
 
-\begin{definition}[Testsample]\protect\hypertarget{def-testsample}{}\label{def-testsample}
+\begin{definition}[Test-Sample]\protect\hypertarget{def-testsample}{}\label{def-testsample}
 
 Den Datensatz, für den Sie \emph{nur} Daten der UV, aber nicht zu der AV
 vorliegen haben, nennt man \emph{Test-Sample}. \(\square\)
@@ -14458,9 +14435,9 @@ oder weggenommen werden.
 \subsection{Vorsicht bei der Interpretation von
 Regressionskoeffizienten}\label{vorsicht-bei-der-interpretation-von-regressionskoeffizienten}
 
-\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, breakable, left=2mm, colback=white, colframe=quarto-callout-important-color-frame, opacitybacktitle=0.6, coltitle=black, colbacktitle=quarto-callout-important-color!10!white, arc=.35mm, bottomtitle=1mm, toprule=.15mm, rightrule=.15mm, toptitle=1mm, titlerule=0mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, bottomrule=.15mm, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-important-color-frame, arc=.35mm, leftrule=.75mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-important-color!10!white, breakable, bottomrule=.15mm, colback=white, left=2mm, rightrule=.15mm, opacityback=0, toptitle=1mm, toprule=.15mm, opacitybacktitle=0.6, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Wichtig}, coltitle=black]
 
-Interpretiere nie Modellkoeffizienten kausal ohne ein Kausalmodell.
+Interpretiere Modellkoeffizienten nur kausal, wenn du Kausalmodell hast.
 \(\square\)
 
 \end{tcolorbox}
@@ -14470,7 +14447,7 @@ macht es Sinn, die Modellkoeffizienten kausal zu interpretieren.
 Andernfalls lässt man besser die Finger von der Interpretation der
 Modellkoeffizienten und begnügt sich mit der Beschreibung der Modellgüte
 und mit Vorhersage (synonym: Prognose). Wer das nicht glaubt, der
-betrachte Abbildung~\ref{fig-confounder}, links. Ei Forschi stellt das
+betrachte Abbildung~\ref{fig-confounder}, links. Ein Forscher stellt das
 Modell \texttt{m1:\ y\ \textasciitilde{}\ x} auf und interpretiert dann
 \texttt{b1}: \enquote{Ist ja klar, X hat einen starken positiven Effekt
 auf Y!}.
@@ -14484,7 +14461,7 @@ und zwar in jeder Gruppe, s. Abbildung~\ref{fig-confounder}, rechts!
 Dieses Umschwenken der Regressionskoeffizienten kann \emph{nicht}
 passieren, wenn der Effekt \enquote{echt}, also kausal, ist. Handelt es
 sich aber um \enquote{nicht echte}, also nicht-kausale Zusammenhänge, um
-Scheinzusammenhänge also, so können sich die Modellkoeffizienten
+\emph{Scheinzusammenhänge} also. So können sich die Modellkoeffizienten
 dramatisch verändern (sogar das Vorzeichen kann wechseln; das nennt man
 dann \emph{Simpsons Paradox}), wenn man das Modell verändert, also
 Variablen hinzufügt oder aus dem Modell entfernt.
@@ -14536,7 +14513,7 @@ Zusammenhang, (b) kein Zusammenhang in beiden Gruppen}
 Man könnte höchstens sagen, dass man (wenn man die Kausalstruktur nicht
 kennt) die Modellkoeffizienten nur \emph{deskriptiv} interpretiert, z.B.
 \enquote{Dort wo es viele Störche gibt, gibt es auch viele
-Babies}.\footnote{Das Störche-Babies-Beispiel passt auch zu
+Babies}.\footnote{Das Störche-Babys-Beispiel passt auch zu
   Abbildung~\ref{fig-confounder}.} Leider ist unser Gehirn auf kausale
 Zusammenhänge geprägt: Es fällt uns schwer, Zusammenhänge nicht kausal
 zu interpretieren. Daher werden deskriptive Befunde immer wieder
@@ -14578,7 +14555,7 @@ s. Abbildung~\ref{fig-dranbleiben}.
 
 }
 
-\subcaption{\label{fig-morgen}Sie mrogen}
+\subcaption{\label{fig-morgen}Sie morgen}
 
 \end{minipage}%
 
@@ -15040,127 +15017,179 @@ World Economic Forum.
 \chapter{Definitionen}\label{definitionen}
 
 \begin{itemize}
+\tightlist
 \item
-  \textbf{Abweichungsrechteck}: Definition~\ref{def-abweichungsrechteck}
+  \textbf{Abweichungsrechteck}:
+  Definition~\ref{def-abweichungsrechteck}, s. S.
+  \pageref{def-abweichungsrechteck}
 \item
-  \textbf{Argumente einer Funktion}: Definition~\ref{def-args}
+  \textbf{Argumente einer Funktion}: Definition~\ref{def-args}, s. S.
+  \pageref{def-args}
 \item
-  \textbf{Ausprägung}: Definition~\ref{def-auspraegung}
+  \textbf{Ausprägung}: Definition~\ref{def-auspraegung}, s. S.
+  \pageref{def-auspraegung}
 \item
-  \textbf{Balkendiagramm}: Definition~\ref{def-balken}
+  \textbf{Balkendiagramm}: Definition~\ref{def-balken}, s. S.
+  \pageref{def-balken}
 \item
-  \textbf{Beobachtungseinheit}: Definition~\ref{def-beobeinheit}
+  \textbf{Beobachtungseinheit}: Definition~\ref{def-beobeinheit}, s. S.
+  \pageref{def-beobeinheit}
 \item
-  \textbf{Binäre Variable}: Definition~\ref{def-binvar}
+  \textbf{Binäre Variable}: Definition~\ref{def-binvar}, s. S.
+  \pageref{def-binvar}
 \item
-  \textbf{Boxplot}: Definition~\ref{def-boxplot}
+  \textbf{Boxplot}: Definition~\ref{def-boxplot}, s. S.
+  \pageref{def-boxplot}
 \item
-  \textbf{Data-Dictionary}: Definition~\ref{def-datadict}
+  \textbf{Data-Dictionary}: Definition~\ref{def-datadict}, s. S.
+  \pageref{def-datadict}
 \item
-  \textbf{Dataframe}: Definition~\ref{def-dataframe}
+  \textbf{Dataframe}: Definition~\ref{def-dataframe}, s. S.
+  \pageref{def-dataframe}
 \item
-  \textbf{Daten}: Definition~\ref{def-daten}
+  \textbf{Daten}: Definition~\ref{def-daten}, s. S. \pageref{def-daten}
 \item
-  \textbf{Datendiagramm}: Definition~\ref{def-datendiagramm}
+  \textbf{Datendiagramm}: Definition~\ref{def-datendiagramm}, s. S.
+  \pageref{def-datendiagramm}
 \item
-  \textbf{Datenjudo}: Definition~\ref{def-datenjudo}
+  \textbf{Datenjudo}: Definition~\ref{def-datenjudo}, s. S.
+  \pageref{def-datenjudo}
 \item
-  \textbf{Dezile}: Definition~\ref{def-dezile}
+  \textbf{Dezile}: Definition~\ref{def-dezile}, s. S.
+  \pageref{def-dezile}
 \item
-  \textbf{Dichtediagramm}: Definition~\ref{def-dichtediagramm}
+  \textbf{Dichtediagramm}: Definition~\ref{def-dichtediagramm}, s. S.
+  \pageref{def-dichtediagramm}
 \item
   \textbf{Das einfache lineare Modell}:
-  Definition~\ref{def-einfache-lineare-modell}
+  Definition~\ref{def-einfache-lineare-modell}, s. S.
+  \pageref{def-einfache-lineare-modell}
 \item
-  \textbf{Extremwert}: Definition~\ref{def-extremwert}
+  \textbf{Extremwert}: Definition~\ref{def-extremwert}, s. S.
+  \pageref{def-extremwert}
 \item
-  \textbf{Fehlerstreuung}: Definition~\ref{def-fehlerstreung}
+  \textbf{Fehlerstreuung}: Definition~\ref{def-fehlerstreung}, s. S.
+  \pageref{def-fehlerstreung}
 \item
-  \textbf{Funktion}: Definition~\ref{def-fun}
+  \textbf{Funktion}: Definition~\ref{def-fun}, s. S. \pageref{def-fun}
 \item
-  \textbf{Gerade}: Definition~\ref{def-gerade}
+  \textbf{Gerade}: Definition~\ref{def-gerade}, s. S.
+  \pageref{def-gerade}
 \item
-  \textbf{Histogramm}: Definition~\ref{def-histogramm}
+  \textbf{Histogramm}: Definition~\ref{def-histogramm}, s. S.
+  \pageref{def-histogramm}
 \item
-  \textbf{Interaktionseffekt}: Definition~\ref{def-interakt}
+  \textbf{Interaktionseffekt}: Definition~\ref{def-interakt}, s. S.
+  \pageref{def-interakt}
 \item
-  \textbf{Interquartilsabstand}: Definition~\ref{def-iqr}
+  \textbf{Interquartilsabstand}: Definition~\ref{def-iqr}, s. S.
+  \pageref{def-iqr}
 \item
-  \textbf{Kovarianz}: Definition~\ref{def-kov}
+  \textbf{Konfidenzintervall}: Definition~\ref{def-konfidenzintervall},
+  s. S. \pageref{def-konfidenzintervall}
 \item
-  \textbf{Lagemaß}: Definition~\ref{def-lage}
+  \textbf{Kovarianz}: Definition~\ref{def-kov}, s. S. \pageref{def-kov}
 \item
-  \textbf{Linearer Zusammenhang}: Definition~\ref{def-lin-zshg}
+  \textbf{Lagemaß}: Definition~\ref{def-lage}, s. S. \pageref{def-lage}
 \item
-  \textbf{Lineares Modell}: Definition~\ref{def-lm}
+  \textbf{Linearer Zusammenhang}: Definition~\ref{def-lin-zshg}, s. S.
+  \pageref{def-lin-zshg}
 \item
-  \textbf{Mittlere Absolutabweichung}: Definition~\ref{def-mae}
+  \textbf{Lineares Modell}: Definition~\ref{def-lm}, s. S.
+  \pageref{def-lm}
 \item
-  \textbf{Median}: Definition~\ref{def-median}
+  \textbf{Mittlere Absolutabweichung}: Definition~\ref{def-mae}, s. S.
+  \pageref{def-mae}
 \item
-  \textbf{Modelle}: Definition~\ref{def-modelle}
+  \textbf{Median}: Definition~\ref{def-median}, s. S.
+  \pageref{def-median}
 \item
-  \textbf{Multiple Regression}: Definition~\ref{def-mult-regr}
+  \textbf{Modelle}: Definition~\ref{def-modelle}, s. S.
+  \pageref{def-modelle}
 \item
-  \textbf{Mittelwert}: Definition~\ref{def-mw}
+  \textbf{Multiple Regression}: Definition~\ref{def-mult-regr}, s. S.
+  \pageref{def-mult-regr}
 \item
-  \textbf{Normalverteilung}: Definition~\ref{def-norm}
+  \textbf{Mittelwert}: Definition~\ref{def-mw}, s. S. \pageref{def-mw}
+\item
+  \textbf{Normalverteilung}: Definition~\ref{def-norm}, s. S.
+  \pageref{def-norm}
 \item
   \textbf{Entstehung einer Normalverteilung}:
-  Definition~\ref{def-normal-galton}
+  Definition~\ref{def-normal-galton}, s. S. \pageref{def-normal-galton}
 \item
-  \textbf{Nullmodell (Punktmodell)}: Definition~\ref{def-nullmodell}
+  \textbf{Nullmodell (Punktmodell)}: Definition~\ref{def-nullmodell}, s.
+  S. \pageref{def-nullmodell}
 \item
-  \textbf{Pfeife}: Definition~\ref{def-pipe}
+  \textbf{Pfeife}: Definition~\ref{def-pipe}, s. S. \pageref{def-pipe}
 \item
-  \textbf{Punktmodell}: Definition~\ref{def-punktmodell}
+  \textbf{Punktmodell}: Definition~\ref{def-punktmodell}, s. S.
+  \pageref{def-punktmodell}
 \item
-  \textbf{Quantile}: Definition~\ref{def-quantile}
+  \textbf{Quantile}: Definition~\ref{def-quantile}, s. S.
+  \pageref{def-quantile}
 \item
-  \textbf{Quartile}: Definition~\ref{def-quartile}
+  \textbf{Quartile}: Definition~\ref{def-quartile}, s. S.
+  \pageref{def-quartile}
 \item
-  \textbf{Korrelationskoeffizient \(r\)}: Definition~\ref{def-r}
+  \textbf{Korrelationskoeffizient \(r\)}: Definition~\ref{def-r}, s. S.
+  \pageref{def-r}
 \item
-  \textbf{R-Quadrat}: Definition~\ref{def-r2}
+  \textbf{R-Quadrat}: Definition~\ref{def-r2}, s. S. \pageref{def-r2}
 \item
-  \textbf{Spannweite}: Definition~\ref{def-range}
+  \textbf{Spannweite}: Definition~\ref{def-range}, s. S.
+  \pageref{def-range}
 \item
-  \textbf{Reproduzierbarkeit}: Definition~\ref{def-repro}
+  \textbf{Reproduzierbarkeit}: Definition~\ref{def-repro}, s. S.
+  \pageref{def-repro}
 \item
-  \textbf{Residuum}: Definition~\ref{def-residuum}
+  \textbf{Residuum}: Definition~\ref{def-residuum}, s. S.
+  \pageref{def-residuum}
 \item
-  \textbf{Standardabweichung}: Definition~\ref{def-sd}
+  \textbf{Standardabweichung}: Definition~\ref{def-sd}, s. S.
+  \pageref{def-sd}
 \item
-  \textbf{Skalenniveau}: Definition~\ref{def-skalenniveau}
+  \textbf{Skalenniveau}: Definition~\ref{def-skalenniveau}, s. S.
+  \pageref{def-skalenniveau}
 \item
-  \textbf{Statistik}: Definition~\ref{def-statistik}
+  \textbf{Statistik}: Definition~\ref{def-statistik}, s. S.
+  \pageref{def-statistik}
 \item
-  \textbf{Streuungsmaße}: Definition~\ref{def-streuungsmaße}
+  \textbf{Streuungsmaße}: Definition~\ref{def-streuungsmaße}, s. S.
+  \pageref{def-streuungsmaße}
 \item
-  \textbf{Testsample}: Definition~\ref{def-testsample}
+  \textbf{Test-Sample}: Definition~\ref{def-testsample}, s. S.
+  \pageref{def-testsample}
 \item
-  \textbf{Tidy Data}: Definition~\ref{def-tidy}
+  \textbf{Tidy Data}: Definition~\ref{def-tidy}, s. S.
+  \pageref{def-tidy}
 \item
-  \textbf{Trainsample}: Definition~\ref{def-trainsample}
+  \textbf{Train-Sample}: Definition~\ref{def-trainsample}, s. S.
+  \pageref{def-trainsample}
 \item
-  \textbf{Variable}: Definition~\ref{def-var}
+  \textbf{Variable}: Definition~\ref{def-var}, s. S. \pageref{def-var}
 \item
-  \textbf{Varianz}: Definition~\ref{def-var}
+  \textbf{Varianz}: Definition~\ref{def-var}, s. S. \pageref{def-var}
 \item
-  \textbf{Vektorielles Rechnen}: Definition~\ref{def-veccalc}
+  \textbf{Vektorielles Rechnen}: Definition~\ref{def-veccalc}, s. S.
+  \pageref{def-veccalc}
 \item
-  \textbf{Vektor}: Definition~\ref{def-vektor}
+  \textbf{Vektor}: Definition~\ref{def-vektor}, s. S.
+  \pageref{def-vektor}
 \item
-  \textbf{Verteilung}: Definition~\ref{def-verteilung}
+  \textbf{Verteilung}: Definition~\ref{def-verteilung}, s. S.
+  \pageref{def-verteilung}
 \item
-  \textbf{Wert}: Definition~\ref{def-wert}
+  \textbf{Wert}: Definition~\ref{def-wert}, s. S. \pageref{def-wert}
 \item
-  \textbf{z-Werte}: Definition~\ref{def-z-werte}
+  \textbf{z-Werte}: Definition~\ref{def-z-werte}, s. S.
+  \pageref{def-z-werte}
 \item
-  \textbf{Zentrieren}: Definition~\ref{def-zentrieren}
+  \textbf{Zentrieren}: Definition~\ref{def-zentrieren}, s. S.
+  \pageref{def-zentrieren}
 \item
   \textbf{Richtung und Stärke eines Zusammenhang}:
-  Definition~\ref{def-zshg}
+  Definition~\ref{def-zshg}, s. S. \pageref{def-zshg}
 \end{itemize}
 
 \chapter{Data-Dictionary für Mariokart}\label{sec-data-dict}
@@ -15189,9 +15218,7 @@ Tabelle~\ref{tbl-dict-mario-pdf} zeigt das Data-Dictionary.
 
 \centering{
 
-[!h]
-\centering
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{10cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{9cm}}
 \toprule
 Variable & Erklärung\\
 \midrule

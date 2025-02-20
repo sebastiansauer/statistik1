@@ -58,7 +58,7 @@ fileConn <- file(output_file, "w")
 writeLines("# Definitionen\n\n", fileConn)
 
 for (definition in definitions) {
-  line <- paste0("- **", definition[2], "**: @def-", definition[1], " [, S. \\pageref{def-", definition[1], "}]{.content-visible when-format=\"pdf\"}\n\n")
+  line <- paste0("- **", definition[2], "**: @def-", definition[1], ", s. S. \\pageref{def-", definition[1], "}")
   writeLines(line, fileConn)
 }
 

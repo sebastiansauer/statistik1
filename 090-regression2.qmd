@@ -200,8 +200,6 @@ Veränderung der Temperatur und Niederschlag (10-Jahres-Mittel) in Deutschland i
 
 In diesem Abschnitt untersuchen wir lineare Modelle mit einer oder mehreren metrischen UV (und einer metrischen AV).
 
-#### Modell Wetter1
-
 Sie stellen sich nun folgende Forschungsfrage:
 
 >    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Um wieviel ist die Temperatur in Deutschland pro Jahr gestiegen, wenn man die letzten ca. 100 Jahre betrachtet?
@@ -231,7 +229,7 @@ Laut Ihrem Modell wurde es pro Jahr um 0.01 Grad wärmer, pro Jahrzehnt also 0.1
 
 
 
-#### Punkt- vs. Bereichsschätzung
+
 
 In @tbl-lm-wetter1 finden sich zwei Arten von Information für den Wert des Achsenabschnitts ($\beta 0$) und des Regressionsgewichts von `year` ($\beta _1$):
 
@@ -239,21 +237,28 @@ In @tbl-lm-wetter1 finden sich zwei Arten von Information für den Wert des Achs
 Das ist sozusagen der Wert, für den sich das Modell festlegen würde, wenn es sonst nichts sagen dürfte.
 
 2. *Bereichschätzungen* Cleverer als Punktschätzungen sind Bereichsschätzungen (Intervallschätzungen): Hier wird ein Bereich plausibler Werte für den entsprechenden Wert angegeben. 
-Der "Bereich plausibler Werte" wird auch als Konfidenzintervall (engl. confidence interval, CI) bezeichnet. 
+Der "Bereich plausibler Werte" wird auch als *Konfidenzintervall* (engl. confidence interval, CI) bezeichnet. 
 Entsprechend gibt `CI_low` die Untergrenze des Bereichs plausibler Werte und `CI_high` die Obergrenze aus. 
 So können wir ablesen, dass das Regressionsgewicht von `year` irgendwo zwischen praktisch Null (0.009) 
 und ca. 0.01 Grad geschätzt wird.
+Je schmaler das Konfidenzintervall, desto genauer wird der Effekt geschätzt 
+(unter sonst gleichen Umständen). 
+Die Spalten mit den *t*- und *p*-Werten in der Ausgabe ignorieren wir einfach. 
+Einatmen, ausatmen.
 
+:::{#def-konfidenzintervall}
+### Konfidenzintervall
 
-:::{.callout-important}
-Je schmaler das Konfidenzintervall, desto genauer wird der Effekt geschätzt. $\square$
+Ein Konfidenzintervall (confidence interval, CI) 
+gibt einen Schätzbereich plausibler Werte für einen Populationswert an, 
+  auf Basis der Schätzung, die uns die Stichprobe liefert. $\square$
 :::
 
-Die Spalten mit den *t*- und *p*-Werten ignorieren wir einfach. Einatmen, ausatmen.
 
-#### Modell Wetter1a
 
-Das Modell `lm_wetter1`, bzw. die Schätzungen zu den erwarteten Werten, kann mich sich so ausgeben lassen, s. @fig-wetter1, links.
+
+Das Modell `lm_wetter1`, bzw. die Schätzungen zu den erwarteten Werten, 
+kann mich sich so ausgeben lassen, s. @fig-wetter1, links.
 Allerdings sind das zu viele Datenpunkte. Wir sollten es vielleicht anders visualisieren, s. @fig-wetter1, rechts.
 Dazu aggregieren wir die Messwerte eines Jahres zu jeweils einem Mittelwert.
 
@@ -677,7 +682,12 @@ So ein Modell ist von den Ergebnissen her praktisch identisch zu einer   *Varian
 Ob es wohl substanzielle Temperaturunterschiede zwischen den Bundesländern gibt?
 :::
 
-Befragen wir dazu ein lineares Modell, s. @tbl-lm_wetter_region.
+Befragen wir dazu ein lineares Modell; 
+in @tbl-lm_wetter_region sind für jeden Parameter der Punktschätzer (Koeffizient)
+und das zugehörige Schätzbereich (Konfidenzintervall) 
+mit Ober- und Untergrenze angegeben.
+
+
 
 ```{r}
 #| results: false
@@ -1388,7 +1398,7 @@ data(mariokart, package = "openintro")
 ```
 
 Grundsätzlich kann man viele Prädiktoren in ein (lineares) Modell aufnehmen.
-Betrachten wir z.&thinsp;B. folgendes lineares Modell mit zwei metrischen UV.
+Betrachten wir z. B. folgendes lineares Modell mit zwei metrischen UV.
 
 ```{r}
 lm_mario_2uv <- lm(total_pr ~ start_pr + ship_pr, data = mariokart %>% filter(total_pr < 100))
@@ -1843,12 +1853,12 @@ aber zusammengehörigen Arten von Stichproben ist in @fig-sample-types dargestel
 
 
 :::{#def-trainsample}
-### Trainsample
+### Train-Sample
 Den Datensatz, für die Sie sowohl UV *als auch AV* vorliegen haben, nennt man Train-Sample. $\square$
 :::
 
 :::{#def-testsample}
-### Testsample
+### Test-Sample
 Den Datensatz, für den Sie *nur* Daten der UV, aber nicht zu der AV vorliegen haben, nennt man *Test-Sample*. $\square$
 :::
 
@@ -2008,7 +2018,7 @@ je nachdem ob Prädiktoren dem Modell hinzugefügt oder weggenommen werden.
 ### Vorsicht bei der Interpretation von Regressionskoeffizienten
 
 :::{.callout-important}
-Interpretiere nie Modellkoeffizienten kausal ohne ein Kausalmodell. $\square$
+Interpretiere  Modellkoeffizienten nur kausal, wenn du Kausalmodell hast. $\square$
 :::
 
 Nur wenn man die Ursache-Wirkungs-Beziehungen in einem System kennt,
@@ -2016,15 +2026,20 @@ macht es Sinn, die Modellkoeffizienten kausal zu interpretieren.
 Andernfalls lässt man besser die Finger von der Interpretation der Modellkoeffizienten und
 begnügt sich mit der Beschreibung der Modellgüte und mit Vorhersage (synonym: Prognose).
 Wer das nicht glaubt, der betrachte @fig-confounder, links.
-Ei Forschi stellt das Modell `m1: y ~ x` auf und  interpretiert dann `b1`: "Ist ja klar, X hat einen starken positiven Effekt auf Y!".
+Ein Forscher stellt das Modell `m1: y ~ x` auf und  interpretiert dann `b1`: 
+"Ist ja klar, X hat einen starken positiven Effekt auf Y!".
 
-In der nächsten Studie nimmt der Forscher dann eine zweite Variable, `group` (z.B. Geschlecht) in das Modell auf: `m2: y ~ x + g`.
-Oh Schreck! Jetzt ist `b1` auf einmal nicht mehr stark positiv, sondern praktisch Null, und zwar in jeder Gruppe, s. @fig-confounder, rechts!
+In der nächsten Studie nimmt der Forscher dann eine zweite Variable, 
+`group` (z.B. Geschlecht) in das Modell auf: `m2: y ~ x + g`.
+Oh Schreck! Jetzt ist `b1` auf einmal nicht mehr stark positiv, 
+sondern praktisch Null, und zwar in jeder Gruppe, s. @fig-confounder, rechts!
 
 Dieses Umschwenken der Regressionskoeffizienten kann *nicht* passieren,
 wenn der Effekt "echt", also kausal, ist. 
-Handelt es sich aber um "nicht echte", also nicht-kausale Zusammenhänge, um Scheinzusammenhänge also,
-so können sich die Modellkoeffizienten dramatisch verändern (sogar das Vorzeichen kann wechseln; das nennt man dann *Simpsons Paradox*),
+Handelt es sich aber um "nicht echte", also nicht-kausale Zusammenhänge, 
+um *Scheinzusammenhänge* also.
+So können sich die Modellkoeffizienten dramatisch verändern 
+(sogar das Vorzeichen kann wechseln; das nennt man dann *Simpsons Paradox*),
 wenn man das Modell verändert, also Variablen hinzufügt oder aus dem Modell entfernt.
 
 Wenn man die kausalen Abhängigkeiten nicht kennt,
@@ -2092,7 +2107,7 @@ d_sim %>%
 
 
 Man könnte höchstens sagen, dass man (wenn man die Kausalstruktur nicht kennt) die Modellkoeffizienten nur *deskriptiv* interpretiert,
-z.B. "Dort wo es viele Störche gibt, gibt es auch viele Babies".^[Das Störche-Babies-Beispiel passt auch zu @fig-confounder.]
+z.B. "Dort wo es viele Störche gibt, gibt es auch viele Babies".^[Das Störche-Babys-Beispiel passt auch zu @fig-confounder.]
 Leider ist unser Gehirn auf kausale Zusammenhänge geprägt: 
 Es fällt uns schwer, Zusammenhänge nicht kausal zu interpretieren.
 Daher werden deskriptive Befunde immer wieder unzulässig kausal interpretiert -- von Laien und Wissenschaftlern auch.
@@ -2121,9 +2136,10 @@ Wenn Sie dran bleiben an der Statistik, wird der Erfolg sich einstellen, s. @fig
 
 ![Sie gestern](img/meme-stat1.jpg){#fig-gestern}
 
-![Sie mrogen](img/meme-stat2.jpg){#fig-morgen}
+![Sie morgen](img/meme-stat2.jpg){#fig-morgen}
 
-Statistik, Sie und Party: Gestern und (vielleicht) morgen. Wenn Sie dran bleiben, wird die Statistik Ihr bester Freund [@imgflip2024].
+Statistik, Sie und Party: Gestern und (vielleicht) morgen. 
+Wenn Sie dran bleiben, wird die Statistik Ihr bester Freund [@imgflip2024].
 
 :::
 

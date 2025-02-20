@@ -67,7 +67,7 @@ beta1col <- "#0072B2"
 xcol <- "#CC79A7"
 
 
-ggplot2::theme_set(ggplot2::theme_minimal())
+
 
 #ggplot2::theme_set(see::theme_modern(axis.title.size = 18))
 
@@ -82,3 +82,14 @@ mariokart_no_extreme <- mariokart[mariokart$total_pr < 100, ]
 
 mariokart_path <- "https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"
 
+
+# add font for plots:
+
+showtext::showtext_auto()
+
+sysfonts::font_add("Lato Regular", 
+                   regular = "/Users/sebastiansaueruser/Library/Fonts/Lato-Regular.ttf")
+
+ggplot2::theme_set(ggplot2::theme_minimal(base_family = "Lato Regular")) 
+
+#ggplot2::theme_update(text = ggplot2::element_text(family = "Lato Regular"))

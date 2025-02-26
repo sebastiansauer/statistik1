@@ -241,9 +241,7 @@ Eine allgegenwärtige Tatsache ist, dass die Dinge der Welt sich unterscheiden,
 etwa, dass Exemplare einer Gattung sich unterscheiden. 
 So sind nicht alle Menschen gleich groß, 
 nicht alle Bücher gleich lang oder nicht alle Tage gleich warm.
-
-
-Ein zentrales Vorgehen bei statistischen Analysen ist es, 
+Daher ist eine zentrale Idee von statistischen Analysen, 
 die *Unterschiedlichkeit der Dinge* zu beschreiben,
 präziser gesagt: die *Variation zu quantifizieren*. 
 Betrachten wir dazu das Beispiel in @fig-groesse.
@@ -255,6 +253,7 @@ Betrachten wir dazu das Beispiel in @fig-groesse.
 #| fig-cap: "Wenig Variation in der Körpergröße bei den Basketballern. Alles lange Kerle. Viel Variation bei den Schachspielern: Manche sind klein, ander groß."
 #| dev: "ragg_png"
 #| out-width: "75%"
+
 
 groesse <- 
   tibble::tribble(
@@ -287,11 +286,13 @@ groesse_summ <-
   group_by(team) %>% 
   summarise(groesse_mw = mean(groesse))
 
+facet_labels <- c(`Basketball 🏀` = "Basketball 🏀\nHohe Variation",
+                  `Schach ♟️` = "Schach ♟\nGeringe Variation")
 
 groesse %>% 
   ggplot(aes(x = id, y = groesse)) +
   geom_col() +
-  facet_wrap(~team) +
+  facet_wrap(~team, labeller = as_labeller(facet_labels)) +
   labs(
        y = "Körpergröße",
        x = "Spielernummer") +
@@ -365,7 +366,7 @@ zeigt hier die Differenz von Mittelwert und dem Wert der Körpergröße bei der 
 Nehmen wir an, wir sprechen allgemein von einer Person $i$.
 Wir bezeichnen das Merkmal Körpergröße mit $X$ 
 und den Mittelwert der Körpergröße mit  als $\bar{x}$ ("x quer").
-Dann können wir kdas Residuum der $i$-ten Person mit $r_i$ bezeichnen und entsprechend definieren.
+Dann können wir das Residuum der $i$-ten Person mit $r_i$ bezeichnen und entsprechend definieren.
 
 
 :::{#def-residuum}
@@ -403,14 +404,17 @@ ggplot(d1) +
   geom_col() +
   geom_bar_text(size = 14) +
   labs(y = "Wahrscheinlichkeit",
-       title = "")
+       title = "") +
+  theme_large_text()
 
 ggplot(d1) +
   aes(x = x, y = p2) +
   geom_col() +
-  geom_bar_text(size = 14) +
+  geom_bar_text(size = 18) +
   labs(y = "Wahrscheinlichkeit",
-       title = "")
+       title = "",
+       x = "")  +
+  theme_large_text()
 ```
 
 
@@ -564,14 +568,6 @@ Diskutieren Sie die Antwort, auch in ihren Grenzen. $\square$
 
 
 
-<!-- :::{.callout-caution} -->
-<!-- Es ist ein häufiger Fehler, in der Forschungsfrage zu formulieren "X führt zu Y",  -->
-<!-- aber in der Analyse keine Methode zu verwenden, die geeignet ist,  -->
-<!-- kausale Zusammenhänge aufzudecken. Es reicht nicht, dass man z.B. einen (negativen) Zusammenhang zwischen der Häufigkeit von Smartphone-Nutzung und Konzentrationsfähigkeit findet [@schwaiger_impact_2022],  -->
-<!-- um zu sagen: "Daddeln macht dumm!".  -->
-<!-- Es könnte ja z.B. auch umgekehrt sein. Platt gesagt: "Dummheit führt zu Daddeln". Weitere Erklärungen sind möglich.  -->
-<!-- Vorsicht also mit (vor)schnellen Aussagen zu kausalen Abhängigkeiten. -->
-<!-- ::: -->
 
 
 
@@ -612,6 +608,41 @@ Diesen Ablauf nennt man auch das PPDAC-Modell [@mackay_scientific_2000]:
 graph LR
     Problem --> Plan --> Data --> Analysis --> Conclusions --> Problem
 ```
+
+
+
+Aus einer weniger abstrakten, eher praktischen Perspektive kann man von der 
+Abfolge der "sieben Schritten der Datenanalyse" sprechen, s. @fig-sieben-schritte.
+
+
+
+```{mermaid}
+%%| fig-cap: "Datenanalyse als Prozess: Die sieben Schritte der Datenanalyse"
+%%| label: fig-sieben-schritte
+%%| fig-width: 4
+
+flowchart LR
+  subgraph R[Rahmen]
+    direction LR
+    subgraph V[Vorbereiten]
+      direction TB
+      E[Einlesen] --> Um[Umformen]
+    end
+    subgraph M[Grundlagen des Modellieren]
+      direction TB
+      M1[Punktmodelle] --> Vis[Verbildlichen]
+      Vis --> U[Ungewissheit]
+
+    end
+    subgraph N[Modellieren]
+      direction TB
+      G1[Modelle] --> G2[Ungewissheit]
+    end
+  V --> M
+  M --> N
+  end
+```
+
 
 
 
@@ -883,7 +914,7 @@ d_long |>
   geom_point(size = 3) +
   geom_line() +
   scale_color_okabeito() +
-  theme_modern() +
+  theme_minimal() +
   geom_text(data = last_points, aes(label = Produkt), 
             hjust = -0.2, vjust = 0.5, size = 4, show.legend = FALSE) +
   theme(legend.position = "none") +
@@ -1302,7 +1333,7 @@ ggplot(data_fig_intervall) +
   ylim(0, 35) +  # Extend y-axis range to avoid clipping
   theme(
     plot.margin = margin(10, 10, 10, 10) # Add margin space
-  )
+  ) 
 ```
 
 
@@ -1311,8 +1342,9 @@ ggplot(data_fig_intervall) +
 was man sich gemeinhin unter einer metrische Variable vorstellt: 
 Man kann "normal" rechnen, alle Rechenoperationen sind erlaubt. 
 Zuzüglich zu denen, 
-die auch in anderen, "niedrigeren" Skalenniveaus erlaubt sind, 
-ist das das Bilden von Verhältnissen -- Multiplizieren (und damit auch Dividieren), s. @fig-verhaeltnis.
+die auch in anderen, "niedrigeren", Skalenniveaus erlaubt sind, 
+ist das das Bilden von Verhältnissen --
+Multiplizieren (und damit auch Dividieren), s. @fig-verhaeltnis.
 
 ```{r p-verhaeltnis}
 #| dev: "ragg_png"
@@ -1374,7 +1406,8 @@ Fragen nach Skalenniveaus gehören zu den Lieblingsprüfungsfragen in diesem The
 
 
 :::{#exr-skalenniveaus}
-Überlegen Sie sich für einige Variablen die Skalenniveaus und befragen Sie dann interessierte Mitmenschen dazu. $\square$
+Überlegen Sie sich für einige Variablen die Skalenniveaus und 
+befragen Sie dann interessierte Mitmenschen dazu. $\square$
 :::
 
 ## Modelle

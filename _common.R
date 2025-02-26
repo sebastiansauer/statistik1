@@ -13,7 +13,7 @@ registerS3method("knit_print", "data.frame", knit_print.head)
 
 
 # Define a custom ggplot theme with larger text
-theme_large_text <- function(base_size = 18, base_family = "") {
+theme_large_text <- function(base_size = 18, base_family = "Lato Regular") {
   theme_minimal(base_size = base_size, base_family = base_family) +
     theme(
       text = element_text(size = base_size + 4),          # Base text size
@@ -83,13 +83,17 @@ mariokart_no_extreme <- mariokart[mariokart$total_pr < 100, ]
 mariokart_path <- "https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"
 
 
-# add font for plots:
 
-showtext::showtext_auto()
 
-sysfonts::font_add("Lato Regular", 
-                   regular = "/Users/sebastiansaueruser/Library/Fonts/Lato-Regular.ttf")
 
-ggplot2::theme_set(ggplot2::theme_minimal(base_family = "Lato Regular")) 
-
-#ggplot2::theme_update(text = ggplot2::element_text(family = "Lato Regular"))
+if (knitr:::is_latex_output()) {
+  
+  # add font for plots in PDF output:
+  
+  font_add("Lato Regular", regular = "/Users/sebastiansaueruser/Library/Fonts/Lato-Regular.ttf")
+  
+  font_add("Font Awesome", regular = "~/Library/Fonts/fontawesome-webfont.ttf")
+  
+  showtext_auto()
+  
+  ggplot2::theme_set(ggplot2::theme_minimal(base_family = "Lato Regular")) }

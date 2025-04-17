@@ -66,6 +66,10 @@ beta0col <- "#D55E00"
 beta1col <- "#0072B2"
 xcol <- "#CC79A7"
 
+yellow <- "#F0E442FF"
+blue <- "#0072B2FF"
+orange <- "#E69F00FF"
+
 
 
 

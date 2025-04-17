@@ -81,7 +81,7 @@ Die Methode des Vorhersagens, die wir hier betrachten,
 nennt man auch *lineare Regression*.
 
 
-### Vorhersagen ohne Prädiktor
+### Vorhersagen ohne UV
 
 :::::{#exm-noten-prognose}
 Nach intensiver Beschäftigung mit Statistik sind Sie allgemein als Checker bekannt.
@@ -136,11 +136,11 @@ Ihre Antwort lautet:
 "Im Schnitt haben die Studis bei der letzten Klausur ungefähr `r mean(round(noten2$y))` erzielt. 
 Diesen Wert kannst du erwarten. 
 Solange ich keine genaueren Infos habe, 
-z.B. wie viel du gelernt hast, kann ich dir keine genauere Vorhersage machen. Sorry!" $\square$
+z.$\,$B. wie viel du gelernt hast, kann ich dir keine genauere Vorhersage machen. Sorry!" $\square$
 :::::
 
 
-Ohne Kenntnis eines Prädiktors (UV) (wie z.B. Lernzeit) 
+Ohne Kenntnis einer UV (Prädiktor) (wie z.$\,$B. Lernzeit) 
 ist der Mittelwert ein geeigneter Vorhersagewert für jede Beobachtung, s. @fig-noten3.
 Wir nutzen den Mittelwert als Punktmodell für den Klausurerfolg. $\square$
 
@@ -165,10 +165,10 @@ ggplot(noten2) +
 
 :::{#def-nullmodell}
 ### Nullmodell (Punktmodell)
-Modelle ohne Prädiktor, Punktmodelle also, 
+Modelle ohne UV, Punktmodelle also, 
 kann man so bezeichnen: `y ~ 1`. 
-Da das Modell null Prädiktoren hat, 
-nennt man es auch manchmal "Nullmodell".
+Da das Modell null UV hat, 
+nennt man es auch manchmal *Nullmodell.*
 :::
 
 Auf Errisch kann man dieses Nullmodell so spezifizieren:
@@ -184,10 +184,10 @@ dass es keine Prädiktoren gibt.
 In dem Fall wird der Mittelwert, `r round(mean(noten2$y))`, als Gerade verwendet.
 Der zurückgemeldete Koeffizient `(Intercept)` 
 ist hier der einizige des Punktmodells.
-Da es ein Punktmodell ist, sagt es für alle Beobachtungen (hier Studentis) den gleichen Wert vorher, nämlich `r round(mean(noten2$y))`.
+Da es ein Punktmodell ist, sagt es für alle Beobachtungen (hier Studierenden) den gleichen Wert vorher, nämlich `r round(mean(noten2$y))`.
 
 
-### Vorhersagen mit Prädiktor
+### Vorhersagen mit UV
 
 
 
@@ -213,11 +213,11 @@ noten2 %>%
 
 ```{r lm1-b0-b1}
 #| echo: false
-lm1 <- lm(y ~ x, data = noten2)
-lm1_b0 <- coef(lm1)[1]
-lm1_b2 <- coef(lm1)[2]
+lm_toni <- lm(y ~ x, data = noten2)
+lm1_b0 <- coef(lm_toni)[1]
+lm1_b2 <- coef(lm_toni)[2]
 
-toni_punkte <- predict(lm1, newdata = data.frame(x=42))
+toni_punkte <- predict(lm_toni_b1, newdata = data.frame(x=42))
 ```
 
 
@@ -240,7 +240,7 @@ Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einz
 #| layout-ncol: 2
 #| fig-subcap: 
 #|   - "Streudiagramm"
-#|   - "Streudigramm mit 'Trendgerade' (blau)"
+#|   - "Streudigramm mit 'Trendgerade'"
 
 #noten2 <- read.csv(noten2, "data/noten2.csv")
 
@@ -259,7 +259,7 @@ noten2 %>%
   geom_point() +
   geom_vline(xintercept = mean(noten2$x), linetype = "dashed", color = "grey") +  
   geom_hline(yintercept = mean(noten2$y), linetype = "dashed", color = "grey") +   
-  geom_abline(slope = coef(lm1)[2], intercept = coef(lm1)[1], color = modelcol, size = 1.5) +
+  geom_abline(slope = coef(lm_toni)[2], intercept = coef(lm_toni)[1], color = modelcol, size = 1.5) +
   theme_minimal() +
   annotate("label", x = mean(noten2$x), y = -Inf, 
            label = paste0("MW: ", round(mean(noten2$x))), vjust = "bottom") +
@@ -270,7 +270,22 @@ noten2 %>%
   scale_x_continuous(breaks = c(20, 40, 60, 80, 100)) +
   labs(x = "Lernzeit",
        y = "Klausurpunkte") +
-  theme_large_text()
+  theme_large_text() +
+  geom_label_repel(data = data.frame(x = 42, y = toni_punkte), label = "Toni",
+       force = 20,
+                      box.padding = unit(1, "lines"),
+                      point.padding = unit(1, "lines"),
+                      segment.color = "grey50",
+                      segment.size = 1,
+                      arrow = arrow(length = unit(0.01, "npc")),
+                      # Styling to create a label-like appearance
+                      bg.color = "white",       # Background color of the label
+                      color = "black",           # Text color
+                      fill = "white",          # Alternative way to set background
+                      alpha = 0.8,             # Transparency of the background
+                      segment.alpha = 1,     # Transparency of the segment
+                     
+                      size = 6)                 # Adjust text size
 ```
 
 
@@ -299,7 +314,7 @@ Eine Gerade ist das, was man bekommt,
 wenn man eine lineare Funktion in ein Koordinatensystem einzeichnet.
 Man kann sie durch durch zwei *Koeffizienten* festlegen: 
 Achsenabschnitt (engl. *intercept*), und Steigung (engl. *slope*).
-Manchmal wird (z.B. im Schulunterricht) der Achsenabschnitt mit $t$ und die Steigung mit $m$ bezeichnet:
+Manchmal wird (z.$\,$B. im Schulunterricht) der Achsenabschnitt mit $t$ und die Steigung mit $m$ bezeichnet:
  
 ::: {.content-visible unless-format="epub"}
 
@@ -309,7 +324,7 @@ $f(\color{xcol}{x})=\color{ycol}{y}={m} \color{xcol}{x} + \color{beta0col}{t}$.
 
 In der Statistik wird folgende Nomenklatur bevorzugt:  $f(\color{xcol}{x})=\color{ycol}{\hat{y}}=\color{beta0col}{\beta_0} + {\beta_1} \color{xcol}{x}$ oder $f(\color{xcol}{x})=\color{ycol}{\hat{y}}= \color{beta0col}{b_0} + {b_1} \color{xcol}{x}$ .
 
-Die Nomenklatur mit $\color{beta0col}{b_0}, \color{beta1col}{b_1}$ hat den Vorteil, dass man das Modell einfach erweitern kann: $b_2, b_3, ...$. Anstelle von $b$ liest man auch oft $\beta$. 
+Die Nomenklatur mit $\color{beta0col}{b_0}, \color{beta1col}{b_1}$ hat den Vorteil, dass man das Modell einfach erweitern kann: $b_2, b_3, \ldots$. Anstelle von $b$ liest man auch oft $\beta$. 
 Griechische Buchstaben werden meist verwendet, um zu zeigen, 
 dass man an einer Aussage über eine Population, 
 nicht nur über eine Stichprobe, machen möchte.
@@ -509,7 +524,7 @@ Zweitens, wie viele Punkte bekomme ich pro gelernte Stunde? Ist immerhin meine L
 [Das sind gute Fragen. Den $\color{ycol}{Y}$-Wert (Klausurpunkte) bei $\color{xcol}{x}=0$ gibt der Achsenabschnitt zurück. ]{.content-visible unless-format="epub"}
 [Das sind gute Fragen. Den ${Y}$-Wert (Klausurpunkte) bei ${x}=0$ gibt der Achsenabschnitt zurück. ]{.content-visible when-format="epub"}
 Schnell skizzieren Sie dazu ein Diagramm, s. @fig-beta0.
-Puh, die Antwort wird Toni nicht gefallen ... $\square$
+Puh, die Antwort wird Toni nicht gefallen … $\square$
 :::
 
 ```{r fig-beta0}
@@ -550,9 +565,9 @@ Anstelle auf @fig-beta0 zu schauen,
 können Sie sich auch von R Tonis Klausurerfolg vorhersagen (to predict) lassen:
 
 
->    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"}  Hey R, predicte mir mal auf Basis vom Modell "lm1" den Lernerfolg für Toni, wenn der x=0 Stunden lernt.
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"}  Hey R, predicte mir mal auf Basis vom Modell "lm_toni" den Lernerfolg für Toni, wenn der x=0 Stunden lernt.
 
->    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Okay, ich predicte mit Modell "lm1" und nehme als neue Datentabelle Tonis Lernzeit (x=0)!
+>    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Okay, ich predicte mit Modell "lm_toni" und nehme als neue Datentabelle Tonis Lernzeit (x=0)!
 
 ```{r}
 tonis_lernzeit <- tibble(x = 0)  # `tibble` erstellt einen Dataframe
@@ -560,7 +575,7 @@ tonis_lernzeit <- tibble(x = 0)  # `tibble` erstellt einen Dataframe
 
 
 ```{r}
-predict(lm1, newdata = tonis_lernzeit)
+predict(lm_toni, newdata = tonis_lernzeit)
 ```
 
 
@@ -617,19 +632,19 @@ Toni ist nicht zufrieden mit Ihren Vorhersagen: "Jetzt hör mal auf mit deinem L
 
 
 ```{r}
-lm1 <- lm(y ~ x, data = noten2)
-lm1
+lm_toni <- lm(y ~ x, data = noten2)
+lm_toni
 ```
 
 R gibt Ihnen die beiden Koeffizienten für die Gerade aus. 
-Den Namen des Objekts können Sie frei aussuchen, z.B. `mein_erstes_lm`.
+Den Namen des Objekts können Sie frei aussuchen, z.$\,$B. `mein_erstes_lm`.
 Die Regressionsgleichung lautet demnach:
 `y_pred = 8.6 + 0.88*x`.
 
 
 ::: {.content-visible unless-format="epub"}
-`8.6` ist der Achsenabschnitt, d.h. der Wert von $\color{ycol}{Y}$ wenn $\color{xcol}{x}=0$.
-`0.88` ist das Regressionsgewicht, d.h. die Steigung der Regressionsgeraden: Für jede Stunde Lernzeit steigt der vorhergesagte Klausurerfolg um `0.88` Punkte.
+`8.6` ist der Achsenabschnitt, d.$\,$h. der Wert von $\color{ycol}{Y}$ wenn $\color{xcol}{x}=0$.
+`0.88` ist das Regressionsgewicht, d.$\,$h. die Steigung der Regressionsgeraden: Für jede Stunde Lernzeit steigt der vorhergesagte Klausurerfolg um `0.88` Punkte.
 
 Mit Kenntnis der beiden Koeffizienten kann man beliebige $\color{ycol}{Y}$-Werte ausrechnen, gegeben bestimmte $\color{xcol}{X}$-Werte.
 Hat jemand zum Beispiel 10 Stunden gelernt, 
@@ -645,8 +660,8 @@ y_pred
 
 ::: {.content-visible when-format="epub"}
 
-`8.6` ist der Achsenabschnitt, d.h. der Wert von ${Y}$ wenn ${x}=0$.
-`0.88` ist das Regressionsgewicht, d.h. die Steigung der Regressionsgeraden: Für jede Stunde Lernzeit steigt der vorhergesagte Klausurerfolg um `0.88` Punkte.
+`8.6` ist der Achsenabschnitt, d.$\,$h. der Wert von ${Y}$ wenn ${x}=0$.
+`0.88` ist das Regressionsgewicht, d.$\,$h. die Steigung der Regressionsgeraden: Für jede Stunde Lernzeit steigt der vorhergesagte Klausurerfolg um `0.88` Punkte.
 
 Mit Kenntnis der beiden Koeffizienten kann man beliebige ${Y}$-Werte ausrechnen gegeben bestimmte ${X}$-Werte.
 Hat jemand zum Beispiel 10 Stunden gelernt, 
@@ -679,7 +694,7 @@ tonis_lernzeit2
 
 
 ```{r}
-predict(lm1, newdata = tonis_lernzeit2)
+predict(lm_toni, newdata = tonis_lernzeit2)
 ```
 
 
@@ -691,7 +706,7 @@ predict(modell, newdata = tabelle_mit_prädiktorwerten)
 ```
 
 Die Funktion `predict` liefert eine Vorhersage für ein ein Modell,
-z.B. `lm1` und für einen bestimmten Dataframe (der die Prädiktorwerte enthalten muss).
+z.$\,$B. `lm_toni` und für einen bestimmten Dataframe (der die Werte der UV enthalten muss).
 
 
 
@@ -720,17 +735,17 @@ ${e_i} = {y_i} - {\hat{y}_i}$.
 #| label: fig-resid
 #| layout-ncol: 2
 #| fig-subcap: 
-#|   - Geradenmodell (lm1)
+#|   - Geradenmodell (lm_toni)
 #|   - Punktmodell (lm0)
 
 noten2 <-
   noten2 %>% 
-  mutate(yhat = predict(lm1, newdata = noten2))
+  mutate(yhat = predict(lm_toni, newdata = noten2))
 
 noten2 %>% 
   ggplot(aes(x, y)) +
   geom_point(color = ycol) +
-  geom_abline(slope = coef(lm1)[2], intercept = coef(lm1)[1], color = modelcol, size = 1.5) +
+  geom_abline(slope = coef(lm_toni)[2], intercept = coef(lm_toni)[1], color = modelcol, size = 1.5) +
   theme_minimal() +
   geom_segment(aes(xend = x, yend = yhat), color = errorcol) +
 theme_large_text()
@@ -752,21 +767,21 @@ in Form der mittleren Absolutabweichung (MAE) ausgeben (aus dem Paket `easystats
 
 ```{r}
 mae(lm0)
-mae(lm1)
+mae(lm_toni)
 ```
 
 
-Vergleichen wir MAE im  Nullmodell mit MAE in `lm1`: 
+Vergleichen wir MAE im  Nullmodell mit MAE in `lm_toni`: 
 
 ```{r}
-verhaeltnis_fehler_mae <- mae(lm1) / mae(lm0)
+verhaeltnis_fehler_mae <- mae(lm_toni) / mae(lm0)
 verhaeltnis_fehler_mae
 ```
 
 
 
 Ah! Das Geradenmodell ist viel besser:
-Von `lm0` zu `lm1` haben die mittlere Absolutlänge des Fehlerbalkens auf `r round(verhaeltnis_fehler_mae, 2)*100` Prozent verbessert.
+Von `lm0` zu `lm_toni` haben die mittlere Absolutlänge des Fehlerbalkens auf `r round(verhaeltnis_fehler_mae, 2)*100` Prozent verbessert.
 Nicht schlecht!
 
 
@@ -789,12 +804,12 @@ kann den MSE auch von Hand berechnen: `mean((noten2$y - mean(noten2$y))^2)`.
 
 ```{r}
 mse(lm0)
-mse(lm1)
+mse(lm_toni)
 ```
 
 
 ```{r}
-verhaeltnis_fehler_mse <- mse(lm1)/mse(lm0)
+verhaeltnis_fehler_mse <- mse(lm_toni)/mse(lm0)
 verhaeltnis_fehler_mse
 ```
 
@@ -865,7 +880,7 @@ Eine schöne Darstellung dazu findet sich bei @kaplan_statistical_2009.
 
 ## R-Quadrat als Maß der Modellgüte
 
-Das Modell `lm1` weist noch `r verhaeltnis_fehler_mse` der Fehlerstreuung (MSE) des Nullmodells auf.
+Das Modell `lm_toni` weist noch `r verhaeltnis_fehler_mse` der Fehlerstreuung (MSE) des Nullmodells auf.
 Anders gesagt, wir haben uns ( (bzw. das Modell hat sich) um $1 - `r round(verhaeltnis_fehler_mse, 2)`$ verbessert.
 
 ```{r}
@@ -893,10 +908,10 @@ $\square$
 
 Einfach gesagt: $R^2$ gibt an, wie gut (zu welchem Anteil) 
 ein Modell die Zielvariable, $y$, erklärt. 
-Wir können R-Quadrat ($R^2$) uns von R z.B. so ausgeben lassen:
+Wir können R-Quadrat ($R^2$) uns von R z.$\,$B. so ausgeben lassen:
 
 ```{r}
-r2(lm1)
+r2(lm_toni)
 ```
 
 Bei einer perfekten Korrelation ist $r=1$, 
@@ -963,7 +978,7 @@ desto besser "erklärt" das Modell die Daten
 
 <!-- ```{r} -->
 <!-- s2_y = var(noten2$y) -->
-<!-- s2_e = mse(lm1) -->
+<!-- s2_e = mse(lm_toni) -->
 <!-- s2_m = s2_y - s2_e -->
 <!-- s2_m -->
 <!-- ``` -->
@@ -978,7 +993,8 @@ desto besser "erklärt" das Modell die Daten
 
 Die Residuen (Vorhersagefehler) bestimmen die Modellgüte:
 Sind die Residuen im Schnitt groß, so ist die Modellgüte gering (schlecht), und umgekehrt.
-Verschiedenen Koeffizienten stehen zur Verfügung: R-Quadrat, $r$ (als Korrelation von tatsächlichem $y$ und vorhergesagten $\hat{y}$), MSE, RMSE, MAE, ...
+Verschiedenen Koeffizienten stehen zur Verfügung: 
+R-Quadrat, $r$ (als Korrelation von tatsächlichem $y$ und vorhergesagten $\hat{y}$), MSE, RMSE, MAE, …
 
 
 ### Koeffizienten
@@ -992,13 +1008,13 @@ Was auch was wert ist.
 
 
 
-[Im Modell `lm1` liegt der Achsenabschnitt bei $\textcolor{ycol}{y}=`r round(coef(lm1)[1], 2)`$. 
+[Im Modell `lm_toni` liegt der Achsenabschnitt bei $\textcolor{ycol}{y}=`r round(coef(lm_toni)[1], 2)`$. 
 Beobachtungen mit $\color{xcol}{x}=0$ 
-können also diesen $\textcolor{ycol}{Y}$-Wert erwarten, laut `lm1`.]{.content-visible unless-format="epub"}
-[Im Modell `lm1` liegt der Achsenabschnitt (engl. intercept) bei ${y}=`r round(coef(lm1)[1], 2)`$.
+können also diesen $\textcolor{ycol}{Y}$-Wert erwarten, laut `lm_toni`.]{.content-visible unless-format="epub"}
+[Im Modell `lm_toni` liegt der Achsenabschnitt (engl. intercept) bei ${y}=`r round(coef(lm_toni)[1], 2)`$.
 Beobachtungen mit ${x}=0$ 
-können also diesen ${Y}$-Wert erwarten, laut `lm1`.]{.content-visible when-format="epub"}
-Leider ist es häufig so, dass Prädiktorwerte von 0 in der Praxis nicht realistisch sind, 
+können also diesen ${Y}$-Wert erwarten, laut `lm_toni`.]{.content-visible when-format="epub"}
+Leider ist es häufig so, dass UV mit Wert 0 in der Praxis nicht realistisch sind, 
 so dass der Achsenabschnitt dann wenig nützt.
 
 :::{#exm-groesse}
@@ -1010,14 +1026,15 @@ Nutzt man Körpergröße und das Gewicht von Menschen vorherzusagen, ist der Ach
 
 ```{r}
 #| echo: false
-lm1_b1 <- coef(lm1)[2] %>% round(2)
+lm_toni_b1 <- coef(lm_toni)[2] %>% round(2)
 ```
 
 So interpretiert man die Geradensteigung, $\beta_1$:
-"Im Modell `lm1` beträgt der Regressionskoeffizient $\beta_1 = `r lm1_b1`$. Zwei Studentinnen, deren Lernzeit sich um eine Stunde unterscheidet, unterscheiden sich *laut Modell* um den Wert von $\beta_1$".
+"Im Modell `lm_toni` beträgt der Regressionskoeffizient $\beta_1 = `r lm_toni_b1`$. Zwei Studentinnen, deren Lernzeit sich um eine Stunde unterscheidet, unterscheiden sich *laut Modell* um den Wert von $\beta_1$".
 
 :::{.callout-caution}
-Häufig liest man, der "Effekt des Prädiktors" auf die AV betrage z.B. $`r lm1_b1`$. "Effekt" ist aber ein Wort, 
+Häufig liest man, der "Effekt der UV" auf die AV betrage z.$\,$B. $`r lm_toni_b1`$. 
+"Effekt" ist aber ein Wort, 
 das man kausal verstehen kann.
 Ohne weitere Absicherung kann man aber Regressionskoeffizienten nicht kausal verstehen. 
 Daher sollte man das Wort "Effekt" mit Vorsicht genießen. 
@@ -1175,7 +1192,7 @@ predict(lm3, newdata = neue_daten)
 
 Aber nützlich wäre noch, das Modell 
 (bzw. die Schätzung der erwarteten Werte) als Diagramm zu bekommen.
-Das erreicht man z.B. so, s. @fig-lm3.
+Das erreicht man z.$\,$B. so, s. @fig-lm3.
 
 ```{r}
 #| label: fig-lm3

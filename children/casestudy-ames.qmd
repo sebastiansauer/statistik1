@@ -35,7 +35,7 @@ Dort finden Sie auch eine nähere Beschreibung, das Ziel und die Spielregeln des
 Sie können die Daten von [www.kaggle.com herunterladen](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data).
 Im Einzelnen müssen Sie folgende Dateien herunterladen:
 
-- *Data_description.txt*: Codebook, d.h. Beschreibung der Variablen im Datensatz
+- *Data_description.txt*: Codebook, d.$\,$h. Beschreibung der Variablen im Datensatz
 - *train.csv*: Daten von Häusern, die Sie nutzen, um Modelle zu erstellen
 - *test.csv*:  Daten von Häusern, von denen Sie den Kaufpreis vorhersagen sollen
 - *sample_submission.csv*: Beispielhafte Prognosedatei, die Datei also, mit der Sie Ihre Vorhersagen einreichen
@@ -136,7 +136,7 @@ Alles klar? Los geht's!
 ### Ein erster Blick in die Daten
 
 Schauen Sie sich zu Beginn einmal die Verteilung der metrischen Variablen,
-z.B. mit `describe_distribution(d_train)` an.
+z.$\,$B. mit `describe_distribution(d_train)` an.
 
 
 ::: {.content-visible when-format="html" unless-format="epub"}
@@ -155,7 +155,7 @@ describe_distribution(d_train) |> print_md()
 
 
 Eine einfache Antwort auf die Frage, welche Variablen sich zur Vorhersage eignen, ist, 
-die Korrelation aller Prädiktoren mit der abhängigen Variablen^[die vorherzusagende Variable, auch Ziel- oder Outcome-Variable genannt] zu berechnen, s. 
+die Korrelation aller UV mit der AV zu berechnen, s. 
 <!-- @tbl-d_train_corr und -->
 @lst-get-high-corrs.
 
@@ -178,7 +178,7 @@ d_train %>%
 #| echo: false
 #| results: hide
 #| label: tbl-d_train_corr
-#| tbl-cap: "Korrelation der Prädiktoren (UV) mit der AV"
+#| tbl-cap: "Korrelation der UV mit der AV"
 d_train %>% 
   select(-Id) %>% 
   correlation() %>%  # berechne Korrelationen
@@ -188,7 +188,7 @@ d_train %>%
   print_md()
 ```
 
-Aha! Ein Menge Information ... Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: 
+Aha! Ein Menge Information … Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: 
 Im Zweifel einfach ignorieren. 
 Wenn Sie die R-Syntax nicht verstehen: 
 Führen Sie die Syntax schrittweise aus. Zuerst `d_train` ausführen und das Ergebnis betrachten. 
@@ -248,14 +248,14 @@ r2(m1)  # aus easystats
 
 
 
-Man kann mehrere UV (Prädiktorvariablen) in ein Regressionsmodell aufnehmen. Dazu trennt man sie mit einem Pluszeichen in `lm()`:
+Man kann mehrere UV in ein Regressionsmodell aufnehmen. Dazu trennt man sie mit einem Pluszeichen in `lm()`:
 
 ```{r}
 #| eval: false
 mein_modell <- lm(av ~ uv1 + uv2 + ... + uv_n, data = meine_daten)
 ```
 
-Dabei ist das Pluszeichen kein arithmetischer Operator, sondern sagt nur "als UV nimm UV1 und UV2 und ...". 
+Dabei ist das Pluszeichen kein arithmetischer Operator, sondern sagt nur "als UV nimm UV1 und UV2 und …". 
 Berechnen wir als nächstes ein Modell mit mehreren UV, `m2`.
 
 ```{r}
@@ -302,8 +302,8 @@ also im Vergleich zu anderen Modellen.
 
 
 
-Zum Vergleich berechnen wir das maximal einfache Modell: ohne Prädiktoren.
-Man nennt es das Nullmodell.
+Zum Vergleich berechnen wir das maximal einfache Modell: ohne UV.
+Man nennt es das *Nullmodell*.
 In diesem Modell sagen wir für jedes Haus einfach den mittleren Preis aller Häuser vorher.
 
 
@@ -350,7 +350,7 @@ m2_pred <- predict(m2, newdata = d_test)  # <1>
 head(m2_pred) # <2>
 ```
 1. Erstelle eine Vorhersage anhand der Regressionsgerade von `m1` und zwar anhand der Daten aus `d_test`.
-2. Zeige den "Kopf" der Vorhersagen (`m1_pred`), d.h. die ersten paar Vorhersagen.
+2. Zeige den "Kopf" der Vorhersagen (`m1_pred`), d.$\,$h. die ersten paar Vorhersagen.
 
 
 
@@ -466,18 +466,18 @@ Das Modell erzielte einen Score von *0.55521*.
 
 
 
-### Fazit
+
 
 Diese Fallstudie hat ein einfaches Prognosemodell vorgestellt.
 Sicherlich gibt es viele Ansätze, dieses Modell zu verbessern.
 Hier sind einige Fragen, die Sie sich dazu stellen können:
 
-- Welche Prädiktoren sollte ich in das Modell aufnehmen?
+- Welche UV sollte ich in das Modell aufnehmen?
 - Wie gehe ich mit fehlenden Werten um?
-- Wenn ein Prädiktor schief ist, sollte ich ihn dann log-transformieren?
-- Vielleicht sollte man manche Prädiktoren quadrieren?
+- Wenn eine UV schief ist, sollte ich ihn dann log-transformieren?
+- Vielleicht sollte man manche UV quadrieren?
 - Wie gehe ich mit nominalskalierten Variablen um, wenn diese viele Stufen haben?
-- ...
+- …
 
 Viel Spielraum für Ihre Kreativität!
 

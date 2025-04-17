@@ -172,7 +172,7 @@ cov_xy <- cov(d$y, d$x)
 
 Anton, Bert, Carl und Daniel haben ihre Statistikklausur zurückbekommen.
 Die Lernzeit $X$ scheint mit der erreichten Punktzahl $Y$ (0-100, je mehr desto besser) zusammenzuhängen.^[[🧑‍🎓]{.content-visible when-format="html"}  Typisches Lehrerbeispiel!]
-Gar nicht so schlecht ausgefallen wie gedacht ..., s. @tbl-noten2. $\square$
+Gar nicht so schlecht ausgefallen wie gedacht …, s. @tbl-noten2. $\square$
 :::
 
 ```{r}
@@ -209,7 +209,8 @@ ggplot(d) +
   geom_hline(yintercept = mean(d$y), linetype = "dashed") +
   geom_rect(aes(xmin = x, xmax = x_avg, ymin = y, ymax = y_avg,
                 fill = factor(cov_sign)),
-            alpha = .5) +
+            alpha = .7, color = "grey40") +
+  #geom_rect(xmin = mean (d$x), xmax = 67, ymax = mean(d$y), ymin = 50) +
   labs(x = "Lernzeit",
        y = "Punkte (0-100)",
        fill = "Vorzeichen") + 
@@ -223,7 +224,7 @@ ggplot(d) +
   annotate("label", x = -Inf, y = Inf, 
            label = "Q4: -", hjust = "left", vjust = "top") +
     geom_point(size = 2, color = "black") +
-  scale_fill_okabeito() +
+  scale_fill_manual(values = c("black", orange)) +
   theme(
     legend.position = c(0.95, 0.05),  # Adjust these values to position the legend
     legend.justification = c(1, 0)    # 1 = right, 0 = bottom
@@ -258,8 +259,8 @@ im rechten Diagramm ist es umgekehrt (blau, negativ überwiegt).
 #| layout: [[45,-10, 45], [100]]
 #| out-width: 80%
 #| fig-subcap: 
-#|   - Positive Vorzeichen (Quadranten 1 und 3) überwiegen, was in einer positiven Kovarianz resultiert
-#|    - Negative Vorzeichen (Quadranten 2 und 4) überwiegen, was in einer negativen Kovarianz resultiert
+#|   - Positive Vorzeichen (Quadranten rechts-oben und links-unten) überwiegen, was in einer positiven Kovarianz resultiert
+#|    - Negative Vorzeichen (Quadranten links-oben und rechts-unten) überwiegen, was in einer negativen Kovarianz resultiert
 #| echo: false
 
 ## Positive correlation
@@ -415,7 +416,8 @@ points1 <- data.frame(
 )
 
 cor.rect.plot(y = points1$y, x = points1$x,
-              xlab = "X", ylab = "Y")
+              xlab = "X", ylab = "Y",
+              col = c(orange, "grey40"))
 
 # perfect correlation
 points2 <- data.frame(
@@ -424,7 +426,8 @@ points2 <- data.frame(
 )
 
 cor.rect.plot(y = points2$y, x = points2$x,
-              xlab = "X", ylab = "Y")
+              xlab = "X", ylab = "Y",
+              col = c(orange, "grey40"))
 
 # perfect negative correlation
 points3 <- data.frame(
@@ -464,7 +467,7 @@ $$\begin{aligned}
 ```{r}
 #| echo: false
 #| label: fig-covnull
-#| fig-cap: "Wenn die Kovarianz 0 ist, gleichen sich die Abweichungsrechtecke auf 0 aus; d.h. , ihre Fläche addiert  zu 0."
+#| fig-cap: "Wenn die Kovarianz 0 ist, gleichen sich die Abweichungsrechtecke auf 0 aus; d.$\,$h. , ihre Fläche addiert  zu 0."
 #| layout: [[45,-10, 45], [100]]
 #| fig-asp: 0.8
 #| fig-subcap: 
@@ -482,7 +485,8 @@ points1 <- data.frame(
 #cor(points1$x, points1$y)
 
 cor.rect.plot(y = points1$y, x = points1$x,
-              xlab = "X", ylab = "Y")
+              xlab = "X", ylab = "Y",
+              col = c(orange, "grey40"))
 
 
 # simulated data, uncorrelated
@@ -499,7 +503,8 @@ data.df <- data.frame(data)
 # p1
 
 cor.rect.plot(y = data.df$X1, x = data.df$X2,
-              xlab = "X", ylab = "Y")
+              xlab = "X", ylab = "Y",
+              col = c(orange, "grey40"))
 ```
 
 
@@ -510,8 +515,8 @@ cor.rect.plot(y = data.df$X1, x = data.df$X2,
 ### Die Kovarianz ist schwer zu interpretieren
 
 Die Kovarianz hat den Nachteil, dass sie abhängig ist von der Skalierung.
-So steigt die Kovarianz z.B. um den Faktor 100, wenn man eine Variable (z.B. Einkommen) anstelle von Euro in Cent bemisst.
-Das ist nicht wünschenswert, denn der Zusammenhang zwischen z.B. Einkommen und Lebenszufriedenheit ist unabhängig davon, 
+So steigt die Kovarianz z.$\,$B. um den Faktor 100, wenn man eine Variable (z.$\,$B. Einkommen) anstelle von Euro in Cent bemisst.
+Das ist nicht wünschenswert, denn der Zusammenhang zwischen z.$\,$B. Einkommen und Lebenszufriedenheit ist unabhängig davon, 
 ob man Einkommen in Euro, Cent oder Dollar misst.
 Außerdem hat die Kovarianz keinen Maximalwert, der einen perfekten Zusammenhang anzeigt.
 Insgesamt ist die Kovarianz schwer zu interpretieren und wird in der praktischen Anwendung nur wenig verwendet.
@@ -535,14 +540,14 @@ Die Korrelation berechnet sich wie folgt:
 
 
 Teilt man nämlich alle $x_i$ bzw. $y_i$ durch ihre Standardabweichung,
-so führt man mit $X$ bzw. $Y$ eine z-Transformation durch.
+so führt man mit $X$ bzw. $Y$ eine *z*-Transformation durch.
 Daher kann man den Korrelationskoeffizienten $r$ definieren wie in @def-r.
 
 
 :::{#def-r}
 ### Korrelationskoeffizient $r$
 
-Der Korrelationskoeffizient $r$ (nach Pearson) ist definiert als das mittlere Produkt der z-Wert-Paare, s. @eq-r-def, vgl. @cohen_applied_2003. Er ist ein Maß des linearen Zusammenhangs zweier metrischer Variablen. Der Wertebereich ist $[-1;1]$, wobei 0 keinen Zusammenhang anzeigt und $|r|=1$ perfekten Zusammenhang. $\square$
+Der Korrelationskoeffizient $r$ (nach Pearson) ist definiert als das mittlere Produkt der *z*-Wert-Paare, s. @eq-r-def, vgl. @cohen_applied_2003. Er ist ein Maß des linearen Zusammenhangs zweier metrischer Variablen. Der Wertebereich ist $[-1;1]$, wobei 0 keinen Zusammenhang anzeigt und $|r|=1$ perfekten Zusammenhang. $\square$
 :::
 
 $$r_{xy}=\frac{1}{n}\sum_{i=1}^n z_{x_i} z_{y_i}$${#eq-r-def}
@@ -777,10 +782,10 @@ Falls der Datensatz im Unterordner mit Namen "Mein_Unterordner" liegt, so würde
 mariokart <- read.csv("Mein_Unterordner/mariokart.csv")
 ```
 
-Man beachte, dass solche sog. relativen Pfade, wie `Mein_Unterordner/`, die relativ zu Ihrem Arbeitsverzeichnis, d.h. Ihr Projektverzeichnis in R-Studio, liegen, *nicht* mit einem Schrägstrich (Slash) beginnen.
+Man beachte, dass solche sog. relativen Pfade, wie `Mein_Unterordner/`, die relativ zu Ihrem Arbeitsverzeichnis, d.$\,$h. Ihr Projektverzeichnis in R-Studio, liegen, *nicht* mit einem Schrägstrich (Slash) beginnen.
 
 Falls Sie die Daten nicht auf Ihrem Computer haben,
-können Sie sie bequem von z.B. der Webseite von [Vincent Arel-Bundock](https://vincentarelbundock.github.io/Rdatasets) herunterladen:
+können Sie sie bequem von z.$\,$B. der Webseite von [Vincent Arel-Bundock](https://vincentarelbundock.github.io/Rdatasets) herunterladen:
 
 ::: {.content-visible when-format="html"}
 
@@ -824,7 +829,7 @@ mariokart %>%
 
 Achtung, Namensverwechslung!
 Es kann vorkommen, dass Sie zwei R-Pakete geladen haben, 
-in denen es jeweils z.B. eine Funktion mit Namen `select` gibt.
+in denen es jeweils z.$\,$B. eine Funktion mit Namen `select` gibt.
 R wird in dem Fall diejenige Funktion verwenden, 
 deren Paket Sie als letztes gestartet haben.
 Das kann dann das falsche `select` sein, wie es mir oben in der Syntax passiert ist.
@@ -969,7 +974,6 @@ Schauen Sie sich auch mal auf der Webseite *Datenwerk*^[<https://sebastiansauer.
 5. [korr01](https://sebastiansauer.github.io/Datenwerk/posts/korr01/korr01.html)
 5. [korr02](https://sebastiansauer.github.io/Datenwerk/posts/korr02/korr02.html)
 
-## Quiz zur deskriptiven Statistik
 
 :::: {layout="[ 80, 20 ]"}
 ::: {#first-column}

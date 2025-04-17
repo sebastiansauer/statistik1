@@ -16,6 +16,7 @@ library(easystats)
 library(plotly)
 library(scales)
 library(ggpubr)
+library(ggpattern)
 ```
 
 
@@ -53,9 +54,9 @@ source("_common.R")
 
 ### Benötigte R-Pakete und Daten
 
-Neben den üblichen Paketen `tidyverse` und `easystats` 
-benötigen Sie in diesem Kapitel noch `DataExplorer` 
-und optional `ggpubr` und `ggstatsplot`.
+Neben den üblichen Paketen `tidyverse` [@wickham2019a] und `easystats` [@ludecke2022]
+benötigen Sie in diesem Kapitel noch `DataExplorer` [@cui2024]
+und optional `ggpubr` [@kassambara2023] und `ggstatsplot` [@patil2021].
 
 ```{r}
 #| message: false
@@ -110,7 +111,7 @@ plot(qr)
 
 ::: {.content-visible when-format="html"}
 
-![Große Aufgaben warten ... [@imgflip_kermit]](img/kermit-curse.gif){width=50%}
+![Große Aufgaben warten … [@imgflip_kermit]](img/kermit-curse.gif){width=50%}
 
 :::
 
@@ -233,7 +234,7 @@ Wie man (nicht) sieht, wird es langsam unübersichtlich.
 Offenbar kann man in einem Bild nicht beliebig viele Variablen sinnvoll reinquetschen.
 Die "Dimensionalität" eines Diagramms hat ihre Grenzen,
 vielleicht bei vier bis sechs Variablen.
-Möchten wir den Zusammenhang von vielen Variablen, z.B. mehr als mher, verstehen,
+Möchten wir den Zusammenhang von vielen Variablen, z.$\,$B. mehr als mher, verstehen,
 kommen wir mit Bildern nicht weiter.
 Dann brauchen wir andere Werkzeuge: Statistik, komm zu Hilfe.
 Bei klaren Zusammenhängen und wenig Variablen braucht man keine (aufwändige) Statistik.
@@ -252,11 +253,12 @@ mariokart |>
   ggplot(aes(x = duration, y = total_pr, 
              color = cond, size = wheels, 
              shape = stock_photo)) +
-  geom_point()
+  geom_point() +
+  scale_color_manual(values = c(yellow, blue)) 
+
 ```
 
-
-
+<!-- TODO: Eine Legende für "cond" und "stock_photo" -->
 
 :::{#exr-anz-dims}
 Wie viele Variablen sind in @fig-many-dims dargestellt?^[5]
@@ -305,7 +307,7 @@ wie häufig jede Ausprägung von $X$ ist. $\square$
 @tbl-wheels-n zeigt die Häufigkeitsverteilung von `cond` (condition, also der Zustand des Artikels, neu oder gebraucht) 
 aus dem Datensatz `mariokart`.
 Die Variable hat 5 Ausprägungen; 
-z.B. kommt die Ausprägung `new`  59 mal vor. $\square$
+z.$\,$B. kommt die Ausprägung `new`  59 mal vor. $\square$
 :::
 
 
@@ -470,15 +472,15 @@ mariokart |>
 ```
 
 Die Lösung: Wir reduzieren die Anzahl der Ausprägungen, in dem wir auf ganze Dollar runden.
-Oder, um noch weniger Ausprägungen zu bekommen, können wir einfach Gruppen definieren, z.B.
+Oder, um noch weniger Ausprägungen zu bekommen, können wir einfach Gruppen definieren, z.$\,$B.
 
 - Gruppe 1: 0-5 Dollar
 - Gruppe 2: 6-10 Dollar
 - Gruppe 3: 11-15 Dollar
-- ...
+- …
 
 
-In @fig-balken-hist (rechts) sind z.B. die Ausprägungen des Verkaufspreises (`total_pr`) in Gruppen der Breite von 5 Dollar aufgeteilt worden. 
+In @fig-balken-hist (rechts) sind z.$\,$B. die Ausprägungen des Verkaufspreises (`total_pr`) in Gruppen der Breite von 5 Dollar aufgeteilt worden. 
 Zusätzlich sind noch die einzelnen Werte als schwarze Punkte gezeigt.
 
 ```{r}
@@ -638,16 +640,16 @@ so kann Rauschen (Zufallsschwankung) besser ausgeblendet werden. (Mit *Dichte* i
 
 ```{r}
 #| echo: false
-#| fig-cap: "Histogramm (graue Balken) und Dichtediagramm (orange Linie) für `total_pr`"
+#| fig-cap: "Histogramm und Dichtediagramm (Linie) für `total_pr`"
 #| label: fig-balken-total-pr-hist-dens
 #| out-width: 75%
 
 m1a |> 
   ggplot(aes(x = total_pr, y = ..density..)) +
-  geom_histogram(binwidth = 5, alpha = .7, center = 0)  +
+  geom_histogram(binwidth = 5, alpha = .7, center = 0, fill = "grey20")  +
   #geom_dotplot(binwidth = 1, method = "histodot") +
-  geom_density(color = okabeito_colors()[1], size = 2)
-  #geom_dotplot(binwidth = 1, method = "histodot")
+  geom_density(color = yellow, size = 2)
+  #geom_dotplot(binwidth = 1, method = "histodot") +
 ```
 
 
@@ -659,7 +661,7 @@ Erstellen Sie das Diagramm @fig-de-hist-density, rechtes Teildiagramm!^[Grob ges
 
 
 
-Verteilungen unterscheiden sich z.B. einerseits in ihrem "typischen" oder "mittleren" Wert (vgl. @sec-lage) und anderseits in ihrer Streuung  (vgl. @sec-streuung).
+Verteilungen unterscheiden sich z.$\,$B. einerseits in ihrem "typischen" oder "mittleren" Wert (vgl. @sec-lage) und anderseits in ihrer Streuung  (vgl. @sec-streuung).
 (Diagramme von) Verteilungen können symmetrisch oder schief (nicht symmetrisch) sein, s. @fig-symm-schief.
 
 
@@ -730,7 +732,7 @@ nd wird daher hier besonders uhervorgehoben.
 Eine Normalverteilung sehen Sie in @fig-symm-schief, links. 
 Die Normalverteilung ist in der Statistik von hoher Bedeutung, 
 da sie sich unter (recht häufigen) Bedingungen zwangsläufig ergeben muss.
-Sie hat u.a. folgende Eigenschaften:
+Sie hat u.$\,$a. folgende Eigenschaften:
 
 - symmetrisch
 - glockenförmig
@@ -884,24 +886,35 @@ Dazu betrachten Sie wieder die `mariokart`-Daten, s. @fig-zshg-nom1.
 #| fig-subcap: 
 #|   - "starker Zusammenhang"
 #|   - "schwacher Zusammenhang"
-#| layout: [[45,-10, 45], [100]]
+#| layout: [[45,-5, 45], [100]]
 #| 
+
+mario_bar1 <- 
 mariokart %>% 
-  ggplot(aes(x = cond, fill = stock_photo)) +
-  geom_bar(position = "fill") +
+  ggplot(aes(x = cond, fill = stock_photo, pattern = stock_photo)) +
+  geom_bar_pattern(
+    position = "fill", 
+    pattern_fill = "grey30",
+    pattern_color = "black") +
   scale_fill_okabeito() +
   theme(legend.position = "bottom") +
   theme_minimal() +
   theme_large_text() +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  scale_pattern_manual(values = c("yes" = "stripe", "no" = "circle")) +
+  labs(fill = "Group", pattern = "Stock photo") # Customize legend titles
 
+mario_bar2 <- 
 mariokart %>% 
   ggplot(aes(x = wheels > 0, fill = stock_photo)) +
   geom_bar(position = "fill") +
-  scale_fill_okabeito() +
+  scale_fill_manual(values = c(yellow, blue)) +
   theme(legend.position = "bottom") +
   theme_minimal() +
   theme_large_text()
+
+mario_bar1
+mario_bar2
 ```
 
 Tatsächlich: Es findet sich ein Zusammenhang zwischen der Tatsache, ob dem versteigerten Produkt ein Foto bei lag und ob es neuwertig oder gebraucht war (@fig-zshg-nom1, links).
@@ -919,11 +932,11 @@ Bildlich gesprochen: Unterscheiden sich die "Füllhöhe" in den Diagrammen,
 so gibt es einen Unterschied hinsichtlich "Foto ist dabei" zwischen 
 den beiden Gruppen (linker vs. rechter Balken).
 Unterscheiden sich die Anteile in den Gruppen (neuwertige vs. gebrauchte Spiele), 
-so spielt z.B. die Variable "Foto dabei" offenbar eine Rolle. 
+so spielt z.$\,$B. die Variable "Foto dabei" offenbar eine Rolle. 
 Dann hängen Neuwertigkeit und "Foto dabei" also zusammen!
 
 So können Sie sich in R ein gefülltes Balkendiagramm ausgeben lassen, 
-z.B. mit `plot_bar(mariokart, by = "cond")` (Paket `DataExplorer`). 
+z.$\,$B. mit `plot_bar(mariokart, by = "cond")` (Paket `DataExplorer`). 
 Diese Darstellung eignet sich, 
 um Zusammenhänge zwischen zwei zweistufigen nominalskalierten Variablen zu verbildlichen. 
 Die verschiedenen Werte der Füllfarbe werden den Stufen der Variablen `cond` zugewiesen, s. @lst-plot-bar.
@@ -967,7 +980,7 @@ mariokart |>
 
 **Lösung**
 
-`wheels` ist als metrische Variable (`int`: Integer, d.h. Ganzzahl) 
+`wheels` ist als metrische Variable (`int`: Integer, d.$\,$h. Ganzzahl) 
 formatiert im Datensatz `mariokart`. 
 Wir müssen Sie zunächst als Faktorvariable umformatieren, 
 damit R sie als nominal skalierte Variable erkennt. $\square$
@@ -1036,7 +1049,7 @@ mariokart %>%
 
 Lässt sich die Beziehung zwischen zwei Variablen mit einer Geraden visualisieren,
 so spricht man von einem linearen Zusammenhang.
-Ändert man eine der beiden Variablen um einen bestimmten Wert (z.B. 1), so ändert sich die andere um einen proportionalen Wert (z.B. 0.5). $\square$
+Ändert man eine der beiden Variablen um einen bestimmten Wert (z.$\,$B. 1), so ändert sich die andere um einen proportionalen Wert (z.$\,$B. 0.5). $\square$
 :::
 
 Natürlich könnte man auch nicht-lineare Zusammenhänge untersuchen,
@@ -1307,7 +1320,7 @@ Und wie man in @fig-zshg-nom1 sieht, ist der Anteil der Spiele mit Foto bei den 
 
 
 Eine typische Analysefrage ist, ob sich zwei Gruppen hinsichtlich einer metrischen Zielvariablen deutlich unterscheiden. 
-Genauer gesagt untersucht man z.B. oft, ob sich die Mittelwerte der beiden Gruppen zwischen der Zielvariablen deutlich unterscheiden. 
+Genauer gesagt untersucht man z.$\,$B. oft, ob sich die Mittelwerte der beiden Gruppen zwischen der Zielvariablen deutlich unterscheiden. 
 Das hört sich abstrakt an? 
 Am besten wir schauen uns einige Beispiele an, s. @fig-compare-groups1.
 
@@ -1353,7 +1366,7 @@ die man mit Sachverstand zum Forschungsgegenstand beantworten muss.
 # fig-cap: "Unterschiede zwischen zwei Gruppen: Metrische Y-Variable, nominale X-Variable"
 #| fig-subcap:
 #|   - "Y: Abschlusspreis, X: Zustand"
-#|   - "Y: Abschlusspreis, X: Photo dabei?"
+#|   - "Y: Abschlusspreis, X: Foto dabei?"
 #| label: fig-compare-groups
 #| layout-ncol: 2
 mariokart %>% 
@@ -1406,7 +1419,7 @@ Schauen wir uns die "Anatomie" des Boxplots näher an:
 2. Die *Enden der Box* zeigen das 1. Quartil (41) bzw. das 3. Quartil (54). Damit zeigt die Breite der Box die Streuung der Verteilung an, genauer gesagt die Streuung der inneren 50% der Beobachtungen. Je breiter die Box, desto größer die Streuung. Die Breite der Box nennt man auch den *Interquartilsabstand* (IQR).
 3. Die "*Antennen*" des Boxplots zeigen die Streuung in den kleinsten 25% der Werte (linke Antenne) bzw. die Streuung der größten 25% der Werte (rechte Antennen). Je länger die Antenne, desto größer die Streuung.
 4. Falls es aber *Extremwerte* gibt, so sollten die lieber einzeln, separat, außerhalb der Antennen gezeigt werden. Daher ist die Antennenlänge auf die 1,5-fache Länge der Box beschränkt. Werte die außerhalb dieses Bereichs liegen (also mehr als das 1,5-fache der Boxlänge von Q3 entfernt sind) werden mittels eines Punktes dargestellt.
-5. Liegt der Median-Strich in der Mitte der Box, so ist die Verteilung *symmetrisch* (bezogen auf die inneren 50% der Werte), liegt der Median-Strich nicht in der Mitte der Box, so ist die Verteilung nicht symmetrisch (d.h. sie ist *schief*). Gleiches gilt für die Antennenlängen: Sind die Antennen gleich lang, so ist der äußere Teil der Verteilung symmetrisch, andernfalls schief.
+5. Liegt der Median-Strich in der Mitte der Box, so ist die Verteilung *symmetrisch* (bezogen auf die inneren 50% der Werte), liegt der Median-Strich nicht in der Mitte der Box, so ist die Verteilung nicht symmetrisch (d.$\,$h. sie ist *schief*). Gleiches gilt für die Antennenlängen: Sind die Antennen gleich lang, so ist der äußere Teil der Verteilung symmetrisch, andernfalls schief.
 
 
 :::{#exm-Boxplots}
@@ -1657,7 +1670,7 @@ Mehr Informationen zu `{DataExplorer}` finden Sie [hier](https://boxuancui.githu
 
 
 Eine weitere nützliche Art von Visualisierung sind *Karten*, *3D-Bilder* und *Animationen.*
-So zeigt z.B. @fig-le-world die Veränderung der Lebenserwartung (in Jahren)
+So zeigt z.$\,$B. @fig-le-world die Veränderung der Lebenserwartung (in Jahren)
 über die letzten Dekaden.^[Der Quellcode der Animation ist hier  zu finden: <https://gist.github.com/rafapereirabr/0d68f7ccfc3af1680c4c8353cf9ab345>.]
 
 ![Animation zur Veränderung der Lebenserwartung](img/life-exp-world.gif){#fig-le-world width="75%"}
@@ -1725,7 +1738,7 @@ mariokart %>%
 
 Möchte man Mittelwerte vergleichen, so sind Boxplots nicht ideal, 
 da diese ja nicht den Mittelwert, sondern den *Median* herausstellen.
-Eine Abhilfe (also eine Darstellung des Mittelwerts) schafft man (z.B.) mit `ggpubr` und der Funktion `ggviolin`,
+Eine Abhilfe (also eine Darstellung des Mittelwerts) schafft man (z.$\,$B.) mit `ggpubr` und der Funktion `ggviolin`,
 s. @fig-comp-means-ggpubr.
 
 
@@ -1792,17 +1805,20 @@ Möchte man auf die Kennzahlen verzichten, so nutzt man den Schalter `results.su
 
 Einige Überlegungen zur Farbwahl findet sich bei @wilke_fundamentals_2019, Kap. 4.
 Die Farbpalette von Okabe und Ito ist [vgl. @ichihara_color_2008] empfehlenswert, 
-da sie auch bei Schwarz-Weiß-Druck und bei Sehschwächen die Farben noch recht gut unterscheiden lässt, s. @fig-okabe.
+da sie bei Sehschwächen die Farben noch recht gut unterscheiden lässt, s. @fig-okabe.
+Möchte man sie für Schwarz-Weiß-Druck verwenden, muss man händisch eine helle Farbe und eine dunkle Farbe als Kontrast aussuchen.
+
+
 
 ```{r}
 #| label: fig-okabe
 #| out-width: 50%
-#| fig-cap: "Die Farbskala von Okabe und Ito: Geeignet bei Farbseh-Schwächen und für Schwarz-Weiß-Druck. Außerdem nett anzuschauen."
+#| fig-cap: "Die Farbpalette von Okabe und Ito: Geeignet bei Farbseh-Schwächen . Außerdem nett anzuschauen."
 
 mariokart %>% 
   filter(total_pr < 100) %>% 
   ggboxplot(x = "cond", y = "total_pr", fill = "cond") +
-  scale_fill_okabeito()
+  scale_fill_manual(values = c(blue, yellow))
 ```
 
 

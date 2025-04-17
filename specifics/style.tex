@@ -7,6 +7,8 @@
 \usepackage{listings}
 \usepackage{fvextra}
 \usepackage[german]{csquotes}
+\usepackage{tocloft}  % more space in TOC
+
 
 
 \definecolor{ycol}{RGB}{230,159,0}
@@ -27,5 +29,37 @@
 
 \raggedbottom
 \flushbottom
+
+
+\setlength{\cftchapnumwidth}{4em} % Increase this to give more room to the number
+
+
+
+% rm page number of "part pages", added 2025-04-17
+\makeatletter
+\def\@part[#1]#2{%
+  \ifnum \c@secnumdepth > -1
+    \refstepcounter{part}%
+    \addcontentsline{toc}{part}{\thepart\hspace{1em}#1}%
+  \else
+    \addcontentsline{toc}{part}{#1}%
+  \fi
+  \markboth{}{}%
+  \clearpage
+  \thispagestyle{empty} % <-- removes page number
+  {\centering
+    \interlinepenalty \@M
+    \normalfont
+    \ifnum \c@secnumdepth > -1
+      \huge\bfseries \partname~\thepart
+      \par\nobreak
+      \vskip 20pt
+    \fi
+    \Huge \bfseries #2\par
+    \vskip 40pt
+  }
+  \@afterheading
+}
+\makeatother
 
 

@@ -19,7 +19,7 @@
 
 - Sie können Regressionsmodelle für Forschungsfragen mit binärer, nominaler und metrischer UV erläutern und in R anwenden.
 - Sie können Interaktionseffekte in Regressionsmodellen erläutern und in R anwenden.
-- Sie können den Anwendungszweck von Zentrieren und z-Transformationen zur besseren Interpretation von Regressionsmodellen erläutern und in R anwenden.
+- Sie können den Anwendungszweck von Zentrieren und *z*-Transformationen zur besseren Interpretation von Regressionsmodellen erläutern und in R anwenden.
 - Sie können Modelle nutzen, um Vorhersagen anhand neuer Daten zu erstellen.
 
 
@@ -318,12 +318,12 @@ In den Wetterdaten wäre Jahr=0 Christi Geburt.
 Da unsere Wetteraufzeichnung gerade mal ca. 150 Jahre in die Vergangenheit reicht,
 ist es vollkommen vermessen, dass Modell 2000 Jahre in die Vergangenheit zu extrapolieren,
 ganz ohne, dass wir dafür Daten haben, s. <https://xkcd.com/605/>.
-Sinnvoller ist es da, z.B. einen *Referenzwert* festzulegen, etwa 1950.
+Sinnvoller ist es da, z.$\,$B. einen *Referenzwert* festzulegen, etwa 1950.
 Wenn wir dann von allen Jahren 1950 abziehen, wird das Jahr 1950 zum neuen Jahr Null.
 Damit bezöge sich der Achsenabschnitt auf das Jahr 1950,
 was Sinn macht, denn für dieses Jahr haben wir Daten.
 Hat man nicht einen bestimmten Wert, der sich als Referenzwert anbietet,
-so ist es üblich, z.B. den Mittelwert (der UV) als Referenzwert zu nehmen.
+so ist es üblich, z.$\,$B. den Mittelwert (der UV) als Referenzwert zu nehmen.
 Diese Transformation bezeichnet man als *Zentrierung* (engl. centering) der Daten, s. @def-zentrieren.
 
 
@@ -350,7 +350,7 @@ wetter %>%
   summarise(mean(year))
 ```
 
-Die Steigung (d.h. der Regressionskoeffizient für `year_c`) bleibt unverändert,
+Die Steigung (d.$\,$h. der Regressionskoeffizient für `year_c`) bleibt unverändert,
 nur der Achsenabschnitt ändert sich, s. @tbl-lm_wetter1_zentriert.
 
 ```{r}
@@ -380,7 +380,7 @@ r2(lm_wetter1_zentriert)  # aus `{easystats}`
 ```
 
 Viel Varianz des Wetters erklärt das Modell mit `year_c` aber nicht. (`year` und `year_c` sind gleich stark mit `temp` korreliert, daher wird sich die Modellgüte nicht unterscheiden.).
-Macht auch Sinn: Abgesehen von der Jahreszahl spielt z.B. die Jahreszeit eine große Rolle für die Temperatur. Das haben wir nicht berücksichtigt.
+Macht auch Sinn: Abgesehen von der Jahreszahl spielt z.$\,$B. die Jahreszeit eine große Rolle für die Temperatur. Das haben wir nicht berücksichtigt.
 
 
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"}  Wie warm ist es laut unserem Modell dann im Jahr 2051?
@@ -908,19 +908,36 @@ parameters(lm_wetter_month_factor) |>
 
 
 
-Sehr schön! Jetzt haben wir eine Referenzgruppe (Monat 1, d.h. Januar) und 11 Unterschiede zum Januar, s. @fig-wetter-month, rechts.
+Sehr schön! Jetzt haben wir eine Referenzgruppe (Monat 1, d.$\,$h. Januar) und 11 Unterschiede zum Januar, s. @fig-wetter-month, rechts.
 
 
 ```{r}
 #| label: fig-wetter-month
 #| fig-cap: "Niederschlagsmengen nach Monaten"
+#| echo: false
 #| layout-ncol: 2
 #| fig-subcap: 
 #|   - "Regressionsgewichte"
 #|   - "Mittelwerte plus SD"
 parameters(lm_wetter_month_factor) |> plot()
-ggerrorplot(data = wetter, x = "month_factor", y = "precip",
-            desc_stat = "mean_sd")
+
+
+wetter_summ2 <- wetter %>%
+  group_by(month_factor) %>%
+  summarise(
+    mean_precip = mean(precip, na.rm = TRUE),
+    sd_precip = sd(precip, na.rm = TRUE),
+    n_precip = n() # Optional: for standard error calculation
+  )
+
+ggerrorplot(data = wetter_summ2,
+            x = "month_factor",
+            y = "mean_precip",
+            ymin = "mean_precip - sd_precip",
+            ymax = "mean_precip + sd_precip",
+            ylab = "Niedeschlag",
+            xlab = "Monat")
+
 ```
 
 
@@ -959,8 +976,7 @@ wetter_month_1_7 <-
 ```
 
 
->    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Ich muss mal kurz auf eine Sache hinweisen...
-
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Ich muss mal kurz auf eine Sache hinweisen …
 
 Eine Faktorvariable ist einer der beiden Datentypen in R, die sich für nominalskalierte Variablen anbieten: 
 Textvariablen (`character`) und Faktor-Variablen (`factor`).
@@ -982,7 +998,7 @@ geschlecht_factor
 
 :::{#exm-factor2}
 ### Filtern verändert die Faktorstufen nicht
-Wenn Sie von der Faktorvariablen^[synonym: nominalskalierte Variable] `geschlecht` das 3. Element (`"m"`) herausfiltern, so dass z.B. nur die ersten beiden Elemente übrig bleiben mit allein der Ausprägung `"f"`, merkt sich R trotzdem, dass es *zwei* Faktorstufen gibt (`"f"` und `"m"`).
+Wenn Sie von der Faktorvariablen^[synonym: nominalskalierte Variable] `geschlecht` das 3. Element (`"m"`) herausfiltern, so dass z.$\,$B. nur die ersten beiden Elemente übrig bleiben mit allein der Ausprägung `"f"`, merkt sich R trotzdem, dass es *zwei* Faktorstufen gibt (`"f"` und `"m"`).
 
 Genaus so ist es, wenn Sie aus `wetter` nur die Monate  `"1"` und `"7"` herausfiltern:
 R merkt sich, dass es 12 Faktorstufen gibt. 
@@ -1003,7 +1019,7 @@ Wie spezifiziert man jetzt das lineare Modell? $\square$
 :::
 
 Hat man mehrere ("multiple") X-Variablen (Prädiktoren, unabhängige Variablen), 
-so trennt man sich mit einem Plus-Zeichen in der Regressionsformel, z.B. `temp ~ year_c + month`.
+so trennt man sich mit einem Plus-Zeichen in der Regressionsformel, z.$\,$B. `temp ~ year_c + month`.
 
 
 :::{#def-mult-regr}
@@ -1026,7 +1042,7 @@ Die Veränderung der monatlichen Temperatur (10-Jahres-Mittel) ist in @fig-wette
 
 Das Pluszeichen hat in der Modellgleichung (synonym: Regressionsformel) *keine* arithmetische Funktion. 
 Es wird nichts addiert.
-In der Modellgleichung sagt das Pluszeichen nur "und noch folgende UV...". 
+In der Modellgleichung sagt das Pluszeichen nur "und noch folgende UV …". 
 
 
 Die obige Modellgleichung liest sich also so:
@@ -1082,12 +1098,12 @@ predict(lm_year_month, newdata = neue_daten)
 
 
 
-Alle Regressionskoeffizienten beziehen sich auf den Y-Wert *unter der Annahme, dass alle übrigen Prädiktoren den Wert Null (bzw. Referenzwert) aufweisen*.
+Alle Regressionskoeffizienten beziehen sich auf die AV *unter der Annahme, dass alle übrigen UV den Wert Null (bzw. Referenzwert) aufweisen*.
 
 
 
 
-Visualisieren wir uns die geschätzten Erwartungswert pro Prädiktorwert, 
+Visualisieren wir uns die geschätzten Erwartungswert pro Wert der UV, 
 s. @fig-lm3: `plot(estimate_expectation(lm_year_month))`
 
 ```{r plot-lm3}
@@ -1104,7 +1120,9 @@ ggplot(wetter_month_1_7) +
   geom_point2(alpha = .1) +
   scale_color_okabeito() +
   geom_abline(slope = coef(lm_year_month)[2],
-              intercept = coef(lm_year_month)[1], color = okabeito_colors()[1], size = 2) +
+              intercept = coef(lm_year_month)[1], 
+              color = okabeito_colors()[1], size = 2,
+              linetype = "1111") +
   geom_abline(slope = coef(lm_year_month)[2],
               intercept = coef(lm_year_month)[1] + coef(lm_year_month)[3], color = okabeito_colors()[2], size = 2) +
   annotate("label", x = Inf,
@@ -1175,6 +1193,7 @@ ggplot(wetter_month_1_7) +
   aes(x = year_c, 
       y = precip, 
       color = month_factor,
+      linetype = month_factor,
       group = month_factor) +
   geom_point(alpha = .1) +  # Removed geom_point2 (assuming it was a typo)
   geom_smooth(method = "lm", size = 2, fullrange = TRUE) +
@@ -1232,9 +1251,9 @@ Im Juli nahm der Niederschlag ab, im Januar zu. $\square$
 :::
 
 Liegt ein Interaktionseffekt vor, 
-kann man nicht mehr von "dem" (statistischen) Effekt eines Prädiktors (auf die Y-Variable) sprechen.
+kann man nicht mehr von "dem" (statistischen) Effekt einer UV (auf die AV) sprechen.
 Vielmehr muss man unterscheiden: 
-Je nach Gruppe (z.B. Monat) unterscheidet der Effekt des Jahres auf die Niederschlagsmenge.
+Je nach Gruppe (z.$\,$B. Monat) unterscheidet der Effekt des Jahres auf die Niederschlagsmenge.
 ("Effekt" ist hier immer statistisch, nie kausal gemeint.)
 
 ::: {.content-visible when-format="html"}
@@ -1269,14 +1288,14 @@ Die Regressionsgleichung lautet:
 
 
 :::{.callout-important}
-Der Achsenabschnitt gibt den Wert für Y an unter der Annahme, dass alle Prädiktoren den Wert Null aufweisen. $\square$
+Der Achsenabschnitt gibt den Wert der AV an unter der Annahme, dass alle UV den Wert Null aufweisen. $\square$
 :::
 
-Wenn eine Beobachtung in allen X-Variablen den Wert 0 hat, 
+Wenn eine Beobachtung in allen UV den Wert 0 hat, 
 so gibt der Achsenabschnitt  den Niederschlag für den Januar des Jahres 1951 an.
-Die Regressionskoeffizienten geben die Zunahme in Y an, 
-wenn der jeweilige Prädiktorwert um 1 steigt, 
-die übrigen Prädiktoren aber den Wert 0 aufweisen. 
+Die Regressionskoeffizienten geben die Zunahme in der AV an, 
+wenn der jeweilige Wert der UV um 1 steigt, 
+die übrigen UV aber den Wert 0 aufweisen. 
 
 
 
@@ -1374,7 +1393,7 @@ Im 3D-Raum wird die Regressionsgerade zu einer *Regressionsebene.*
 ![Winkel 3](img/3d_scatter3.png)
 
 
-Ein lineares Modell, `y ~ x1 + x2` mit zwei Prädiktoren im 3D-Raum.
+Ein lineares Modell, `y ~ x1 + x2` mit zwei UV im 3D-Raum.
 
 :::
 
@@ -1397,8 +1416,8 @@ plot(lm3d_expect)
 data(mariokart, package = "openintro")
 ```
 
-Grundsätzlich kann man viele Prädiktoren in ein (lineares) Modell aufnehmen.
-Betrachten wir z. B. folgendes lineares Modell mit zwei metrischen UV.
+Grundsätzlich kann man viele UV in ein (lineares) Modell aufnehmen.
+Betrachten wir z.$\,$B. folgendes lineares Modell mit zwei metrischen UV.
 
 ```{r}
 lm_mario_2uv <- lm(total_pr ~ start_pr + ship_pr, data = mariokart %>% filter(total_pr < 100))
@@ -1431,7 +1450,7 @@ Verkaufspreis <- t(outer(start_seq, ship_seq,
 
 
 Jedes der beiden Regressionsgewichte in `lm_mario_2uv` entspricht der Steigung in der beiden Achsen in @fig-mario-2uv-dyn,
-d.h. die Steigung für `start_pr` bzw. die Steigung für `ship_pr`.
+d.$\,$h. die Steigung für `start_pr` bzw. die Steigung für `ship_pr`.
 
 :::
 
@@ -1462,15 +1481,15 @@ Das Modell `lm_mario2v` mit 2 metrischen UV (und 1 metrische AV) als 3D-Diagramm
 ### Viele UV ins Modell?
 
 Wir könnten im Prinzip alle Variablen unserer Datentabelle 
-als Prädiktoren in das Regressionsmodell aufnehmen.
+als UV in das Regressionsmodell aufnehmen.
 Die Frage ist nur: Macht das Sinn?
 
-Hier sind einige Richtlinien, die helfen, welche Prädiktoren (und wie viele) 
-man in ein Modell aufnehmen sollte [@gelman_regression_2021], s. S. 199:
+Hier sind einige Richtlinien, die helfen, welche Variablen (und wie viele) 
+man als UV in ein Modell aufnehmen sollte [@gelman_regression_2021], s. S. 199:
 
-1. Man sollte alle Prädiktoren aufnehmen, von denen anzunehmen ist, dass Sie Ursachen für die Zielvariablen sind.
-2. Bei Prädiktoren mit starken (absoluten) Effekten kann es Sinn machen, ihre Interaktionseffekte auch mit in das Modell aufzunehmen.
-3. Prädiktoren mit kleinem Schätzbereich (`95 CI`) sollten tendenziell im Modell belassen werden, da sie die Modellgüte verbessern.
+1. Man sollte alle Variablen aufnehmen, von denen anzunehmen ist, dass Sie Ursachen für die Zielvariablen sind.
+2. Bei UV mit starken (absoluten) Effekten kann es Sinn machen, ihre Interaktionseffekte auch mit in das Modell aufzunehmen.
+3. UV, die vergleichsweise exakt geschätzt werden (der Bereich `95 CI` ist klein), sollten tendenziell im Modell belassen werden, da sie die Modellgüte verbessern.
 
 
 
@@ -1507,7 +1526,7 @@ Diesen Teil nennen wir Test-Sample, alles klar?
 #write_csv(mariokart_test, "data/mariokart_test.csv")
 ```
 
-Wenn die Daten auf Ihrer Festplatte liegen, z.B. im Unterordner `daten`,
+Wenn die Daten auf Ihrer Festplatte liegen, z.$\,$B. im Unterordner `daten`,
 dann können Sie sie von dort importieren:
 
 ```{r}
@@ -1604,7 +1623,7 @@ predict(lm_allin, newdata = mariokart_test)
 Oh nein! Was ist los!? Eine Fehlermeldung!
 
 
-Nominalskalierte Prädiktorvariablen mit vielen Ausprägungen, wie `title` sind problematisch.
+Nominalskalierte UV mit vielen Ausprägungen, wie `title` sind problematisch.
 Kommt eine Ausprägung von `title` im Test-Sample vor,
 die es *nicht* im Train-Sample gab, so resultiert ein Fehler beim `predict`en.
 Häufig ist es sinnvoll, auf diese Variable zu verzichten,
@@ -1797,7 +1816,7 @@ bietet sich folgendes Vorgehen an (vgl. @fig-sample-types):
 
 
 
-Diese Aufteilung Ihres Datensatzatzes in diese zwei Teile nennt man auch *Validierungsaufteilung* (validation split); Sie können sie z.B. so bewerkstelligen:
+Diese Aufteilung Ihres Datensatzatzes in diese zwei Teile nennt man auch *Validierungsaufteilung* (validation split); Sie können sie z.$\,$B. so bewerkstelligen:
 
 
 ```{r}
@@ -1820,7 +1839,7 @@ meine_aufteilung <- initial_split(mariokart, strata = total_pr)
 Im Standard werden 75% der Daten in das Analyse- und 25% in das Assessment-Sample eingeteilt^[vgl. `help(initial_split)`];
 das ist eine sinnvolle Aufteilung.
 Das Argument `strata` sorgt dafür, dass die Verteilung der AV in beiden Stichproben gleich ist.
-Es wäre nämlich blöd für Ihr Modell, wenn im Train-Sample z.B. nur die teuren, und im Test-Sample nur die günstigen Spiele landen würde. Anderes Beispiel: In den ersten Zeilen stehen nur Kunden aus Land A und in den unteren Zeilen nur aus Land B.
+Es wäre nämlich blöd für Ihr Modell, wenn im Train-Sample z.$\,$B. nur die teuren, und im Test-Sample nur die günstigen Spiele landen würde. Anderes Beispiel: In den ersten Zeilen stehen nur Kunden aus Land A und in den unteren Zeilen nur aus Land B.
 In so einem Fall würde sich Ihr Modell unnötig schwer tun.
 
 Im nächsten Schritt können Sie anhand anhand der von `initial_split` bestimmten Aufteilung die Daten tatsächlich aufteilen. `initial_split` sagt nur, welche Zeile in welche der beiden Stichproben kommen *soll*. Die eigentliche Aufteilung wird aber noch nicht durchgeführt.
@@ -1845,7 +1864,7 @@ außerdem Kürze und aussagekräftige Namen.
 
 
 Das Train-Sample stellt die bekannten Daten dar; aus denen können wir lernen, 
-d.h. unser Modell berechnen.
+d.$\,$h. unser Modell berechnen.
 Das Test-Sample  stellt das Problem der wirklichen Welt dar: 
 Neue Beobachtungen, von denen man (noch) nicht weiß, was der Wert der AV ist.
 Der Zusammenhang dieser verschiedenen, 
@@ -1891,8 +1910,8 @@ flowchart TD
 Ein Anwendungsbezug von moderner Datenanalyse ist es vorherzusagen, welche Kunden "abwanderungsgefährdet" sind, 
 also vielleicht in Zukunft bald nicht mehr unsere Kunden sind ("customer churn").
 Es gibt eine ganze Reihe von Untersuchungen dazu, 
-z.B. die von @lalwani2022.
-Die Forschis versuchen anhand von Daten und u.a. auch der linearen Regression vorherzusagen, 
+z.$\,$B. die von @lalwani2022.
+Die Forschis versuchen anhand von Daten und u.$\,$a. auch der linearen Regression vorherzusagen, 
 welche Kunden abgewandert sein werden. 
 Die Autoren berichten von einer Genauigkeit von über 80 % in Ihrem (besten) Vorhersagemodell.
 
@@ -1990,7 +2009,7 @@ Daten lügen nicht?! Oder doch?!
 
 
 Hier sind die statistischen Details der zweiten Analyse, s. @tbl-peng-simpson2. 
-Im zweiten Modell (`lm2`) kam `species` als zweiter Prädiktor 
+Im zweiten Modell (`lm2`) kam `species` als zweite UV 
 neu ins Modell (zusätzlich zur Schnabellänge).
 
 ```{r}
@@ -2010,7 +2029,7 @@ parameters(lm_ping2) |> select(Parameter, Coefficient)
 Ohne Hintergrundwissen oder ohne weitere Analysen kann *nicht* entschieden werden,
 welche Analyse -- Gesamtdaten oder Subgruppen -- die richtige ist.
 Nicht-exprimentelle Studien können zu grundverschiedenen Ergebnissen führen,
-je nachdem ob Prädiktoren dem Modell hinzugefügt oder weggenommen werden. 
+je nachdem, ob weitere UV dem Modell hinzugefügt oder weggenommen werden. 
 
 
 
@@ -2030,7 +2049,7 @@ Ein Forscher stellt das Modell `m1: y ~ x` auf und  interpretiert dann `b1`:
 "Ist ja klar, X hat einen starken positiven Effekt auf Y!".
 
 In der nächsten Studie nimmt der Forscher dann eine zweite Variable, 
-`group` (z.B. Geschlecht) in das Modell auf: `m2: y ~ x + g`.
+`group` (z.$\,$B. Geschlecht) in das Modell auf: `m2: y ~ x + g`.
 Oh Schreck! Jetzt ist `b1` auf einmal nicht mehr stark positiv, 
 sondern praktisch Null, und zwar in jeder Gruppe, s. @fig-confounder, rechts!
 
@@ -2090,7 +2109,7 @@ p_super_korr
 
 
 d_sim %>%
-  ggplot(aes(x = x, y = y, color = group)) +
+  ggplot(aes(x = x, y = y, color = group, shape = group)) +
   geom_point() +
   geom_smooth(method = "lm") +
   labs(title = "Oh nein",
@@ -2107,25 +2126,16 @@ d_sim %>%
 
 
 Man könnte höchstens sagen, dass man (wenn man die Kausalstruktur nicht kennt) die Modellkoeffizienten nur *deskriptiv* interpretiert,
-z.B. "Dort wo es viele Störche gibt, gibt es auch viele Babies".^[Das Störche-Babys-Beispiel passt auch zu @fig-confounder.]
+z.$\,$B. "Dort wo es viele Störche gibt, gibt es auch viele Babies".^[Das Störche-Babys-Beispiel passt auch zu @fig-confounder.]
 Leider ist unser Gehirn auf kausale Zusammenhänge geprägt: 
 Es fällt uns schwer, Zusammenhänge nicht kausal zu interpretieren.
 Daher werden deskriptive Befunde immer wieder unzulässig kausal interpretiert -- von Laien und Wissenschaftlern auch.
 
 
 
-## Fazit
+## Was war noch mal das Erfolgsgeheimnis?
 
 
-
-In diesem Kapitel haben Sie lineare Modelle gelernt, 
-die über einfache Modelle der Art `y ~ x` hinausgehen. 
-Dazu gehören multiple Modelle, 
-das sind Modelle mit mehr als einer UV (Prädiktor) und auch Interaktionsmodelle.
-Außerdem haben Sie sich mit einem Datensatz von
-gesamtgesellschaftlichen Nutzen beschäftigt -- sehr schön.
-Das Fallbeispiel zum Schluss war vielleicht erhellend insofern,
-als dass ein gutes Modell im Train-Sample nicht (notwendig) zu guten Vorhersagen im Test-Sample führt.
 
 
 

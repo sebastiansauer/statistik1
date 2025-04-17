@@ -233,7 +233,7 @@ Wir wollen ein präzises Modell, also kurze Fehlerbalken:
 Das Modell soll die Daten gut erklären, 
 also wenig vom tatsächlichen Wert abweichen.
 Jedes Modell sollte Informationen über die Präzision des Modellwerts bzw. der Modellwerte (Vorhersagen) angeben. 
-Ein Modell ohne Angaben der Modellgüte, d.h. der Präzision der Schätzung des Modellwerts, 
+Ein Modell ohne Angaben der Modellgüte, d.$\,$h. der Präzision der Schätzung des Modellwerts, 
 ist wenig nütze.
 
 
@@ -323,7 +323,10 @@ m %>%
                    yend = mean(total_pr)
                ), color = "grey") +
   geom_point(
-    aes(x = ID, y = total_pr, color = factor(wheels))) +
+    aes(x = ID, y = total_pr, 
+        color = factor(wheels), 
+        size = 2,
+        shape = factor(wheels))) +
   labs(color = "wheels") +
   theme(legend.position = "none") +
   geom_label(data = m_sum,
@@ -331,9 +334,10 @@ m %>%
         y = total_pr, color = factor(wheels)), 
     x = max(m$ID), hjust = 1, size = 6,
     show.legend = FALSE) +
-  scale_color_okabeito() +
+  scale_color_manual(values = c(blue, yellow)) +
   scale_x_continuous(limits = c(-10, 90)) +
-  theme_large_text()
+  theme_large_text() +
+  theme(legend.position = "none")
 ```
 
 
@@ -440,14 +444,14 @@ In Worten:
 >   Hey R, berechne mit ein lineares Modell zur Erklärung von Y. Aber verwende keine andere Variable zur Erklärung von Y, sondern nimm den Mittelwert von Y.
 
 ```{r}
-lm1 <- lm(y ~ 1, data = d)
+lm_ohne_x_var <- lm(y ~ 1, data = d)
 ```
 
 
 Den MAE können wir uns jetzt so ausgeben lassen:
 
 ```{r}
-mae(lm1)  # aus dem Paket easystats
+mae(lm_ohne_x_var)  # aus dem Paket easystats
 ```
 
 
@@ -458,7 +462,7 @@ mae(lm1)  # aus dem Paket easystats
 
 Der Interquartilsabstand (IQA; engl. inter quartile range, IQR) 
 ist ein Streuungsmaß, das nicht auf dem Mittelwert aufbaut.
-Der IQR ist robuster als z.B. der MAA oder die Varianz und die Standardabweichung.
+Der IQR ist robuster als z.$\,$B. der MAA oder die Varianz und die Standardabweichung.
 @fig-iqr-mario stellt den IQR (und einige Quantile) 
 für den Verkaufspreise von Mariokart-Spielen dar.
 
@@ -475,7 +479,7 @@ des 3. Quartils und 1. Quartils: $IQR := Q_3-Q_1. \; \square$
 In einem Statistikkurs betragen die Quartile der Körpergröße: 
 Q1: 1.65m, Q2 (Median): 1.70m, Q3: 1.75m. 
 Der IQR beträgt dann: 
-$IQR = Q_3-Q_1 = 1.75 \; m - 1.65\;  m = 0.10\; m$, d.h. 10 cm. $\square$
+$IQR = Q_3-Q_1 = 1.75 \; m - 1.65\;  m = 0.10\; m$, d.$\,$h. 10 cm. $\square$
 :::
 
 
@@ -632,7 +636,7 @@ denn damit lässt sich die Streuung (Abweichung vom Mittelwert, Residuen) der No
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"}
  Aber wie berechnet man jetzt diese Standardabweichung?
 
->    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Moment, noch ein kurzer Exkurs zur Varianz ...
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Moment, noch ein kurzer Exkurs zur Varianz …
 
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"}
  (seufzt)
@@ -644,7 +648,7 @@ denn damit lässt sich die Streuung (Abweichung vom Mittelwert, Residuen) der No
 
 
 
-Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist der mittlere quadrierte Abstand jedes Verkaufspreises vom Mittelwert.
+Die Varianz einer Variable (z.$\,$B. Verkaufspreis von Mariokart) ist der mittlere quadrierte Abstand jedes Verkaufspreises vom Mittelwert.
 
 
 
@@ -680,7 +684,7 @@ Die Varianz einer Variable (z.B. Verkaufspreis von Mariokart) ist der mittlere q
 
 @fig-mse visualisiert die Varianz für @exm-mae.^[Die Abweichungsquadrate wirken optisch nicht quadratisch, 
 da die X-Achse breiter skaliert dargestellt ist als die Y-Achse. 
-Trotzdem sind es Quadrate, nur nicht optisch, wenn Sie wissen, was ich meine...]
+Trotzdem sind es Quadrate, nur nicht optisch, wenn Sie wissen, was ich meine …]
 Links sind die *Abweichungsquadrate* dargestellt, rechts die Varianz als "*typisches Abweichungsquadrat*".
 
 :::{.callout-note}
@@ -832,7 +836,7 @@ m_summ
 
 
 
-Statistiken sind ja schön ... aber Bilder sind auch gut, s. @fig-var.
+Statistiken sind ja schön … aber Bilder sind auch gut, s. @fig-var.
 Datendiagramme eignen sich gut, 
 um (grob) die Streuung einer Variable zu erfassen.
 
@@ -1013,8 +1017,8 @@ Sie überlegen: "Okay, ich will ein einfaches Modell, in dem der Mittelwert das 
 Das spezifizieren Sie so:
 
 ```{r}
-lm1 <- lm(total_pr ~ 1, data = mariokart)
-mae(lm1)  # Modellgüte bzw. Modellfehler
+lm_mario_ohne_x_var <- lm(total_pr ~ 1, data = mariokart)
+mae(lm_mario_ohne_x_var)  # Modellgüte bzw. Modellfehler
 ```
 
 
@@ -1022,12 +1026,27 @@ Im nächsten Schritt spezifizieren Sie ein Modell,
 in dem der Verkaufspreis eine Funktion der Anzahl der Lenkräder ist (ähnlich wie in @fig-fehler-red):
 
 ```{r}
-lm2 <- lm(total_pr ~ wheels, data = mariokart)
-mae(lm2)
+lm_wheels <- lm(total_pr ~ wheels, data = mariokart)
+mae(lm_wheels)
 ```
 
 Ah! Sehr schön, Sie haben mit `lm2` ein besseres Modell als einfach nur den Mittelwert gefunden. Ab nach Hause! $\square$
 :::
+
+
+
+
+
+
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Der "gesunde Menschenverstand" würde den mittleren Absolutabstand (MAA oder MAE) der Varianz (oder der Standardabweichung, SD) vorziehen. Warum brauche ich dann die SD?
+
+>   >    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Ja, die MAA ist anschaulicher und insofern nützlicher als die Varianz und die SD. Wenn es nur um deskriptive Statistik geht, braucht man die Varianz (oder die SD) nicht unbedingt. Allerdings ist die SD  nützlich zur Beschreibung der Normalverteilung. Außerdem wird die Varianz häufig verwendet bzw. in Forschungsarbeiten berichtet, daher hilft es Ihnen, wenn Sie die Varianz kennen. Liegen Extremwerte vor, kann es vorteilhafter sein, den IQR vorzuziehen gegenüber Mittelwert basierten Streuungsmaßen (MAA, Varianz, SD).
+
+
+
+
+
+
 
 
 ## Streuung als Modellfehler
@@ -1037,23 +1056,25 @@ Wenn wir den Mittelwert als Punktmodell des Verkaufspreises auffassen, so kann m
 Definieren wir zunächst als Punktmodell auf Errisch:
 
 ```{r}
-lm_mario1 <- lm(total_pr ~ 1, data = mariokart)
+lm_mario_ohne_x_var <- lm(total_pr ~ 1, data = mariokart)
 ```
 
-Zur Erinnerung: Wir modellieren `total_pr` ohne Prädiktoren, sondern als Punktmodell,
+Zur Erinnerung: Wir modellieren `total_pr` ohne UV (Prädiktoren), sondern als Punktmodell,
 und zwar schätzen wir den Mittelwert mit den Daten `mariokart`.
 
 Das (Meta-)Paket `easystats` bietet komfortable Befehle, um die Modellgüte zu berechnen:
 
 ```{r}
-mae(lm_mario1)  # Mean absolute error
-mse(lm_mario1)  # Mean squared error
-rmse(lm_mario1)  # Root mean squared error
+mae(lm_mario_ohne_x_var)  # Mean absolute error
+mse(lm_mario_ohne_x_var)  # Mean squared error
+rmse(lm_mario_ohne_x_var)  # Root mean squared error
 ```
 
 
 
-## Die z-Transformation
+
+
+## Die *z*-Transformation
 
 Sie arbeiten immer noch als Datenknecht, Moment, *Datenhecht* bei dem Online-Auktionshaus.
 Heute untersuchen Sie, wie gut sich die Verkaufspreise mit einer einzigen Zahl, dem mittleren Verkaufspreis, beschreiben lassen.
@@ -1113,7 +1134,7 @@ Je weniger Streuung um den Mittelwert (ca. 47 Euro) herum, desto besser eignet s
 :::
 
 Ja, es ist *etwas* Streuung, aber wie viel? Kann man das genau angeben?
-Sie überlegen ... und überlegen. Da! Eine Idee!
+Sie überlegen … und überlegen. Da! Eine Idee!
 
 Man könnte vielleicht angeben, wie viel Euro jedes Spiel vom Mittelwert entfernt ist.
 Je größer diese Abweichung, desto schlechter die Modellgüte!
@@ -1204,37 +1225,21 @@ Wir fassen die Schritte unserer Umrechnung ("Transformation") zusammen wie in ei
 
 
 Diese Art von Transformation bezeichnet man als
-*z-Transformation* und die resultierenden Werte als *z-Werte*.
+z*-Transformation* und die resultierenden Werte als z*-Werte*.
 
 :::{#def-z-werte}
-### z-Werte
-z-Werte sind das Resultat der z-Transformation.
+### *z*-Werte
+*z*-Werte sind das Resultat der *z*-Transformation.
 Für die Variable $X$ berechnet sich der 
-z-Wert der $i$-ten Beobachtung so: $z_i := \frac{x_i - \bar{x}}{sd_x}.\;\square$
+*z*-Wert der $i$-ten Beobachtung so: $z_i := \frac{x_i - \bar{x}}{sd_x}.\;\square$
 :::
 
-z-Werte sind nützlich, weil sie die "relative" Abweichung
+*z*-Werte sind nützlich, weil sie die "relative" Abweichung
 einzelner Beobachtungen vom Mittelwert anzeigen.
 Nach einer *Faustregel* spricht man von extremen Abweichungen
 (Extremwerten, Ausreißern), wenn $z_i \ge 2.5$ [@shimizu2022].
 
 
-## Fazit
-
-Der "gesunde Menschenverstand" würde spontan den mittleren Absolutabstand (MAA oder MAE) 
-der Varianz (oder der Standardabweichung, SD) vorziehen. 
-Das ist vernünftig, 
-denn die MAA ist anschaulicher und damit nützlicher als die Varianz und die SD.
-Warum sollte man überhaupt ein unanschauliches Maß wie die Varianz verwenden? 
-Wenn es nur um deskriptive Statistik geht, braucht man die Varianz (oder die SD) nicht unbedingt.
-Gründe, warum Sie die Varianz (bzw. SD) kennen und nutzen sollten, sind:
-
-- Die SD ist nützlich zur Beschreibung der Normalverteilung.
-- Die Varianz wird häufig verwendet bzw. in Forschungsarbeiten berichtet, also müssen Sie die Varianz kennen.
-
-
-Liegen Extremwerte vor, kann es vorteilhafter sein, 
-den IQR vorzuziehen gegenüber Mittelwert basierten Streuungsmaßen (MAA, Varianz, SD).
 
 
 ## Aufgaben

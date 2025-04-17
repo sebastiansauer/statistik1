@@ -35,7 +35,9 @@ library(tidyverse)
 
 
 
-In diesem Kapitel benötigen Sie die üblichen R-Pakete (`tidyverse`, `easystats`) und Daten (`mariokart`),  s. @sec-import-mariokart.
+In diesem Kapitel benötigen Sie die üblichen R-Pakete (`tidyverse`, `easystats`) und Daten (`mariokart`),  s. @sec-import-mariokart und @sec-r-pckgs.
+
+
 
 
 
@@ -67,7 +69,7 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 
 
 - Sie können gängige Arten von Lagemaße definieren.
-- Sie können erläutern, inwiefern man ein Lagemaß als ein Modell hernehmen kann.
+- Sie können erläutern, inwiefern man ein Lagemaß als ein Modell verstehen kann.
 - Sie können Lagemaße mit R berechnen.
 
 
@@ -129,14 +131,14 @@ sondern eine inhaltliche.
 
 
 
-*Ist das viel?*
+Ist das viel?
 
 a) ja
 b) nein
 c) kommt drauf an
 d) weiß nicht $\square$
 
-*Antwort*
+**Antwort**
 
 Auf dieser Frage gibt es keine Antwort, 
 zumindest nicht ohne weitere Annahmen. 
@@ -335,7 +337,7 @@ $${\hat{y}} \,\sim\, {\text{ x}}$$ {#eq-sim-mean}
 
 Lies: "Der Modellwert ${\hat{y}}$ ist eine Funktion der Variable ${\text{x}}$". 
 Der Kringel "~" soll also hier heißen "... ist eine Funktion von ...".
-Das "Kringel" oder die "Welle" "~" nennt man auch "Tilde".
+Das "Kringel" oder die "Welle" "~" nennt man  "Tilde".
 
 Mit ${\hat{y}}$ ist die vorhergesagte bzw. 
 die *zu erklärende Variable* (synonym: AV, Output-Variable, Zielvariable) gemeint.
@@ -390,14 +392,14 @@ häufig mit $e$ wie *error* bezeichnet) der einzelnen Noten vom Mittelwert einge
 :::
 
 
-Schauen Sie sich die Abweichungsbalken ( in @fig-mw1 einmal genauer an.
+Schauen Sie sich die Abweichungsbalken in @fig-mw1 einmal genauer an.
 Jetzt stellen Sie sich vor, Sie würden die vom Mittelwert nach *oben* ragenden Balkenlängen aneinanderlegen (das sind die gestrichelten.
 Können Sie sich das vorstellen?
 Jetzt legen Sie auch noch die Abweichungsbalken, 
 die nach *unten* ragen, aneinander (die mit den durchgezogenen Linien).
 Wer viel Phantasie hat, erkennt (sieht),
 dass die Gesamtlänge der "nach oben ragenden Balken" identisch ist zur Gesamtlänge 
-der nach "unten ragenden Balken", vgl. @fig-wippe.
+der nach "unten ragenden Balken".
 @eq-summenull drückt das präziser und ohne Ihre Phantasie zu strapazieren aus.
 
 
@@ -421,7 +423,7 @@ d <- tibble::tribble(
    4L,   1.5,     2.325, -0.825,  2.325,        1.5
   )
 
-d$names <- c("Anna", "Berta", "Carl", "Dani")
+d$names <- c("Anna", "Berta", "Carla", "Dani")
 
 
 d <- d %>% 
@@ -495,7 +497,7 @@ sagen wir, es ist Kylian Mbappé [@transfermarkt2024].
 Sein Jahreseinkommen (2023) liegt bei ca. 120 Millionen Euro [@arad2024].
 Der Fußballer ist gut gelaunt:
 
->    [🦹]{.content-visible when-format="html"}[\emoji{supervillain}]{.content-visible when-format="pdf"}  Hey Leute, wie geht's denn so! Wie viel Kohle verdient ihr eigentlich so?
+>    [🦹]{.content-visible when-format="html"}[\emoji{supervillain}]{.content-visible when-format="pdf"}  Hey Leute, wie geht's denn so! Wie viel Kohle habt ihr eigentlich so?
 
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Äh, wir studieren und verdienen fast nix!
 
@@ -539,7 +541,7 @@ das `1e6` ist zu lesen als "1 Mal 10 hoch 6, also mit 6 im *E*xponenten".
 :::
 
 Der Mittelwert im Hörsaal beträgt also `r scales::label_comma()(einkommen_mw)` Euro, etwas mehr als eine Million.
-Ist das ein gutes Modell für das typische Vermögen im Hörsaal?
+Ist das ein gutes Modell für das typische Vermögen im Hörsaal?^[Nein. Es beschreibt weder das Vermögen der Studierenden noch das des Fußballers gut.]
 
 
 ### Der Mittelwert als lineares Modell
@@ -630,7 +632,7 @@ Berechnen wir mal den Mittelwert von `einkommen` mit R mit dem Befehl `lm`.
 
 
 ```{r}
-lm(einkommen ~ 1)  # lm wie "lineares Modell" oder engl. "linear modell"
+lm(einkommen ~ 1)  # lm wie "lineares Modell" oder engl. "linear model"
 ```
 
 Der Befehl `lm` gibt hier mit der Ausgabe `Coeffients` (Koeffizient) einen einzelnen Wert zurück 
@@ -694,7 +696,7 @@ p1 <- ggplot(d) +
   labs(caption = "MW: Mittelwert",
   y = "Anzahl",
        x = "Einkommen") +
-  theme(plot.margin = margin(0, 10, 0, 0))
+  theme(plot.margin = margin(10, 10, 10, 10))
 
 p1
 ```
@@ -719,8 +721,9 @@ da er nicht mehr "typische" Werte für die Merkmalsträger beschreibt.
 ### Das Median-Einkommen einiger Studentinnen
 Fünf Studentinnen tauschen sich über ihr Einkommen aus, s. @fig-md1, links.
 Es handelt sich um eine schiefe Verteilung.
-
-
+Wir könnten jetzt behaupten, dass Carla das typische Einkommen (für diese Datenreihe) aufweist,
+da es genauso viele Studentinnen gibt, die mehr verdienen, wie solche, die weniger verdienen. $\square$
+:::
 
 ```{r}
 #| label: fig-md1
@@ -768,10 +771,9 @@ d %>%
 
 
 
-Wir könnten jetzt behaupten, dass Carla das typische Einkommen (für diese Datenreihe) aufweist,
-da es genauso viele Studentinnen gibt, die mehr verdienen, wie solche, die weniger verdienen. $\square$
 
-:::
+
+
 
 
 :::{#def-median}
@@ -819,7 +821,7 @@ das arithmetische Mittel aus diesen beiden Werten gebildet.
 
 
 :::{#exm-med2}
-Bei der Messreihe 1, 2, 3, 4, 5, 6, 8, 9 beträgt der Median 4.5. $\square$
+Bei der Messreihe 1,2,3 beträgt der Median 2. Bei der Messreihe 1, 2  beträgt der Median 1.5. $\square$
 :::
 
 
@@ -848,7 +850,7 @@ Der Median und nur der Median zeigt den mittleren Messwert! Links und rechts sin
 viele Messwerte, wenn man die Werte der Größe nach sortiert. 
 Also liegt der Median genau in der Mitte!
 
-Nehmen Sie Stellung zu dieser Diskussion!$\square$
+Nehmen Sie Stellung zu dieser Diskussion! $\square$
 :::
 
 
@@ -904,8 +906,7 @@ Bei schiefen Verteilungen ist der Median dem Mittelwert als Modell für den "typ
 
 Im Datensatz `mariokart` gibt es einige wenige Spiele, die für einen vergleichsweise hohen Preis verkauft wurden. 
 Diese Extremwerte verzerren den mittleren Verkaufspreis 
-möglicherweise über die Gebühr. $\square$
-
+möglicherweise über die Gebühr.
 
 Entfernen Sie diese Werte und berechnen Sie dann Mittelwert und Median erneut. Vergleichen Sie die Ergebnisse.
 
@@ -960,7 +961,7 @@ e) 300 Tsd Euro$\square$
 
 
 Der Median teilt eine Verteilung in eine untere und ein obere Hälfte.
-Er markiert sozusagen eine "50-Prozent-Marke" (der aufsteigend sortierten Beobachtungen).
+Er markiert sozusagen eine "50-Prozent-Marke" (der aufsteigend sortierten Werte).
 Betrachten wir einmal nur alle Spiele, die für weniger als 100 Euro verkauft wurden (`total_pr`, finales Verkaufsgebot), 
 s. @fig-mario-qs1.
 50% dieser Spiele wurden für weniger als ca. 46 Euro verkauft und 50% für mehr als 46 Euro.
@@ -968,22 +969,25 @@ Der Median beträgt als 46 Euro.
 
 Jetzt könnten wir nur die günstigere Hälfte betrachten und wieder 
 nach dem Median fragen (d.$\,$h. `total_pr < 46`).
-Dieser "Median der günstigeren Hälfte" grenzt damit das insgesamt 
-günstigste Viertel vom Rest der Verkaufsgebote ab.
+Dieser "Median der billigeren Hälfte" grenzt damit das insgesamt 
+billigste Viertel vom Rest der Verkaufsgebote ab.
 In unserem Datensatz liegt dieser Wert bei ca. 41 Euro.
 Entsprechend kann man nach dem Wert fragen, der das oberste Viertel 
 vom Rest der Verkaufsgebote abtrennt.
 Dieser Wert liegt bei ca. 54 Euro.
-
-
+Jetzt könnte man sagen, hey, warum nur in 25$\,$%-Stücke die Verteilung aufteilen?
+Warum nicht in 10$\,$%-Schritten? 
+Oder vielleicht in 1$\,$%-Schritten oder in sonstigen Schritten?
+Wo die Quartile in 25$\,$%-Schritten aufteilen, teilt ein *Quantil* in $p$-Prozent-Schritten auf.
+[S. @fig-quantile-anim dazu.]{.content-visible when-format="html" unless-format="epub"}
 :::{#def-quartile}
 
 ### Quartile
 
 Sortiert man die Daten aufsteigend, so nennt man den Wert,
-der das Viertel mit den kleisten Wert vom Rest der Daten trennt das *erste Quartil* (Q1, 25%).
-Den Median nennt man das *zweite Quartil* (Q2, 50%).
-Entsprechend heißt der Wert, der die drei Viertel kleinsten Werte vom oberen Viertel abtrennt, das *dritte Quartil* (Q3, 75%). $\square$
+der das Viertel mit den kleisten Wert vom Rest der Daten trennt das *erste Quartil* (Q1, 25$\,$%).
+Den Median nennt man das *zweite Quartil* (Q2, 50$\,$%).
+Entsprechend heißt der Wert, der die drei Viertel kleinsten Werte vom oberen Viertel abtrennt, das *dritte Quartil* (Q3, 75$\,$%). $\square$
 :::
 
 :::{#exm-mario-qs}
@@ -993,8 +997,7 @@ Entsprechend heißt der Wert, der die drei Viertel kleinsten Werte vom oberen Vi
 
 
 
-Jetzt könnte man sagen, hey, warum nur in 25%-Stücke die Verteilung aufteilen?
-Warum nicht in 10%-Schritten? 
+
 
 :::{#def-dezile}
 ### Dezile
@@ -1004,9 +1007,6 @@ Die neun Quantile $p= 0.1, 0.2, \ldots, 1$, die die Verteilung in 10 gleich gro�
 
 
 
-Oder vielleicht in 1%-Schritten oder in sonstigen Schritten?
-Wo die Quartile in 25%-Schritten aufteilen, teilt ein *Quantil* in $p$-Prozent-Schritten auf.
-[S. @fig-quantile-anim dazu.]{.content-visible when-format="html" unless-format="epub"}
 
 
 
@@ -1015,12 +1015,6 @@ Wo die Quartile in 25%-Schritten aufteilen, teilt ein *Quantil* in $p$-Prozent-S
 
 
 
-
-:::{#def-quantile}
-### Quantile
-Ein $p$-Quantil ist der Wert, der von $p$ Prozent der Werte nicht überschritten wird.
-Ein Quantil ist ein Oberbegriff für Quartile, Dezile etc. $\square$
-:::
 
 
 
@@ -1093,8 +1087,15 @@ mariokart %>%
 
 
 
+:::{#def-quantile}
+### Quantile
+Ein $p$-Quantil ist der Wert, der von $p$ Prozent der Werte nicht überschritten wird.
+Ein Quantil ist ein Oberbegriff für Quartile, Dezile etc. $\square$
+:::
 
-*Quantile* kann man in R mit dem Befehl `quantile()` berechnen:
+
+
+Quantile kann man in R mit dem Befehl `quantile` berechnen:
 
 ```{r}
 #| eval: false
@@ -1140,7 +1141,7 @@ Verschiedene Quantile animiert
 :::::
 
 @fig-quantile-mosaic visualisiert verschiedene Quantile.
-Man beachte, dass alle Regionen gleichgroße Flächen (d.$\,$h. Wahrscheinlichkeitsmassen) aufweisen.
+Man beachte, dass alle Regionen gleichgroße Flächen aufweisen.
 
 
 
@@ -1278,7 +1279,7 @@ im Vergleich zu den Abweichungen der Preise zum ungruppierten Mittelwert.
 ### Punktmodell
 Ein Modell, welches für alle Beobachtungen ein und denselben Wert annimmt (vorhersagt),
 heißt  *Punktmodell*. 
-Anders gesagt fasst ein Punktmodell eine Wertereihe (häufig ist das eine Tabellenspalte) zu einer einzelnen Zahl zusammen, einem "Punkt" in diesem Sinne, s. @fig-desk. $\square$
+Anders gesagt, fasst ein Punktmodell eine Wertereihe (häufig ist das eine Tabellenspalte) zu einer einzelnen Zahl zusammen, einem "Punkt" in diesem Sinne, s. @fig-desk. $\square$
 :::
 
 
@@ -1301,6 +1302,7 @@ sie sind uns also ein Modell.
 #| echo: false
 #| layout: [[45,-10, 45], [100]]
 #| out-width: 100%
+#| fig-asp: .618
 #| fig-width: 7
 
 mariokart$X <- 1:nrow(mariokart)
@@ -1351,7 +1353,7 @@ p2 <- mariokart3 |>
   geom_hline(data = mariokart3_summ, aes(yintercept = total_pr,
                                          color = wheels),
              size = 2) +
-  scale_color_okabeito() +
+  scale_color_okabeito(palette = "black_first") +
   annotate("label", x = -Inf, y = round(mariokart3_summ$total_pr[1], 2),
            label = paste0("MW: ", round(mariokart3_summ$total_pr[1], 0)),
            hjust = 0, size = labeltextsize) +
@@ -1387,7 +1389,7 @@ Viele Wege führen nach Rom (aber nicht alle).
 Um Manipulationsversuche abzuwehren oder einfache Fehler und Unschärfen ohne böse Absicht aufzudecken, 
 gibt es ein probates Gegenmittel: *Transparenz*.
 Analysen sollten transparent sein:
-Das Vorgehen und die zugrundeliegenden Entscheidungen offenlegen.
+Das Vorgehen und die zugrundeliegenden Entscheidungen sollte man offenlegen.
 Hier ist eine (nicht abschließende!) Checkliste, 
 was Sie nachprüfen sollten, um die Belastbarkeit einer Analyse sicherzustellen [@simmons_false-positive_2011, @wicherts_degrees_2016]:
 
@@ -1412,7 +1414,7 @@ Stellen Sie hohe Anforderungen an die Transparenz einer statistischen Analyse. N
 :::{#exm-survival1}
 ### Survival-Tipp
 
-Eine Studentin aus dem Bachelorstudiengang "Angewandte Medien- und Wirtschaftspsychologie" mit Schwerpunkt *Data Science* berichtet ihre "Survival-Tipps" für Statistik.
+Eine Studentin aus dem Bachelorstudiengang *Angewandte Medien- und Wirtschaftspsychologie* mit Schwerpunkt *Data Science* berichtet ihre "Survival-Tipps" für Statistik.
 
 1. Wenn man mal nicht weiterkommt, hilft es auch mal ein paar Tage Abstand von R und Statistik zu nehmen. 
 2. Es hilft, sich während des Semesters neue Begriffe und ihre Erklärung zusammenschreiben.
@@ -1422,7 +1424,7 @@ Eine Studentin aus dem Bachelorstudiengang "Angewandte Medien- und Wirtschaftsps
 
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Irgendwie kann ich mir R-Code so schlecht merken.
 
->    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Frag doch mal ChatGPT, oder einen anderen Chatbot -- dort bekommt man auch R-Code ausgegegeben.
+>    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Frag doch mal ChatGPT oder einen anderen Chatbot -- dort bekommt man auch R-Code ausgegegeben.
 
 
 
@@ -1435,7 +1437,7 @@ Fragen Sie einen Chat-Bot wie ChatGPT nach Übungsaufgaben.
 Sie können sich an folgenden Prompt orientieren. 
 Empfehlenswert ist mit verschiedenen Prompts zu experimentieren.
 
->    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Ich bin ein Student in einem Bachelor-Studiengang für Psychologie. Gerade bereite ich mich auf die Klausur im Fach "Grundlagen der Statistik" vor. Bitte schreibe mir Aufgaben, die mir helfen, mich auf die Prüfung vorzubereiten. Die Fragen sollten folgende Themen beinhalten: Maße der zentralen Tendenz, Grundlagen von R, Skalenniveau (z.$\,$B. Nominalskala vs. Intervallskala), Verteilungsformen, Normalverteilungen, *z*-Werte. Bitte schreibe die Aufgabe im Stil von Richtig-Falsch-Aufgaben. Schreibe ca. 10 Aufgaben.  $\square$
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Ich bin Student in einem Bachelor-Studiengang. Gerade bereite ich mich auf die Klausur im Fach "Grundlagen der Statistik" vor. Bitte schreibe mir Aufgaben, die mir helfen, mich auf die Prüfung vorzubereiten. Die Fragen sollten folgende Themen beinhalten: Maße der zentralen Tendenz, Grundlagen von R, Skalenniveau (z.$\,$B. Nominalskala vs. Intervallskala), Verteilungsformen, Normalverteilungen, *z*-Werte. Bitte schreibe die Aufgabe im Stil von Richtig-Falsch-Aufgaben. Schreibe ca. 10 Aufgaben.  $\square$
 :::
 
 
@@ -1469,10 +1471,8 @@ Die Webseite [datenwerk.netlify.app](https://datenwerk.netlify.app) stellt eine 
 
 
 
-:::{.callout-tip}
-Schauen Sie sich auch mal auf [datenwerk.netlify.app](https://datenwerk.netlify.app) die Aufgaben zu z.$\,$B. dem Tag [EDA](https://sebastiansauer.github.io/Datenwerk/#category=eda) an. $\square$
-:::
 
+Schauen Sie sich auch mal auf [datenwerk.netlify.app](https://datenwerk.netlify.app) die Aufgaben zu z.$\,$B. dem Tag [EDA](https://sebastiansauer.github.io/Datenwerk/#category=eda) an. 
 
 
 
@@ -1495,11 +1495,11 @@ Vielleicht ist es am einfachsten,
 wenn Sie einfach in Ihrer Bibliothek des Vertrauens nach einem typischen Lehrbuch schauen.
 Beispiel für Lehrbücher sind @mittag_statistik_2020 
 oder @oestreich_keine_2014; ein Klassiker ist @bortz_statistik_2010. 
-Ein Fokus auf R legt @sauer_moderne_2019.
+Einen Fokus auf R legt @sauer_moderne_2019.
 Wer vor Englisch nicht zurückschreckt, ist mit @cetinkaya-rundel_introduction_2021 
 oder @poldrack_statistical_2023 gut beraten. 
 Beide Bücher sind online verfügbar. 
-Tipp: Mit dem Browser einfach auf Deutsch übersetzen.
+Tipp: Mit dem Browser lässt sich englischer Text auf einer Webseite auf  auf Deutsch übersetzen.
 
 
 

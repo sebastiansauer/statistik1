@@ -38,7 +38,7 @@ Im Einzelnen müssen Sie folgende Dateien herunterladen:
 - *Data_description.txt*: Codebook, d.$\,$h. Beschreibung der Variablen im Datensatz
 - *train.csv*: Daten von Häusern, die Sie nutzen, um Modelle zu erstellen
 - *test.csv*:  Daten von Häusern, von denen Sie den Kaufpreis vorhersagen sollen
-- *sample_submission.csv*: Beispielhafte Prognosedatei, die Datei also, mit der Sie Ihre Vorhersagen einreichen
+- *sample_submission.csv*: Beispielhafte Prognosedatei, die Datei also, mit der Sie Ihre Vorhersagen einreichen, s. @tbl-subm
 
 
 Sie können auch über das Github-Repo `statistik1`, Ordner `data` auf die Daten zugreifen:
@@ -61,9 +61,6 @@ d_test <- read.csv(d_test_path_online)
 
 Laden Sie diese Daten am besten herunter und speichern Sie sie in einem passenden 
 Unterverzeichnis (Ihres Projektordners in RStudio) ab.
-
-
-
 Importieren wir die Daten von der Festplatte, aus dem Unterordner `data` in R
 (davon ausgehend, dass der Unterordner `data` ein Unterordner Ihres aktuellen R-Projekts ist):
 
@@ -208,20 +205,20 @@ Diese Variable ist am stärksten mit der Zielvariable korreliert und daher ein g
 
 ```{r}
 #| eval: false
-m1 <- lm(SalePrice ~ OverallQual, data = d_train)
-parameters(m1)  # aus easystats
+lm_immo1 <- lm(SalePrice ~ OverallQual, data = d_train)
+parameters(lm_immo1)  # aus easystats
 ```
 
 
 
 
 
-```{r lm1-ames}
+```{r llm_immo1-ames}
 #| echo: false
-#| label: tbl-ames-lm1
-#| tbl-cap: "Parameter von `lm1`"
-m1 <- lm(SalePrice ~ OverallQual, data = d_train)
-parameters(m1)  |> 
+#| label: tbl-ames-lm_immo1
+#| tbl-cap: "Parameter von `lm_immo1`"
+lm_immo1 <- lm(SalePrice ~ OverallQual, data = d_train)
+parameters(lm_immo1)  |> 
 select(Parameter, Coefficient) |> print_md() # aus easystats
 ```
 
@@ -231,17 +228,17 @@ select(Parameter, Coefficient) |> print_md() # aus easystats
 Wie gut ist das Modell?
 
 ```{r}
-rmse(m1)  # aus easystats
+rmse(lm_immo1)  # aus easystats
 ```
 
-Im Schnitt liegen wir `r rmse(m1)` Dollar daneben. 
+Im Schnitt liegen wir `r rmse(lm_immo1)` Dollar daneben. 
 Ob das viel oder weniger ist, wird sich im Vergleich mit anderen Modellen zeigen.
 
 R-Quadrat liefert einen anderen Blick auf die Modellgüte:
 
 
 ```{r}
-r2(m1)  # aus easystats
+r2(lm_immo1)  # aus easystats
 ```
 
 
@@ -256,22 +253,22 @@ mein_modell <- lm(av ~ uv1 + uv2 + ... + uv_n, data = meine_daten)
 ```
 
 Dabei ist das Pluszeichen kein arithmetischer Operator, sondern sagt nur "als UV nimm UV1 und UV2 und …". 
-Berechnen wir als nächstes ein Modell mit mehreren UV, `m2`.
+Berechnen wir als nächstes ein Modell mit mehreren UV, `lm_immo2`.
 
 ```{r}
 #| results: hide
-m2 <- lm(SalePrice ~ OverallQual + GrLivArea + GarageCars, data = d_train)
-parameters(m2)
+lm_immo2 <- lm(SalePrice ~ OverallQual + GrLivArea + GarageCars, data = d_train)
+parameters(lm_immo2)
 ```
 
 
-@tbl-m2-params zeigt die Koeffizienten von `m2`. 
+@tbl-m2-params zeigt die Koeffizienten von `lm_immo2`. 
 
 ```{r}
 #| echo: false
 #| label: tbl-m2-params
-#| tbl-cap: "Modellparameter von m1"
-parameters(m2) %>% 
+#| tbl-cap: "Modellparameter von lm_immo2"
+parameters(lm_immo2) %>% 
   select(Parameter, Coefficient) |> 
   print_md()
 ```
@@ -279,20 +276,20 @@ parameters(m2) %>%
 
 
 
-Wie gut sind die Vorhersagen des Modells `m2` für die Daten von `d_train`?
+Wie gut sind die Vorhersagen des Modells `lm_immo2` für die Daten von `d_train`?
 
 
 ```{r}
-rmse(m2)
+rmse(lm_immo2)
 ```
 
 
-Im Schnitt liegen unsere Vorhersagen `r rmse(m2)` Dollar daneben. 
+Im Schnitt liegen unsere Vorhersagen `r rmse(lm_immo2)` Dollar daneben. 
 Ist das gut?
 Betrachten wir noch $R^2$:
 
 ```{r}
-r2(m2)
+r2(lm_immo2)
 ```
 
 Ob die Modellgüte (R-Quadrat, RMSE, etc.) "gut" bzw. "hoch" ist, 
@@ -322,9 +319,6 @@ rmse(m0)
 
 
 Beim Nullmodell liegen wir ca. 80 Tausend Dollar daneben.
-
-
-
 Das R-Quadrat der Nullmodells ist per Definition null:
 
 
@@ -333,24 +327,22 @@ r2(m0)
 ```
 
 
-### Vorhersagen im Test-Datensatz mit `m2`
+### Vorhersagen im Test-Datensatz mit `lm_immo2`
 
-Wir haben jetzt unseren Champion, `m2`.
+Wir haben jetzt unseren Champion, `lm_immo2`.
 Alle Hoffnung ruht auf diesem Modell.
 Ob die Vorhersagen im Test-Sample präzise sein werden?
 Oder himmelweit daneben?
 Enttäusche uns nicht!
-
-
 Hier sind die Vorhersagen:
 
 
 ```{r}
-m2_pred <- predict(m2, newdata = d_test)  # <1> 
-head(m2_pred) # <2>
+lm_immo2_pred <- predict(lm_immo2, newdata = d_test)  # <1> 
+head(lm_immo2_pred) # <2>
 ```
-1. Erstelle eine Vorhersage anhand der Regressionsgerade von `m1` und zwar anhand der Daten aus `d_test`.
-2. Zeige den "Kopf" der Vorhersagen (`m1_pred`), d.$\,$h. die ersten paar Vorhersagen.
+1. Erstelle eine Vorhersage anhand der Regressionsgerade von `lm_immo1` und zwar anhand der Daten aus `d_test`.
+2. Zeige den "Kopf" der Vorhersagen (`lm_immo1_pred`), d.$\,$h. die ersten paar Vorhersagen.
 
 
 
@@ -358,7 +350,7 @@ Die Vorhersagen fügen wir jetzt dem Test-Sample hinzu:
 ```{r}
 d_test <- 
   d_test %>% 
-  mutate(SalePrice = m2_pred)
+  mutate(SalePrice = lm_immo2_pred)
 ```
 
 
@@ -374,32 +366,32 @@ Für die Prognosedatei (submission file) brauchen wir nur die Spalten `id` und `
 
 
 ```{r}
-m2_subm <-
+lm_immo2_subm <-
   d_test %>% 
   select(Id, SalePrice)
 ```
 
 
-Kaggle möchte keine fehlenden Werten in den Vorhersagen, also prüfen wir das mal:
+<!-- Kaggle möchte keine fehlenden Werten in den Vorhersagen, also prüfen wir das mal: -->
 
-```{r}
-#| eval: true
-#| code-annotations: hover
-m2_subm %>% 
-  drop_na() %>%  # <1>
-  nrow()         # <2>
-```
+<!-- ```{r} -->
+<!-- #| eval: true -->
+<!-- #| code-annotations: hover -->
+<!-- lm_immo2_subm %>%  -->
+<!--   drop_na() %>%  # <1> -->
+<!--   nrow()         # <2> -->
+<!-- ``` -->
 
-1. Lass alle Zeilen mit NAs (fehlenden Werten in irgendeiner Spalte) fallen, filtere diese Zeilen also raus
+<!-- 1. Lass alle Zeilen mit NAs (fehlenden Werten in irgendeiner Spalte) fallen, filtere diese Zeilen also raus -->
 
-2. zähle die Anzahl der Zeilen (die noch verbleiben)
+<!-- 2. Zähle die Anzahl der Zeilen (die noch verbleiben) -->
 
-Die Anzahl der Zeilen, die wir hier erhalten, ist gleich zu den Anzahl der Zeilen von `d_test`. Es gibt also keine fehlenden Werte.
+<!-- Die Anzahl der Zeilen, die wir hier erhalten, ist gleich zu den Anzahl der Zeilen von `d_test`. Es gibt also keine fehlenden Werte. -->
 
 
-```{r}
-nrow(d_test)
-```
+<!-- ```{r} -->
+<!-- nrow(d_test) -->
+<!-- ``` -->
 
 
 <!-- #### Vertiefung: Fehlende Werte -->
@@ -458,10 +450,10 @@ Kaggle erwartet exakt zwei Spalten und zwar mit den Namen `Id` und `SalePrice`.
 
 ```{r}
 #| eval: false
-write_csv(m2_subm, "data/ames-kaggle/m1-subm.csv")
+write_csv(lm_immo2_subm, "data/ames-kaggle/lm_immo2_subm.csv")
 ```
 
-Und dann laden Sie diese Datei, `m1_subm.csv` bei Kaggle hoch und hoffen auf einen Hauptgewinn.
+Und dann laden Sie diese Datei, `lm2_subm.csv` bei Kaggle hoch und hoffen auf einen Hauptgewinn.
 Das Modell erzielte einen Score von *0.55521*.
 
 

@@ -22,7 +22,8 @@ library(gt)
 ## Einstieg
 
 
-In diesem Kapitel benötigen Sie die üblichen R-Pakete (`tidyverse`, `easystats`) und Daten (`mariokart`),  s. @sec-import-mariokart.
+In diesem Kapitel benötigen Sie die üblichen R-Pakete (`tidyverse`, `easystats`) und Daten (`mariokart`),
+s. @sec-import-mariokart und @sec-r-pckgs.
 
 
 
@@ -59,8 +60,8 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 :::{#exr-zsgh-studis}
 
 1. Suchen Sie sich eine vertrauenswürdige Partnerin oder einen vertrauenswürdigen Partner.
-Im Zweifel reicht die Person, die neben Ihnen sitzt. [😁]{.content-visible when-format="html"}
-2. Nennen Sie je zwei Variablen, die wie folgt zusammenhängen:
+Im Zweifel reicht die erste Person, die Sie sehen. [😁]{.content-visible when-format="html"}
+2. Fragne Sie diese Person nach je zwei Variablen, die wie folgt zusammenhängen:
 
 - gleichsinnig (Viel von dem einen, viel von dem anderen)
 - gegensinnig (viel von dem einen, wenig von dem anderen)
@@ -85,16 +86,16 @@ Wir begrenzen uns auf *metrische* Variablen.
 
 ![Zwei Spalten werden zu einer Zahl zusammengefasst](img/desk-stat-zsmnfassen-cor-crop.png){#fig-desk2 width=25%}
 
-:::{#exm-zsmn}
-### Beispiele für Zusammenhänge
+<!-- :::{#exm-zsmn} -->
+<!-- ### Beispiele für Zusammenhänge -->
 
-- Lernzeit und Klausurerfolg
-- Körpergröße und Schuhgröße
-- Verbrauchtes Benzin und zurückgelegte Strecke
-- Produktionsmenge und Produktionskosten
-- Bildschirmzeit und Schlafqualität
-- Umweltschutz und Biodiversivität $\square$
-:::
+<!-- - Lernzeit und Klausurerfolg -->
+<!-- - Körpergröße und Schuhgröße -->
+<!-- - Verbrauchtes Benzin und zurückgelegte Strecke -->
+<!-- - Produktionsmenge und Produktionskosten -->
+<!-- - Bildschirmzeit und Schlafqualität -->
+<!-- - Umweltschutz und Biodiversivität $\square$ -->
+<!-- ::: -->
 
 Die Verbildlichung (Visualisierung) zweier metrischer Variablen haben wir bereits in @sec-zshg-metr kennengelernt.
 Zur Verdeutlichung wie ein Zusammenhang zweier metrischer Variablen aussehen kann, 
@@ -241,13 +242,13 @@ Ja, ich weiß, ich strapaziere mal wieder Ihre Phantasie.
 Jetzt kommt's: Je größer die Fläche des Summenrechtecks ist, 
 desto stärker der (lineare) Zusammenhang.
 Beachten Sie, dass die Flächen Vorzeichen haben, positiv oder negativ (Plus oder Minus), 
-je nach dem, in welchem der vier Quadranten sie stehen. Die Füllfarben der Rechtecke verdeutlichen dies, s. @fig-delta-rect.
+je nachdem, in welchem der vier Quadranten sie stehen. Die Füllfarben der Rechtecke verdeutlichen dies, s. @fig-delta-rect.
 Das *Vorzeichen* der Summe zeigt an, 
 ob der Zusammenhang positiv (gleichsinnig, ansteigende Trendlinie) 
 oder negativ (gegensinnig, absinkende Trendlinie) ist.
 So zeigt @fig-kov links eine positive Summe der Abweichungsrechtecke und rechts eine negative Summe. 
-Man sieht im linken Diagramme, dass die Summe der Rechtecke mit positivem Vorzeigen (rot) überwiegt; 
-im rechten Diagramm ist es umgekehrt (blau, negativ überwiegt).
+Man sieht im linken Teildiagramme, dass die Summe der Rechtecke mit positivem Vorzeigen (oben-rechts und unten-links) überwiegt; 
+im rechten Teildiagramm ist es umgekehrt: Die Rechtecke in Quadranten mit negativem Vorzeichen überwiegen (oben-links und unten-rechts).
 
 
 
@@ -260,25 +261,25 @@ im rechten Diagramm ist es umgekehrt (blau, negativ überwiegt).
 #| out-width: 80%
 #| fig-subcap: 
 #|   - Positive Vorzeichen (Quadranten rechts-oben und links-unten) überwiegen, was in einer positiven Kovarianz resultiert
-#|    - Negative Vorzeichen (Quadranten links-oben und rechts-unten) überwiegen, was in einer negativen Kovarianz resultiert
+#|   - Negative Vorzeichen (Quadranten links-oben und rechts-unten) überwiegen, was in einer negativen Kovarianz resultiert
 #| echo: false
 
 ## Positive correlation
 x <- rnorm(25)
 y <- x + rnorm(25,3, .5)
 #cor(x,y)
-cor.rect.plot(x,y)
+cor.rect.plot(x,y, col = c(orange, "grey20"))
 ## negative correlation
 x <- rnorm(25)
 y <- rnorm(25,10,1.5) - x
 #cor(x,y)
-cor.rect.plot(x,y)
+cor.rect.plot(x,y, col = c(orange, "grey20"))
 ```
 
 
 Wir können das Summenrechteck noch durch die Anzahl der Datenpunkte teilen,
 das ändert nichts an der Aussage,
-aber der Mittelwert hat gegenüber der Summe den Vorteil, dass er unabhängig ist in seiner Aussage von der Anzahl der eingegangenen Datenpunkte.
+aber der Mittelwert hat gegenüber der Summe den Vorteil, dass er in seiner Aussage unabhängig ist von der Anzahl der eingegangenen Datenpunkte.
 Das resultierende Rechteck nennen wir das *mittlere Abweichungsrechteck*.
 Ein Maß für den Zusammenhang von Lernzeit und Klausurpunkte ist also die *Fläche des mittleren Abweichungsrechtecks*, s. @fig-cov2.
 
@@ -443,11 +444,11 @@ points3 <- data.frame(
 
 
 Bei einer Kovarianz von (ungefähr) Null ist die Gesamt-Fläche der Abweichungsrechtecke, wenn man sie pro *Quadrant* aufsummiert, 
-ungefähr gleich groß, s. @fig-covnull.
+(ungefähr) gleich groß, s. @fig-covnull.
 Zur Erinnerung: Bei der Varianz waren es Quadrate; bei der Kovarianz sind es jetzt Rechtecke.
-Addiert man die Abweichungsrechtecke (unter Beachtung der Vorzeichen: rot = positiv; blau = negativ), 
-so beträgt die Summe in etwa (oder genau) Null.
 
+Addiert man die Abweichungsrechtecke (unter Beachtung der Vorzeichen), 
+so beträgt die Summe in etwa (bzw. genau) Null.
 Damit ist die Kovarianz in diesem Fall etwa (bzw. genau) Null, s. @eq-cov-is-zero: 
 Wenn die Summe der Aweichungsrechtecke Null ist, 
 dann ist auch ihr Mittelwert (MW) Null. 
@@ -527,7 +528,7 @@ Insgesamt ist die Kovarianz schwer zu interpretieren und wird in der praktischen
 
 ### Korrelation als mittleres z-Produkt
 
-Der Korrelationskoeffizient $r$ nach Karl Pearson löst das Problem, dass die Kovarianz schwer interpretierbar ist.
+Der Korrelationskoeffizient $r$ nach Karl Pearson [-@pearson1896] löst das Problem, dass die Kovarianz schwer interpretierbar ist.
 Der Wertebereich von $r$ reicht von -1 (perfekte negative lineare Korrelation) bis +1 (perfekte positive lineare Korrelation).
 Eine Korrelation von $r = 0$ bedeutet *kein linearer* Zusammenhang.
 
@@ -547,7 +548,9 @@ Daher kann man den Korrelationskoeffizienten $r$ definieren wie in @def-r.
 :::{#def-r}
 ### Korrelationskoeffizient $r$
 
-Der Korrelationskoeffizient $r$ (nach Pearson) ist definiert als das mittlere Produkt der *z*-Wert-Paare, s. @eq-r-def, vgl. @cohen_applied_2003. Er ist ein Maß des linearen Zusammenhangs zweier metrischer Variablen. Der Wertebereich ist $[-1;1]$, wobei 0 keinen Zusammenhang anzeigt und $|r|=1$ perfekten Zusammenhang. $\square$
+Der Korrelationskoeffizient $r$ (nach Pearson) ist definiert als das mittlere Produkt der *z*-Wert-Paare, s. @eq-r-def, vgl. @cohen_applied_2003. 
+Er ist ein Maß des linearen Zusammenhangs zweier metrischer Variablen. 
+Der Wertebereich ist $[-1;1]$, wobei 0 keinen linearen Zusammenhang anzeigt und $|r|=1$ perfekten linearen Zusammenhang. $\square$
 :::
 
 $$r_{xy}=\frac{1}{n}\sum_{i=1}^n z_{x_i} z_{y_i}$${#eq-r-def}
@@ -556,9 +559,7 @@ Man beachte, dass eine Korrelation (genauso wie eine Kovarianz) nur für metrisc
 Aus dem Korrelationskoeffizienten können Sie zwei Informationen ableiten:
 
 1. *Vorzeichen*: Ein positives Vorzeichen bedeutet positiver (gleichsinniger) linearer Zusammenhang (und umgekehrt: negatives Vorzeichen, negativer, also gegensinniger linearer Zusammenhang).
-2. *Absolutwert* der Korrelation: Der Absolutwert (Betrag) des Korrelationskoeffizienten gibt die Stärke des linearen Zusammenhangs an. Je näher der Wert bei 1 liegt, desto stärker ist der (lineare) Zusammenhang. 
-  - $r = 0$: kein linearer Zusammenhang
-  - $r = 1$: perfekter linearer Zusammenhang $\square$
+2. *Absolutwert* der Korrelation: Der Absolutwert (Betrag) des Korrelationskoeffizienten gibt die Stärke des linearen Zusammenhangs an. Je näher der Wert bei 1 liegt, desto stärker ist der (lineare) Zusammenhang.  
 
 
 
@@ -654,10 +655,9 @@ Liegt Korrelation ohne Kausation vor, so spricht man von einer Scheinkorrelation
 ### Scheinkorrelation: Störche und Babys
 
 Ein Mythos besagt: Die Anzahl der Störche pro Landkreis korreliert mit der Anzahl der Babys in diesem Landkreis [vgl. @matthews_storks_2000]. 
-
 Eine mögliche Erklärung für dieses (nur scheinbare) Paradoxon ist, 
-dass die "Naturbelassenheit" des Landkreises die gemeinsame Ursache für Störche ist (Störche lieben Natur) 
-und für Babies ist (die  Gegebenheiten bei hoher Naturbelassenheit eine höhere Zahl von Kindern pro Frau begünstigen).
+dass die "Naturbelassenheit" des Landkreises die gemeinsame Ursache von Störchen ist (Störche lieben Natur) 
+und  Babys ist (die  Gegebenheiten bei hoher Naturbelassenheit begünstigteine höhere Zahl von Kindern pro Frau).
 Wir müssen die Erklärung keinesfalls glauben; sie soll das Beispiel nur konkreter machen.
 Uns geht es hier nur um die Erkennung von Scheinkorrelation. $\square$
 :::
@@ -684,7 +684,7 @@ und auf die Schwere des Corona-Verlaufs
 
 ### Einschränkung der Spannweite
 
-Durch (nicht-randomisierte) Einschränkung (Restriktion) der Spannweite einer (oder beider) Variablen sinkt die Stärke (der Absolutwert) einer Korrelation, vgl. @cohen_applied_2003 und @fig-corr-range.
+Durch (nicht-randomisierte) Einschränkung (Restriktion) der Spannweite einer (oder beider) Variablen sinkt die Stärke (der Absolutwert) einer Korrelation, vgl. @cohen_applied_2003; s. @fig-corr-range.
 
 
 Erstellen wir uns dazu *zwei* Datensätze mit je zwei Variablen, $X$ und $Y$ und mit Umfang $n=100$.
@@ -702,8 +702,6 @@ Wir schränken dann den Wertebereich von $X$ ein auf, sagen wir, auf $[-0.5, .5]
 #| echo: true
 #| lst-label: lst-corr-range
 #| lst-cap: Korrelation mit eingeschränkter Spannweite
-
-set.seed(42)
 n <- 1e2
 d <- tibble(x = rnorm(n = n, mean = 0, sd = 1),
             e = rnorm(n = n, mean = 0, sd = .5),
@@ -763,29 +761,12 @@ Glauben Sie nicht, prüfen Sie nach! Berechnen Sie die Korrelation von $X$ und $
 
 
 In Ihrer Arbeit beim Online-Auktionshaus analysieren Sie, welche Variablen mit dem Verkaufspreis von Computerspielen zusammenhängen.
-Falls der Datensatz auf Ihrem Computer (am besten in Ihrem Projektverzeichnis in RStudio) abgelegt ist, können Sie die Daten so (in mittlerweile gewohnter Manier) importieren, s. @lst-mario-nopath.
-
-```{r}
-#| lst-label: lst-mario-nopath
-#| lst-cap: Mariokart importieren, wenn die CSV-Datei im aktuellen Projektordner liegt.
-#| eval: false
-mariokart <- read.csv("mariokart.csv")
-```
-
-
-Falls der Datensatz im Unterordner mit Namen "Mein_Unterordner" liegt, so würden Sie folgenden Pfad eingeben, s. @lst-mario-unterordner.
-
-```{r}
-#| lst-label: lst-mario-unterordner
-#| lst-cap: "Den Datensatz Mariokart importieren, wenn die CSV-Datei im Unterordner `Mein_Unterordner` liegt."
-#| eval: false
-mariokart <- read.csv("Mein_Unterordner/mariokart.csv")
-```
-
-Man beachte, dass solche sog. relativen Pfade, wie `Mein_Unterordner/`, die relativ zu Ihrem Arbeitsverzeichnis, d.$\,$h. Ihr Projektverzeichnis in R-Studio, liegen, *nicht* mit einem Schrägstrich (Slash) beginnen.
-
+Falls der Datensatz auf Ihrem Computer (am besten in Ihrem Projektverzeichnis in RStudio) abgelegt ist, können Sie die Daten so (in mittlerweile gewohnter Manier) importieren: `mariokart <- read.csv("mariokart.csv")`
+Falls der Datensatz im Unterordner mit Namen "Mein_Unterordner" liegt, so würden Sie folgenden Pfad eingeben: `mariokart <- read.csv("Mein_Unterordner/mariokart.csv")`.
+Man beachte, dass solche sog. *relativen* Pfade, wie `Mein_Unterordner/`, die relativ zu Ihrem Arbeitsverzeichnis, d.$\,$h. Ihr Projektverzeichnis in R-Studio, liegen, *nicht* mit einem Schrägstrich (Slash) beginnen.
 Falls Sie die Daten nicht auf Ihrem Computer haben,
-können Sie sie bequem von z.$\,$B. der Webseite von [Vincent Arel-Bundock](https://vincentarelbundock.github.io/Rdatasets) herunterladen:
+können Sie sie bequem von z.$\,$B. der Webseite von [Vincent Arel-Bundock](https://vincentarelbundock.github.io/Rdatasets) herunterladen.
+Den Pfad hatten wir in @lst-import-mario definiert.
 
 ::: {.content-visible when-format="html"}
 
@@ -794,16 +775,11 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 ```
 :::
 
-::: {.content-visible when-format="pdf"}
 
-Den Pfad hatten wir in @lst-import-mario definiert.
 
-```{r}
-mariokart <- read.csv(mariokart_path)
-```
-:::
-
-Sie wählen die Variablen von `mariokart`, die Sie in diesem Fall interessieren -- natürlich nur die metrischen -- und lassen sich mit `cor` die Korrelation aller Variablen untereinander ausgeben: 
+Sie wählen die Variablen von `mariokart`, die Sie in diesem Fall interessieren 
+-- natürlich nur die metrischen -- 
+und lassen sich mit `cor` die Korrelation aller Variablen untereinander ausgeben: 
 
 ::: {.content-visible when-format="html"}
 
@@ -820,8 +796,7 @@ mariokart %>%
 ```{r}
 mariokart %>%  
   dplyr::select(start_pr, ship_pr, total_pr) %>% 
-  cor() %>% 
-  round(2) # Runden auf zwei Dezimalen
+  cor()
 ```
 :::
 
@@ -832,7 +807,7 @@ Es kann vorkommen, dass Sie zwei R-Pakete geladen haben,
 in denen es jeweils z.$\,$B. eine Funktion mit Namen `select` gibt.
 R wird in dem Fall diejenige Funktion verwenden, 
 deren Paket Sie als letztes gestartet haben.
-Das kann dann das falsche `select` sein, wie es mir oben in der Syntax passiert ist.
+Das kann dann das falsche `select` sein.
 In dem Fall resultiert eine verwirrende Fehlermeldung, 
 die sinngemäß sagt: "Hey Mensch, du hast Argumente in der Funktion verwendet, die du gar nicht verwenden darfst, 
 da es sie nicht gibt." 
@@ -904,11 +879,7 @@ mariokart %>%
 Die Sternchen in @tbl-mario-corr-pdf geben die sog. statistische Signifikanz der Korrelation an; ein Thema, das wir einfach gekonnt ignorieren.
 Möchte man nur einzelne Korrelationskoeffizienten ausrechnen, 
 können wir die Idee des Zusammenfassens, s. @fig-desk2, nutzen:
-
-```{r}
-mariokart %>% 
-  summarise(cor_super_wichtig = cor(total_pr, wheels))
-```
+`mariokart %>% summarise(korrelation = cor(total_pr, wheels))`.
 
 
 Im Falle von fehlenden Werte müssen Sie den Befehl `cor` aus seiner schüchternen Vorsicht befreien und ermutigen, 
@@ -917,6 +888,7 @@ Das geht mit dem Argument `use = "complete.obs"` in `cor`.
 
 
 ```{r}
+#| eval: false
 mariokart %>% 
   summarise(cor_super_wichtig = cor(total_pr, wheels, use = "complete.obs"))
 ```
@@ -1035,7 +1007,7 @@ entsprechend wird Ihnen jedes typische Statistik-Buch die Grundlagen erläutern.
 Schauen Sie doch mal, was Ihre Bibliothek Ihnen zu bieten hat.
 Wer eine unorthodoxe (geometrische!) Herangehensweise an die Korrelation (und Regression) sucht, 
 darf sich auf eine Menge Aha-Momente bei @kaplan_statistical_2009 freuen.
-Ein schönes, modernes Statistikbuch bietet der Psychologie-Prof Russell Poldrack [-@poldrack_statistical_2023];
+Ein schönes, modernes Statistikbuch bietet Poldrack [-@poldrack_statistical_2023];
 auch dieses Buch ist frei online verfügbar.
 Tipp: Nutzen Sie die Übersetzungfunktion Ihres Browsers, wenn Sie das Buch nicht in Englisch lesen wollen.
 Ein Klassiker, wenn auch nicht mehr ganz frisch, ist  @cohen_applied_2003; immer noch sehr empfehlenswert, aber etwas höheren Anspruchs.

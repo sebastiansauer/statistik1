@@ -38,7 +38,8 @@ source("_common.R")
 
 
 
-In diesem Kapitel benötigen Sie die üblichen R-Pakete (`tidyverse`, `easystats`) und Daten (`mariokart`),  s. @sec-import-mariokart.
+In diesem Kapitel benötigen Sie die üblichen R-Pakete (`tidyverse`, `easystats`) und Daten (`mariokart`),
+s. @sec-import-mariokart und @sec-r-pckgs.
 
 
 
@@ -70,13 +71,10 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 
 
 Vorhersagen sind eine nützliche Sache, 
-unter (mindestens) folgenden Voraussetzungen:
-
-1. Sie sind präzise.
-2. Wir wissen, wie präzise.
-3. Jemand interessiert sich für die Vorhersage.
-
-
+unter (mindestens) folgenden Voraussetzungen: 
+1. Sie sind präzise; 
+2. Wir wissen, wie präzise; 
+3. Jemand interessiert sich für die Vorhersage. 
 Die Methode des Vorhersagens, die wir hier betrachten, 
 nennt man auch *lineare Regression*.
 
@@ -84,9 +82,10 @@ nennt man auch *lineare Regression*.
 ### Vorhersagen ohne UV
 
 :::::{#exm-noten-prognose}
-Nach intensiver Beschäftigung mit Statistik sind Sie allgemein als Checker bekannt.
-Viele jüngere Studis fragen Sie um Rat.
-Eines Tages kommt eine Studentin zu Ihnen, Toni, und fragt: "Welche Statistiknote kann ich in der Klausur erwarten?"
+Nach intensiver Beschäftigung mit Statistik sind Sie allgemein als Daten-Checker bekannt.
+Viele Studierende fragen Sie um Rat.
+Eines Tages kommt eine Studentin zu Ihnen, Toni, 
+und fragt: "Welche Statistiknote kann ich in der Klausur erwarten?"
 Sie entgegnen: "Wie viel hast du denn gelernt?".
 Die Antwort: "Sage ich nicht."
 Nach kurzem Überlegen geben Sie den Notenschnitt der letzten Klausur als Prognose für diese Person. 
@@ -132,7 +131,7 @@ noten2 %>%
 
 
 
-Ihre Antwort lautet: 
+Ihre Überlegung: 
 "Im Schnitt haben die Studis bei der letzten Klausur ungefähr `r mean(round(noten2$y))` erzielt. 
 Diesen Wert kannst du erwarten. 
 Solange ich keine genaueren Infos habe, 
@@ -168,8 +167,9 @@ ggplot(noten2) +
 Modelle ohne UV, Punktmodelle also, 
 kann man so bezeichnen: `y ~ 1`. 
 Da das Modell null UV hat, 
-nennt man es auch manchmal *Nullmodell.*
+nennt man es auch manchmal *Nullmodell.* $\square$
 :::
+
 
 Auf Errisch kann man dieses Nullmodell so spezifizieren:
 
@@ -183,7 +183,7 @@ lm0
 dass es keine Prädiktoren gibt.
 In dem Fall wird der Mittelwert, `r round(mean(noten2$y))`, als Gerade verwendet.
 Der zurückgemeldete Koeffizient `(Intercept)` 
-ist hier der einizige des Punktmodells.
+ist in diesem Fall der einzige Koeffizient des Modells.
 Da es ein Punktmodell ist, sagt es für alle Beobachtungen (hier Studierenden) den gleichen Wert vorher, nämlich `r round(mean(noten2$y))`.
 
 
@@ -217,7 +217,7 @@ lm_toni <- lm(y ~ x, data = noten2)
 lm1_b0 <- coef(lm_toni)[1]
 lm1_b2 <- coef(lm_toni)[2]
 
-toni_punkte <- predict(lm_toni_b1, newdata = data.frame(x=42))
+toni_punkte <- predict(lm_toni, newdata = data.frame(x=42))
 ```
 
 
@@ -391,7 +391,7 @@ $$\begin{aligned}
 \color{ycol}{y_i} &= \color{beta0col}{\beta_0} + \color{beta1col}{\beta_1} \cdot \color{modelcol}{x_i} + \color{errorcol}{\epsilon_i} \square
 \end{aligned}$${#eq-linear-model}
 
-Mit:
+Die Variablen in @eq-linear-model haben folgende Bedeutung:
 
 - $\color{beta0col}{\beta_0}$: geschätzter y-Achsenabschnitt laut Modell (engl. *intercept*)
 - $\color{beta1col}{\beta_1}$: geschätzte Steigung (Regressionsgewicht) laut Modell (engl. *slope*)
@@ -545,18 +545,34 @@ noten2 %>%
   theme_minimal() +
   #scale_x_continuous(limits = c(0, 100)) +
   #scale_y_continuous(limits = c(0, 100)) +
-  annotate("point", x = 0, y = lm1_b0, color = modelcol, size = 7, alpha = .7) +
+  annotate("point", x = 0, y = lm1_b0, color = ycol, size = 7, alpha = .7) +
   annotate("label", x = mean(noten2$x), y = 0, vjust = "bottom",
            label = "MW Lernzeit") +
   annotate("label", y = mean(noten2$y), x = 12, vjust = "left",
            label = "MW Klausurpunkte") +
-  geom_text_repel(data = tibble(x = 0, y = predict(lm1, newdata = tibble(x = 0))), 
-                  aes(x = x, y = y,), 
-                  label = "Toni",
-                  point.padding = .5,
-                  size = 8) +
+  # geom_text_repel(data = tibble(x = 0, y = predict(lm1, newdata = tibble(x = 0))), 
+  #                 aes(x = x, y = y,), 
+  #                 label = "Toni",
+  #                 point.padding = .5,
+  #                 size = 8) +
   labs(x = "Lernzeit",
-       y = "Klausurpunkte")
+       y = "Klausurpunkte") +
+ geom_label_repel(
+  data = tibble(x = 0, y = predict(lm1, newdata = tibble(x = 0))), 
+  aes(x = x, y = y,),
+  label = "Toni",
+  box.padding = unit(1, "lines"),
+  point.padding = unit(1, "lines"),
+  segment.color = "grey50",
+  segment.size = 1,
+  arrow = arrow(length = unit(0.01, "npc")),
+  # Styling to create a label-like appearance
+  bg.color = "white",       # Background color of the label
+  color = "black",           # Text color
+  fill = "white",          # Alternative way to set background
+  alpha = 0.8,             # Transparency of the background
+  segment.alpha = 1,     # Transparency of the segment
+  size = 6)                 # Adjust text size
 ```
 
 
@@ -585,18 +601,15 @@ In diesem Beispiel heißt er `tonis_lernzeit`.
 ### Spezifikation eines Geradenmodells
 
 
-Ein Geradenmodell kann man im einfachsten Fall spezifizieren wie s. @eq-mod1 dargestellt.
+Ein Geradenmodell kann man im einfachsten Fall spezifizieren wie @eq-mod1 dargestellt.
 
 
 ::: {.content-visible unless-format="epub"}
 
 $$\color{ycol}{\hat{y}} \sim \color{xcol}{\text{x}}$$ {#eq-mod1}
 
-Lies: "Laut meinem Modell ist mein (geschätztes) $\color{ycol}{\hat{y}}$ irgendeine Funktion von $\color{xcol}{\text{x}}$".
-
-Wir erinnern uns, dass $\color{ycol}{Y}$ die $\color{ycol}{AV}$ und $\color{xcol}{X}$ die $\color{xcol}{UV}$ ist:
-
-$$\color{ycol}{AV} \sim \color{xcol}{UV}$$ {#eq-mod1}
+Lies: "Laut meinem Modell ist mein vorhergesagtes $\color{ycol}{\hat{y}}$ irgendeine Funktion von $\color{xcol}{\text{x}}$". 
+Wir erinnern uns, dass $\color{ycol}{Y}$ die $\color{ycol}{AV}$ und $\color{xcol}{X}$ die $\color{xcol}{UV}$ ist: $\color{ycol}{AV} \sim \color{xcol}{UV}$.
 
 :::
 
@@ -605,22 +618,13 @@ $$\color{ycol}{AV} \sim \color{xcol}{UV}$$ {#eq-mod1}
 $${\hat{y}} \sim {\text{x}}$$ {#eq-mod1}
 
 Lies: "Laut meinem Modell ist mein (geschätztes) ${\hat{y}}$ irgendeine Funktion von ${\text{x}}$".
-
-Wir erinnern uns, dass ${Y}$ die ${AV}$ und ${X}$ die ${UV}$ ist:
-
-$${AV} \sim {UV}$$ {#eq-mod1}
+Wir erinnern uns, dass ${Y}$ die ${AV}$ und ${X}$ die ${UV}$ ist: ${AV} \sim {UV}$.
 :::
 
 
 Wir werden als Funktion nur Geraden verwenden.
 Die genauen Werte der Gerade lassen wir uns  vom Computer ausrechnen.
-@eq-mod1 können Sie so ins Errische übersetzen:
-
-
-```{r}
-#| eval: false
-lm(y ~ x, data = meine_daten)
-```
+@eq-mod1 können Sie so ins Errische übersetzen: `lm(y ~ x, data = meine_daten)`.
 
 `lm` steht für "lineares Modell", also eine Gerade als Modell.
 Die Gerade nennt man auch *Regressionsgerade* (an anderer Stelle in diesem Buch unscharf als "Trendgerade" bezeichnet).
@@ -647,11 +651,11 @@ Die Regressionsgleichung lautet demnach:
 `0.88` ist das Regressionsgewicht, d.$\,$h. die Steigung der Regressionsgeraden: Für jede Stunde Lernzeit steigt der vorhergesagte Klausurerfolg um `0.88` Punkte.
 
 Mit Kenntnis der beiden Koeffizienten kann man beliebige $\color{ycol}{Y}$-Werte ausrechnen, gegeben bestimmte $\color{xcol}{X}$-Werte.
-Hat jemand zum Beispiel 10 Stunden gelernt, 
+Hat jemand zum Beispiel 73 Stunden gelernt, 
 würden wir folgendes Klausurergebnis vorhersagen:
 
 ```{r}
-lernzeit <- 10
+lernzeit <- 73
 y_pred <- 46 + 0.88*lernzeit
 y_pred
 ```
@@ -706,7 +710,7 @@ predict(modell, newdata = tabelle_mit_prädiktorwerten)
 ```
 
 Die Funktion `predict` liefert eine Vorhersage für ein ein Modell,
-z.$\,$B. `lm_toni` und für einen bestimmten Dataframe (der die Werte der UV enthalten muss).
+z.$\,$B. `lm_toni`, und für einen bestimmten Dataframe (der die Werte der UV enthalten muss).
 
 
 
@@ -787,7 +791,7 @@ Nicht schlecht!
 
 :::{#def-fehlerstreung}
 ### Fehlerstreuung
-Als Fehlerstreuung bezeichnen wir die Gesamtheit der Abweichungen der beobachteten Werte ($y_i$) vom vorhergesagten Wert ($\hat{y}_i$). $\square$
+Als Fehlerstreuung bezeichnen wir die Verteilung der Abweichungen der beobachteten Werte ($y_i$) vom vorhergesagten Wert ($\hat{y}_i$). $\square$
 :::
 
 Zur Berechnung der Fehlerstreuung gibt es mehrere Kenngrößen 
@@ -795,8 +799,6 @@ wie MAE oder MSE.
 Ein Geradenmodell ist immer besser als ein Punktmodell 
 (im Hinblick auf die Verringerung der Fehlerstreuung), 
 solange X mit Y korreliert ist. 
-
-
 Natürlich können wir -- in Analogie zur Varianz -- 
 auch den mittleren Quadratfehlerbalken (Mean Squared Error, MSE) berechnen.
 Wer mag, 
@@ -819,7 +821,6 @@ Betrachtet man die MSE, so kann man eine Verbesserung um `r 1-verhaeltnis_fehler
 ### Berechnung der Modellkoeffizienten
 
 Aber wie legt man die Regressionsgerade in das Streudiagramm, bildlich gesprochen?
-
 Die Regressionskoeffizienten (hier synonym: Modellparameter) $\beta_0$ und $\beta_1$ wählt man so, dass die *Residuen* *minimal* sind.
 Genauer gesagt wird die Summe der quadrierten [Residuen]{.green} minimiert, s. @eq-min.
 
@@ -878,7 +879,7 @@ Eine schöne Darstellung dazu findet sich bei @kaplan_statistical_2009.
 
 
 
-## R-Quadrat als Maß der Modellgüte
+## $R^2$ als Maß der Modellgüte
 
 Das Modell `lm_toni` weist noch `r verhaeltnis_fehler_mse` der Fehlerstreuung (MSE) des Nullmodells auf.
 Anders gesagt, wir haben uns ( (bzw. das Modell hat sich) um $1 - `r round(verhaeltnis_fehler_mse, 2)`$ verbessert.
@@ -891,7 +892,7 @@ Anders gesagt, wir haben uns ( (bzw. das Modell hat sich) um $1 - `r round(verha
 
 
 :::{#def-r2}
-### R-Quadrat
+### R$R^2$-Quadrat
 Der Anteil der Verringerung (als Anteil) der Fehlerstreuung der Zielvariablen  zwischen `lm0` und dem
  gerade untersuchten Modell nennt man  *R-Quadrat* ($R^2$).
 Das R-Quadrat ($R^2$) eines Modells $m$ ist definiert als die Verringerung der Streuung, 
@@ -959,7 +960,7 @@ wie wenn man für jedes $y$ den Mittelwert, [$\color{ycol}{\bar{y}}$]{.content-v
 [${\bar{y}}$]{.content-visible when-format="epub"}, vorhersagen würde. 
 Je größer R-Quadrat, desto besser passt das Modell zu den Daten; 
 desto besser "erklärt" das Modell die Daten 
-(desto besser der "Fit", sagt man).
+(desto besser der "Fit" des Modells zu den Daten, sagt man).
 
 ::: {.content-visible when-format="html"}
 [Diese App der FOM-Hochschule](https://fomshinyapps.shinyapps.io/Variationszerlegung/) erlaubt es Ihnen mit der Größe der Residuen eines linearen Modells zu spielen.
@@ -994,7 +995,7 @@ desto besser "erklärt" das Modell die Daten
 Die Residuen (Vorhersagefehler) bestimmen die Modellgüte:
 Sind die Residuen im Schnitt groß, so ist die Modellgüte gering (schlecht), und umgekehrt.
 Verschiedenen Koeffizienten stehen zur Verfügung: 
-R-Quadrat, $r$ (als Korrelation von tatsächlichem $y$ und vorhergesagten $\hat{y}$), MSE, RMSE, MAE, …
+$R^2$, $r$ (als Korrelation von tatsächlichem $y$ und vorhergesagten $\hat{y}$), MSE, RMSE, MAE, …
 
 
 ### Koeffizienten
@@ -1006,15 +1007,14 @@ Ohne eine zugrundeliegende Theorie für eine Kausalbehauptung kann man kann nur 
 Oder sich mit der Modellgüte und den Vorhersagen begnügen. 
 Was auch was wert ist.
 
-
-
 [Im Modell `lm_toni` liegt der Achsenabschnitt bei $\textcolor{ycol}{y}=`r round(coef(lm_toni)[1], 2)`$. 
 Beobachtungen mit $\color{xcol}{x}=0$ 
 können also diesen $\textcolor{ycol}{Y}$-Wert erwarten, laut `lm_toni`.]{.content-visible unless-format="epub"}
 [Im Modell `lm_toni` liegt der Achsenabschnitt (engl. intercept) bei ${y}=`r round(coef(lm_toni)[1], 2)`$.
 Beobachtungen mit ${x}=0$ 
 können also diesen ${Y}$-Wert erwarten, laut `lm_toni`.]{.content-visible when-format="epub"}
-Leider ist es häufig so, dass UV mit Wert 0 in der Praxis nicht realistisch sind, 
+Leider ist es häufig so, dass UV mit Wert 0 in der Praxis 
+nicht realistisch sind, 
 so dass der Achsenabschnitt dann wenig nützt.
 
 :::{#exm-groesse}
@@ -1035,10 +1035,11 @@ So interpretiert man die Geradensteigung, $\beta_1$:
 :::{.callout-caution}
 Häufig liest man, der "Effekt der UV" auf die AV betrage z.$\,$B. $`r lm_toni_b1`$. 
 "Effekt" ist aber ein Wort, 
-das man kausal verstehen kann.
-Ohne weitere Absicherung kann man aber Regressionskoeffizienten nicht kausal verstehen. 
+das man leicht kausal verstehen kann.
+Ohne weitere Absicherung kann man aber Regressionskoeffizienten *nicht* kausal verstehen. 
 Daher sollte man das Wort "Effekt" mit Vorsicht genießen. 
-Manche sprechen daher auch von einem "statistischen Effekt". $\square$
+Manche sprechen daher auch von einem "statistischen Effekt",
+um zu verdeutlichen, dass keine Kausalaussage impliziert ist. $\square$
 :::
 
 
@@ -1110,13 +1111,14 @@ r2(lm2)
 
 
 Oh nein! Unterirdisch schlecht. Anstelle von bloßem Rumprobieren überlegen Sie und schauen dann nach, welche Variable am stärksten korreliert mit `total_pr`;
-es resultiert `lm3`: 
+es resultiert `lm3`. Dann lassen Sie sich die Modellparameter ausgeben, s. @tbl-lm3.
 
 ```{r}
 #| results: hide
 lm3 <- lm(total_pr ~ ship_pr, data = mariokart)
-parameters(lm3)
 ```
+
+
 
 ```{r}
 #| echo: false
@@ -1128,7 +1130,8 @@ parameters(lm3) %>% print_md()
 
 Der Achsenabschnitt liegt bei ca. `r round(coef(lm3)[1])` Dollar, 
 wie man in @tbl-lm3 sieht: Ein Spiel, 
-das mit null Dollar Preis startet, kann laut `lm3` etwa  `r round(coef(lm3)[1])` Dollar finaler Verkaufspreis erwarten.
+das mit null Dollar Preis startet, 
+kann laut `lm3` etwa  `r round(coef(lm3)[1])` Dollar finaler Verkaufspreis erwarten.
 *Pro Dollar an Versandkosten* (`ship_pr`) steigt der zu erwartende finale Verkaufspreis 
 um ca. `r round(coef(lm3)[2])` Dollar.
 (Die Spalte `95 CI` gibt einen Schätzbereich für den jeweiligen Modellkoeffizienten an,
@@ -1230,11 +1233,11 @@ mae(lm3)
 
 
 
-Im nächsten Meeting erzählen Sie Ihrem Chef 
+Im nächsten Meeting erzählen Sie Ihrer Chefin
 "Ich kann den Verkaufspreis von Mariokart-Spielen im Schnitt auf `r round(mae(lm3),0)` 
 Dollar genau vorhersagen!".
 Hört sich gut an.
-Allerdings hätte ihr Chef es gerne genauer. 
+Allerdings hätte es Ihre Chefin gerne genauer. 
 Kann man da noch was machen?
 
 

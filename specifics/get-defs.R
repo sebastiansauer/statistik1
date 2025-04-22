@@ -53,12 +53,12 @@ for (file in files) {
 definitions <- definitions[order(sapply(definitions, `[`, 1))]
 
 # Write the definitions to a new Quarto file:
-output_file <- file.path(quarto_dir, "definitions.qmd")
+output_file <- file.path(quarto_dir, "110-definitions.qmd")
 fileConn <- file(output_file, "w")
 writeLines("# Definitionen\n\n", fileConn)
 
 for (definition in definitions) {
-  line <- paste0("- **", definition[2], "**: @def-", definition[1], ", s. S. \\pageref{def-", definition[1], "}")
+  line <- paste0("- *", definition[2], "*: @def-", definition[1], ", s. S. \\pageref{def-", definition[1], "}")
   writeLines(line, fileConn)
 }
 

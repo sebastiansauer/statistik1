@@ -1642,8 +1642,8 @@ Oh nein! Was ist los!? Eine Fehlermeldung!
 Nominalskalierte UV mit vielen Ausprägungen, wie `title` sind problematisch.
 Kommt eine Ausprägung von `title` im Test-Sample vor,
 die es *nicht* im Train-Sample gab, so resultiert ein Fehler beim `predict`en.
-Häufig ist es sinnvoll, auf diese Variable zu verzichten,
-da diese Variablen oft zu Overfitting führen. $\square$
+Häufig ist es ohnehin sinnvoll, auf diese Variable zu verzichten,
+da diese Variablen oft zu Overfitting führen. 
 
 
 ### Modell "all-in", ohne Titelspalte
@@ -1654,30 +1654,22 @@ Nächster Versuch.
 ```{r mariokart-train2}
 mariokart_train2 <-
   mariokart_train %>% 
-  select(-c(title, V1, id))
-```
+  select(-c(title, id))
 
-
-Wir entfernen auch die Spalte `V1` und `id`,
-da sie ebenfalls keine Informationen bergen.
-
-
-```{r lm_allin_no_title}
-lm_allin_no_title <- lm(total_pr ~ ., data = mariokart_train2)
-r2(lm_allin_no_title) 
+lm_allin_no_title_no_id <- lm(total_pr ~ ., data = mariokart_train2)
+r2(lm_allin_no_title_no_id) 
 ```
 
 
 
-Das R-Quadrat ist ja durchaus ordentlich.
-Schauen wir uns noch den `rmse` (die SD der Vorhersagefehler) an; der Befehl wohnt im Paket `performance`, Teil des Metapakets `easystats`:
+Das R-Quadrat ist durchaus ordentlich.
 
 
->    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Gut gemacht!
+>    [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Das haben wir gut gemacht!
 
 
 ```{r performance-lm-allin-no-title}
-performance::rmse(lm_allin_no_title)
+performance::rmse(lm_allin_no_title_no_id)
 ```
 
 
@@ -1715,7 +1707,7 @@ mariokart_test %>%
 Berechnen wir die Vorhersagen (engl. predictions; to predict: vorhersagen):
 
 ```{r}
-lm_allin_predictions <- predict(lm_allin_no_title, newdata = mariokart_test)
+lm_allin_predictions <- predict(lm_allin_no_title_no_id, newdata = mariokart_test)
 ```
 
 
@@ -1731,7 +1723,8 @@ mit den Test-Daten ein:
 ```{r}
 mariokart_test <-
   mariokart_test %>% 
-  mutate(lm_allin_predictions = predict(lm_allin_no_title, newdata = mariokart_test))
+  mutate(lm_allin_predictions = predict(lm_allin_no_title_no_id, 
+newdata = mariokart_test))
 ```
 
 
@@ -1773,10 +1766,10 @@ yardstick::rmse(data = mariokart_test,
 Ihr mittlerer Vorhersagefehler (RMSE) liegt bei ca. 13 Euro. Übrigens haben wir hier `yardstick::rmse geschrieben und nicht nur `rmse()`, 
 da es sowohl im Paket `performance` ( Teil des Metapakets `easystats`) als auch im Paket `yardstick` (Teil des Metapakets `tidymodels`) 
 einen Befehl des Namens `rmse` gibt. Name-Clash-Alarm! 
-R könnte daher den anderen `rmse`` meinen als Sie, 
+R könnte daher den anderen `rmse` meinen als Sie, 
 was garantiert zu Verwirrung führt. (Entweder bei R oder bei Ihnen.)
 
->    [👴]{.content-visible when-format="html"}[\emoji{old-man}]{.content-visible when-format="pdf"} Ganz okay.
+>    [👩‍💼]{.content-visible when-format="html"}[\emoji{old-man}]{.content-visible when-format="pdf"} Ganz okay.
 
 Wie ist es um das R-Quadrat Ihrer Vorhersagen bestellt?
 
@@ -1808,16 +1801,22 @@ knitr::kable()
 
 Wie das Beispiel zeigt, ist die Modellgüte im Test-Sample (leider) oft *geringer* als im Train-Sample. 
 Die Modellgüte im Train-Sample ist mitunter übermäßig optimistisch.
-Dieses Phänomen bezeichnet man als *Overfitting*.
-Bevor man Vorhersagen eines Modells einreicht, 
-bietet es sich, die Modellgüte in einem neuen Datensatz, als einem Test-Sample, zu überprüfen. $\square$
+Dieses Phänomen bezeichnet man als *Overfitting* [@gelman2021].
+Bevor man Vorhersagen eines Modells bei der Chefin einreicht, 
+bietet es sich, die Modellgüte in einem neuen Datensatz, 
+also einem Test-Sample, zu überprüfen. 
+
+Wir haben hier die Funktion `rsq` aus dem Paket `yardstick` verwendet,
+da `r2` nur die Modellgüte im Train-Sample ausrechnen kann.
+`rsq` kann die Modellgüte für beliebige Vorhersagewerte berechen, 
+also sowohl aus dem Train- oder dem Test-Sample.
 
 
 ## Vertiefung: Das Aufteilen Ihrer Daten
 
 ### Analyse- und Assessment-Sample
 
-Wenn Sie eine robuste Schätzung der Güte Ihres Modells erfahren möchten,
+Wenn Sie eine robuste Schätzung der Güte Ihres Modells erhalten möchten,
 bietet sich folgendes Vorgehen an (vgl. @fig-sample-types):
 
 
@@ -1836,8 +1835,9 @@ Diese Aufteilung Ihres Datensatzatzes in diese zwei Teile nennt man auch *Validi
 
 
 ```{r}
-library(rsample)
-mariokart <- read_csv("data/mariokart.csv")  # Wenn die CSV-Datei in einem Unterordner mit Namen "daten" liegt
+library(rsample)  # ggf. noch installieren
+mariokart <- read_csv("data/mariokart.csv")  # Wenn die CSV-Datei in einem Unterordner mit Namen "data" liegt
+
 
 meine_aufteilung <- initial_split(mariokart, strata = total_pr)
 ```
@@ -1851,13 +1851,13 @@ meine_aufteilung <- initial_split(mariokart, strata = total_pr)
 ```
 
 
-`initial_split` *bestimmt* für jede Zeile (Beobachtung) zufällig aus, ob diese Zeile in das Analyse- oder in das Assessment-Sample kommen soll.
-Im Standard werden 75% der Daten in das Analyse- und 25% in das Assessment-Sample eingeteilt^[vgl. `help(initial_split)`];
+`initial_split` wählt für jede Zeile (Beobachtung) zufällig aus, 
+ob diese Zeile in das Analyse- oder in das Assessment-Sample kommen soll.
+Im Standard werden 75% der Daten in das Analyse- und 25% in das Assessment-Sample eingeteilt;^[vgl. `help(initial_split)`]
 das ist eine sinnvolle Aufteilung.
 Das Argument `strata` sorgt dafür, dass die Verteilung der AV in beiden Stichproben gleich ist.
 Es wäre nämlich blöd für Ihr Modell, wenn im Train-Sample z.$\,$B. nur die teuren, und im Test-Sample nur die günstigen Spiele landen würde. Anderes Beispiel: In den ersten Zeilen stehen nur Kunden aus Land A und in den unteren Zeilen nur aus Land B.
 In so einem Fall würde sich Ihr Modell unnötig schwer tun.
-
 Im nächsten Schritt können Sie anhand anhand der von `initial_split` bestimmten Aufteilung die Daten tatsächlich aufteilen. `initial_split` sagt nur, welche Zeile in welche der beiden Stichproben kommen *soll*. Die eigentliche Aufteilung wird aber noch nicht durchgeführt.
 
 
@@ -1868,6 +1868,8 @@ mariokart_test <-
   testing(meine_aufteilung)  # Assessment-Sample
 ```
 
+`training` wählt die Zeilen aus, die in das Train-Sample ihres Train-Samples, d.h. Ihr Analyse-Sample, kommen sollen.
+`testing`  wählt die Zeilen aus, die in das Test-Sample ihres Train-Samples, d.h. Ihr Assessment-Sample, kommen sollen.
 
 Ich persönliche nenne die Tabelle mit den Daten gerne `d_analysis` bzw. `d_assess`,
 das ist kürzer zu tippen und einheitlich.
@@ -1927,9 +1929,9 @@ Ein Anwendungsbezug von moderner Datenanalyse ist es vorherzusagen, welche Kunde
 also vielleicht in Zukunft bald nicht mehr unsere Kunden sind ("customer churn").
 Es gibt eine ganze Reihe von Untersuchungen dazu, 
 z.$\,$B. die von @lalwani2022.
-Die Forschis versuchen anhand von Daten und u.$\,$a. auch der linearen Regression vorherzusagen, 
+Das Forschungsteam versuchen anhand von Daten und u.$\,$a. auch der linearen Regression vorherzusagen, 
 welche Kunden abgewandert sein werden. 
-Die Autoren berichten von einer Genauigkeit von über 80 % in Ihrem (besten) Vorhersagemodell.
+Die Autoren berichten von einer Genauigkeit von über 80$\,$% im (besten) Vorhersagemodell.
 
 
 ## Wie man mit Statistik lügt
@@ -2001,7 +2003,7 @@ parameters(lm_ping1) |> select(Parameter, Coefficient)
 
 ### Analyse 2: Aufteilung in Arten (Gruppen)
 
-Kurz darauf veröffentlicht eine verfeindete Forscherin auch einen Aufsatz zum gleichen Thema. Gleiche Daten. 
+Kurz darauf veröffentlicht eine andere Forscherin auch einen Aufsatz zum gleichen Thema. Gleiche Daten. 
 Aber mit *gegenteiligem* Ergebnis: 
 Bei *jeder Rasse* von (untersuchten) Pinguinen gilt: 
 Es gibt einen *positiven* Zusammenhang von Schnabelllänge und Schnabeltiefe, s. @fig-penguins-groups.
@@ -2053,7 +2055,7 @@ je nachdem, ob weitere UV dem Modell hinzugefügt oder weggenommen werden.
 ### Vorsicht bei der Interpretation von Regressionskoeffizienten
 
 :::{.callout-important}
-Interpretiere  Modellkoeffizienten nur kausal, wenn du Kausalmodell hast. $\square$
+Interpretiere  Modellkoeffizienten nur kausal, wenn du ein Kausalmodell hast. $\square$
 :::
 
 Nur wenn man die Ursache-Wirkungs-Beziehungen in einem System kennt,
@@ -2074,7 +2076,7 @@ wenn der Effekt "echt", also kausal, ist.
 Handelt es sich aber um "nicht echte", also nicht-kausale Zusammenhänge, 
 um *Scheinzusammenhänge* also.
 So können sich die Modellkoeffizienten dramatisch verändern 
-(sogar das Vorzeichen kann wechseln; das nennt man dann *Simpsons Paradox*),
+(sogar das Vorzeichen kann wechseln; das nennt man dann *Simpsons Paradox* [@gelman2021]),
 wenn man das Modell verändert, also Variablen hinzufügt oder aus dem Modell entfernt.
 
 Wenn man die kausalen Abhängigkeiten nicht kennt,
@@ -2142,10 +2144,10 @@ d_sim %>%
 
 
 Man könnte höchstens sagen, dass man (wenn man die Kausalstruktur nicht kennt) die Modellkoeffizienten nur *deskriptiv* interpretiert,
-z.$\,$B. "Dort wo es viele Störche gibt, gibt es auch viele Babys".^[Das Störche-Babys-Beispiel passt auch zu @fig-confounder.]
+z.$\,$B. "Dort wo es viele Störche gibt, gibt es auch viele Babys" [@matthews2000].^[Das Störche-Babys-Beispiel passt auch zu @fig-confounder.]
 Leider ist unser Gehirn auf kausale Zusammenhänge geprägt: 
 Es fällt uns schwer, Zusammenhänge nicht kausal zu interpretieren.
-Daher werden deskriptive Befunde immer wieder unzulässig kausal interpretiert -- von Laien und Wissenschaftlern auch.
+Daher werden deskriptive Befunde immer wieder unzulässig kausal interpretiert -- von Laien und Wissenschaftlern ebenfalls.
 
 
 
@@ -2165,7 +2167,7 @@ Wenn Sie dran bleiben an der Statistik, wird der Erfolg sich einstellen, s. @fig
 ![Sie morgen](img/meme-stat2.jpg){#fig-morgen}
 
 Statistik, Sie und Party: Gestern und (vielleicht) morgen. 
-Wenn Sie dran bleiben, wird die Statistik Ihr bester Freund [@imgflip2024].
+Wenn Sie dran bleiben, wird die Statistik Ihre beste Freundin [@imgflip2024].
 
 :::
 
@@ -2232,6 +2234,7 @@ Sie können die Suchfunktion der Webseite nutzen, um die Aufgaben mit den folgen
 Ein empfehlenswertes Buch für Regressionsanalyse ist das Buch von Andrew Gelman zum Thema "Regression und andere Geschichten" [@gelman_regression_2021].
 Sein Buch ist für Sozialwissenschaftler geschrieben, 
 also nicht für typische Nerds, hat aber deutlich mehr Anspruch als dieses Kapitel.
+Eine Alternative bietet @sauer_moderne_2019.
 
 
 

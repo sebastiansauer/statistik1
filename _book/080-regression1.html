@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.6.31">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="keywords" content="Statistik, Prognose, Modellierung, R, Datenanalyse, Regression">
-<meta name="description" content="Einführung in die Statistik mit einem Schwerpunkt auf Vorhersage-Modellierung">
+<meta name="description" content="Einführung in die Statistik mit einem Schwerpunkt auf Prognose-Modellierung">
 <title>9&nbsp; Geradenmodelle 1 – Statistik1</title>
 <style>
 code{white-space: pre-wrap;}
@@ -359,8 +359,8 @@ window.Quarto = {
   <li>
 <a href="#vorhersagen" id="toc-vorhersagen" class="nav-link" data-scroll-target="#vorhersagen"><span class="header-section-number">9.2</span> Vorhersagen</a>
   <ul class="collapse">
-<li><a href="#vorhersagen-ohne-pr%C3%A4diktor" id="toc-vorhersagen-ohne-prädiktor" class="nav-link" data-scroll-target="#vorhersagen-ohne-pr%C3%A4diktor"><span class="header-section-number">9.2.1</span> Vorhersagen ohne Prädiktor</a></li>
-  <li><a href="#vorhersagen-mit-pr%C3%A4diktor" id="toc-vorhersagen-mit-prädiktor" class="nav-link" data-scroll-target="#vorhersagen-mit-pr%C3%A4diktor"><span class="header-section-number">9.2.2</span> Vorhersagen mit Prädiktor</a></li>
+<li><a href="#vorhersagen-ohne-uv" id="toc-vorhersagen-ohne-uv" class="nav-link" data-scroll-target="#vorhersagen-ohne-uv"><span class="header-section-number">9.2.1</span> Vorhersagen ohne UV</a></li>
+  <li><a href="#vorhersagen-mit-uv" id="toc-vorhersagen-mit-uv" class="nav-link" data-scroll-target="#vorhersagen-mit-uv"><span class="header-section-number">9.2.2</span> Vorhersagen mit UV</a></li>
   </ul>
 </li>
   <li>
@@ -372,7 +372,7 @@ window.Quarto = {
   <li><a href="#berechnung-der-modellkoeffizienten" id="toc-berechnung-der-modellkoeffizienten" class="nav-link" data-scroll-target="#berechnung-der-modellkoeffizienten"><span class="header-section-number">9.3.4</span> Berechnung der Modellkoeffizienten</a></li>
   </ul>
 </li>
-  <li><a href="#r-quadrat-als-ma%C3%9F-der-modellg%C3%BCte" id="toc-r-quadrat-als-maß-der-modellgüte" class="nav-link" data-scroll-target="#r-quadrat-als-ma%C3%9F-der-modellg%C3%BCte"><span class="header-section-number">9.4</span> R-Quadrat als Maß der Modellgüte</a></li>
+  <li><a href="#r2-als-ma%C3%9F-der-modellg%C3%BCte" id="toc-r2-als-maß-der-modellgüte" class="nav-link" data-scroll-target="#r2-als-ma%C3%9F-der-modellg%C3%BCte"><span class="header-section-number">9.4</span> <span class="math inline">\(R^2\)</span> als Maß der Modellgüte</a></li>
   <li>
 <a href="#sec-interpret-reg-mod" id="toc-sec-interpret-reg-mod" class="nav-link" data-scroll-target="#sec-interpret-reg-mod"><span class="header-section-number">9.5</span> Interpretation eines Regressionsmodells</a>
   <ul class="collapse">
@@ -396,9 +396,8 @@ window.Quarto = {
   <li><a href="#prognosedatei" id="toc-prognosedatei" class="nav-link" data-scroll-target="#prognosedatei"><span class="header-section-number">9.8.3</span> Prognosedatei</a></li>
   <li><a href="#ein-erster-blick-in-die-daten" id="toc-ein-erster-blick-in-die-daten" class="nav-link" data-scroll-target="#ein-erster-blick-in-die-daten"><span class="header-section-number">9.8.4</span> Ein erster Blick in die Daten</a></li>
   <li><a href="#ein-erstes-vorhersagemodell" id="toc-ein-erstes-vorhersagemodell" class="nav-link" data-scroll-target="#ein-erstes-vorhersagemodell"><span class="header-section-number">9.8.5</span> Ein erstes Vorhersagemodell</a></li>
-  <li><a href="#vorhersagen-im-test-datensatz-mit-m2" id="toc-vorhersagen-im-test-datensatz-mit-m2" class="nav-link" data-scroll-target="#vorhersagen-im-test-datensatz-mit-m2"><span class="header-section-number">9.8.6</span> Vorhersagen im Test-Datensatz mit <code>m2</code></a></li>
+  <li><a href="#vorhersagen-im-test-datensatz-mit-lm_immo2" id="toc-vorhersagen-im-test-datensatz-mit-lm_immo2" class="nav-link" data-scroll-target="#vorhersagen-im-test-datensatz-mit-lm_immo2"><span class="header-section-number">9.8.6</span> Vorhersagen im Test-Datensatz mit <code>lm_immo2</code></a></li>
   <li><a href="#einreichen" id="toc-einreichen" class="nav-link" data-scroll-target="#einreichen"><span class="header-section-number">9.8.7</span> Einreichen!</a></li>
-  <li><a href="#fazit" id="toc-fazit" class="nav-link" data-scroll-target="#fazit"><span class="header-section-number">9.8.8</span> Fazit</a></li>
   </ul>
 </li>
   <li><a href="#aufgaben" id="toc-aufgaben" class="nav-link" data-scroll-target="#aufgaben"><span class="header-section-number">9.9</span> Aufgaben</a></li>
@@ -437,7 +436,7 @@ window.Quarto = {
 \]</span></p>
 <section id="einstieg" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="einstieg">
 <span class="header-section-number">9.1</span> Einstieg</h2>
-<p>In diesem Kapitel benötigen Sie die üblichen R-Pakete (<code>tidyverse</code>, <code>easystats</code>) und Daten (<code>mariokart</code>), s. <a href="020-R.html#sec-import-mariokart" class="quarto-xref"><span>Kapitel 3.7.3</span></a>.</p>
+<p>In diesem Kapitel benötigen Sie die üblichen R-Pakete (<code>tidyverse</code>, <code>easystats</code>) und Daten (<code>mariokart</code>), s. <a href="020-R.html#sec-import-mariokart" class="quarto-xref"><span>Kapitel 3.7.3</span></a> und <a href="020-R.html#sec-r-pckgs" class="quarto-xref"><span>Kapitel 3.4</span></a>.</p>
 <section id="lernziele" class="level3" data-number="9.1.1"><h3 data-number="9.1.1" class="anchored" data-anchor-id="lernziele">
 <span class="header-section-number">9.1.1</span> Lernziele</h3>
 <ul>
@@ -451,17 +450,11 @@ window.Quarto = {
 </div>
 </section></section><section id="vorhersagen" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="vorhersagen">
 <span class="header-section-number">9.2</span> Vorhersagen</h2>
-<p>Vorhersagen sind eine nützliche Sache, unter (mindestens) folgenden Voraussetzungen:</p>
-<ol type="1">
-<li>Sie sind präzise.</li>
-<li>Wir wissen, wie präzise.</li>
-<li>Jemand interessiert sich für die Vorhersage.</li>
-</ol>
-<p>Die Methode des Vorhersagens, die wir hier betrachten, nennt man auch <em>lineare Regression</em>.</p>
-<section id="vorhersagen-ohne-prädiktor" class="level3" data-number="9.2.1"><h3 data-number="9.2.1" class="anchored" data-anchor-id="vorhersagen-ohne-prädiktor">
-<span class="header-section-number">9.2.1</span> Vorhersagen ohne Prädiktor</h3>
+<p>Vorhersagen sind eine nützliche Sache, unter (mindestens) folgenden Voraussetzungen: 1. Sie sind präzise; 2. Wir wissen, wie präzise; 3. Jemand interessiert sich für die Vorhersage. Die Methode des Vorhersagens, die wir hier betrachten, nennt man auch <em>lineare Regression</em>.</p>
+<section id="vorhersagen-ohne-uv" class="level3" data-number="9.2.1"><h3 data-number="9.2.1" class="anchored" data-anchor-id="vorhersagen-ohne-uv">
+<span class="header-section-number">9.2.1</span> Vorhersagen ohne UV</h3>
 <div id="exm-noten-prognose" class="theorem example">
-<p><span class="theorem-title"><strong>Beispiel 9.1</strong></span> Nach intensiver Beschäftigung mit Statistik sind Sie allgemein als Checker bekannt. Viele jüngere Studis fragen Sie um Rat. Eines Tages kommt eine Studentin zu Ihnen, Toni, und fragt: “Welche Statistiknote kann ich in der Klausur erwarten?” Sie entgegnen: “Wie viel hast du denn gelernt?”. Die Antwort: “Sage ich nicht.” Nach kurzem Überlegen geben Sie den Notenschnitt der letzten Klausur als Prognose für diese Person. Dazu rechnen Sie schnell den Notenschnitt (Mittelwert) aus.</p>
+<p><span class="theorem-title"><strong>Beispiel 9.1</strong></span> Nach intensiver Beschäftigung mit Statistik sind Sie allgemein als Daten-Checker bekannt. Viele Studierende fragen Sie um Rat. Eines Tages kommt eine Studentin zu Ihnen, Toni, und fragt: “Welche Statistiknote kann ich in der Klausur erwarten?” Sie entgegnen: “Wie viel hast du denn gelernt?”. Die Antwort: “Sage ich nicht.” Nach kurzem Überlegen geben Sie den Notenschnitt der letzten Klausur als Prognose für diese Person. Dazu rechnen Sie schnell den Notenschnitt (Mittelwert) aus.</p>
 <p>Zuerst importieren Sie die Daten der letzten Klausur. Die Syntax in <a href="#lst-noten2-lokal" class="quarto-xref">Listing&nbsp;<span>9.1</span></a> wird bei Ihnen nur funktionieren, wenn auf <em>Ihrem Computer</em> dieser Ordner mit dieser Datei existiert. Andernfalls müssen Sie die Daten erst herunterladen<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
 <div class="cell" data-layout-align="center">
 <div id="lst-noten2-lokal" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
@@ -473,7 +466,7 @@ Listing&nbsp;9.1: Wenn der Datensatz ‘noten2’ im Unterordner ‘Noten’ lie
 </figure>
 </div>
 </div>
-<p><a href="#dnldts32104" onclick="fetch('data:text/csv;base64,WCxpZCx4LHkKMSwxLDQwLjgzODc4ODA3MzA4MzMsODIuOTgxNzg3MTIxMDQxNDkKMiwyLDQ3Ljk4NTA2NjEzMzkzNTYwNCw4NC4wMTY5OTQ1ODUwMDEKMywzLDU0LjI5Nzg0NzUyODA2MTIsODAuNzUzMDk3MDg1MDMyNjkKNCw0LDUwLjE5OTE3NTA1NDI3MDUsNzguODE1MzA2MjQ0MDAxNQo1LDUsNTguNjEwNjUwMzA1MjAyMyw3NS43NjA4NTAzODkyOTA5MQo2LDYsNDAuNzQ2NjMwNTA0ODI5OCw4MS42NDMwNzg1MDQ4Mjg0CjcsNyw1NS4xMDIxMTE0MTEyMTA0LDEwNS42Mzc1Mzg3NjYyMTE0CjgsOCw1My43MTAzMTIxMDcyMzc2LDk3LjAzMDMxMDUwNTEzNDYKOSw5LDI1LjE1ODk1MDgxNzg3NTEwMiw2OC42NTY4MzE2NzQ0MzQzCjEwLDEwLDUyLjc3OTQzMjY4Nzk4NzM5NSw4Mi44Mzc3MDExMjYzOTEyMQoxMSwxMSw1OC41OTEwOTA0OTc3NTA0LDEwMC44OTQ3MTExMzEyMzc2CjEyLDEyLDUzLjU5MjcyNjEwMzA1NzUsMTA3LjA0MjQ4ODkwMDQzMgoxMywxMyw1Ni43Nzc3ODMzMTcwNTYyMDUsOTguNzgxNDUwODk4NTgyNgoxNCwxNCw0Ni4xMTQ2NjgxMDQwODQ0LDQ4LjgzMjEwOTAwNTI1NTIwNQoxNSwxNSw1MS42MzExMDc4MTY2NzcxLDk2Ljc1NjA3MDcyMjYzOTQKMTYsMTYsNDEuNDAyNjY4MzcyNjk0NSw3NS43NzUwODE1MDE4NDM0CjE3LDE3LDY2LjYyMTg1NzE2NDMzODYsMTA0LjY5NzI0Nzg4MjUxODQKMTgsMTgsNDMuMDYzNDcyMDYyMjQzNyw4My43ODYwNDY1MTk0NzM3CjE5LDE5LDU5LjQ2NTY2NTQ3NzYzODY5NCwxMTAuNjY5Nzc3MjUzOTAxMQoyMCwyMCwzNi41MDgyNTYzMDU0MzI5LDc5LjUzNTg5MzQyMjcwNTkKMjEsMjEsNDkuODM0MjM2MzY4ODExMzA0LDg2LjQwMDExOTg1OTA2NzcKMjIsMjIsMzMuNjYzNjkyNTY0MzI2OCw4Mi41NzQ4MzczNzE0MTkzCjIzLDIzLDUxLjUzODExNzI1MDc1MzYsNzUuNDI3NTczMzc4OTU0MDEKMjQsMjQsNTAuODQ0NTE2MzMzMTk0MzA2LDk2LjQxMDU0MzI3NzEzMTUKMjUsMjUsNTAuNzY1Nzk0ODQwNjk1MDk0LDExNC4xNjUyMjcxNTUzOTA1CjI2LDI2LDQ3LjY1NTIwOTIwMjUxMjEsOTMuMDgzNDM5ODczMzY5CjI3LDI3LDI1Ljk0ODkxODk1MzQwMzg5Nyw2Mi4xNTk3NTc3NTU1NzgyCjI4LDI4LDQ3Ljg0ODIzMzc0OTU5NDMsODguNTk1MzQxNzg1NjM2OQoyOSwyOSw2OS42MzIxODU0NTUwOTM5LDExMS44Mjc5MjkxOTU0NTU3CjMwLDMwLDU3Ljg3NjM4NTUxNDk0NDQsOTcuNTI4MDM1NTQ2NzgyNQozMSwzMSwyOS4zMDU0NDE3MzM1NTQxOTcsODUuMTkzODMyMDQ5OTkzOQozMiwzMiw1MS40MTU4OTI3MjIzOTAxLDg1LjIwODU0Njk2MTI5NjYKMzMsMzMsNTIuNTcxNDY0OTQxNjg0NTk2LDkyLjgxOTQzMTA0MjgxMDkKMzQsMzQsNTcuOTAwOTg5NDUwNDYyMzA1LDg4LjI1MjM1MjI4MjM4NDgKMzUsMzUsNDUuODc3NDI2Njk0NjU5NjA0LDkzLjYzODM4Njg1NDMyCjM2LDM2LDU1LjQ0NzAzOTk4MTg0MDEwNiw5Ni4wMzY1OTgyNTI4NzUzCjM3LDM3LDY3LjQ5OTI3NDk2NzQ4NjcsMTE0LjEyNzU4MzEwODA2NzIKMzgsMzgsMzkuNDMxNDU0MjA1NzczNCw5MS4wNjY3NzA2NjUzOTEzCjM5LDM5LDQwLjkxMTE1NTk2NjIwNzYsNjMuMjE2OTYzODkyMDk0NQo0MCw0MCw1Ny41NjMwMDk4ODQ2Mjc5LDExMS4wMzU5MjMwODI5NTQzCjQxLDQxLDYzLjM2ODg0ODA5NzgwMTMwNSwxMDIuMTU2OTg0NDc4MTg0Mgo0Miw0Miw2MC4xOTI4MDY5NDIzMTIxLDg5Ljg3MTk4NDMyNzAxNTgKNDMsNDMsNDguNjgzNjkzNDg2OTEyNiw5Ni42NzgwOTkyMzQ3NTA4CjQ0LDQ0LDQ1LjMwMjAwMjIxMzE4ODksNzcuNzE3NzcxNTMxMTQ0Mgo0NSw0NSw2MC42MzYwOTA2MzQ4ODY5LDk5LjY4Mzk3MTMxNTE0NTcKNDYsNDYsNDkuMTg2NjY2ODAxODU0MSw3OC41OTk2NzcxNTQ5NjI0CjQ3LDQ3LDM1LjcyNDM1NzQ3OTM3MTYsNzkuMzA4MTM3ODM5ODEyMwo0OCw0OCw1Mi4yMTkyNjM5NTI3MDE0OTYsODkuODk4NDg2MDY2NjM3Ngo0OSw0OSw0NC44OTMxMjY1NTczNzM0MSwxMDMuNDczMjI2OTk0MzA4Mwo1MCw1MCw2Ni4yMDIyNzEyMTE4NzUyLDgwLjM1OTI0ODIxODIwNTAxCjUxLDUxLDY2LjM5ODIwMTI3NzEwMTYsOTkuNTQyMDA2MTA2NzYzNgo1Miw1Miw2MS4wMTU3MzE5MzMzMDg5LDEwOC42NDgxNjMxMzk2MDAyCjUzLDUzLDQ5LjExMjM2Mzc3NTIzODI5LDEwMi44OTg3NTM5ODU0NDEzCjU0LDU0LDc0LjAxNjEzNjEyNDA4OTMsMTE1LjkzMjYwNzg3MDMwMjkKNTUsNTUsNTQuMDE2MDA3MjQzOTM0Njk1LDg5LjU2MDgwNTUwNjcxNTMKNTYsNTYsNjYuMDYyODIyNDIwMDM4NSwxMDkuMDczMjYzNjAwNjcwOQo1Nyw1Nyw2NC42NTUxNzk2MjM5NjI3LDExMi40NDg1MzM5Mzk0ODI3CjU4LDU4LDM3LjQ5MTU4MzI0ODEwODEsOTMuODM4NjU5Nzc1Mjg2MQo1OSw1OSwzOS4wNjAxNjY1Mjk5MDksOTMuOTU1MDA5NjIwMzc2CjYwLDYwLDYyLjA4MjE0NTAxODUwODUsMTA2LjQzMzA1MzgxNjAwMjYKNjEsNjEsNTQuMzA2MDkzNDkzMjc1ODk1LDkzLjMxNjk2NzA1NzA5NTMKNjIsNjIsNDQuNjM1MDI1NDY5MzMxNzk0LDcyLjA3NTgyNDA3NzI3MDYKNjMsNjMsNjguMDI4ODUyNzkyNDUxNiwxMTUuODU0MjgyMDk2OTcKNjQsNjQsNDkuMzc1MTg0ODUxMDg0LDg5LjM3NzYwMjYzMTAyMzYKNjUsNjUsNDcuNTI4MTI5OTAwMjA5ODA1LDgyLjM0NzI2ODg0MDM0NTQ5CjY2LDY2LDUyLjg1NDQzMzM2OTg4NTcsOTguMTE3MzkyMDc2OTE3MQo2Nyw2Nyw0My4xOTY2NDk0OTQ0MjAxLDgyLjYxODQ5NTM0NTMwODkKNjgsNjgsNTYuMjA2MzU1NzcyMTUwNyw5MC4zNzI0OTg5MDgyODExCjY5LDY5LDUyLjQwMjY3NjgyNzE4MTY5LDc1LjIyMjQ4MTg0OTY0ODIKNzAsNzAsNDkuMDE3MzI0MDg4NTg1ODk1LDcwLjkyODMxODU0MzIyNzgKNzEsNzEsMzIuMDU1MTExNDUyMTEyMSw4MS43NDAxNTcxNDM2MTMwOQo3Miw3Miw2OS4zMTA4NjExNDQ2NTgxLDExOC4xODAwOTMyNjE0Mjk0CjczLDczLDU1LjMzMzgwNTM5NTE5OTgsOTEuMTg5OTUzNzU2MDMxNAo3NCw3NCw0MS45MjI3MDkzMTgxMzE4LDgzLjYyMDc5MjYzNjY1MTIKNzUsNzUsNjAuMDQzMjIzMTgxMjg5OSwxMTEuOTIzNTYyMzY0MTc2Mgo3Niw3NiwzMy4yMDExMTUyNzIzMzY5LDc4LjM5MTIzNDgyOTY3OTYKNzcsNzcsNDIuODM1NDgzMjUxNjIwNSwxMDUuNTU1Nzg5MTc0MjY4Ngo3OCw3OCwzOC44NTYzNTkzMDQ1OTIyLDg0LjIyNzE5MjEwODU4NjkKNzksNzksNTQuMjAxMDA0NzE5MjYwMSw5Ni44NzM3MjA5NDc4NzE3CjgwLDgwLDU4Ljk0NDYxODUzODc2NzIsODguNzg5MzU3NTM5MTc4OAo4MSw4MSw1MS40ODc1NDg5MjkzNDU0OSw5My4yMDkxODM0Nzc2NTYxCjgyLDgyLDUyLjE4MjQzNjA3NjczNDYwNCw5Mi40NDczMzY5MTIwMDM3CjgzLDgzLDQ5LjA2MTY5Nzg3ODczNjEsODEuMjA5MTM2NDg3NTk4Cjg0LDg0LDU2LjEzMjk5MzcxMTE0MzQsODEuNjU0NDMxNjcyNjE1Mgo4NSw4NSw1OS42MjA5NDU1Mzg2MywxMTAuMDE2ODAyODQzODgzNQo4Niw4NiwzOS4wOTY3MzAyNjMwMTgsNjcuMjk1ODI1ODAwOTgyOAo4Nyw4NywzNy40ODg5NzkwODY1MTMyLDczLjk3MTkwODYwMDYwMjYKODgsODgsNjQuMTUyMDcyNTQ2MTA2Nyw4OS43ODgwNDQ4MzYzNzk1Cjg5LDg5LDQ2LjYxMDg3MzA2NjE5MzgwNCw3MC41Nzk0OTg0OTM4ODY2CjkwLDkwLDY2LjI4MzQ2NjMxOTE0ODUsMTA2LjgyMzQ4MzE5NTk2NzkKOTEsOTEsNDUuMzM3NzM4OTk1MTU5Niw5MC45MTc0NzU0MzE0NzkyCjkyLDkyLDM0LjEwOTEwNDYwMzAzNzEsNjYuNjY5NzA4ODM0MTExNwo5Myw5Myw2MS4wMDQ2MTczMTcwNzU2LDEwMi44OTU0OTIyMjg0NzQKOTQsOTQsNjQuNTk4MjcyNjAyOTg2Myw5MC40NDM2MDk1NTcxNjE2Cjk1LDk1LDcyLjk3NDcyMDY4NjkzMzMsMTE2LjUxNzY3MTQyNjE4NDcKOTYsOTYsNDAuODQ2MzAzNzIxMTQwMyw4My40MzM4MDM0Nzg5Mzc3OQo5Nyw5Nyw0MC40NTI2MDIxODM0NzUxLDg3LjA0NDcyMzQwNTQ3MzIKOTgsOTgsNDIuNzk3NjE2MTc0MzM0MSw4OC41MDQwNDA0MTMxMDA1Cjk5LDk5LDU3LjcwMjAwMjE2NTkxMzMsMTA1LjMyMTk2MzE5Mzc5ODEKMTAwLDEwMCw0MS4xNDUyNjIxMTIxNDA4LDk0Ljc0ODQyODQzMzYxNTEK').then(res => res.blob()).then(blob => {
+<p><a href="#dnldts21877" onclick="fetch('data:text/csv;base64,WCxpZCx4LHkKMSwxLDQwLjgzODc4ODA3MzA4MzMsODIuOTgxNzg3MTIxMDQxNDkKMiwyLDQ3Ljk4NTA2NjEzMzkzNTYwNCw4NC4wMTY5OTQ1ODUwMDEKMywzLDU0LjI5Nzg0NzUyODA2MTIsODAuNzUzMDk3MDg1MDMyNjkKNCw0LDUwLjE5OTE3NTA1NDI3MDUsNzguODE1MzA2MjQ0MDAxNQo1LDUsNTguNjEwNjUwMzA1MjAyMyw3NS43NjA4NTAzODkyOTA5MQo2LDYsNDAuNzQ2NjMwNTA0ODI5OCw4MS42NDMwNzg1MDQ4Mjg0CjcsNyw1NS4xMDIxMTE0MTEyMTA0LDEwNS42Mzc1Mzg3NjYyMTE0CjgsOCw1My43MTAzMTIxMDcyMzc2LDk3LjAzMDMxMDUwNTEzNDYKOSw5LDI1LjE1ODk1MDgxNzg3NTEwMiw2OC42NTY4MzE2NzQ0MzQzCjEwLDEwLDUyLjc3OTQzMjY4Nzk4NzM5NSw4Mi44Mzc3MDExMjYzOTEyMQoxMSwxMSw1OC41OTEwOTA0OTc3NTA0LDEwMC44OTQ3MTExMzEyMzc2CjEyLDEyLDUzLjU5MjcyNjEwMzA1NzUsMTA3LjA0MjQ4ODkwMDQzMgoxMywxMyw1Ni43Nzc3ODMzMTcwNTYyMDUsOTguNzgxNDUwODk4NTgyNgoxNCwxNCw0Ni4xMTQ2NjgxMDQwODQ0LDQ4LjgzMjEwOTAwNTI1NTIwNQoxNSwxNSw1MS42MzExMDc4MTY2NzcxLDk2Ljc1NjA3MDcyMjYzOTQKMTYsMTYsNDEuNDAyNjY4MzcyNjk0NSw3NS43NzUwODE1MDE4NDM0CjE3LDE3LDY2LjYyMTg1NzE2NDMzODYsMTA0LjY5NzI0Nzg4MjUxODQKMTgsMTgsNDMuMDYzNDcyMDYyMjQzNyw4My43ODYwNDY1MTk0NzM3CjE5LDE5LDU5LjQ2NTY2NTQ3NzYzODY5NCwxMTAuNjY5Nzc3MjUzOTAxMQoyMCwyMCwzNi41MDgyNTYzMDU0MzI5LDc5LjUzNTg5MzQyMjcwNTkKMjEsMjEsNDkuODM0MjM2MzY4ODExMzA0LDg2LjQwMDExOTg1OTA2NzcKMjIsMjIsMzMuNjYzNjkyNTY0MzI2OCw4Mi41NzQ4MzczNzE0MTkzCjIzLDIzLDUxLjUzODExNzI1MDc1MzYsNzUuNDI3NTczMzc4OTU0MDEKMjQsMjQsNTAuODQ0NTE2MzMzMTk0MzA2LDk2LjQxMDU0MzI3NzEzMTUKMjUsMjUsNTAuNzY1Nzk0ODQwNjk1MDk0LDExNC4xNjUyMjcxNTUzOTA1CjI2LDI2LDQ3LjY1NTIwOTIwMjUxMjEsOTMuMDgzNDM5ODczMzY5CjI3LDI3LDI1Ljk0ODkxODk1MzQwMzg5Nyw2Mi4xNTk3NTc3NTU1NzgyCjI4LDI4LDQ3Ljg0ODIzMzc0OTU5NDMsODguNTk1MzQxNzg1NjM2OQoyOSwyOSw2OS42MzIxODU0NTUwOTM5LDExMS44Mjc5MjkxOTU0NTU3CjMwLDMwLDU3Ljg3NjM4NTUxNDk0NDQsOTcuNTI4MDM1NTQ2NzgyNQozMSwzMSwyOS4zMDU0NDE3MzM1NTQxOTcsODUuMTkzODMyMDQ5OTkzOQozMiwzMiw1MS40MTU4OTI3MjIzOTAxLDg1LjIwODU0Njk2MTI5NjYKMzMsMzMsNTIuNTcxNDY0OTQxNjg0NTk2LDkyLjgxOTQzMTA0MjgxMDkKMzQsMzQsNTcuOTAwOTg5NDUwNDYyMzA1LDg4LjI1MjM1MjI4MjM4NDgKMzUsMzUsNDUuODc3NDI2Njk0NjU5NjA0LDkzLjYzODM4Njg1NDMyCjM2LDM2LDU1LjQ0NzAzOTk4MTg0MDEwNiw5Ni4wMzY1OTgyNTI4NzUzCjM3LDM3LDY3LjQ5OTI3NDk2NzQ4NjcsMTE0LjEyNzU4MzEwODA2NzIKMzgsMzgsMzkuNDMxNDU0MjA1NzczNCw5MS4wNjY3NzA2NjUzOTEzCjM5LDM5LDQwLjkxMTE1NTk2NjIwNzYsNjMuMjE2OTYzODkyMDk0NQo0MCw0MCw1Ny41NjMwMDk4ODQ2Mjc5LDExMS4wMzU5MjMwODI5NTQzCjQxLDQxLDYzLjM2ODg0ODA5NzgwMTMwNSwxMDIuMTU2OTg0NDc4MTg0Mgo0Miw0Miw2MC4xOTI4MDY5NDIzMTIxLDg5Ljg3MTk4NDMyNzAxNTgKNDMsNDMsNDguNjgzNjkzNDg2OTEyNiw5Ni42NzgwOTkyMzQ3NTA4CjQ0LDQ0LDQ1LjMwMjAwMjIxMzE4ODksNzcuNzE3NzcxNTMxMTQ0Mgo0NSw0NSw2MC42MzYwOTA2MzQ4ODY5LDk5LjY4Mzk3MTMxNTE0NTcKNDYsNDYsNDkuMTg2NjY2ODAxODU0MSw3OC41OTk2NzcxNTQ5NjI0CjQ3LDQ3LDM1LjcyNDM1NzQ3OTM3MTYsNzkuMzA4MTM3ODM5ODEyMwo0OCw0OCw1Mi4yMTkyNjM5NTI3MDE0OTYsODkuODk4NDg2MDY2NjM3Ngo0OSw0OSw0NC44OTMxMjY1NTczNzM0MSwxMDMuNDczMjI2OTk0MzA4Mwo1MCw1MCw2Ni4yMDIyNzEyMTE4NzUyLDgwLjM1OTI0ODIxODIwNTAxCjUxLDUxLDY2LjM5ODIwMTI3NzEwMTYsOTkuNTQyMDA2MTA2NzYzNgo1Miw1Miw2MS4wMTU3MzE5MzMzMDg5LDEwOC42NDgxNjMxMzk2MDAyCjUzLDUzLDQ5LjExMjM2Mzc3NTIzODI5LDEwMi44OTg3NTM5ODU0NDEzCjU0LDU0LDc0LjAxNjEzNjEyNDA4OTMsMTE1LjkzMjYwNzg3MDMwMjkKNTUsNTUsNTQuMDE2MDA3MjQzOTM0Njk1LDg5LjU2MDgwNTUwNjcxNTMKNTYsNTYsNjYuMDYyODIyNDIwMDM4NSwxMDkuMDczMjYzNjAwNjcwOQo1Nyw1Nyw2NC42NTUxNzk2MjM5NjI3LDExMi40NDg1MzM5Mzk0ODI3CjU4LDU4LDM3LjQ5MTU4MzI0ODEwODEsOTMuODM4NjU5Nzc1Mjg2MQo1OSw1OSwzOS4wNjAxNjY1Mjk5MDksOTMuOTU1MDA5NjIwMzc2CjYwLDYwLDYyLjA4MjE0NTAxODUwODUsMTA2LjQzMzA1MzgxNjAwMjYKNjEsNjEsNTQuMzA2MDkzNDkzMjc1ODk1LDkzLjMxNjk2NzA1NzA5NTMKNjIsNjIsNDQuNjM1MDI1NDY5MzMxNzk0LDcyLjA3NTgyNDA3NzI3MDYKNjMsNjMsNjguMDI4ODUyNzkyNDUxNiwxMTUuODU0MjgyMDk2OTcKNjQsNjQsNDkuMzc1MTg0ODUxMDg0LDg5LjM3NzYwMjYzMTAyMzYKNjUsNjUsNDcuNTI4MTI5OTAwMjA5ODA1LDgyLjM0NzI2ODg0MDM0NTQ5CjY2LDY2LDUyLjg1NDQzMzM2OTg4NTcsOTguMTE3MzkyMDc2OTE3MQo2Nyw2Nyw0My4xOTY2NDk0OTQ0MjAxLDgyLjYxODQ5NTM0NTMwODkKNjgsNjgsNTYuMjA2MzU1NzcyMTUwNyw5MC4zNzI0OTg5MDgyODExCjY5LDY5LDUyLjQwMjY3NjgyNzE4MTY5LDc1LjIyMjQ4MTg0OTY0ODIKNzAsNzAsNDkuMDE3MzI0MDg4NTg1ODk1LDcwLjkyODMxODU0MzIyNzgKNzEsNzEsMzIuMDU1MTExNDUyMTEyMSw4MS43NDAxNTcxNDM2MTMwOQo3Miw3Miw2OS4zMTA4NjExNDQ2NTgxLDExOC4xODAwOTMyNjE0Mjk0CjczLDczLDU1LjMzMzgwNTM5NTE5OTgsOTEuMTg5OTUzNzU2MDMxNAo3NCw3NCw0MS45MjI3MDkzMTgxMzE4LDgzLjYyMDc5MjYzNjY1MTIKNzUsNzUsNjAuMDQzMjIzMTgxMjg5OSwxMTEuOTIzNTYyMzY0MTc2Mgo3Niw3NiwzMy4yMDExMTUyNzIzMzY5LDc4LjM5MTIzNDgyOTY3OTYKNzcsNzcsNDIuODM1NDgzMjUxNjIwNSwxMDUuNTU1Nzg5MTc0MjY4Ngo3OCw3OCwzOC44NTYzNTkzMDQ1OTIyLDg0LjIyNzE5MjEwODU4NjkKNzksNzksNTQuMjAxMDA0NzE5MjYwMSw5Ni44NzM3MjA5NDc4NzE3CjgwLDgwLDU4Ljk0NDYxODUzODc2NzIsODguNzg5MzU3NTM5MTc4OAo4MSw4MSw1MS40ODc1NDg5MjkzNDU0OSw5My4yMDkxODM0Nzc2NTYxCjgyLDgyLDUyLjE4MjQzNjA3NjczNDYwNCw5Mi40NDczMzY5MTIwMDM3CjgzLDgzLDQ5LjA2MTY5Nzg3ODczNjEsODEuMjA5MTM2NDg3NTk4Cjg0LDg0LDU2LjEzMjk5MzcxMTE0MzQsODEuNjU0NDMxNjcyNjE1Mgo4NSw4NSw1OS42MjA5NDU1Mzg2MywxMTAuMDE2ODAyODQzODgzNQo4Niw4NiwzOS4wOTY3MzAyNjMwMTgsNjcuMjk1ODI1ODAwOTgyOAo4Nyw4NywzNy40ODg5NzkwODY1MTMyLDczLjk3MTkwODYwMDYwMjYKODgsODgsNjQuMTUyMDcyNTQ2MTA2Nyw4OS43ODgwNDQ4MzYzNzk1Cjg5LDg5LDQ2LjYxMDg3MzA2NjE5MzgwNCw3MC41Nzk0OTg0OTM4ODY2CjkwLDkwLDY2LjI4MzQ2NjMxOTE0ODUsMTA2LjgyMzQ4MzE5NTk2NzkKOTEsOTEsNDUuMzM3NzM4OTk1MTU5Niw5MC45MTc0NzU0MzE0NzkyCjkyLDkyLDM0LjEwOTEwNDYwMzAzNzEsNjYuNjY5NzA4ODM0MTExNwo5Myw5Myw2MS4wMDQ2MTczMTcwNzU2LDEwMi44OTU0OTIyMjg0NzQKOTQsOTQsNjQuNTk4MjcyNjAyOTg2Myw5MC40NDM2MDk1NTcxNjE2Cjk1LDk1LDcyLjk3NDcyMDY4NjkzMzMsMTE2LjUxNzY3MTQyNjE4NDcKOTYsOTYsNDAuODQ2MzAzNzIxMTQwMyw4My40MzM4MDM0Nzg5Mzc3OQo5Nyw5Nyw0MC40NTI2MDIxODM0NzUxLDg3LjA0NDcyMzQwNTQ3MzIKOTgsOTgsNDIuNzk3NjE2MTc0MzM0MSw4OC41MDQwNDA0MTMxMDA1Cjk5LDk5LDU3LjcwMjAwMjE2NTkxMzMsMTA1LjMyMTk2MzE5Mzc5ODEKMTAwLDEwMCw0MS4xNDUyNjIxMTIxNDA4LDk0Ljc0ODQyODQzMzYxNTEK').then(res => res.blob()).then(blob => {
       const downloadURL = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       document.body.appendChild(a);
@@ -481,24 +474,21 @@ Listing&nbsp;9.1: Wenn der Datensatz ‘noten2’ im Unterordner ‘Noten’ lie
       a.download = 'noten2.csv'; a.click();
       window.URL.revokeObjectURL(downloadURL);
       document.body.removeChild(a);
-        });"><button class="btn btn-default downloadthis  " id="dnldts32104"><i class="bi bi-download"></i> Download </button></a></p>
+        });"><button class="btn btn-default downloadthis  " id="dnldts21877"><i class="bi bi-download"></i> Download </button></a></p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">noten2</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>mw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>  <span class="co"># y ist der Punktwert in der Klausur</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead><tr class="header">
-<th style="text-align: right;">mw</th>
-</tr></thead>
-<tbody><tr class="odd">
-<td style="text-align: right;">91</td>
-</tr></tbody>
-</table>
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["mw"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"91"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[5],"max":[5]},"pages":{}}}
+  </script>
 </div>
 </div>
-<p>Ihre Antwort lautet: “Im Schnitt haben die Studis bei der letzten Klausur ungefähr 91.12 erzielt. Diesen Wert kannst du erwarten. Solange ich keine genaueren Infos habe, z.B. wie viel du gelernt hast, kann ich dir keine genauere Vorhersage machen. Sorry!” <span class="math inline">\(\square\)</span></p>
 </div>
-<p>Ohne Kenntnis eines Prädiktors (UV) (wie z.B. Lernzeit) ist der Mittelwert ein geeigneter Vorhersagewert für jede Beobachtung, s. <a href="#fig-noten3" class="quarto-xref">Abbildung&nbsp;<span>9.1</span></a>. Wir nutzen den Mittelwert als Punktmodell für den Klausurerfolg. <span class="math inline">\(\square\)</span></p>
+<p>Ihre Überlegung: “Im Schnitt haben die Studis bei der letzten Klausur ungefähr 91.12 erzielt. Diesen Wert kannst du erwarten. Solange ich keine genaueren Infos habe, z.<span class="math inline">\(\,\)</span>B. wie viel du gelernt hast, kann ich dir keine genauere Vorhersage machen. Sorry!” <span class="math inline">\(\square\)</span></p>
+</div>
+<p>Ohne Kenntnis einer UV (Prädiktor) (wie z.<span class="math inline">\(\,\)</span>B. Lernzeit) ist der Mittelwert ein geeigneter Vorhersagewert für jede Beobachtung, s. <a href="#fig-noten3" class="quarto-xref">Abbildung&nbsp;<span>9.1</span></a>. Wir nutzen den Mittelwert als Punktmodell für den Klausurerfolg. <span class="math inline">\(\square\)</span></p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-noten3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -512,7 +502,7 @@ Abbildung&nbsp;9.1: Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmode
 </div>
 </div>
 <div id="def-nullmodell" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 9.1 (Nullmodell (Punktmodell))</strong></span> Modelle ohne Prädiktor, Punktmodelle also, kann man so bezeichnen: <code>y ~ 1</code>. Da das Modell null Prädiktoren hat, nennt man es auch manchmal “Nullmodell”.</p>
+<p><span class="theorem-title"><strong>Definition 9.1 (Nullmodell (Punktmodell))</strong></span> Modelle ohne UV, Punktmodelle also, kann man so bezeichnen: <code>y ~ 1</code>. Da das Modell null UV hat, nennt man es auch manchmal <em>Nullmodell.</em> <span class="math inline">\(\square\)</span></p>
 </div>
 <p>Auf Errisch kann man dieses Nullmodell so spezifizieren:</p>
 <div class="cell" data-layout-align="center">
@@ -526,9 +516,9 @@ Abbildung&nbsp;9.1: Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmode
 <span><span class="co">## (Intercept)  </span></span>
 <span><span class="co">##        91.1</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><code>lm</code> steht für “lineares Modell”, die <code>1</code> sagt, dass es keine Prädiktoren gibt. In dem Fall wird der Mittelwert, 91, als Gerade verwendet. Der zurückgemeldete Koeffizient <code>(Intercept)</code> ist hier der einizige des Punktmodells. Da es ein Punktmodell ist, sagt es für alle Beobachtungen (hier Studentis) den gleichen Wert vorher, nämlich 91.</p>
-</section><section id="vorhersagen-mit-prädiktor" class="level3" data-number="9.2.2"><h3 data-number="9.2.2" class="anchored" data-anchor-id="vorhersagen-mit-prädiktor">
-<span class="header-section-number">9.2.2</span> Vorhersagen mit Prädiktor</h3>
+<p><code>lm</code> steht für “lineares Modell”, die <code>1</code> sagt, dass es keine Prädiktoren gibt. In dem Fall wird der Mittelwert, 91, als Gerade verwendet. Der zurückgemeldete Koeffizient <code>(Intercept)</code> ist in diesem Fall der einzige Koeffizient des Modells. Da es ein Punktmodell ist, sagt es für alle Beobachtungen (hier Studierenden) den gleichen Wert vorher, nämlich 91.</p>
+</section><section id="vorhersagen-mit-uv" class="level3" data-number="9.2.2"><h3 data-number="9.2.2" class="anchored" data-anchor-id="vorhersagen-mit-uv">
+<span class="header-section-number">9.2.2</span> Vorhersagen mit UV</h3>
 <div id="exm-noten3" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 9.2 (Toni verrät die Lernzeit)</strong></span> Toni entschließt sich dann doch noch, die Lernzeit zu verraten: “Okay, also ich hab insgesamt 42 Stunden gelernt, insgesamt.” Jetzt müssen Sie erstmal nachdenken: “Wie viele Klausurpunkte sage ich vorher, wenn Toni 42 Stunden gelernt hat?”</p>
 <p>Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. <a href="#fig-noten4" class="quarto-xref">Abbildung&nbsp;<span>9.2</span></a>, (a).</p>
@@ -546,7 +536,7 @@ Abbildung&nbsp;9.1: Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmode
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-noten4" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-noten4-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-noten4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="080-regression1_files/figure-html/fig-noten4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-noten4">
+<img src="080-regression1_files/figure-html/fig-noten4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-noten4">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-noten4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Streudiagramm
@@ -556,10 +546,10 @@ Abbildung&nbsp;9.1: Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmode
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-noten4" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-noten4-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-noten4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="080-regression1_files/figure-html/fig-noten4-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-noten4">
+<img src="080-regression1_files/figure-html/fig-noten4-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-noten4">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-noten4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(b) Streudigramm mit ‘Trendgerade’ (blau)
+(b) Streudigramm mit ‘Trendgerade’
 </figcaption></figure>
 </div>
 </div>
@@ -576,11 +566,11 @@ Abbildung&nbsp;9.2: Noten und Lernzeit: Rohdaten (a) und mit Modell (b). Mittelw
 <p>Wir verwenden eine Gerade als Modell für die Daten, s. <a href="#fig-noten4" class="quarto-xref">Abbildung&nbsp;<span>9.2</span></a>, b. Anders gesagt: Wir modellieren die Daten (bzw. deren Zusammenhang) mit einer Geraden. Ein <em>Geradenmodell</em> ist eine Verallgemeinerung des Punktmodells: Ein Punktmodell sagt für alle Beobachtungen den gleichen Wert vorher. <a href="#fig-noten3" class="quarto-xref">Abbildung&nbsp;<span>9.1</span></a> und <a href="#fig-noten4" class="quarto-xref">Abbildung&nbsp;<span>9.2</span></a> stellen ein Punktmodell einem Geradenmodell gegenüber.</p>
 <p>In einem Geradenmodell wird nicht mehr (notwendig) für jede Beobachtung die gleiche Vorhersage <span class="math inline">\(\hat{y}\)</span> gemacht (wie das bei einem Punktmodell der Fall ist).</p>
 <div id="def-gerade" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 9.2 (Gerade)</strong></span> Eine Gerade ist das, was man bekommt, wenn man eine lineare Funktion in ein Koordinatensystem einzeichnet. Man kann sie durch durch zwei <em>Koeffizienten</em> festlegen: Achsenabschnitt (engl. <em>intercept</em>), und Steigung (engl. <em>slope</em>). Manchmal wird (z.B. im Schulunterricht) der Achsenabschnitt mit <span class="math inline">\(t\)</span> und die Steigung mit <span class="math inline">\(m\)</span> bezeichnet:</p>
+<p><span class="theorem-title"><strong>Definition 9.2 (Gerade)</strong></span> Eine Gerade ist das, was man bekommt, wenn man eine lineare Funktion in ein Koordinatensystem einzeichnet. Man kann sie durch durch zwei <em>Koeffizienten</em> festlegen: Achsenabschnitt (engl. <em>intercept</em>), und Steigung (engl. <em>slope</em>). Manchmal wird (z.<span class="math inline">\(\,\)</span>B. im Schulunterricht) der Achsenabschnitt mit <span class="math inline">\(t\)</span> und die Steigung mit <span class="math inline">\(m\)</span> bezeichnet:</p>
 <!-- HTML, PDF: -->
 <p><span class="math inline">\(f(\color{xcol}{x})=\color{ycol}{y}={m} \color{xcol}{x} + \color{beta0col}{t}\)</span>.</p>
 <p>In der Statistik wird folgende Nomenklatur bevorzugt: <span class="math inline">\(f(\color{xcol}{x})=\color{ycol}{\hat{y}}=\color{beta0col}{\beta_0} + {\beta_1} \color{xcol}{x}\)</span> oder <span class="math inline">\(f(\color{xcol}{x})=\color{ycol}{\hat{y}}= \color{beta0col}{b_0} + {b_1} \color{xcol}{x}\)</span> .</p>
-<p>Die Nomenklatur mit <span class="math inline">\(\color{beta0col}{b_0}, \color{beta1col}{b_1}\)</span> hat den Vorteil, dass man das Modell einfach erweitern kann: <span class="math inline">\(b_2, b_3, ...\)</span>. Anstelle von <span class="math inline">\(b\)</span> liest man auch oft <span class="math inline">\(\beta\)</span>. Griechische Buchstaben werden meist verwendet, um zu zeigen, dass man an einer Aussage über eine Population, nicht nur über eine Stichprobe, machen möchte.</p>
+<p>Die Nomenklatur mit <span class="math inline">\(\color{beta0col}{b_0}, \color{beta1col}{b_1}\)</span> hat den Vorteil, dass man das Modell einfach erweitern kann: <span class="math inline">\(b_2, b_3, \ldots\)</span>. Anstelle von <span class="math inline">\(b\)</span> liest man auch oft <span class="math inline">\(\beta\)</span>. Griechische Buchstaben werden meist verwendet, um zu zeigen, dass man an einer Aussage über eine Population, nicht nur über eine Stichprobe, machen möchte.</p>
 <p>Das “Dach” über y, <span class="math inline">\(\color{modelcol}{\hat{y}}\)</span>, drückt aus, dass es sich den den geschätzten, bzw. vom Modell vorhergesagten (“modellierten”) Wert für <span class="math inline">\(\color{ycol}{y}\)</span> handelt, nicht der tatsächliche (empirische, beobachtete) Wert von <span class="math inline">\(\color{ycol}{y}\)</span>. <a href="#fig-regrtex" class="quarto-xref">Abbildung&nbsp;<span>9.3</span></a> skizziert die Elemente einer Regression.</p>
 </div>
 <div id="fig-regrtex" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -599,7 +589,7 @@ Abbildung&nbsp;9.3: Achsenabschnitt (<span class="math inline">\(\beta_0\)</span
 \color{ycol}{y} &amp;= f(\color{xcol}{x}) + \color{errorcol}{\epsilon} \\
 \color{ycol}{y_i} &amp;= \color{beta0col}{\beta_0} + \color{beta1col}{\beta_1} \cdot \color{modelcol}{x_i} + \color{errorcol}{\epsilon_i} \square
 \end{aligned} \tag{9.1}\]</span></span></p>
-<p>Mit:</p>
+<p>Die Variablen in <a href="#eq-linear-model" class="quarto-xref">Gleichung&nbsp;<span>9.1</span></a> haben folgende Bedeutung:</p>
 <ul>
 <li>
 <span class="math inline">\(\color{beta0col}{\beta_0}\)</span>: geschätzter y-Achsenabschnitt laut Modell (engl. <em>intercept</em>)</li>
@@ -616,7 +606,7 @@ Abbildung&nbsp;9.3: Achsenabschnitt (<span class="math inline">\(\beta_0\)</span
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-regr-div" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-regr-div-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-regr-div-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="080-regression1_files/figure-html/fig-regr-div-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-regr-div">
+<img src="080-regression1_files/figure-html/fig-regr-div-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-regr-div">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-regr-div-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Datensatz 1
@@ -626,7 +616,7 @@ Abbildung&nbsp;9.3: Achsenabschnitt (<span class="math inline">\(\beta_0\)</span
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-regr-div" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-regr-div-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-regr-div-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="080-regression1_files/figure-html/fig-regr-div-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-regr-div">
+<img src="080-regression1_files/figure-html/fig-regr-div-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-regr-div">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-regr-div-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Datensatz 2
@@ -1345,38 +1335,33 @@ Abbildung&nbsp;9.6: Der Achsenabschnitt: Wie viele Punkte kann Toni erwarten bei
 </div>
 <p>Anstelle auf <a href="#fig-beta0" class="quarto-xref">Abbildung&nbsp;<span>9.6</span></a> zu schauen, können Sie sich auch von R Tonis Klausurerfolg vorhersagen (to predict) lassen:</p>
 <blockquote class="blockquote">
-<p><span>🧑‍🏫</span> Hey R, predicte mir mal auf Basis vom Modell “lm1” den Lernerfolg für Toni, wenn der x=0 Stunden lernt.</p>
+<p><span>🧑‍🏫</span> Hey R, predicte mir mal auf Basis vom Modell “lm_toni” den Lernerfolg für Toni, wenn der x=0 Stunden lernt.</p>
 </blockquote>
 <blockquote class="blockquote">
-<p><span>🤖</span> Okay, ich predicte mit Modell “lm1” und nehme als neue Datentabelle Tonis Lernzeit (x=0)!</p>
+<p><span>🤖</span> Okay, ich predicte mit Modell “lm_toni” und nehme als neue Datentabelle Tonis Lernzeit (x=0)!</p>
 </blockquote>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tonis_lernzeit</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>  <span class="co"># `tibble` erstellt einen Dataframe</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm1</span>, newdata <span class="op">=</span> <span class="va">tonis_lernzeit</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_toni</span>, newdata <span class="op">=</span> <span class="va">tonis_lernzeit</span><span class="op">)</span></span>
 <span><span class="co">##  1 </span></span>
 <span><span class="co">## 46</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>predict</code> erwartet für das Argument <code>newdata</code> einen Dataframe. In diesem Beispiel heißt er <code>tonis_lernzeit</code>.</p>
 </section><section id="spezifikation-eines-geradenmodells" class="level3" data-number="9.3.2"><h3 data-number="9.3.2" class="anchored" data-anchor-id="spezifikation-eines-geradenmodells">
 <span class="header-section-number">9.3.2</span> Spezifikation eines Geradenmodells</h3>
-<p>Ein Geradenmodell kann man im einfachsten Fall spezifizieren wie s. <a href="#eq-mod1" class="quarto-xref">Gleichung&nbsp;<span>9.3</span></a> dargestellt.</p>
+<p>Ein Geradenmodell kann man im einfachsten Fall spezifizieren wie <a href="#eq-mod1" class="quarto-xref">Gleichung&nbsp;<span>9.2</span></a> dargestellt.</p>
 <p><span id="eq-mod1"><span class="math display">\[\color{ycol}{\hat{y}} \sim \color{xcol}{\text{x}} \tag{9.2}\]</span></span></p>
-<p>Lies: “Laut meinem Modell ist mein (geschätztes) <span class="math inline">\(\color{ycol}{\hat{y}}\)</span> irgendeine Funktion von <span class="math inline">\(\color{xcol}{\text{x}}\)</span>”.</p>
-<p>Wir erinnern uns, dass <span class="math inline">\(\color{ycol}{Y}\)</span> die <span class="math inline">\(\color{ycol}{AV}\)</span> und <span class="math inline">\(\color{xcol}{X}\)</span> die <span class="math inline">\(\color{xcol}{UV}\)</span> ist:</p>
-<p><span id="eq-mod1"><span class="math display">\[\color{ycol}{AV} \sim \color{xcol}{UV} \tag{9.3}\]</span></span></p>
-<p>Wir werden als Funktion nur Geraden verwenden. Die genauen Werte der Gerade lassen wir uns vom Computer ausrechnen. <a href="#eq-mod1" class="quarto-xref">Gleichung&nbsp;<span>9.3</span></a> können Sie so ins Errische übersetzen:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data <span class="op">=</span> <span class="va">meine_daten</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p>Lies: “Laut meinem Modell ist mein vorhergesagtes <span class="math inline">\(\color{ycol}{\hat{y}}\)</span> irgendeine Funktion von <span class="math inline">\(\color{xcol}{\text{x}}\)</span>”. Wir erinnern uns, dass <span class="math inline">\(\color{ycol}{Y}\)</span> die <span class="math inline">\(\color{ycol}{AV}\)</span> und <span class="math inline">\(\color{xcol}{X}\)</span> die <span class="math inline">\(\color{xcol}{UV}\)</span> ist: <span class="math inline">\(\color{ycol}{AV} \sim \color{xcol}{UV}\)</span>.</p>
+<p>Wir werden als Funktion nur Geraden verwenden. Die genauen Werte der Gerade lassen wir uns vom Computer ausrechnen. <a href="#eq-mod1" class="quarto-xref">Gleichung&nbsp;<span>9.2</span></a> können Sie so ins Errische übersetzen: <code>lm(y ~ x, data = meine_daten)</code>.</p>
 <p><code>lm</code> steht für “lineares Modell”, also eine Gerade als Modell. Die Gerade nennt man auch <em>Regressionsgerade</em> (an anderer Stelle in diesem Buch unscharf als “Trendgerade” bezeichnet).</p>
 <div id="exm-noten5" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 9.4 (Zahlen für Toni)</strong></span> Toni ist nicht zufrieden mit Ihren Vorhersagen: “Jetzt hör mal auf mit deinem Lineal hier herum zu malen. Ich will es genau wissen, sage mir präzise Zahlen!”.</p>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data <span class="op">=</span> <span class="va">noten2</span><span class="op">)</span></span>
-<span><span class="va">lm1</span></span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_toni</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data <span class="op">=</span> <span class="va">noten2</span><span class="op">)</span></span>
+<span><span class="va">lm_toni</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Call:</span></span>
 <span><span class="co">## lm(formula = y ~ x, data = noten2)</span></span>
@@ -1385,43 +1370,40 @@ Abbildung&nbsp;9.6: Der Achsenabschnitt: Wie viele Punkte kann Toni erwarten bei
 <span><span class="co">## (Intercept)            x  </span></span>
 <span><span class="co">##      46.191        0.879</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>R gibt Ihnen die beiden Koeffizienten für die Gerade aus. Den Namen des Objekts können Sie frei aussuchen, z.B. <code>mein_erstes_lm</code>. Die Regressionsgleichung lautet demnach: <code>y_pred = 8.6 + 0.88*x</code>.</p>
-<p><code>8.6</code> ist der Achsenabschnitt, d.h. der Wert von <span class="math inline">\(\color{ycol}{Y}\)</span> wenn <span class="math inline">\(\color{xcol}{x}=0\)</span>. <code>0.88</code> ist das Regressionsgewicht, d.h. die Steigung der Regressionsgeraden: Für jede Stunde Lernzeit steigt der vorhergesagte Klausurerfolg um <code>0.88</code> Punkte.</p>
-<p>Mit Kenntnis der beiden Koeffizienten kann man beliebige <span class="math inline">\(\color{ycol}{Y}\)</span>-Werte ausrechnen, gegeben bestimmte <span class="math inline">\(\color{xcol}{X}\)</span>-Werte. Hat jemand zum Beispiel 10 Stunden gelernt, würden wir folgendes Klausurergebnis vorhersagen:</p>
+<p>R gibt Ihnen die beiden Koeffizienten für die Gerade aus. Den Namen des Objekts können Sie frei aussuchen, z.<span class="math inline">\(\,\)</span>B. <code>mein_erstes_lm</code>. Die Regressionsgleichung lautet demnach: <code>y_pred = 8.6 + 0.88*x</code>.</p>
+<p><code>8.6</code> ist der Achsenabschnitt, d.<span class="math inline">\(\,\)</span>h. der Wert von <span class="math inline">\(\color{ycol}{Y}\)</span> wenn <span class="math inline">\(\color{xcol}{x}=0\)</span>. <code>0.88</code> ist das Regressionsgewicht, d.<span class="math inline">\(\,\)</span>h. die Steigung der Regressionsgeraden: Für jede Stunde Lernzeit steigt der vorhergesagte Klausurerfolg um <code>0.88</code> Punkte.</p>
+<p>Mit Kenntnis der beiden Koeffizienten kann man beliebige <span class="math inline">\(\color{ycol}{Y}\)</span>-Werte ausrechnen, gegeben bestimmte <span class="math inline">\(\color{xcol}{X}\)</span>-Werte. Hat jemand zum Beispiel 73 Stunden gelernt, würden wir folgendes Klausurergebnis vorhersagen:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lernzeit</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lernzeit</span> <span class="op">&lt;-</span> <span class="fl">73</span></span>
 <span><span class="va">y_pred</span> <span class="op">&lt;-</span> <span class="fl">46</span> <span class="op">+</span> <span class="fl">0.88</span><span class="op">*</span><span class="va">lernzeit</span></span>
 <span><span class="va">y_pred</span></span>
-<span><span class="co">## [1] 55</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">## [1] 110</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="exm-noten6" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 9.5 (Vorhersage für Klausurerfolg, nächster Versuch)</strong></span> Sie versuchen, noch etwas Gutes für Toni zu tun. R hilft Ihnen dabei und rechnet die erwartete Punktzahl aus, wenn Toni 73 Stunden lernt. Sie dürfen es aber auch selber rechnen, wenn Ihnen das lieber ist.</p>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tonis_lernzeit2</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>x <span class="op">=</span> <span class="fl">73</span><span class="op">)</span>  </span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tonis_lernzeit2</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>x <span class="op">=</span> <span class="fl">73</span><span class="op">)</span>  </span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>tonis_lernzeit2</code> ist eine Tabelle mit einer Zeile und einer Spalte:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tonis_lernzeit2</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tonis_lernzeit2</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead><tr class="header">
-<th style="text-align: right;">x</th>
-</tr></thead>
-<tbody><tr class="odd">
-<td style="text-align: right;">73</td>
-</tr></tbody>
-</table>
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["x"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"73"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[5],"max":[5]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm1</span>, newdata <span class="op">=</span> <span class="va">tonis_lernzeit2</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_toni</span>, newdata <span class="op">=</span> <span class="va">tonis_lernzeit2</span><span class="op">)</span></span>
 <span><span class="co">##   1 </span></span>
 <span><span class="co">## 110</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Die Syntax von <code>predict</code> lautet:</p>
 <pre><code>predict(modell, newdata = tabelle_mit_prädiktorwerten)</code></pre>
-<p>Die Funktion <code>predict</code> liefert eine Vorhersage für ein ein Modell, z.B. <code>lm1</code> und für einen bestimmten Dataframe (der die Prädiktorwerte enthalten muss).</p>
+<p>Die Funktion <code>predict</code> liefert eine Vorhersage für ein ein Modell, z.<span class="math inline">\(\,\)</span>B. <code>lm_toni</code>, und für einen bestimmten Dataframe (der die Werte der UV enthalten muss).</p>
 </section><section id="vorhersagefehler" class="level3" data-number="9.3.3"><h3 data-number="9.3.3" class="anchored" data-anchor-id="vorhersagefehler">
 <span class="header-section-number">9.3.3</span> Vorhersagefehler</h3>
 <p>Die Differenz zwischen vorhergesagtem Wert für eine (neue) Beobachtung, <span class="math inline">\(\color{modelcol}{\hat{y_0}}\)</span> und ihrem tatsächlichen Wert nennt man Vorhersagefehler (error, <span class="math inline">\(e\)</span>) oder <em>Residuum</em>: <span class="math inline">\(\color{errorcol}{e_i} = \color{ycol}{y_i} - \color{modelcol}{\hat{y}_i}\)</span>.</p>
@@ -1431,17 +1413,17 @@ Abbildung&nbsp;9.6: Der Achsenabschnitt: Wie viele Punkte kann Toni erwarten bei
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-resid" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-resid-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-resid-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="080-regression1_files/figure-html/fig-resid-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-resid">
+<img src="080-regression1_files/figure-html/fig-resid-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-resid">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-resid-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(a) Geradenmodell (lm1)
+(a) Geradenmodell (lm_toni)
 </figcaption></figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-resid" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-resid-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-resid-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="080-regression1_files/figure-html/fig-resid-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-resid">
+<img src="080-regression1_files/figure-html/fig-resid-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-resid">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-resid-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Punktmodell (lm0)
@@ -1456,39 +1438,37 @@ Abbildung&nbsp;9.7: Vorhersagefehler als Abweichungsbalken. (a) Beim Geradenmode
 </div>
 <p>Wie ist es mit den Vorhersagefehlern von beiden Modellen bestellt? Lassen wir uns von R die Streuung (Residuen) in Form der mittleren Absolutabweichung (MAE) ausgeben (aus dem Paket <code>easystats</code>):</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
-<span><span class="fu">mae</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
+<span><span class="fu">mae</span><span class="op">(</span><span class="va">lm_toni</span><span class="op">)</span></span>
 <span><span class="co">## [1] 11</span></span>
 <span><span class="co">## [1] 8</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Vergleichen wir MAE im Nullmodell mit MAE in <code>lm1</code>:</p>
+<p>Vergleichen wir MAE im Nullmodell mit MAE in <code>lm_toni</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">verhaeltnis_fehler_mae</span> <span class="op">&lt;-</span> <span class="fu">mae</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span> <span class="op">/</span> <span class="fu">mae</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">verhaeltnis_fehler_mae</span> <span class="op">&lt;-</span> <span class="fu">mae</span><span class="op">(</span><span class="va">lm_toni</span><span class="op">)</span> <span class="op">/</span> <span class="fu">mae</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
 <span><span class="va">verhaeltnis_fehler_mae</span></span>
 <span><span class="co">## [1] 0.71</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Ah! Das Geradenmodell ist viel besser: Von <code>lm0</code> zu <code>lm1</code> haben die mittlere Absolutlänge des Fehlerbalkens auf 71 Prozent verbessert. Nicht schlecht!</p>
+<p>Ah! Das Geradenmodell ist viel besser: Von <code>lm0</code> zu <code>lm_toni</code> haben die mittlere Absolutlänge des Fehlerbalkens auf 71 Prozent verbessert. Nicht schlecht!</p>
 <div id="def-fehlerstreung" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 9.4 (Fehlerstreuung)</strong></span> Als Fehlerstreuung bezeichnen wir die Gesamtheit der Abweichungen der beobachteten Werte (<span class="math inline">\(y_i\)</span>) vom vorhergesagten Wert (<span class="math inline">\(\hat{y}_i\)</span>). <span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Definition 9.4 (Fehlerstreuung)</strong></span> Als Fehlerstreuung bezeichnen wir die Verteilung der Abweichungen der beobachteten Werte (<span class="math inline">\(y_i\)</span>) vom vorhergesagten Wert (<span class="math inline">\(\hat{y}_i\)</span>). <span class="math inline">\(\square\)</span></p>
 </div>
-<p>Zur Berechnung der Fehlerstreuung gibt es mehrere Kenngrößen wie MAE oder MSE. Ein Geradenmodell ist immer besser als ein Punktmodell (im Hinblick auf die Verringerung der Fehlerstreuung), solange X mit Y korreliert ist.</p>
-<p>Natürlich können wir – in Analogie zur Varianz – auch den mittleren Quadratfehlerbalken (Mean Squared Error, MSE) berechnen. Wer mag, kann den MSE auch von Hand berechnen: <code>mean((noten2$y - mean(noten2$y))^2)</code>.</p>
+<p>Zur Berechnung der Fehlerstreuung gibt es mehrere Kenngrößen wie MAE oder MSE. Ein Geradenmodell ist immer besser als ein Punktmodell (im Hinblick auf die Verringerung der Fehlerstreuung), solange X mit Y korreliert ist. Natürlich können wir – in Analogie zur Varianz – auch den mittleren Quadratfehlerbalken (Mean Squared Error, MSE) berechnen. Wer mag, kann den MSE auch von Hand berechnen: <code>mean((noten2$y - mean(noten2$y))^2)</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mse</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
-<span><span class="fu">mse</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mse</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
+<span><span class="fu">mse</span><span class="op">(</span><span class="va">lm_toni</span><span class="op">)</span></span>
 <span><span class="co">## [1] 193</span></span>
 <span><span class="co">## [1] 106</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">verhaeltnis_fehler_mse</span> <span class="op">&lt;-</span> <span class="fu">mse</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span><span class="op">/</span><span class="fu">mse</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">verhaeltnis_fehler_mse</span> <span class="op">&lt;-</span> <span class="fu">mse</span><span class="op">(</span><span class="va">lm_toni</span><span class="op">)</span><span class="op">/</span><span class="fu">mse</span><span class="op">(</span><span class="va">lm0</span><span class="op">)</span></span>
 <span><span class="va">verhaeltnis_fehler_mse</span></span>
 <span><span class="co">## [1] 0.55</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Betrachtet man die MSE, so kann man eine Verbesserung um 0.45 auf 0.55 feststellen.</p>
 </section><section id="berechnung-der-modellkoeffizienten" class="level3" data-number="9.3.4"><h3 data-number="9.3.4" class="anchored" data-anchor-id="berechnung-der-modellkoeffizienten">
 <span class="header-section-number">9.3.4</span> Berechnung der Modellkoeffizienten</h3>
-<p>Aber wie legt man die Regressionsgerade in das Streudiagramm, bildlich gesprochen?</p>
-<p>Die Regressionskoeffizienten (hier synonym: Modellparameter) <span class="math inline">\(\beta_0\)</span> und <span class="math inline">\(\beta_1\)</span> wählt man so, dass die <em>Residuen</em> <em>minimal</em> sind. Genauer gesagt wird die Summe der quadrierten <span class="green">Residuen</span> minimiert, s. <a href="#eq-min" class="quarto-xref">Gleichung&nbsp;<span>9.4</span></a>.</p>
+<p>Aber wie legt man die Regressionsgerade in das Streudiagramm, bildlich gesprochen? Die Regressionskoeffizienten (hier synonym: Modellparameter) <span class="math inline">\(\beta_0\)</span> und <span class="math inline">\(\beta_1\)</span> wählt man so, dass die <em>Residuen</em> <em>minimal</em> sind. Genauer gesagt wird die Summe der quadrierten <span class="green">Residuen</span> minimiert, s. <a href="#eq-min" class="quarto-xref">Gleichung&nbsp;<span>9.3</span></a>.</p>
 <p><a href="#fig-opt" class="quarto-xref">Abbildung&nbsp;<span>9.8</span></a> veranschaulicht die Minimierung der Residuen (Vorhersagefehler).</p>
 <div id="fig-opt" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-opt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1517,22 +1497,22 @@ Abbildung&nbsp;9.7: Vorhersagefehler als Abweichungsbalken. (a) Beim Geradenmode
 Abbildung&nbsp;9.8: Bildquelle: <a href="https://www.fom-blog.de/autorinnen-und-autoren/karsten-luebke">Karsten Lübke, FOM Hochschule</a>
 </figcaption></figure>
 </div>
-<p><span id="eq-min"><span class="math display">\[\text{min}\sum_i \color{errorcol}{e_i}^2 \tag{9.4}\]</span></span></p>
+<p><span id="eq-min"><span class="math display">\[\text{min}\sum_i \color{errorcol}{e_i}^2 \tag{9.3}\]</span></span></p>
 <p>Es gibt verschiedene Methoden, um die Koeffizienten zu berechnen (die aber nicht in diesem Buch zu finden sind). Eine schöne Darstellung dazu findet sich bei <span class="citation" data-cites="kaplan_statistical_2009">Kaplan (<a href="references.html#ref-kaplan_statistical_2009" role="doc-biblioref">2009</a>)</span>.</p>
 <p>“Von Hand” können Sie die Optimierung von <span class="math inline">\(\beta_0\)</span> und <span class="math inline">\(\beta1\)</span> in dieser App der FOM-Hochschule<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> ausprobieren.</p>
-</section></section><section id="r-quadrat-als-maß-der-modellgüte" class="level2" data-number="9.4"><h2 data-number="9.4" class="anchored" data-anchor-id="r-quadrat-als-maß-der-modellgüte">
-<span class="header-section-number">9.4</span> R-Quadrat als Maß der Modellgüte</h2>
-<p>Das Modell <code>lm1</code> weist noch 0.55 der Fehlerstreuung (MSE) des Nullmodells auf. Anders gesagt, wir haben uns ( (bzw. das Modell hat sich) um <span class="math inline">\(1 - 0.55\)</span> verbessert.</p>
+</section></section><section id="r2-als-maß-der-modellgüte" class="level2" data-number="9.4"><h2 data-number="9.4" class="anchored" data-anchor-id="r2-als-maß-der-modellgüte">
+<span class="header-section-number">9.4</span> <span class="math inline">\(R^2\)</span> als Maß der Modellgüte</h2>
+<p>Das Modell <code>lm_toni</code> weist noch 0.55 der Fehlerstreuung (MSE) des Nullmodells auf. Anders gesagt, wir haben uns ( (bzw. das Modell hat sich) um <span class="math inline">\(1 - 0.55\)</span> verbessert.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fl">1</span> <span class="op">-</span> <span class="va">verhaeltnis_fehler_mse</span></span>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fl">1</span> <span class="op">-</span> <span class="va">verhaeltnis_fehler_mse</span></span>
 <span><span class="co">## [1] 0.45</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="def-r2" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 9.5 (R-Quadrat)</strong></span> Der Anteil der Verringerung (als Anteil) der Fehlerstreuung der Zielvariablen zwischen <code>lm0</code> und dem gerade untersuchten Modell nennt man <em>R-Quadrat</em> (<span class="math inline">\(R^2\)</span>). Das R-Quadrat (<span class="math inline">\(R^2\)</span>) eines Modells <span class="math inline">\(m\)</span> ist definiert als die Verringerung der Streuung, wenn man das Modell <span class="math inline">\(m\)</span> mit dem Nullmodell <span class="math inline">\(m_0\)</span> vergleicht: <span class="math inline">\(R^2 =1-  \frac{\text{MSE}_{m}}{\text{MSE}_{m0}}\)</span>. R-Quadrat ist ein Maß der <em>Modellgüte</em>: Je größer <span class="math inline">\(R^2\)</span>, desto besser ist die Vorhersage. Da es ein Anteilsmaß ist, liegt der Wertebereich zwischen 0 und 1. Im Nullmodell beträgt R-Quadrat per Definition Null. Im Fall von Modellen des Typs <span class="math inline">\(y\sim x\)</span> gilt: <span class="math inline">\(R^2 = r_{xy}^2\)</span>. <span class="math inline">\(\square\)</span></p>
+<p><span class="theorem-title"><strong>Definition 9.5 (R<span class="math inline">\(R^2\)</span>-Quadrat)</strong></span> Der Anteil der Verringerung (als Anteil) der Fehlerstreuung der Zielvariablen zwischen <code>lm0</code> und dem gerade untersuchten Modell nennt man <em>R-Quadrat</em> (<span class="math inline">\(R^2\)</span>). Das R-Quadrat (<span class="math inline">\(R^2\)</span>) eines Modells <span class="math inline">\(m\)</span> ist definiert als die Verringerung der Streuung, wenn man das Modell <span class="math inline">\(m\)</span> mit dem Nullmodell <span class="math inline">\(m_0\)</span> vergleicht: <span class="math inline">\(R^2 =1-  \frac{\text{MSE}_{m}}{\text{MSE}_{m0}}\)</span>. R-Quadrat ist ein Maß der <em>Modellgüte</em>: Je größer <span class="math inline">\(R^2\)</span>, desto besser ist die Vorhersage. Da es ein Anteilsmaß ist, liegt der Wertebereich zwischen 0 und 1. Im Nullmodell beträgt R-Quadrat per Definition Null. Im Fall von Modellen des Typs <span class="math inline">\(y\sim x\)</span> gilt: <span class="math inline">\(R^2 = r_{xy}^2\)</span>. <span class="math inline">\(\square\)</span></p>
 </div>
-<p>Einfach gesagt: <span class="math inline">\(R^2\)</span> gibt an, wie gut (zu welchem Anteil) ein Modell die Zielvariable, <span class="math inline">\(y\)</span>, erklärt. Wir können R-Quadrat (<span class="math inline">\(R^2\)</span>) uns von R z.B. so ausgeben lassen:</p>
+<p>Einfach gesagt: <span class="math inline">\(R^2\)</span> gibt an, wie gut (zu welchem Anteil) ein Modell die Zielvariable, <span class="math inline">\(y\)</span>, erklärt. Wir können R-Quadrat (<span class="math inline">\(R^2\)</span>) uns von R z.<span class="math inline">\(\,\)</span>B. so ausgeben lassen:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm1</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_toni</span><span class="op">)</span></span>
 <span><span class="co">## # R2 for Linear Regression</span></span>
 <span><span class="co">##        R2: 0.448</span></span>
 <span><span class="co">##   adj. R2: 0.442</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1545,7 +1525,7 @@ Abbildung&nbsp;9.8: Bildquelle: <a href="https://www.fom-blog.de/autorinnen-und-
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-r2-extreme" style="flex-basis: 45.0%;justify-content: center;">
 <div id="fig-r2-extreme-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-r2-extreme-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="080-regression1_files/figure-html/fig-r2-extreme-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-r2-extreme">
+<img src="080-regression1_files/figure-html/fig-r2-extreme-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-r2-extreme">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-r2-extreme-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Keine Korrelation
@@ -1558,7 +1538,7 @@ Abbildung&nbsp;9.8: Bildquelle: <a href="https://www.fom-blog.de/autorinnen-und-
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-r2-extreme" style="flex-basis: 45.0%;justify-content: center;">
 <div id="fig-r2-extreme-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-r2-extreme-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="080-regression1_files/figure-html/fig-r2-extreme-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-r2-extreme">
+<img src="080-regression1_files/figure-html/fig-r2-extreme-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-r2-extreme">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-r2-extreme-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Perfekte Korrelation
@@ -1572,7 +1552,7 @@ Abbildung&nbsp;9.9: Extremfälle von R-Quadrat: 0 und 1. (a) Keine Korrelation, 
 </figcaption></figure>
 </div>
 </div>
-<p>Bei einer perfekten Korrelation <span class="math inline">\(R^2=1\)</span> liegen die Punkte auf der Geraden. Im gegenteiligen Extremfall von <span class="math inline">\(R^2=0\)</span> ist die Vorhersage genauso gut, wie wenn man für jedes <span class="math inline">\(y\)</span> den Mittelwert, <span><span class="math inline">\(\color{ycol}{\bar{y}}\)</span></span> , vorhersagen würde. Je größer R-Quadrat, desto besser passt das Modell zu den Daten; desto besser “erklärt” das Modell die Daten (desto besser der “Fit”, sagt man).</p>
+<p>Bei einer perfekten Korrelation <span class="math inline">\(R^2=1\)</span> liegen die Punkte auf der Geraden. Im gegenteiligen Extremfall von <span class="math inline">\(R^2=0\)</span> ist die Vorhersage genauso gut, wie wenn man für jedes <span class="math inline">\(y\)</span> den Mittelwert, <span><span class="math inline">\(\color{ycol}{\bar{y}}\)</span></span> , vorhersagen würde. Je größer R-Quadrat, desto besser passt das Modell zu den Daten; desto besser “erklärt” das Modell die Daten (desto besser der “Fit” des Modells zu den Daten, sagt man).</p>
 <p><a href="https://fomshinyapps.shinyapps.io/Variationszerlegung/">Diese App der FOM-Hochschule</a> erlaubt es Ihnen mit der Größe der Residuen eines linearen Modells zu spielen.</p>
 <!-- ### Addition der Varianzen -->
 <!-- Nennen wir die Varianz des Verkaufspreis $s^2_y$, die Verbesserung der Fehlerstreuung durch das *M*odell $s^2_m$ und die restliche Fehlerstreuung, den MSE, $s^2_e$. -->
@@ -1581,7 +1561,7 @@ Abbildung&nbsp;9.9: Extremfälle von R-Quadrat: 0 und 1. (a) Keine Korrelation, 
 <!-- s^2_m = s^2_y - s^2_e$$ -->
 <!-- ```{r} -->
 <!-- s2_y = var(noten2$y) -->
-<!-- s2_e = mse(lm1) -->
+<!-- s2_e = mse(lm_toni) -->
 <!-- s2_m = s2_y - s2_e -->
 <!-- s2_m -->
 <!-- ``` -->
@@ -1590,15 +1570,15 @@ Abbildung&nbsp;9.9: Extremfälle von R-Quadrat: 0 und 1. (a) Keine Korrelation, 
 <span class="header-section-number">9.5</span> Interpretation eines Regressionsmodells</h2>
 <section id="modellgüte" class="level3" data-number="9.5.1"><h3 data-number="9.5.1" class="anchored" data-anchor-id="modellgüte">
 <span class="header-section-number">9.5.1</span> Modellgüte</h3>
-<p>Die Residuen (Vorhersagefehler) bestimmen die Modellgüte: Sind die Residuen im Schnitt groß, so ist die Modellgüte gering (schlecht), und umgekehrt. Verschiedenen Koeffizienten stehen zur Verfügung: R-Quadrat, <span class="math inline">\(r\)</span> (als Korrelation von tatsächlichem <span class="math inline">\(y\)</span> und vorhergesagten <span class="math inline">\(\hat{y}\)</span>), MSE, RMSE, MAE, …</p>
+<p>Die Residuen (Vorhersagefehler) bestimmen die Modellgüte: Sind die Residuen im Schnitt groß, so ist die Modellgüte gering (schlecht), und umgekehrt. Verschiedenen Koeffizienten stehen zur Verfügung: <span class="math inline">\(R^2\)</span>, <span class="math inline">\(r\)</span> (als Korrelation von tatsächlichem <span class="math inline">\(y\)</span> und vorhergesagten <span class="math inline">\(\hat{y}\)</span>), MSE, RMSE, MAE, …</p>
 </section><section id="koeffizienten" class="level3" data-number="9.5.2"><h3 data-number="9.5.2" class="anchored" data-anchor-id="koeffizienten">
 <span class="header-section-number">9.5.2</span> Koeffizienten</h3>
 <p>Die Modellkoeffizienten, also Achsenabschnitt (<span class="math inline">\(\beta_0\)</span>) und Steigung (<span class="math inline">\(\beta_1\)</span>) sind nur eingeschränkt zu interpretieren, wenn man die zugrundeliegenden kausalen Abhängigkeiten nicht kennt. Allein aufgrund eines statistischen Zusammenhangs darf man keine kausalen Abhängigkeiten annehmen. Ohne eine zugrundeliegende Theorie für eine Kausalbehauptung kann man kann nur <em>deskriptiv</em> argumentieren. Oder sich mit der Modellgüte und den Vorhersagen begnügen. Was auch was wert ist.</p>
-<p><span>Im Modell <code>lm1</code> liegt der Achsenabschnitt bei <span class="math inline">\(\textcolor{ycol}{y}=46.19\)</span>. Beobachtungen mit <span class="math inline">\(\color{xcol}{x}=0\)</span> können also diesen <span class="math inline">\(\textcolor{ycol}{Y}\)</span>-Wert erwarten, laut <code>lm1</code>.</span> Leider ist es häufig so, dass Prädiktorwerte von 0 in der Praxis nicht realistisch sind, so dass der Achsenabschnitt dann wenig nützt.</p>
+<p><span>Im Modell <code>lm_toni</code> liegt der Achsenabschnitt bei <span class="math inline">\(\textcolor{ycol}{y}=46.19\)</span>. Beobachtungen mit <span class="math inline">\(\color{xcol}{x}=0\)</span> können also diesen <span class="math inline">\(\textcolor{ycol}{Y}\)</span>-Wert erwarten, laut <code>lm_toni</code>.</span> Leider ist es häufig so, dass UV mit Wert 0 in der Praxis nicht realistisch sind, so dass der Achsenabschnitt dann wenig nützt.</p>
 <div id="exm-groesse" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 9.6 (Regression Größe und Gewicht)</strong></span> Nutzt man Körpergröße und das Gewicht von Menschen vorherzusagen, ist der Achsenabschnitt von Körpergröße wenig nützlich, da es keine Menschen gibt der Größe 0. <span class="math inline">\(\square\)</span></p>
 </div>
-<p>So interpretiert man die Geradensteigung, <span class="math inline">\(\beta_1\)</span>: “Im Modell <code>lm1</code> beträgt der Regressionskoeffizient <span class="math inline">\(\beta_1 = 0.88\)</span>. Zwei Studentinnen, deren Lernzeit sich um eine Stunde unterscheidet, unterscheiden sich <em>laut Modell</em> um den Wert von <span class="math inline">\(\beta_1\)</span>”.</p>
+<p>So interpretiert man die Geradensteigung, <span class="math inline">\(\beta_1\)</span>: “Im Modell <code>lm_toni</code> beträgt der Regressionskoeffizient <span class="math inline">\(\beta_1 = 0.88\)</span>. Zwei Studentinnen, deren Lernzeit sich um eine Stunde unterscheidet, unterscheiden sich <em>laut Modell</em> um den Wert von <span class="math inline">\(\beta_1\)</span>”.</p>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1609,7 +1589,7 @@ Vorsicht
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Häufig liest man, der “Effekt des Prädiktors” auf die AV betrage z.B. <span class="math inline">\(0.88\)</span>. “Effekt” ist aber ein Wort, das man kausal verstehen kann. Ohne weitere Absicherung kann man aber Regressionskoeffizienten nicht kausal verstehen. Daher sollte man das Wort “Effekt” mit Vorsicht genießen. Manche sprechen daher auch von einem “statistischen Effekt”. <span class="math inline">\(\square\)</span></p>
+<p>Häufig liest man, der “Effekt der UV” auf die AV betrage z.<span class="math inline">\(\,\)</span>B. <span class="math inline">\(0.88\)</span>. “Effekt” ist aber ein Wort, das man leicht kausal verstehen kann. Ohne weitere Absicherung kann man aber Regressionskoeffizienten <em>nicht</em> kausal verstehen. Daher sollte man das Wort “Effekt” mit Vorsicht genießen. Manche sprechen daher auch von einem “statistischen Effekt”, um zu verdeutlichen, dass keine Kausalaussage impliziert ist. <span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 </section></section><section id="wie-man-mit-statistik-lügt" class="level2" data-number="9.6"><h2 data-number="9.6" class="anchored" data-anchor-id="wie-man-mit-statistik-lügt">
@@ -1646,19 +1626,18 @@ Vorsicht
 <span class="header-section-number">9.7.1</span> Der Datenwahrsager legt los</h3>
 <p>Als mittlerweile anerkannter Extrem-Datenanalyst in dem Online-Auktionshaus, in dem Sie arbeiten, haben Sie sich neue Ziele gesetzt. Sie möchten eine genaue Vorhersage von Verkaufspreisen erzielen. Als Sie von diesem Plan berichteten, leuchteten die Augen Ihrer Chefin. Genaue Vorhersagen sind von hoher betriebswirtschaftlicher Relevanz. Mariokart-Daten laden, am besten ohne Extremwerte, s. <a href="040-verbildlichen.html#lst-no-extreme" class="quarto-xref">Listing&nbsp;<span>5.4</span></a> und los geht’s (und die üblichen Pakete starten, nicht vergessen)!</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">start_pr</span>, data <span class="op">=</span> <span class="va">mariokart</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">start_pr</span>, data <span class="op">=</span> <span class="va">mariokart</span><span class="op">)</span></span>
 <span><span class="fu">r2</span><span class="op">(</span><span class="va">lm2</span><span class="op">)</span></span>
 <span><span class="co">## # R2 for Linear Regression</span></span>
 <span><span class="co">##        R2: 0.005</span></span>
 <span><span class="co">##   adj. R2: -0.002</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Oh nein! Unterirdisch schlecht. Anstelle von bloßem Rumprobieren überlegen Sie und schauen dann nach, welche Variable am stärksten korreliert mit <code>total_pr</code>; es resultiert <code>lm3</code>:</p>
+<p>Oh nein! Unterirdisch schlecht. Anstelle von bloßem Rumprobieren überlegen Sie und schauen dann nach, welche Variable am stärksten korreliert mit <code>total_pr</code>; es resultiert <code>lm3</code>. Dann lassen Sie sich die Modellparameter ausgeben, s. <a href="#tbl-lm3" class="quarto-xref">Tabelle&nbsp;<span>9.1</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">ship_pr</span>, data <span class="op">=</span> <span class="va">mariokart</span><span class="op">)</span></span>
-<span><span class="fu">parameters</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">ship_pr</span>, data <span class="op">=</span> <span class="va">mariokart</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-lm3" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -1784,17 +1763,17 @@ Tabelle&nbsp;9.2: Die vorhergesagten (predicted) Werte und die Abweichungen vom 
 <p><span>🤖</span> Ja, klar!</p>
 </blockquote>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">neue_daten</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">neue_daten</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
 <span>  ship_pr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="co"># zwei Werte zum Vorhersagen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm3</span>, newdata <span class="op">=</span> <span class="va">neue_daten</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm3</span>, newdata <span class="op">=</span> <span class="va">neue_daten</span><span class="op">)</span></span>
 <span><span class="co">##  1  2 </span></span>
 <span><span class="co">## 41 54</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Aber nützlich wäre noch, das Modell (bzw. die Schätzung der erwarteten Werte) als Diagramm zu bekommen. Das erreicht man z.B. so, s. <a href="090-regression2.html#fig-lm3" class="quarto-xref">Abbildung&nbsp;<span>10.10</span></a>.</p>
+<p>Aber nützlich wäre noch, das Modell (bzw. die Schätzung der erwarteten Werte) als Diagramm zu bekommen. Das erreicht man z.<span class="math inline">\(\,\)</span>B. so, s. <a href="090-regression2.html#fig-lm3" class="quarto-xref">Abbildung&nbsp;<span>10.10</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">estimate_prediction</span><span class="op">(</span><span class="va">lm3</span>, by <span class="op">=</span> <span class="st">"ship_pr"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">estimate_prediction</span><span class="op">(</span><span class="va">lm3</span>, by <span class="op">=</span> <span class="st">"ship_pr"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-lm3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-lm3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1809,21 +1788,21 @@ Abbildung&nbsp;9.11: Verbildlichung der erwarteteten Werte laut lm3
 <p><code>estimate_expectation</code> heißt sinngemäß “schätze den zu erwartenden Wert”. Kurz gesagt: Wir wollen eine Vorhersage von R.</p>
 <p>Am wichtigsten ist Ihnen aber im Moment die Frage, wie “gut” das Modell ist, spricht wie lang oder kurz die (absoluten) Vorhersagefehler-Balken sind:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span></span>
 <span><span class="co">## [1] 13</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Das Modell erklärt einen Anteil von ca. 0.29 der Gesamtstreuung.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span></span>
 <span><span class="co">## # R2 for Linear Regression</span></span>
 <span><span class="co">##        R2: 0.294</span></span>
 <span><span class="co">##   adj. R2: 0.289</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm3</span><span class="op">)</span></span>
 <span><span class="co">## [1] 13</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Im nächsten Meeting erzählen Sie Ihrem Chef “Ich kann den Verkaufspreis von Mariokart-Spielen im Schnitt auf 13 Dollar genau vorhersagen!”. Hört sich gut an. Allerdings hätte ihr Chef es gerne genauer. Kann man da noch was machen?</p>
+<p>Im nächsten Meeting erzählen Sie Ihrer Chefin “Ich kann den Verkaufspreis von Mariokart-Spielen im Schnitt auf 13 Dollar genau vorhersagen!”. Hört sich gut an. Allerdings hätte es Ihre Chefin gerne genauer. Kann man da noch was machen?</p>
 </section></section><section id="fallstudie-immobilienpreise" class="level2" data-number="9.8"><h2 data-number="9.8" class="anchored" data-anchor-id="fallstudie-immobilienpreise">
 <span class="header-section-number">9.8</span> Fallstudie Immobilienpreise</h2>
 <!-- ## Fallstudie Immobilienpreise -->
@@ -1852,17 +1831,18 @@ Vorsicht
 <p>Sie können die Daten von <a href="https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data">www.kaggle.com herunterladen</a>. Im Einzelnen müssen Sie folgende Dateien herunterladen:</p>
 <ul>
 <li>
-<em>Data_description.txt</em>: Codebook, d.h. Beschreibung der Variablen im Datensatz</li>
+<em>Data_description.txt</em>: Codebook, d.<span class="math inline">\(\,\)</span>h. Beschreibung der Variablen im Datensatz</li>
 <li>
 <em>train.csv</em>: Daten von Häusern, die Sie nutzen, um Modelle zu erstellen</li>
 <li>
 <em>test.csv</em>: Daten von Häusern, von denen Sie den Kaufpreis vorhersagen sollen</li>
 <li>
-<em>sample_submission.csv</em>: Beispielhafte Prognosedatei, die Datei also, mit der Sie Ihre Vorhersagen einreichen</li>
+<em>sample_submission.csv</em>: Beispielhafte Prognosedatei, die Datei also, mit der Sie Ihre Vorhersagen einreichen, s. <a href="#tbl-subm" class="quarto-xref">Tabelle&nbsp;<span>9.3</span></a>
+</li>
 </ul>
 <p>Sie können auch über das Github-Repo <code>statistik1</code>, Ordner <code>data</code> auf die Daten zugreifen:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d_train_path_online</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d_train_path_online</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span></span>
 <span>    <span class="st">"https://raw.githubusercontent.com/sebastiansauer/statistik1/"</span>,</span>
 <span>    <span class="st">"refs/heads/main/data/kaggle-train.csv"</span><span class="op">)</span></span>
 <span></span>
@@ -1873,15 +1853,14 @@ Vorsicht
 <span><span class="va">d_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="va">d_train_path_online</span><span class="op">)</span></span>
 <span><span class="va">d_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="va">d_test_path_online</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Laden Sie diese Daten am besten herunter und speichern Sie sie in einem passenden Unterverzeichnis (Ihres Projektordners in RStudio) ab.</p>
-<p>Importieren wir die Daten von der Festplatte, aus dem Unterordner <code>data</code> in R (davon ausgehend, dass der Unterordner <code>data</code> ein Unterordner Ihres aktuellen R-Projekts ist):</p>
+<p>Laden Sie diese Daten am besten herunter und speichern Sie sie in einem passenden Unterverzeichnis (Ihres Projektordners in RStudio) ab. Importieren wir die Daten aus dem Unterordner <code>data</code> in R (davon ausgehend, dass der Unterordner <code>data</code> ein Unterordner Ihres aktuellen R-Projekts ist):</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d_train_path</span> <span class="op">&lt;-</span> <span class="st">"data/kaggle-train.csv"</span></span>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d_train_path</span> <span class="op">&lt;-</span> <span class="st">"data/kaggle-train.csv"</span></span>
 <span><span class="va">d_test_path</span> <span class="op">&lt;-</span> <span class="st">"data/kaggle-test.csv"</span></span>
 <span><span class="va">d_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="va">d_train_path</span><span class="op">)</span></span>
 <span><span class="va">d_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="va">d_test_path</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Wenn das Importieren von der Festplatte nicht klappt … Es ist zwar hilfreich, wenn man Daten von der eigenen Festplatte importieren kann. Aber fürs Erste können Sie die Daten auch von oben angegeben Online-Pfad importieren.</p>
+<p>Wenn das Importieren von Ihrem Computer nicht klappen sollte … Es ist zwar hilfreich, wenn man Daten von der eigenen Festplatte importieren kann. Aber fürs Erste können Sie die Daten auch von oben angegeben Online-Pfad importieren.</p>
 </section><section id="prognosedatei" class="level3" data-number="9.8.3"><h3 data-number="9.8.3" class="anchored" data-anchor-id="prognosedatei">
 <span class="header-section-number">9.8.3</span> Prognosedatei</h3>
 <p>Die Prognosedatei ist die Datei, die Ihre Vorhersagen (Prognosen) enthält. Sie soll prinzipiell so aussehen wie in <a href="#tbl-subm" class="quarto-xref">Tabelle&nbsp;<span>9.3</span></a> dargestellt.</p>
@@ -1919,7 +1898,7 @@ Tabelle&nbsp;9.3: Beispiel für den Aufbau der Prognose-Datei
 <p>Die Prognosedatei besteht also aus zwei Spalten: der Spalte <code>id</code> und der Spalte <code>Saleprice</code>. Die Spalte <code>id</code> gibt an, welches Haus in einer bestimmten Zeile Ihrer Prognosedatei gemeint ist – für welches Haus Sie also gerade einen Kaufpreis vorhersagen. die Spalte <code>SalePrice</code> enthält Ihre Vorhersage für den Kaufpreis das Hauses mit der Id, die in der betreffenden Zeile steht. Insgesamt soll die Prognosedatei genau so viele Zeilen haben wie der Test-Datensatz, also die Tabelle, die die vorherzusagenden Werte angibt. Alles klar? Los geht’s!</p>
 </section><section id="ein-erster-blick-in-die-daten" class="level3" data-number="9.8.4"><h3 data-number="9.8.4" class="anchored" data-anchor-id="ein-erster-blick-in-die-daten">
 <span class="header-section-number">9.8.4</span> Ein erster Blick in die Daten</h3>
-<p>Schauen Sie sich zu Beginn einmal die Verteilung der metrischen Variablen, z.B. mit <code>describe_distribution(d_train)</code> an.</p>
+<p>Schauen Sie sich zu Beginn einmal die Verteilung der metrischen Variablen, z.<span class="math inline">\(\,\)</span>B. mit <code>describe_distribution(d_train)</code> an.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -2370,7 +2349,7 @@ Tabelle&nbsp;9.3: Beispiel für den Aufbau der Prognose-Datei
 </div>
 </section><section id="ein-erstes-vorhersagemodell" class="level3" data-number="9.8.5"><h3 data-number="9.8.5" class="anchored" data-anchor-id="ein-erstes-vorhersagemodell">
 <span class="header-section-number">9.8.5</span> Ein erstes Vorhersagemodell</h3>
-<p>Eine einfache Antwort auf die Frage, welche Variablen sich zur Vorhersage eignen, ist, die Korrelation aller Prädiktoren mit der abhängigen Variablen<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> zu berechnen, s. <!-- @tbl-d_train_corr und --> <a href="#lst-get-high-corrs" class="quarto-xref">Listing&nbsp;<span>9.2</span></a>.</p>
+<p>Eine einfache Antwort auf die Frage, welche Variablen sich zur Vorhersage eignen, ist, die Korrelation aller UV mit der AV zu berechnen, s. <!-- @tbl-d_train_corr und --> <a href="#lst-get-high-corrs" class="quarto-xref">Listing&nbsp;<span>9.2</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div id="lst-get-high-corrs" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-get-high-corrs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2388,7 +2367,7 @@ Listing&nbsp;9.2: Welche Variablen korrelieren stärker als .3?
 </div>
 <div id="tbl-d_train_corr" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-d_train_corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabelle&nbsp;9.4: Korrelation der Prädiktoren (UV) mit der AV
+Tabelle&nbsp;9.4: Korrelation der UV mit der AV
 </figcaption><div aria-describedby="tbl-d_train_corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
 
@@ -2396,17 +2375,17 @@ Tabelle&nbsp;9.4: Korrelation der Prädiktoren (UV) mit der AV
 </div>
 </figure>
 </div>
-<p>Aha! Ein Menge Information … Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: Im Zweifel einfach ignorieren. Wenn Sie die R-Syntax nicht verstehen: Führen Sie die Syntax schrittweise aus. Zuerst <code>d_train</code> ausführen und das Ergebnis betrachten. Dann <code>d_train %&gt;% select(-Id)</code> ausführen, wieder die Ausgabe betrachten, usw. Die als Output von <a href="#lst-get-high-corrs" class="quarto-xref">Listing&nbsp;<span>9.2</span></a> aufgeführten Variablen sind einigermaßen stark mit unserer Zielvariablen <code>SalePrice</code> korreliert. Nutzen wir also diese Variablen (oder einige von ihnen) zur Vorhersage. <a href="#tbl-ames-lm1" class="quarto-xref">Tabelle&nbsp;<span>9.5</span></a> zeigt die Parameter von <code>m1</code>.</p>
+<p>Aha! Ein Menge Information … Wenn Sie Teile der Ausgabe der Tabelle nicht verstehen: Im Zweifel einfach ignorieren. Wenn Sie die R-Syntax nicht verstehen: Führen Sie die Syntax schrittweise aus. Zuerst <code>d_train</code> ausführen und das Ergebnis betrachten. Dann <code>d_train %&gt;% select(-Id)</code> ausführen, wieder die Ausgabe betrachten, usw. Die als Output von <a href="#lst-get-high-corrs" class="quarto-xref">Listing&nbsp;<span>9.2</span></a> aufgeführten Variablen sind einigermaßen stark mit unserer Zielvariablen <code>SalePrice</code> korreliert. Nutzen wir also diese Variablen (oder einige von ihnen) zur Vorhersage. <span class="quarto-unresolved-ref">?tbl-ames-lm1</span> zeigt die Parameter von <code>m1</code>.</p>
 <p>Im ersten Modell gehen wir davon aus, dass der Verkaufspreis im Großen und Ganzen durch den Zustand der Immobilie (<code>OverallQual</code>) vorhergesagt werden kann. Diese Variable ist am stärksten mit der Zielvariable korreliert und daher ein guter Kandidat für die Vorhersage.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">SalePrice</span> <span class="op">~</span> <span class="va">OverallQual</span>, data <span class="op">=</span> <span class="va">d_train</span><span class="op">)</span></span>
-<span><span class="fu">parameters</span><span class="op">(</span><span class="va">m1</span><span class="op">)</span>  <span class="co"># aus easystats</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_immo1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">SalePrice</span> <span class="op">~</span> <span class="va">OverallQual</span>, data <span class="op">=</span> <span class="va">d_train</span><span class="op">)</span></span>
+<span><span class="fu">parameters</span><span class="op">(</span><span class="va">lm_immo1</span><span class="op">)</span>  <span class="co"># aus easystats</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div id="tbl-ames-lm1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ames-lm1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabelle&nbsp;9.5: Parameter von <code>lm1</code>
-</figcaption><div aria-describedby="tbl-ames-lm1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="tbl-ames-lm_immo1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ames-lm_immo1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabelle&nbsp;9.5: Parameter von <code>lm_immo1</code>
+</figcaption><div aria-describedby="tbl-ames-lm_immo1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <caption>Fixed Effects</caption>
@@ -2432,31 +2411,31 @@ Tabelle&nbsp;9.5: Parameter von <code>lm1</code>
 </div>
 <p>Wie gut ist das Modell?</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">rmse</span><span class="op">(</span><span class="va">m1</span><span class="op">)</span>  <span class="co"># aus easystats</span></span>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">rmse</span><span class="op">(</span><span class="va">lm_immo1</span><span class="op">)</span>  <span class="co"># aus easystats</span></span>
 <span><span class="co">## [1] 48589</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Im Schnitt liegen wir 4.86^{4} Dollar daneben. Ob das viel oder weniger ist, wird sich im Vergleich mit anderen Modellen zeigen.</p>
 <p>R-Quadrat liefert einen anderen Blick auf die Modellgüte:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">m1</span><span class="op">)</span>  <span class="co"># aus easystats</span></span>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_immo1</span><span class="op">)</span>  <span class="co"># aus easystats</span></span>
 <span><span class="co">## # R2 for Linear Regression</span></span>
 <span><span class="co">##        R2: 0.626</span></span>
 <span><span class="co">##   adj. R2: 0.625</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Man kann mehrere UV (Prädiktorvariablen) in ein Regressionsmodell aufnehmen. Dazu trennt man sie mit einem Pluszeichen in <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>:</p>
+<p>Man kann mehrere UV in ein Regressionsmodell aufnehmen. Dazu trennt man sie mit einem Pluszeichen in <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mein_modell</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">av</span> <span class="op">~</span> <span class="va">uv1</span> <span class="op">+</span> <span class="va">uv2</span> <span class="op">+</span> <span class="va">...</span> <span class="op">+</span> <span class="va">uv_n</span>, data <span class="op">=</span> <span class="va">meine_daten</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mein_modell</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">av</span> <span class="op">~</span> <span class="va">uv1</span> <span class="op">+</span> <span class="va">uv2</span> <span class="op">+</span> <span class="va">...</span> <span class="op">+</span> <span class="va">uv_n</span>, data <span class="op">=</span> <span class="va">meine_daten</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Dabei ist das Pluszeichen kein arithmetischer Operator, sondern sagt nur “als UV nimm UV1 und UV2 und …”. Berechnen wir als nächstes ein Modell mit mehreren UV, <code>m2</code>.</p>
+<p>Dabei ist das Pluszeichen kein arithmetischer Operator, sondern sagt nur “als UV nimm UV1 und UV2 und …”. Berechnen wir als nächstes ein Modell mit mehreren UV, <code>lm_immo2</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">SalePrice</span> <span class="op">~</span> <span class="va">OverallQual</span> <span class="op">+</span> <span class="va">GrLivArea</span> <span class="op">+</span> <span class="va">GarageCars</span>, data <span class="op">=</span> <span class="va">d_train</span><span class="op">)</span></span>
-<span><span class="fu">parameters</span><span class="op">(</span><span class="va">m2</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_immo2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">SalePrice</span> <span class="op">~</span> <span class="va">OverallQual</span> <span class="op">+</span> <span class="va">GrLivArea</span> <span class="op">+</span> <span class="va">GarageCars</span>, data <span class="op">=</span> <span class="va">d_train</span><span class="op">)</span></span>
+<span><span class="fu">parameters</span><span class="op">(</span><span class="va">lm_immo2</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><a href="#tbl-m2-params" class="quarto-xref">Tabelle&nbsp;<span>9.6</span></a> zeigt die Koeffizienten von <code>m2</code>.</p>
+<p><a href="#tbl-m2-params" class="quarto-xref">Tabelle&nbsp;<span>9.6</span></a> zeigt die Koeffizienten von <code>lm_immo2</code>.</p>
 <div class="cell" data-layout-align="center">
 <div id="tbl-m2-params" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-m2-params-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabelle&nbsp;9.6: Modellparameter von m1
+Tabelle&nbsp;9.6: Modellparameter von lm_immo2
 </figcaption><div aria-describedby="tbl-m2-params-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="do-not-create-environment cell caption-top table table-sm table-striped small">
@@ -2489,97 +2468,85 @@ Tabelle&nbsp;9.6: Modellparameter von m1
 </figure>
 </div>
 </div>
-<p>Wie gut sind die Vorhersagen des Modells <code>m2</code> für die Daten von <code>d_train</code>?</p>
+<p>Wie gut sind die Vorhersagen des Modells <code>lm_immo2</code> für die Daten von <code>d_train</code>?</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">rmse</span><span class="op">(</span><span class="va">m2</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">rmse</span><span class="op">(</span><span class="va">lm_immo2</span><span class="op">)</span></span>
 <span><span class="co">## [1] 40566</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Im Schnitt liegen unsere Vorhersagen 4.06^{4} Dollar daneben. Ist das gut? Betrachten wir noch <span class="math inline">\(R^2\)</span>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">m2</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">lm_immo2</span><span class="op">)</span></span>
 <span><span class="co">## # R2 for Linear Regression</span></span>
 <span><span class="co">##        R2: 0.739</span></span>
 <span><span class="co">##   adj. R2: 0.739</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ob die Modellgüte (R-Quadrat, RMSE, etc.) “gut” bzw. “hoch” ist, beantwortet man am besten <em>relativ</em>, also im Vergleich zu anderen Modellen.</p>
-<p>Zum Vergleich berechnen wir das maximal einfache Modell: ohne Prädiktoren. Man nennt es das Nullmodell. In diesem Modell sagen wir für jedes Haus einfach den mittleren Preis aller Häuser vorher.</p>
+<p>Zum Vergleich berechnen wir das maximal einfache Modell: ohne UV. Man nennt es das <em>Nullmodell</em>. In diesem Modell sagen wir für jedes Haus einfach den mittleren Preis aller Häuser vorher.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">SalePrice</span> <span class="op">~</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">d_train</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">SalePrice</span> <span class="op">~</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">d_train</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Wie gut ist die Vorhersage des Nullnodells?</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">rmse</span><span class="op">(</span><span class="va">m0</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">rmse</span><span class="op">(</span><span class="va">m0</span><span class="op">)</span></span>
 <span><span class="co">## [1] 79415</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Beim Nullmodell liegen wir ca. 80 Tausend Dollar daneben.</p>
-<p>Das R-Quadrat der Nullmodells ist per Definition null:</p>
+<p>Beim Nullmodell liegen wir ca. 80 Tausend Dollar daneben. Das R-Quadrat der Nullmodells ist per Definition null:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">m0</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">r2</span><span class="op">(</span><span class="va">m0</span><span class="op">)</span></span>
 <span><span class="co">## # R2 for Linear Regression</span></span>
 <span><span class="co">##        R2: 0.000</span></span>
 <span><span class="co">##   adj. R2: 0.000</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="vorhersagen-im-test-datensatz-mit-m2" class="level3" data-number="9.8.6"><h3 data-number="9.8.6" class="anchored" data-anchor-id="vorhersagen-im-test-datensatz-mit-m2">
-<span class="header-section-number">9.8.6</span> Vorhersagen im Test-Datensatz mit <code>m2</code>
+</section><section id="vorhersagen-im-test-datensatz-mit-lm_immo2" class="level3" data-number="9.8.6"><h3 data-number="9.8.6" class="anchored" data-anchor-id="vorhersagen-im-test-datensatz-mit-lm_immo2">
+<span class="header-section-number">9.8.6</span> Vorhersagen im Test-Datensatz mit <code>lm_immo2</code>
 </h3>
-<p>Wir haben jetzt unseren Champion, <code>m2</code>. Alle Hoffnung ruht auf diesem Modell. Ob die Vorhersagen im Test-Sample präzise sein werden? Oder himmelweit daneben? Enttäusche uns nicht!</p>
-<p>Hier sind die Vorhersagen:</p>
+<p>Wir haben jetzt unseren Champion, <code>lm_immo2</code>. Alle Hoffnung ruht auf diesem Modell. Ob die Vorhersagen im Test-Sample präzise sein werden? Oder himmelweit daneben? Enttäusche uns nicht! Hier sind die Vorhersagen:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="annotated-cell-36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m2_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m2</span>, newdata <span class="op">=</span> <span class="va">d_test</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">m2_pred</span><span class="op">)</span></span>
+<div class="sourceCode" id="annotated-cell-35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_immo2_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_immo2</span>, newdata <span class="op">=</span> <span class="va">d_test</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">lm_immo2_pred</span><span class="op">)</span></span>
 <span><span class="co">##      1      2      3      4      5      6 </span></span>
 <span><span class="co">## 103395 152441 161838 187676 225467 190260</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-annotation">
 <dl>
-<dt data-target-cell="annotated-cell-36" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-35" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-36" data-code-lines="1" data-code-annotation="1">Erstelle eine Vorhersage anhand der Regressionsgerade von <code>m1</code> und zwar anhand der Daten aus <code>d_test</code>.</span>
+<span data-code-cell="annotated-cell-35" data-code-lines="1" data-code-annotation="1">Erstelle eine Vorhersage anhand der Regressionsgerade von <code>lm_immo1</code> und zwar anhand der Daten aus <code>d_test</code>.</span>
 </dd>
-<dt data-target-cell="annotated-cell-36" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-35" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-36" data-code-lines="2" data-code-annotation="2">Zeige den “Kopf” der Vorhersagen (<code>m1_pred</code>), d.h. die ersten paar Vorhersagen.</span>
+<span data-code-cell="annotated-cell-35" data-code-lines="2" data-code-annotation="2">Zeige den “Kopf” der Vorhersagen (<code>lm_immo1_pred</code>), d.<span class="math inline">\(\,\)</span>h. die ersten paar Vorhersagen.</span>
 </dd>
 </dl>
 </div>
 </div>
 <p>Die Vorhersagen fügen wir jetzt dem Test-Sample hinzu:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d_test</span> <span class="op">&lt;-</span> </span>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d_test</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="va">d_test</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>SalePrice <span class="op">=</span> <span class="va">m2_pred</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">mutate</span><span class="op">(</span>SalePrice <span class="op">=</span> <span class="va">lm_immo2_pred</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="einreichen" class="level3" data-number="9.8.7"><h3 data-number="9.8.7" class="anchored" data-anchor-id="einreichen">
 <span class="header-section-number">9.8.7</span> Einreichen!</h3>
 <p>So, wir haben unsere Vorhersagen! Jetzt reichen wir diese Vorhersagen ein. Für die Prognosedatei (submission file) brauchen wir nur die Spalten <code>id</code> und <code>SalePrice</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m2_subm</span> <span class="op">&lt;-</span></span>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_immo2_subm</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">d_test</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">select</span><span class="op">(</span><span class="va">Id</span>, <span class="va">SalePrice</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Kaggle möchte keine fehlenden Werten in den Vorhersagen, also prüfen wir das mal:</p>
-<div class="cell" data-layout-align="center" data-code-annotations="hover">
-<div class="sourceCode" id="annotated-cell-39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m2_subm</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">## [1] 1458</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-annotation">
-<dl>
-<dt data-target-cell="annotated-cell-39" data-target-annotation="1">1</dt>
-<dd>
-<span data-code-cell="annotated-cell-39" data-code-lines="2" data-code-annotation="1">Lass alle Zeilen mit NAs (fehlenden Werten in irgendeiner Spalte) fallen, filtere diese Zeilen also raus</span>
-</dd>
-<dt data-target-cell="annotated-cell-39" data-target-annotation="2">2</dt>
-<dd>
-<span data-code-cell="annotated-cell-39" data-code-lines="3" data-code-annotation="2">zähle die Anzahl der Zeilen (die noch verbleiben)</span>
-</dd>
-</dl>
-</div>
-</div>
-<p>Die Anzahl der Zeilen, die wir hier erhalten, ist gleich zu den Anzahl der Zeilen von <code>d_test</code>. Es gibt also keine fehlenden Werte.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">d_test</span><span class="op">)</span></span>
-<span><span class="co">## [1] 1459</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<!-- Kaggle möchte keine fehlenden Werten in den Vorhersagen, also prüfen wir das mal: -->
+<!-- ```{r} -->
+<!-- #| eval: true -->
+<!-- #| code-annotations: hover -->
+<!-- lm_immo2_subm %>%  -->
+<!--   drop_na() %>%  # <1> -->
+<!--   nrow()         # <2> -->
+<!-- ``` -->
+<!-- 1. Lass alle Zeilen mit NAs (fehlenden Werten in irgendeiner Spalte) fallen, filtere diese Zeilen also raus -->
+<!-- 2. Zähle die Anzahl der Zeilen (die noch verbleiben) -->
+<!-- Die Anzahl der Zeilen, die wir hier erhalten, ist gleich zu den Anzahl der Zeilen von `d_test`. Es gibt also keine fehlenden Werte. -->
+<!-- ```{r} -->
+<!-- nrow(d_test) -->
+<!-- ``` -->
 <!-- #### Vertiefung: Fehlende Werte -->
 <!-- Angenommen wir hätten fehlende Werte bei `SalePrice`. -->
 <!-- Filtern wir die Spalte `SalePrice` mal nach "ist NA": -->
@@ -2611,17 +2578,15 @@ Tabelle&nbsp;9.6: Modellparameter von m1
 <!-- "No NA" - Keine NAs, keine fehlenden Werte mehr. -->
 <p>Diesen Tibble speichern wir als CSV-Datei an geeigneter Stelle ab. Es bietet sich an <code>write_csv</code> zu verwenden, da <code>write.csv</code> automatisch (ungefragt) noch eine Id-Spalte ohne Namen einfügt (mit den Zeilennummern), das mag aber Kaggle nicht. Kaggle erwartet exakt zwei Spalten und zwar mit den Namen <code>Id</code> und <code>SalePrice</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">write_csv</span><span class="op">(</span><span class="va">m2_subm</span>, <span class="st">"data/ames-kaggle/m1-subm.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">write_csv</span><span class="op">(</span><span class="va">lm_immo2_subm</span>, <span class="st">"data/ames-kaggle/lm_immo2_subm.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Und dann laden Sie diese Datei, <code>m1_subm.csv</code> bei Kaggle hoch und hoffen auf einen Hauptgewinn. Das Modell erzielte einen Score von <em>0.55521</em>.</p>
-</section><section id="fazit" class="level3" data-number="9.8.8"><h3 data-number="9.8.8" class="anchored" data-anchor-id="fazit">
-<span class="header-section-number">9.8.8</span> Fazit</h3>
+<p>Und dann laden Sie diese Datei, <code>lm2_subm.csv</code> bei Kaggle hoch und hoffen auf einen Hauptgewinn. Das Modell erzielte einen Score von <em>0.55521</em>.</p>
 <p>Diese Fallstudie hat ein einfaches Prognosemodell vorgestellt. Sicherlich gibt es viele Ansätze, dieses Modell zu verbessern. Hier sind einige Fragen, die Sie sich dazu stellen können:</p>
 <ul>
-<li>Welche Prädiktoren sollte ich in das Modell aufnehmen?</li>
+<li>Welche UV sollte ich in das Modell aufnehmen?</li>
 <li>Wie gehe ich mit fehlenden Werten um?</li>
-<li>Wenn ein Prädiktor schief ist, sollte ich ihn dann log-transformieren?</li>
-<li>Vielleicht sollte man manche Prädiktoren quadrieren?</li>
+<li>Wenn eine UV schief ist, sollte ich ihn dann log-transformieren?</li>
+<li>Vielleicht sollte man manche UV quadrieren?</li>
 <li>Wie gehe ich mit nominalskalierten Variablen um, wenn diese viele Stufen haben?</li>
 <li>…</li>
 </ul>
@@ -2676,7 +2641,6 @@ Menk. (2014, Juli 29). <em>Linear Regression</em>. <a href="https://texample.net
 <ol>
 <li id="fn1"><p><a href="https://raw.githubusercontent.com/sebastiansauer/statistik1/main/data/noten.csv" class="uri">https://raw.githubusercontent.com/sebastiansauer/statistik1/main/data/noten.csv</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p><a href="https://fomshinyapps.shinyapps.io/KleinsteQuadrate/" class="uri">https://fomshinyapps.shinyapps.io/KleinsteQuadrate/</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>die vorherzusagende Variable, auch Ziel- oder Outcome-Variable genannt<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol></section></main><!-- /main --><script type="ojs-module-contents">
 eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InJlc2V0QnV0dG9uID0ge1xuICBjb25zdCByZXNldEJ1dHRvbiA9IElucHV0cy5idXR0b24oXCJSZXNldFwiKTtcblxuICBkMy5zZWxlY3QocmVzZXRCdXR0b24pLm9uKFwiaW5wdXRcIiwgKCkgPT4ge1xuXG4gICAgcmVncmVzc2lvblBsb3QucmVzZXQoKTtcbiAgfSk7XG5cbiAgcmV0dXJuIHJlc2V0QnV0dG9uO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0yIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoidmlld09wdGlvbnMgPSB7XG4gIGNvbnN0IHZpZXdPcHRpb25zID0gSW5wdXRzLnJhZGlvKFxuICAgIFtcIk5vbmVcIiwgXCJBYnNvbHV0ZSBFcnJvclwiLCBcIlNxdWFyZWQgRXJyb3JcIl0sXG4gICAgeyBsYWJlbDogXCJWaWV3XCIsIHZhbHVlOiBcIkFic29sdXRlIEVycm9yXCIgfVxuICApO1xuXG4gIGQzLnNlbGVjdCh2aWV3T3B0aW9ucykub24oXCJpbnB1dFwiLCAoKSA9PiB7XG4gICAgcmVncmVzc2lvblBsb3QudXBkYXRlVmlldyh2aWV3T3B0aW9ucy52YWx1ZSk7XG4gIH0pO1xuXG4gIHJldHVybiB2aWV3T3B0aW9ucztcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InJTcXVhcmVkUGxvdCA9IFJTcXVhcmVkUGxvdCh7IHdpZHRoOiB3aWR0aCB9KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC00IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoicmVncmVzc2lvblBsb3QgPSB7XG4gIGNvbnN0IHJlZ3Jlc3Npb25QbG90ID0gUmVncmVzc2lvblBsb3QoZGF0YS5zbGljZSgwLCAxKSwge1xuICAgIHdpZHRoOiB3aWR0aCxcbiAgICB4RG9tYWluOiBbMCwgZDMubWF4KGRhdGEsIChbeF0pID0+IHgpICsgNV0sXG4gICAgeURvbWFpbjogWzAsIGQzLm1heChkYXRhLCAoW18sIHldKSA9PiB5KSArIDVdLFxuICAgIHI6IDYsXG4gICAgc2hvd0dyaWQ6IHRydWVcbiAgfSk7XG4gIC8vIEF0dGFjaCBsaXN0ZW5lclxuICBkMy5zZWxlY3QocmVncmVzc2lvblBsb3QpLm9uKFwiaW5wdXRcIiwgZnVuY3Rpb24gKCkge1xuICAgIHJTcXVhcmVkUGxvdC51cGRhdGUodGhpcy52YWx1ZSwgdGhpcy50cmFuc2l0aW9uKTtcbiAgfSk7XG5cbiAgclNxdWFyZWRQbG90LnVwZGF0ZShyZWdyZXNzaW9uUGxvdC52YWx1ZSk7XG5cbiAgcmV0dXJuIHJlZ3Jlc3Npb25QbG90O1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC01IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoid2lkdGggPSA4MDBcbmRhdGEgPSB7XG4gIGNvbnN0IG51bVBvaW50cyA9IDE1O1xuICBjb25zdCB4U2NhbGUgPSAxMDtcbiAgY29uc3QgeFNoaWZ0ID0gNTtcbiAgY29uc3QgeVNjYWxlID0gNjtcbiAgY29uc3QgeVNoaWZ0ID0gMDtcblxuICBjb25zdCBkYXRhID0gZDMucmFuZ2UobnVtUG9pbnRzKS5tYXAoKGkpID0+IHtcbiAgICBjb25zdCB4Q29vcmQgPSB4U2hpZnQgKyB4U2NhbGUgKiBkMy5yYW5kb21Vbmlmb3JtKCkoKTtcbiAgICBjb25zdCB5Q29vcmQgPSB5U2hpZnQgKyB4Q29vcmQgKyB5U2NhbGUgKiBkMy5yYW5kb21Vbmlmb3JtKCkoKTtcblxuICAgIHJldHVybiBbeENvb3JkLCB5Q29vcmRdO1xuICB9KTtcblxuICByZXR1cm4gZGF0YTtcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImFuaW1hdGlvbiA9IHtcbiAgLy8gUGVyZm9ybSBvcGVuaW5nIGFuaW1hdGlvblxuICBjb25zdCB0b3RhbFRpbWUgPSA2XzAwMDtcbiAgY29uc3QgZWFzZSA9IGQzLmVhc2VRdWFkT3V0O1xuXG4gIGQzLnJhbmdlKDEsIGRhdGEubGVuZ3RoKS5mb3JFYWNoKChpKSA9PiB7XG4gICAgc2V0VGltZW91dCgoKSA9PiB7XG4gICAgICBjb25zdCBbeENvb3JkLCB5Q29vcmRdID0gZGF0YVtpXTtcblxuICAgICAgcmVncmVzc2lvblBsb3QudXBkYXRlRGF0YXBvaW50KHhDb29yZCwgeUNvb3JkKTtcbiAgICB9LCB0b3RhbFRpbWUgKiBlYXNlKGkgLyBkYXRhLmxlbmd0aCkpO1xuICB9KTtcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImZ1bmN0aW9uIFJTcXVhcmVkUGxvdCh7XG4gIGRhdGEsXG4gIG1hcmdpblRvcCA9IDAsIC8vIHRvcCBtYXJnaW4sIGluIHBpeGVsc1xuICBtYXJnaW5SaWdodCA9IDMwLCAvLyByaWdodCBtYXJnaW4sIGluIHBpeGVsc1xuICBtYXJnaW5Cb3R0b20gPSAwLCAvLyBib3R0b20gbWFyZ2luLCBpbiBwaXhlbHNcbiAgbWFyZ2luTGVmdCA9IDUzLCAvLyBsZWZ0IG1hcmdpbiwgaW4gcGl4ZWxzXG4gIHdpZHRoID0gNjQwLCAvLyBvdXRlciB3aWR0aCwgaW4gcGl4ZWxzXG4gIGhlaWdodCA9IDIwLCAvLyBvdXRlciBoZWlnaHQsIGluIHBpeGVsc1xuICBiYXJIZWlnaHQgPSAyNSwgLy8gaGVpZ2h0IG9mIGJhciwgaW4gcGl4ZWxzXG4gIHRpdGxlU2l6ZSA9IDIwLCAvLyBmb250c2l6ZSBvZiB0aXRsZSB0ZXh0XG4gIGxhYmVsU2l6ZSA9IDEyIC8vIGZvbnRzaXplIG9mIGxhYmVsIHRleHRcbn0gPSB7fSkge1xuICBpZiAoZGF0YSA9PT0gdW5kZWZpbmVkKSBkYXRhID0gMDtcblxuICBjb25zdCB4U2NhbGUgPSBkM1xuICAgIC5zY2FsZUxpbmVhcigpXG4gICAgLmRvbWFpbihbMCwgMV0pXG4gICAgLnJhbmdlKFttYXJnaW5MZWZ0LCB3aWR0aCAtIG1hcmdpblJpZ2h0XSk7XG5cbiAgY29uc3Qgc3ZnID0gZDNcbiAgICAuY3JlYXRlKFwic3ZnXCIpXG4gICAgLmF0dHIoXCJ3aWR0aFwiLCB3aWR0aClcbiAgICAuYXR0cihcImhlaWdodFwiLCBoZWlnaHQpXG4gICAgLmF0dHIoXCJ2aWV3Qm94XCIsIFswLCAwLCB3aWR0aCwgaGVpZ2h0XSlcbiAgICAuYXR0cihcInN0eWxlXCIsIFwibWF4LXdpZHRoOiAxMDAlOyBoZWlnaHQ6IGF1dG87IGhlaWdodDogaW50cmluc2ljO1wiKTtcblxuICAvLyBEcmF3IHRpdGxlLlxuICBjb25zdCB0aXRsZUdyb3VwID0gc3ZnLmFwcGVuZChcImdcIik7XG5cbiAgLy8gdGl0bGVHcm91cFxuICAvLyAgIC5hcHBlbmQoXCJsaW5lXCIpXG4gIC8vICAgLmF0dHIoXCJzdHJva2VcIiwgXCJibGFja1wiKVxuICAvLyAgIC5hdHRyKFwieDFcIiwgeFNjYWxlKDApKVxuICAvLyAgIC5hdHRyKFwieDJcIiwgeFNjYWxlKDApKVxuICAvLyAgIC5hdHRyKFwieTFcIiwgMClcbiAgLy8gICAuYXR0cihcInkyXCIsIGhlaWdodCk7XG5cbiAgdGl0bGVHcm91cFxuICAgIC5hcHBlbmQoXCJ0ZXh0XCIpXG4gICAgLmF0dHIoXCJmaWxsXCIsIFwiYmxhY2tcIilcbiAgICAuYXR0cihcInRleHQtYW5jaG9yXCIsIFwiZW5kXCIpXG4gICAgLmF0dHIoXCJkb21pbmFudC1iYXNlbGluZVwiLCBcIm1pZGRsZVwiKVxuICAgIC5hdHRyKFwiZm9udC1mYW1pbHlcIiwgXCJzZXJpZlwiKVxuICAgIC5hdHRyKFwiZm9udC1zaXplXCIsIHRpdGxlU2l6ZSlcbiAgICAuYXR0cihcInhcIiwgeFNjYWxlKDApKVxuICAgIC5hdHRyKFwiZHhcIiwgLTEwKVxuICAgIC5hdHRyKFwieVwiLCBoZWlnaHQgLyAyKVxuICAgIC50ZXh0KFwiUsKyXCIpO1xuXG4gIC8vIERyYXcgd2hvbGUgYmFyLlxuICBzdmdcbiAgICAuYXBwZW5kKFwiZ1wiKVxuICAgIC5hcHBlbmQoXCJyZWN0XCIpXG4gICAgLmF0dHIoXCJmaWxsXCIsIFwiZ2FpbnNib3JvXCIpXG4gICAgLmF0dHIoXCJ4XCIsIHhTY2FsZSgwKSlcbiAgICAuYXR0cihcInlcIiwgbWFyZ2luVG9wKVxuICAgIC5hdHRyKFwid2lkdGhcIiwgd2lkdGggLSBtYXJnaW5MZWZ0IC0gbWFyZ2luUmlnaHQpXG4gICAgLmF0dHIoXCJoZWlnaHRcIiwgaGVpZ2h0IC0gbWFyZ2luVG9wIC0gbWFyZ2luQm90dG9tKTtcblxuICAvLyBEcmF3IGJhci5cbiAgY29uc3QgYmFyID0gdXBkYXRlQmFyKHN2Zy5hcHBlbmQoXCJnXCIpLnNlbGVjdEFsbChcInJlY3RcIiksIDApO1xuXG4gIC8vIERyYXcgbGFiZWxcbiAgY29uc3QgbGFiZWxGb3JtYXQgPSBkMy5mb3JtYXQoXCIuMmZcIik7XG4gIGNvbnN0IGxhYmVsID0gdXBkYXRlTGFiZWwoc3ZnLmFwcGVuZChcImdcIikuc2VsZWN0QWxsKFwidGV4dFwiKSwgMCk7XG5cbiAgLy8gVXBkYXRlIGFjY29yZGluZyB0byBkYXRhLlxuICB1cGRhdGUoZGF0YSk7XG5cbiAgZnVuY3Rpb24gdXBkYXRlQmFyKHJlY3QsIGRhdGEsIHRyYW5zaXRpb24gPSB0cnVlKSB7XG4gICAgcmV0dXJuIHJlY3QuZGF0YShbZGF0YV0pLmpvaW4oXG4gICAgICAoZW50ZXIpID0+XG4gICAgICAgIGVudGVyXG4gICAgICAgICAgLmFwcGVuZChcInJlY3RcIilcbiAgICAgICAgICAuYXR0cihcImZpbGxcIiwgXCJibGFja1wiKVxuICAgICAgICAgIC5hdHRyKFwieFwiLCB4U2NhbGUoMCkpXG4gICAgICAgICAgLmF0dHIoXCJ5XCIsIG1hcmdpblRvcClcbiAgICAgICAgICAuYXR0cihcIndpZHRoXCIsIDApXG4gICAgICAgICAgLmF0dHIoXCJoZWlnaHRcIiwgaGVpZ2h0IC0gbWFyZ2luVG9wIC0gbWFyZ2luQm90dG9tKSxcbiAgICAgICh1cGRhdGUpID0+XG4gICAgICAgIHVwZGF0ZS5jYWxsKCh1cGRhdGUpID0+IHtcbiAgICAgICAgICBpZiAodHJhbnNpdGlvbikgdXBkYXRlID0gdXBkYXRlLnRyYW5zaXRpb24oKTtcblxuICAgICAgICAgIHVwZGF0ZS5hdHRyKFwid2lkdGhcIiwgKGQpID0+IHhTY2FsZShpc05hTihkKSA/IDAgOiBkKSAtIHhTY2FsZSgwKSk7XG4gICAgICAgIH0pXG4gICAgKTtcbiAgfVxuXG4gIGZ1bmN0aW9uIHVwZGF0ZUxhYmVsKHRleHQsIGRhdGEsIHRyYW5zaXRpb24gPSB0cnVlKSB7XG4gICAgcmV0dXJuIHRleHQuZGF0YShbZGF0YV0pLmpvaW4oXG4gICAgICAoZW50ZXIpID0+XG4gICAgICAgIGVudGVyXG4gICAgICAgICAgLmFwcGVuZChcInRleHRcIilcbiAgICAgICAgICAuYXR0cihcImRvbWluYW50LWJhc2VsaW5lXCIsIFwibWlkZGxlXCIpXG4gICAgICAgICAgLmF0dHIoXCJmb250LWZhbWlseVwiLCBcInNhbnMtc2VyaWZcIilcbiAgICAgICAgICAuYXR0cihcImZvbnQtc2l6ZVwiLCBsYWJlbFNpemUpXG4gICAgICAgICAgLmF0dHIoXCJmb250LXdlaWdodFwiLCBcImJvbGRcIilcbiAgICAgICAgICAuYXR0cihcImZpbGxcIiwgXCJibGFja1wiKVxuICAgICAgICAgIC5hdHRyKFwidGV4dC1hbmNob3JcIiwgXCJzdGFydFwiKVxuICAgICAgICAgIC5hdHRyKFwiZHhcIiwgMTApXG4gICAgICAgICAgLmF0dHIoXCJ4XCIsIHhTY2FsZSgwKSlcbiAgICAgICAgICAuYXR0cihcInlcIiwgaGVpZ2h0IC8gMilcbiAgICAgICAgICAudGV4dChsYWJlbEZvcm1hdChcIjBcIikpLFxuICAgICAgKHVwZGF0ZSkgPT5cbiAgICAgICAgdXBkYXRlLmNhbGwoKHVwZGF0ZSkgPT4ge1xuICAgICAgICAgIC8vIENoZWNrIGlmIGJhciBpcyB0b28gc2hvcnRcbiAgICAgICAgICBjb25zdCBjaGVjayA9IChkKSA9PiBkIDwgMC4xO1xuXG4gICAgICAgICAgaWYgKHRyYW5zaXRpb24pIHVwZGF0ZSA9IHVwZGF0ZS50cmFuc2l0aW9uKCk7XG5cbiAgICAgICAgICB1cGRhdGVcbiAgICAgICAgICAgIC5hdHRyKFwieFwiLCAoZCkgPT4geFNjYWxlKGQpKVxuICAgICAgICAgICAgLnRleHQoKGQpID0+IGxhYmVsRm9ybWF0KGQpKVxuICAgICAgICAgICAgLmF0dHIoXCJmaWxsXCIsIChkKSA9PiAoY2hlY2soZCkgPyBcImJsYWNrXCIgOiBcIndoaXRlXCIpKVxuICAgICAgICAgICAgLmF0dHIoXCJ0ZXh0LWFuY2hvclwiLCAoZCkgPT4gKGNoZWNrKGQpID8gXCJzdGFydFwiIDogXCJlbmRcIikpXG4gICAgICAgICAgICAuYXR0cihcImR4XCIsIChkKSA9PiAoY2hlY2soZCkgPyAxMCA6IC0xMCkpO1xuICAgICAgICB9KVxuICAgICk7XG4gIH1cblxuICAvLyBNYWluIGZ1bmN0aW9uIGZvciBkYXRhIHVwZGF0ZXMuXG4gIGZ1bmN0aW9uIHVwZGF0ZShkYXRhLCB0cmFuc2l0aW9uID0gdHJ1ZSkge1xuICAgIHVwZGF0ZUJhcihiYXIsIGRhdGEsIHRyYW5zaXRpb24pO1xuICAgIHVwZGF0ZUxhYmVsKGxhYmVsLCBkYXRhLCB0cmFuc2l0aW9uKTtcbiAgfVxuXG4gIHJldHVybiBPYmplY3QuYXNzaWduKHN2Zy5ub2RlKCksIHsgdXBkYXRlIH0pO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC04IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiLy8gdG8gZHJhdyBsaW5lcyBhdCB0aGUgb3JpZ2luICh0byBzaG93IGludGVyY2VwdCBhbmQgc3R1ZmYpXG4vLyBjcmVhdGUgdm9yb25vaSBvdmVybGF5PyBmb3IgZHJhZ2dpbmcgcG9pbnRzXG4vLyB2aXogZXJyb3IgLyBzcXVhcmVkIGVycm9yXG4vLyBtYWtlIHRoZSBlcnJvciBsaW5lcyBsb29rIGxpa2UgYSB3ZWlnaHRcbi8vIHNob3cgb3RoZXIgbWV0cmljcyBsaWtlIFJeMiBldGMuXG5mdW5jdGlvbiBSZWdyZXNzaW9uUGxvdChcbiAgZGF0YSxcbiAge1xuICAgIHggPSAoW3hdKSA9PiB4LCAvLyBhY2Nlc3NvciBmdW5jdGlvbiBmb3IgeC1jb29yZGluYXRlXG4gICAgeSA9IChbLCB5XSkgPT4geSwgLy8gYWNjZXNzb3IgZnVuY3Rpb24gZm9yIHktY29vcmRpbmF0ZVxuICAgIHIgPSA2LCAvLyByYWRpdXMgb2YgZG90cywgaW4gcGl4ZWxzXG4gICAgbWFyZ2luVG9wID0gMjAsIC8vIHRvcCBtYXJnaW4sIGluIHBpeGVsc1xuICAgIG1hcmdpblJpZ2h0ID0gMzAsIC8vIHJpZ2h0IG1hcmdpbiwgaW4gcGl4ZWxzXG4gICAgbWFyZ2luQm90dG9tID0gMzAsIC8vIGJvdHRvbSBtYXJnaW4sIGluIHBpeGVsc1xuICAgIG1hcmdpbkxlZnQgPSA0MCwgLy8gbGVmdCBtYXJnaW4sIGluIHBpeGVsc1xuICAgIGluc2V0ID0gciAqIDIsIC8vIGluc2V0IHRoZSBkZWZhdWx0IHJhbmdlLCBpbiBwaXhlbHNcbiAgICBpbnNldFRvcCA9IGluc2V0LCAvLyBpbnNldCB0aGUgZGVmYXVsdCB5LXJhbmdlXG4gICAgaW5zZXRSaWdodCA9IGluc2V0LCAvLyBpbnNldCB0aGUgZGVmYXVsdCB4LXJhbmdlXG4gICAgaW5zZXRCb3R0b20gPSBpbnNldCwgLy8gaW5zZXQgdGhlIGRlZmF1bHQgeS1yYW5nZVxuICAgIGluc2V0TGVmdCA9IGluc2V0LCAvLyBpbnNldCB0aGUgZGVmYXVsdCB4LXJhbmdlXG4gICAgd2lkdGggPSA2NDAsIC8vIG91dGVyIHdpZHRoLCBpbiBwaXhlbHNcbiAgICBoZWlnaHQgPSA1MDAsIC8vIG91dGVyIGhlaWdodCwgaW4gcGl4ZWxzXG4gICAgeFR5cGUgPSBkMy5zY2FsZUxpbmVhciwgLy8gdHlwZSBvZiB4LXNjYWxlXG4gICAgeERvbWFpbiwgLy8gW3htaW4sIHhtYXhdXG4gICAgeFJhbmdlID0gW21hcmdpbkxlZnQgKyBpbnNldExlZnQsIHdpZHRoIC0gbWFyZ2luUmlnaHQgLSBpbnNldFJpZ2h0XSwgLy8gW2xlZnQsIHJpZ2h0XVxuICAgIHlUeXBlID0gZDMuc2NhbGVMaW5lYXIsIC8vIHR5cGUgb2YgeS1zY2FsZVxuICAgIHlEb21haW4sIC8vIFt5bWluLCB5bWF4XVxuICAgIHlSYW5nZSA9IFtoZWlnaHQgLSBtYXJnaW5Cb3R0b20gLSBpbnNldEJvdHRvbSwgbWFyZ2luVG9wICsgaW5zZXRUb3BdLCAvLyBbYm90dG9tLCB0b3BdXG4gICAgc2hvd0dyaWQgPSB0cnVlIC8vIHdoZXRoZXIgdG8gc2hvdyBncmlkIGxpbmVzXG4gIH0gPSB7fVxuKSB7XG4gIGNvbnN0IGVycm9yQ29sb3IgPSBkMy5zY2hlbWVTZXQzWzNdO1xuXG4gIGxldCBlcnJvckxpbmVzT3BhY2l0eSA9IDE7XG4gIGxldCBlcnJvclNxdWFyZXNPcGFjaXR5ID0gMDtcblxuICAvLyBJbml0IGRyYWcgb2JqZWN0LlxuICBjb25zdCBkcmFnID0gZDNcbiAgICAuZHJhZygpXG4gICAgLy8gLm9uKFwic3RhcnRcIiwgZHJhZ3N0YXJ0ZWQpXG4gICAgLm9uKFwiZHJhZ1wiLCBkcmFnZ2VkKTtcbiAgLy8gLm9uKFwiZW5kXCIsIGRyYWdlbmRlZCk7XG5cbiAgLy8gVG8gZ2l2ZSBlYWNoIGRhdGEgcG9pbnQgYSB1bmlxdWUgaWRcbiAgbGV0IGlkQ291bnRlciA9IDA7XG5cbiAgLy8gQ29tcHV0ZSBkYXRhIHZhbHVlcy5cbiAgZGF0YSA9IGRhdGEubWFwKChkKSA9PiAoe1xuICAgIHhDb29yZDogeChkKSxcbiAgICB5Q29vcmQ6IHkoZCksXG4gICAgaWQ6IGlkQ291bnRlcisrXG4gIH0pKTtcblxuICAvLyBTdG9yZSBjb3B5IG9mIGluaXRpYWwgZGF0YSBvYmplY3RcbiAgY29uc3QgaW5pdERhdGEgPSBkYXRhLm1hcCgoZCkgPT4gKHsgLi4uZCB9KSk7XG5cbiAgLy8gQ29tcHV0ZSBkZWZhdWx0IGRvbWFpbnMuXG4gIC8vIGlmICh4RG9tYWluID09PSB1bmRlZmluZWQpIHhEb21haW4gPSBkMy5leHRlbnQoZGF0YSwgKGQpID0+IGQueENvb3JkKTtcbiAgaWYgKHhEb21haW4gPT09IHVuZGVmaW5lZCkgeERvbWFpbiA9IFswLCBkMy5tYXgoZGF0YSwgKGQpID0+IGQueENvb3JkKV07XG4gIGlmICh5RG9tYWluID09PSB1bmRlZmluZWQpIHlEb21haW4gPSBbMCwgZDMubWF4KGRhdGEsIChkKSA9PiBkLnlDb29yZCldO1xuXG4gIC8vIEluaXQgbGluZWFyIHJlZ3Jlc3Nvci5cbiAgY29uc3QgbGluZWFyUmVncmVzc2lvbiA9IGQzXG4gICAgLnJlZ3Jlc3Npb25MaW5lYXIoKVxuICAgIC54KChkKSA9PiBkLnhDb29yZClcbiAgICAueSgoZCkgPT4gZC55Q29vcmQpXG4gICAgLmRvbWFpbih4RG9tYWluKTtcblxuICAvLyBDb25zdHJ1Y3Qgc2NhbGVzIGFuZCBheGVzLlxuICBjb25zdCB4U2NhbGUgPSB4VHlwZSh4RG9tYWluLCB4UmFuZ2UpO1xuICBjb25zdCB5U2NhbGUgPSB5VHlwZSh5RG9tYWluLCB5UmFuZ2UpO1xuICBjb25zdCB4QXhpcyA9IGQzLmF4aXNCb3R0b20oeFNjYWxlKS50aWNrcyh3aWR0aCAvIDgwKTtcbiAgY29uc3QgeUF4aXMgPSBkMy5heGlzTGVmdCh5U2NhbGUpLnRpY2tzKGhlaWdodCAvIDgwKTtcblxuICAvLyBEcmF3IHN2Zy5cbiAgY29uc3Qgc3ZnID0gZDNcbiAgICAuY3JlYXRlKFwic3ZnXCIpXG4gICAgLmF0dHIoXCJ3aWR0aFwiLCB3aWR0aClcbiAgICAuYXR0cihcImhlaWdodFwiLCBoZWlnaHQpXG4gICAgLmF0dHIoXCJ2aWV3Qm94XCIsIFswLCAwLCB3aWR0aCwgaGVpZ2h0XSlcbiAgICAuYXR0cihcInN0eWxlXCIsIFwibWF4LXdpZHRoOiAxMDAlOyBoZWlnaHQ6IGF1dG87IGhlaWdodDogaW50cmluc2ljO1wiKTtcblxuICAvLyBEcmF3IHhBeGlzLlxuICBjb25zdCBheGlzT3BhY2l0eSA9IDE7XG5cbiAgY29uc3QgeEdyb3VwID0gc3ZnXG4gICAgLmFwcGVuZChcImdcIilcbiAgICAuYXR0cihcInRyYW5zZm9ybVwiLCBgdHJhbnNsYXRlKDAsJHtoZWlnaHQgLSBtYXJnaW5Cb3R0b219KWApXG4gICAgLmF0dHIoXCJvcGFjaXR5XCIsIGF4aXNPcGFjaXR5KVxuICAgIC5jYWxsKHhBeGlzKVxuICAgIC5jYWxsKChnKSA9PiBnLnNlbGVjdChcIi5kb21haW5cIikucmVtb3ZlKCkpO1xuICAvLyBEcmF3IGdyaWQgbGluZXNcbiAgeEdyb3VwXG4gICAgLnNlbGVjdEFsbChcIi50aWNrIGxpbmVcIilcbiAgICAuY2xvbmUoKVxuICAgIC5hdHRyKFwieTJcIiwgbWFyZ2luVG9wICsgbWFyZ2luQm90dG9tIC0gaGVpZ2h0KVxuICAgIC8vIERyYXcgbGluZSBhdCBvcmlnaW5cbiAgICAuYXR0cihcInN0cm9rZS1vcGFjaXR5XCIsIChkKSA9PiB7XG4gICAgICBpZiAoZCA9PSAwKSB7XG4gICAgICAgIHJldHVybiBheGlzT3BhY2l0eTtcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIHJldHVybiBzaG93R3JpZCA/IDAuMSA6IDA7XG4gICAgICB9XG4gICAgfSk7XG5cbiAgLy8gRHJhdyB5QXhpcy5cbiAgY29uc3QgeUdyb3VwID0gc3ZnXG4gICAgLmFwcGVuZChcImdcIilcbiAgICAuYXR0cihcInRyYW5zZm9ybVwiLCBgdHJhbnNsYXRlKCR7bWFyZ2luTGVmdH0sMClgKVxuICAgIC5hdHRyKFwib3BhY2l0eVwiLCBheGlzT3BhY2l0eSlcbiAgICAuY2FsbCh5QXhpcylcbiAgICAuY2FsbCgoZykgPT4gZy5zZWxlY3QoXCIuZG9tYWluXCIpLnJlbW92ZSgpKTtcbiAgeUdyb3VwXG4gICAgLnNlbGVjdEFsbChcIi50aWNrIGxpbmVcIilcbiAgICAuY2xvbmUoKVxuICAgIC5hdHRyKFwieDJcIiwgd2lkdGggLSBtYXJnaW5MZWZ0IC0gbWFyZ2luUmlnaHQpXG4gICAgLy8gRHJhdyBsaW5lIGF0IG9yaWdpblxuICAgIC5hdHRyKFwic3Ryb2tlLW9wYWNpdHlcIiwgKGQpID0+IHtcbiAgICAgIGlmIChkID09IDApIHtcbiAgICAgICAgcmV0dXJuIGF4aXNPcGFjaXR5O1xuICAgICAgfSBlbHNlIHtcbiAgICAgICAgcmV0dXJuIHNob3dHcmlkID8gMC4xIDogMDtcbiAgICAgIH1cbiAgICB9KTtcblxuICAvLyBEcmF3IGVycm9yIHNxdWFyZXMuXG4gIGxldCBlcnJvclNxdWFyZXMgPSB1cGRhdGVFcnJvclNxdWFyZXMoXG4gICAgc3ZnLmFwcGVuZChcImdcIikuc2VsZWN0QWxsKFwicmVjdFwiKSxcbiAgICBkYXRhXG4gICk7XG5cbiAgLy8gRHJhdyBlcnJvciBsaW5lcy5cbiAgbGV0IGVycm9yTGluZXMgPSB1cGRhdGVFcnJvckxpbmVzKHN2Zy5hcHBlbmQoXCJnXCIpLnNlbGVjdEFsbChcImxpbmVcIiksIGRhdGEpO1xuXG4gIC8vIERyYXcgcmVncmVzc2lvbiBsaW5lLlxuICBjb25zdCByZWdyZXNzaW9uTGluZUdyb3VwID0gc3ZnXG4gICAgLmFwcGVuZChcImdcIilcbiAgICAuYXR0cihcInN0cm9rZVwiLCBcImJsYWNrXCIpXG4gICAgLmF0dHIoXCJzdHJva2Utd2lkdGhcIiwgMik7XG4gIC8vIC5hdHRyKFwic3Ryb2tlLWRhc2hhcnJheVwiLCBcIjIwLDIwXCIpO1xuXG4gIGNvbnN0IHJlZ3Jlc3Npb25MaW5lID0gdXBkYXRlUmVncmVzc2lvbkxpbmUoXG4gICAgcmVncmVzc2lvbkxpbmVHcm91cC5zZWxlY3RBbGwoXCJsaW5lXCIpLFxuICAgIGRhdGFcbiAgKTtcblxuICAvLyBEcmF3IHNwYWNlIGZvciBwbG90IGludGVyYWN0aW9ucy5cbiAgY29uc3QgcGxvdFJlY3QgPSBzdmdcbiAgICAuYXBwZW5kKFwicmVjdFwiKVxuICAgIC5hdHRyKFwid2lkdGhcIiwgd2lkdGgpXG4gICAgLmF0dHIoXCJoZWlnaHRcIiwgaGVpZ2h0KVxuICAgIC5hdHRyKFwib3BhY2l0eVwiLCAwKVxuICAgIC5vbihcImNsaWNrXCIsIGFkZERhdGFwb2ludCk7XG5cbiAgLy8gRHJhdyBkYXRhIHBvaW50cy5cbiAgY29uc3QgY2lyY2xlc0dyb3VwID0gc3ZnLmFwcGVuZChcImdcIikuYXR0cihcImZpbGxcIiwgXCJibGFja1wiKTtcbiAgbGV0IGNpcmNsZXMgPSB1cGRhdGVDaXJjbGVzKGNpcmNsZXNHcm91cC5zZWxlY3RBbGwoXCJjaXJjbGVcIiksIGRhdGEpO1xuXG4gIC8vIERyYWcgaW50ZXJhY3Rpb25zIGZvciBjaXJjbGVzLlxuICBmdW5jdGlvbiBkcmFnc3RhcnRlZChldmVudCwgZCkge1xuICAgIGQzLnNlbGVjdCh0aGlzKS5yYWlzZSgpLmF0dHIoXCJzdHJva2VcIiwgXCJyZWRcIik7XG4gIH1cbiAgZnVuY3Rpb24gZHJhZ2dlZChldmVudCwgZCkge1xuICAgIGQzLnNlbGVjdCh0aGlzKVxuICAgICAgLy8gVXBkYXRlIGRhdGEgcG9pbnQsIGFzIHdlbGwgYXMgaXRzIHBvc2l0aW9uIG9uIHRoZSBwbG90XG4gICAgICAuYXR0cihcImN4XCIsICgpID0+IHtcbiAgICAgICAgZC54Q29vcmQgPSB4U2NhbGUuaW52ZXJ0KGV2ZW50LngpO1xuICAgICAgICByZXR1cm4gZXZlbnQueDtcbiAgICAgIH0pXG4gICAgICAuYXR0cihcImN5XCIsICgpID0+IHtcbiAgICAgICAgZC55Q29vcmQgPSB5U2NhbGUuaW52ZXJ0KGV2ZW50LnkpO1xuICAgICAgICByZXR1cm4gZXZlbnQueTtcbiAgICAgIH0pO1xuXG4gICAgdXBkYXRlUmVncmVzc2lvbkxpbmUocmVncmVzc2lvbkxpbmUsIGRhdGEsIGZhbHNlKTtcbiAgICBlcnJvclNxdWFyZXMgPSB1cGRhdGVFcnJvclNxdWFyZXMoZXJyb3JTcXVhcmVzLCBkYXRhLCBmYWxzZSk7XG4gICAgZXJyb3JMaW5lcyA9IHVwZGF0ZUVycm9yTGluZXMoZXJyb3JMaW5lcywgZGF0YSwgZmFsc2UpO1xuICB9XG4gIGZ1bmN0aW9uIGRyYWdlbmRlZChldmVudCwgaSkge1xuICAgIGQzLnNlbGVjdCh0aGlzKS5hdHRyKFwic3Ryb2tlXCIsIG51bGwpO1xuICB9XG5cbiAgLy8gQ2xpY2sgaW50ZXJhY3Rpb24gZm9yIGNpcmNsZXMuXG4gIGZ1bmN0aW9uIHJlbW92ZURhdGFwb2ludChldmVudCwgZEN1cnIpIHtcbiAgICBpZiAoZXZlbnQuZGVmYXVsdFByZXZlbnRlZCkgcmV0dXJuOyAvLyBkcmFnZ2VkXG5cbiAgICAvLyBSZW1vdmUgZGF0YSBwb2ludDsgZmFzdGVyIHdheSB0byBkbyB0aGlzP1xuICAgIGRhdGEgPSBkYXRhLmZpbHRlcigoZCkgPT4gZC5pZCAhPT0gZEN1cnIuaWQpO1xuXG4gICAgdXBkYXRlKGRhdGEpO1xuICB9XG5cbiAgLy8gQ2xpY2sgaW50ZXJhY3Rpb24gZm9yIHBsb3QuXG4gIGZ1bmN0aW9uIGFkZERhdGFwb2ludChldmVudCkge1xuICAgIGNvbnN0IFt4bSwgeW1dID0gZDMucG9pbnRlcihldmVudCk7XG5cbiAgICB1cGRhdGVEYXRhcG9pbnQoeFNjYWxlLmludmVydCh4bSksIHlTY2FsZS5pbnZlcnQoeW0pKTtcbiAgfVxuXG4gIC8vIEhlbHBlciBmdW5jdGlvbiBmb3IgcmVncmVzc2lvbiBsaW5lIHVwZGF0ZS5cbiAgZnVuY3Rpb24gdXBkYXRlUmVncmVzc2lvbkxpbmUobGluZSwgZGF0YSwgdHJhbnNpdGlvbiA9IHRydWUpIHtcbiAgICBjb25zdCByZWdyZXNzaW9uRGF0YSA9IGxpbmVhclJlZ3Jlc3Npb24oZGF0YSk7XG5cbiAgICAvLyBEaXNwYXRjaCBldmVudCBhbmQgUl4yIHZhbHVlXG4gICAgc3ZnLm5vZGUoKS52YWx1ZSA9IHJlZ3Jlc3Npb25EYXRhLnJTcXVhcmVkO1xuICAgIHN2Zy5ub2RlKCkudHJhbnNpdGlvbiA9IHRyYW5zaXRpb247XG4gICAgc3ZnLmRpc3BhdGNoKFwiaW5wdXRcIiwgeyBidWJibGVzOiB0cnVlIH0pO1xuXG4gICAgcmV0dXJuIGxpbmVcbiAgICAgIC5kYXRhKFtyZWdyZXNzaW9uRGF0YV0pXG4gICAgICAuam9pbihcImxpbmVcIilcbiAgICAgIC5jYWxsKChsaW5lKSA9PiB7XG4gICAgICAgIGlmICh0cmFuc2l0aW9uKSBsaW5lID0gbGluZS50cmFuc2l0aW9uKCk7XG4gICAgICAgIGxpbmVcbiAgICAgICAgICAuYXR0cihcIngxXCIsIChkKSA9PiB4U2NhbGUoZFswXVswXSkpXG4gICAgICAgICAgLmF0dHIoXCJ4MlwiLCAoZCkgPT4geFNjYWxlKGRbMV1bMF0pKVxuICAgICAgICAgIC5hdHRyKFwieTFcIiwgKGQpID0+IHlTY2FsZShkWzBdWzFdKSlcbiAgICAgICAgICAuYXR0cihcInkyXCIsIChkKSA9PiB5U2NhbGUoZFsxXVsxXSkpO1xuICAgICAgfSk7XG4gIH1cblxuICAvLyBIZWxwZXIgZnVuY3Rpb24gdG8gdXBkYXRlIGNpcmNsZXMgYmFzZWQgb24gbmV3IGRhdGEuXG4gIGZ1bmN0aW9uIHVwZGF0ZUNpcmNsZXMoY2lyY2xlcywgZGF0YSkge1xuICAgIHJldHVybiBjaXJjbGVzXG4gICAgICAuZGF0YShkYXRhLCAoZCkgPT4gZC5pZClcbiAgICAgIC5qb2luKFxuICAgICAgICAoZW50ZXIpID0+XG4gICAgICAgICAgZW50ZXJcbiAgICAgICAgICAgIC5hcHBlbmQoXCJjaXJjbGVcIilcbiAgICAgICAgICAgIC5hdHRyKFwiY3hcIiwgKGQpID0+IHhTY2FsZShkLnhDb29yZCkpXG4gICAgICAgICAgICAuYXR0cihcImN5XCIsIChkKSA9PiB5U2NhbGUoZC55Q29vcmQpKVxuICAgICAgICAgICAgLy8gVG8gdHJhbnNpdGlvbiBmcm9tIDAgcmFkaXVzXG4gICAgICAgICAgICAuYXR0cihcInJcIiwgMClcbiAgICAgICAgICAgIC8vIEF0dGFjaCBpbnRlcmFjdGlvbnNcbiAgICAgICAgICAgIC5jYWxsKGRyYWcpXG4gICAgICAgICAgICAub24oXCJjbGlja1wiLCByZW1vdmVEYXRhcG9pbnQpXG4gICAgICAgICAgICAvLyBBZGQgdHJhbnNpdGlvblxuICAgICAgICAgICAgLmNhbGwoKGVudGVyKSA9PlxuICAgICAgICAgICAgICBlbnRlclxuICAgICAgICAgICAgICAgIC50cmFuc2l0aW9uKClcbiAgICAgICAgICAgICAgICAuZWFzZShkMy5lYXNlQmFja091dC5vdmVyc2hvb3QoMS43KSlcbiAgICAgICAgICAgICAgICAuYXR0cihcInJcIiwgcilcbiAgICAgICAgICAgICksXG4gICAgICAgICh1cGRhdGUpID0+XG4gICAgICAgICAgdXBkYXRlXG4gICAgICAgICAgICAudHJhbnNpdGlvbigpXG4gICAgICAgICAgICAuYXR0cihcImN4XCIsIChkKSA9PiB4U2NhbGUoZC54Q29vcmQpKVxuICAgICAgICAgICAgLmF0dHIoXCJjeVwiLCAoZCkgPT4geVNjYWxlKGQueUNvb3JkKSksXG4gICAgICAgIChleGl0KSA9PlxuICAgICAgICAgIGV4aXRcbiAgICAgICAgICAgIC50cmFuc2l0aW9uKClcbiAgICAgICAgICAgIC5lYXNlKGQzLmVhc2VCYWNrSW4ub3ZlcnNob290KDEuNykpXG4gICAgICAgICAgICAuYXR0cihcInJcIiwgMClcbiAgICAgICAgICAgIC5yZW1vdmUoKVxuICAgICAgKTtcbiAgfVxuXG4gIC8vIEhlbHBlciBmdW5jdGlvbiB0byB1cGRhdGUgZXJyb3IgbGluZXMgYmFzZWQgb24gbmV3IGRhdGEuXG4gIGZ1bmN0aW9uIHVwZGF0ZUVycm9yTGluZXMobGluZXMsIGRhdGEsIHRyYW5zaXRpb24gPSB0cnVlKSB7XG4gICAgY29uc3QgcmVncmVzc2lvbkRhdGEgPSBsaW5lYXJSZWdyZXNzaW9uKGRhdGEpO1xuXG4gICAgcmV0dXJuIGxpbmVzXG4gICAgICAuZGF0YShkYXRhLCAoZCkgPT4gZC5pZClcbiAgICAgIC5qb2luKFxuICAgICAgICAoZW50ZXIpID0+XG4gICAgICAgICAgZW50ZXJcbiAgICAgICAgICAgIC5hcHBlbmQoXCJsaW5lXCIpXG4gICAgICAgICAgICAuYXR0cihcInN0cm9rZVwiLCBlcnJvckNvbG9yKVxuICAgICAgICAgICAgLmF0dHIoXCJzdHJva2Utd2lkdGhcIiwgMilcbiAgICAgICAgICAgIC5hdHRyKFwib3BhY2l0eVwiLCBlcnJvckxpbmVzT3BhY2l0eSlcbiAgICAgICAgICAgIC8vIFN0YXJ0IGF0IGRhdGEgcG9pbnRcbiAgICAgICAgICAgIC5hdHRyKFwieDFcIiwgKGQpID0+IHhTY2FsZShkLnhDb29yZCkpXG4gICAgICAgICAgICAuYXR0cihcInkxXCIsIChkKSA9PiB5U2NhbGUoZC55Q29vcmQpKVxuICAgICAgICAgICAgLmF0dHIoXCJ4MlwiLCAoZCkgPT4geFNjYWxlKGQueENvb3JkKSlcbiAgICAgICAgICAgIC5hdHRyKFwieTJcIiwgKGQpID0+IHlTY2FsZShkLnlDb29yZCkpXG4gICAgICAgICAgICAvLyBBZGQgdHJhbnNpdGlvblxuICAgICAgICAgICAgLmNhbGwoKGVudGVyKSA9PlxuICAgICAgICAgICAgICBlbnRlclxuICAgICAgICAgICAgICAgIC50cmFuc2l0aW9uKClcbiAgICAgICAgICAgICAgICAuYXR0cihcInkyXCIsIChkKSA9PiB5U2NhbGUocmVncmVzc2lvbkRhdGEucHJlZGljdChkLnhDb29yZCkpKVxuICAgICAgICAgICAgKSxcbiAgICAgICAgKHVwZGF0ZSkgPT5cbiAgICAgICAgICB1cGRhdGUuY2FsbCgodXBkYXRlKSA9PiB7XG4gICAgICAgICAgICBpZiAodHJhbnNpdGlvbikgdXBkYXRlID0gdXBkYXRlLnRyYW5zaXRpb24oKTtcbiAgICAgICAgICAgIHVwZGF0ZVxuICAgICAgICAgICAgICAuYXR0cihcIngxXCIsIChkKSA9PiB4U2NhbGUoZC54Q29vcmQpKVxuICAgICAgICAgICAgICAuYXR0cihcInkxXCIsIChkKSA9PiB5U2NhbGUoZC55Q29vcmQpKVxuICAgICAgICAgICAgICAuYXR0cihcIngyXCIsIChkKSA9PiB4U2NhbGUoZC54Q29vcmQpKVxuICAgICAgICAgICAgICAuYXR0cihcInkyXCIsIChkKSA9PiB5U2NhbGUocmVncmVzc2lvbkRhdGEucHJlZGljdChkLnhDb29yZCkpKTtcbiAgICAgICAgICB9KSxcbiAgICAgICAgKGV4aXQpID0+XG4gICAgICAgICAgZXhpdFxuICAgICAgICAgICAgLnRyYW5zaXRpb24oKVxuICAgICAgICAgICAgLmF0dHIoXCJ5MlwiLCAoZCkgPT4geVNjYWxlKGQueUNvb3JkKSlcbiAgICAgICAgICAgIC5yZW1vdmUoKVxuICAgICAgKTtcbiAgfVxuXG4gIC8vIEhlbHBlciBmdW5jdGlvbiB0byB1cGRhdGUgZXJyb3Igc3F1YXJlcyBiYXNlZCBvbiBuZXcgZGF0YS5cbiAgZnVuY3Rpb24gdXBkYXRlRXJyb3JTcXVhcmVzKHJlY3RzLCBkYXRhLCB0cmFuc2l0aW9uID0gdHJ1ZSkge1xuICAgIGNvbnN0IHJlZ3Jlc3Npb25EYXRhID0gbGluZWFyUmVncmVzc2lvbihkYXRhKTtcblxuICAgIGNvbnN0IGNvbXB1dGVIZWlnaHQgPSAoZCkgPT4ge1xuICAgICAgY29uc3QgeUNvb3JkUHJlZCA9IHJlZ3Jlc3Npb25EYXRhLnByZWRpY3QoZC54Q29vcmQpO1xuXG4gICAgICByZXR1cm4gTWF0aC5hYnMoeVNjYWxlKHlDb29yZFByZWQpIC0geVNjYWxlKGQueUNvb3JkKSk7XG4gICAgfTtcbiAgICAvLyBDb21wdXRlIHdoaWNoIGRpcmVjdGlvbiB0aGUgYm94IHNob3VsZCBmYWNlXG4gICAgY29uc3QgY29tcHV0ZVRyYW5zZm9ybSA9IChkKSA9PiB7XG4gICAgICBjb25zdCB5Q29vcmRQcmVkID0gcmVncmVzc2lvbkRhdGEucHJlZGljdChkLnhDb29yZCk7XG4gICAgICBjb25zdCBjaGVjayA9IHlTY2FsZSh5Q29vcmRQcmVkKSAtIHlTY2FsZShkLnlDb29yZCkgPCAwO1xuICAgICAgY29uc3QgZGVnID0gY2hlY2sgPyAtOTAgOiA5MDtcblxuICAgICAgcmV0dXJuIGByb3RhdGUoJHtkZWd9LCAke3hTY2FsZShkLnhDb29yZCl9LCAke3lTY2FsZShkLnlDb29yZCl9KWA7XG4gICAgfTtcblxuICAgIHJldHVybiByZWN0c1xuICAgICAgLmRhdGEoZGF0YSwgKGQpID0+IGQuaWQpXG4gICAgICAuam9pbihcbiAgICAgICAgKGVudGVyKSA9PlxuICAgICAgICAgIGVudGVyXG4gICAgICAgICAgICAuYXBwZW5kKFwicmVjdFwiKVxuICAgICAgICAgICAgLmF0dHIoXCJzdHJva2VcIiwgXCJub25lXCIpXG4gICAgICAgICAgICAuYXR0cihcImZpbGxcIiwgZXJyb3JDb2xvcilcbiAgICAgICAgICAgIC5hdHRyKFwib3BhY2l0eVwiLCBlcnJvclNxdWFyZXNPcGFjaXR5KVxuICAgICAgICAgICAgLmF0dHIoXCJ0cmFuc2Zvcm1cIiwgY29tcHV0ZVRyYW5zZm9ybSlcbiAgICAgICAgICAgIC8vIFN0YXJ0IGF0IGRhdGEgcG9pbnRcbiAgICAgICAgICAgIC5hdHRyKFwieFwiLCAoZCkgPT4geFNjYWxlKGQueENvb3JkKSlcbiAgICAgICAgICAgIC5hdHRyKFwieVwiLCAoZCkgPT4geVNjYWxlKGQueUNvb3JkKSlcbiAgICAgICAgICAgIC5hdHRyKFwid2lkdGhcIiwgMClcbiAgICAgICAgICAgIC5hdHRyKFwiaGVpZ2h0XCIsIDApXG4gICAgICAgICAgICAvLyBBZGQgdHJhbnNpdGlvblxuICAgICAgICAgICAgLmNhbGwoKGVudGVyKSA9PiB7XG4gICAgICAgICAgICAgIGVudGVyXG4gICAgICAgICAgICAgICAgLnRyYW5zaXRpb24oKVxuICAgICAgICAgICAgICAgIC5hdHRyKFwid2lkdGhcIiwgY29tcHV0ZUhlaWdodClcbiAgICAgICAgICAgICAgICAuYXR0cihcImhlaWdodFwiLCBjb21wdXRlSGVpZ2h0KTtcbiAgICAgICAgICAgIH0pLFxuICAgICAgICAodXBkYXRlKSA9PlxuICAgICAgICAgIHVwZGF0ZS5jYWxsKCh1cGRhdGUpID0+IHtcbiAgICAgICAgICAgIHVwZGF0ZS5hdHRyKFwidHJhbnNmb3JtXCIsIGNvbXB1dGVUcmFuc2Zvcm0pO1xuXG4gICAgICAgICAgICBpZiAodHJhbnNpdGlvbikgdXBkYXRlID0gdXBkYXRlLnRyYW5zaXRpb24oKTtcblxuICAgICAgICAgICAgdXBkYXRlXG4gICAgICAgICAgICAgIC5hdHRyKFwieFwiLCAoZCkgPT4geFNjYWxlKGQueENvb3JkKSlcbiAgICAgICAgICAgICAgLmF0dHIoXCJ5XCIsIChkKSA9PiB5U2NhbGUoZC55Q29vcmQpKVxuICAgICAgICAgICAgICAuYXR0cihcIndpZHRoXCIsIGNvbXB1dGVIZWlnaHQpXG4gICAgICAgICAgICAgIC5hdHRyKFwiaGVpZ2h0XCIsIGNvbXB1dGVIZWlnaHQpO1xuICAgICAgICAgIH0pLFxuICAgICAgICAoZXhpdCkgPT4gZXhpdC50cmFuc2l0aW9uKCkuYXR0cihcIndpZHRoXCIsIDApLmF0dHIoXCJoZWlnaHRcIiwgMCkucmVtb3ZlKClcbiAgICAgICk7XG4gIH1cblxuICAvLyBSZXNldHMgdGhlIHBsb3QgdG8gdGhlIGluaXRpYWwgZGF0YVxuICBmdW5jdGlvbiByZXNldCgpIHtcbiAgICB1cGRhdGUoaW5pdERhdGEsIHRydWUpO1xuICB9XG5cbiAgLy8gVXBkYXRlcyB3aGljaCBlcnJvciB0eXBlIHRvIHNob3dcbiAgZnVuY3Rpb24gdXBkYXRlVmlldyhvcHRpb24pIHtcbiAgICBpZiAob3B0aW9uID09PSBcIk5vbmVcIikge1xuICAgICAgZXJyb3JMaW5lc09wYWNpdHkgPSAwO1xuICAgICAgZXJyb3JTcXVhcmVzT3BhY2l0eSA9IDA7XG5cbiAgICAgIGVycm9yTGluZXMudHJhbnNpdGlvbigpLmF0dHIoXCJvcGFjaXR5XCIsIDApO1xuICAgICAgZXJyb3JTcXVhcmVzLnRyYW5zaXRpb24oKS5hdHRyKFwib3BhY2l0eVwiLCAwKTtcbiAgICB9IGVsc2UgaWYgKG9wdGlvbiA9PT0gXCJBYnNvbHV0ZSBFcnJvclwiKSB7XG4gICAgICBlcnJvckxpbmVzT3BhY2l0eSA9IDE7XG4gICAgICBlcnJvclNxdWFyZXNPcGFjaXR5ID0gMDtcblxuICAgICAgZXJyb3JMaW5lcy50cmFuc2l0aW9uKCkuYXR0cihcIm9wYWNpdHlcIiwgMSk7XG4gICAgICBlcnJvclNxdWFyZXMudHJhbnNpdGlvbigpLmF0dHIoXCJvcGFjaXR5XCIsIDApO1xuICAgIH0gZWxzZSBpZiAob3B0aW9uID09PSBcIlNxdWFyZWQgRXJyb3JcIikge1xuICAgICAgZXJyb3JMaW5lc09wYWNpdHkgPSAwO1xuICAgICAgZXJyb3JTcXVhcmVzT3BhY2l0eSA9IDAuNTtcblxuICAgICAgZXJyb3JMaW5lcy50cmFuc2l0aW9uKCkuYXR0cihcIm9wYWNpdHlcIiwgMCk7XG4gICAgICBlcnJvclNxdWFyZXMudHJhbnNpdGlvbigpLmF0dHIoXCJvcGFjaXR5XCIsIDAuNSk7XG4gICAgfVxuICB9XG5cbiAgLy8gQWRkcyBhIG5ldyBkYXRhcG9pbnQgYW5kIHVwZGF0ZXMgdGhlIHBsb3RcbiAgZnVuY3Rpb24gdXBkYXRlRGF0YXBvaW50KHhDb29yZCwgeUNvb3JkKSB7XG4gICAgLy8gQWRkIGRhdGFwb2ludFxuICAgIGRhdGEgPSBbLi4uZGF0YSwgeyB4Q29vcmQsIHlDb29yZCwgaWQ6IGlkQ291bnRlcisrIH1dO1xuXG4gICAgdXBkYXRlKGRhdGEpO1xuICB9XG5cbiAgLy8gTWFpbiBmdW5jdGlvbiB0aGF0IHVwZGF0ZXMgdGhlIHBsb3QgYmFzZWQgb24gbmV3IGRhdGFcbiAgZnVuY3Rpb24gdXBkYXRlKG5ld0RhdGEsIHRyYW5zaXRpb24gPSB0cnVlKSB7XG4gICAgLy8gVXBhdGUgbG9jYWwgZGF0YSBvYmplY3RcbiAgICBkYXRhID0gbmV3RGF0YS5tYXAoKGQpID0+ICh7IC4uLmQgfSkpO1xuXG4gICAgdXBkYXRlUmVncmVzc2lvbkxpbmUocmVncmVzc2lvbkxpbmUsIGRhdGEsIHRyYW5zaXRpb24pO1xuICAgIGNpcmNsZXMgPSB1cGRhdGVDaXJjbGVzKGNpcmNsZXMsIGRhdGEpO1xuICAgIGVycm9yU3F1YXJlcyA9IHVwZGF0ZUVycm9yU3F1YXJlcyhlcnJvclNxdWFyZXMsIGRhdGEsIHRyYW5zaXRpb24pO1xuICAgIGVycm9yTGluZXMgPSB1cGRhdGVFcnJvckxpbmVzKGVycm9yTGluZXMsIGRhdGEsIHRyYW5zaXRpb24pO1xuICB9XG5cbiAgcmV0dXJuIE9iamVjdC5hc3NpZ24oc3ZnLm5vZGUoKSwge1xuICAgIHVwZGF0ZSxcbiAgICB1cGRhdGVEYXRhcG9pbnQsXG4gICAgdXBkYXRlVmlldyxcbiAgICByZXNldFxuICB9KTtcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtOSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImQzID0gcmVxdWlyZShcImQzLXJlZ3Jlc3Npb25cIiwgXCJkM1wiKVxuIn1dfQ==
 </script><script type="module">

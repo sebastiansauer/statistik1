@@ -251,13 +251,13 @@ die *Unterschiedlichkeit der Dinge* zu beschreiben,
 präziser gesagt: die *Variation zu quantifizieren*. 
 Betrachten wir dazu das Beispiel in @fig-groesse.
 Im Team der Basketballer gibt es (vergleichsweise) *geringe* Variation in der Körpergröße -- alle sind groß, ähnlich groß.
-Im Team der Schachspieler gibt es(vergleichsweise)*hohe* Variation: Einige Personen sind groß, andere klein.
+Im Team der Schachspieler gibt es (vergleichsweise) *hohe* Variation: Einige Personen sind groß, andere klein.
 
 
 ```{r}
 #| echo: false
 #| label: fig-groesse
-#| fig-cap: "Wenig Variation in der Körpergröße bei den Basketballern 🏀. Alles lange Kerle. Viel Variation bei den Schachspielern ♟: Manche sind klein, andere groß. Die vertikalen, vom Mittelwert (MW) abgehenenden Balken zeigen die Abweichungen der jeweiligen Körpergröße zum Mittelwert. Hinweis: Die Y-Achse startet nicht bei Null."
+#| fig-cap: "Wenig Variation in der Körpergröße bei den Basketballern. Alles lange Kerle. Viel Variation bei den Schachspielern: Manche sind klein, andere groß. Die vertikalen, vom Mittelwert (MW) abgehenenden Balken zeigen die Abweichungen der jeweiligen Körpergröße zum Mittelwert. Hinweis: Die Y-Achse startet nicht bei Null."
 # dev: "ragg_png"
 #| out-width: "75%"
 
@@ -1308,7 +1308,7 @@ tibble(x = c(1,2,5), Liebling = c("🥩", "🍝", "🍕")) %>%
 Wenn die Temperatur heute bei 10$\,$°C liegt und morgen 5$\,$°C -- 
 dann ist es heute *nicht* doppelt so warm wie morgen. 
 Ja, 10 ist das Doppelte von 5. 
-Aber *10° Celsius* ist *nicht* doppelt so warm wie 20 $\,$°C. 
+Aber *10$\,$°C* ist *nicht* doppelt so warm wie 20$\,$°C. 
 Wenn Sie das verwundert: 
 Das ist normal, so geht es vielen Leuten, wenn sie das zum ersten Mal hören.
 Der Grund, warum es nicht sinnvoll ("erlaubt") ist, 
@@ -1337,7 +1337,7 @@ ggplot(data_fig_intervall) +
   annotate("segment", x = 0, xend = 0, y = 0, yend = 30) +
   annotate("rect", fill = "blue", alpha = .8,
            xmin = -1, xmax = 1, ymin = 0, ymax = 10) + # ymin and ymax order fixed
-  geom_label(aes(y = y, label = y), x = 0, size = 8) + 
+  geom_label(aes(y = y, label = y), x = 0, size = 12) + 
   theme_void() +
   ylim(0, 35) +  # Extend y-axis range to avoid clipping
   theme(
@@ -1347,22 +1347,23 @@ ggplot(data_fig_intervall) +
 
 
 
-*Verhältnisskala*: Eine Verhältnisskala  ist das,
+*Verhältnisskala*: Eine Verhältnisskala ist das,
 was man sich gemeinhin unter einer metrische Variable vorstellt: 
 Man kann "normal" rechnen, alle Rechenoperationen sind erlaubt. 
 Zuzüglich zu denen, 
 die auch in anderen, "niedrigeren", Skalenniveaus erlaubt sind, 
 ist das das Bilden von Verhältnissen --
-Multiplizieren (und damit auch Dividieren), s. @fig-verhaeltnis.
+Multiplizieren (und damit auch Dividieren).
 
 ```{r p-verhaeltnis}
 #| echo: false
+#| eval: false
 #| label: fig-verhaeltnis
-#| fig-cap: "Puh! Der rote Flitzer ist 10 Mal so teuer wie die blaue Möhre. Kohlen zusammenkratzen."
+# fig-cap: "Puh! Der rote Flitzer ist 10 Mal so teuer wie die blaue Möhre. Kohlen zusammenkratzen."
 #| layout-ncol: 2
 #| fig-subcap: 
-#|   - "🚙"
-#|   - "🏎"
+#|   - "Möhre"
+#|   - "Flitzer"
 
 # Ursprüngliche Daten
 df <- tibble(
@@ -1377,7 +1378,7 @@ df <- tibble(
 df1 <- df %>% filter(id == 1)
 p1 <- ggplot(df1, aes(y = Preis, x = factor(id))) +
   geom_col() +
-  scale_x_discrete() +
+  scale_x_discrete(breaks = "Möhre") +
   scale_y_continuous(
     labels = dollar_format(),
     limits = c(-5000, 110000),
@@ -1386,7 +1387,9 @@ p1 <- ggplot(df1, aes(y = Preis, x = factor(id))) +
   ) +
   # geom_label(aes(x = factor(id), label = Auto), y = -1e3, size = 10, nudge_y = -10000) +
   labs(x = "",
-       title = "Möhre")
+       title = "Möhre") +
+  theme_large_text() +
+  annotate("label", x = 1, y = 12000, label = "10 Tsd")
 
 # Diagramm 2
 df2 <- df %>% filter(id == 2)
@@ -1401,7 +1404,8 @@ p2 <- ggplot(df2, aes(y = Preis, x = factor(id))) +
   ) +
   # geom_label(aes(x = factor(id), label = Auto), y = -1e3, size = 10, nudge_y = -10000) +
     labs(x = "",
-       title = "Flitzer")
+       title = "Flitzer")  +
+  annotate("label", x = 1, y = 105000, label = "100 Tsd")
 
 # Anzeigen
 p1

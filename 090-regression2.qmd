@@ -221,7 +221,7 @@ parameters(lm_wetter1) |>
 ```
 
 
-Laut dem Modell wurde es pro Jahr im Schnitt um 0.01 Grad wärmer, pro Jahrzehnt also 0.1 Grad und pro Jahrhundert 1 Grad.
+Laut dem Modell wurde es pro Jahr im Schnitt um 0.01$\,$°C wärmer, pro Jahrzehnt also 0.1$\,$°C und pro Jahrhundert 1$\,$°C.
 
 
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Das ist sicherlich nicht linear! Vermutlich ist die Temperatur bis 1950 konstant geblieben und jetzt knallt sie durch die Decke!
@@ -262,7 +262,7 @@ kann mich sich so ausgeben lassen, s. @fig-wetter1, links.
 Allerdings sind das zu viele Datenpunkte. 
 Wir sollten es vielleicht anders visualisieren, s. @fig-wetter1, rechts.
 Dazu aggregieren wir die Messwerte eines Jahres zu jeweils einem Mittelwert.
-Auf dieser Basis erstellen wir ein neues lineares Modell, `lm_wetter1a`,  s. @tbl-lm-wetter1a.
+Auf dieser Basis erstellen wir ein neues lineares Modell, `lm_wetter1_pro_jahr`,  s. @tbl-lm-wetter1a.
 
 ```{r}
 wetter_summ <-
@@ -290,23 +290,33 @@ parameters(lm_wetter1_pro_jahr) %>%
   select(Parameter, Coefficient) |> print_md()
 ```
 
-Hilfreich ist es, das Modell `lm_wetter1_pro_jahr` mit `plot(estimate_relation(lm_wetter1_pro_jahr))` zu plotten.
+Komfortabel ist es, das Modell `lm_wetter1_pro_jahr` mit `plot(estimate_relation(lm_wetter1_pro_jahr))` zu plotten.
 
 
-<!-- ```{r} -->
-<!-- #| label: fig-wetter1 -->
-<!-- #| echo: false -->
-<!-- #| fig-cap: "Die Veränderung der mittleren Temperatur in Deutschland im Zeitverlauf [DWD2025]. Links: Jeder Punkt ist ein Tag (viel Overplotting, wenig nützlich). Rechts: Jeder Punkt ist ein Jahr (wetter_summ). Außerdem ist die Regressionsgerade dargestellt." -->
-<!-- #| layout: [[45,-10, 45], [100]] -->
-<!-- #| out-width: 100% -->
-<!-- #| fig-subcap: -->
-<!-- #|   - Ein Punkt pro Tag -->
-<!-- #|   - Ein Punkt pro Jahr -->
-<!-- plot(estimate_relation(lm_wetter1)) + theme_large_text() + -->
-<!--   labs(title = "") -->
-<!-- plot(estimate_relation(lm_wetter1a)) + theme_large_text() + -->
-<!--    labs(title = "") -->
-<!-- ``` -->
+```{r}
+#| label: fig-wetter1
+#| warning: false
+#| echo: false
+#| fig-cap: "Die Veränderung der mittleren Temperatur in Deutschland im Zeitverlauf [DWD2025]. Links: Jeder Punkt ist ein Tag (viel Overplotting, wenig nützlich). Rechts: Jeder Punkt ist ein Jahr (wetter_summ). Außerdem ist die Regressionsgerade dargestellt."
+#| layout: [[45,-10, 45], [100]]
+#| out-width: 100%
+#| fig-subcap:
+#|   - Ein Punkt pro *Tag*
+#|   - Ein Punkt pro *Jahr*
+ggplot(wetter) + 
+  geom_point(data = wetter, aes(x = year, y = temp)) +
+  geom_abline(color = ycol, 
+              size = 2,
+              intercept = coef(lm_wetter1)[1], 
+              slope = coef(lm_wetter1)[2])
+
+ggplot(wetter) + 
+  geom_point(data = wetter_summ, aes(x = year, y = temp)) +
+  geom_abline(color = ycol, 
+              size = 2,
+              intercept = coef(lm_wetter1_pro_jahr)[1], 
+              slope = coef(lm_wetter1_pro_jahr)[2])
+```
 
 
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Moment mal, der Achsenabschnitt liegt bei etwa -14 Grad! Was soll das bitte bedeuten?
@@ -370,9 +380,9 @@ parameters(lm_wetter1_zentriert) |>
 ```
 
 Jetzt ist die Interpretation des Achsenabschnitts komfortabel:
-Im Jahr 1951 (x=0) lag die mittlere Temperatur in Deutschland (laut DWD) bei ca. 8.5 Grad Celsius.
+Im Jahr 1951 (x=0) lag die mittlere Temperatur in Deutschland (laut DWD) bei ca. 8.5$\,$°C.
 Die Regressionsgleichung lautet: `temp_pred = 8.49 + 0.01*year_c`.
-In Worten: Wir sagen eine Temperatur vorher, die sich als Summe von 8.49 Grad plus 0.01 mal das Jahr (in zentrierter Form) berechnet.
+In Worten: Wir sagen eine Temperatur vorher, die sich als Summe von 8.49$\,$°C plus 0.01 mal das Jahr (in zentrierter Form) berechnet.
 
 
 Wie gut erklärt unser Modell die Daten?
@@ -382,7 +392,8 @@ r2(lm_wetter1_zentriert)  # aus `{easystats}`
 ```
 
 Viel Varianz des Wetters erklärt das Modell mit `year_c` aber nicht. (`year` und `year_c` sind gleich stark mit `temp` korreliert, daher wird sich die Modellgüte nicht unterscheiden.).
-Macht auch Sinn: Abgesehen von der Jahreszahl spielt z.$\,$B. die Jahreszeit eine große Rolle für die Temperatur. Das haben wir nicht berücksichtigt.
+Macht auch Sinn: Abgesehen von der Jahreszahl spielt z.$\,$B. die Jahreszeit eine große Rolle für die Temperatur. 
+Das haben wir nicht berücksichtigt.
 
 
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"}  Wie warm ist es laut unserem Modell dann im Jahr 2051?
@@ -422,7 +433,8 @@ hat nur zwei Ausprägungen: 0 und 1. $\square$
 
 :::{#exm-bin}
 ### Binäre Variablen 
-Das sind zum Beispiel *weiblich* mit den Ausprägungen `0` (nein) und `1` (ja) oder *before_1950* mit `1` für Jahre früher als 1950 und `0` ansonsten. $\square$
+Das sind zum Beispiel *weiblich* mit den Ausprägungen `0` (nein) und `1` (ja) 
+oder *before_1950* mit `1` für Jahre früher als 1950 und `0` ansonsten. $\square$
 :::
 
 :::{#exm-binuv}
@@ -470,10 +482,9 @@ parameters(lm_wetter_bin_uv) |>
 ```
 
 
-Die Parameterwertre des Modells lassen darauf schließen, 
+Die Parameterwerte des Modells lassen darauf schließen, 
 dass es tatsächlich wärmer geworden ist nach 1950, 
-und zwar im Schnitt 
-offenbar ein gutes halbes Grad, s. @fig-wetter2.
+und zwar offenbar ein gutes halbes Grad, s. @fig-wetter2.
 
 
 
@@ -504,7 +515,7 @@ wetter |>
   stat_summary(fun = mean, 
                geom = "line", 
                aes(group = 1), color = okabeito_colors()[2], 
-               linewidth = 1) +  # Connect means | 
+               linewidth = 1)  + # Connect means | 
   theme_large_text()
 ```
 
@@ -693,7 +704,7 @@ Ob es wohl substanzielle Temperaturunterschiede zwischen den Bundesländern gibt
 
 Befragen wir dazu ein lineares Modell; 
 in @tbl-lm_wetter_region sind für jeden Parameter der Punktschätzer (Koeffizient)
-und das zugehörige Schätzbereich (Konfidenzintervall) 
+und der zugehörige Schätzbereich (Konfidenzintervall) 
 mit Ober- und Untergrenze angegeben.
 
 
@@ -713,7 +724,8 @@ lm_wetter_region_params <-
   parameters(lm_wetter_region) 
 
 lm_wetter_region_params |> 
-  select(Parameter, Coefficient, CI_high, CI_low)
+  select(Parameter, Coefficient, CI_high, CI_low) |>
+  print_md()
 ```
 
 Hat die nominalskalierte UV mehr als zwei Stufen, 
@@ -1078,9 +1090,9 @@ parameters(lm_year_month) %>%
 
 Die Modellkoeffizienten sind so zu interpretieren:
 
-1. Achsenabschnitt ($\beta_0$, `(Intercept`)): Im Referenzjahr (1951) im *Referenzmonat Januar* lag die Niederschlagsmenge bei 57$\,$mm pro Quadratmeter.
+1. Achsenabschnitt ($\beta_0$, `Intercept`): Im Referenzjahr (1951) im *Referenzmonat Januar* lag die Niederschlagsmenge bei 57$\,$mm pro Quadratmeter.
 2. Regressionskoeffizient für Jahr ($\beta_1$, `year_c`): Pro Jahr ist die Niederschlagsmenge im Schnitt um 0.03$\,$mm an (im Referenzmonat).
-3. Regressionskoeffizient für Monat ($\beta_2$, `month factor7`) Im Monat `7` (Juli) lag die mittlere Niederschlagsmenge (im Referenzjahr) knapp 25$\,$mm über dem mittleren Wert des Referenzmonats (Januar).
+3. Regressionskoeffizient für Monat ($\beta_2$, `month_factor7`) Im Monat `7` (Juli) lag die mittlere Niederschlagsmenge (im Referenzjahr) knapp 25$\,$mm über dem mittleren Wert des Referenzmonats (Januar).
 
 
 Die Regressiongleichung von `lm_year_month` lautet: 
@@ -1106,6 +1118,7 @@ neue_daten <- tibble(year_c = 2020-1951,
 predict(lm_year_month, newdata = neue_daten)
 ```
 
+Das Modell erwartet Niederschlag in Höhe von `r predict(lm_year_month, newdata = neue_daten)`$\,$mm. 
 Mit `predict` kann man sich Vorhersagen eines Modells ausgeben lassen. $\square$
 :::
 
@@ -1150,7 +1163,7 @@ ggplot(wetter_month_1_7) +
 
 ```
 
-Mit `scale_color_okabeito` haben wir die Standard-Farbpalette durch die von  [@okabeito] ersetzt [s. @barrett2021].
+Mit `scale_color_okabeito` haben wir die Standard-Farbpalette durch die von  @okabeito ersetzt [s. @barrett2021].
 Das ist nicht unbedingt nötig, 
 aber robuster bei Sehschwächen, vgl. @sec-farbwahl.
 Die erklärte Varianz von `lm_year_month` liegt bei:
@@ -1323,31 +1336,17 @@ hätten wir einen triftigen Grund,
 den Interaktionseffekt im Modell zu belassen.
 
 
+\clearpage
 
 ## Modelle mit vielen UV
 
 
 ### Zwei metrische UV
 
+Ein Modell mit zwei metrischen UV kann man sich im 3D-Raum visualisieren, s. @fig-3d-regr-statisch, oder im 2D-Raum, s. @fig-3d-regr-2d.
+Im 3D-Raum wird die Regressionsgerade zu einer *Regressionsebene*.
 
 
-
-:::::{.content-visible when-format="html" unless-format="epub"}
-
-
-Ein Modell mit zwei metrischen UV kann man sich im 3D-Raum visualisieren, s. @fig-3d-regr.
-Im 3D-Raum wird die Regressionsgerade zu einer *Regressionsebene.*
-
-::::{#fig-3d-regr}
-
-
-:::{.panel-tabset}
-
-#### 3D-Animation
-
-![Animation eines Regeressionsmodells mit zwei metrischen UV, x1 und x2; y wird gut von den beiden UV erklärt](img/regression_plane_rotation.gif){#fig-regression-plane-rotation}
-
-<!-- #### 3D-Diagramme für Modelle mit zwei Prädiktoren -->
 
 ```{r}
 #| include: false
@@ -1361,38 +1360,6 @@ df_3d <-
 lm3d <- lm(y ~ x1 + x2, data = df_3d)
 ```
 
-
-
-<!-- ```{r} -->
-<!-- #| label: Ein interaktives 3D-Diagramm und Regressionsebene -->
-<!-- #| echo: false -->
-<!-- #| eval: !expr knitr:::is_html_output() -->
-
-<!-- source("children/3d.R") -->
-<!-- scatterplot_3d_with_trace -->
-<!-- ``` -->
-
-#### 2D-Diagramm für 3D-Modell
-
-```{r}
-#| label: 2D-Diagramm für 3D-Modell
-#| echo: false
-lm3d_expect <- estimate_relation(lm3d)
-plot(lm3d_expect)
-```
-
-
-:::
-
-::::
-
-:::::
-
-
-::::: {.content-visible when-format="pdf"}
-
-Ein Modell mit zwei metrischen UV kann man sich im 3D-Raum visualisieren, s. @fig-3d-regr-statisch, oder im 2D-Raum, s. @fig-3d-regr-2d.
-Im 3D-Raum wird die Regressionsgerade zu einer *Regressionsebene.*
 
 
 
@@ -1421,28 +1388,60 @@ lm3d_expect <- estimate_relation(lm3d)
 plot(lm3d_expect)
 ```
 
+
+
+
+:::::{.content-visible when-format="html" unless-format="epub"}
+
+
+
+::::{#fig-3d-regr}
+
+:::{.panel-tabset}
+
+#### 3D-Animation
+
+![Animation eines Regeressionsmodells mit zwei metrischen UV, x1 und x2; y wird gut von den beiden UV erklärt](img/regression_plane_rotation.gif){#fig-regression-plane-rotation}
+
+
+
+
+
+#### 2D-Diagramm für 3D-Modell
+
+```{r}
+#| label: 2D-Diagramm für 3D-Modell
+#| echo: false
+lm3d_expect <- estimate_relation(lm3d)
+plot(lm3d_expect)
+```
+
+
+:::
+
+::::
+
 :::::
 
 
-```{r}
-#| echo: false
-data(mariokart, package = "openintro")
-```
+
+
+
+
+
 
 Grundsätzlich kann man viele UV in ein (lineares) Modell aufnehmen.
-Betrachten wir z.$\,$B. folgendes lineares Modell mit zwei metrischen UV.
+Betrachten wir z.$\,$B. folgendes lineares Modell mit zwei metrischen UV, `lm_mario_2uv`. 
+
 
 ```{r}
 lm_mario_2uv <- lm(total_pr ~ start_pr + ship_pr, 
                    data = mariokart %>% filter(total_pr < 100))
 ```
 
-<!-- , s. auch @fig-mario-2uv. -->
 
 ::: {.content-visible when-format="html" unless-fromat="epub"}
 
-
-<!-- @fig-mario-2uv-dyn visualisiert das Modell `lm_mario2v` in einem 3D-Diagramm. -->
 
 
 ```{r}
@@ -1462,21 +1461,17 @@ Verkaufspreis <- t(outer(start_seq, ship_seq,
 
 
 
-
-<!-- Jedes der beiden Regressionsgewichte in `lm_mario_2uv` entspricht der Steigung in der beiden Achsen in @fig-mario-2uv-dyn, -->
-<!-- d.$\,$h. die Steigung für `start_pr` bzw. die Steigung für `ship_pr`. -->
-
 :::
 
 
 
 :::: {.content-visible when-format="pdf"}
 
-@fig-3d-regr-statisch visualisiert das Modell `lm_mario2v` in einem 3D-Diagramm (betrachtet aus verschiedenen Winkeln).
+@fig-3d-regr-mario-statisch visualisiert das Modell `lm_mario_2uv` in einem 3D-Diagramm (betrachtet aus verschiedenen Winkeln).
 
 
 
-::: {#fig-3d-regr-statisch layout-ncol=3}
+::: {#fig-3d-regr-mario-statisch layout-ncol=3}
 
 
 ![Winkel 1](img/3d_scatter_mario1.png)
@@ -1486,7 +1481,7 @@ Verkaufspreis <- t(outer(start_seq, ship_seq,
 
 ![Winkel 3](img/3d_scatter_mario3.png)
 
-Das Modell `lm_mario2v` mit 2 metrischen UV (und 1 metrische AV) als 3D-Diagramm
+Das Modell `lm_mario_2uv` mit 2 metrischen UV (und 1 metrische AV) als 3D-Diagramm
 
 :::
 ::::
@@ -1840,7 +1835,6 @@ Diese Aufteilung Ihres Datensatzatzes in diese zwei Teile nennt man auch *Validi
 library(rsample)  # ggf. noch installieren
 mariokart <- read_csv("data/mariokart.csv")  # Wenn die CSV-Datei in einem Unterordner mit Namen "data" liegt
 
-
 meine_aufteilung <- initial_split(mariokart, strata = total_pr)
 ```
 
@@ -2067,29 +2061,32 @@ begnügt sich mit der Beschreibung der Modellgüte und mit Vorhersage (synonym: 
 Wer das nicht glaubt, der betrachte @fig-confounder, links.
 Ein Forscher stellt das Modell `m1: y ~ x` auf und  interpretiert dann `b1`: 
 "Ist ja klar, X hat einen starken positiven Effekt auf Y!"
-
 In der nächsten Studie nimmt der Forscher dann eine zweite Variable, 
 `group` (z.$\,$B. Geschlecht) in das Modell auf: `m2: y ~ x + g`.
 Oh Schreck! Jetzt ist `b1` auf einmal nicht mehr stark positiv, 
 sondern praktisch Null, und zwar in jeder Gruppe, s. @fig-confounder, rechts!
-
 Dieses Umschwenken der Regressionskoeffizienten kann *nicht* passieren,
 wenn der Effekt "echt", also kausal, ist. 
 Handelt es sich aber um "nicht echte", also nicht-kausale Zusammenhänge, 
-um *Scheinzusammenhänge* also.
-So können sich die Modellkoeffizienten dramatisch verändern 
-(sogar das Vorzeichen kann wechseln; das nennt man dann *Simpsons Paradox* [@gelman_regression_2021]),
-wenn man das Modell verändert, also Variablen hinzufügt oder aus dem Modell entfernt.
-
+um *Scheinzusammenhänge* also,
+so können sich die Modellkoeffizienten dramatisch verändern, wenn man das Modell verändert, also Variablen hinzufügt oder aus dem Modell entfernt.
+Sogar das Vorzeichen des Effekts kann wechseln; das nennt man dann *Simpsons Paradox* [@gelman_regression_2021],
 Wenn man die kausalen Abhängigkeiten nicht kennt,
 weiß man also nicht, ob die Zusammenhänge kausal oder nicht-kausal sind.
-Man weiß also nicht, ob die Modellkoeffizienten belastbar, robust, stichhaltig sind oder nicht.
+Dann bleibt unklar, ob die Modellkoeffizienten belastbar, robust, stichhaltig sind oder nicht.
+
+
+
+
+
+
 
 ```{r}
 #| echo: false
+#| eval: true
 #| label: fig-confounder
 #| fig-asp: 0.8
-#| fig-cap: "Fügt man in ein Modell eine Variable hinzu, können sich die Koeffizienten massiv ändern. In beiden Diagrammen wurden die gleichen Daten verwendet. (a): starker positiver Zusammenhang, (b) kein Zusammenhang in beiden Gruppen"
+#| fig-cap: "Fügt man in ein Modell eine Variable hinzu, können sich die Koeffizienten massiv ändern. In beiden Diagrammen wurden die gleichen Daten verwendet. (a) starker positiver Zusammenhang, (b) kein Zusammenhang in beiden Gruppen"
 #| layout: [[45,-10, 45], [100]]
 #| out-width: 100%
 #| fig-subcap: 
@@ -2116,7 +2113,7 @@ d_sim <-
 p_super_korr <- 
 d_sim %>%
   ggplot(aes(x = x, y = y)) +
-  geom_point() +
+  geom_point2() +
   geom_smooth(method = "lm", se = FALSE, color = modelcol) +
   labs(title = "Oh yeah,",
        subtitle = "super Korrelation!") +
@@ -2124,10 +2121,7 @@ d_sim %>%
   theme(plot.title = element_text(size = 12)) +
   theme_large_text()
 
-p_super_korr
-
-
-
+p_no_korr <- 
 d_sim %>%
   ggplot(aes(x = x, y = y, color = group, shape = group)) +
   geom_point() +
@@ -2142,6 +2136,9 @@ d_sim %>%
     legend.justification = c(1, 0)) +
   theme(plot.title = element_text(size = 12)) +
   theme_large_text()
+
+p_super_korr
+p_no_korr
 ```
 
 

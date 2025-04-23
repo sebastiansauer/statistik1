@@ -10,6 +10,8 @@ knit_print.head = function(x, ...) {
 # register the method
 registerS3method("knit_print", "data.frame", knit_print.head)
 
+base_size <- 18
+base_family <- "Lato Regular"
 
 
 # Define a custom ggplot theme with larger text
@@ -94,10 +96,16 @@ if (knitr:::is_latex_output()) {
   
   # add font for plots in PDF output:
   
-  font_add("Lato Regular", regular = "/Users/sebastiansaueruser/Library/Fonts/Lato-Regular.ttf")
+  sysfonts::font_add("Lato Regular", regular = "/Users/sebastiansaueruser/Library/Fonts/Lato-Regular.ttf")
   
-  font_add("Font Awesome", regular = "~/Library/Fonts/fontawesome-webfont.ttf")
+  sysfonts::font_add("Lato", regular = "/Users/sebastiansaueruser/Library/Fonts/Lato-Regular.ttf")
   
-  showtext_auto()
+  sysfonts::font_add("Font Awesome", regular = "~/Library/Fonts/fontawesome-webfont.ttf")
   
-  ggplot2::theme_set(ggplot2::theme_minimal(base_family = "Lato Regular")) }
+  sysfonts::font_add("Roboto Regular", regular = "/Users/sebastiansaueruser/Library/Fonts/Roboto-Regular.ttf")
+  
+  showtext::showtext_auto(TRUE)  # use "showtext" automatically
+  
+  ggplot2::theme_set(ggplot2::theme_minimal(base_family = "Lato Regular"))
+  
+  }

@@ -24,7 +24,7 @@
 
 ### Benötigte R-Pakete
 
-Neben den üblichen Paketen `tidyverse` [@wickham2019a] und `easystats` [@easystats] benötigen Sie in diesem Kapitel noch `yardstick` [@kuhn2024] und optional `ggpubr` [@kassambara2023].
+Neben den üblichen Paketen `tidyverse` [@wickham2019a] und `easystats` [@ludecke2022] benötigen Sie in diesem Kapitel noch `yardstick` [@kuhn2024] und optional `ggpubr` [@kassambara2023].
 
 
 
@@ -101,7 +101,7 @@ wetter <- read.csv(wetter_path)
 
 :::
 
-Die Wetterdaten stammen vom [DWD](https://opendata.dwd.de/) [@dwd2023, @dwd2023a]
+Die Wetterdaten stammen vom [DWD](https://opendata.dwd.de/) [-@dwd2023; -@dwd2023a]
 Ein *Data-Dictionary* für den Datensatz können Sie [hier](https://raw.githubusercontent.com/sebastiansauer/Lehre/main/data/wetter-dwd/wetter-dwd-data-dict.md) herunterladen.
 
 
@@ -134,7 +134,7 @@ wie gläsern man im Internet ist! $\square$
 :::
 
 
-![Prediction accuracy of regression for numeric attributes and traits expressed by the Pearson correlation coefficient between predicted and actual attribute values 5@kosinski2013](img/pnas.kosinski.1218772110fig03.jpeg){#fig-pnas1 width="50%"}
+![Prediction accuracy of regression for numeric attributes and traits expressed by the Pearson correlation coefficient between predicted and actual attribute values [@kosinski2013]](img/pnas.kosinski.1218772110fig03.jpeg){#fig-pnas1 width="50%"}
 
 
 
@@ -237,9 +237,9 @@ In @tbl-lm-wetter1 finden sich zwei Arten von Information für den Wert des Achs
 1. *Punktschätzungen* In der Spalte `Coefficient` sehen Sie den "Best-Guess" (Punktschätzer) für den entsprechenden Koeffizienten in der Population. 
 Das ist sozusagen der Wert, für den sich das Modell festlegen würde, wenn es sonst nichts sagen dürfte.
 
-2. *Bereichschätzungen* Cleverer als Punktschätzungen sind Bereichsschätzungen (Intervallschätzungen): Hier wird ein Bereich plausibler Werte für den entsprechenden Koeffizienten angegeben. In der Spalte "CI" sehen Sie die untere bzw. die obere Grenze eines "Bereichs plausibler Werte". Dieser Schätzbereich wird auch als *Konfidenzintervall* (engl. confidence interval, CI) bezeichnet.
-Ein Konfidenzintervall ist mit einer Sicherheit zwischen 0 und 1 angegeben, z.B. 95% (0.95).
-Grob gesagt bedeutet ein 95%-Kondidenzintervall, dass wir uns zu 95% sicher sein können, dass der wahre Werte sich in diesem Bereich befindet.
+2. *Bereichschätzungen* Cleverer als Punktschätzungen sind Bereichsschätzungen (Intervallschätzungen): Hier wird ein Bereich plausibler Werte für den entsprechenden Koeffizienten angegeben. In der Spalte `CI` sehen Sie die untere bzw. die obere Grenze eines "Bereichs plausibler Werte". Dieser Schätzbereich wird auch als *Konfidenzintervall* (engl. confidence interval, CI) bezeichnet.
+Ein Konfidenzintervall ist mit einer Sicherheit zwischen 0 und 1 angegeben, z.B. 95$\,$% (0.95).
+Grob gesagt bedeutet ein 95$\,$%-Kondidenzintervall, dass wir uns (laut Modell) zu 95$\,$% sicher sein können, dass der wahre Werte sich in diesem Bereich befindet.
 In @tbl-lm-wetter1 können wir ablesen, dass das Regressionsgewicht von `year` irgendwo zwischen praktisch Null (0.009) 
 und ca. 0.01 Grad geschätzt wird.
 Je schmaler das Konfidenzintervall, desto genauer wird der Effekt geschätzt 
@@ -276,8 +276,9 @@ wetter_summ <-
 
 ```{r}
 #| results: hide
-lm_wetter1a <- lm(temp ~ year, data = wetter_summ)
-parameters(lm_wetter1a) |> 
+# Summierte Daten (nach Jahr), aber gleiche Modellformel:
+lm_wetter1_pro_jahr <- lm(temp ~ year, data = wetter_summ) 
+parameters(lm_wetter1_pro_jahr) |> 
   select(Parameter, Coefficient)
 ```
 
@@ -285,29 +286,30 @@ parameters(lm_wetter1a) |>
 #| echo: false
 #| label: tbl-lm-wetter1a
 #| tbl-cap: "Modellparameter von lm_wetter1a"
-parameters(lm_wetter1a) %>%
+parameters(lm_wetter1_pro_jahr) %>%
   select(Parameter, Coefficient) |> print_md()
 ```
 
-Dann plotten wir das Modell mit `plot(estimate_relation(lm_wetter1a))` und das Modell `lm_wetter1` entsprechend, s. @fig-wetter1.
-
-```{r}
-#| label: fig-wetter1
-#| echo: false
-#| fig-cap: "Die Veränderung der mittleren Temperatur in Deutschland im Zeitverlauf (Datenquelle: DWD). Links: Jeder Punkt ist ein Tag (viel Overplotting, wenig nützlich). Rechts: Jeder Punkt ist ein Jahr (wetter_summ). Außerdem ist die Regressionsgerade dargestellt."
-#| layout: [[45,-10, 45], [100]]
-#| out-width: 100%
-#| fig-subcap:
-#|   - Ein Punkt pro Tag
-#|   - Ein Punkt pro Jahr
-plot(estimate_relation(lm_wetter1)) + theme_large_text() +
-  labs(title = "")
-plot(estimate_relation(lm_wetter1a)) + theme_large_text() +
-   labs(title = "")
-```
+Hilfreich ist es, das Modell `lm_wetter1_pro_jahr` mit `plot(estimate_relation(lm_wetter1_pro_jahr))` zu plotten.
 
 
->    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Moment mal, der Achsenabschnitt liegt bei -15 Grad! Was soll das bitte bedeuten?
+<!-- ```{r} -->
+<!-- #| label: fig-wetter1 -->
+<!-- #| echo: false -->
+<!-- #| fig-cap: "Die Veränderung der mittleren Temperatur in Deutschland im Zeitverlauf [DWD2025]. Links: Jeder Punkt ist ein Tag (viel Overplotting, wenig nützlich). Rechts: Jeder Punkt ist ein Jahr (wetter_summ). Außerdem ist die Regressionsgerade dargestellt." -->
+<!-- #| layout: [[45,-10, 45], [100]] -->
+<!-- #| out-width: 100% -->
+<!-- #| fig-subcap: -->
+<!-- #|   - Ein Punkt pro Tag -->
+<!-- #|   - Ein Punkt pro Jahr -->
+<!-- plot(estimate_relation(lm_wetter1)) + theme_large_text() + -->
+<!--   labs(title = "") -->
+<!-- plot(estimate_relation(lm_wetter1a)) + theme_large_text() + -->
+<!--    labs(title = "") -->
+<!-- ``` -->
+
+
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Moment mal, der Achsenabschnitt liegt bei etwa -14 Grad! Was soll das bitte bedeuten?
 
 
 ### UV zentrieren
@@ -918,30 +920,31 @@ parameters(lm_wetter_month_factor) |>
 Sehr schön! Jetzt haben wir eine Referenzgruppe (Monat 1, d.$\,$h. Januar) und 11 Unterschiede zum Januar, s. @fig-wetter-month. 
 
 :::{#exr-fig-wetter-month}
-In ähnlicher Form könnten Sie auch die Regressionsgewichte wie folgt plotten: `parameters(lm_wetter_month_factor) |> plot()`. Was sind die Unterschiede zu @fig-wetter-month?^[In @fig-wetter-month? wird nicht der Schätzbereich für die Regressionsgewichte dargestellt, sondern stattdessen die SD der AV.]  $\square$
+In ähnlicher Form zu @fig-wetter-month könnten Sie auch die Regressionsgewichte wie folgt plotten: `parameters(lm_wetter_month_factor) |> plot()`. Was sind die Unterschiede zu @fig-wetter-month?^[In @fig-wetter-month? wird nicht der Schätzbereich für die Regressionsgewichte dargestellt, sondern stattdessen die SD der AV.]  $\square$
 :::
+
+
+```{r}
+#| echo: false
+wetter_summ2 <- wetter %>%
+  group_by(month_factor) %>%
+  summarise(
+    mean_precip = mean(precip, na.rm = TRUE),
+    sd_precip = sd(precip, na.rm = TRUE)
+  )
+```
+
 
 
 ```{r}
 #| label: fig-wetter-month
 #| fig-cap: "Niederschlagsmengen nach Monaten (Mittelwerte plus SD)"
+#| fig-asp: 0.5
 
-wetter_summ2 <- wetter %>%
-  group_by(month_factor) %>%
-  summarise(
-    mean_precip = mean(precip, na.rm = TRUE),
-    sd_precip = sd(precip, na.rm = TRUE),
-    n_precip = n() # Optional: for standard error calculation
-  )
-
-ggerrorplot(data = wetter_summ2,
+ggerrorplot(data = wetter,
             x = "month_factor",
-            y = "mean_precip",
-            ymin = "mean_precip - sd_precip",
-            ymax = "mean_precip + sd_precip",
-            ylab = "Niedeschlag",
-            xlab = "Monat")
-
+            y = "precip",
+            desc_stat = "mean_sd")
 ```
 
 
@@ -1007,7 +1010,7 @@ Wenn Sie von der Faktorvariablen^[synonym: nominalskalierte Variable] `geschlech
 so dass z.$\,$B. nur die ersten beiden Elemente übrig bleiben mit allein der Ausprägung `"f"`, merkt sich R trotzdem, dass die Variable laut Definition
 *zwei* Faktorstufen besithzt (`"f"` und `"m"`).
 
-Genaus so ist es, wenn Sie aus `wetter` nur die Monate  `"1"` und `"7"` herausfiltern:
+Genau so ist es, wenn Sie aus `wetter` nur die Monate  `"1"` und `"7"` herausfiltern:
 R merkt sich, dass es 12 Faktorstufen gibt. 
 Möchten Sie die herausgefilterten Faktorstufen "löschen", 
 so können Sie einfach die Faktorvariable neu definieren (mit `factor`).
@@ -1077,7 +1080,7 @@ Die Modellkoeffizienten sind so zu interpretieren:
 
 1. Achsenabschnitt ($\beta_0$, `(Intercept`)): Im Referenzjahr (1951) im *Referenzmonat Januar* lag die Niederschlagsmenge bei 57$\,$mm pro Quadratmeter.
 2. Regressionskoeffizient für Jahr ($\beta_1$, `year_c`): Pro Jahr ist die Niederschlagsmenge im Schnitt um 0.03$\,$mm an (im Referenzmonat).
-3. Regressionskoeffizient für Monat ($\beta_2$, `month [7]`) Im Monat `7` (Juli) lag die mittlere Niederschlagsmenge (im Referenzjahr) knapp 25$\,$mm über dem mittleren Wert des Referenzmonats (Januar).
+3. Regressionskoeffizient für Monat ($\beta_2$, `month factor7`) Im Monat `7` (Juli) lag die mittlere Niederschlagsmenge (im Referenzjahr) knapp 25$\,$mm über dem mittleren Wert des Referenzmonats (Januar).
 
 
 Die Regressiongleichung von `lm_year_month` lautet: 
@@ -1128,7 +1131,7 @@ ggplot(wetter_month_1_7) +
       y = precip, 
       color = month_factor,
       group = month_factor) +
-  geom_point2(alpha = .1) +
+  geom_point(alpha = .1, aes(shape = month_factor)) +
   scale_color_okabeito() +
   geom_abline(slope = coef(lm_year_month)[2],
               intercept = coef(lm_year_month)[1], 
@@ -1212,7 +1215,6 @@ ggplot(wetter_month_1_7) +
   theme(legend.position = "none") +
   geom_label_repel(
     data = d,
-
     aes(x = year_c, y = precip, label = label),
     hjust = 1.1,
     nudge_x = 5,  # Nudges labels slightly to the right
@@ -1622,7 +1624,7 @@ Im Test-Sample werden unsere Vorhersagen also grottenschlecht sein,
 wenn wir uns auf die Titel der Auktionen im Test-Sample stützen.
 Merke: Höchst idiografische Informationen wie Namen, 
 Titel etc. sind nicht nützlich,
-um allgemeine Muster zu erkennen und damit exakte Prognosen zu erstellen. $\square$
+um allgemeine Muster zu erkennen und damit exakte Prognosen zu erstellen. 
 
 
 
@@ -1728,7 +1730,7 @@ newdata = mariokart_test))
 ```
 
 
-[👴]{.content-visible when-format="html"}[\emoji{old-man}]{.content-visible when-format="pdf"}️ Okay, was ist jetzt der mittlere Vorhersagefehler?
+[👩‍💼]{.content-visible when-format="html"}[\emoji{old-man}]{.content-visible when-format="pdf"}️ Okay, was ist jetzt der mittlere Vorhersagefehler?
 
 
 
@@ -1763,7 +1765,7 @@ yardstick::rmse(data = mariokart_test,
 ```
 
 
-Ihr mittlerer Vorhersagefehler (RMSE) liegt bei ca. 13 Euro. Übrigens haben wir hier `yardstick::rmse geschrieben und nicht nur `rmse()`, 
+Ihr mittlerer Vorhersagefehler (RMSE) liegt bei ca. 13 Euro. Übrigens haben wir hier `yardstick::rmse` geschrieben und nicht nur `rmse`, 
 da es sowohl im Paket `performance` ( Teil des Metapakets `easystats`) als auch im Paket `yardstick` (Teil des Metapakets `tidymodels`) 
 einen Befehl des Namens `rmse` gibt. Name-Clash-Alarm! 
 R könnte daher den anderen `rmse` meinen als Sie, 
@@ -1801,7 +1803,7 @@ knitr::kable()
 
 Wie das Beispiel zeigt, ist die Modellgüte im Test-Sample (leider) oft *geringer* als im Train-Sample. 
 Die Modellgüte im Train-Sample ist mitunter übermäßig optimistisch.
-Dieses Phänomen bezeichnet man als *Overfitting* [@gelman2021].
+Dieses Phänomen bezeichnet man als *Overfitting* [@gelman_regression_2021].
 Bevor man Vorhersagen eines Modells bei der Chefin einreicht, 
 bietet es sich, die Modellgüte in einem neuen Datensatz, 
 also einem Test-Sample, zu überprüfen. 
@@ -2064,7 +2066,7 @@ Andernfalls lässt man besser die Finger von der Interpretation der Modellkoeffi
 begnügt sich mit der Beschreibung der Modellgüte und mit Vorhersage (synonym: Prognose).
 Wer das nicht glaubt, der betrachte @fig-confounder, links.
 Ein Forscher stellt das Modell `m1: y ~ x` auf und  interpretiert dann `b1`: 
-"Ist ja klar, X hat einen starken positiven Effekt auf Y!".
+"Ist ja klar, X hat einen starken positiven Effekt auf Y!"
 
 In der nächsten Studie nimmt der Forscher dann eine zweite Variable, 
 `group` (z.$\,$B. Geschlecht) in das Modell auf: `m2: y ~ x + g`.
@@ -2076,7 +2078,7 @@ wenn der Effekt "echt", also kausal, ist.
 Handelt es sich aber um "nicht echte", also nicht-kausale Zusammenhänge, 
 um *Scheinzusammenhänge* also.
 So können sich die Modellkoeffizienten dramatisch verändern 
-(sogar das Vorzeichen kann wechseln; das nennt man dann *Simpsons Paradox* [@gelman2021]),
+(sogar das Vorzeichen kann wechseln; das nennt man dann *Simpsons Paradox* [@gelman_regression_2021]),
 wenn man das Modell verändert, also Variablen hinzufügt oder aus dem Modell entfernt.
 
 Wenn man die kausalen Abhängigkeiten nicht kennt,

@@ -11,6 +11,7 @@ library(tidyverse)
 library(gt)
 library(ggfittext)
 library(see)
+library(scales)
 ```
 
 
@@ -249,15 +250,15 @@ Daher ist eine zentrale Idee von statistischen Analysen,
 die *Unterschiedlichkeit der Dinge* zu beschreiben,
 präziser gesagt: die *Variation zu quantifizieren*. 
 Betrachten wir dazu das Beispiel in @fig-groesse.
-Bei den Basketballern gibt es *geringe* Variation in der Körpergröße -- alle sind groß, ähnlich groß.
-Bei den Schachspielern gibt es (im Verhältnis) *hohe* Variation: Einige Personen sind groß, andere klein.
+Im Team der Basketballer gibt es (vergleichsweise) *geringe* Variation in der Körpergröße -- alle sind groß, ähnlich groß.
+Im Team der Schachspieler gibt es(vergleichsweise)*hohe* Variation: Einige Personen sind groß, andere klein.
 
 
 ```{r}
 #| echo: false
 #| label: fig-groesse
-#| fig-cap: "Wenig Variation in der Körpergröße bei den Basketballern 🏀. Alles lange Kerle. Viel Variation bei den Schachspielern ♟: Manche sind klein, ander groß."
-#| dev: "ragg_png"
+#| fig-cap: "Wenig Variation in der Körpergröße bei den Basketballern 🏀. Alles lange Kerle. Viel Variation bei den Schachspielern ♟: Manche sind klein, andere groß. Die vertikalen, vom Mittelwert (MW) abgehenenden Balken zeigen die Abweichungen der jeweiligen Körpergröße zum Mittelwert. Hinweis: Die Y-Achse startet nicht bei Null."
+# dev: "ragg_png"
 #| out-width: "75%"
 
 
@@ -297,27 +298,30 @@ facet_labels <- c(`Basketball` = "Basketball\nHohe Variation",
 
 groesse %>% 
   ggplot(aes(x = id, y = groesse)) +
-  geom_col(width=0.1) +
+  #geom_col(width=.5, alpha = .5) +
   facet_wrap(~team, labeller = as_labeller(facet_labels)) +
   labs(
        y = "Körpergröße",
        x = "Spielernummer") +
-  geom_label(data = distinct(groesse, team, .keep_all = TRUE), 
-            aes(label = label, x = 3, y = 50), 
-            size = labeltextsize-4, 
-            vjust = 0) +
+  # geom_label(data = distinct(groesse, team, .keep_all = TRUE), 
+  #           aes(label = label, x = 3, y = 50), 
+  #           size = labeltextsize-4, 
+  #           vjust = 0) +
   theme(strip.text = element_text(size = 16)) +
   theme_modern()  +
   theme(plot.caption = element_text(size = 16)) +
-  geom_hline(aes(yintercept = groesse_mw), data = groesse_summ) + 
+  geom_hline(aes(yintercept = groesse_mw), data = groesse_summ, color = "grey60") + 
   geom_label(x = 5.5, label = "MW",
             aes(y = groesse_mw),
             hjust = "left",
             size = labeltextsize-4)  +
+  # Abweichungsbalken:
   geom_segment(aes(x = id, xend = id, 
-                   y = groesse, yend = groesse_mw, color = Vorzeichen,
-                   size = 2)) +
-  geom_point(aes(x = id, y = groesse), color = "grey60", alpha = .7, size = 3) +
+                   y = groesse, yend = groesse_mw, 
+                   color = Vorzeichen),
+               linetype = "solid",
+               size = 2) +
+  geom_point(aes(x = id, y = groesse), color = "black", alpha = .8, size = 2) +
   scale_x_continuous(limits = c(0, 7), breaks = 1:5) +
   scale_color_okabeito(palette = "contrast") +
   theme(legend.position = "none")
@@ -410,8 +414,9 @@ ggplot(d1) +
   geom_col() +
   geom_bar_text(size = 28) +
   labs(y = "Wahrscheinlichkeit",
-       title = "") +
-  theme_large_text()
+       title = "",
+       x = "") +
+  theme_large_text() 
 
 ggplot(d1) +
   aes(x = x, y = p2) +
@@ -865,13 +870,13 @@ Einmal ist dazu eine Nicht-Tidy-Tabelle (@tbl-untidy1; Breitformat) und einmal e
 #| echo: false
 #| label: tbl-untidy1
 #| tbl-cap: "Beispiel für eine NICHT-Tidy-Tabelle (Breitformat)"
-d <-
+tidy_untidy <-
   tribble(
     ~Produkt, ~Umsatz_2021, ~Umsatz_2022, ~Umsatz_2023,
     "Hämmer", 10, 11, 12,
     "Nägel", 15, 10, 5
   )
-kable(d)
+kable(tidy_untidy)
 ```
 
 
@@ -880,13 +885,13 @@ kable(d)
 #| label: tbl-tidy1
 #| tbl-cap: "Beispiel für eine Tidy-Tabelle (Langformat)"
 #| out-width: "100%"
-d_long <-
-  d |> 
+tidy_untidy_long <-
+  tidy_untidy |> 
   pivot_longer(cols = c(Umsatz_2021, Umsatz_2022, Umsatz_2023), names_to = "Jahr2", values_to = "Umsatz") |> 
   separate(Jahr2, into = c("k", "Jahr")) |> 
   dplyr::select(-k)
 
-kable(d_long)
+kable(tidy_untidy)
 ```
 
 
@@ -910,12 +915,12 @@ Suchen Sie ein Beispiel für eine Konfiguration einer Tabelle im Lang- vs. Breit
 #| out-width: "75%"
 #| fig-cap: "Beispiel für eine Visualisierung auf Basis einer Tidy-Tabelle,  vgl. @tbl-tidy1"
 
-last_points <- d_long %>%
+last_points <- tidy_untidy_long %>%
   group_by(Produkt) %>%
   filter(Jahr == max(Jahr)) %>%
   ungroup()
 
-d_long |> 
+tidy_untidy_long |> 
   ggplot(aes(x = Jahr, y = Umsatz, color = Produkt, 
              group = Produkt, shape = Produkt)) +
   geom_point(size = 3) +
@@ -925,9 +930,7 @@ d_long |>
             hjust = -0.2, vjust = 0.5, size = 4, show.legend = FALSE) +
   theme(legend.position = "none") +
   scale_y_continuous(limits = c(0,15)) +
-  scale_color_okabeito(palette = "black_first")
-  scale_color_manual(values = c(yellow, blue)) 
-
+  scale_color_okabeito(palette = "black_first") 
 ```
 
 
@@ -1101,7 +1104,7 @@ Die zweite Position ist nach dem Pfeil (Y).
 %%| fig-height: 0.5
 
 graph LR
-    X["Lernen<br>(UV, X)"] --> Y["gute Note<br>(AV, Y)"]
+    X["Lernen<br>(UV, X, Prädiktor)"] --> Y["gute Note<br>(AV, Y, Kriterium)"]
 ```
 
 
@@ -1353,27 +1356,75 @@ ist das das Bilden von Verhältnissen --
 Multiplizieren (und damit auch Dividieren), s. @fig-verhaeltnis.
 
 ```{r p-verhaeltnis}
-#| dev: "ragg_png"
 #| echo: false
-#| fig-asp: 0.5
 #| label: fig-verhaeltnis
 #| fig-cap: "Puh! Der rote Flitzer ist 10 Mal so teuer wie die blaue Möhre. Kohlen zusammenkratzen."
-tibble(Preis = c(1e4, 1e5),
-       id = c(1, 2),
-       Auto = c("🚙", "🏎️"  )) %>% 
-  ggplot(aes(y = Preis, x = id)) +
+#| layout-ncol: 2
+#| fig-subcap: 
+#|   - "🚙"
+#|   - "🏎"
+
+# Ursprüngliche Daten
+df <- tibble(
+  Preis = c(1e4, 1e5),
+  id = c(1, 2),
+  Auto = c("Möhre", "Flitzer"),
+  Auto_img = c("🚙", "🏎️")
+)
+
+# Einzelne Diagramme
+# Diagramm 1
+df1 <- df %>% filter(id == 1)
+p1 <- ggplot(df1, aes(y = Preis, x = factor(id))) +
   geom_col() +
   scale_x_discrete() +
-  #geom_bar() +
-  # geom_bar_text()+
-  #geom_label(aes(x = id, y = Preis, label = Preis)) +
-  scale_y_continuous(labels = scales::dollar_format(),
-                     limits = c(-5000, 110000),
-                     breaks = c(10000, 50000, 100000),
-                     expand = c(0.1, 0.1)) +
-  geom_label(aes(x = id, label = Auto), y = -1e3,
-                          size = 10,
-             nudge_y = -10000)
+  scale_y_continuous(
+    labels = dollar_format(),
+    limits = c(-5000, 110000),
+    breaks = c(10000, 50000, 100000),
+    expand = c(0.1, 0.1)
+  ) +
+  # geom_label(aes(x = factor(id), label = Auto), y = -1e3, size = 10, nudge_y = -10000) +
+  labs(x = "",
+       title = "Möhre")
+
+# Diagramm 2
+df2 <- df %>% filter(id == 2)
+p2 <- ggplot(df2, aes(y = Preis, x = factor(id))) +
+  geom_col() +
+  scale_x_discrete() +
+  scale_y_continuous(
+    labels = dollar_format(),
+    limits = c(-5000, 110000),
+    breaks = c(10000, 50000, 100000),
+    expand = c(0.1, 0.1)
+  ) +
+  # geom_label(aes(x = factor(id), label = Auto), y = -1e3, size = 10, nudge_y = -10000) +
+    labs(x = "",
+       title = "Flitzer")
+
+# Anzeigen
+p1
+p2
+
+
+
+# tibble(Preis = c(1e4, 1e5),
+#        id = c(1, 2),
+#        Auto = c("🚙", "🏎️"  )) %>% 
+#   ggplot(aes(y = Preis, x = id)) +
+#   geom_col() +
+#   scale_x_discrete() +
+#   #geom_bar() +
+#   # geom_bar_text()+
+#   #geom_label(aes(x = id, y = Preis, label = Preis)) +
+#   scale_y_continuous(labels = scales::dollar_format(),
+#                      limits = c(-5000, 110000),
+#                      breaks = c(10000, 50000, 100000),
+#                      expand = c(0.1, 0.1)) +
+#   geom_label(aes(x = id, label = Auto), y = -1e3,
+#                           size = 10,
+#              nudge_y = -10000)
 ```
 
 

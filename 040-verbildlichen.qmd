@@ -1067,6 +1067,7 @@ Beispiele für nicht-lineare Zusammenhänge sind in @fig-nonlinear zu sehen.
 #| fig-cap: "Beispiele nichtlinearer Zusammenhänge"
 #| echo: false
 #| fig-width: 7
+#| out-width: "75%"
 
 data <- read.csv("data/nonlinear_datasets.csv")
 
@@ -1105,8 +1106,8 @@ Cohen [-@cohen_power_1992] hat folgende Faustregeln angegeben:
 #| echo: false
 #| label: fig-cors
 #| fig-cap: "Lineare Zusammenhänge verschiedener Stärke und Richtung"
-#| out-width: "50%"
-#| fig-asp: 0.5
+#| out-width: "75%"
+# fig-asp: 0.5
 source("funs/plot-different-cors.R")
 fig_cors <- plot_different_cors(plot_it = FALSE, alpha = .7)
 fig_cors +
@@ -1443,15 +1444,18 @@ Das kann man mit dem Befehl `factor(wheels)` erreichen (verpackt in `mutate`), s
 
 ```{r}
 #| eval: false
+#| echo: true
 mariokart_no_extreme |> 
-  ggplot(aes(x = total_pr, y = wheels)) +
-  geom_boxplot()
+  select(total_pr, wheels) %>% 
+  # Probieren Sie den Code mit bzw. ohne folgender Zeile:
+  mutate(wheels = factor(wheels)) |>  # wheels als nominale Variable
+  plot_boxplot(by = "wheels")  # Boxplot mit "wheels" auf der Y-Achse
 ```
 
 
 ```{r}
 #| label: fig-box-wheels1
-#| echo: true
+#| echo: false
 #| fig-cap: "Abschlusspreis nach Anzahl von beigelegten Lenkrädern"
 #| fig-subcap: 
 #|   - "`wheels` als metrische Variable"
@@ -1459,14 +1463,12 @@ mariokart_no_extreme |>
 #| layout-ncol: 2
 mariokart_no_extreme %>%  # `wheels as metrische Variable`: 
   select(total_pr, wheels) %>% 
-  plot_boxplot(by = "wheels") +
-  theme_large_text()
+  plot_boxplot(by = "wheels") 
 
 mariokart_no_extreme %>%  # `wheels as nominale Variable`: 
   select(total_pr, wheels) %>% 
   mutate(wheels = factor(wheels)) %>% 
-  plot_boxplot(by = "wheels") +
-  theme_large_text()
+  plot_boxplot(by = "wheels")
 ```
 
 Sie schließen aus dem Bild, dass Lenkräder und Preis (positiv) zusammenhängen.
@@ -1563,12 +1565,12 @@ So könnte auch eine Drittvariable im Hintergrund die gleichzeitige Ursache von 
 ```{r}
 #| echo: false
 #| label: fig-lie1
-#| fig-cap: "Strecken und Stauchen der Y-Achse, um mit Statistik zu lügen"
+#| fig-cap: "Strecken und Stauchen der Achse(n), um mit Statistik zu lügen"
 #| out-width: "100%"
 #| fig-subcap: 
 #|   - "Oh nein, dramatischer Einbruch des Umsatzes!"
 #|   - "Kaum der Rede wert, ist nur ein bisschen Schwankung!"
-#| layout: [[45,-20, 45], [100]]
+#| layout: [[45,-10, 45], [100]]
 #| 
 d <- tibble(
   Jahr = c(1, 2, 3, 4, 5),

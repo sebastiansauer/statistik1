@@ -96,6 +96,8 @@ if (knitr:::is_latex_output()) {
   
   # add font for plots in PDF output:
   
+  showtext::showtext_auto(TRUE)  # use "showtext" automatically
+  
   sysfonts::font_add("Lato Regular", regular = "/Users/sebastiansaueruser/Library/Fonts/Lato-Regular.ttf")
   
   sysfonts::font_add("Lato", regular = "/Users/sebastiansaueruser/Library/Fonts/Lato-Regular.ttf")
@@ -104,7 +106,7 @@ if (knitr:::is_latex_output()) {
   
   sysfonts::font_add("Roboto Regular", regular = "/Users/sebastiansaueruser/Library/Fonts/Roboto-Regular.ttf")
   
-  showtext::showtext_auto(TRUE)  # use "showtext" automatically
+
   
   ggplot2::theme_set(ggplot2::theme_minimal(base_family = "Lato Regular"))
   

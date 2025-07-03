@@ -15,8 +15,8 @@ base_family <- "Lato Regular"
 
 
 # Define a custom ggplot theme with larger text
-theme_large_text <- function(base_size = 18, base_family = "Lato Regular") {
-  theme_minimal(base_size = base_size, base_family = base_family) +
+theme_large_text <- function(base_size = 18) {
+  theme_minimal(base_size = base_size) +
     theme(
       text = element_text(size = base_size + 4),          # Base text size
       axis.title = element_text(size = base_size + 6),    # Axis title text size
@@ -108,6 +108,6 @@ if (knitr:::is_latex_output()) {
   
 
   
-  ggplot2::theme_set(ggplot2::theme_minimal(base_family = "Lato Regular"))
+  ggplot2::theme_set(ggplot2::theme_minimal())
   
   }

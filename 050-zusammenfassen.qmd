@@ -18,7 +18,7 @@ source("_common.R")
 library(gt)
 library(mosaic)
 #library(gganimate)
-
+library(patchwork)
 library(tidyverse)
 #ggplot2::theme_update(axis.title = ggplot2::element_text(size = 66))
 ```
@@ -1173,6 +1173,103 @@ mosaic::xqnorm( p = seq(0,1, by = .01), return = "plot") +
   theme_minimal() +
   guides(fill = "none") +
   scale_y_continuous(breaks = NULL, name = "")
+```
+
+
+
+
+
+### Beispiel: Quantile der IQ-Verteilung
+
+Zur Erinnerung: Die Verteilung des IQ wird gewöhnlich als normalverteilt mit Mittelwert gleich 100 und Streuung gleich 15 angenommen.
+
+
+Betrachten wir einige häufig verwendete Quantile für die IQ-Verteilung, s. @fig-nv-quants2.
+
+```{r}
+#| echo: false
+q_p50 <-
+  ggplot(NULL, aes(c(60,145))) +
+  geom_area(stat = "function", fun = dnorm, fill = "grey", args = list(mean=100,sd = 15), xlim= c(60, 100)) +
+  geom_line(stat = "function", fun = dnorm, args = list(mean=100,sd = 15)) +
+  labs(x = "IQ", y = "Dichte",
+       title = "50%-Quantil: 100") +
+  scale_y_continuous(breaks = NULL)
+
+q_inv <- .25
+q_p <- qnorm(q_inv, mean = 100, sd= 15)
+p_q <- pnorm(q_p, mean = 100, sd= 15)
+
+q_p25 <-
+  ggplot(NULL, aes(c(60,145))) +
+  geom_area(stat = "function", fun = dnorm, fill = "grey", args = list(mean=100,sd = 15), xlim= c(60, q_p)) +
+  geom_line(stat = "function", fun = dnorm, args = list(mean=100,sd = 15)) +
+  labs(x = "IQ", y = "Dichte",
+       title = paste0(q_inv,"-Quantil: ",round(q_p)),
+       caption = "MW-0.68sd") +
+  scale_y_continuous(breaks = NULL)
+
+q_inv <- .95
+q_p <- qnorm(q_inv, mean = 100, sd = 15)
+
+q_p95 <-
+  ggplot(NULL, aes(c(60,145))) +
+  geom_area(stat = "function", fun = dnorm, fill = "grey", args = list(mean=100,sd = 15), xlim= c(60, q_p)) +
+  geom_line(stat = "function", fun = dnorm, args = list(mean=100,sd = 15)) +
+  labs(x = "IQ", y = "Dichte",
+       title = paste0(q_inv,"-Quantil: ",round(q_p)),
+       caption = "MW+1.64sd") +
+  scale_y_continuous(breaks = NULL)
+
+q_inv <- .975
+q_p <- qnorm(q_inv, mean = 100, sd= 15)
+#pnorm(115, mean= 100, sd = 15)
+
+q_p975 <-
+  ggplot(NULL, aes(c(60,145))) +
+  geom_area(stat = "function", fun = dnorm, fill = "grey", args = list(mean=100,sd = 15), xlim= c(60, q_p)) +
+  geom_line(stat = "function", fun = dnorm, args = list(mean=100,sd = 15)) +
+  labs(x = "IQ", y = "Dichte",
+       title = paste0(q_inv,"-Quantil: ",round(q_p)),
+       caption = "MW+2SD") +
+  scale_y_continuous(breaks = NULL)
+
+q_inv <- .84
+q_p <- qnorm(q_inv, mean = 100, sd= 15)
+#pnorm(115, mean= 100, sd = 15)
+
+q_p84 <-
+  ggplot(NULL, aes(c(60,145))) +
+  geom_area(stat = "function", fun = dnorm, fill = "grey", args = list(mean=100,sd = 15), xlim= c(60, q_p)) +
+  geom_line(stat = "function", fun = dnorm, args = list(mean=100,sd = 15)) +
+  labs(x = "IQ", y = "Dichte",
+       title = paste0(q_inv,"-Quantil: ",round(q_p)),
+       caption = "MW+1sd") +
+  scale_y_continuous(breaks = NULL)
+
+q_inv <- .69
+q_p <- qnorm(q_inv, mean = 100, sd= 15)  # halbe SD
+#pnorm(107.5, mean= 100, sd = 15)
+
+q_p69 <-
+  ggplot(NULL, aes(c(60,145))) +
+  geom_area(stat = "function", fun = dnorm, fill = "grey", args = list(mean=100,sd = 15), xlim= c(60, q_p)) +
+  geom_line(stat = "function", fun = dnorm, args = list(mean=100,sd = 15)) +
+  labs(x = "IQ", y = "Dichte",
+       title = paste0(q_inv,"-Quantil: ",round(q_p)),
+       caption = "MW+0.5sd") +
+  scale_y_continuous(breaks = NULL)
+```
+
+
+
+```{r fig-nv-quants2}
+#| echo: false
+#| label: fig-nv-quants2
+#| fig-width: 10
+#| fig-cap: Verschiedene Quantile der Normalverteilung
+
+(q_p50 + q_p25 + q_p69) / (q_p95 + q_p975 + q_p84)
 ```
 
 

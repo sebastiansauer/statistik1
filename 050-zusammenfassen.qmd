@@ -962,6 +962,7 @@ e) 300 Tsd Euro$\square$
 
 ## Quantile
 
+### Quantile als Verallgemeinerung des Medians
 
 Der Median teilt eine Verteilung in eine untere und ein obere Hälfte.
 Er markiert sozusagen eine "50-Prozent-Marke" (der aufsteigend sortierten Werte).
@@ -984,6 +985,8 @@ Oder vielleicht in 1$\,$%-Schritten oder in sonstigen Schritten?
 Wo die Quartile in 25$\,$%-Schritten aufteilen, teilt ein *Quantil* in $p$-Prozent-Schritten auf.
 [S. @fig-quantile-anim dazu.]{.content-visible when-format="html" unless-format="epub"}
 
+
+### Quartile, Dezile und Perzentile
 
 :::{#def-quartile}
 
@@ -1176,6 +1179,34 @@ mosaic::xqnorm( p = seq(0,1, by = .01), return = "plot") +
 ```
 
 
+### Quantile als sortierte Ordnung
+
+
+Den R-Befehl `quantile()` kann man sich einfach nachbauen und damit das Konzept der Quantile besser verstehen.
+Angenommen, wir wollen wissen, welcher Verkaufspreis mit 90% Wahrscheinlichkeit nicht überschritten wird.
+Das können wir im Datensatz `mariokart` wie folgt erreichen:
+
+1. Sortiere die Werte aufsteigend.
+2. Schneide die oberen 10% ab (entfernesie).
+3. Schaue, was der größte verbleibende Wert ist.
+
+```{r}
+mariokart %>% 
+  arrange(total_pr) %>%   # sortiere aufsteigend
+  slice_head(n = 130) %>%  # nur die ersten ca. 90%
+  summarise(p90 = max(total_pr))  # was ist der größte verbleibende Wert?
+```
+
+
+Das (annähernd) gleiche Ergebnis liefert `quantile()`:
+
+```{r}
+mariokart %>% 
+  summarise(q90 = quantile(total_pr, .9))
+```
+
+
+
 
 
 
@@ -1276,6 +1307,100 @@ q_p69 <-
 
 
 
+
+
+
+### Beispiel: Wie groß sind Studierende?
+
+Untersuchen wir die Verteilung der Körpergröße von Studierenden auf Basis eines Datensatzes von @openintro.
+
+Das Quantil von z.B. 25% zeigt die Körpergröße der 25% kleinsten Studentis an, analog für 50%, 75%, in Inches bzw. in Zentimetern^[1 Inch entspricht 2.54cm].
+
+```{r QM2-Thema3-Teil1-5}
+#| message: false
+#| echo: true
+
+data("speed_gender_height", package = "openintro")  # <1>
+
+height_summary <- 
+  speed_gender_height %>% 
+  mutate(height_cm = height*2.54) %>%  # <2>
+  select(height_inch = height, height_cm) %>% 
+  drop_na() %>%   # <3>
+  pivot_longer(everything(), names_to = "Einheit", values_to = "Messwert") %>%   # <4>
+  group_by(Einheit) %>%   # <5>
+  summarise(q25 = quantile(Messwert, prob = .25),  # <6>
+            q50 = quantile(Messwert, prob = .5),
+            q75 = quantile(Messwert, prob = .75))
+
+height_summary
+```
+1. Daten importieren
+2. Inch in Zentimeter umrechnen
+3. Zeilen mit fehlenden Werten löschen
+4. In die Langform pivotieren
+5. Gruppieren nach Einheit (Inch, Zentimeter)
+6. Quantile berechnen  (Q1, Q2, Q3)
+
+
+Das 25%-Quantil nennt man auch 1. Quartil; das 50%-Quantil (Median) auch 2. Quartil und das 75%-Quantil auch 3. Quartil.
+
+
+@fig-stud-height visualisiert die Quantile und die Häufigkeitsverteilung.
+
+```{r QM2-Thema3-Teil1-6}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-cap: Größenverteilung von 1325 amerikanischen Studentis
+#| label: fig-stud-height
+#| fig-width: 10
+
+speed_gender_height <-
+  speed_gender_height |> 
+   mutate(height_cm = height*2.54)
+
+p1 <- speed_gender_height %>% 
+  ggplot() +
+  aes(x = 1, y = height_cm) +
+  geom_boxplot() +
+  labs(x = "",
+       y = "Größe in cm",
+       title = "Die Box zeigt das 25%-, 50%- und 75%-Quantil") +
+  theme_minimal()
+
+height_summary_long <- 
+  speed_gender_height %>% 
+  select(height_cm) %>% 
+  drop_na() %>% 
+  summarise(q25 = quantile(height_cm, prob = .25),
+            q50 = quantile(height_cm, prob = .5),
+            q75 = quantile(height_cm, prob = .75)) %>% 
+  pivot_longer(everything(),
+               names_to = "q",
+               values_to = "height_cm") 
+
+p2 <- 
+  speed_gender_height %>% 
+  ggplot() +
+  aes(x = height_cm) +
+  geom_histogram() +
+  geom_vline(data = height_summary_long,
+             aes(xintercept = height_cm)) +
+  geom_text(data = height_summary_long,
+             aes(x = height_cm+1,
+                 y = 0,
+                 label = paste0(q, ": ", height_cm)),
+             angle = 90,
+            hjust = 0,
+            color = "white"
+             ) +
+  labs(title = "Die vertikalen Striche zeigen die Quantile",
+       y = "Häufigkeit")  +
+  theme_minimal()
+
+plots(p1, p2)
+```
 
 
 

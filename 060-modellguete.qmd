@@ -10,6 +10,7 @@ library(ggpubr)
 library(tidyverse)
 library(easystats)
 library(DataExplorer)
+library(gt)
 ```
 
 
@@ -1077,6 +1078,22 @@ rmse(lm_mario_ohne_x_var)  # Root mean squared error
 
 ## Die *z*-Transformation
 
+
+
+Wenn man mit einem bestimmten Datensatz arbeitet, ist es häufig schwer zu sagen,
+welche Ausprägungen "groß" sind und welche "klein".
+Um einzuschätzen zu können, welche Ausprägungen wie groß sind,
+sollte man die Quantile kennen.
+Dann kann man Aussagen machen wie "Ah, die Ausprägung *X* ist groß, weil 90 Prozent aller Leute einen kleineren Wert aufweisen".
+Die *z*-Transformation hilft hier,
+dass sie die Werte in bekannte und verständliche Bereiche transformiert.
+So wird der Mittelwert auf Null transformiert und die Streuung (sd) auf 1.
+Bei normalverteilten Variablen weiß man dann direkt,
+dass der Mittelwert, Modus und Median bei Null sind, und ca. 98 Prozent der Werte kleiner als 2,
+s. @def-nv.
+Die *z*-Transformation besteht aus zwei Schritten: Zentrieren und (Streuung) standardisieren.
+
+
 Sie arbeiten immer noch als Datenknecht, Moment, *Datenhecht* bei dem Online-Auktionshaus.
 Heute untersuchen Sie, wie gut sich die Verkaufspreise mit einer einzigen Zahl, dem mittleren Verkaufspreis, beschreiben lassen.
 Einige widerspenstige Werte haben Sie dabei einfach des Datensatzes verwiesen.
@@ -1099,11 +1116,58 @@ mariokart_no_extreme <-
 ```
 
 
-@fig-mariokart_no_extreme (links) zeigt, dass es einige Streuung um den Mittelwert herum gibt. @fig-mariokart_no_extreme (rechts) zeigt die (um den Mittelwert) *zentrierten* Daten.
+### Zentrieren
+
+
+
+@fig-mariokart_no_extreme (rechts) zeigt die Verteilung; 
+man sieht dass es einige Streuung um den Mittelwert ($\bar{X}= 47$) herum gibt. @fig-mariokart_no_extreme (links) zeigt die (um den Mittelwert) *zentrierten* Daten:
+Dort wurde von allen Werten der Mittelwert abgezogen.
+
+
+
+```{r Post-Regression-9, fig.asp=0.4}
+#| echo: false
+#| label: fig-mariokart_no_extreme
+#| fig-cap: "Verteilung von `mariokart_no_extreme`; das Zentrieren ändert die Verteilung nicht, sondern 'schiebt die Verteilung nur zur Seite'. Zentrierte Werte zeigen, wie weit die unzentrierten Werte von ihrem Mittelwert entfernt sind. Zentrieren erreicht man, indem von allen Werten den Mittelwert abzieht."
+
+mariokart_no_extreme_zentriert <- 
+  mariokart_no_extreme |> 
+  mutate(total_pr_zentriert = total_pr - mean(total_pr, na.rm = TRUE))
+
+total_pr_mean <- mean(mariokart_no_extreme_zentriert$total_pr, na.rm = TRUE)
+total_pr_zentriert_mean <- mean(mariokart_no_extreme_zentriert$total_pr_zentriert, na.rm = TRUE)
+
+
+
+mariokart_no_extreme_zentriert %>% 
+  select(total_pr, total_pr_zentriert) %>% 
+  ggplot() +
+  geom_density(aes(x = total_pr), fill = "grey40") +
+  geom_density(aes(x = total_pr_zentriert), fill = "black") +
+  # geom_histogram(aes(x = total_pr), fill = "grey40", bins = 15) +
+  # geom_histogram(aes(x = total_pr_zentriert), fill = "black", bins = 15) +
+  theme_minimal() +
+  geom_segment(x = total_pr_mean, 
+               xend = 0, 
+               y = 0, yend = 0, 
+               arrow = arrow(length = unit(0.2, "cm"), type = "closed"),
+               color = okabeito_colors()[1], size = 2) +
+  geom_vline(xintercept = total_pr_mean, color = okabeito_colors()[1], 
+             linetype = "dashed") +
+  geom_vline(xintercept = 0, color = okabeito_colors()[1],
+             linetype = "dashed") +
+  annotate("label", x = 0, y = Inf, label = "Preis zentriert", vjust = 1) +
+  annotate("label", x = total_pr_mean, y = Inf, label = "Preis unzentriert", vjust = 1)  +
+  labs(caption = "Die vertikalen gepunkteten Linien zeigen die Mittelwerte der Verteilungen.") +
+  scale_x_continuous(limits = c(-50, 100))
+```
+
+
+
 
 ```{r}
-#| label: fig-mariokart_no_extreme
-#| fig-cap: Verteilung von `mariokart_no_extreme`
+#| eval: false
 #| layout: [[45, -10, 45], [100]]
 #| echo: false
 #| fig-subcap:
@@ -1130,10 +1194,11 @@ gghistogram(mariokart_no_extreme, x = "abw",
 
 
 
-Tja, das ist doch etwas Streuung um den Mittelwert herum.
+Man sieht, dass es eine gewisse Streuung um den Mittelwert herum gibt. Aber ist das viel oder wenig Streuung?
 
 :::callout-important
-Je weniger Streuung um den Mittelwert (ca. 47 Euro) herum, desto besser eignet sich der Mittelwert als Modell für die Daten und desto höher ist die Modellgüte. 
+Je weniger Streuung um den Mittelwert herum, 
+desto besser eignet sich der Mittelwert als Modell für die Daten und desto höher ist die Modellgüte. 
 :::
 
 Ja, es ist *etwas* Streuung, aber wie viel? Kann man das genau angeben?
@@ -1141,25 +1206,42 @@ Sie überlegen … und überlegen. Da! Eine Idee!
 
 Man könnte vielleicht angeben, wie viel Euro jedes Spiel vom Mittelwert entfernt ist.
 Je größer diese Abweichung, desto schlechter die Modellgüte!
-Also rechnen Sie diese Abweichung aus, @lst-zentrieren.
+Also rechnen Sie diese Abweichung aus, @lst-zentrieren und @tbl-zentriert.
 
 ```{r}
 #| lst-label: lst-zentrieren
 #| lst-cap: Zentrieren einer Variablen
-mariokart_no_extreme <-
+mariokart_no_extreme_zentriert <-
   mariokart_no_extreme %>% 
-  mutate(abw = 47.4 - total_pr) # zentriert = messwert - mittelwert
+  mutate(
+    total_pr_zentriert = total_pr - 47.7)  
 ```
+
+
+```{r}
+#| label: tbl-zentriert
+#| tbl-cap: "Die ersten paar Zeilen von `total_pr` zentriert: `zentriert = total_pr - MW`"
+#| echo: false
+mariokart_no_extreme_zentriert |> 
+  mutate(MW = mean(total_pr, na.rm = TRUE),
+         id = 1:n()) |> 
+  select(id, total_pr, MW, total_pr_zentriert) |> 
+  head() |> 
+  gt()
+```
+
 
 Anders gesagt: Wir haben die Verkaufspreise *zentriert.*
 
 :::{#def-zentrieren}
 ### Zentrieren
-Zentrieren bedeutet, von jedem Wert einer Verteilung $X$ den Mittelwert zu subtrahieren.
+Zentrieren bedeutet, von jedem Wert einer Verteilung $X$ den Mittelwert zu subtrahieren:
+$X_c = X - \bar{X}$.
 Daher ist der neue Mittelwert (der zentrierten Verteilung) gleich Null. $\square$
 :::
 
 
+### Streuung standardisieren
 
 
 Aber irgendwie sind Sie noch nicht am Ziel Ihrer Überlegungen:
@@ -1220,15 +1302,18 @@ plots(p1, p_ad, p2, n_rows = 3)
 ```
 
 
-Wir fassen die Schritte unserer Umrechnung ("Transformation") zusammen wie in einem Kochrezept:
+### *z*-Werte
 
-1. Nimm die Verteilung der Verkaufspreise
-2. Berechne die Abweichungen vom mittleren Verkaufspreis (Differenz Mittelwert und jeweiliger Verkaufspreis)
-4. Teile die Abweichungen (aus Schritt 2) durch die SD
+Wir fassen die zwei Schritte unserer Umrechnung ("Transformation") zusammen wie in einem Kochrezept:
+
+1. Berechne die Abweichungen vom mittleren Verkaufspreis (Differenz Mittelwert und jeweiliger Verkaufspreis)
+2. Teile die Abweichungen (aus Schritt 2) durch die SD
+
+Fertig sind die *z*-Werte!
 
 
 Diese Art von Transformation bezeichnet man als
-z*-Transformation* und die resultierenden Werte als z*-Werte*.
+*z-Transformation* und die resultierenden Werte als *z-Werte*.
 
 :::{#def-z-werte}
 ### z-Werte
@@ -1242,14 +1327,27 @@ einzelner Beobachtungen vom Mittelwert anzeigen.
 Nach einer *Faustregel* spricht man von extremen Abweichungen
 (Extremwerten, Ausreißern), wenn $z_i \ge 2.5$ [@shimizu2022].
 
+
+Zentrieren bzw. z-tranformieren kann man sich mithilfe des R-Pakets `easystats` verrichten lassen:
+
+```{r}
+mariokart_no_extreme_z_transformiert <-
+  mariokart_no_extreme |> 
+  mutate(total_pr_zentriert = as.numeric(center(total_pr)),
+         total_pr_z_transformiert = as.numeric(standardise(total_pr)))
+```
+
+
+
 :::{#def-snv}
 ### Standardnormalverteilung
 
-Eine *Standard*normalverteilung ist eine Normalverteilung mit Mittelwert gleich 0 und  Standardabweichung gelich 1.
+Eine *Standard*normalverteilung ist eine Normalverteilung mit Mittelwert von 0 und
+ einer Standardabweichung von 1.
 Man schreibt kurz: $X \sim \mathcal{N}(0, 1)\quad \square$.
 :::
 
-Man kann jeder Normalverteilung in eine Standardnormalverteilung überführen mit der *z-Transformation*.
+Man kann jede Normalverteilung in eine Standardnormalverteilung überführen mit der *z-Transformation*.
 
 
 ## Aufgaben

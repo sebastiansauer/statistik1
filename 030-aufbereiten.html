@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
 <meta name="keywords" content="Statistik, Prognose, Modellierung, R, Datenanalyse, Regression">
 <meta name="description" content="Einführung in die Statistik mit einem Schwerpunkt auf Prognose-Modellierung">
+
 <title>4&nbsp; Daten umformen – Statistik1</title>
 <style>
 code{white-space: pre-wrap;}
@@ -76,6 +79,7 @@ div.csl-indent {
   margin-left: 2em;
 }</style>
 
+
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
@@ -88,20 +92,25 @@ div.csl-indent {
 <link href="./img/statistik1_icon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-4d9afe2b8d18ee9fa5d0d57b5ed4214d.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-8e2bfcb8bc6552a7f7d2e060577a719b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-07788d60b690ac42ea903764c198f837.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-8e2bfcb8bc6552a7f7d2e060577a719b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-cfa408634a1d24e6e0b787a3a7260859.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-1724a6097eea06b88b87879f5d7ee85f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-cfa408634a1d24e6e0b787a3a7260859.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
-<link href="site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -127,11 +136,20 @@ div.csl-indent {
     "search-submit-button-title": "Abschicken",
     "search-label": "Suchen"
   }
-}</script><script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script><link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+}</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 <meta name="mermaid-theme" content="default">
-<script src="site_libs/quarto-diagram/mermaid.min.js"></script><script src="site_libs/quarto-diagram/mermaid-init.js"></script><link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -142,7 +160,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -156,8 +174,11 @@ const typesetMath = (el) => {
 window.Quarto = {
   typesetMath
 };
-</script><link rel="stylesheet" href="webex.css">
+</script>
+
+<link rel="stylesheet" href="webex.css">
 </head>
+
 <body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
@@ -323,7 +344,9 @@ window.Quarto = {
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
@@ -334,11 +357,17 @@ window.Quarto = {
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./img/statistik1_icon.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none"></a>
+      <img src="./img/statistik1_icon.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./img/statistik1_icon.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Statistik1</a> 
         <div class="sidebar-tools-main tools-wide">
@@ -359,7 +388,7 @@ window.Quarto = {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Vorwort</span></a>
@@ -379,8 +408,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-rahmen.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rahmen</span></span></a>
@@ -399,7 +428,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
@@ -408,8 +437,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./040-verbildlichen.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Daten verbildlichen</span></span></a>
@@ -434,7 +463,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
@@ -443,8 +472,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./080-regression1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></span></a>
@@ -463,7 +492,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
@@ -472,8 +501,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./110-definitions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Definitionen</span></span></a>
@@ -487,8 +516,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./125-quiz.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Quiz</span></span></a>
+  <a href="./125-probeklausur.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Probeklausur</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -498,74 +527,70 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Inhaltsverzeichnis</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Inhaltsverzeichnis</h2>
    
   <ul>
-<li>
-<a href="#einstieg" id="toc-einstieg" class="nav-link active" data-scroll-target="#einstieg"><span class="header-section-number">4.1</span> Einstieg</a>
+  <li><a href="#einstieg" id="toc-einstieg" class="nav-link active" data-scroll-target="#einstieg"><span class="header-section-number">4.1</span> Einstieg</a>
   <ul class="collapse">
-<li><a href="#lernziele" id="toc-lernziele" class="nav-link" data-scroll-target="#lernziele"><span class="header-section-number">4.1.1</span> Lernziele</a></li>
+  <li><a href="#lernziele" id="toc-lernziele" class="nav-link" data-scroll-target="#lernziele"><span class="header-section-number">4.1.1</span> Lernziele</a></li>
   <li><a href="#r-code-zum-copy-pasten" id="toc-r-code-zum-copy-pasten" class="nav-link" data-scroll-target="#r-code-zum-copy-pasten"><span class="header-section-number">4.1.2</span> R-Code zum Copy-Pasten</a></li>
   <li><a href="#frag-den-bot" id="toc-frag-den-bot" class="nav-link" data-scroll-target="#frag-den-bot"><span class="header-section-number">4.1.3</span> Frag den Bot</a></li>
   <li><a href="#quiz-zum-einstieg" id="toc-quiz-zum-einstieg" class="nav-link" data-scroll-target="#quiz-zum-einstieg"><span class="header-section-number">4.1.4</span> Quiz zum Einstieg</a></li>
   <li><a href="#praxisbezug-aus-dem-alltag-des-datenwissenschaftlers" id="toc-praxisbezug-aus-dem-alltag-des-datenwissenschaftlers" class="nav-link" data-scroll-target="#praxisbezug-aus-dem-alltag-des-datenwissenschaftlers"><span class="header-section-number">4.1.5</span> Praxisbezug: Aus dem Alltag des Datenwissenschaftlers</a></li>
   <li><a href="#machs-einfach" id="toc-machs-einfach" class="nav-link" data-scroll-target="#machs-einfach"><span class="header-section-number">4.1.6</span> Mach’s einfach</a></li>
-  </ul>
-</li>
-  <li>
-<a href="#die-verben-des-datenjudos" id="toc-die-verben-des-datenjudos" class="nav-link" data-scroll-target="#die-verben-des-datenjudos"><span class="header-section-number">4.2</span> Die Verben des Datenjudos</a>
+  </ul></li>
+  <li><a href="#die-verben-des-datenjudos" id="toc-die-verben-des-datenjudos" class="nav-link" data-scroll-target="#die-verben-des-datenjudos"><span class="header-section-number">4.2</span> Die Verben des Datenjudos</a>
   <ul class="collapse">
-<li><a href="#tabelle-sortieren-arrange" id="toc-tabelle-sortieren-arrange" class="nav-link" data-scroll-target="#tabelle-sortieren-arrange"><span class="header-section-number">4.2.1</span> Tabelle sortieren: <code>arrange</code></a></li>
+  <li><a href="#tabelle-sortieren-arrange" id="toc-tabelle-sortieren-arrange" class="nav-link" data-scroll-target="#tabelle-sortieren-arrange"><span class="header-section-number">4.2.1</span> Tabelle sortieren: <code>arrange</code></a></li>
   <li><a href="#zeilen-filtern-filter" id="toc-zeilen-filtern-filter" class="nav-link" data-scroll-target="#zeilen-filtern-filter"><span class="header-section-number">4.2.2</span> Zeilen filtern: <code>filter</code></a></li>
-  <li><a href="#spalten-ausw%C3%A4hlen-mit-select" id="toc-spalten-auswählen-mit-select" class="nav-link" data-scroll-target="#spalten-ausw%C3%A4hlen-mit-select"><span class="header-section-number">4.2.3</span> Spalten auswählen mit <code>select</code></a></li>
+  <li><a href="#spalten-auswählen-mit-select" id="toc-spalten-auswählen-mit-select" class="nav-link" data-scroll-target="#spalten-auswählen-mit-select"><span class="header-section-number">4.2.3</span> Spalten auswählen mit <code>select</code></a></li>
   <li><a href="#spalten-zu-einer-zahl-zusammenfassen-mit-summarise" id="toc-spalten-zu-einer-zahl-zusammenfassen-mit-summarise" class="nav-link" data-scroll-target="#spalten-zu-einer-zahl-zusammenfassen-mit-summarise"><span class="header-section-number">4.2.4</span> Spalten zu einer Zahl zusammenfassen mit <code>summarise</code></a></li>
   <li><a href="#tabelle-gruppieren" id="toc-tabelle-gruppieren" class="nav-link" data-scroll-target="#tabelle-gruppieren"><span class="header-section-number">4.2.5</span> Tabelle gruppieren</a></li>
-  <li><a href="#spalten-ver%C3%A4ndern-mit-mutate" id="toc-spalten-verändern-mit-mutate" class="nav-link" data-scroll-target="#spalten-ver%C3%A4ndern-mit-mutate"><span class="header-section-number">4.2.6</span> Spalten verändern mit <code>mutate</code></a></li>
-  <li><a href="#zeilen-z%C3%A4hlen-mit-count" id="toc-zeilen-zählen-mit-count" class="nav-link" data-scroll-target="#zeilen-z%C3%A4hlen-mit-count"><span class="header-section-number">4.2.7</span> Zeilen zählen mit <code>count</code></a></li>
-  <li><a href="#verben-am-flie%C3%9Fband" id="toc-verben-am-fließband" class="nav-link" data-scroll-target="#verben-am-flie%C3%9Fband"><span class="header-section-number">4.2.8</span> Verben am Fließband</a></li>
-  </ul>
-</li>
-  <li>
-<a href="#sec-pipe" id="toc-sec-pipe" class="nav-link" data-scroll-target="#sec-pipe"><span class="header-section-number">4.3</span> Die Pfeife</a>
+  <li><a href="#spalten-verändern-mit-mutate" id="toc-spalten-verändern-mit-mutate" class="nav-link" data-scroll-target="#spalten-verändern-mit-mutate"><span class="header-section-number">4.2.6</span> Spalten verändern mit <code>mutate</code></a></li>
+  <li><a href="#zeilen-zählen-mit-count" id="toc-zeilen-zählen-mit-count" class="nav-link" data-scroll-target="#zeilen-zählen-mit-count"><span class="header-section-number">4.2.7</span> Zeilen zählen mit <code>count</code></a></li>
+  <li><a href="#verben-am-fließband" id="toc-verben-am-fließband" class="nav-link" data-scroll-target="#verben-am-fließband"><span class="header-section-number">4.2.8</span> Verben am Fließband</a></li>
+  </ul></li>
+  <li><a href="#sec-pipe" id="toc-sec-pipe" class="nav-link" data-scroll-target="#sec-pipe"><span class="header-section-number">4.3</span> Die Pfeife</a>
   <ul class="collapse">
-<li><a href="#russische-puppen" id="toc-russische-puppen" class="nav-link" data-scroll-target="#russische-puppen"><span class="header-section-number">4.3.1</span> Russische Puppen</a></li>
+  <li><a href="#russische-puppen" id="toc-russische-puppen" class="nav-link" data-scroll-target="#russische-puppen"><span class="header-section-number">4.3.1</span> Russische Puppen</a></li>
   <li><a href="#die-pfeife-zur-rettung" id="toc-die-pfeife-zur-rettung" class="nav-link" data-scroll-target="#die-pfeife-zur-rettung"><span class="header-section-number">4.3.2</span> Die Pfeife zur Rettung</a></li>
-  </ul>
-</li>
-  <li><a href="#beispiele-f%C3%BCr-forschungsfragen" id="toc-beispiele-für-forschungsfragen" class="nav-link" data-scroll-target="#beispiele-f%C3%BCr-forschungsfragen"><span class="header-section-number">4.4</span> Beispiele für Forschungsfragen</a></li>
+  </ul></li>
+  <li><a href="#beispiele-für-forschungsfragen" id="toc-beispiele-für-forschungsfragen" class="nav-link" data-scroll-target="#beispiele-für-forschungsfragen"><span class="header-section-number">4.4</span> Beispiele für Forschungsfragen</a></li>
   <li><a href="#praxisbezug" id="toc-praxisbezug" class="nav-link" data-scroll-target="#praxisbezug"><span class="header-section-number">4.5</span> Praxisbezug</a></li>
-  <li><a href="#wie-man-mit-statistik-l%C3%BCgt" id="toc-wie-man-mit-statistik-lügt" class="nav-link" data-scroll-target="#wie-man-mit-statistik-l%C3%BCgt"><span class="header-section-number">4.6</span> Wie man mit Statistik lügt</a></li>
-  <li>
-<a href="#fallstudien" id="toc-fallstudien" class="nav-link" data-scroll-target="#fallstudien"><span class="header-section-number">4.7</span> Fallstudien</a>
+  <li><a href="#wie-man-mit-statistik-lügt" id="toc-wie-man-mit-statistik-lügt" class="nav-link" data-scroll-target="#wie-man-mit-statistik-lügt"><span class="header-section-number">4.6</span> Wie man mit Statistik lügt</a></li>
+  <li><a href="#fallstudien" id="toc-fallstudien" class="nav-link" data-scroll-target="#fallstudien"><span class="header-section-number">4.7</span> Fallstudien</a>
   <ul class="collapse">
-<li><a href="#die-pinguine" id="toc-die-pinguine" class="nav-link" data-scroll-target="#die-pinguine"><span class="header-section-number">4.7.1</span> Die Pinguine</a></li>
+  <li><a href="#die-pinguine" id="toc-die-pinguine" class="nav-link" data-scroll-target="#die-pinguine"><span class="header-section-number">4.7.1</span> Die Pinguine</a></li>
   <li><a href="#fallstudie-covidistress" id="toc-fallstudie-covidistress" class="nav-link" data-scroll-target="#fallstudie-covidistress"><span class="header-section-number">4.7.2</span> Fallstudie COVIDiSTRESS</a></li>
-  </ul>
-</li>
-  <li><a href="#aufgaben" id="toc-aufgaben" class="nav-link" data-scroll-target="#aufgaben"><span class="header-section-number">4.8</span> Aufgaben</a></li>
-  <li>
-<a href="#vertiefung" id="toc-vertiefung" class="nav-link" data-scroll-target="#vertiefung"><span class="header-section-number">4.9</span> Vertiefung</a>
+  </ul></li>
+  <li><a href="#quiz" id="toc-quiz" class="nav-link" data-scroll-target="#quiz"><span class="header-section-number">4.8</span> Quiz</a></li>
+  <li><a href="#aufgaben" id="toc-aufgaben" class="nav-link" data-scroll-target="#aufgaben"><span class="header-section-number">4.9</span> Aufgaben</a></li>
+  <li><a href="#vertiefung" id="toc-vertiefung" class="nav-link" data-scroll-target="#vertiefung"><span class="header-section-number">4.10</span> Vertiefung</a>
   <ul class="collapse">
-<li><a href="#fortgeschrittenes-r" id="toc-fortgeschrittenes-r" class="nav-link" data-scroll-target="#fortgeschrittenes-r"><span class="header-section-number">4.9.1</span> Fortgeschrittenes R</a></li>
-  <li><a href="#sec-erbie" id="toc-sec-erbie" class="nav-link" data-scroll-target="#sec-erbie"><span class="header-section-number">4.9.2</span> Hilfe?! Erbie!</a></li>
-  <li><a href="#zertifikate-und-online-kurse" id="toc-zertifikate-und-online-kurse" class="nav-link" data-scroll-target="#zertifikate-und-online-kurse"><span class="header-section-number">4.9.3</span> Zertifikate und Online-Kurse</a></li>
+  <li><a href="#fortgeschrittenes-r" id="toc-fortgeschrittenes-r" class="nav-link" data-scroll-target="#fortgeschrittenes-r"><span class="header-section-number">4.10.1</span> Fortgeschrittenes R</a></li>
+  <li><a href="#sec-erbie" id="toc-sec-erbie" class="nav-link" data-scroll-target="#sec-erbie"><span class="header-section-number">4.10.2</span> Hilfe?! Erbie!</a></li>
+  <li><a href="#zertifikate-und-online-kurse" id="toc-zertifikate-und-online-kurse" class="nav-link" data-scroll-target="#zertifikate-und-online-kurse"><span class="header-section-number">4.10.3</span> Zertifikate und Online-Kurse</a></li>
+  </ul></li>
+  <li><a href="#exkurs" id="toc-exkurs" class="nav-link" data-scroll-target="#exkurs"><span class="header-section-number">4.11</span> Exkurs</a></li>
+  <li><a href="#literaturhinweise" id="toc-literaturhinweise" class="nav-link" data-scroll-target="#literaturhinweise"><span class="header-section-number">4.12</span> Literaturhinweise</a></li>
   </ul>
-</li>
-  <li><a href="#exkurs" id="toc-exkurs" class="nav-link" data-scroll-target="#exkurs"><span class="header-section-number">4.10</span> Exkurs</a></li>
-  <li><a href="#literaturhinweise" id="toc-literaturhinweise" class="nav-link" data-scroll-target="#literaturhinweise"><span class="header-section-number">4.11</span> Literaturhinweise</a></li>
-  </ul><div class="toc-actions"><ul><li><a href="https://github.com/sebastiansauer/statistik1/issues/new" class="toc-action"><i class="bi bi-github"></i>Problem melden</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/sebastiansauer/statistik1/issues/new" class="toc-action"><i class="bi bi-github"></i>Problem melden</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./010-rahmen.html">Vorbereiten</a></li><li class="breadcrumb-item"><a href="./030-aufbereiten.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Daten umformen</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title">
-<span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Daten umformen</span>
-</h1>
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./010-rahmen.html">Vorbereiten</a></li><li class="breadcrumb-item"><a href="./030-aufbereiten.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Daten umformen</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Daten umformen</span></h1>
 </div>
 
 
@@ -585,7 +610,15 @@ window.Quarto = {
   </div>
 </div>
 
-</header><!-- <style> --><!-- q { --><!--   quotes: '„' '“'; --><!-- } --><!-- </style> --><p><span class="math display">\[
+</header>
+
+
+<!-- <style> -->
+<!-- q { -->
+<!--   quotes: '„' '“'; -->
+<!-- } -->
+<!-- </style> -->
+<p><span class="math display">\[
 \definecolor{ycol}{RGB}{230,159,0}
 \definecolor{modelcol}{RGB}{86,180,233}
 \definecolor{errorcol}{RGB}{0,158,115}
@@ -593,10 +626,10 @@ window.Quarto = {
 \definecolor{beta1col}{RGB}{0,114,178}
 \definecolor{xcol}{RGB}{204,121,167}
 \]</span></p>
-<section id="einstieg" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="einstieg">
-<span class="header-section-number">4.1</span> Einstieg</h2>
-<section id="lernziele" class="level3" data-number="4.1.1"><h3 data-number="4.1.1" class="anchored" data-anchor-id="lernziele">
-<span class="header-section-number">4.1.1</span> Lernziele</h3>
+<section id="einstieg" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="einstieg"><span class="header-section-number">4.1</span> Einstieg</h2>
+<section id="lernziele" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="lernziele"><span class="header-section-number">4.1.1</span> Lernziele</h3>
 <ul>
 <li>Sie können folgende Verben des Datenjudo anwenden: <code>arrange</code>, <code>filter</code>, <code>select</code>, <code>summarise</code>, <code>group_by</code>, <code>mutate</code>.</li>
 <li>Sie können R-Befehle mit der “Pfeife” verketten.</li>
@@ -604,28 +637,33 @@ window.Quarto = {
 <div id="exr-los" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 4.1 (Mariokart importieren)</strong></span> Importieren Sie den Datensatz <code>mariokart</code>, s. <a href="020-R.html#sec-import-mariokart" class="quarto-xref"><span>Kapitel 3.7.3</span></a>. Probieren Sie alle in diesem Kapitel vorgestellten Verben des Datenjudos aus, zunächst, indem Sie einfach den R-Code kopieren und selber ausführen. Danach überlegen Sie sich Varianten. <span class="math inline">\(\square\)</span></p>
 </div>
-</section><section id="r-code-zum-copy-pasten" class="level3" data-number="4.1.2"><h3 data-number="4.1.2" class="anchored" data-anchor-id="r-code-zum-copy-pasten">
-<span class="header-section-number">4.1.2</span> R-Code zum Copy-Pasten</h3>
+</section>
+<section id="r-code-zum-copy-pasten" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="r-code-zum-copy-pasten"><span class="header-section-number">4.1.2</span> R-Code zum Copy-Pasten</h3>
 <p>Sie finden den R-Code für jedes Kapitel <a href="https://github.com/sebastiansauer/statistik1/tree/main/R-code-for-all-chapters">hier</a>. <span class="math inline">\(\square\)</span></p>
-</section><section id="frag-den-bot" class="level3" data-number="4.1.3"><h3 data-number="4.1.3" class="anchored" data-anchor-id="frag-den-bot">
-<span class="header-section-number">4.1.3</span> Frag den Bot</h3>
+</section>
+<section id="frag-den-bot" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="frag-den-bot"><span class="header-section-number">4.1.3</span> Frag den Bot</h3>
 <blockquote class="blockquote">
 <p><span>🧑‍🎓</span> Erkläre einem Fünfjährigen, warum Statistik nützlich ist.</p>
 </blockquote>
 <blockquote class="blockquote">
 <p><span>🤖</span> Okay, hör zu. Stell dir vor, du hast viele Spielzeugautos und du willst herausfinden, welches Auto am meisten bespielt wird. Du kannst jeden Tag zählen, wie oft du jedes Auto benutzt hast. Aber das wäre sehr mühsam und könnte schnell durcheinander gebracht werden. Stattdessen kannst du mit Statistik eine einfachere Methode finden. Du kannst zum Beispiel eine Liste machen und jedes Auto mit einer bestimmten Farbe markieren. Dann kannst du jeden Tag einfach zählen, wie oft du jede Farbe verwendet hast. Am Ende kannst du herausfinden, welches Auto am meisten bespielt wurde, indem du siehst, welche Farbe am meisten verwendet wurde. Das ist ein Beispiel dafür, wie Statistik uns dabei helfen kann, Muster in großen Datensätzen zu finden und Entscheidungen zu treffen, ohne alles einzeln zu zählen.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 </blockquote>
-</section><section id="quiz-zum-einstieg" class="level3" data-number="4.1.4"><h3 data-number="4.1.4" class="anchored" data-anchor-id="quiz-zum-einstieg">
-<span class="header-section-number">4.1.4</span> Quiz zum Einstieg</h3>
+</section>
+<section id="quiz-zum-einstieg" class="level3" data-number="4.1.4">
+<h3 data-number="4.1.4" class="anchored" data-anchor-id="quiz-zum-einstieg"><span class="header-section-number">4.1.4</span> Quiz zum Einstieg</h3>
 <p>Vielleicht fordert Sie die Lehrkraft zu einem Einstiegsquiz auf, etwa mittels der Plattform <a href="https://antworte.jetzt/">antworte.jetzt</a>. Alternativ überlegen Sie sich selber 10 Quiz-Aufgaben zum Stoff des letzten Kapitels.</p>
 <div id="def-datenjudo" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 4.1 (Datenjudo)</strong></span> Mit <em>Datenjudo</em> meint man den Prozess der Aufbereitens, Umformens oder Zusammenfassen von Daten, sowohl für einzelne Beobachtungen (Zeilen einer Datentabelle) oder Variablen (Spalten einer Datentabelle) oder einer ganzen Datentabelle. <span class="math inline">\(\square\)</span></p>
 </div>
-</section><section id="praxisbezug-aus-dem-alltag-des-datenwissenschaftlers" class="level3 exm-datenjudo1" data-number="4.1.5"><h3 data-number="4.1.5" class="anchored" data-anchor-id="praxisbezug-aus-dem-alltag-des-datenwissenschaftlers">
-<span class="header-section-number">4.1.5</span> Praxisbezug: Aus dem Alltag des Datenwissenschaftlers</h3>
+</section>
+<section id="praxisbezug-aus-dem-alltag-des-datenwissenschaftlers" class="level3 exm-datenjudo1" data-number="4.1.5">
+<h3 data-number="4.1.5" class="anchored" data-anchor-id="praxisbezug-aus-dem-alltag-des-datenwissenschaftlers"><span class="header-section-number">4.1.5</span> Praxisbezug: Aus dem Alltag des Datenwissenschaftlers</h3>
 <p>Denkt man an Data Science, stellt man sich coole Leute vor (in San Francisco oder Berlin), die an abgefahrenen Berechnungen mit hoch komplexen statistischen Modellen für gigantische Datenmengen basteln. Laut dem <em>Harvard Business Review</em>, verbringen Data Scientisten allerdings “80<span class="math inline">\(\,\)</span>%” ihrer Zeit mit dem <em>Aufbereiten</em> von Daten <span class="citation" data-cites="bowne-anderson_what_2018">(<a href="references.html#ref-bowne-anderson_what_2018" role="doc-biblioref">Bowne-Anderson, 2018</a>)</span>. Ja: mit uncoolen Tätigkeiten wie Tippfehler aus Datensätzen entfernen oder die Daten überhaupt nutzbar und verständlich zu machen.</p>
 <p>Das zeigt zumindest, dass das Aufbereiten von Daten a) wichtig ist und b) dass man allein damit schon weit kommen kann. Eine gute Nachricht ist (vielleicht), dass das Aufbereiten von Daten keine aufwändige Mathematik verlangt, stattdessen muss man ein paar Handgriffe und Kniffe kennen. Daher passt der Begriff <em>Datenjudo</em> vielleicht ganz gut. Kümmern wir uns also um das Aufbereiten bzw. Umformen von Daten, um das Datenjudo. <span>🔢🤹</span> <span class="math inline">\(\square\)</span></p>
-</section><div id="exm-datenjudo" class="theorem example">
+</section>
+<div id="exm-datenjudo" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 4.1 (Beispiel für Datenjudo)</strong></span> Beispiele für typische Tätigkeiten des Datenjudos sind:</p>
 <ul>
 <li>Zeilen <em>filtern</em> (z.<span class="math inline">\(\,\)</span>B. nur Studierenden des Studiengangs X)</li>
@@ -634,53 +672,62 @@ window.Quarto = {
 <li>Spalten in eine Zahl <em>zusammenfassen</em> (z.<span class="math inline">\(\,\)</span>B. Notenschnitt der 1. Klausur)</li>
 <li>Tabelle <em>gruppieren</em> (z.<span class="math inline">\(\,\)</span>B. Analyse getrennt nach Standorten)</li>
 <li>Werte aus einer Spalte <em>verändern</em> oder <em>neue Spalte</em> bilden (z.<span class="math inline">\(\,\)</span>B. Punkte in Prozent-Richtige umrechnen).</li>
-<li>… <span class="math inline">\(\square\)</span>
-</li>
+<li>… <span class="math inline">\(\square\)</span></li>
 </ul>
 </div>
-<section id="machs-einfach" class="level3" data-number="4.1.6"><h3 data-number="4.1.6" class="anchored" data-anchor-id="machs-einfach">
-<span class="header-section-number">4.1.6</span> Mach’s einfach</h3>
+<section id="machs-einfach" class="level3" data-number="4.1.6">
+<h3 data-number="4.1.6" class="anchored" data-anchor-id="machs-einfach"><span class="header-section-number">4.1.6</span> Mach’s einfach</h3>
 <p>Klingt fast zu schön, um wahr zu sein (s. <a href="#fig-that-would-be-great" class="quarto-xref">Abbildung&nbsp;<span>4.1</span></a>).</p>
 <div id="fig-that-would-be-great" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-that-would-be-great-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/thatwouldbegreat.jpg" class="img-fluid figure-img" style="width:50.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-that-would-be-great-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/thatwouldbegreat.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Abbildung&nbsp;4.1: Mach’s einfach [@imgflip_simply]"><img src="img/thatwouldbegreat.jpg" class="img-fluid figure-img" style="width:50.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-that-would-be-great-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;4.1: Mach’s einfach <span class="citation" data-cites="imgflip_simply">(<a href="references.html#ref-imgflip_simply" role="doc-biblioref">imgflip, 2024a</a>)</span>
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 <p>Es gibt einen (einfachen) Trick, wie man umfangreiche Datenaufbereitung elegant geregelt kriegt. Der Trick besteht darin, komplexe Operationen in mehrere einfache Teilschritte zu zergliedern. (In gewisser Weise besteht das Wesen einer Analyse eben darin: die Zerlegung eines Gegenstands in seine Bestandteile.) Man könnte vom “Lego-Prinzip” sprechen, s. <a href="#fig-lego" class="quarto-xref">Abbildung&nbsp;<span>4.2</span></a>. Im linken Teil von <a href="#fig-lego" class="quarto-xref">Abbildung&nbsp;<span>4.2</span></a> sieht man ein (recht) komplexes Gebilde. Zerlegt man es aber in seine Einzelteile, so sind es deutlich einfachere geometrische Objekte wie Dreiecke oder Kreise (rechter Teil des Diagramms). Damit Sie es selber einfach machen können, müssen Sie selber Hand anlegen. Importieren Sie daher den Datensatz <code>mariokart</code>, s. <a href="020-R.html#sec-import-mariokart" class="quarto-xref"><span>Kapitel 3.7.3</span></a>.</p>
 <div id="fig-lego" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-lego-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/Bausteine_dplyr_crop.png" class="img-fluid figure-img" style="width:75.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-lego-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/Bausteine_dplyr_crop.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Abbildung&nbsp;4.2: Das Lego-Prinzip [@sauer_moderne_2019]"><img src="img/Bausteine_dplyr_crop.png" class="img-fluid figure-img" style="width:75.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-lego-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;4.2: Das Lego-Prinzip <span class="citation" data-cites="sauer_moderne_2019">(<a href="references.html#ref-sauer_moderne_2019" role="doc-biblioref">Sauer, 2019</a>)</span>
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 <p>Werfen wir einen Blick hinein (to glimpse):</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">glimpse</span><span class="op">(</span><span class="va">mariokart</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(mariokart)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="exm-datenjudo" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 4.2 (Der Datenguru in Aktion)</strong></span> Sie arbeiten immer noch bei dem großen Online-Auktionshaus. Mittlerweile haben Sie sich den Ruf des “Datenguru” erworben. Vielleicht, weil Sie behauptet haben, Data Science sei zu 80% Datenjudo, das hat irgendwie Eindruck geschindet … Naja, jedenfalls müssen Sie jetzt mal zeigen, dass Sie nicht nur schlaue Sprüche draufhaben, sondern auch die Daten ordentlich abbürsten können. Sie analysieren dafür im Folgenden den Datensatz <code>mariokart</code>. Na, dann los. <span class="math inline">\(\square\)</span></p>
 </div>
-</section></section><section id="die-verben-des-datenjudos" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="die-verben-des-datenjudos">
-<span class="header-section-number">4.2</span> Die Verben des Datenjudos</h2>
+</section>
+</section>
+<section id="die-verben-des-datenjudos" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="die-verben-des-datenjudos"><span class="header-section-number">4.2</span> Die Verben des Datenjudos</h2>
 <p>Im R-Paket <code>dplyr</code>, das wiederum Teil des R-Pakets <code>tidyverse</code> ist, gibt es eine Reihe von R-Befehlen, die das Datenjudo in eine Handvoll einfacher Verben herunterbrechen. (Falls Sie das R-Paket <code>tidyverse</code> noch nicht installiert haben sollten, wäre jetzt ein guter Zeitpunkt dafür.) Die wichtigsten Verben des Datenjudos schauen wir uns im Folgenden an. Wir betrachten dazu im Folgenden einen einfachen (Spielzeug-)Datensatz, an dem wir zunächst die Verben des Datenjudos vorstellen, s. <a href="#tbl-datenjudo" class="quarto-xref">Tabelle&nbsp;<span>4.1</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div id="tbl-datenjudo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-datenjudo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-datenjudo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;4.1: Ein einfacher Datensatz von schlichtem Gemüt
-</figcaption><div aria-describedby="tbl-datenjudo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+</figcaption>
+<div aria-describedby="tbl-datenjudo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="do-not-create-environment cell caption-top table table-sm table-striped small">
-<thead><tr class="header">
+<thead>
+<tr class="header">
 <th style="text-align: right;">id</th>
 <th style="text-align: left;">name</th>
 <th style="text-align: left;">gruppe</th>
 <th style="text-align: right;">note</th>
-</tr></thead>
+</tr>
+</thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">1</td>
@@ -707,23 +754,24 @@ Tabelle&nbsp;4.1: Ein einfacher Datensatz von schlichtem Gemüt
 </figure>
 </div>
 </div>
-<p>Die Verben des Datenjudos wohnen im Paket <code>dplyr</code>, welches gestartet wird, wenn Sie <code><a href="https://tidyverse.tidyverse.org">library(tidyverse)</a></code> eingeben. Falls Sie vergessen, das Paket <code>tidyverse</code> zu starten, dann funktionieren diese Befehle nicht.</p>
+<p>Die Verben des Datenjudos wohnen im Paket <code>dplyr</code>, welches gestartet wird, wenn Sie <code>library(tidyverse)</code> eingeben. Falls Sie vergessen, das Paket <code>tidyverse</code> zu starten, dann funktionieren diese Befehle nicht.</p>
 <!-- :::{.callout-note} -->
 <!-- Zur Erinnerung: In RStudio können Sie per Klick auf das kleine Tabellen-Icon im Bereich *Environment* die Tabellenansicht einer Tabelle öffnen, s. @sec-viewtab. $\square$ -->
 <!-- ::: -->
-<section id="tabelle-sortieren-arrange" class="level3" data-number="4.2.1"><h3 data-number="4.2.1" class="anchored" data-anchor-id="tabelle-sortieren-arrange">
-<span class="header-section-number">4.2.1</span> Tabelle sortieren: <code>arrange</code>
-</h3>
+<section id="tabelle-sortieren-arrange" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="tabelle-sortieren-arrange"><span class="header-section-number">4.2.1</span> Tabelle sortieren: <code>arrange</code></h3>
 <p><em>Sortieren</em> der Zeilen ist eine einfache, aber häufige Tätigkeit des Datenjudos, s. <a href="#fig-arrange" class="quarto-xref">Abbildung&nbsp;<span>4.3</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-arrange" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-arrange-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="030-aufbereiten_files/figure-html/fig-arrange-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-arrange-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="030-aufbereiten_files/figure-html/fig-arrange-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Abbildung&nbsp;4.3: Sinnbild für das Sortieren einer Tabelle mit arrange: Hier wurden die Noten aufsteigend sortiert."><img src="030-aufbereiten_files/figure-html/fig-arrange-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arrange-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;4.3: Sinnbild für das Sortieren einer Tabelle mit <code>arrange</code>: Hier wurden die Noten aufsteigend sortiert.
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -731,11 +779,13 @@ Abbildung&nbsp;4.3: Sinnbild für das Sortieren einer Tabelle mit <code>arrange<
 <p><span class="theorem-title"><strong>Beispiel 4.3 (Was sind die höchsten Preise?)</strong></span> Sie wollen mal locker anfangen. Daher stellen Sie sich folgende Frage: Was sind denn eigentlich die höchsten Preise, für die das Spiel <em>Mariokart</em> über den Online-Ladentisch geht? Die Spalte für den Verkaufsprei heißt offenbar <code>total_pr</code> (s. Datensatz <code>mariokart</code>). In Excel kann die Spalte, nach der man die Tabelle sortieren möchte, einfach anklicken. Ob das in R auch so einfach geht?</p>
 <p>Die Funktion <code>arrange</code> macht es uns ziemlich einfach, s. <a href="#tbl-arrange" class="quarto-xref">Tabelle&nbsp;<span>4.2</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">arrange</span><span class="op">(</span><span class="va">mariokart</span>, <span class="va">total_pr</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">arrange</span>(mariokart, total_pr)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="tbl-arrange" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-arrange-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-arrange-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;4.2: Die Datentabelle, (aufsteigend) sortiert nach <code>total_pr</code>
-</figcaption><div aria-describedby="tbl-arrange-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+</figcaption>
+<div aria-describedby="tbl-arrange-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -755,34 +805,36 @@ nach der Spalte `total_pr` (aufsteigend).</code></pre>
 </div>
 <p>Übrigens wird in <code>arrange</code> per Voreinstellung aufsteigend sortiert. Setzt man ein Minus vor der zu sortierenden Spalte, wird umgekehrt, also <em>absteigend</em> sortiert:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mario_sortiert</span> <span class="op">&lt;-</span> <span class="fu">arrange</span><span class="op">(</span><span class="va">mariokart</span>, <span class="op">-</span><span class="va">total_pr</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mario_sortiert <span class="ot">&lt;-</span> <span class="fu">arrange</span>(mariokart, <span class="sc">-</span>total_pr)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="exr-arrange2" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 4.2</strong></span> Sortieren Sie die Mariokart-Daten absteigend nach der Anzahl der beigelegten Lenkräder. <span class="math inline">\(\square\)</span></p>
 </div>
-</section><section id="zeilen-filtern-filter" class="level3" data-number="4.2.2"><h3 data-number="4.2.2" class="anchored" data-anchor-id="zeilen-filtern-filter">
-<span class="header-section-number">4.2.2</span> Zeilen filtern: <code>filter</code>
-</h3>
+</section>
+<section id="zeilen-filtern-filter" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="zeilen-filtern-filter"><span class="header-section-number">4.2.2</span> Zeilen filtern: <code>filter</code></h3>
 <p>Zeilen <em>filtern</em> bedeutet, dass man nur <em>bestimmte</em> <em>Zeilen</em> (Beobachtungen) <em>behalten</em> möchte, die restlichen Zeilen brauchen wir nicht, weg mit ihnen. Wir haben also ein Filterkriterium im Kopf, anhand dessen wir die Tabelle filern, s. <a href="#fig-filter" class="quarto-xref">Abbildung&nbsp;<span>4.4</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-filter" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-filter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="030-aufbereiten_files/figure-html/fig-filter-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-filter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="030-aufbereiten_files/figure-html/fig-filter-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Abbildung&nbsp;4.4: Sinnbild für das Filtern einer Tabelle mit filter: Gruppe B wurde entfernt, also wurde nach Gruppe A gefiltert."><img src="030-aufbereiten_files/figure-html/fig-filter-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-filter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;4.4: Sinnbild für das Filtern einer Tabelle mit <code>filter</code>: Gruppe <em>B</em> wurde entfernt, also wurde nach Gruppe <em>A</em> gefiltert.
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
 <div id="exm-filter" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 4.4 (Ob ein Foto für den Verkaufspreis nützlich ist?)</strong></span> Als nächstes kommt Ihnen die Idee, mal zu schauen, ob Auktionen mit “Stock-Photo” Ware einen höheren Verkaufspreis erzielen als Auktionen ohne solche Totos.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_neu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">mariokart</span>, <span class="va">stock_photo</span> <span class="op">==</span> <span class="st">"yes"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mariokart_neu <span class="ot">&lt;-</span> <span class="fu">filter</span>(mariokart, stock_photo <span class="sc">==</span> <span class="st">"yes"</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_neu</span> </span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mariokart_neu </span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -795,12 +847,12 @@ Abbildung&nbsp;4.4: Sinnbild für das Filtern einer Tabelle mit <code>filter</co
 </div>
 <p>Angestachelt von Ihren Erfolgen möchten Sie jetzt komplexere Hypothesen prüfen: Erzielen Auktionen von <em>neuen</em> Spielen und zwar <em>mit</em> Foto einen höheren Preis als die übrigen Auktionen? Anders gesagt haben Sie zwei Filterkriterien im Blick: Neuheit <code>cond</code> und Foto <code>stock_photo</code>. Nur diejenigen Auktionen, die <em>sowohl</em> Neuheit <em>als auch</em> Foto erfüllen, möchten Sie näher untersuchen (Filtern mit dem logischen UND):</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mario_filter1</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">mariokart</span>,  <span class="co"># "&amp;" heißt UND:</span></span>
-<span>         <span class="va">stock_photo</span> <span class="op">==</span> <span class="st">"yes"</span> <span class="op">&amp;</span> <span class="va">cond</span> <span class="op">==</span> <span class="st">"new"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mario_filter1 <span class="ot">&lt;-</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(mariokart,  <span class="co"># "&amp;" heißt UND:</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>         stock_photo <span class="sc">==</span> <span class="st">"yes"</span> <span class="sc">&amp;</span> cond <span class="sc">==</span> <span class="st">"new"</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mario_filter1</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mario_filter1</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -811,12 +863,12 @@ Abbildung&nbsp;4.4: Sinnbild für das Filtern einer Tabelle mit <code>filter</co
 </div>
 <p>Hm. Was ist mit den Auktionen, die <em>entweder</em> über (mind.) ein Foto verfügen <em>oder auch</em> neu sind, oder beides (Filtern mit dem logischen ODER)?</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mario_filter2</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">mariokart</span>,  <span class="co"># "|" heißt ODER:</span></span>
-<span>         <span class="va">stock_photo</span> <span class="op">==</span> <span class="st">"yes"</span> <span class="op">|</span> <span class="va">cond</span> <span class="op">==</span> <span class="st">"new"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mario_filter2 <span class="ot">&lt;-</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(mariokart,  <span class="co"># "|" heißt ODER:</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>         stock_photo <span class="sc">==</span> <span class="st">"yes"</span> <span class="sc">|</span> cond <span class="sc">==</span> <span class="st">"new"</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mario_filter2</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mario_filter2</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -835,19 +887,21 @@ Abbildung&nbsp;4.4: Sinnbild für das Filtern einer Tabelle mit <code>filter</co
 <div id="exr-filter3" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 4.5</strong></span> Filtern Sie die Spiele mit nur einem Lenkrad, die einen überdurchschnittlichen Verkaufspreis erzielen. Tipp: Nutzen Sie die Funktion <code>describe_distribution</code>, um den Mittelwert einer Variable des Datensatzes zu erfahren (diese Funktion wohnt im R-Paket <code>easystats</code>). <span class="math inline">\(\square\)</span></p>
 </div>
-</section><section id="spalten-auswählen-mit-select" class="level3" data-number="4.2.3"><h3 data-number="4.2.3" class="anchored" data-anchor-id="spalten-auswählen-mit-select">
-<span class="header-section-number">4.2.3</span> Spalten auswählen mit <code>select</code>
-</h3>
+</section>
+<section id="spalten-auswählen-mit-select" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="spalten-auswählen-mit-select"><span class="header-section-number">4.2.3</span> Spalten auswählen mit <code>select</code></h3>
 <p>Eine Tabelle mit vielen Spalten kann schnell unübersichtlich werden. Da lohnt es sich, eine goldene Regel zu beachten: Mache die Dinge so einfach wie möglich, aber nicht einfacher. Wählen wir also <em>nur</em> die Spalten aus, die uns interessieren und entfernen wir die restlichen, s. <a href="#fig-select" class="quarto-xref">Abbildung&nbsp;<span>4.5</span></a> als Beispiel.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-select" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-select-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="030-aufbereiten_files/figure-html/fig-select-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-select-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="030-aufbereiten_files/figure-html/fig-select-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Abbildung&nbsp;4.5: Sinnbild für das Auswählen von Spalten mit select"><img src="030-aufbereiten_files/figure-html/fig-select-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-select-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;4.5: Sinnbild für das Auswählen von Spalten mit <code>select</code>
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -855,22 +909,22 @@ Abbildung&nbsp;4.5: Sinnbild für das Auswählen von Spalten mit <code>select</c
 <p><span class="theorem-title"><strong>Beispiel 4.5 (Fokus auf nur zwei Spalten)</strong></span> Ob wohl gebrauchte Spiele deutlich geringere Preise erzielen im Vergleich zu neuwertigen Spielen? Sie entschließen sich, mal ein Stündchen auf die relevanten Daten zu starren. Dafür wählen Sie mit <code>select</code> die relevanten Spalten aus. <span class="math inline">\(\square\)</span></p>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mario_select1</span> <span class="op">&lt;-</span> <span class="fu">select</span><span class="op">(</span><span class="va">mariokart</span>, <span class="va">cond</span>, <span class="va">total_pr</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mario_select1 <span class="ot">&lt;-</span> <span class="fu">select</span>(mariokart, cond, total_pr)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Der Befehl <code>select</code> erwartet als Input eine Tabelle und gibt (als Output) eine Tabelle zurück – genau wie die meisten anderen Befehle des Datenjudos. Auch wenn Sie nur eine Spalte auswählen, bleibt es eine Tabelle, eben eine Tabelle mit nur einer Spalte.</p>
 <p><code>select</code> erlaubt Komfort; Sie können Spalten auf mehrere Arten auswählen:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">select</span><span class="op">(</span><span class="va">mariokart</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>  <span class="co"># Spalten 1 und 2</span></span>
-<span><span class="fu">select</span><span class="op">(</span><span class="va">mariokart</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>  <span class="co">#  Spalten 2 *bis* 5 </span></span>
-<span><span class="fu">select</span><span class="op">(</span><span class="va">mariokart</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>  <span class="co"># Alle Spalte *außer* Spalte 1</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(mariokart, <span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># Spalten 1 und 2</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(mariokart, <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>)  <span class="co">#  Spalten 2 *bis* 5 </span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(mariokart, <span class="sc">-</span><span class="dv">1</span>)  <span class="co"># Alle Spalte *außer* Spalte 1</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="exr-select" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 4.6</strong></span> Wählen Sie die Spalten <code>total_pr</code>, <code>cond</code> sowie die zweite Spalte der Tabelle <code>mariokart</code> aus!<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <span class="math inline">\(\square\)</span></p>
 </div>
 <p>Vertiefte Informationen zum Auswählen von Spalten mit <code>select</code> finden sich <a href="https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html">auf der Hilfeseite der Funktion</a>.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
-</section><section id="spalten-zu-einer-zahl-zusammenfassen-mit-summarise" class="level3" data-number="4.2.4"><h3 data-number="4.2.4" class="anchored" data-anchor-id="spalten-zu-einer-zahl-zusammenfassen-mit-summarise">
-<span class="header-section-number">4.2.4</span> Spalten zu einer Zahl zusammenfassen mit <code>summarise</code>
-</h3>
+</section>
+<section id="spalten-zu-einer-zahl-zusammenfassen-mit-summarise" class="level3" data-number="4.2.4">
+<h3 data-number="4.2.4" class="anchored" data-anchor-id="spalten-zu-einer-zahl-zusammenfassen-mit-summarise"><span class="header-section-number">4.2.4</span> Spalten zu einer Zahl zusammenfassen mit <code>summarise</code></h3>
 <div id="exm-summarise" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 4.6 (Was ist der mittlere Verkaufspreis?)</strong></span> Mit <code>summarise</code>, s. <a href="#lst-summarise" class="quarto-xref">Listing&nbsp;<span>4.1</span></a>, können wir den mittleren Verkaufspreis der Mariokart-Spiele berechnen (50). <span class="math inline">\(\square\)</span></p>
 </div>
@@ -878,24 +932,28 @@ Abbildung&nbsp;4.5: Sinnbild für das Auswählen von Spalten mit <code>select</c
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-summarise" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-summarise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="030-aufbereiten_files/figure-html/fig-summarise-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-summarise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="030-aufbereiten_files/figure-html/fig-summarise-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Abbildung&nbsp;4.6: Spalten zu einer einzelnen Zahl zusammenfassen mit summarise: Hier wurden die Noten anhand des Mittelwerts zusammengefasst."><img src="030-aufbereiten_files/figure-html/fig-summarise-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-summarise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;4.6: Spalten zu einer einzelnen Zahl zusammenfassen mit <code>summarise</code>: Hier wurden die Noten anhand des Mittelwerts zusammengefasst.
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
 <p>Fassen wir als Nächstes die Spalte <code>total_pr</code> zu einer Zahl zusammen, und zwar zum Mittelwert. Dann wissen wir, für welchen Preis ein Spiel im Durchschnitt verkauft wird, s. <a href="#lst-summarise" class="quarto-xref">Listing&nbsp;<span>4.1</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div id="lst-summarise" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
-<figure class="quarto-float quarto-float-lst figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-summarise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-summarise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;4.1: Die R-Funktion summarise fasst einen Vektor zu einer einzelnen Zahl zusammen.
-</figcaption><div aria-describedby="lst-summarise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_mittelwert</span> <span class="op">&lt;-</span> <span class="fu">summarise</span><span class="op">(</span><span class="va">mariokart</span>,</span>
-<span>                                  preis_mw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">mariokart_mittelwert</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</figcaption>
+<div aria-describedby="lst-summarise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mariokart_mittelwert <span class="ot">&lt;-</span> <span class="fu">summarise</span>(mariokart,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>mariokart_mittelwert</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
 </div>
@@ -917,8 +975,9 @@ Listing&nbsp;4.1: Die R-Funktion summarise fasst einen Vektor zu einer einzelnen
 <div id="exr-summarise2" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 4.8</strong></span> Identifizieren Sie den Mittelwert der Versandkostenpauschale!<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> <span class="math inline">\(\square\)</span></p>
 </div>
-</section><section id="tabelle-gruppieren" class="level3" data-number="4.2.5"><h3 data-number="4.2.5" class="anchored" data-anchor-id="tabelle-gruppieren">
-<span class="header-section-number">4.2.5</span> Tabelle gruppieren</h3>
+</section>
+<section id="tabelle-gruppieren" class="level3" data-number="4.2.5">
+<h3 data-number="4.2.5" class="anchored" data-anchor-id="tabelle-gruppieren"><span class="header-section-number">4.2.5</span> Tabelle gruppieren</h3>
 <p>Es ist ja gut und schön, zu wissen, was so ein Spiel im Schnitt kostet. Aber viel interessanter wäre es doch, denken Sie sich, zu wissen, ob die neuen Spiele im Schnitt mehr kosten als die alten? Ob R Ihnen so etwas ausrechnen kann?</p>
 <blockquote class="blockquote">
 <p><span>🧑‍🎓</span> Hallo R, kannst du mir die mittleren Verkaufspreise von alten und neuen Spielen ausrechnen?</p>
@@ -930,12 +989,14 @@ Listing&nbsp;4.1: Die R-Funktion summarise fasst einen Vektor zu einer einzelnen
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-group" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-group-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="030-aufbereiten_files/figure-html/fig-group-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-group-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="030-aufbereiten_files/figure-html/fig-group-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Abbildung&nbsp;4.7: Gruppieren von Datensätzen mit group_by: Hier wurde anhand der Variable gruppe gruppiert."><img src="030-aufbereiten_files/figure-html/fig-group-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-group-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;4.7: Gruppieren von Datensätzen mit <code>group_by</code>: Hier wurde anhand der Variable <code>gruppe</code> gruppiert.
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -943,11 +1004,11 @@ Abbildung&nbsp;4.7: Gruppieren von Datensätzen mit <code>group_by</code>: Hier 
 <div id="exm-groupby" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 4.7 (Mittlerer Preis pro Gruppe)</strong></span> Gruppieren alleine liefert Ihnen zwei (oder mehrere) Teiltabellen, etwa neue Spiele (Gruppe 1, <code>new</code>) vs.&nbsp;gebrauchte Spiele (Gruppe 2, <code>used</code>). Mit anderen Worten: Wir gruppieren anhand der Variable <code>cond</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_gruppiert</span> <span class="op">&lt;-</span> <span class="fu">group_by</span><span class="op">(</span><span class="va">mariokart</span>, <span class="va">cond</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mariokart_gruppiert <span class="ot">&lt;-</span> <span class="fu">group_by</span>(mariokart, cond)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Wenn Sie die neue Tabelle betrachte, sehen Sie wenig Aufregendes, nur einen Hinweis, dass die Tabelle gruppiert ist. Jetzt können Sie an jeder Teiltabelle Ihre weiteren Berechnungen vornehmen, etwa die Berechnung des mittleren Verkaufspreises.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">summarise</span><span class="op">(</span><span class="va">mariokart_gruppiert</span>, preis_mw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(mariokart_gruppiert, <span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -961,24 +1022,21 @@ Abbildung&nbsp;4.7: Gruppieren von Datensätzen mit <code>group_by</code>: Hier 
 <div id="exr-groupby" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 4.9</strong></span> &nbsp;</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist">
-<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Aufgabe</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Lösung</a></li>
-</ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Aufgabe</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Lösung</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <p>Berechnen Sie den mittleren und maximalen Verkaufspreis getrennt für Spiele mit und ohne Foto!</p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_gruppiert_foto</span> <span class="op">&lt;-</span> <span class="fu">group_by</span><span class="op">(</span><span class="va">mariokart</span>, <span class="va">stock_photo</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mariokart_verkaufspreis_foto</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu">summarise</span><span class="op">(</span><span class="va">mariokart_gruppiert_foto</span>,</span>
-<span>            total_pr_avg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span>,</span>
-<span>            total_pr_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mariokart_verkaufspreis_foto</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mariokart_gruppiert_foto <span class="ot">&lt;-</span> <span class="fu">group_by</span>(mariokart, stock_photo)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>mariokart_verkaufspreis_foto <span class="ot">&lt;-</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(mariokart_gruppiert_foto,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">total_pr_avg =</span> <span class="fu">mean</span>(total_pr),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">total_pr_max =</span> <span class="fu">max</span>(total_pr))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>mariokart_verkaufspreis_foto</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -992,29 +1050,31 @@ Abbildung&nbsp;4.7: Gruppieren von Datensätzen mit <code>group_by</code>: Hier 
 </div>
 <p>Bei Auktionen mit Foto wird im Schnitt ein höherer Preis erzielt als ohne Foto. <span class="math inline">\(\square\)</span></p>
 </div>
-</section><section id="spalten-verändern-mit-mutate" class="level3" data-number="4.2.6"><h3 data-number="4.2.6" class="anchored" data-anchor-id="spalten-verändern-mit-mutate">
-<span class="header-section-number">4.2.6</span> Spalten verändern mit <code>mutate</code>
-</h3>
+</section>
+<section id="spalten-verändern-mit-mutate" class="level3" data-number="4.2.6">
+<h3 data-number="4.2.6" class="anchored" data-anchor-id="spalten-verändern-mit-mutate"><span class="header-section-number">4.2.6</span> Spalten verändern mit <code>mutate</code></h3>
 <p>Immer mal wieder möchte man <em>Spalten verändern</em>, bzw. deren Werte umrechnen, s. <a href="#fig-mutate" class="quarto-xref">Abbildung&nbsp;<span>4.8</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-mutate" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-mutate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="030-aufbereiten_files/figure-html/fig-mutate-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mutate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="030-aufbereiten_files/figure-html/fig-mutate-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Abbildung&nbsp;4.8: Spalten verändern/neu berechnen mit mutate"><img src="030-aufbereiten_files/figure-html/fig-mutate-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mutate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;4.8: Spalten verändern/neu berechnen mit <code>mutate</code>
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
 <div id="exm-mutate" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 4.8</strong></span> Der Hersteller des Computerspiels <em>Mariokart</em> kommt aus Japan; daher erscheint es Ihnen opportun für ein anstehendes Meeting mit dem Hersteller die Verkaufspreise von Dollar in japanische Yen umzurechnen. Nach etwas Googeln finden Sie einen Umrechnungskurs von 1:133.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_yen</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span><span class="va">mariokart</span>, total_pr_yen <span class="op">=</span> <span class="va">total_pr</span> <span class="op">*</span> <span class="fl">133</span><span class="op">)</span></span>
-<span><span class="va">mariokart_yen</span> <span class="op">&lt;-</span> <span class="fu">select</span><span class="op">(</span><span class="va">mariokart_yen</span>, <span class="va">total_pr_yen</span>, <span class="va">total_pr</span><span class="op">)</span></span>
-<span><span class="va">mariokart_yen</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># nur die ersten paar Zeilen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mariokart_yen <span class="ot">&lt;-</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(mariokart, <span class="at">total_pr_yen =</span> total_pr <span class="sc">*</span> <span class="dv">133</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>mariokart_yen <span class="ot">&lt;-</span> <span class="fu">select</span>(mariokart_yen, total_pr_yen, total_pr)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>mariokart_yen <span class="sc">|&gt;</span> <span class="fu">head</span>()  <span class="co"># nur die ersten paar Zeilen</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1032,22 +1092,19 @@ Abbildung&nbsp;4.8: Spalten verändern/neu berechnen mit <code>mutate</code>
 <div id="exr-mutate" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 4.10</strong></span> &nbsp;</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist">
-<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Aufgabe</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Lösung</a></li>
-</ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Aufgabe</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Lösung</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <p>Rechnen Sie die Dauer der Auktionen von Tagen in Wochen um.</p>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_duration_wochen</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span><span class="va">mariokart</span>, duration_week <span class="op">=</span> <span class="va">duration</span> <span class="op">/</span> <span class="fl">7</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mariokart_duration_wochen</span> <span class="op">&lt;-</span></span>
-<span>   <span class="fu">select</span><span class="op">(</span><span class="va">mariokart_duration_wochen</span>, <span class="va">duration</span>, <span class="va">duration_week</span><span class="op">)</span></span>
-<span><span class="va">mariokart_duration_wochen</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># nur die ersten paar Zeilen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mariokart_duration_wochen <span class="ot">&lt;-</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(mariokart, <span class="at">duration_week =</span> duration <span class="sc">/</span> <span class="dv">7</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>mariokart_duration_wochen <span class="ot">&lt;-</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>   <span class="fu">select</span>(mariokart_duration_wochen, duration, duration_week)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>mariokart_duration_wochen <span class="sc">|&gt;</span> <span class="fu">head</span>()  <span class="co"># nur die ersten paar Zeilen</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1063,27 +1120,24 @@ Abbildung&nbsp;4.8: Spalten verändern/neu berechnen mit <code>mutate</code>
 <div id="exr-mutate2" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 4.11</strong></span> &nbsp;</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist">
-<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Aufgabe</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Lösung</a></li>
-</ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Aufgabe</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Lösung</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <p>Rechnen Sie wieder die Dauer der Auktionen von Tagen in Wochen um, aber runden Sie die Wochen auf ganze Wochen.</p>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_duration_wochen</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span><span class="va">mariokart</span>, duration_week <span class="op">=</span> <span class="va">duration</span> <span class="op">/</span> <span class="fl">7</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mariokart_duration_wochen_gerundet</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu">mutate</span><span class="op">(</span><span class="va">mariokart_duration_wochen</span>, duration_week_gerundet <span class="op">=</span></span>
-<span>           <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">duration_week</span>, digits <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mariokart_duration_wochen_schmal</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="va">mariokart_duration_wochen_gerundet</span>, <span class="va">duration</span>, </span>
-<span>         <span class="va">duration_week</span>, <span class="va">duration_week_gerundet</span><span class="op">)</span></span>
-<span><span class="va">mariokart_duration_wochen_schmal</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mariokart_duration_wochen <span class="ot">&lt;-</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(mariokart, <span class="at">duration_week =</span> duration <span class="sc">/</span> <span class="dv">7</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>mariokart_duration_wochen_gerundet <span class="ot">&lt;-</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(mariokart_duration_wochen, <span class="at">duration_week_gerundet =</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>           <span class="fu">round</span>(duration_week, <span class="at">digits =</span> <span class="dv">0</span>))</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>mariokart_duration_wochen_schmal <span class="ot">&lt;-</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(mariokart_duration_wochen_gerundet, duration, </span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>         duration_week, duration_week_gerundet)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>mariokart_duration_wochen_schmal <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1102,15 +1156,15 @@ Abbildung&nbsp;4.8: Spalten verändern/neu berechnen mit <code>mutate</code>
 <blockquote class="blockquote">
 <p><span>🤖</span> Eigentlich nur dann, wenn man die Fakten gut verstehen will, sonst nicht.</p>
 </blockquote>
-</section><section id="zeilen-zählen-mit-count" class="level3" data-number="4.2.7"><h3 data-number="4.2.7" class="anchored" data-anchor-id="zeilen-zählen-mit-count">
-<span class="header-section-number">4.2.7</span> Zeilen zählen mit <code>count</code>
-</h3>
+</section>
+<section id="zeilen-zählen-mit-count" class="level3" data-number="4.2.7">
+<h3 data-number="4.2.7" class="anchored" data-anchor-id="zeilen-zählen-mit-count"><span class="header-section-number">4.2.7</span> Zeilen zählen mit <code>count</code></h3>
 <p>Arbeitet man mit nominalskalierten Daten, ist (fast) alles, was man mit den Daten tun kann, die entsprechenden Zeilen der Tabelle zu zählen: Man könnte z.<span class="math inline">\(\,\)</span>B. fragen, wie viele neue und wie viele alte Spiele in der Tabelle (Dataframe) <code>mariokart</code> vorhanden sind.</p>
 <div id="exm-count" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 4.10</strong></span> Nach der letzten Präsentation Ihrer Analyse hat Ihre Chefin gestöhnt: “Oh nein, alles so kompliziert. Statistik! Himmel hilf! Kann man das nicht einfacher machen?” Anstelle von irgendwelchen komplizierten Berechnungen (Mittelwert?) möchten Sie ihr beim nächsten Treffen nur zeigen, wie viele Computerspiele neu und wie viele gebraucht sind (in Ihrem Datensatz). Schlichte Häufigkeiten also. Hoffentlich ist Ihre Chefin nicht wieder überfordert …</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariocart_counted</span> <span class="op">&lt;-</span> <span class="fu">count</span><span class="op">(</span><span class="va">mariokart</span>, <span class="va">cond</span><span class="op">)</span></span>
-<span><span class="va">mariocart_counted</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mariocart_counted <span class="ot">&lt;-</span> <span class="fu">count</span>(mariokart, cond)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>mariocart_counted</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1123,7 +1177,7 @@ Abbildung&nbsp;4.8: Spalten verändern/neu berechnen mit <code>mutate</code>
 </div>
 <p>Jetzt könnte man noch den <em>Anteil</em> (engl. <em>proportion</em>) ergänzen: Welcher <em>Anteil</em> (der 143 Spiele in <code>mariokart</code>) ist neu, welcher gebraucht?</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mutate</span><span class="op">(</span><span class="va">mariocart_counted</span>, Anteil <span class="op">=</span> <span class="va">n</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(mariocart_counted, <span class="at">Anteil =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1138,13 +1192,15 @@ Abbildung&nbsp;4.8: Spalten verändern/neu berechnen mit <code>mutate</code>
 <div id="exr-count2" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 4.13</strong></span> Zählen Sie Sie, wie viele Auktionen ein Foto enthalten – innerhalb der gebrauchten Spiele und innerhalb der neuen Spiele. Anders gesagt: Teilen Sie den Datensatz sowohl nach Zustand als auch nach Foto auf und zählen Sie jeweils, wie viele Spiele/Auktionen in die jeweilige Gruppe gehören.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> <span class="math inline">\(\square\)</span></p>
 </div>
-</section><section id="verben-am-fließband" class="level3" data-number="4.2.8"><h3 data-number="4.2.8" class="anchored" data-anchor-id="verben-am-fließband">
-<span class="header-section-number">4.2.8</span> Verben am Fließband</h3>
+</section>
+<section id="verben-am-fließband" class="level3" data-number="4.2.8">
+<h3 data-number="4.2.8" class="anchored" data-anchor-id="verben-am-fließband"><span class="header-section-number">4.2.8</span> Verben am Fließband</h3>
 <p>Die Befehle (“Verben”) des Tidyverse sind jeweils für einzelne, typische Aufgaben des Datenaufbereitens (“Datenjudo”) zuständig. Typischerweise erwarten diese Befehle eine Tabelle (<i class="fa-solid fa-table" aria-label="table"></i>) als Input und liefern eine Tabelle aus Output zurück, s. <a href="#fig-tbl-in-out" class="quarto-xref">Abbildung&nbsp;<span>4.9</span></a>. Die Verben des Datenjudos werden beim <a href="https://tidydatatutor.com/">“Tidydatatutor”</a> anschaulich illustriert.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
 <div class="cell" data-fig-width="4" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-tbl-in-out" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-tbl-in-out-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tbl-in-out-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
 <pre class="mermaid mermaid-js" data-label="fig-tbl-in-out">flowchart LR
   A["▥"] --&gt; B[tidyverse-Befehl] --&gt; C["▥"] 
@@ -1153,19 +1209,23 @@ Abbildung&nbsp;4.8: Spalten verändern/neu berechnen mit <code>mutate</code>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tbl-in-out-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;4.9: Tidyverse-Befehle erwarten normalerweise eine Tabelle (“Tibble”) als Input und geben auch eine Tabelle zurück als Output
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
-</section></section><section id="sec-pipe" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="sec-pipe">
-<span class="header-section-number">4.3</span> Die Pfeife</h2>
+</section>
+</section>
+<section id="sec-pipe" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="sec-pipe"><span class="header-section-number">4.3</span> Die Pfeife</h2>
 <p><span>🚬 👈</span><a href="https://en.wikipedia.org/wiki/The_Treachery_of_Images">Das ist keine Pfeife</a>, wie René Magritte 1929 in seinem <a href="https://en.wikipedia.org/wiki/File:MagrittePipe.jpg">berühmten Bild</a> schrieb, s. <a href="#fig-pfeifen" class="quarto-xref">Abbildung&nbsp;<span>4.10</span></a>.</p>
 <div id="fig-pfeifen" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-pfeifen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pfeifen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-panel" data-layout-ncol="4">
 <div class="quarto-layout-row">
 <div class="column quarto-layout-cell" style="flex-basis: 41.7%;justify-content: center;">
-<p><img src="img/800px-Pipa_savinelli.jpg" class="img-fluid figure-img"></p>
+<p><a href="img/800px-Pipa_savinelli.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Abbildung&nbsp;4.10: So sieht die Pfeife in R aus (Jaja, das ist keine Pfeife, sondern ein Symbol einer Pfeife …). Links: Ein Bild einer Pfeife [@m72004]. Mitte und Rechts: Die zwei R-Symbole für eine “Pfeife” (pipe)."><img src="img/800px-Pipa_savinelli.jpg" class="img-fluid figure-img"></a></p>
 </div>
 <div class="column quarto-layout-cell" style="flex-basis: 8.3%;justify-content: flex-start;">
 <!-- Empty col -->
@@ -1185,18 +1245,19 @@ Abbildung&nbsp;4.9: Tidyverse-Befehle erwarten normalerweise eine Tabelle (“Ti
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pfeifen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;4.10: So sieht die Pfeife in R aus (Jaja, das ist keine Pfeife, sondern ein Symbol einer Pfeife …). Links: Ein <em>Bild</em> einer Pfeife <span class="citation" data-cites="m72004">(<a href="references.html#ref-m72004" role="doc-biblioref">M7, 2004</a>)</span>. Mitte und Rechts: Die zwei R-Symbole für eine “Pfeife” (pipe).
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
-<section id="russische-puppen" class="level3" data-number="4.3.1"><h3 data-number="4.3.1" class="anchored" data-anchor-id="russische-puppen">
-<span class="header-section-number">4.3.1</span> Russische Puppen</h3>
+<section id="russische-puppen" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="russische-puppen"><span class="header-section-number">4.3.1</span> Russische Puppen</h3>
 <p>Computerbefehle, und im Speziellen R-Befehle, kann man “aufeinander” – oder vielmehr: ineinander – stapeln, so ähnlich wie eine russische Puppe (vgl. <a href="020-R.html#sec-first-fun" class="quarto-xref"><span>Kapitel 3.6.3</span></a>). Schauen wir uns das in einem Beispiel an. Dazu definieren wir zuerst einen Vektor <code>x</code> aus drei Zahlen:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Und dann kommt unser verschachtelter Befehl:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">## [1] 0</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(x <span class="sc">-</span> <span class="fu">mean</span>(x))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Wie schon erwähnt, arbeitet R so einen “verschachtelten” Befehl <em>von innen nach außen</em> ab:</p>
 <p>Start: <code>sum(x - mean(x))</code></p>
@@ -1208,19 +1269,22 @@ Abbildung&nbsp;4.10: So sieht die Pfeife in R aus (Jaja, das ist keine Pfeife, s
 <p>Schritt 3: <code>0</code>. Fertig. Ganz schön kompliziert!</p>
 <p>Soweit kann man noch einigermaßen folgen. Aber das Verschachteln kann man noch extremer machen, dann wird’s wild. Schauen Sie sich mal folgende (Pseudo-)Syntax an:</p>
 <div id="lst-schachtel" class="r listing quarto-float quarto-figure quarto-figure-left anchored">
-<figure class="quarto-float quarto-float-lst figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-schachtel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-schachtel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;4.2: Eine wild verschachtelte Sequenz von Pseudo-Befehlen
-</figcaption><div aria-describedby="lst-schachtel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">fasse_zusammen</span><span class="op">(</span></span>
-<span>  <span class="fu">gruppiere</span><span class="op">(</span></span>
-<span>    <span class="fu">wähle_spalten</span><span class="op">(</span></span>
-<span>      <span class="fu">filter_zeilen</span><span class="op">(</span><span class="va">meine_daten</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</figcaption>
+<div aria-describedby="lst-schachtel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fasse_zusammen</span>(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gruppiere</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    wähle<span class="fu">_spalten</span>(</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter_zeilen</span>(meine_daten))))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
 </div>
 <p>Ein beliebter Fehler ist es übrigens, nicht die richtige Zahl an schließenden Klammern hinzuschreiben, z.<span class="math inline">\(\,\)</span>B. <code>d(c(b(a(meine_daten))</code>. Falsche Zahl an Klammern!</p>
-</section><section id="die-pfeife-zur-rettung" class="level3" data-number="4.3.2"><h3 data-number="4.3.2" class="anchored" data-anchor-id="die-pfeife-zur-rettung">
-<span class="header-section-number">4.3.2</span> Die Pfeife zur Rettung</h3>
+</section>
+<section id="die-pfeife-zur-rettung" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="die-pfeife-zur-rettung"><span class="header-section-number">4.3.2</span> Die Pfeife zur Rettung</h3>
 <p><a href="#lst-schachtel" class="quarto-xref">Listing&nbsp;<span>4.2</span></a> ist schon harter Tobak, was für echte Fans. Wäre es nicht einfacher, man könnte <a href="#lst-schachtel" class="quarto-xref">Listing&nbsp;<span>4.2</span></a> wie folgt schreiben:</p>
 <pre><code>Nimm "meine_daten" *und dann*
   filter die gewünschte Zeilen *und dann*
@@ -1247,7 +1311,8 @@ Hinweis
 <div class="cell" data-fig-height="0.4" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-pfeife" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
 <pre class="mermaid mermaid-js" data-label="fig-pfeife">flowchart LR
   A["▥"] --filter&lt;br&gt;zeilen--&gt;B["▥"] 
@@ -1259,38 +1324,43 @@ Hinweis
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;4.11: Illustration für eine Pfeifensequenz, es geht vorwärts wie am Fließband.
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
 <div id="lst-pfeife" class="r listing quarto-float quarto-figure quarto-figure-left anchored">
-<figure class="quarto-float quarto-float-lst figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;4.3: Eine Pfeifen-Befehlssequenz (Pseudo-Syntax)
-</figcaption><div aria-describedby="lst-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">meine_daten</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">filter_gewünschte_zeilen</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">wähle_gewünschte_spalten</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">gruppiere</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">fasse_zusammen</span><span class="op">(</span><span class="op">)</span> </span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</figcaption>
+<div aria-describedby="lst-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>meine_daten <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  filter_gewünschte<span class="fu">_zeilen</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  wähle_gewünschte<span class="fu">_spalten</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gruppiere</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fasse_zusammen</span>() </span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
 </div>
 <p>Und jetzt kommt’s: So eine Art von Befehls-Verkettung gibt es in R. Schauen Sie sich mal <a href="#lst-pfeife" class="quarto-xref">Listing&nbsp;<span>4.3</span></a> an im Vergleich zu <a href="#lst-schachtel" class="quarto-xref">Listing&nbsp;<span>4.2</span></a>. So eine Pfeifen-Befehlsequenz ist ein wie ein Fließband, an dem es mehrere Arbeitsstationen gibt, s. <a href="#fig-pfeife" class="quarto-xref">Abbildung&nbsp;<span>4.11</span></a>. Unser Datensatz wird am Fließband von Station zu Station weitergereicht und an jeder Stelle weiterverarbeitet. So könnte Ihre “Pfeifen-Sequenz” für den Mariokart-Datensatz aussehen, s. <a href="#lst-ihre-pfeife" class="quarto-xref">Listing&nbsp;<span>4.4</span></a>.</p>
 <div class="cell" data-layout-align="center" data-tbl-cap="Endprodukt einer Pfeifen-Syntax">
 <div id="lst-ihre-pfeife" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
-<figure class="quarto-float quarto-float-lst figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-ihre-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-ihre-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;4.4: Mariokart am Fließband: Die ‘Pfeifen-Syntax’
-</figcaption><div aria-describedby="lst-ihre-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Hey R, nimm die Tabelle "mariokart":</span></span>
-<span><span class="va">mariokart</span> <span class="op">%&gt;%</span>  </span>
-<span>   <span class="co"># filter nur die günstigen Spiele:</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="co"># wähle die zwei Spalten:</span></span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="va">cond</span>, <span class="va">total_pr</span><span class="op">)</span> <span class="op">%&gt;%</span>  </span>
-<span>  <span class="co"># gruppiere die Tabelle nach Zustand des Spiels:</span></span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">cond</span><span class="op">)</span> <span class="op">%&gt;%</span>  </span>
-<span>  <span class="co"># fasse beide Gruppen nach dem mittleren Preis zusammen:</span></span>
-<span>  <span class="fu">summarise</span><span class="op">(</span>total_pr_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span><span class="op">)</span>  </span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</figcaption>
+<div aria-describedby="lst-ihre-pfeife-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hey R, nimm die Tabelle "mariokart":</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span>  </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>   <span class="co"># filter nur die günstigen Spiele:</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># wähle die zwei Spalten:</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(cond, total_pr) <span class="sc">%&gt;%</span>  </span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># gruppiere die Tabelle nach Zustand des Spiels:</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cond) <span class="sc">%&gt;%</span>  </span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fasse beide Gruppen nach dem mittleren Preis zusammen:</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_pr_mean =</span> <span class="fu">mean</span>(total_pr))  </span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
 </div>
@@ -1308,8 +1378,10 @@ Listing&nbsp;4.4: Mariokart am Fließband: Die ‘Pfeifen-Syntax’
 <!-- ### Fehlende Werte  -->
 <!-- ### Spalten umbenennen -->
 <!-- ### Werte umkodieren -->
-</section></section><section id="beispiele-für-forschungsfragen" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="beispiele-für-forschungsfragen">
-<span class="header-section-number">4.4</span> Beispiele für Forschungsfragen</h2>
+</section>
+</section>
+<section id="beispiele-für-forschungsfragen" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="beispiele-für-forschungsfragen"><span class="header-section-number">4.4</span> Beispiele für Forschungsfragen</h2>
 <p>Bevor Sie die Lösungen der folgenden Fallbeispiele lesen, versuchen Sie die Aufgaben selbst zu lösen. Ja, ich weiß, es ist hart, nicht gleich auf die Lösungen zu schauen!</p>
 <div id="exr-fofrage1" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 4.14 (Das teuerste Spiel?)</strong></span> Sie arbeiten als strategischer Assistent der Geschäftsführerin und sind für Faktenchecks und andere Daten-Aufgaben zuständig. Heute sollen Sie zeigen, was Sie können (Schluck).</p>
@@ -1318,10 +1390,10 @@ Listing&nbsp;4.4: Mariokart am Fließband: Die ‘Pfeifen-Syntax’
 </blockquote>
 <p><strong>Lösung</strong></p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_photo</span> <span class="op">==</span> <span class="st">"yes"</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">cond</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarise</span><span class="op">(</span>total_pr_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(stock_photo <span class="sc">==</span> <span class="st">"yes"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cond) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_pr_max =</span> <span class="fu">max</span>(total_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1332,9 +1404,9 @@ Listing&nbsp;4.4: Mariokart am Fließband: Die ‘Pfeifen-Syntax’
 </div>
 <p>Die Funktion <code>max</code> liefert den größten Wert eines Vektors zurück:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span><span class="co">## [1] 10</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">10</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(x)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 10</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Das teuerste Spiel mit Foto kostet <code>75</code> Dollar, wenn es neu ist und <code>62</code>, wenn es gebraucht ist. <span class="math inline">\(\square\)</span></p>
 </div>
@@ -1346,8 +1418,8 @@ Listing&nbsp;4.4: Mariokart am Fließband: Die ‘Pfeifen-Syntax’
 <p><strong>Lösung</strong></p>
 <p>Wenn wir die Anzahl der Spiele zählen in Abhängigkeit der beigelegten Lenkräder (<code>wheels</code>), bekommen wir eine Tabelle mit zwei Spalten: <code>wheels</code> und <code>n</code>. <code>n</code> zählt, wie viele Spiele (Zeilen) in der jeweiligen Gruppe (“Teiltabelle”) von <code>wheels</code> sind.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">count</span><span class="op">(</span><span class="va">wheels</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(wheels)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1358,11 +1430,11 @@ Listing&nbsp;4.4: Mariokart am Fließband: Die ‘Pfeifen-Syntax’
 </div>
 <p>Aus dieser Tabelle sehen wir, dass 3 oder 4 Lenkräder nur selten (2 bzw. 1 Mal) beigelegt wurden und wir solche Spiele herausfiltern sollten, bevor wir den Mittelwert der Versandkosten ausrechnen:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">wheels</span> <span class="op">&lt;</span> <span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">wheels</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarise</span><span class="op">(</span>mittlere_versandkosten <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">ship_pr</span><span class="op">)</span>,</span>
-<span>            anzahl_spiele <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(wheels <span class="sc">&lt;</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(wheels) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mittlere_versandkosten =</span> <span class="fu">mean</span>(ship_pr),</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">anzahl_spiele =</span> <span class="fu">n</span>())</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1381,12 +1453,12 @@ Listing&nbsp;4.4: Mariokart am Fließband: Die ‘Pfeifen-Syntax’
 </blockquote>
 <p><strong>Lösung</strong></p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>total_pr_yen <span class="op">=</span> <span class="va">total_pr</span> <span class="op">*</span> <span class="fl">133</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarise</span><span class="op">(</span></span>
-<span>    preis_yen_mw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">total_pr_yen</span><span class="op">)</span>,</span>
-<span>    preis_yen_mw_minus_10proz <span class="op">=</span> <span class="va">preis_yen_mw</span> <span class="op">-</span> <span class="fl">0.1</span><span class="op">*</span><span class="va">preis_yen_mw</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_pr_yen =</span> total_pr <span class="sc">*</span> <span class="dv">133</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">preis_yen_mw =</span> <span class="fu">mean</span>(total_pr_yen),</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">preis_yen_mw_minus_10proz =</span> preis_yen_mw <span class="sc">-</span> <span class="fl">0.1</span><span class="sc">*</span>preis_yen_mw)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1400,11 +1472,13 @@ Listing&nbsp;4.4: Mariokart am Fließband: Die ‘Pfeifen-Syntax’
 <div id="exr-diy" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 4.17 (Do It Yourself)</strong></span> Denken Sie sich selber ähnliche Forschungsfragen aus. Stellen Sie diese einer vertrauenswürdigen Kommilitonen bzw. einem vertrauenswürdigen Kommilitonen. DIY! Schauen Sie, ob Ihre Aufgabe richtig gelöst wird. Prüfen Sie streng … <span class="math inline">\(\square\)</span></p>
 </div>
-</section><section id="praxisbezug" class="level2" data-number="4.5"><h2 data-number="4.5" class="anchored" data-anchor-id="praxisbezug">
-<span class="header-section-number">4.5</span> Praxisbezug</h2>
+</section>
+<section id="praxisbezug" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="praxisbezug"><span class="header-section-number">4.5</span> Praxisbezug</h2>
 <p>Die Covid19-Epidemie hatte weltweit massive Auswirkungen; auch psychologischer Art wie Vereinsamung, Angst oder Depression. <span class="citation" data-cites="mulukom_psychological_2020">Mulukom et al. (<a href="references.html#ref-mulukom_psychological_2020" role="doc-biblioref">2020</a>)</span> berichten eine Studie, die die psychologischen Auswirkungen untersucht; die Studie ist <a href="https://osf.io/tsjnb/">unter der Projekt-ID <em>tsjnb</em> bei der Open Science Foundation (OSF), &lt;https://osf.io/tsjnb/&gt;, angemeldet</a>. Die Daten wurden mit R ausgewertet. Beispielhaft ist unter <a href="https://osf.io/4b9p2" class="uri">https://osf.io/4b9p2</a> die R-Syntax zu sehen, die die Autoren zur Datenaufbereitung verwendet haben. Einen guten Teil dieser Syntax kennen Sie aus diesem Kapitel. Diese Studie ist, neben einigen vergleichbaren, ein schönes Beispiel, wie Forschung und Praxis ineinander greifen können: Angewandte Forschung als Beitrag zur Lösung eines akuten Problems, der Corona-Pandemie.</p>
-</section><section id="wie-man-mit-statistik-lügt" class="level2" data-number="4.6"><h2 data-number="4.6" class="anchored" data-anchor-id="wie-man-mit-statistik-lügt">
-<span class="header-section-number">4.6</span> Wie man mit Statistik lügt</h2>
+</section>
+<section id="wie-man-mit-statistik-lügt" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="wie-man-mit-statistik-lügt"><span class="header-section-number">4.6</span> Wie man mit Statistik lügt</h2>
 <p>Ein (leider) immer mal wieder zu beobachtender “Trick”, um Daten zu frisieren ist, nur die Daten zu berichten, die einem in den Kram passen.</p>
 <div id="exm-luege-filter" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 4.11</strong></span> Eine Analystin <span>👩</span> möchte zeigen, dass der Verkaufspreis von Mariokart-Spielen “viel zu niedrig” ist. Es muss ein höherer Wert rauskommen, findet die Analystin. Der mittlere Verkaufspreis (im Datensatz <code>mariokart</code>) liegt bei 50 Euro.</p>
@@ -1413,13 +1487,13 @@ Listing&nbsp;4.4: Mariokart am Fließband: Die ‘Pfeifen-Syntax’
 </blockquote>
 <p>Um dieses Ziel zu erreichen, teilt die Analystin den Datensatz in Gruppen nach Anzahl der dem Spiel beigelegten Lenkräder (<code>wheels</code>). Dann wird der Mittelwert pro Gruppe berechnet.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_wheels</span> <span class="op">&lt;-</span> </span>
-<span><span class="va">mariokart</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">wheels</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarise</span><span class="op">(</span>pr_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span>,</span>
-<span>            count_n <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>  <span class="co"># `n` gibt die Anzahl der Zeilen pro Gruppe an</span></span>
-<span></span>
-<span><span class="va">mariokart_wheels</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>mariokart_wheels <span class="ot">&lt;-</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(wheels) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">pr_mean =</span> <span class="fu">mean</span>(total_pr),</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">count_n =</span> <span class="fu">n</span>())  <span class="co"># `n` gibt die Anzahl der Zeilen pro Gruppe an</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>mariokart_wheels</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1430,8 +1504,8 @@ Listing&nbsp;4.4: Mariokart am Fließband: Die ‘Pfeifen-Syntax’
 </div>
 <p>Schließlich berechnet unsere Analystin den <em>ungewichteten</em> Mittelwert über diese 5 Gruppen:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_wheels</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarise</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">pr_mean</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>mariokart_wheels <span class="sc">%&gt;%</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">mean</span>(pr_mean))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1443,33 +1517,36 @@ Listing&nbsp;4.4: Mariokart am Fließband: Die ‘Pfeifen-Syntax’
 <p>Und das Ergebnis lautet: 56 Euro! Das ist doch schon etwas “besser” als 50 Euro.</p>
 <p>Natürlich ist es <em>falsch</em> und irreführend, hier einen ungewichteten Mittelwert zu berechnen. Der gewichtete Mittelwert würde wiederum zum korrekten Ergebnis, 50 Euro, führen. <span class="math inline">\(\square\)</span></p>
 </div>
-</section><section id="fallstudien" class="level2" data-number="4.7"><h2 data-number="4.7" class="anchored" data-anchor-id="fallstudien">
-<span class="header-section-number">4.7</span> Fallstudien</h2>
-<section id="die-pinguine" class="level3" data-number="4.7.1"><h3 data-number="4.7.1" class="anchored" data-anchor-id="die-pinguine">
-<span class="header-section-number">4.7.1</span> Die Pinguine</h3>
+</section>
+<section id="fallstudien" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="fallstudien"><span class="header-section-number">4.7</span> Fallstudien</h2>
+<section id="die-pinguine" class="level3" data-number="4.7.1">
+<h3 data-number="4.7.1" class="anchored" data-anchor-id="die-pinguine"><span class="header-section-number">4.7.1</span> Die Pinguine</h3>
 <div id="fig-penguins" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-penguins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/penguins.png" class="img-fluid figure-img" style="width:50.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-penguins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/penguins.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Abbildung&nbsp;4.12: Possierlich: Die Pinguine [@horst_statistics_2024]"><img src="img/penguins.png" class="img-fluid figure-img" style="width:50.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-penguins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;4.12: Possierlich: Die Pinguine <span class="citation" data-cites="horst_statistics_2024">(<a href="references.html#ref-horst_statistics_2024" role="doc-biblioref">Horst, 2024</a>)</span>
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 <div id="exr-peng-start" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 4.18</strong></span> Machen Sie sich zunächst mit dem Pinguin-Datensatz vertraut. Sie finden den Datensatz <code>penguins</code> im R-Paket <code>palmerpenguins</code>, das Sie auf gewohnte Art installieren können (vgl. <a href="020-R.html#sec-r-pckgs" class="quarto-xref"><span>Kapitel 3.4</span></a>); im Internet findet man den Datensatz auch als CSV-Datei. Fokussieren Sie Ihre Analyse auf die Zielvariable <em>Gewicht</em>. <span class="math inline">\(\square\)</span></p>
 </div>
 <p>Die folgende Datenapp ermöglicht Ihnen, die Verteilung des Körpergewichts zu betrachten, wobei sie die Pinguin-Spezies filtern können sowie eine Mindestlänge des Schnabels verlangen können.</p>
 <div class="cell panel-input card bg-light p-2">
-<div class="sourceCode cell-code hidden" id="cb35" data-startfrom="1451" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1450;"><span id="cb35-1451"><a href="#cb35-1451" aria-hidden="true" tabindex="-1"></a>viewof bill_length_min <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>(</span>
-<span id="cb35-1452"><a href="#cb35-1452" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">32</span><span class="op">,</span> <span class="dv">50</span>]<span class="op">,</span> </span>
-<span id="cb35-1453"><a href="#cb35-1453" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">value</span><span class="op">:</span> <span class="dv">35</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Bill length (min):"</span>}</span>
-<span id="cb35-1454"><a href="#cb35-1454" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb35-1455"><a href="#cb35-1455" aria-hidden="true" tabindex="-1"></a>viewof islands <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>(</span>
-<span id="cb35-1456"><a href="#cb35-1456" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"Torgersen"</span><span class="op">,</span> <span class="st">"Biscoe"</span><span class="op">,</span> <span class="st">"Dream"</span>]<span class="op">,</span> </span>
-<span id="cb35-1457"><a href="#cb35-1457" aria-hidden="true" tabindex="-1"></a>  { <span class="dt">value</span><span class="op">:</span> [<span class="st">"Torgersen"</span><span class="op">,</span> <span class="st">"Biscoe"</span>]<span class="op">,</span> </span>
-<span id="cb35-1458"><a href="#cb35-1458" aria-hidden="true" tabindex="-1"></a>    <span class="dt">label</span><span class="op">:</span> <span class="st">"Islands:"</span></span>
-<span id="cb35-1459"><a href="#cb35-1459" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb35-1460"><a href="#cb35-1460" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb35" data-startfrom="1452" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1451;"><span id="cb35-1452"><a href="#cb35-1452" aria-hidden="true" tabindex="-1"></a>viewof bill_length_min <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>(</span>
+<span id="cb35-1453"><a href="#cb35-1453" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">32</span><span class="op">,</span> <span class="dv">50</span>]<span class="op">,</span> </span>
+<span id="cb35-1454"><a href="#cb35-1454" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">value</span><span class="op">:</span> <span class="dv">35</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Bill length (min):"</span>}</span>
+<span id="cb35-1455"><a href="#cb35-1455" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-1456"><a href="#cb35-1456" aria-hidden="true" tabindex="-1"></a>viewof islands <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>(</span>
+<span id="cb35-1457"><a href="#cb35-1457" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"Torgersen"</span><span class="op">,</span> <span class="st">"Biscoe"</span><span class="op">,</span> <span class="st">"Dream"</span>]<span class="op">,</span> </span>
+<span id="cb35-1458"><a href="#cb35-1458" aria-hidden="true" tabindex="-1"></a>  { <span class="dt">value</span><span class="op">:</span> [<span class="st">"Torgersen"</span><span class="op">,</span> <span class="st">"Biscoe"</span>]<span class="op">,</span> </span>
+<span id="cb35-1459"><a href="#cb35-1459" aria-hidden="true" tabindex="-1"></a>    <span class="dt">label</span><span class="op">:</span> <span class="st">"Islands:"</span></span>
+<span id="cb35-1460"><a href="#cb35-1460" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-1461"><a href="#cb35-1461" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -1486,30 +1563,27 @@ Abbildung&nbsp;4.12: Possierlich: Die Pinguine <span class="citation" data-cites
 </div>
 </div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist">
-<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Plot</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Data</a></li>
-</ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Data</a></li></ul>
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb36" data-startfrom="1468" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1467;"><span id="cb36-1468"><a href="#cb36-1468" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">rectY</span>(filtered<span class="op">,</span> </span>
-<span id="cb36-1469"><a href="#cb36-1469" aria-hidden="true" tabindex="-1"></a>  Plot<span class="op">.</span><span class="fu">binX</span>(</span>
-<span id="cb36-1470"><a href="#cb36-1470" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">y</span><span class="op">:</span> <span class="st">"count"</span>}<span class="op">,</span> </span>
-<span id="cb36-1471"><a href="#cb36-1471" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">x</span><span class="op">:</span> <span class="st">"body_mass_g"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span> <span class="dt">thresholds</span><span class="op">:</span> <span class="dv">20</span>}</span>
-<span id="cb36-1472"><a href="#cb36-1472" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb36-1473"><a href="#cb36-1473" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">plot</span>({</span>
-<span id="cb36-1474"><a href="#cb36-1474" aria-hidden="true" tabindex="-1"></a>    <span class="dt">facet</span><span class="op">:</span> {</span>
-<span id="cb36-1475"><a href="#cb36-1475" aria-hidden="true" tabindex="-1"></a>      <span class="dt">data</span><span class="op">:</span> filtered<span class="op">,</span></span>
-<span id="cb36-1476"><a href="#cb36-1476" aria-hidden="true" tabindex="-1"></a>      <span class="dt">x</span><span class="op">:</span> <span class="st">"sex"</span><span class="op">,</span></span>
-<span id="cb36-1477"><a href="#cb36-1477" aria-hidden="true" tabindex="-1"></a>      <span class="dt">y</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span></span>
-<span id="cb36-1478"><a href="#cb36-1478" aria-hidden="true" tabindex="-1"></a>      <span class="dt">marginRight</span><span class="op">:</span> <span class="dv">80</span></span>
-<span id="cb36-1479"><a href="#cb36-1479" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
-<span id="cb36-1480"><a href="#cb36-1480" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [</span>
-<span id="cb36-1481"><a href="#cb36-1481" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">frame</span>()<span class="op">,</span></span>
-<span id="cb36-1482"><a href="#cb36-1482" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb36-1483"><a href="#cb36-1483" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb36-1484"><a href="#cb36-1484" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb36" data-startfrom="1469" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1468;"><span id="cb36-1469"><a href="#cb36-1469" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">rectY</span>(filtered<span class="op">,</span> </span>
+<span id="cb36-1470"><a href="#cb36-1470" aria-hidden="true" tabindex="-1"></a>  Plot<span class="op">.</span><span class="fu">binX</span>(</span>
+<span id="cb36-1471"><a href="#cb36-1471" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">y</span><span class="op">:</span> <span class="st">"count"</span>}<span class="op">,</span> </span>
+<span id="cb36-1472"><a href="#cb36-1472" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">x</span><span class="op">:</span> <span class="st">"body_mass_g"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span> <span class="dt">thresholds</span><span class="op">:</span> <span class="dv">20</span>}</span>
+<span id="cb36-1473"><a href="#cb36-1473" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb36-1474"><a href="#cb36-1474" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb36-1475"><a href="#cb36-1475" aria-hidden="true" tabindex="-1"></a>    <span class="dt">facet</span><span class="op">:</span> {</span>
+<span id="cb36-1476"><a href="#cb36-1476" aria-hidden="true" tabindex="-1"></a>      <span class="dt">data</span><span class="op">:</span> filtered<span class="op">,</span></span>
+<span id="cb36-1477"><a href="#cb36-1477" aria-hidden="true" tabindex="-1"></a>      <span class="dt">x</span><span class="op">:</span> <span class="st">"sex"</span><span class="op">,</span></span>
+<span id="cb36-1478"><a href="#cb36-1478" aria-hidden="true" tabindex="-1"></a>      <span class="dt">y</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span></span>
+<span id="cb36-1479"><a href="#cb36-1479" aria-hidden="true" tabindex="-1"></a>      <span class="dt">marginRight</span><span class="op">:</span> <span class="dv">80</span></span>
+<span id="cb36-1480"><a href="#cb36-1480" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb36-1481"><a href="#cb36-1481" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb36-1482"><a href="#cb36-1482" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">frame</span>()<span class="op">,</span></span>
+<span id="cb36-1483"><a href="#cb36-1483" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb36-1484"><a href="#cb36-1484" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb36-1485"><a href="#cb36-1485" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-2" data-nodetype="expression">
 
@@ -1519,7 +1593,7 @@ Abbildung&nbsp;4.12: Possierlich: Die Pinguine <span class="citation" data-cites
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb37" data-startfrom="1491" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1490;"><span id="cb37-1491"><a href="#cb37-1491" aria-hidden="true" tabindex="-1"></a>Inputs<span class="op">.</span><span class="fu">table</span>(filtered)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb37" data-startfrom="1492" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1491;"><span id="cb37-1492"><a href="#cb37-1492" aria-hidden="true" tabindex="-1"></a>Inputs<span class="op">.</span><span class="fu">table</span>(filtered)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="expression">
 
@@ -1530,7 +1604,7 @@ Abbildung&nbsp;4.12: Possierlich: Die Pinguine <span class="citation" data-cites
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb38" data-startfrom="1498" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1497;"><span id="cb38-1498"><a href="#cb38-1498" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> <span class="fu">FileAttachment</span>(<span class="st">"data/penguins.csv"</span>)<span class="op">.</span><span class="fu">csv</span>({ <span class="dt">typed</span><span class="op">:</span> <span class="kw">true</span> })</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb38" data-startfrom="1499" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1498;"><span id="cb38-1499"><a href="#cb38-1499" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> <span class="fu">FileAttachment</span>(<span class="st">"data/penguins.csv"</span>)<span class="op">.</span><span class="fu">csv</span>({ <span class="dt">typed</span><span class="op">:</span> <span class="kw">true</span> })</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-4" data-nodetype="declaration">
 
@@ -1538,10 +1612,10 @@ Abbildung&nbsp;4.12: Possierlich: Die Pinguine <span class="citation" data-cites
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb39" data-startfrom="1503" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1502;"><span id="cb39-1503"><a href="#cb39-1503" aria-hidden="true" tabindex="-1"></a>filtered <span class="op">=</span> data<span class="op">.</span><span class="fu">filter</span>(<span class="kw">function</span>(penguin) {</span>
-<span id="cb39-1504"><a href="#cb39-1504" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> bill_length_min <span class="op">&lt;</span> penguin<span class="op">.</span><span class="at">bill_length_mm</span> <span class="op">&amp;&amp;</span></span>
-<span id="cb39-1505"><a href="#cb39-1505" aria-hidden="true" tabindex="-1"></a>         islands<span class="op">.</span><span class="fu">includes</span>(penguin<span class="op">.</span><span class="at">island</span>)<span class="op">;</span></span>
-<span id="cb39-1506"><a href="#cb39-1506" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb39" data-startfrom="1504" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1503;"><span id="cb39-1504"><a href="#cb39-1504" aria-hidden="true" tabindex="-1"></a>filtered <span class="op">=</span> data<span class="op">.</span><span class="fu">filter</span>(<span class="kw">function</span>(penguin) {</span>
+<span id="cb39-1505"><a href="#cb39-1505" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> bill_length_min <span class="op">&lt;</span> penguin<span class="op">.</span><span class="at">bill_length_mm</span> <span class="op">&amp;&amp;</span></span>
+<span id="cb39-1506"><a href="#cb39-1506" aria-hidden="true" tabindex="-1"></a>         islands<span class="op">.</span><span class="fu">includes</span>(penguin<span class="op">.</span><span class="at">island</span>)<span class="op">;</span></span>
+<span id="cb39-1507"><a href="#cb39-1507" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-5" data-nodetype="declaration">
 
@@ -1554,12 +1628,16 @@ Abbildung&nbsp;4.12: Possierlich: Die Pinguine <span class="citation" data-cites
 <li>Was ist das mediane Gewicht von Pinguinen, gruppiert nach Spezies und nach Gewicht?</li>
 <li>Wie viele Pinguine gibt es pro Spezies?</li>
 <li>Wie viel wiegt der schwerste und der leichteste Pinguin pro Spezies?</li>
-</ol></section><section id="fallstudie-covidistress" class="level3" data-number="4.7.2"><h3 data-number="4.7.2" class="anchored" data-anchor-id="fallstudie-covidistress">
-<span class="header-section-number">4.7.2</span> Fallstudie COVIDiSTRESS</h3>
+</ol>
+</section>
+<section id="fallstudie-covidistress" class="level3" data-number="4.7.2">
+<h3 data-number="4.7.2" class="anchored" data-anchor-id="fallstudie-covidistress"><span class="header-section-number">4.7.2</span> Fallstudie COVIDiSTRESS</h3>
 <!-- [Diese Fallstudie](https://sebastiansauer.github.io/Fallstudie_Flights/) hat die Analyse von Flugverspätungen zum Thema. -->
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="img/Covidistress1.jpg" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption>Studie COVIDiSTTRESS <span class="citation" data-cites="lieberoth2022">(<a href="references.html#ref-lieberoth2022" role="doc-biblioref">Lieberoth et al., 2022</a>)</span></figcaption></figure>
+<figure class="figure">
+<p><a href="img/Covidistress1.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Studie COVIDiSTTRESS [@lieberoth2022]"><img src="img/Covidistress1.jpg" class="img-fluid figure-img" style="width:50.0%" alt="Studie COVIDiSTTRESS (Lieberoth et al., 2022)"></a></p>
+<figcaption>Studie COVIDiSTTRESS <span class="citation" data-cites="lieberoth2022">(<a href="references.html#ref-lieberoth2022" role="doc-biblioref">Lieberoth et al., 2022</a>)</span></figcaption>
+</figure>
 </div>
 <p>Lesen Sie die Beschreibung der Studie COVIDiSTRESS <span class="citation" data-cites="lieberoth2022">(<a href="references.html#ref-lieberoth2022" role="doc-biblioref">Lieberoth et al., 2022</a>)</span>. Hier ist ein Abstract:</p>
 <blockquote class="blockquote">
@@ -1567,15 +1645,20 @@ Abbildung&nbsp;4.12: Possierlich: Die Pinguine <span class="citation" data-cites
 </blockquote>
 <p><a href="https://osf.io/z39us/files/osfstorage">Die Daten</a> stehen unter <a href="https://osf.io/z39us" class="uri">https://osf.io/z39us</a> zur freien Verfügung. Sie können diese echten Daten eigenständig analysieren.</p>
 <p><a href="https://osf.io/z39us/files/osfstorage/5f20b69732080501f5156b02">Diese Datei</a> beinhaltet die finalen, aufbereiteten Daten. Achtung: Die Datei ist recht groß, ca. 90 MB.</p>
-</section></section><section id="aufgaben" class="level2" data-number="4.8"><h2 data-number="4.8" class="anchored" data-anchor-id="aufgaben">
-<span class="header-section-number">4.8</span> Aufgaben</h2>
+</section>
+</section>
+<section id="quiz" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="quiz"><span class="header-section-number">4.8</span> Quiz</h2>
+</section>
+<section id="aufgaben" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="aufgaben"><span class="header-section-number">4.9</span> Aufgaben</h2>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-ChatGPT
+<span class="screen-reader-only">Tipp</span>ChatGPT
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1606,10 +1689,12 @@ ChatGPT
 <li><a href="https://sebastiansauer.github.io/Datenwerk/posts/summarise02/summarise02.html">summarise02</a></li>
 <li><a href="https://sebastiansauer.github.io/Datenwerk/posts/mutate01/mutate01.html">mutate01</a></li>
 <li><a href="https://sebastiansauer.github.io/Datenwerk/posts/wrangle3/wrangle3">wrangle3</a></li>
-</ol></section><section id="vertiefung" class="level2" data-number="4.9"><h2 data-number="4.9" class="anchored" data-anchor-id="vertiefung">
-<span class="header-section-number">4.9</span> Vertiefung</h2>
-<section id="fortgeschrittenes-r" class="level3" data-number="4.9.1"><h3 data-number="4.9.1" class="anchored" data-anchor-id="fortgeschrittenes-r">
-<span class="header-section-number">4.9.1</span> Fortgeschrittenes R</h3>
+</ol>
+</section>
+<section id="vertiefung" class="level2" data-number="4.10">
+<h2 data-number="4.10" class="anchored" data-anchor-id="vertiefung"><span class="header-section-number">4.10</span> Vertiefung</h2>
+<section id="fortgeschrittenes-r" class="level3" data-number="4.10.1">
+<h3 data-number="4.10.1" class="anchored" data-anchor-id="fortgeschrittenes-r"><span class="header-section-number">4.10.1</span> Fortgeschrittenes R</h3>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1624,16 +1709,14 @@ Hinweis
 </div>
 </div>
 <p>Häufig ist es nützlich, die Werte einer Variablen umzukodieren, z.<span class="math inline">\(\,\)</span>B. “weiblich” in “w” oder in <code>0</code>. Eine gute Möglichkeit, dies in R umzusetzen, bietet der Befehl <code>case_when</code>; der Befehl wohnt im Tidyverse.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> Im Datenwerk finden Sie dazu Übungen, etwa <a href="https://sebastiansauer.github.io/Datenwerk/posts/mutate03/mutate03.html">mutate03</a>.</p>
-</section><section id="sec-erbie" class="level3" data-number="4.9.2"><h3 data-number="4.9.2" class="anchored" data-anchor-id="sec-erbie">
-<span class="header-section-number">4.9.2</span> Hilfe?! Erbie!</h3>
+</section>
+<section id="sec-erbie" class="level3" data-number="4.10.2">
+<h3 data-number="4.10.2" class="anchored" data-anchor-id="sec-erbie"><span class="header-section-number">4.10.2</span> Hilfe?! Erbie!</h3>
 <p>R will nicht, so wie Sie wollen? Sie haben das Gefühl, R verweigert störrisch den Dienst, vermutlich rein aus Boshaftigkeit, rein um Sie zu ärgern? Ausführliches Googeln und ChatGPT befragen hat keine Lösung gebracht? Kurz, Sie brauchen die Hilfe eines kundigen Menschens? <a href="https://data-se.netlify.app/2022/01/31/erbie-einfache-reproduzierbare-beispiele-ihres-problems-mit-r-syntax/">Sie sollten Ihren Hilfeschrei so artikulieren</a>, dass er nicht nur gehört, sondern auch verstanden wird und einen anderen Menschen veranlasst und ermöglicht, Ihnen zu helfen.</p>
 <p>Also: Sie müssen Ihr Problem nachvollziehbar, aber prägnant formulieren. Das nennt man auch ein <em>ERBie</em>: ein <em>einfaches, reproduzierbares Beispiel</em> Ihres Problems mit (R-)Syntax:</p>
 <ul>
-<li>
-<em>einfach</em>: die einfachste Syntax, die Ihr Problem bzw. die Fehlermeldung produziert. Es bietet sich an, einen einfachen, allgemein bekannten Datensatz zu verwenden, etwa <code>mtcars</code>
-</li>
-<li>
-<em>reproduzierbar</em>: Code (z.<span class="math inline">\(\,\)</span>B. als Textdatei oder in einem Post), der die Fehlermeldung entstehen lässt</li>
+<li><em>einfach</em>: die einfachste Syntax, die Ihr Problem bzw. die Fehlermeldung produziert. Es bietet sich an, einen einfachen, allgemein bekannten Datensatz zu verwenden, etwa <code>mtcars</code></li>
+<li><em>reproduzierbar</em>: Code (z.<span class="math inline">\(\,\)</span>B. als Textdatei oder in einem Post), der die Fehlermeldung entstehen lässt</li>
 </ul>
 <div id="exm-erbie" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 4.12 (Beispiel für ein Erbie)</strong></span> <em>Problem:</em> Ich verstehe nicht, warum folgende Fehlermeldung kommt.</p>
@@ -1641,21 +1724,23 @@ Hinweis
 <p><em>Was ich schon versucht habe:</em> Ich habe folgende Posts gelesen …, aber ohne Erfolg.</p>
 <p><em>Erbie</em>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>  <span class="co"># nicht "tidyverse", denn "dplyr" reicht</span></span>
-<span></span>
-<span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span>am <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>  <span class="co"># den kürzesten Code, der Ihren Fehler entstehen lässt!</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># gibt Infos zur R-Version etc. aus</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(mtcars)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)  <span class="co"># nicht "tidyverse", denn "dplyr" reicht</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span> </span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="at">am =</span> <span class="dv">0</span>)  <span class="co"># den kürzesten Code, der Ihren Fehler entstehen lässt!</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()  <span class="co"># gibt Infos zur R-Version etc. aus</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre><code>Error in `filter()`</code></pre>
-<p>Mit dem Paket <code>reprex</code> kann man sich R-Syntax schön formuliert ausgeben lassen. Das ist perfekt, um den Code dann in einem Forum (oder Mail) einzustellen. Dafür müssen Sie nur den Code auswählen, <code>Strg-c</code> drücken und dann <code><a href="https://reprex.tidyverse.org/reference/reprex.html">reprex::reprex</a></code> ausführen. Mit <code>Strg-v</code> können Sie die schön formatierte Syntax (sowie die Ausgabe, auch schön formatiert) dann irgendwohin pasten.</p>
+<p>Mit dem Paket <code>reprex</code> kann man sich R-Syntax schön formuliert ausgeben lassen. Das ist perfekt, um den Code dann in einem Forum (oder Mail) einzustellen. Dafür müssen Sie nur den Code auswählen, <code>Strg-c</code> drücken und dann <code>reprex::reprex</code> ausführen. Mit <code>Strg-v</code> können Sie die schön formatierte Syntax (sowie die Ausgabe, auch schön formatiert) dann irgendwohin pasten.</p>
 </div>
 <center>
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="img/help-me-help-you.gif" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption>Help me help you <span class="citation" data-cites="imgflip_helpme">(<a href="references.html#ref-imgflip_helpme" role="doc-biblioref">imgflip, 2024b</a>)</span></figcaption></figure>
+<figure class="figure">
+<p><a href="img/help-me-help-you.gif" class="lightbox" data-gallery="quarto-lightbox-gallery-12" title="Help me help you [@imgflip_helpme]"><img src="img/help-me-help-you.gif" class="img-fluid figure-img" style="width:50.0%" alt="Help me help you (imgflip, 2024b)"></a></p>
+<figcaption>Help me help you <span class="citation" data-cites="imgflip_helpme">(<a href="references.html#ref-imgflip_helpme" role="doc-biblioref">imgflip, 2024b</a>)</span></figcaption>
+</figure>
 </div>
 </center>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1677,7 +1762,8 @@ Tipp
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="030-aufbereiten_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
+<figure class="figure">
+<p><a href="030-aufbereiten_files/figure-html/unnamed-chunk-45-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="030-aufbereiten_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -1687,15 +1773,19 @@ Tipp
 </div>
 </div>
 </div>
-</section><section id="zertifikate-und-online-kurse" class="level3" data-number="4.9.3"><h3 data-number="4.9.3" class="anchored" data-anchor-id="zertifikate-und-online-kurse">
-<span class="header-section-number">4.9.3</span> Zertifikate und Online-Kurse</h3>
+</section>
+<section id="zertifikate-und-online-kurse" class="level3" data-number="4.10.3">
+<h3 data-number="4.10.3" class="anchored" data-anchor-id="zertifikate-und-online-kurse"><span class="header-section-number">4.10.3</span> Zertifikate und Online-Kurse</h3>
 <p>Sie können zu den Inhalten dieses Kapitels Zertifikate erwerben (teilweise kostenlos), indem Sie einen Online-Kurs absolvieren, bei z.<span class="math inline">\(\,\)</span>B. folgenden Anbietern – Das ist keine Werbung für spezifische Anbieter und kein umfassender Überblick und keine Kaufempfehlung.</p>
 <ul>
 <li><a href="https://www.linkedin.com/learning/search?keywords=R">LinkedIn: R Courses</a></li>
 <li><a href="https://www.coursera.org/learn/data-analysis-r#modules">Google/Coursera: Data Analysis with R Programming</a></li>
 <li><a href="https://www.coursera.org/specializations/statistics">Duke University/Coursera: Data Analysis with R Specialization</a></li>
-</ul></section></section><section id="exkurs" class="level2" data-number="4.10"><h2 data-number="4.10" class="anchored" data-anchor-id="exkurs">
-<span class="header-section-number">4.10</span> Exkurs</h2>
+</ul>
+</section>
+</section>
+<section id="exkurs" class="level2" data-number="4.11">
+<h2 data-number="4.11" class="anchored" data-anchor-id="exkurs"><span class="header-section-number">4.11</span> Exkurs</h2>
 <p><a href="https://openai.com/dall-e-2/">Dall-E 2</a> ist eine KI, die “realistische Bilder und Kunst aus einer Beschreibung in natürlicher Sprache” erstellt.</p>
 <blockquote class="blockquote">
 <p><span>👨‍🏫</span> I’d like a mixture between robot und professor, in oil painting</p>
@@ -1704,16 +1794,19 @@ Tipp
 <p><span>🤖</span> … s. <a href="#fig-mix-rob-prof" class="quarto-xref">Abbildung&nbsp;<span>4.13</span></a></p>
 </blockquote>
 <div id="fig-mix-rob-prof" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-mix-rob-prof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/mix-prof-robot.png" class="img-fluid figure-img" style="width:50.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mix-rob-prof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/mix-prof-robot.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14" title="Abbildung&nbsp;4.13: Bild erzeugt von künstlicher Intelligenz, Quelle: DALL-E 2, 2023-02-09"><img src="img/mix-prof-robot.png" class="img-fluid figure-img" style="width:50.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mix-rob-prof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;4.13: Bild erzeugt von künstlicher Intelligenz, Quelle: DALL-E 2, 2023-02-09
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 <p>Der Nutzen künstlicher Intelligenz für die Datenanalyse ist natürlich breiter: Wenn Sie sich z.<span class="math inline">\(\,\)</span>B. über die Syntax eines bestimmten Befehls (oder allgemeiner: Vorhabens) nicht sicher sind, fragen Sie sich doch mal einen Bot wie ChatGPT.</p>
-</section><section id="literaturhinweise" class="level2" data-number="4.11"><h2 data-number="4.11" class="anchored" data-anchor-id="literaturhinweise">
-<span class="header-section-number">4.11</span> Literaturhinweise</h2>
+</section>
+<section id="literaturhinweise" class="level2" data-number="4.12">
+<h2 data-number="4.12" class="anchored" data-anchor-id="literaturhinweise"><span class="header-section-number">4.12</span> Literaturhinweise</h2>
 <p><span class="citation" data-cites="sauer_moderne_2019">Sauer (<a href="references.html#ref-sauer_moderne_2019" role="doc-biblioref">2019</a>)</span>, Kap. 7, gibt eine Einführung in die Datenaufbereitung (mit Hilfe von R), ähnlich zu den Inhalten dieses Kapitels. Mehr in die Tiefe des “Datenjudo” führen; der Autor Hadley Wickham ist in der R-Community sehr bekannt. Er ist einer der Hauptautoren von beliebten R-Paketen wie <code>dplyr</code> und <code>ggplot2</code>. <span class="citation" data-cites="wickham_r_2018">Wickham &amp; Grolemund (<a href="references.html#ref-wickham_r_2018" role="doc-biblioref">2018</a>)</span> Kap. 5 behandeln (etwas ausführlicher) die Themen dieses Kapitels.</p>
 <p>Wer sich tiefer in das Datenjudo mit dem Tidyverse einarbeiten möchte, dem sei z.<span class="math inline">\(\,\)</span>B. dieser <a href="https://www.datacamp.com/courses/introduction-to-the-tidyverse">Kurs</a> empfohlen.</p>
 
@@ -1747,7 +1840,9 @@ Sauer, S. (2019). <em>Moderne Datenanalyse mit R: Daten einlesen, aufbereiten, v
 Wickham, H., &amp; Grolemund, G. (2018). <em>R für Data Science: Daten importieren, bereinigen, umformen, modellieren und visualisieren</em> (F. Langenau, Übers.). O’Reilly. <a href="https://r4ds.had.co.nz/index.html">https://r4ds.had.co.nz/index.html</a>
 </div>
 </div>
-</section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
 <ol>
 <li id="fn1"><p>Quelle: ChatGTP 3.5, 2023-02-09<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p><code>select(mariokart, total_pr, cond, 2)</code><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1759,7 +1854,11 @@ Wickham, H., &amp; Grolemund, G. (2018). <em>R für Data Science: Daten importie
 <li id="fn8"><p><a href="https://tidydatatutor.com" class="uri">https://tidydatatutor.com</a><a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn9"><p>Genauer gesagt im Paket <code>magrittr</code>, welches aber von <code>tidyverse</code> geladen wird. Also nichts, um das Sie sich kümmern müssten.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn10"><p><a href="https://www.statology.org/dplyr-case_when/" class="uri">https://www.statology.org/dplyr-case_when/</a><a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol></section></main><!-- /main --><script>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script>
 
 /* definition of content for the buttons */
 const webex_buttons = {check_hidden:          "<b>&check;</b>",
@@ -2343,16 +2442,19 @@ window.onload = function() {
   update_total_correct();
 }
 
-</script><script type="ojs-module-contents">
+</script>
+<script type="ojs-module-contents">
 eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBiaWxsX2xlbmd0aF9taW4gPSBJbnB1dHMucmFuZ2UoXG4gIFszMiwgNTBdLCBcbiAge3ZhbHVlOiAzNSwgc3RlcDogMSwgbGFiZWw6IFwiQmlsbCBsZW5ndGggKG1pbik6XCJ9XG4pXG52aWV3b2YgaXNsYW5kcyA9IElucHV0cy5jaGVja2JveChcbiAgW1wiVG9yZ2Vyc2VuXCIsIFwiQmlzY29lXCIsIFwiRHJlYW1cIl0sIFxuICB7IHZhbHVlOiBbXCJUb3JnZXJzZW5cIiwgXCJCaXNjb2VcIl0sIFxuICAgIGxhYmVsOiBcIklzbGFuZHM6XCJcbiAgfVxuKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0yIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiUGxvdC5yZWN0WShmaWx0ZXJlZCwgXG4gIFBsb3QuYmluWChcbiAgICB7eTogXCJjb3VudFwifSwgXG4gICAge3g6IFwiYm9keV9tYXNzX2dcIiwgZmlsbDogXCJzcGVjaWVzXCIsIHRocmVzaG9sZHM6IDIwfVxuICApKVxuICAucGxvdCh7XG4gICAgZmFjZXQ6IHtcbiAgICAgIGRhdGE6IGZpbHRlcmVkLFxuICAgICAgeDogXCJzZXhcIixcbiAgICAgIHk6IFwic3BlY2llc1wiLFxuICAgICAgbWFyZ2luUmlnaHQ6IDgwXG4gICAgfSxcbiAgICBtYXJrczogW1xuICAgICAgUGxvdC5mcmFtZSgpLFxuICAgIF1cbiAgfVxuKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0zIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiSW5wdXRzLnRhYmxlKGZpbHRlcmVkKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC00IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZGF0YSA9IEZpbGVBdHRhY2htZW50KFwiZGF0YS9wZW5ndWlucy5jc3ZcIikuY3N2KHsgdHlwZWQ6IHRydWUgfSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImZpbHRlcmVkID0gZGF0YS5maWx0ZXIoZnVuY3Rpb24ocGVuZ3Vpbikge1xuICByZXR1cm4gYmlsbF9sZW5ndGhfbWluIDwgcGVuZ3Vpbi5iaWxsX2xlbmd0aF9tbSAmJlxuICAgICAgICAgaXNsYW5kcy5pbmNsdWRlcyhwZW5ndWluLmlzbGFuZCk7XG59KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdiaWxsX2xlbmd0aF9taW4nKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnaXNsYW5kcycpIn1dfQ==
-</script><script type="module">
+</script>
+<script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
 window._ojs.paths.runtimeToDoc = "../..";
 window._ojs.paths.runtimeToRoot = "../..";
 window._ojs.paths.docToRoot = "";
 window._ojs.selfContained = false;
 window._ojs.runtime.interpretFromScriptTags();
-</script><script id="quarto-html-after-body" type="application/javascript">
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
     if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -2416,13 +2518,14 @@ window._ojs.runtime.interpretFromScriptTags();
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
@@ -2763,7 +2866,9 @@ window._ojs.runtime.interpretFromScriptTags();
       }
     }
   });
-  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="./020-R.html" class="pagination-link" aria-label="Daten einlesen">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Daten einlesen</span></span>
       </a>          
@@ -2775,7 +2880,8 @@ window._ojs.runtime.interpretFromScriptTags();
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
+<footer class="footer">
+  <div class="nav-footer">
     <div class="nav-footer-left">
 <p>Powered by <a href="https://quarto.org">Quarto</a></p>
 </div>   
@@ -2787,6 +2893,40 @@ window._ojs.runtime.interpretFromScriptTags();
 </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
 
 
 </body></html>

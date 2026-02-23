@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
 <meta name="keywords" content="Statistik, Prognose, Modellierung, R, Datenanalyse, Regression">
 <meta name="description" content="Einführung in die Statistik mit einem Schwerpunkt auf Prognose-Modellierung">
+
 <title>7&nbsp; Modellgüte – Statistik1</title>
 <style>
 code{white-space: pre-wrap;}
@@ -76,6 +79,7 @@ div.csl-indent {
   margin-left: 2em;
 }</style>
 
+
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
@@ -88,18 +92,23 @@ div.csl-indent {
 <link href="./img/statistik1_icon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-4d9afe2b8d18ee9fa5d0d57b5ed4214d.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-8e2bfcb8bc6552a7f7d2e060577a719b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-07788d60b690ac42ea903764c198f837.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-8e2bfcb8bc6552a7f7d2e060577a719b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-cfa408634a1d24e6e0b787a3a7260859.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-1724a6097eea06b88b87879f5d7ee85f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-cfa408634a1d24e6e0b787a3a7260859.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -125,8 +134,14 @@ div.csl-indent {
     "search-submit-button-title": "Abschicken",
     "search-label": "Suchen"
   }
-}</script><link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+}</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -137,7 +152,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -151,8 +166,11 @@ const typesetMath = (el) => {
 window.Quarto = {
   typesetMath
 };
-</script><link rel="stylesheet" href="webex.css">
+</script>
+
+<link rel="stylesheet" href="webex.css">
 </head>
+
 <body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
@@ -318,7 +336,9 @@ window.Quarto = {
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
@@ -329,11 +349,17 @@ window.Quarto = {
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./img/statistik1_icon.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none"></a>
+      <img src="./img/statistik1_icon.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./img/statistik1_icon.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Statistik1</a> 
         <div class="sidebar-tools-main tools-wide">
@@ -354,7 +380,7 @@ window.Quarto = {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Vorwort</span></a>
@@ -374,8 +400,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-rahmen.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rahmen</span></span></a>
@@ -394,7 +420,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
@@ -403,8 +429,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./040-verbildlichen.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Daten verbildlichen</span></span></a>
@@ -429,7 +455,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
@@ -438,8 +464,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./080-regression1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Geradenmodelle 1</span></span></a>
@@ -458,7 +484,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
@@ -467,8 +493,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./110-definitions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Definitionen</span></span></a>
@@ -482,8 +508,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./125-quiz.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Quiz</span></span></a>
+  <a href="./125-probeklausur.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Probeklausur</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -493,57 +519,55 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Inhaltsverzeichnis</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Inhaltsverzeichnis</h2>
    
   <ul>
-<li>
-<a href="#einstieg" id="toc-einstieg" class="nav-link active" data-scroll-target="#einstieg"><span class="header-section-number">7.1</span> Einstieg</a>
+  <li><a href="#einstieg" id="toc-einstieg" class="nav-link active" data-scroll-target="#einstieg"><span class="header-section-number">7.1</span> Einstieg</a>
   <ul class="collapse">
-<li><a href="#lernziele" id="toc-lernziele" class="nav-link" data-scroll-target="#lernziele"><span class="header-section-number">7.1.1</span> Lernziele</a></li>
+  <li><a href="#lernziele" id="toc-lernziele" class="nav-link" data-scroll-target="#lernziele"><span class="header-section-number">7.1.1</span> Lernziele</a></li>
   <li><a href="#sec-weiss-ois" id="toc-sec-weiss-ois" class="nav-link" data-scroll-target="#sec-weiss-ois"><span class="header-section-number">7.1.2</span> Die Schlankheitspille von Prof.&nbsp;Weiss-Ois</a></li>
-  <li><a href="#wie-man-seine-kuh-%C3%BCber-den-fluss-bringt" id="toc-wie-man-seine-kuh-über-den-fluss-bringt" class="nav-link" data-scroll-target="#wie-man-seine-kuh-%C3%BCber-den-fluss-bringt"><span class="header-section-number">7.1.3</span> Wie man seine Kuh über den Fluss bringt</a></li>
-  </ul>
-</li>
+  <li><a href="#wie-man-seine-kuh-über-den-fluss-bringt" id="toc-wie-man-seine-kuh-über-den-fluss-bringt" class="nav-link" data-scroll-target="#wie-man-seine-kuh-über-den-fluss-bringt"><span class="header-section-number">7.1.3</span> Wie man seine Kuh über den Fluss bringt</a></li>
+  </ul></li>
   <li><a href="#woran-erkennt-man-ein-gutes-modell" id="toc-woran-erkennt-man-ein-gutes-modell" class="nav-link" data-scroll-target="#woran-erkennt-man-ein-gutes-modell"><span class="header-section-number">7.2</span> Woran erkennt man ein gutes Modell?</a></li>
-  <li>
-<a href="#sec-streuung" id="toc-sec-streuung" class="nav-link" data-scroll-target="#sec-streuung"><span class="header-section-number">7.3</span> Streuungsmaße</a>
+  <li><a href="#sec-streuung" id="toc-sec-streuung" class="nav-link" data-scroll-target="#sec-streuung"><span class="header-section-number">7.3</span> Streuungsmaße</a>
   <ul class="collapse">
-<li><a href="#der-mittlere-abweichungsbalken" id="toc-der-mittlere-abweichungsbalken" class="nav-link" data-scroll-target="#der-mittlere-abweichungsbalken"><span class="header-section-number">7.3.1</span> Der mittlere Abweichungsbalken</a></li>
+  <li><a href="#der-mittlere-abweichungsbalken" id="toc-der-mittlere-abweichungsbalken" class="nav-link" data-scroll-target="#der-mittlere-abweichungsbalken"><span class="header-section-number">7.3.1</span> Der mittlere Abweichungsbalken</a></li>
   <li><a href="#der-interquartilsabstand" id="toc-der-interquartilsabstand" class="nav-link" data-scroll-target="#der-interquartilsabstand"><span class="header-section-number">7.3.2</span> Der Interquartilsabstand</a></li>
-  <li><a href="#streuungsma%C3%9Fe-f%C3%BCr-normalverteilungen" id="toc-streuungsmaße-für-normalverteilungen" class="nav-link" data-scroll-target="#streuungsma%C3%9Fe-f%C3%BCr-normalverteilungen"><span class="header-section-number">7.3.3</span> Streuungsmaße für Normalverteilungen</a></li>
+  <li><a href="#streuungsmaße-für-normalverteilungen" id="toc-streuungsmaße-für-normalverteilungen" class="nav-link" data-scroll-target="#streuungsmaße-für-normalverteilungen"><span class="header-section-number">7.3.3</span> Streuungsmaße für Normalverteilungen</a></li>
   <li><a href="#varianz" id="toc-varianz" class="nav-link" data-scroll-target="#varianz"><span class="header-section-number">7.3.4</span> Varianz</a></li>
   <li><a href="#die-standardabweichung" id="toc-die-standardabweichung" class="nav-link" data-scroll-target="#die-standardabweichung"><span class="header-section-number">7.3.5</span> Die Standardabweichung</a></li>
-  </ul>
-</li>
+  </ul></li>
   <li><a href="#streuung-als-modellfehler" id="toc-streuung-als-modellfehler" class="nav-link" data-scroll-target="#streuung-als-modellfehler"><span class="header-section-number">7.4</span> Streuung als Modellfehler</a></li>
-  <li>
-<a href="#die-z-transformation" id="toc-die-z-transformation" class="nav-link" data-scroll-target="#die-z-transformation"><span class="header-section-number">7.5</span> Die <em>z</em>-Transformation</a>
+  <li><a href="#die-z-transformation" id="toc-die-z-transformation" class="nav-link" data-scroll-target="#die-z-transformation"><span class="header-section-number">7.5</span> Die <em>z</em>-Transformation</a>
   <ul class="collapse">
-<li><a href="#zentrieren" id="toc-zentrieren" class="nav-link" data-scroll-target="#zentrieren"><span class="header-section-number">7.5.1</span> Zentrieren</a></li>
+  <li><a href="#zentrieren" id="toc-zentrieren" class="nav-link" data-scroll-target="#zentrieren"><span class="header-section-number">7.5.1</span> Zentrieren</a></li>
   <li><a href="#streuung-standardisieren" id="toc-streuung-standardisieren" class="nav-link" data-scroll-target="#streuung-standardisieren"><span class="header-section-number">7.5.2</span> Streuung standardisieren</a></li>
   <li><a href="#z-werte" id="toc-z-werte" class="nav-link" data-scroll-target="#z-werte"><span class="header-section-number">7.5.3</span> <em>z</em>-Werte</a></li>
-  </ul>
-</li>
-  <li>
-<a href="#aufgaben" id="toc-aufgaben" class="nav-link" data-scroll-target="#aufgaben"><span class="header-section-number">7.6</span> Aufgaben</a>
+  </ul></li>
+  <li><a href="#quiz" id="toc-quiz" class="nav-link" data-scroll-target="#quiz"><span class="header-section-number">7.6</span> Quiz</a></li>
+  <li><a href="#aufgaben" id="toc-aufgaben" class="nav-link" data-scroll-target="#aufgaben"><span class="header-section-number">7.7</span> Aufgaben</a>
   <ul class="collapse">
-<li><a href="#fallstudie-zur-lebenszufriedenheit" id="toc-fallstudie-zur-lebenszufriedenheit" class="nav-link" data-scroll-target="#fallstudie-zur-lebenszufriedenheit"><span class="header-section-number">7.6.2</span> Fallstudie zur Lebenszufriedenheit</a></li>
+  <li><a href="#fallstudie-zur-lebenszufriedenheit" id="toc-fallstudie-zur-lebenszufriedenheit" class="nav-link" data-scroll-target="#fallstudie-zur-lebenszufriedenheit"><span class="header-section-number">7.7.2</span> Fallstudie zur Lebenszufriedenheit</a></li>
+  </ul></li>
+  <li><a href="#literaturhinweise" id="toc-literaturhinweise" class="nav-link" data-scroll-target="#literaturhinweise"><span class="header-section-number">7.8</span> Literaturhinweise</a></li>
   </ul>
-</li>
-  <li><a href="#literaturhinweise" id="toc-literaturhinweise" class="nav-link" data-scroll-target="#literaturhinweise"><span class="header-section-number">7.7</span> Literaturhinweise</a></li>
-  </ul><div class="toc-actions"><ul><li><a href="https://github.com/sebastiansauer/statistik1/issues/new" class="toc-action"><i class="bi bi-github"></i>Problem melden</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/sebastiansauer/statistik1/issues/new" class="toc-action"><i class="bi bi-github"></i>Problem melden</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Grundlagen des Modellieren</a></li><li class="breadcrumb-item"><a href="./060-modellguete.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modellgüte</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title">
-<span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modellgüte</span>
-</h1>
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Grundlagen des Modellieren</a></li><li class="breadcrumb-item"><a href="./060-modellguete.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modellgüte</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modellgüte</span></h1>
 </div>
 
 
@@ -563,7 +587,10 @@ window.Quarto = {
   </div>
 </div>
 
-</header><p><span class="math display">\[
+</header>
+
+
+<p><span class="math display">\[
 \definecolor{ycol}{RGB}{230,159,0}
 \definecolor{modelcol}{RGB}{86,180,233}
 \definecolor{errorcol}{RGB}{0,158,115}
@@ -571,18 +598,18 @@ window.Quarto = {
 \definecolor{beta1col}{RGB}{0,114,178}
 \definecolor{xcol}{RGB}{204,121,167}
 \]</span></p>
-<section id="einstieg" class="level2" data-number="7.1"><h2 data-number="7.1" class="anchored" data-anchor-id="einstieg">
-<span class="header-section-number">7.1</span> Einstieg</h2>
+<section id="einstieg" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="einstieg"><span class="header-section-number">7.1</span> Einstieg</h2>
 <p>In diesem Kapitel benötigen Sie die üblichen R-Pakete (<code>tidyverse</code>, <code>easystats</code>) und Daten (<code>mariokart</code>), s. <a href="020-R.html#sec-import-mariokart" class="quarto-xref"><span>Kapitel 3.7.3</span></a> und <a href="020-R.html#sec-r-pckgs" class="quarto-xref"><span>Kapitel 3.4</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/easystats/">easystats</a></span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="lernziele" class="level3" data-number="7.1.1"><h3 data-number="7.1.1" class="anchored" data-anchor-id="lernziele">
-<span class="header-section-number">7.1.1</span> Lernziele</h3>
+<section id="lernziele" class="level3" data-number="7.1.1">
+<h3 data-number="7.1.1" class="anchored" data-anchor-id="lernziele"><span class="header-section-number">7.1.1</span> Lernziele</h3>
 <ul>
 <li>Sie kennen gängige Maße der Streuung einer Stichprobe und können diese definieren und anhand von Beispielen erläutern.</li>
 <li>Sie können gängige Maße der Streuung einer Stichprobe mit R berechnen.</li>
@@ -591,16 +618,20 @@ window.Quarto = {
 <div id="exr-streuung-erkennen" class="theorem exercise">
 <p><span class="theorem-title"><strong>Übungsaufgabe 7.1 (Freiwillige vor!)</strong></span> Für diese kleine Live-Demonstration brauchen wir einige Freiwillige. Die Lehrkraft teilt die Freiwilligen in zwei Gruppen ein: Gruppe <em>Gleich-Groß</em> und Gruppe <em>Verschieden-Groß</em>. Erkennen Sie, dass die <em>Unterschiedlichkeit</em> der Größe in Gruppe <em>Gleich-Groß</em> gering ist, aber in Gruppe <em>Verschieden-Groß</em> hoch? <span class="math inline">\(\square\)</span></p>
 </div>
-</section><section id="sec-weiss-ois" class="level3" data-number="7.1.2"><h3 data-number="7.1.2" class="anchored" data-anchor-id="sec-weiss-ois">
-<span class="header-section-number">7.1.2</span> Die Schlankheitspille von Prof.&nbsp;Weiss-Ois</h3>
+</section>
+<section id="sec-weiss-ois" class="level3" data-number="7.1.2">
+<h3 data-number="7.1.2" class="anchored" data-anchor-id="sec-weiss-ois"><span class="header-section-number">7.1.2</span> Die Schlankheitspille von Prof.&nbsp;Weiss-Ois</h3>
 <p>Prof.&nbsp;Weiss-Ois hat eine Erfindung gemacht, eine Schlankheitspille<span>💊</span> <span class="citation" data-cites="flaticon_professor_2024">(<a href="references.html#ref-flaticon_professor_2024" role="doc-biblioref">flaticon, 2024</a>)</span>.</p>
 <div id="fig-prof" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-prof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-prof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 45.5%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="img/teacher.png" class="img-fluid figure-img" style="width:25.0%"></p>
-<figcaption><strong>Was er sagt:</strong> “Ich habe eine Schlankheitspille entwickelt, die pro Einnahme das Gewicht im Schnitt um 1<span class="math inline">\(\,\)</span>kg reduziert!”</figcaption></figure>
+<figure class="figure">
+<p><a href="img/teacher.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Was er sagt: “Ich habe eine Schlankheitspille entwickelt, die pro Einnahme das Gewicht im Schnitt um 1\,kg reduziert!”"><img src="img/teacher.png" class="img-fluid figure-img" style="width:25.0%"></a></p>
+<figcaption><strong>Was er sagt:</strong> “Ich habe eine Schlankheitspille entwickelt, die pro Einnahme das Gewicht im Schnitt um 1<span class="math inline">\(\,\)</span>kg reduziert!”</figcaption>
+</figure>
 </div>
 </div>
 <div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 9.1%;justify-content: flex-start;">
@@ -608,20 +639,24 @@ window.Quarto = {
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 45.5%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="img/teacher.png" class="img-fluid figure-img" style="width:25.0%"></p>
-<figcaption><strong>Was er NICHT sagt:</strong> “Allerdings streuten die Werte der Gewichtsveränderung um 10<span class="math inline">\(\,\)</span>kg um den Mittelwert herum.”</figcaption></figure>
+<figure class="figure">
+<p><a href="img/teacher.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Was er NICHT sagt: “Allerdings streuten die Werte der Gewichtsveränderung um 10\,kg um den Mittelwert herum.”"><img src="img/teacher.png" class="img-fluid figure-img" style="width:25.0%"></a></p>
+<figcaption><strong>Was er NICHT sagt:</strong> “Allerdings streuten die Werte der Gewichtsveränderung um 10<span class="math inline">\(\,\)</span>kg um den Mittelwert herum.”</figcaption>
+</figure>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;7.1: Prof.&nbsp;Weiss-Oiss präsentiert seine neue Schlankheitspille. Würden Sie Sie einnehmen?
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 <p>Würden Sie die Pille von Prof.&nbsp;I. Ch. Weiss-Ois nehmen? Auf jeden Fall? Wenn Sie 1000<span class="math inline">\(\,\)</span>Euro bekommen? Nur, wenn man Ihnen Geld zahlt? Auf keinen Fall?</p>
 <p>Wie sehr die Werte eines Modells streuen, ist eine wichtige Information: Bei Prof.&nbsp;Weiss-Ois’ Pille kann es sein, dass Sie 10<span class="math inline">\(\,\)</span>kg <em>zunehmen</em>, wenn Sie die Pille einnehmen.</p>
-</section><section id="wie-man-seine-kuh-über-den-fluss-bringt" class="level3" data-number="7.1.3"><h3 data-number="7.1.3" class="anchored" data-anchor-id="wie-man-seine-kuh-über-den-fluss-bringt">
-<span class="header-section-number">7.1.3</span> Wie man seine Kuh über den Fluss bringt</h3>
+</section>
+<section id="wie-man-seine-kuh-über-den-fluss-bringt" class="level3" data-number="7.1.3">
+<h3 data-number="7.1.3" class="anchored" data-anchor-id="wie-man-seine-kuh-über-den-fluss-bringt"><span class="header-section-number">7.1.3</span> Wie man seine Kuh über den Fluss bringt</h3>
 <p>Treffen sich zwei Bauern, Fritz Furchenzieher und Karla Kartoffelsack. Fritz will mit seiner Kuh einen Fluss überqueren, nur kann die Kuh nicht schwimmen (ob Fritz es kann, ist nicht überliefert).</p>
 <blockquote class="blockquote">
 <p><span>👨‍🌾</span> (Fritz): Sag mal, Karla, ist der Fluss tief?</p>
@@ -631,12 +666,14 @@ Abbildung&nbsp;7.1: Prof.&nbsp;Weiss-Oiss präsentiert seine neue Schlankheitspi
 </blockquote>
 <p>Also führt Fritz seine Kuh durch den Fluss, leider kam die Kuh nicht am anderen Ufer an, da im Floß ersoffen, s. <a href="#fig-fluss-tief" class="quarto-xref">Abbildung&nbsp;<span>7.2</span></a>.</p>
 <div id="fig-fluss-tief" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-fluss-tief-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/fluss-tief.png" class="img-fluid figure-img">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fluss-tief-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/fluss-tief.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Abbildung&nbsp;7.2: Der Fluss ist im Schnitt nur einen Meter tief, trotzdem ist die Kuh ersoffen."><img src="img/fluss-tief.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fluss-tief-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;7.2: Der Fluss ist im Schnitt nur einen Meter tief, trotzdem ist die Kuh ersoffen.
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 <blockquote class="blockquote">
 <p><span>👩‍🌾</span> (Karla): Übrigens: Lagemaße sagen nicht alles, Fritz.</p>
@@ -657,18 +694,22 @@ Wichtig
 <p>Die Streuung ihrer Daten zu kennen, ist eine wesentliche Information. <span class="math inline">\(\square\)</span></p>
 </div>
 </div>
-</section></section><section id="woran-erkennt-man-ein-gutes-modell" class="level2" data-number="7.2"><h2 data-number="7.2" class="anchored" data-anchor-id="woran-erkennt-man-ein-gutes-modell">
-<span class="header-section-number">7.2</span> Woran erkennt man ein gutes Modell?</h2>
+</section>
+</section>
+<section id="woran-erkennt-man-ein-gutes-modell" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="woran-erkennt-man-ein-gutes-modell"><span class="header-section-number">7.2</span> Woran erkennt man ein gutes Modell?</h2>
 <p><a href="#fig-streuung" class="quarto-xref">Abbildung&nbsp;<span>7.3</span></a> zeigt ein einfaches Modell (Mittelwert) mit wenig Streuung (links) vs.&nbsp;ein einfaches Modell mit viel Streuung (rechts). Links ist die Streuung der Schlankheitspille <em>Dicktableitin</em> und rechts von der Schlankheitspille <em>Pfundafliptan</em> abgetragen. Die vertikalen Balken in <a href="#fig-streuung" class="quarto-xref">Abbildung&nbsp;<span>7.3</span></a> kennzeichnen den (absoluten) Abstand von jeweils einem Datenpunkt zum Mittelwert (horizontale Linie). Je länger die vertikalen ‘Abstandsbalken’ insgesamt, desto größer die Streuung. Die X-Achse (<code>id</code>) reiht die Versuchspersonen auf.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-streuung" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-streuung-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-streuung-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-streuung-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="060-modellguete_files/figure-html/fig-streuung-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Abbildung&nbsp;7.3: Wenig (links) vs.&nbsp;viel Streuung (rechts)."><img src="060-modellguete_files/figure-html/fig-streuung-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-streuung-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;7.3: Wenig (links) vs.&nbsp;viel Streuung (rechts).
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -688,33 +729,39 @@ Abbildung&nbsp;7.3: Wenig (links) vs.&nbsp;viel Streuung (rechts).
 </blockquote>
 <p>Im Beispiel von Mariokart: Da die Anzahl der Lenkräder mit dem Verkaufspreis zusammenhängt, könnte es vielleicht sein, dass wir die Lenkräder-Anzahl zur Vorhersage nutzen könnten. Das sollten wir ausprobieren. <a href="#fig-fehler-red" class="quarto-xref">Abbildung&nbsp;<span>7.4</span></a> zeigt, dass die Fehlerbalken <em>kürzer</em> werden, wenn wir ein (sinnvolles) komplexeres Modell finden. Innerhalb jeder der beiden Gruppen (mit 2 Lenkrädern vs.&nbsp;mit 0 Lenkrädern) sind die Fehlerbalken jeweils im Durchschnitt kürzer (rechtes Teildiagramm) als im Modell ohne Gruppierung (linkes Teildiagramm). Aus Gründen der Übersichtlichkeit wurden nur Autos mit Verkaufsgebot von weniger als 100 Euros berücksichtigt und nur Spiele mit 0 oder mit 2 Lenkrädern.</p>
 <div id="fig-fehler-red" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-fehler-red-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fehler-red-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-fehler-red" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-fehler-red-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-fehler-red-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-fehler-red-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-fehler-red">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-fehler-red-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="060-modellguete_files/figure-html/fig-fehler-red-1.png" class="lightbox" data-gallery="fig-fehler-red" title="Abbildung&nbsp;7.4&nbsp;(a): Einfaches Modell"><img src="060-modellguete_files/figure-html/fig-fehler-red-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-fehler-red"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-fehler-red-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Einfaches Modell
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-fehler-red" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-fehler-red-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-fehler-red-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-fehler-red-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-fehler-red">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-fehler-red-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="060-modellguete_files/figure-html/fig-fehler-red-2.png" class="lightbox" data-gallery="fig-fehler-red" title="Abbildung&nbsp;7.4&nbsp;(b): Komplexeres Modell"><img src="060-modellguete_files/figure-html/fig-fehler-red-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-fehler-red"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-fehler-red-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Komplexeres Modell
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fehler-red-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;7.4: Fehlerbalken in einem einfachen und komplexeren Modell. (a) Fehlerbalken im einfachen Modell. Ein Mittelwert; viel Streuung insgesamt, y ~ 1. (b) Fehlerbalken im komplexeren Modell. Zwei Mittelwerte; weniger Streuung in jeder Gruppe, y ~ G. Die geringere Streuung erkennt man daran, dass die vertikalen Abstandsbalken im Schnitt kürzer sind als im einfachen Modell.
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -729,8 +776,9 @@ Wichtig
 <p>Durch sinnvolle, komplexere Modelle sinkt die Fehlerstreuung eines Modells. <span class="math inline">\(\square\)</span></p>
 </div>
 </div>
-</section><section id="sec-streuung" class="level2" data-number="7.3"><h2 data-number="7.3" class="anchored" data-anchor-id="sec-streuung">
-<span class="header-section-number">7.3</span> Streuungsmaße</h2>
+</section>
+<section id="sec-streuung" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="sec-streuung"><span class="header-section-number">7.3</span> Streuungsmaße</h2>
 <div id="def-streuungsmaße" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 7.1 (Streuungsmaße)</strong></span> Ein Streuungsmaß quantifiziert die Variabilität (Unterschiedlichkeit, Streuung) eines Merkmals. <span class="math inline">\(\square\)</span></p>
 </div>
@@ -741,8 +789,8 @@ Wichtig
 <p><span class="theorem-title"><strong>Beispiel 7.2</strong></span> Angenommen, wir haben einen Datensatz zum Merkmal “Alter” mit den Werte 1, 23, 42, 100. Dann beträgt der Range: <span class="math inline">\(R = 100 - 1 = 99\)</span>. Das bedeutet, dass die Werte des Merkmals sich über 99 Einheiten (Jahre in diesem Fall) verteilen. <span class="math inline">\(\square\)</span></p>
 </div>
 <p>Die Spannweite ist aber nicht robust (gegenüber Extremwerten) und sollte daher nur mit Einschränkung verwendet werden.</p>
-<section id="der-mittlere-abweichungsbalken" class="level3" data-number="7.3.1"><h3 data-number="7.3.1" class="anchored" data-anchor-id="der-mittlere-abweichungsbalken">
-<span class="header-section-number">7.3.1</span> Der mittlere Abweichungsbalken</h3>
+<section id="der-mittlere-abweichungsbalken" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="der-mittlere-abweichungsbalken"><span class="header-section-number">7.3.1</span> Der mittlere Abweichungsbalken</h3>
 <blockquote class="blockquote">
 <p><span>🧑‍🎓</span> Wir müssen jetzt mal präziser werden! Wie können wir die Streuung berechnen?</p>
 </blockquote>
@@ -761,12 +809,14 @@ Wichtig
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-mae" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-mae-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-mae-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mae-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="060-modellguete_files/figure-html/fig-mae-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Abbildung&nbsp;7.5: Abweichungsbalken und der MAE"><img src="060-modellguete_files/figure-html/fig-mae-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mae-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;7.5: Abweichungsbalken und der MAE
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -774,21 +824,22 @@ Abbildung&nbsp;7.5: Abweichungsbalken und der MAE
 <blockquote class="blockquote">
 <p><span>🤖</span> Loving it!</p>
 </blockquote>
-<p>Schauen Sie: Den Mittelwert (s. <a href="#fig-mae" class="quarto-xref">Abbildung&nbsp;<span>7.5</span></a>) kann man doch mit Fug und Recht als ein <em>lineares Modell</em>, eine Gerade, betrachten, oder nicht? Schließlich erklären wir <span class="math inline">\(y\)</span> anhand einer Gerade (die parallel zur X-Achse verläuft). In R gibt es einen Befehl, um ein <em>l</em>ineares <em>M</em>odell zu berechnen, er heißt <code>lm</code>. Die Syntax von <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> lautet: <code>lm(y ~ 1, data = meine_daten)</code>.</p>
+<p>Schauen Sie: Den Mittelwert (s. <a href="#fig-mae" class="quarto-xref">Abbildung&nbsp;<span>7.5</span></a>) kann man doch mit Fug und Recht als ein <em>lineares Modell</em>, eine Gerade, betrachten, oder nicht? Schließlich erklären wir <span class="math inline">\(y\)</span> anhand einer Gerade (die parallel zur X-Achse verläuft). In R gibt es einen Befehl, um ein <em>l</em>ineares <em>M</em>odell zu berechnen, er heißt <code>lm</code>. Die Syntax von <code>lm()</code> lautet: <code>lm(y ~ 1, data = meine_daten)</code>.</p>
 <p>In Worten:</p>
 <blockquote class="blockquote">
 <p>Hey R, berechne mit ein lineares Modell zur Erklärung von Y. Aber verwende keine andere Variable zur Erklärung von Y, sondern nimm den Mittelwert von Y.</p>
 </blockquote>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_ohne_x_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lm_ohne_x_var <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> d)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Den MAE können wir uns jetzt so ausgeben lassen:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm_ohne_x_var</span><span class="op">)</span>  <span class="co"># aus dem Paket easystats</span></span>
-<span><span class="co">## [1] 1.5</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(lm_ohne_x_var)  <span class="co"># aus dem Paket easystats</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 1.5</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section><section id="der-interquartilsabstand" class="level3" data-number="7.3.2"><h3 data-number="7.3.2" class="anchored" data-anchor-id="der-interquartilsabstand">
-<span class="header-section-number">7.3.2</span> Der Interquartilsabstand</h3>
+</section>
+<section id="der-interquartilsabstand" class="level3" data-number="7.3.2">
+<h3 data-number="7.3.2" class="anchored" data-anchor-id="der-interquartilsabstand"><span class="header-section-number">7.3.2</span> Der Interquartilsabstand</h3>
 <p>Der Interquartilsabstand (IQA; engl. inter quartile range, IQR) ist ein Streuungsmaß, das nicht auf dem Mittelwert aufbaut. Der IQR ist robuster als z.<span class="math inline">\(\,\)</span>B. der MAA oder die Varianz und die Standardabweichung. <a href="#fig-iqr-mario" class="quarto-xref">Abbildung&nbsp;<span>7.6</span></a> stellt den IQR (und einige Quantile) für den Verkaufspreise von Mariokart-Spielen dar.</p>
 <div id="def-iqr" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 7.4 (Interquartilsabstand)</strong></span> Der Interquartilsabstand ist definiert als die (absolute) Differenz des 3. Quartils und 1. Quartils: <span class="math inline">\(IQR := Q_3-Q_1. \; \square\)</span></p>
@@ -797,46 +848,55 @@ Abbildung&nbsp;7.5: Abweichungsbalken und der MAE
 <p><span class="theorem-title"><strong>Beispiel 7.4 (IQR im Hörsaal)</strong></span> In einem Statistikkurs betragen die Quartile der Körpergröße: Q1: 1.65m, Q2 (Median): 1.70m, Q3: 1.75m. Der IQR beträgt dann: <span class="math inline">\(IQR = Q_3-Q_1 = 1.75\,m - 1.65\,m = 0.10\,m\)</span>, d.<span class="math inline">\(\,\)</span>h. 10<span class="math inline">\(\,\)</span>cm. <span class="math inline">\(\square\)</span></p>
 </div>
 <div id="fig-iqr-mario" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-iqr-mario-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-iqr-mario-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-iqr-mario" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-iqr-mario-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-iqr-mario-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-iqr-mario-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-iqr-mario">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-iqr-mario-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="060-modellguete_files/figure-html/fig-iqr-mario-1.png" class="lightbox" data-gallery="fig-iqr-mario" title="Abbildung&nbsp;7.6&nbsp;(a): Histogramm"><img src="060-modellguete_files/figure-html/fig-iqr-mario-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-iqr-mario"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-iqr-mario-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Histogramm
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-iqr-mario" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-iqr-mario-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-iqr-mario-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-iqr-mario-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-iqr-mario">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-iqr-mario-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="060-modellguete_files/figure-html/fig-iqr-mario-2.png" class="lightbox" data-gallery="fig-iqr-mario" title="Abbildung&nbsp;7.6&nbsp;(b): Dichtediagramm"><img src="060-modellguete_files/figure-html/fig-iqr-mario-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-iqr-mario"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-iqr-mario-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Dichtediagramm
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-iqr-mario-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;7.6: IQR, Q1, Q2 und Q3 für das Schlussgebot (nur Spiele für weniger als 100 Euro)
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
-</section><section id="streuungsmaße-für-normalverteilungen" class="level3" data-number="7.3.3"><h3 data-number="7.3.3" class="anchored" data-anchor-id="streuungsmaße-für-normalverteilungen">
-<span class="header-section-number">7.3.3</span> Streuungsmaße für Normalverteilungen</h3>
+</section>
+<section id="streuungsmaße-für-normalverteilungen" class="level3" data-number="7.3.3">
+<h3 data-number="7.3.3" class="anchored" data-anchor-id="streuungsmaße-für-normalverteilungen"><span class="header-section-number">7.3.3</span> Streuungsmaße für Normalverteilungen</h3>
 <p>Normalverteilungen sind recht häufig anzutreffen in der Praxis der Datenanalyse. Daher lohnt es sich, zu überlegen, wie man diese Verteilungen kompakt zusammenfasst. Man kann zeigen, dass eine Normalverteilung sich komplett über ihren <em>Mittelwert</em> sowie ihre <em>Standardabweichung</em> beschreiben lässt <span class="citation" data-cites="lyon_why_2014">(<a href="references.html#ref-lyon_why_2014" role="doc-biblioref">Lyon, 2014</a>)</span>. Außerdem gilt: Sind Ihre Daten normalverteilt, dann sind die Abweichungen vom Mittelwert auch normalverteilt. Denn wenn man eine Konstante zu einer Verteilung addiert (bzw. subtrahiert), “verschiebt man den Berg” nur zur Seite, ohne die Form zu verändern, s. <a href="#fig-norm-dev" class="quarto-xref">Abbildung&nbsp;<span>7.7</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-norm-dev" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-norm-dev-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-norm-dev-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-norm-dev-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="060-modellguete_files/figure-html/fig-norm-dev-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Abbildung&nbsp;7.7: Die Abweichungen zum Mittelwert (MW) einer normalverteilten Variable sind selber normalverteilt. Rechts: unzentrierte Verteilung; links: zentriert."><img src="060-modellguete_files/figure-html/fig-norm-dev-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-norm-dev-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;7.7: Die Abweichungen zum Mittelwert (MW) einer normalverteilten Variable sind selber normalverteilt. Rechts: unzentrierte Verteilung; links: zentriert.
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -850,8 +910,9 @@ Abbildung&nbsp;7.7: Die Abweichungen zum Mittelwert (MW) einer normalverteilten 
 <blockquote class="blockquote">
 <p><span>🧑‍🎓</span> (seufzt)</p>
 </blockquote>
-</section><section id="varianz" class="level3" data-number="7.3.4"><h3 data-number="7.3.4" class="anchored" data-anchor-id="varianz">
-<span class="header-section-number">7.3.4</span> Varianz</h3>
+</section>
+<section id="varianz" class="level3" data-number="7.3.4">
+<h3 data-number="7.3.4" class="anchored" data-anchor-id="varianz"><span class="header-section-number">7.3.4</span> Varianz</h3>
 <p>Die Varianz einer Variable (z.<span class="math inline">\(\,\)</span>B. Verkaufspreis von Mariokart) ist der mittlere quadrierte Abstand jedes Verkaufspreises vom Mittelwert.</p>
 <div class="quarto-layout-panel" data-layout="[ 60, 40 ]">
 <div class="quarto-layout-row">
@@ -866,75 +927,87 @@ Abbildung&nbsp;7.7: Die Abweichungen zum Mittelwert (MW) einer normalverteilten 
 </div>
 <div class="column quarto-layout-cell" style="flex-basis: 40.0%;justify-content: flex-start;">
 <div id="fig-var" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/Variance_visualisation.svg.png" class="img-fluid figure-img">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/Variance_visualisation.svg.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Abbildung&nbsp;7.8: Varianz [@cmglee_english_2015]"><img src="img/Variance_visualisation.svg.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;7.8: Varianz <span class="citation" data-cites="cmglee_english_2015">(<a href="references.html#ref-cmglee_english_2015" role="doc-biblioref">Cmglee, 2015</a>)</span>
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
 </div>
 <p><a href="#fig-mse" class="quarto-xref">Abbildung&nbsp;<span>7.9</span></a> visualisiert die Varianz für <a href="#exm-mae" class="quarto-xref">Beispiel&nbsp;<span>7.3</span></a>.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Links sind die <em>Abweichungsquadrate</em> dargestellt, rechts die Varianz als “<em>typisches Abweichungsquadrat</em>”. Die Varianz ist also ein Maß, das die typische <em>quadrierte</em> Abweichung der Beobachtungen vom Mittelwert in eine Zahl fasst.</p>
 <div id="fig-mse" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-mse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-mse" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-mse-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-mse-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-mse-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-mse">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-mse-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="060-modellguete_files/figure-html/fig-mse-1.png" class="lightbox" data-gallery="fig-mse" title="Abbildung&nbsp;7.9&nbsp;(a): Quadrierte Fehlerbalken"><img src="060-modellguete_files/figure-html/fig-mse-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-mse"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mse-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Quadrierte Fehlerbalken
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-mse" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-mse-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-mse-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-mse-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-mse">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-mse-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="060-modellguete_files/figure-html/fig-mse-2.png" class="lightbox" data-gallery="fig-mse" title="Abbildung&nbsp;7.9&nbsp;(b): Varianz als ‘typischer’ Fehlerbalken"><img src="060-modellguete_files/figure-html/fig-mse-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-mse"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mse-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Varianz als ‘typischer’ Fehlerbalken
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;7.9: Sinnbild zur Varianz als typischer Fehlerbalken
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 <div id="exm-var" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 7.5</strong></span> Sie arbeiten immer noch bei einem Online-Auktionshaus und untersuchen den Verkauf von Videospielen. Natürlich mit dem Ziel, dass Ihre Firma mehr von dem Zeug verkaufen kann. Dazu berechnen Sie die Streuung in den Verkaufspreisen, s. <a href="#lst-mario-streu" class="quarto-xref">Listing&nbsp;<span>7.1</span></a> bzw. <a href="#tbl-mario-streu" class="quarto-xref">Tabelle&nbsp;<span>7.1</span></a>. <span class="math inline">\(\square\)</span></p>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="lst-mario-streu" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
-<figure class="quarto-float quarto-float-lst figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-mario-streu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-mario-streu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;7.1: Berechnung der Streuung des Verkaufspreises als Indikator für die Modellgüte des Mittelwerts
-</figcaption><div aria-describedby="lst-mario-streu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_no_extreme</span> <span class="op">&lt;-</span></span>
-<span>  <span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span>  <span class="co"># ohne Extremwerte</span></span>
-<span></span>
-<span><span class="va">m_summ</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="va">mariokart_no_extreme</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
-<span>    pr_mw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span>,</span>
-<span>    pr_iqr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/IQR.html">IQR</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span>,</span>
-<span>    pr_maa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    pr_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span>,</span>
-<span>    pr_sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</figcaption>
+<div aria-describedby="lst-mario-streu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mariokart_no_extreme <span class="ot">&lt;-</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>)  <span class="co"># ohne Extremwerte</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>m_summ <span class="ot">&lt;-</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  mariokart_no_extreme <span class="sc">%&gt;%</span> </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_mw =</span> <span class="fu">mean</span>(total_pr),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_iqr =</span> <span class="fu">IQR</span>(total_pr),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_maa =</span> <span class="fu">mean</span>(<span class="fu">abs</span>(total_pr <span class="sc">-</span> <span class="fu">mean</span>(total_pr))),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_var =</span> <span class="fu">var</span>(total_pr),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr_sd =</span> <span class="fu">sd</span>(total_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-mario-streu" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mario-streu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mario-streu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;7.1: Kennwerte der Streuung für den Mariokart-Datensatz
-</figcaption><div aria-describedby="tbl-mario-streu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+</figcaption>
+<div aria-describedby="tbl-mario-streu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -948,39 +1021,45 @@ Tabelle&nbsp;7.1: Kennwerte der Streuung für den Mariokart-Datensatz
 </div>
 <p>Statistiken sind ja schön … aber Bilder sind auch gut, s. <a href="#fig-var" class="quarto-xref">Abbildung&nbsp;<span>7.10</span></a>. Datendiagramme eignen sich gut, um (grob) die Streuung einer Variable zu erfassen.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="va">mariokart_no_extreme</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>   <span class="co"># ohne Extremwerte</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu">plot_density</span><span class="op">(</span><span class="op">)</span>  <span class="co"># oder plot_violin</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  mariokart_no_extreme <span class="sc">%&gt;%</span>   <span class="co"># ohne Extremwerte</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_density</span>()  <span class="co"># oder plot_violin</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="fig-var" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-var" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-var-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-var-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-var-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-var">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-var-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="060-modellguete_files/figure-html/fig-var-1.png" class="lightbox" data-gallery="fig-var" title="Abbildung&nbsp;7.10&nbsp;(a): Dichtediagramm"><img src="060-modellguete_files/figure-html/fig-var-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-var"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-var-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Dichtediagramm
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-var" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-var-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-var-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-var-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-var">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-var-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="060-modellguete_files/figure-html/fig-var-2.png" class="lightbox" data-gallery="fig-var" title="Abbildung&nbsp;7.10&nbsp;(b): Violindiagramm"><img src="060-modellguete_files/figure-html/fig-var-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-var"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-var-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Violindiagramm
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;7.10: Die Verteilung des Verkaufspreises von Mariokart-Spielen mit MW±SD farblich markiert
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 <p>Wer sich die Berechnung von Hand für <code>pr_maa</code> sparen möchte (s. <a href="#lst-mario-streu" class="quarto-xref">Listing&nbsp;<span>7.1</span></a>), kann die <a href="https://rdrr.io/cran/DescTools/man/MeanAD.html">Funktion <code>MeanAD</code> aus dem Paket <code>DescTools</code></a> nutzen. Um die Standardabweichung zu berechnen, berechnet man zunächst die <em>Varianz</em>, <span class="math inline">\(s^2\)</span> abgekürzt. Hier ist ein “Kochrezept” (Algorithmus) zur Berechnung der Varianz:</p>
 <ol type="1">
@@ -997,8 +1076,9 @@ Abbildung&nbsp;7.10: Die Verteilung des Verkaufspreises von Mariokart-Spielen mi
 <p>Die Varianz steht im engen Verhältnis zur Kovarianz, s. <a href="070-zusammenhaenge.html#sec-cov" class="quarto-xref"><span>Kapitel 8.3</span></a>. Die Varianz kann auch verstehen als den <em>mittleren Quadratfehler</em> (Mean Squared Error, MSE) eines Modells, s. <a href="#eq-mse" class="quarto-xref">Gleichung&nbsp;<span>7.3</span></a>.</p>
 <p><span id="eq-mse"><span class="math display">\[{\displaystyle MSE:={\frac {1}{n}}\sum _{i=1}^{N}\left(y_{i}-{\hat {y}}\right)^{2}.} \tag{7.3}\]</span></span></p>
 <p>Im Fall eines Punktmodells ist der Mittelwert der vorhergesagte Wert eines Modells: <span class="math inline">\(\hat{y} = \bar{y}\)</span>.</p>
-</section><section id="die-standardabweichung" class="level3" data-number="7.3.5"><h3 data-number="7.3.5" class="anchored" data-anchor-id="die-standardabweichung">
-<span class="header-section-number">7.3.5</span> Die Standardabweichung</h3>
+</section>
+<section id="die-standardabweichung" class="level3" data-number="7.3.5">
+<h3 data-number="7.3.5" class="anchored" data-anchor-id="die-standardabweichung"><span class="header-section-number">7.3.5</span> Die Standardabweichung</h3>
 <div id="def-sd" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 7.6 (Standardabweichung)</strong></span> Die Standardabweichung (SD, s, <span class="math inline">\(\sigma\)</span>) ist definiert als die Quadratwurzel der Varianz, s. <a href="#eq-sd" class="quarto-xref">Gleichung&nbsp;<span>7.4</span></a>.</p>
 <p><span id="eq-sd"><span class="math display">\[s := \sqrt{s^2} \square \tag{7.4}\]</span></span></p>
@@ -1020,17 +1100,19 @@ Hinweis
 <div id="exm-sd-mario" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 7.6</strong></span> Sie arbeiten weiter an Ihrem Mariokart-Projekt. Da Sie heute keine Lust auf viel Tippen haben, nutzen Sie das R-Paket <code>easystats</code> mit der Funktion <code>describe_distribution</code>, s. <a href="#tbl-describe-dist1" class="quarto-xref">Tabelle&nbsp;<span>7.2</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/easystats/">easystats</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu">describe_distribution</span><span class="op">(</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">describe_distribution</span>()</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-describe-dist1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-describe-dist1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-describe-dist1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;7.2: Ausgabe der Funktion <code>describe_distribution</code> (Auszug)
-</figcaption><div aria-describedby="tbl-describe-dist1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+</figcaption>
+<div aria-describedby="tbl-describe-dist1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1050,15 +1132,15 @@ Tabelle&nbsp;7.2: Ausgabe der Funktion <code>describe_distribution</code> (Auszu
 <p><span class="theorem-title"><strong>Beispiel 7.7</strong></span> Ihr Job als Datenanalyst ist anstrengend, aber auch mitunter interessant. So war auch der heutige Tag. Bevor Sie nach Hause gehen, möchten Sie noch eine Sache anschauen. In einer früheren Analyse (s. <a href="#fig-fehler-red" class="quarto-xref">Abbildung&nbsp;<span>7.4</span></a>) fanden Sie heraus, dass die Fehlerbalken kürzer werden, wenn man ein geschickteres und komplexeres Modell findet. Das wollen Sie natürlich prüfen. Sie überlegen: “Okay, ich will ein einfaches Modell, in dem der Mittelwert das Modell des Verkaufspreis sein soll.”</p>
 <p>Das spezifizieren Sie so:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_mario_ohne_x_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">mariokart</span><span class="op">)</span></span>
-<span><span class="fu">mae</span><span class="op">(</span><span class="va">lm_mario_ohne_x_var</span><span class="op">)</span>  <span class="co"># Modellgüte bzw. Modellfehler</span></span>
-<span><span class="co">## [1] 10</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lm_mario_ohne_x_var <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> mariokart)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(lm_mario_ohne_x_var)  <span class="co"># Modellgüte bzw. Modellfehler</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 10</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Im nächsten Schritt spezifizieren Sie ein Modell, in dem der Verkaufspreis eine Funktion der Anzahl der Lenkräder ist (ähnlich wie in <a href="#fig-fehler-red" class="quarto-xref">Abbildung&nbsp;<span>7.4</span></a>):</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_wheels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="va">wheels</span>, data <span class="op">=</span> <span class="va">mariokart</span><span class="op">)</span></span>
-<span><span class="fu">mae</span><span class="op">(</span><span class="va">lm_wheels</span><span class="op">)</span></span>
-<span><span class="co">## [1] 7.4</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>lm_wheels <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> wheels, <span class="at">data =</span> mariokart)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(lm_wheels)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 7.4</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Ah! Sehr schön, Sie haben mit <code>lm2</code> ein besseres Modell als einfach nur den Mittelwert gefunden. Ab nach Hause! <span class="math inline">\(\square\)</span></p>
 </div>
@@ -1070,50 +1152,57 @@ Tabelle&nbsp;7.2: Ausgabe der Funktion <code>describe_distribution</code> (Auszu
 <p><span>🧑‍🏫</span> Ja, die MAA ist anschaulicher und insofern nützlicher als die Varianz und die SD. Wenn es nur um deskriptive Statistik geht, braucht man die Varianz (oder die SD) nicht unbedingt. Allerdings ist die SD nützlich zur Beschreibung der Normalverteilung. Außerdem wird die Varianz häufig verwendet bzw. in Forschungsarbeiten berichtet, daher hilft es Ihnen, wenn Sie die Varianz kennen. Liegen Extremwerte vor, kann es vorteilhafter sein, den IQR vorzuziehen gegenüber Mittelwert basierten Streuungsmaßen (MAA, Varianz, SD).</p>
 </blockquote>
 </blockquote>
-</section></section><section id="streuung-als-modellfehler" class="level2" data-number="7.4"><h2 data-number="7.4" class="anchored" data-anchor-id="streuung-als-modellfehler">
-<span class="header-section-number">7.4</span> Streuung als Modellfehler</h2>
+</section>
+</section>
+<section id="streuung-als-modellfehler" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="streuung-als-modellfehler"><span class="header-section-number">7.4</span> Streuung als Modellfehler</h2>
 <p>Wenn wir den Mittelwert als Punktmodell des Verkaufspreises auffassen, so kann man die verschiedenen Kennwerte der Streuung als verschiedene Kennwerte der Modellgüte auffassen.</p>
 <p>Definieren wir zunächst als Punktmodell auf Errisch:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lm_mario_ohne_x_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">~</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">mariokart</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lm_mario_ohne_x_var <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> mariokart)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Zur Erinnerung: Wir modellieren <code>total_pr</code> ohne UV (Prädiktoren), sondern als Punktmodell, und zwar schätzen wir den Mittelwert mit den Daten <code>mariokart</code>. Modelle ohne UV nennt man auch “Nullmodell”. Das (Meta-)Paket <code>easystats</code> bietet komfortable Befehle, um die Modellgüte zu berechnen:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mae</span><span class="op">(</span><span class="va">lm_mario_ohne_x_var</span><span class="op">)</span>  <span class="co"># Mean absolute error</span></span>
-<span><span class="fu">mse</span><span class="op">(</span><span class="va">lm_mario_ohne_x_var</span><span class="op">)</span>  <span class="co"># Mean squared error</span></span>
-<span><span class="fu">rmse</span><span class="op">(</span><span class="va">lm_mario_ohne_x_var</span><span class="op">)</span>  <span class="co"># Root mean squared error</span></span>
-<span><span class="co">## [1] 10</span></span>
-<span><span class="co">## [1] 655</span></span>
-<span><span class="co">## [1] 26</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(lm_mario_ohne_x_var)  <span class="co"># Mean absolute error</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mse</span>(lm_mario_ohne_x_var)  <span class="co"># Mean squared error</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rmse</span>(lm_mario_ohne_x_var)  <span class="co"># Root mean squared error</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 10</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 655</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 26</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section><section id="die-z-transformation" class="level2" data-number="7.5"><h2 data-number="7.5" class="anchored" data-anchor-id="die-z-transformation">
-<span class="header-section-number">7.5</span> Die <em>z</em>-Transformation</h2>
+</section>
+<section id="die-z-transformation" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="die-z-transformation"><span class="header-section-number">7.5</span> Die <em>z</em>-Transformation</h2>
 <p>Wenn man mit einem bestimmten Datensatz arbeitet, ist es häufig schwer zu sagen, welche Ausprägungen “groß” sind und welche “klein”. Um einzuschätzen zu können, welche Ausprägungen wie groß sind, sollte man die Quantile kennen. Dann kann man Aussagen machen wie “Ah, die Ausprägung <em>X</em> ist groß, weil 90 Prozent aller Leute einen kleineren Wert aufweisen”. Die <em>z</em>-Transformation hilft hier, dass sie die Werte in bekannte und verständliche Bereiche transformiert. So wird der Mittelwert auf Null transformiert und die Streuung (sd) auf 1. Bei normalverteilten Variablen weiß man dann direkt, dass der Mittelwert, Modus und Median bei Null sind, und ca. 98 Prozent der Werte kleiner als 2, s. <a href="040-verbildlichen.html#def-nv" class="quarto-xref">Definition&nbsp;<span>5.6</span></a>. Die <em>z</em>-Transformation besteht aus zwei Schritten: Zentrieren und (Streuung) standardisieren.</p>
 <p>Sie arbeiten immer noch als Datenknecht, Moment, <em>Datenhecht</em> bei dem Online-Auktionshaus. Heute untersuchen Sie, wie gut sich die Verkaufspreise mit einer einzigen Zahl, dem mittleren Verkaufspreis, beschreiben lassen. Einige widerspenstige Werte haben Sie dabei einfach des Datensatzes verwiesen. Schon ist das Leben leichter, s. <a href="#lst-mariokart-no-extreme" class="quarto-xref">Listing&nbsp;<span>7.2</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div id="lst-mariokart-no-extreme" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
-<figure class="quarto-float quarto-float-lst figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-mariokart-no-extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-mariokart-no-extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;7.2: Mariokart ohne Extremwerte
-</figcaption><div aria-describedby="lst-mariokart-no-extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_no_extreme</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</figcaption>
+<div aria-describedby="lst-mariokart-no-extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mariokart_no_extreme <span class="ot">&lt;-</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
 </div>
 </div>
-<section id="zentrieren" class="level3" data-number="7.5.1"><h3 data-number="7.5.1" class="anchored" data-anchor-id="zentrieren">
-<span class="header-section-number">7.5.1</span> Zentrieren</h3>
+<section id="zentrieren" class="level3" data-number="7.5.1">
+<h3 data-number="7.5.1" class="anchored" data-anchor-id="zentrieren"><span class="header-section-number">7.5.1</span> Zentrieren</h3>
 <p><a href="#fig-mariokart_no_extreme" class="quarto-xref">Abbildung&nbsp;<span>7.11</span></a> (rechts) zeigt die Verteilung; man sieht dass es einige Streuung um den Mittelwert (<span class="math inline">\(\bar{X}= 47\)</span>) herum gibt. <a href="#fig-mariokart_no_extreme" class="quarto-xref">Abbildung&nbsp;<span>7.11</span></a> (links) zeigt die (um den Mittelwert) <em>zentrierten</em> Daten: Dort wurde von allen Werten der Mittelwert abgezogen.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-mariokart_no_extreme" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-mariokart_no_extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-mariokart_no_extreme-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mariokart_no_extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="060-modellguete_files/figure-html/fig-mariokart_no_extreme-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16" title="Abbildung&nbsp;7.11: Verteilung von mariokart_no_extreme; das Zentrieren ändert die Verteilung nicht, sondern ‘schiebt die Verteilung nur zur Seite’. Zentrierte Werte zeigen, wie weit die unzentrierten Werte von ihrem Mittelwert entfernt sind. Zentrieren erreicht man, indem von allen Werten den Mittelwert abzieht."><img src="060-modellguete_files/figure-html/fig-mariokart_no_extreme-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mariokart_no_extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;7.11: Verteilung von <code>mariokart_no_extreme</code>; das Zentrieren ändert die Verteilung nicht, sondern ‘schiebt die Verteilung nur zur Seite’. Zentrierte Werte zeigen, wie weit die unzentrierten Werte von ihrem Mittelwert entfernt sind. Zentrieren erreicht man, indem von allen Werten den Mittelwert abzieht.
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -1138,22 +1227,26 @@ Wichtig
 <p>Man könnte vielleicht angeben, wie viel Euro jedes Spiel vom Mittelwert entfernt ist. Je größer diese Abweichung, desto schlechter die Modellgüte! Also rechnen Sie diese Abweichung aus, <a href="#lst-zentrieren" class="quarto-xref">Listing&nbsp;<span>7.3</span></a> und <a href="#tbl-zentriert" class="quarto-xref">Tabelle&nbsp;<span>7.3</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div id="lst-zentrieren" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
-<figure class="quarto-float quarto-float-lst figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-zentrieren-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-zentrieren-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;7.3: Zentrieren einer Variablen
-</figcaption><div aria-describedby="lst-zentrieren-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_no_extreme_zentriert</span> <span class="op">&lt;-</span></span>
-<span>  <span class="va">mariokart_no_extreme</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
-<span>    total_pr_zentriert <span class="op">=</span> <span class="va">total_pr</span> <span class="op">-</span> <span class="fl">47.7</span><span class="op">)</span>  </span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</figcaption>
+<div aria-describedby="lst-zentrieren-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mariokart_no_extreme_zentriert <span class="ot">&lt;-</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  mariokart_no_extreme <span class="sc">%&gt;%</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_pr_zentriert =</span> total_pr <span class="sc">-</span> <span class="fl">47.7</span>)  </span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-zentriert" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
-<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-zentriert-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-zentriert-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabelle&nbsp;7.3: Die ersten paar Zeilen von <code>total_pr</code> zentriert: <code>zentriert = total_pr - MW</code>
-</figcaption><div aria-describedby="tbl-zentriert-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+</figcaption>
+<div aria-describedby="tbl-zentriert-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <div id="pjbrhlscdu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#pjbrhlscdu table {
@@ -1604,13 +1697,16 @@ Tabelle&nbsp;7.3: Die ersten paar Zeilen von <code>total_pr</code> zentriert: <c
   height: 0px !important;
 }
 </style>
-<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead><tr class="gt_col_headings header">
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
 <th id="id" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">id</th>
 <th id="total_pr" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">total_pr</th>
 <th id="MW" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MW</th>
 <th id="total_pr_zentriert" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">total_pr_zentriert</th>
-</tr></thead>
+</tr>
+</thead>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_right" headers="id">1</td>
@@ -1650,6 +1746,7 @@ Tabelle&nbsp;7.3: Die ersten paar Zeilen von <code>total_pr</code> zentriert: <c
 </tr>
 </tbody>
 </table>
+
 </div>
 </div>
 </div>
@@ -1660,31 +1757,35 @@ Tabelle&nbsp;7.3: Die ersten paar Zeilen von <code>total_pr</code> zentriert: <c
 <div id="def-zentrieren" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 7.7 (Zentrieren)</strong></span> Zentrieren bedeutet, von jedem Wert einer Verteilung <span class="math inline">\(X\)</span> den Mittelwert zu subtrahieren: <span class="math inline">\(X_c = X - \bar{X}\)</span>. Daher ist der neue Mittelwert (der zentrierten Verteilung) gleich Null. <span class="math inline">\(\square\)</span></p>
 </div>
-</section><section id="streuung-standardisieren" class="level3" data-number="7.5.2"><h3 data-number="7.5.2" class="anchored" data-anchor-id="streuung-standardisieren">
-<span class="header-section-number">7.5.2</span> Streuung standardisieren</h3>
+</section>
+<section id="streuung-standardisieren" class="level3" data-number="7.5.2">
+<h3 data-number="7.5.2" class="anchored" data-anchor-id="streuung-standardisieren"><span class="header-section-number">7.5.2</span> Streuung standardisieren</h3>
 <p>Aber irgendwie sind Sie noch nicht am Ziel Ihrer Überlegungen: Woher weiß man, ob 10 Euro oder 20 Euro “viel” Abweichung vom Verkaufspreis ist? Man müsste die Abweichung eines Verkaufspreises zu irgendetwas in Bezug setzen. Wieder! Ein Geistesblitz! Man könnte doch die jeweilige Abweichung in Bezug setzen zur <em>mittleren (absoluten) Abweichung</em> (MAA)! Ein alternativer, ähnlicher Kennwert zur MAA ist die SD. Sie haben gehört, dass die SD gebräuchlicher sei als die MAA. Um sich als Checker zu präsentieren, berechnen Sie also auch die SD; die beiden Koeffizienten sind ja ähnlich.</p>
 <p>Also: Wenn ein Spiel 10 Dollar vom Mittelwert abweicht und die SD 10 Dollar betragen sollte, dann hätten wir eine “standardisierte” (abgekürzt manchmal mit <code>std</code>) Abweichung von 1, weil 10/10=1. Begeistert über Ihre Geistesblitze machen Sie sich ans Werk.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_no_extreme</span> <span class="op">&lt;-</span></span>
-<span>  <span class="va">mariokart_no_extreme</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>abw_std <span class="op">=</span> <span class="va">abw</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">abw</span><span class="op">)</span>,  <span class="co"># std wie "standardisiert"</span></span>
-<span>         abw_std2 <span class="op">=</span> <span class="va">abw</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">abw</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  </span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mariokart_no_extreme <span class="ot">&lt;-</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  mariokart_no_extreme <span class="sc">%&gt;%</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">abw_std =</span> abw <span class="sc">/</span> <span class="fu">sd</span>(abw),  <span class="co"># std wie "standardisiert"</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">abw_std2 =</span> abw <span class="sc">/</span> <span class="fu">mean</span>(<span class="fu">abs</span>(abw)))  </span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Zufrieden betrachten Sie Ihr Werk, s. <a href="#fig-z-transf" class="quarto-xref">Abbildung&nbsp;<span>7.12</span></a>. In <a href="#fig-z-transf" class="quarto-xref">Abbildung&nbsp;<span>7.12</span></a> sieht man oben die Rohwerte und unten die transformierten Werte, die wir hier als <em>z-standardisiert</em> bezeichnen, da wir sie in Bezug zur “typischen Abweichung”, der SD, gesetzt haben.</p>
 <div class="cell" data-layout-align="center" data-fig-aspect="0.8">
 <div class="cell-output-display">
 <div id="fig-z-transf" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-z-transf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="060-modellguete_files/figure-html/fig-z-transf-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-z-transf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="060-modellguete_files/figure-html/fig-z-transf-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-17" title="Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilung; der vertikale Balken zeigt den Mittelwert"><img src="060-modellguete_files/figure-html/fig-z-transf-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-z-transf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilung; der vertikale Balken zeigt den Mittelwert
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
-</section><section id="z-werte" class="level3" data-number="7.5.3"><h3 data-number="7.5.3" class="anchored" data-anchor-id="z-werte">
-<span class="header-section-number">7.5.3</span> <em>z</em>-Werte</h3>
+</section>
+<section id="z-werte" class="level3" data-number="7.5.3">
+<h3 data-number="7.5.3" class="anchored" data-anchor-id="z-werte"><span class="header-section-number">7.5.3</span> <em>z</em>-Werte</h3>
 <p>Wir fassen die zwei Schritte unserer Umrechnung (“Transformation”) zusammen wie in einem Kochrezept:</p>
 <ol type="1">
 <li>Berechne die Abweichungen vom mittleren Verkaufspreis (Differenz Mittelwert und jeweiliger Verkaufspreis)</li>
@@ -1698,17 +1799,204 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <p><em>z</em>-Werte sind nützlich, weil sie die “relative” Abweichung einzelner Beobachtungen vom Mittelwert anzeigen. Nach einer <em>Faustregel</em> spricht man von extremen Abweichungen (Extremwerten, Ausreißern), wenn <span class="math inline">\(z_i \ge 2.5\)</span> <span class="citation" data-cites="shimizu2022">(<a href="references.html#ref-shimizu2022" role="doc-biblioref">Shimizu, 2022</a>)</span>.</p>
 <p>Zentrieren bzw. z-tranformieren kann man sich mithilfe des R-Pakets <code>easystats</code> verrichten lassen:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_no_extreme_z_transformiert</span> <span class="op">&lt;-</span></span>
-<span>  <span class="va">mariokart_no_extreme</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>total_pr_zentriert <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu">center</span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>         total_pr_z_transformiert <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu">standardise</span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mariokart_no_extreme_z_transformiert <span class="ot">&lt;-</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  mariokart_no_extreme <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_pr_zentriert =</span> <span class="fu">as.numeric</span>(<span class="fu">center</span>(total_pr)),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">total_pr_z_transformiert =</span> <span class="fu">as.numeric</span>(<span class="fu">standardise</span>(total_pr)))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="def-snv" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 7.9 (Standardnormalverteilung)</strong></span> Eine <em>Standard</em>normalverteilung ist eine Normalverteilung mit Mittelwert von 0 und einer Standardabweichung von 1. Man schreibt kurz: <span class="math inline">\(X \sim \mathcal{N}(0, 1)\quad \square\)</span>.</p>
 </div>
 <p>Man kann jede Normalverteilung in eine Standardnormalverteilung überführen mit der <em>z-Transformation</em>.</p>
-</section></section><section id="aufgaben" class="level2" data-number="7.6"><h2 data-number="7.6" class="anchored" data-anchor-id="aufgaben">
-<span class="header-section-number">7.6</span> Aufgaben</h2>
+</section>
+</section>
+<section id="quiz" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="quiz"><span class="header-section-number">7.6</span> Quiz</h2>
+<div class="cell" data-layout-align="center">
+<div class="webex-question">
+<div class="webex-check webex-box">
+<p>Was ist das mathematische Resultat, wenn man alle (nicht-absoluten) Residuen einer Verteilung vom Mittelwert aufsummiert? Betrachten Sie die Eigenschaft des Mittelwerts als Schwerpunkt.</p>
+<div id="webex-d64ce8fcbd7f37e1039e5d7f50f49e32" class="webex-radiogroup" data-answer="PwYYUkkISlNOVGo=">
+<label><input type="radio" autocomplete="off" name="d64ce8fcbd7f37e1039e5d7f50f49e32"><span>Die Summe entspricht dem Stichprobenumfang n.</span></label><label><input type="radio" autocomplete="off" name="d64ce8fcbd7f37e1039e5d7f50f49e32"><span>Die Summe ist immer exakt Null.</span></label><label><input type="radio" autocomplete="off" name="d64ce8fcbd7f37e1039e5d7f50f49e32"><span>Die Summe entspricht der Varianz der Daten.</span></label><label><input type="radio" autocomplete="off" name="d64ce8fcbd7f37e1039e5d7f50f49e32"><span>Das Ergebnis ist abhängig von der Standardabweichung.</span></label><label><input type="radio" autocomplete="off" name="d64ce8fcbd7f37e1039e5d7f50f49e32"><span>Das Ergebnis ist immer positiv.</span></label>
+</div>
+</div>
+<div class="webex-solution">
+<p>Da der Mittelwert der Schwerpunkt einer Verteilung ist, gleichen sich positive und negative Abweichungen exakt aus. Die Summe der einfachen Residuen ist daher immer Null.</p>
+<ul>
+<li>Falsch</li>
+<li>Richtig</li>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Falsch</li>
+</ul>
+</div>
+</div>
+<div class="webex-question">
+<div class="webex-check webex-box">
+<p>Sie haben ein Modell <code>lm1</code> (nur Mittelwert) und ein Modell <code>lm2</code> (mit einer UV). In R liefert <code>mae(lm1)</code> den Wert 10 und <code>mae(lm2)</code> den Wert 7,4. Wie beurteilen Sie die Veränderung der Modellgüte?</p>
+<div id="webex-ed5164d23a49b39c1c6a8f75317062ec" class="webex-radiogroup" data-answer="PlQZARoFSAIfUWk=">
+<label><input type="radio" autocomplete="off" name="ed5164d23a49b39c1c6a8f75317062ec"><span>Die Güte hat sich verschlechtert, da der MAE gesunken ist.</span></label><label><input type="radio" autocomplete="off" name="ed5164d23a49b39c1c6a8f75317062ec"><span>Das erste Modell ist besser, da größere Fehler für die Forschung nützlicher sind.</span></label><label><input type="radio" autocomplete="off" name="ed5164d23a49b39c1c6a8f75317062ec"><span>Das zweite Modell ist besser, da der durchschnittliche Vorhersagefehler gesunken ist.</span></label><label><input type="radio" autocomplete="off" name="ed5164d23a49b39c1c6a8f75317062ec"><span>Ein MAE von 7,4 bedeutet, dass das Modell zu 74 % korrekt ist.</span></label><label><input type="radio" autocomplete="off" name="ed5164d23a49b39c1c6a8f75317062ec"><span>Man kann die Modelle nicht vergleichen, da die Skalierung unterschiedlich ist.</span></label>
+</div>
+</div>
+<div class="webex-solution">
+<p>Ein geringerer MAE bedeutet kürzere Fehlerbalken. Je kleiner der Fehler, desto höher ist die Modellgüte.</p>
+<ul>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Richtig</li>
+<li>Falsch</li>
+<li>Falsch</li>
+</ul>
+</div>
+</div>
+<div class="webex-question">
+<div class="webex-check webex-box">
+<p>In R berechnen Sie für ein Nullmodell (Punktmodell) den RMSE. Welcher statistische Kennwert der abhängigen Variable entspricht diesem Ergebnis (nahezu) exakt? Berücksichtigen Sie die Definition des RMSE im Kontext des Mittelwerts.</p>
+<div id="webex-582288c6edb9013a7885e2cc6f9612e2" class="webex-radiogroup" data-answer="bggeAhQITwdJVD8=">
+<label><input type="radio" autocomplete="off" name="582288c6edb9013a7885e2cc6f9612e2"><span>Der Interquartilsabstand (IQR)</span></label><label><input type="radio" autocomplete="off" name="582288c6edb9013a7885e2cc6f9612e2"><span>Der Median</span></label><label><input type="radio" autocomplete="off" name="582288c6edb9013a7885e2cc6f9612e2"><span>Der Modus</span></label><label><input type="radio" autocomplete="off" name="582288c6edb9013a7885e2cc6f9612e2"><span>Die Standardabweichung (SD)</span></label><label><input type="radio" autocomplete="off" name="582288c6edb9013a7885e2cc6f9612e2"><span>Die Spannweite (Range)</span></label>
+</div>
+</div>
+<div class="webex-solution">
+<p>Beim Nullmodell ist der Vorhersagewert der Mittelwert. Die Wurzel aus dem mittleren quadrierten Fehler (RMSE) ist dann mathematisch äquivalent zur Standardabweichung.</p>
+<ul>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Richtig</li>
+<li>Falsch</li>
+</ul>
+</div>
+</div>
+<div class="webex-question">
+<div class="webex-check webex-box">
+<p>Ein Student hat in einem Statistiktest einen z-Wert von -2,0 erzielt. Wie ist dieses Ergebnis im Vergleich zur restlichen Gruppe zu interpretieren? Nutzen Sie die Definition von z-Werten als relative Abweichungen.</p>
+<div id="webex-fdb41fa81ff8850f3ebffc237a7b76e8" class="webex-radiogroup" data-answer="PVROBB1WTQgdVzs=">
+<label><input type="radio" autocomplete="off" name="fdb41fa81ff8850f3ebffc237a7b76e8"><span>Der Student hat zwei Fehler mehr gemacht als der Durchschnitt.</span></label><label><input type="radio" autocomplete="off" name="fdb41fa81ff8850f3ebffc237a7b76e8"><span>Das Ergebnis ist ein extremer Ausreißer nach oben.</span></label><label><input type="radio" autocomplete="off" name="fdb41fa81ff8850f3ebffc237a7b76e8"><span>Der tatsächliche Punktwert des Studenten muss negativ sein.</span></label><label><input type="radio" autocomplete="off" name="fdb41fa81ff8850f3ebffc237a7b76e8"><span>Der Student gehört zu den besten 2 % der Teilnehmer.</span></label><label><input type="radio" autocomplete="off" name="fdb41fa81ff8850f3ebffc237a7b76e8"><span>Der Student liegt zwei Standardabweichungen unter dem Durchschnitt der Gruppe.</span></label>
+</div>
+</div>
+<div class="webex-solution">
+<p>Ein z-Wert gibt an, wie viele Standardabweichungen ein Wert vom Mittelwert entfernt ist. Ein negatives Vorzeichen bedeutet, dass der Wert unter dem Durchschnitt liegt.</p>
+<ul>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Richtig</li>
+</ul>
+</div>
+</div>
+<div class="webex-question">
+<div class="webex-check webex-box">
+<p>Was passiert bei einer z-Transformation mit dem Mittelwert und der Standardabweichung einer beliebigen Verteilung? Die Transformation besteht aus Zentrieren und Standardisieren.</p>
+<div id="webex-9f3778fbc39e5f51ceaf34c15a1bd93c" class="webex-radiogroup" data-answer="YlYfBxsJSlJPA2Q=">
+<label><input type="radio" autocomplete="off" name="9f3778fbc39e5f51ceaf34c15a1bd93c"><span>Alle Ausreißer werden automatisch aus dem Datensatz gelöscht.</span></label><label><input type="radio" autocomplete="off" name="9f3778fbc39e5f51ceaf34c15a1bd93c"><span>Die Werte werden alle positiv.</span></label><label><input type="radio" autocomplete="off" name="9f3778fbc39e5f51ceaf34c15a1bd93c"><span>Der Mittelwert wird 0 und die Standardabweichung wird 1.</span></label><label><input type="radio" autocomplete="off" name="9f3778fbc39e5f51ceaf34c15a1bd93c"><span>Der Mittelwert wird 1 und die Standardabweichung wird 0.</span></label><label><input type="radio" autocomplete="off" name="9f3778fbc39e5f51ceaf34c15a1bd93c"><span>Die Form der Verteilung wird immer perfekt symmetrisch.</span></label>
+</div>
+</div>
+<div class="webex-solution">
+<p>Durch das Abziehen des Mittelwerts (Zentrieren) verschiebt sich das Zentrum auf 0. Durch das Teilen durch die SD wird die Streuung auf 1 normiert.</p>
+<ul>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Richtig</li>
+<li>Falsch</li>
+<li>Falsch</li>
+</ul>
+</div>
+</div>
+<div class="webex-question">
+<div class="webex-check webex-box">
+<p>Ein Datensatz weist einen sehr extremen Ausreißer auf. Welches Streuungsmaß ist in dieser Situation am ehesten zu empfehlen, um ein verzerrtes Bild zu vermeiden? Nutzen Sie das Konzept der Robustheit.</p>
+<div id="webex-87e6453c1ee4174bfeb24970f59dabb0" class="webex-radiogroup" data-answer="YwZJBhgFH1MdVTg=">
+<label><input type="radio" autocomplete="off" name="87e6453c1ee4174bfeb24970f59dabb0"><span>Interquartilsabstand (IQR)</span></label><label><input type="radio" autocomplete="off" name="87e6453c1ee4174bfeb24970f59dabb0"><span>Varianz</span></label><label><input type="radio" autocomplete="off" name="87e6453c1ee4174bfeb24970f59dabb0"><span>Spannweite (Range)</span></label><label><input type="radio" autocomplete="off" name="87e6453c1ee4174bfeb24970f59dabb0"><span>Root Mean Squared Error (RMSE)</span></label><label><input type="radio" autocomplete="off" name="87e6453c1ee4174bfeb24970f59dabb0"><span>Standardabweichung (SD)</span></label>
+</div>
+</div>
+<div class="webex-solution">
+<p>Der IQR basiert auf Quantilen (Q3 - Q1) und ignoriert die extremen Ränder der Verteilung. Dadurch bleibt er stabil, selbst wenn einzelne Werte extrem abweichen.</p>
+<ul>
+<li>Richtig</li>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Falsch</li>
+</ul>
+</div>
+</div>
+<div class="webex-question">
+<div class="webex-check webex-box">
+<p>Warum wird in der Statistik die Standardabweichung (SD) oft der Varianz vorgezogen, wenn es um die Beschreibung von Daten geht? Betrachten Sie die mathematische Transformation bei der Berechnung der SD. Überlegen Sie, was mit der Maßeinheit der Daten passiert.</p>
+<div id="webex-bc6cf6801dca8df74cff2276c388896e" class="webex-radiogroup" data-answer="OVMaU0oHFAAdVD4=">
+<label><input type="radio" autocomplete="off" name="bc6cf6801dca8df74cff2276c388896e"><span>Die SD ist immer kleiner als der Mittelwert der Daten.</span></label><label><input type="radio" autocomplete="off" name="bc6cf6801dca8df74cff2276c388896e"><span>Die Varianz kann niemals für normalverteilte Daten berechnet werden.</span></label><label><input type="radio" autocomplete="off" name="bc6cf6801dca8df74cff2276c388896e"><span>Die SD besitzt wieder die gleiche Größenordnung und Maßeinheit wie die Originaldaten.</span></label><label><input type="radio" autocomplete="off" name="bc6cf6801dca8df74cff2276c388896e"><span>R kann die Varianz technisch nicht direkt berechnen.</span></label><label><input type="radio" autocomplete="off" name="bc6cf6801dca8df74cff2276c388896e"><span>Die SD ist robuster gegenüber Ausreißern als die Varianz.</span></label>
+</div>
+</div>
+<div class="webex-solution">
+<p>Die Varianz nutzt quadrierte Abweichungen, was die Einheit verändert (z. B. Quadrat-Euro). Durch das Wurzelziehen bei der SD kehrt man zur ursprünglichen Einheit (z. B. Euro) zurück.</p>
+<ul>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Richtig</li>
+<li>Falsch</li>
+<li>Falsch</li>
+</ul>
+</div>
+</div>
+<div class="webex-question">
+<div class="webex-check webex-box">
+<p>Vier Abweichungen von einem Mittelwert betragen: 1, -3, 1 und 1. Wie hoch ist der Mean Absolute Error (MAE) für diese Daten? Wenden Sie die Definition der mittleren Absolutabweichung an. Beachten Sie den Umgang mit negativen Vorzeichen.</p>
+<div id="webex-26d71256f28e6d00a3cc277d9a1f902b" class="webex-radiogroup" data-answer="aQZIBx0DGQZKAmU=">
+<label><input type="radio" autocomplete="off" name="26d71256f28e6d00a3cc277d9a1f902b"><span>1,25</span></label><label><input type="radio" autocomplete="off" name="26d71256f28e6d00a3cc277d9a1f902b"><span>0</span></label><label><input type="radio" autocomplete="off" name="26d71256f28e6d00a3cc277d9a1f902b"><span>1,5</span></label><label><input type="radio" autocomplete="off" name="26d71256f28e6d00a3cc277d9a1f902b"><span>6</span></label><label><input type="radio" autocomplete="off" name="26d71256f28e6d00a3cc277d9a1f902b"><span>2</span></label>
+</div>
+</div>
+<div class="webex-solution">
+<p>Der MAE berechnet sich aus der Summe der Absolutbeträge der Fehler geteilt durch n. Hier: (1 + 3 + 1 + 1) / 4 = 6 / 4 = 1,5.</p>
+<ul>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Richtig</li>
+<li>Falsch</li>
+<li>Falsch</li>
+</ul>
+</div>
+</div>
+<div class="webex-question">
+<div class="webex-check webex-box">
+<p>Sie betrachten ein einfaches Punktmodell für Klausurnoten. Nun erweitern Sie das Modell, indem Sie die Studierenden in zwei Gruppen (viel gelernt vs.&nbsp;wenig gelernt) aufteilen. Was passiert im Idealfall mit den Residuen (Fehlerbalken) im Vergleich zum ungruppierten Modell? Denken Sie an die grafische Darstellung der Abweichungen in Teilsamples.</p>
+<div id="webex-e4a750cf25b3cff6ce23be376171d833" class="webex-radiogroup" data-answer="PgRNBxkAT1ceBT8=">
+<label><input type="radio" autocomplete="off" name="e4a750cf25b3cff6ce23be376171d833"><span>Die Residuen verändern ihre Richtung von positiv zu negativ.</span></label><label><input type="radio" autocomplete="off" name="e4a750cf25b3cff6ce23be376171d833"><span>Die Summe der Residuen wird deutlich größer als Null.</span></label><label><input type="radio" autocomplete="off" name="e4a750cf25b3cff6ce23be376171d833"><span>Das Modell wird ungenauer, da man nun zwei Mittelwerte schätzen muss.</span></label><label><input type="radio" autocomplete="off" name="e4a750cf25b3cff6ce23be376171d833"><span>Die Fehlerbalken innerhalb der Gruppen werden im Durchschnitt kürzer.</span></label><label><input type="radio" autocomplete="off" name="e4a750cf25b3cff6ce23be376171d833"><span>Die Standardabweichung der gesamten Stichprobe sinkt automatisch auf Null.</span></label>
+</div>
+</div>
+<div class="webex-solution">
+<p>Durch ein komplexeres Modell (Gruppierung) passen sich die Vorhersagen besser an die Daten an. Dies führt dazu, dass die Abweichungen der beobachteten Werte von den (gruppenbezogenen) Modellwerten sinken.</p>
+<ul>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Richtig</li>
+<li>Falsch</li>
+</ul>
+</div>
+</div>
+<div class="webex-question">
+<div class="webex-check webex-box">
+<p>Zwei Medikamente zur Gewichtsreduktion zeigen in einer Studie den exakt gleichen mittleren Effekt. Bei Präparat A ist die Streuung der individuellen Ergebnisse jedoch minimal. Bei Präparat B ist die Streuung der Ergebnisse extrem hoch. Welche Aussage zur Modellgüte des Mittelwerts ist in diesem Fall korrekt? Betrachten Sie die Verlässlichkeit der Vorhersage für eine einzelne Person.</p>
+<div id="webex-30a7c05eaefd313fd26750f0cd93d73a" class="webex-radiogroup" data-answer="aABNB08AGVVNVDs=">
+<label><input type="radio" autocomplete="off" name="30a7c05eaefd313fd26750f0cd93d73a"><span>Ein Modell mit hoher Streuung ist immer präziser in der Vorhersage.</span></label><label><input type="radio" autocomplete="off" name="30a7c05eaefd313fd26750f0cd93d73a"><span>Die Modellgüte ist bei beiden Präparaten identisch, da der Mittelwert gleich ist.</span></label><label><input type="radio" autocomplete="off" name="30a7c05eaefd313fd26750f0cd93d73a"><span>Präparat B hat eine höhere Modellgüte, weil extreme Erfolge möglich sind.</span></label><label><input type="radio" autocomplete="off" name="30a7c05eaefd313fd26750f0cd93d73a"><span>Die Standardabweichung hat keinen Einfluss auf die Güte eines Punktmodells.</span></label><label><input type="radio" autocomplete="off" name="30a7c05eaefd313fd26750f0cd93d73a"><span>Die Modellgüte ist bei Präparat A höher, da die tatsächlichen Werte näher am Modellwert liegen.</span></label>
+</div>
+</div>
+<div class="webex-solution">
+<p>Ein gutes Modell zeichnet sich durch geringe Fehlerbalken (Residuen) aus. Geringe Streuung bedeutet, dass der Mittelwert die einzelnen Beobachtungen gut repräsentiert.</p>
+<ul>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Falsch</li>
+<li>Richtig</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="aufgaben" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="aufgaben"><span class="header-section-number">7.7</span> Aufgaben</h2>
 <p>Die Webseite <a href="https://datenwerk.netlify.app">datenwerk.netlify.app</a> stellt eine Reihe von einschlägigen Übungsaufgaben bereit. Sie können die Suchfunktion der Webseite nutzen, um die Aufgaben mit den folgenden Namen zu suchen:</p>
 <ul>
 <li><a href="https://sebastiansauer.github.io/Datenwerk/posts/mariokart-sd2/mariokart-sd2">mariokart-sd2</a></li>
@@ -1735,7 +2023,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="060-modellguete_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
+<figure class="figure">
+<p><a href="060-modellguete_files/figure-html/unnamed-chunk-19-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-18"><img src="060-modellguete_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -1747,7 +2036,7 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <p><strong>Lösung: Daten importieren</strong></p>
 <p>Sie können die Daten entweder selber herunterladen oder aber die folgende Version des Datensatzes verwenden. In beiden Fällen ist es nützlich, den (absoluten oder relativen) Pfad anzugeben:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/sebastiansauer/statistik1/main/data/Smartphone-Nutzung%20(Responses)%20-%20Form%20responses%201.csv"</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>data_path <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/sebastiansauer/statistik1/main/data/Smartphone-Nutzung%20(Responses)%20-%20Form%20responses%201.csv"</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <!-- ::: {.content-visible when-format="pdf"} -->
 <!-- ```{r} -->
@@ -1759,49 +2048,51 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <!-- ::: -->
 <p>Dann können Sie die Daten wie gewohnt importieren:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">smartphone_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>smartphone_raw <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(data_path)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Lösung: Daten aufbereiten</strong></p>
 <p>Die Spaltennamen sind sehr unschön. Lassen Sie uns daher die Spaltennamen umbenennen (aber vorab sichern):</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">item_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">smartphone_raw</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">smartphone_raw</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"item"</span>,<span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">smartphone_raw</span><span class="op">)</span><span class="op">)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>item_labels <span class="ot">&lt;-</span> <span class="fu">names</span>(smartphone_raw)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(smartphone_raw) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"item"</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(smartphone_raw))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Check:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">smartphone_raw</span><span class="op">)</span></span>
-<span><span class="co">## Rows: 70</span></span>
-<span><span class="co">## Columns: 18</span></span>
-<span><span class="co">## $ item1  &lt;chr&gt; "21/03/2024 15:36:52", "05/04/2024 10:24:58", "05/04/2024 10…</span></span>
-<span><span class="co">## $ item2  &lt;chr&gt; "15:31:00", "10:23:00", "10:40:00", "11:14:00", "12:33:00", …</span></span>
-<span><span class="co">## $ item3  &lt;int&gt; 3, 4, 3, 3, 5, 5, 5, 5, 1, 2, 5, 3, 2, 2, 2, 5, 3, 1, 2, 4, …</span></span>
-<span><span class="co">## $ item4  &lt;int&gt; 5, 3, 3, 3, 4, 3, 3, 6, 2, 4, 5, 1, 1, 2, 3, 3, 4, 3, 2, 4, …</span></span>
-<span><span class="co">## $ item5  &lt;int&gt; 3, 3, 1, 5, 1, 3, 2, 4, 3, 2, 1, 1, 1, 4, 1, 2, 2, 1, 1, 1, …</span></span>
-<span><span class="co">## $ item6  &lt;int&gt; 4, 2, 4, 3, 5, 4, 6, 3, 2, 5, 6, 4, 2, 6, 5, 5, 5, 5, 5, 4, …</span></span>
-<span><span class="co">## $ item7  &lt;int&gt; 4, 3, 2, 3, 3, 1, 3, 2, 1, 2, 1, 1, 1, 3, 2, 2, 1, 2, 2, 2, …</span></span>
-<span><span class="co">## $ item8  &lt;int&gt; 1, 3, 1, 2, 3, 1, 1, 2, 2, 2, 1, 1, 2, 4, 1, 1, 2, 2, 1, 2, …</span></span>
-<span><span class="co">## $ item9  &lt;int&gt; 2, 6, 1, 3, 6, 5, 5, 2, 2, 5, 6, 1, 1, 5, 4, 6, 2, 4, 3, 4, …</span></span>
-<span><span class="co">## $ item10 &lt;int&gt; 2, 5, 5, 3, 4, 3, 1, 5, 1, 5, 3, 4, 3, 5, 4, 4, 4, 5, 3, 2, …</span></span>
-<span><span class="co">## $ item11 &lt;int&gt; 5, 6, 6, 5, 6, 6, 5, 6, 4, 3, 6, 4, 4, 5, 3, 6, 6, 4, 4, 5, …</span></span>
-<span><span class="co">## $ item12 &lt;int&gt; 1, 3, 1, 2, 5, 2, 4, 2, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 2, …</span></span>
-<span><span class="co">## $ item13 &lt;int&gt; 4, 3, 4, 2, 4, 2, 5, 3, 1, 1, 4, 1, 3, 4, 1, 3, 5, 2, 1, 4, …</span></span>
-<span><span class="co">## $ item14 &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", …</span></span>
-<span><span class="co">## $ item15 &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", …</span></span>
-<span><span class="co">## $ item16 &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
-<span><span class="co">## $ item17 &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", …</span></span>
-<span><span class="co">## $ item18 &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(smartphone_raw)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Rows: 70</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Columns: 18</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item1  &lt;chr&gt; "21/03/2024 15:36:52", "05/04/2024 10:24:58", "05/04/2024 10…</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item2  &lt;chr&gt; "15:31:00", "10:23:00", "10:40:00", "11:14:00", "12:33:00", …</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item3  &lt;int&gt; 3, 4, 3, 3, 5, 5, 5, 5, 1, 2, 5, 3, 2, 2, 2, 5, 3, 1, 2, 4, …</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item4  &lt;int&gt; 5, 3, 3, 3, 4, 3, 3, 6, 2, 4, 5, 1, 1, 2, 3, 3, 4, 3, 2, 4, …</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item5  &lt;int&gt; 3, 3, 1, 5, 1, 3, 2, 4, 3, 2, 1, 1, 1, 4, 1, 2, 2, 1, 1, 1, …</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item6  &lt;int&gt; 4, 2, 4, 3, 5, 4, 6, 3, 2, 5, 6, 4, 2, 6, 5, 5, 5, 5, 5, 4, …</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item7  &lt;int&gt; 4, 3, 2, 3, 3, 1, 3, 2, 1, 2, 1, 1, 1, 3, 2, 2, 1, 2, 2, 2, …</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item8  &lt;int&gt; 1, 3, 1, 2, 3, 1, 1, 2, 2, 2, 1, 1, 2, 4, 1, 1, 2, 2, 1, 2, …</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item9  &lt;int&gt; 2, 6, 1, 3, 6, 5, 5, 2, 2, 5, 6, 1, 1, 5, 4, 6, 2, 4, 3, 4, …</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item10 &lt;int&gt; 2, 5, 5, 3, 4, 3, 1, 5, 1, 5, 3, 4, 3, 5, 4, 4, 4, 5, 3, 2, …</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item11 &lt;int&gt; 5, 6, 6, 5, 6, 6, 5, 6, 4, 3, 6, 4, 4, 5, 3, 6, 6, 4, 4, 5, …</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item12 &lt;int&gt; 1, 3, 1, 2, 5, 2, 4, 2, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 2, …</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item13 &lt;int&gt; 4, 3, 4, 2, 4, 2, 5, 3, 1, 1, 4, 1, 3, 4, 1, 3, 5, 2, 1, 4, …</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item14 &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", …</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item15 &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", …</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item16 &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item17 &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", …</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="do">## $ item18 &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="komplette-lösung" class="level3" data-number="7.6.1"><h3 data-number="7.6.1" class="anchored" data-anchor-id="komplette-lösung">
-<span class="header-section-number">7.6.1</span> Komplette Lösung</h3>
+<section id="komplette-lösung" class="level3" data-number="7.7.1">
+<h3 data-number="7.7.1" class="anchored" data-anchor-id="komplette-lösung"><span class="header-section-number">7.7.1</span> Komplette Lösung</h3>
 <p>😁</p>
 </section>
 </div>
-<section id="fallstudie-zur-lebenszufriedenheit" class="level3" data-number="7.6.2"><h3 data-number="7.6.2" class="anchored" data-anchor-id="fallstudie-zur-lebenszufriedenheit">
-<span class="header-section-number">7.6.2</span> Fallstudie zur Lebenszufriedenheit</h3>
+<section id="fallstudie-zur-lebenszufriedenheit" class="level3" data-number="7.7.2">
+<h3 data-number="7.7.2" class="anchored" data-anchor-id="fallstudie-zur-lebenszufriedenheit"><span class="header-section-number">7.7.2</span> Fallstudie zur Lebenszufriedenheit</h3>
 <p>Die OECD führt eine <a href="https://www.oecd.org/wise/measuring-well-being-and-progress.htm">weltweite Studie zur Lebenszufriedenheit</a> durch.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> Arbeiten Sie die die <a href="https://sebastiansauer.github.io/Datenwerk/posts/oecd-yacsda/">Fallstudie “oecd-yacsda” im Datenwerk</a> durch, um ein tieferes Verständnis für die Lebenszufriedenheit in verschiedenen Ländern der Welt zu bekommen.</p>
-</section></section><section id="literaturhinweise" class="level2" data-number="7.7"><h2 data-number="7.7" class="anchored" data-anchor-id="literaturhinweise">
-<span class="header-section-number">7.7</span> Literaturhinweise</h2>
+</section>
+</section>
+<section id="literaturhinweise" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="literaturhinweise"><span class="header-section-number">7.8</span> Literaturhinweise</h2>
 <p>Allen Downey <span class="citation" data-cites="downey_probably_2023">(<a href="references.html#ref-downey_probably_2023" role="doc-biblioref">2023</a>)</span> stellt in seinem vergnüglich zu lesenden Buch eine kurzweilige Einführung in die Statistik vor; auch Streuungsmaße haben dabei einen Auftritt. Wer mehr “Lehrbuch-Feeling” sucht, wird bei <span class="citation" data-cites="cetinkaya-rundel_introduction_2021">Çetinkaya-Runde &amp; Hardin (<a href="references.html#ref-cetinkaya-rundel_introduction_2021" role="doc-biblioref">2021</a>)</span> fündig (das Buch ist online frei verfügbar). Es ist kein Geheimnis, dass Streuungsmaße keine ganz neuen Themen in der Statistik sind. Aber hey, Oldie is Goldie, ohne Streuungsmaße geht’s nicht. Jedenfalls werden Sie in jedem Statistik-Lehrbuch, dass Sie in der Bib (oder sonst wo) aus dem Regal ziehen, fündig werden zu diesem Thema. Die Bücher unterscheiden sich meist “nur” in ihrem Anspruch bzw. der didaktischen Aufmachung; für jeden Geschmack ist da was dabei.</p>
 
 
@@ -1825,12 +2116,18 @@ Lyon, A. (2014). Why Are <span>Normal Distributions Normal</span>? <em>The Briti
 Shimizu, Y. (2022). Multiple <span>Desirable Methods</span> in <span>Outlier Detection</span> of <span>Univariate Data With R Source Codes</span>. <em>Frontiers in Psychology</em>, <em>12</em>, 819854. <a href="https://doi.org/10.3389/fpsyg.2021.819854">https://doi.org/10.3389/fpsyg.2021.819854</a>
 </div>
 </div>
-</section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
 <ol>
 <li id="fn1"><p>Die Abweichungsquadrate wirken optisch nicht quadratisch, da die X-Achse breiter skaliert dargestellt ist als die Y-Achse. Trotzdem sind es Quadrate, nur nicht optisch, wenn Sie wissen, was ich meine …<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p><a href="https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1SWMj4rIIIJdAsfsSKQHSg8jHr_OuKLpJx_0XV4LGnH0/edit?usp=sharing</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p><a href="https://www.oecd.org/wise/measuring-well-being-and-progress.htm" class="uri">https://www.oecd.org/wise/measuring-well-being-and-progress.htm</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol></section></main><!-- /main --><script>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script>
 
 /* definition of content for the buttons */
 const webex_buttons = {check_hidden:          "<b>&check;</b>",
@@ -2414,7 +2711,8 @@ window.onload = function() {
   update_total_correct();
 }
 
-</script><script id="quarto-html-after-body" type="application/javascript">
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
     if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -2478,13 +2776,14 @@ window.onload = function() {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
@@ -2825,7 +3124,9 @@ window.onload = function() {
       }
     }
   });
-  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="./050-zusammenfassen.html" class="pagination-link" aria-label="Punktmodelle 1">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Punktmodelle 1</span></span>
       </a>          
@@ -2837,7 +3138,8 @@ window.onload = function() {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
+<footer class="footer">
+  <div class="nav-footer">
     <div class="nav-footer-left">
 <p>Powered by <a href="https://quarto.org">Quarto</a></p>
 </div>   
@@ -2849,6 +3151,40 @@ window.onload = function() {
 </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
 
 
 </body></html>

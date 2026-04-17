@@ -1,0 +1,85 @@
+# Data-Dictionary für Mariokart {#sec-data-dict}
+
+```{r}
+#| message: false
+#| echo: false
+library(knitr)
+library(kableExtra)
+```
+
+
+In diesem Datensatz werden Auktionen zum Videospiel *Wii Mario Kart* 
+beim Online-Auktionshaus Ebay dargestellt. 
+Die Daten wurden im Oktober 2009 gesammelt.
+Es handelt sich um einen Dataframe mit 143 Beobachtungen (Auktionen) und 12 Spalten (Variablen).
+Die Preise sind in US-Dollar angegeben.
+Die Quelle des Datensatzes ist das R-Paket `openintro` [@openintro].
+Alternativ ist der Datensatz online zu finden: <https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv>.
+Mit `help(mariokart)` wird die Hilfeseite zum Datensatz geöffnet (dazu muss das Paket `openintro` bereitgestellt sein).
+
+
+
+
+```{r}
+#| echo: false
+df <- data.frame(
+  Variable = c("id", "duration", "n_bids", "cond", "start_pr", "ship_pr", "total_pr", 
+               "ship_sp", "seller_rate", "stock_photo", "wheels", "title"),
+  Erklärung = c("ID der Auktion", 
+                "Dauer der Auktion in Tagen", 
+                "Anzahl der Gebote", 
+                "Zustand (new/used)", 
+                "Anfangspreis bei der Auktion", 
+                "Versangebühr", 
+                "Gesamtpreis (inkl. Versandgebühr)", 
+                "Versandmethode bzw. -geschwindigkeit", 
+                "Bewertung des Verkäufers; das ist die Differenz zwischen positiven und negativen Bewertungen", 
+                'Lag der Auktion ein "stock photo" bei? Wenn ein Foto in vielen Auktionen benutzt wurde, wird es "stock photo" genannt.', 
+                "Anzahl der enthaltenen Wii-Räder", 
+                "Name der Auktion")
+)
+```
+
+
+
+::: {.content-visible when-format="html"}
+
+@tbl-dict-mario zeigt das Data-Dictionary.
+
+
+```{r}
+#| echo: false
+#| label: tbl-dict-mario
+#| tbl-cap: Data-Dictionary für Mariokart
+
+# Create a table with column width adjustments
+df %>%
+  kbl(booktabs = TRUE) 
+```
+
+:::
+
+
+::: {.content-visible when-format="pdf"}
+
+@tbl-dict-mario-pdf zeigt das Data-Dictionary.
+
+```{r}
+#| echo: false
+#| tbl-cap: Data-Dictionary für Mariokart
+#| label: tbl-dict-mario-pdf
+
+
+# Create a table with column width adjustments
+df %>%
+  kbl(booktabs = TRUE, format = "latex") %>%
+  column_spec(1, width = "3cm") %>%  # Adjust first column width
+  column_spec(2, width = "9cm") # Adjust second column width
+```
+:::
+
+
+
+
+
+

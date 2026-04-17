@@ -1,0 +1,228 @@
+# Abschluss  
+
+
+## Einstieg
+
+
+
+
+
+
+
+### Lernziele
+
+
+*kein neuer Stoff*
+
+Ziel dieses Kapitels ist es, den Stoff des Moduls zu wiederholen und zu konsolidieren.
+
+
+
+
+
+
+
+### Benötigte R-Pakete
+
+
+```{r}
+#| message: false
+library(tidyverse)
+library(easystats)
+```
+
+
+```{r}
+#| echo: false
+ggplot2::theme_set(theme_minimal())
+```
+
+
+### Benötigte Daten
+
+
+```{r}
+data(mtcars)
+```
+
+
+## Herzlichen Glückwünsch!
+
+{{< fa award >}}
+
+
+ 
+ 
+ 
+
+Herzlichen Glückwunsch - Sie haben diesen Kurs abgeschlossen! 
+Es sei denn, Sie haben nur ein bisschen durchgeschaut. 
+Dann war es hoffentlich zumindest interessant.  [😄]{.content-visible when-format="html"} 
+
+
+## Wie geht's weiter?
+
+Es gibt viele weiterführende Bücher und Kurse.
+Ein logischer nächster Schritt ist es, 
+sich mit Inferenzstatistik zu beschäftigen.
+Dazu bietet sich z.$\,$B. der Kurs [Start:Bayes!](https://start-bayes.netlify.app/) an,
+zufälligerweise aus der Feder des gleichen Autors …
+
+Wenn Sie sich breiter (nicht tiefer) mit Data Literacy beschäftigen wollen,
+bietet sich der Online-Kurs des [KI-Campus](https://learn.ki-campus.org/courses/dali-basis-THK2021) an.^[<https://learn.ki-campus.org/courses/dali-basis-THK2021>]
+Es gibt viele Online-Kurse, die sich anbieten, wenn Sie im Thema moderne Datenanalyse fit werden wollen.
+Schauen Sie doch mal z.$\,$B. bei Anbietern wie [Coursera](https://www.coursera.org/specializations/data-science) oder ähnlichen Anbietern vorbei.^[<https://www.coursera.org/specializations/data-science>]
+
+
+## Aufgabensammlungen
+
+
+Auf dem [Datenwerk](https://sebastiansauer.github.io/Datenwerk/) finden Sie reichlich Aufgaben zur Prüfungsvorbereitung.^[<https://sebastiansauer.github.io/Datenwerk/>]
+
+u.$\,$a. folgende Tags sind für diesen Kurs relevant:
+
+- [r](https://sebastiansauer.github.io/datenwerk/#category=r)
+- [association](https://sebastiansauer.github.io/datenwerk/#category=association)
+- [datawrangling](https://sebastiansauer.github.io/datenwerk/#category=datawrangling)
+- [dplyr](https://sebastiansauer.github.io/datenwerk/#category=dplyr) 
+- [lagemaße](https://sebastiansauer.github.io/datenwerk/#category=lagema%c3%9fe)
+- [streuungsmaß](https://sebastiansauer.github.io/datenwerk/#category=streuungsma%c3%9f)
+- [variablelevles](https://sebastiansauer.github.io/datenwerk/#category=variable-levels)
+- [yacsda](https://sebastiansauer.github.io/datenwerk/#category=yacsda)
+
+
+
+## Quizze
+
+[Hier](https://forms.gle/w7eTW3ftKy8Hv3nw8) geht's zu einem Quiz zur deskriptiven Statistik (Maße der zentralen Tendenz, Variabilität, Verteilungsformen, Normalverteilung, Korrelation).^[<https://forms.gle/w7eTW3ftKy8Hv3nw8>]
+
+[Hier](https://sebastiansauer.github.io/Datenwerk/#category=Verteilungen-Quiz) geht's zu einem Quiz zum Thema Verteilungen.^[Datenwerk: `Verteilungen-Quiz`]
+
+
+## Fallstudien
+
+:::{.callout-important}
+Wenn Sie mit Aufgaben "in der Wildnis" der freien Datenanalyse zu tun haben, 
+wird es immer wieder passieren, dass Sie auf bisher unbekannte Probleme, 
+Methoden und Lösungen stoßen. Das kann weh tun, weil man das Gefühl hat, 
+man kennt sich nicht gut aus. Aber lassen Sie sich nicht ins Boxhorn jagen! 
+Auf etwas Unbekanntes zu stoßen, bedeutet nichts anderes als der Beweis, 
+dass man lernt! Es ist also eine gute Nachricht. Denn vergessen Sie nicht: 
+Sie machen die Fallstudien nur aus einem Grund -- 
+um zu lernen, um ihre Grenzen zu erweitern, zu wachsen, 
+schlauer zu werden, ein Handwerk zu lernen, ihre Persönlichkeit zu entfalten. Let's grow! $\square$
+:::
+
+
+
+
+### Datenvisualisierung
+
+
+```{r child-vis, results='asis', echo = FALSE}
+url <- "https://raw.githubusercontent.com/sebastiansauer/Lehre/main/yacsdas/yacsdas-vis.md"
+childtext <- readLines(url)
+cat(childtext, sep="\n")
+```
+
+
+
+
+
+
+
+
+### Explorative Datenanalyse
+
+In diesem Abschnitt sind Fallstudien, die Methoden der deskriptiven Statistik verwenden, aufgeführt. 
+Datenvisualisierung und Datenjudo spielt dabei auch eine (zum Teil wichtige) Rolle.
+
+```{r child-eda, results='asis', echo = FALSE}
+url <- "https://raw.githubusercontent.com/sebastiansauer/Lehre/main/yacsdas/yacsdas-EDA.md"
+childtext <- readLines(url)
+cat(childtext, sep="\n")
+```
+
+
+
+
+
+
+
+
+### Lineare Modelle
+
+
+
+
+```{r child2, results='asis', echo = FALSE}
+url <- "https://raw.githubusercontent.com/sebastiansauer/Lehre/main/yacsdas/yacsdas-lm.md"
+childtext <- readLines(url)
+cat(childtext, sep="\n")
+
+```
+
+
+
+
+## FAQ
+
+Werfen Sie auch einen Blick in [typische R-Fragen](#sec-r-faq).
+
+
+### SD berechnen
+
+FRAGE: Macht es einen Unterschied, ob man dafür den Befehlt summary() oder den Befehl sd() verwendet? Bei mir kommen da nämlich unterschiedliche Zahlen raus.
+
+ANTWORT: `summary()` gibt nicht SD aus, sondern nur den IQR (IQR = Q3-Q1).
+
+
+```{r}
+data(mtcars)
+sd(mtcars$mpg)
+summary(mtcars$mpg)
+```
+
+
+### count vs. filter
+
+FRAGE: Wann benutzt man count() und wann filter()?
+
+ANTWORT: Mit `filter` plus dem Zählen der übrig gebliebenen Zeilen erreicht man etwas Ähnliches wie mit `count`:
+
+```{r}
+mtcars |> 
+  filter(am == 0) |> 
+  nrow()
+```
+
+
+```{r}
+mtcars |> 
+  count(am)
+```
+
+
+### 1000
+
+FRAGE: gibt es einen Unterschied zwischen 10^3 und 1e3? 
+Es kommen nämlich unterschiedliche Ergebnisse raus.
+
+ANTWORT: Nein, beide Schreibweisen meinen das Gleiche, 
+nämlich die Zahl 1000.
+
+
+```{r}
+10^3 == 1000 
+1e3 == 1000
+```
+
+
+
+## Literaturhinweise
+
+
+Diese [Literaturliste](https://www.zotero.org/groups/4583286/intro-stats/library) empfiehlt Ihnen Lehrbücher zu grundlegenden Themen der Datenanalyse (mit R).^[<https://www.zotero.org/groups/4583286/intro-stats/library>]
+
+
+

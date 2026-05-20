@@ -815,17 +815,19 @@ Interaktives Beispiel für Normalverteilungen.
 
 
 
-### Fläche unter der Kurve
+### 68-95-99.7-Prozentregel
 
 
 
-Kennt man die beiden Parameter der Normalverteilung, Mittelwert und Streuung (SD, $\sigma$), einer Normalverteilung, 
-so kann man einfach angeben, welcher Anteil der Fläche (unter der Kurve) der Normalverteilung sich in einem bestimmten Bereich befindet, 
+Kennt man die beiden Parameter der Normalverteilung, Mittelwert und Streuung (SD, $\sigma$), 
+einer Normalverteilung, 
+so kann man einfach angeben, welcher Anteil der Fläche 
+(unter der Kurve) der Normalverteilung sich in einem bestimmten Bereich befindet, 
 s. @fig-norm-perc [@ainali_standard_2007].
 
 
 Davon leitet sich die "68-95-99.7-Prozentregel" ab,
-die angibt, in welchem Bereich sich welcher Anteil der Fläche befindet:
+die angibt, in welchem Bereich sich welcher Anteil der Fläche (unter der Kurve einer Normalverteilung) befindet:
 
 - $68\,\%$ im Bereich $\mu\pm 1 \cdot \sigma$ 
 - $95\,\%$ im Bereich $\mu\pm 2 \cdot \sigma$ 
@@ -1120,7 +1122,7 @@ Beispiele für nicht-lineare Zusammenhänge sind in @fig-nonlinear zu sehen.
 #| fig-width: 7
 #| out-width: "75%"
 
-data <- read.csv("data/nonlinear_datasets.csv")
+data <- read_csv("data/nonlinear_datasets.csv")
 
 p0 <- ggplot(data) + geom_point()  + theme_void() 
 
@@ -1837,7 +1839,8 @@ s. @fig-comp-means-ggpubr.
 #| out-width: 50%
 #| fig-cap: Vergleich der Verteilungen zweier Gruppen mit Mittelwert und Standardabweichung pro Gruppe hervorgehoben
 ggviolin(mariokart_no_extreme, 
-         x = "cond", y = "total_pr", add = "mean_sd") 
+         x = "cond", y = "total_pr", add = c("mean_sd", "jitter"), 
+         add.params = list(shape = 1, alpha = .6)) 
 ```
 
 
@@ -1913,7 +1916,7 @@ Alternativ kann man händisch eine helle Farbe und eine dunkle Farbe als Kontras
 mariokart %>% 
   filter(total_pr < 100) %>% 
   ggboxplot(x = "cond", y = "total_pr", fill = "cond", notch = TRUE) +
-  scale_fill_okabeito(palette = "black_first")
+  scale_fill_okabeito(palette = "black_first") 
   #scale_fill_manual(values = c("#0072B2", "#E69F00"))
 ```
 

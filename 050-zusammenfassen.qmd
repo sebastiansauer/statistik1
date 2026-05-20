@@ -57,7 +57,7 @@ library(easystats)
 
 
 ```{r import-mariokart-csv}
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+mariokart <- read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 ```
 :::
 
@@ -193,21 +193,22 @@ Der Nutzen des Mittelwerts liegt darin, dass er uns ein Bild gibt (ein Modell is
 <!-- \begin{array}{|c|} \hline \\ \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \square \\ \square \\ \square \\ \hline \end{array} = 3 \cdot \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array} -->
 <!-- $$ {#eq-mw} -->
 
-![Der Mittelwert als "typisches Element" eines Vektors](img/mw-modell-crop2.png){#fig-mw2 width="75%"}
+![Der Mittelwert als "typisches Element" einer Zahlenreihe](img/mw-modell-crop2.png){#fig-mw2 width="75%"}
 
 
 <!-- $$\begin{array}{|c|} \hline \\ \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array} + \begin{array}{|c|} \hline \square \\ \square \\ \square \\ \hline \end{array} \qquad \leftrightarrow  \qquad \underbrace{\begin{array}{|c|} \hline \\ \square \\ \square \\ \hline \end{array}}_{\text{"typischer Vertreter"}}$$ {#eq-mw2} -->
 
 
 
-Der Nutzen des Mittelwerts liegt darin, dass er einen Vektor (eine "Datenreihe") zu einen "typischen Vertreter" zusammenfasst.
+Der Nutzen des Mittelwerts liegt darin, dass er einen Vektor (eine "Zahlenreihe") 
+zu einen "typischen Vertreter" zusammenfasst.
 Er ist typisch in dem Sinne, als dass die Werte aller Merkmalsträger in gleichem Maße einfließen.
 Er gibt uns eine (mögliche) Vorstellung (ein Modell!), 
 wie wir uns die Werte der Datenreihe vorstellen sollen.
 Eine nützliche Anschauung zum Mittelwert ist die Vorstellung des Mittelwerts als eine ausbalancierte Wippe, s. @fig-wippe.
 In "Mathe-Sprech" bezeichnet man den Mittelwert häufig mit $\bar{x}$ und schreibt die Rechenregel so, s. @eq-mw-formel.
 
-![Mittelwert als ausbalancierte Wippe mit Mittelwert 3 [@maphry_seesaw_2009]](img/1280px-Seesaw_with_mean.svg.png){#fig-wippe width="70%"}
+![Der Mittelwert der Zahlenreihe $(1,2,6)$ als ausbalancierte Wippe mit Mittelwert 3 [@maphry_seesaw_2009]](img/1280px-Seesaw_with_mean.svg.png){#fig-wippe width="70%"}
 
 
 
@@ -217,7 +218,8 @@ $$\bar {x} :=\frac{1}{n} \sum_{i=1}^{n}{x_{i}}=\frac {x_{1}+x_{2}+\dotsb +x_{n}}
 
 :::{#def-mw}
 ### Mittelwert
-Der Mittelwert (MW, mean) von $X$ (präziser: das arithmetische Mittel des Merkmals $X$) ist definiert als die Summe der Elemente von $X$ geteilt durch deren Anzahl, $n$. 
+Der Mittelwert (MW, mean) von $X$ (präziser: das arithmetische Mittel des Merkmals $X$) 
+ist definiert als die Summe der Elemente von $X$ geteilt durch deren Anzahl, $n$. 
 Den Mittelwert von $X$ bezeichnet man auch mit $\bar {x}$. $\square$
 :::
 
@@ -380,6 +382,8 @@ daher steht hier kein Buchstabe, sondern eine einfache $1$.
 Der mathematische Hintergrund liegt in der Art, wie man Matrizen multipliziert.
 :::
 
+
+### Die Summe der Abweichungen ist Null
 
 
 :::{#exm-noten}
@@ -588,7 +592,7 @@ ggplot(mariokart) +
              alpha = .7,
              size = 8) +
   labs(caption = paste0("Mittelwert (MW): ", round(mean(mariokart$total_pr), 2)),
-       x = "Nr. des Spiel") +
+       x = "Auktion") +
   scale_y_continuous(limits = c(0, 400)) +
   theme_minimal() +
   annotate("label", x = 0, y = 50, label = paste0("MW: ", 50), hjust = "left", size = 8) +
@@ -607,7 +611,7 @@ ggplot(mariokart2) +
              size = 2) +
   geom_point(alpha = .7) +
   labs(caption = paste0("Mittelwert (MW): ", round(mean(mariokart2$total_pr), 2)),
-       x = "Nr. des Spiel") + 
+       x = "Auktion") + 
   scale_y_continuous(limits = c(0, 400)) +
   theme_minimal()  +
   annotate("label", x = 0, y = 47, label = paste0("MW: ", 47), hjust = "left", size = 8) +
@@ -720,15 +724,16 @@ da er nicht mehr "typische" Werte für die Merkmalsträger beschreibt.
 
 :::{#exm-med}
 ### Das Median-Einkommen einiger Studentinnen
-Fünf Studentinnen tauschen sich über ihr Einkommen aus, s. @fig-md1, links.
+
+Vier Studentinnen (Anna, Berta, Carla, Dora, Emma) tauschen sich über ihr Einkommen (1, 2, 3, 4, 100) aus, s. @fig-md1, links.
 Es handelt sich um eine schiefe Verteilung.
-Wir könnten jetzt behaupten, dass Carla das typische Einkommen (für diese Datenreihe) aufweist,
+Wir könnten jetzt behaupten, dass Carla das typische Einkommen (für diese Datenreihe) aufweist (3),
 da es genauso viele Studentinnen gibt, die mehr verdienen, wie solche, die weniger verdienen. $\square$
 :::
 
 ```{r}
 #| label: fig-md1
-#| fig-cap: Das Einkommen einiger Studentinnen sowie der Mittelwert (MW) ihres Einkommens
+#| fig-cap: Das Einkommen einiger Studentinnen (1,2,3,4, 100) sowie der Mittelwert (MW=22) und Median (Med=3) ihres Einkommens
 #| echo: false
 #| out-width: 75%
 #| layout-ncol: 1
@@ -763,8 +768,8 @@ d %>%
   annotate("label", x = 22, y = -1, label = "MW", color = okabeito_colors()[1])   +
   theme_minimal() +
   scale_y_continuous(breaks = NULL, limits = c(-1,2)) +
-  annotate("label", x = 100, y = +2, label = "Dora") +
-  annotate("label", x = 0, y = 2, label = "Anna\nBerta\nCarla", hjust = 0, vjust = "top") +
+  annotate("label", x = 100, y = +2, label = "Emma") +
+  annotate("label", x = 0, y = 2, label = "Anna\nBerta\nCarla\nDora", hjust = 0, vjust = "top") +
   labs(caption = "MW: Mittelwert",
        y = "",
        x = "Einkommen")
@@ -822,7 +827,9 @@ das arithmetische Mittel aus diesen beiden Werten gebildet.
 
 
 :::{#exm-med2}
-Bei der Messreihe 1,2,3 beträgt der Median 2. Bei der Messreihe 1, 2  beträgt der Median 1.5. $\square$
+Für die Stichproben $(1,2,3)$ und $(1,2)$ gilt:
+$\operatorname{Median}(1,2,3) = 2$ und 
+$\operatorname{Median}(1,2) = \frac{1+2}{2} = 1.5$. $\square$
 :::
 
 
@@ -1180,6 +1187,8 @@ mosaic::xqnorm( p = seq(0,1, by = .01), return = "plot") +
 ```
 
 
+
+:::{#exm-quant-sort}
 ### Quantile als sortierte Ordnung
 
 
@@ -1206,17 +1215,17 @@ mariokart %>%
   summarise(q90 = quantile(total_pr, .9))
 ```
 
+$\square$
+:::
 
 
-
-
-
+:::{#exm-quant-iq}
 ### Beispiel: Quantile der IQ-Verteilung
 
 Zur Erinnerung: Die Verteilung des IQ wird gewöhnlich als normalverteilt mit Mittelwert gleich 100 und Streuung gleich 15 angenommen.
 
 
-Betrachten wir einige häufig verwendete Quantile für die IQ-Verteilung, s. @fig-nv-quants2.
+
 
 ```{r}
 #| echo: false
@@ -1305,7 +1314,9 @@ q_p69 <-
 ```
 
 
+@fig-nv-quants2 zeigt einige häufig verwendete Quantile für die IQ-Verteilung. $\square$
 
+:::
 
 
 
@@ -1529,7 +1540,7 @@ sie sind uns also ein Modell.
 #|   - "ungruppiert"
 #|   - "gruppiert"
 #| echo: false
-#| layout: [[45,-10, 45], [100]]
+#| layout: [[45,-5, 45], [100]]
 #| out-width: 100%
 #| fig-asp: .618
 #| fig-width: 7

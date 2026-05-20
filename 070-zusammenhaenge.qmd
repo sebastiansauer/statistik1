@@ -48,7 +48,7 @@ library(easystats)
 
 
 ```{r import-mariokart-csv}
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+mariokart <- read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 ```
 :::
 
@@ -353,7 +353,7 @@ Wenn Sie die Werte selber nachrechnen wollen, finden Sie den Noten-Datensatz in 
 ```{r}
 #| echo: false
 #| label: tbl-kov2
-#| tbl-cap: "Werte der Abweichungsrechtecke. avg: average (Mittelwert), cov_sign: Vorzeichen der Kovarianz,_pos: positiver Wert auf der entsprechenden Achse (x/y), xy_area: Produkt von x_delta und y_delta"
+#| tbl-cap: "Werte der Abweichungsrechtecke. avg: average (Mittelwert), cov_sign: Vorzeichen der Kovarianz,_pos: positiver Wert auf der entsprechenden Achse (x/y), xy_area: Produkt von x_delta und y_delta; x_z, y_z: z-transformiertes x bzw. y"
 
 d %>% 
   select(-x_pos, -y_pos) |> 
@@ -665,14 +665,13 @@ Liegt Korrelation ohne Kausation vor, so spricht man von einer Scheinkorrelation
 
 
 
-### Korrelation misst nur linearen Zusammenhang
-
+### Scheinkorrelation
 
 
 
 
 :::{#exm-scheinkorr}
-### Scheinkorrelation: Störche und Babys
+### Störche und Babys
 
 Ein Mythos besagt: Die Anzahl der Störche pro Landkreis korreliert mit der Anzahl der Babys in diesem Landkreis [vgl. @matthews_storks_2000]. 
 Eine mögliche Erklärung für dieses (nur scheinbare) Paradoxon ist, 
@@ -781,8 +780,8 @@ Glauben Sie nicht, prüfen Sie nach! Berechnen Sie die Korrelation von $X$ und $
 
 
 In Ihrer Arbeit beim Online-Auktionshaus analysieren Sie, welche Variablen mit dem Verkaufspreis von Computerspielen zusammenhängen.
-Falls der Datensatz auf Ihrem Computer (am besten in Ihrem Projektverzeichnis in RStudio) abgelegt ist, können Sie die Daten so (in mittlerweile gewohnter Manier) importieren: `mariokart <- read.csv("mariokart.csv")`
-Falls der Datensatz im Unterordner mit Namen "Mein_Unterordner" liegt, so würden Sie folgenden Pfad eingeben: `mariokart <- read.csv("Mein_Unterordner/mariokart.csv")`.
+Falls der Datensatz auf Ihrem Computer (am besten in Ihrem Projektverzeichnis in RStudio) abgelegt ist, können Sie die Daten so (in mittlerweile gewohnter Manier) importieren: `mariokart <- read_csv("mariokart.csv")`
+Falls der Datensatz im Unterordner mit Namen "Mein_Unterordner" liegt, so würden Sie folgenden Pfad eingeben: `mariokart <- read_csv("Mein_Unterordner/mariokart.csv")`.
 Man beachte, dass solche sog. *relativen* Pfade, wie `Mein_Unterordner/`, die relativ zu Ihrem Arbeitsverzeichnis, d.$\,$h. Ihr Projektverzeichnis in R-Studio, liegen, *nicht* mit einem Schrägstrich (Slash) beginnen.
 Falls Sie die Daten nicht auf Ihrem Computer haben,
 können Sie sie bequem von z.$\,$B. der Webseite von [Vincent Arel-Bundock](https://vincentarelbundock.github.io/Rdatasets) herunterladen.
@@ -791,7 +790,7 @@ Den Pfad hatten wir in @lst-import-mario definiert.
 ::: {.content-visible when-format="html"}
 
 ```{r}
-mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
+mariokart <- read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv")
 ```
 :::
 
@@ -799,15 +798,14 @@ mariokart <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 
 Sie wählen die Variablen von `mariokart`, die Sie in diesem Fall interessieren 
 -- natürlich nur die metrischen -- 
-und lassen sich mit `cor` die Korrelation aller Variablen untereinander ausgeben: 
+und lassen sich mit `correlation` die Korrelation aller Variablen untereinander ausgeben: 
 
 ::: {.content-visible when-format="html"}
 
 ```{r}
 mariokart %>%  
   dplyr::select(duration, n_bids, start_pr, ship_pr, total_pr, seller_rate, wheels) %>% 
-  cor() %>% 
-  round(2) # Runden auf zwei Dezimalen
+  correlation()
 ```
 
 :::

@@ -1,0 +1,112 @@
+# Checkliste zur Klausurvorbereitung
+
+
+:::{.callout-note}
+Bitte beachten Sie, dass Ihr Dozent für Ihre Klausur zusätzliche Hinweise gegeben haben kann.
+:::
+
+
+
+## Vorbereitung
+
+- [ ] Alle (prüfungsrelevanten) Kapitel des Skripts mindestens einmal durchgearbeitet
+- [ ] Probeklausur vollständig bearbeitet (ohne Lösung zuerst)
+- [ ] Quiz-Aufgaben am Ende der Kapitel gründlich geübt
+- [ ] Aufgaben aus der [Aufgabensammlung](https://sebastiansauer.github.io/statistik1-aufgabensammlung/) geübt
+- [ ] Definitionen im Anhang A bekannt
+- [ ] Griechische Buchstaben und ihre Bedeutung bekannt (β, μ, σ, ρ)
+- [ ] Auf die spezifische Aufgabenform der Klausur vorbereitetet (Eine Single-Choice-Prüfung verlangt anderes Wissen als eine Klausur mit frei zu schreibenden Antworten)
+- [ ] Selber Aufgaben erstellt bzw. von einer KI erstellen lassen
+
+---
+
+## Inhaltliche Kernthemen
+
+### Daten & R-Grundlagen
+- [ ] Datentypen in R: numerisch, character, logical – und was passiert bei Mischtypen (`c(1, "2", 3)`)
+- [ ] `NA`-Verhalten: `mean()` gibt `NA` zurück; `na.rm = TRUE` ist nötig
+- [ ] Dollar-Operator: `datensatz$spalte`
+- [ ] Pipe `|>`: Ergebnis links wird erstes Argument rechts
+
+### Daten einlesen & umformen
+- [ ] `read.csv()` / `read_csv()` zum Einlesen
+- [ ] Tidyverse-Verben und ihre Funktion kennen:
+  - `filter()` – Zeilen auswählen (Bedingungen mit `&` / `|`)
+  - `select()` – Spalten auswählen
+  - `mutate()` – neue Spalten berechnen, bestehende erhalten
+  - `summarise()` – eine Kennzahl berechnen (reduziert Zeilen)
+  - `arrange()` – sortieren
+  - `count()` – Häufigkeiten zählen (sinnvoll bei nominalen Variablen)
+  - `group_by()` – Gruppierung für nachfolgende Operationen
+
+### Daten verbildlichen
+- [ ] Welches Diagramm wofür:
+  - Verteilung einer metrischen Variable → Histogramm
+  - Gruppenvergleich metrisch → **Boxplot**
+  - Zusammenhang zweier metrischer Variablen → Scatterplot
+  - Häufigkeiten nominal → Balkendiagramm
+- [ ] Visualisierung ist kein Beiwerk – Anscombe/Datasaurus: gleiche Kennzahlen, völlig verschiedene Strukturen
+
+### Punktmodelle & Modellgüte
+- [ ] Punktmodell: eine einzige Zahl als Vorhersage für alle Beobachtungen (= Mittelwert)
+- [ ] Residuum: `e = y - ŷ` (beobachtet minus vorhergesagt)
+- [ ] MAE = Mittelwert der Absolutbeträge der Fehler
+- [ ] RMSE = Wurzel aus dem Mittelwert der quadrierten Fehler
+- [ ] Kleinerer MAE/RMSE = besseres Modell
+- [ ] Gruppiertes Modell kann besser sein als globaler Mittelwert, wenn Residuen in Gruppen kleiner sind
+- [ ] IQR ist robuster als SD/Varianz bei Ausreißern
+
+### Zusammenhänge & Korrelation
+- [ ] Korrelation r: Wertebereich −1 bis +1
+  - r < 0: gegensinniger Zusammenhang
+  - r = 0: kein linearer Zusammenhang
+  - r > 0: gleichsinniger Zusammenhang
+- [ ] Kovarianz ist skalenabhängig; Korrelation ist skalenunabhängig
+- [ ] Simpson-Paradox: Zusammenhang auf Gesamtebene kann sich in Gruppen umkehren
+
+### Geradenmodelle (Regression)
+- [ ] Gleichung: `y = β₀ + β₁·x + ε`
+- [ ] β₁ > 0: positiver Zusammenhang; β₁ < 0: negativer Zusammenhang
+- [ ] β₁ = 0 bzw. r = 0: Geradenmodell bringt keinen Vorteil gegenüber Nullmodell
+- [ ] R² = Anteil der erklärten Varianz (0 bis 1)
+- [ ] Overfitting: hohes R² im Training, niedriges R² im Test → Modell hat überangepasst
+- [ ] Interaktionsterm `x1:x2`: nicht-parallele Geraden = Effekt von x1 hängt von x2 ab
+- [ ] Variablen mit mutmaßlichem Kausaleinfluss bevorzugen (nach Gelman)
+
+---
+
+## Umgang mit MC-Fragen
+
+- [ ] Alle fünf Antwortoptionen lesen, bevor eine ausgewählt wird
+- [ ] Absolute Formulierungen kritisch prüfen: "immer", "nie", "grundsätzlich", "zwingend" – meist falsch
+- [ ] Distraktoren erkennen: plausibel klingende, aber inhaltlich falsche Aussagen
+- [ ] Bei Rechenaufgaben: Zwischenschritte notieren, nicht im Kopf rechnen
+- [ ] Bei Unsicherheit: Welche Optionen scheiden sicher aus? → Restwahrscheinlichkeit nutzen
+
+---
+
+## Häufige Fehler 
+
+| Fehler | Richtig |
+|--------|---------|
+| `summarise()` für neue Spalten | → `mutate()` verwenden |
+| `filter()` mit `=` statt `==` | → `==` für Vergleiche |
+| `&` und `\|` verwechseln | → `&` = beide Bedingungen, `\|` = eine reicht |
+| `mean()` gibt NA, obwohl Zahlen da sind | → ein `NA` im Vektor reicht; `na.rm = TRUE` setzen |
+| Kovarianz und Korrelation gleichsetzen | → Kovarianz ist skalenabhängig, r nicht |
+| MAE-Berechnung ohne Absolutbetrag | → negative Fehler müssen betragsmäßig eingehen |
+| SD bevorzugen, weil robuster | → IQR ist robuster; SD ist nur interpretierbar in Originaleinheit |
+| Geradenmodell verbessert immer | → nur wenn r ≠ 0; sonst gleich wie Nullmodell |
+
+---
+
+## Unmittelbar vor der Klausur
+
+- [ ] Aufgabenstellung vollständig lesen (Szenario, Frage, Optionen)
+- [ ] Auf Schlüsselwörter achten: "metrisch", "nominal", "Vorhersage", "Zusammenhang", "Unterschied"
+- [ ] Zeit einteilen: bei Hänger weiter, am Ende zurückkommen
+- [ ] Keine Option unbeantwortet lassen (kein Punktabzug bei Falschantwort – sofern nicht anders angegeben)
+
+---
+
+

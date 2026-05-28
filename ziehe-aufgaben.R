@@ -1,6 +1,6 @@
 library(dplyr)
 
-set.seed(42)  # für Reproduzierbarkeit; entfernen für echte Zufallsziehung
+set.seed(42) # für Reproduzierbarkeit; entfernen für echte Zufallsziehung
 
 n_gesamt <- 25
 
@@ -13,13 +13,15 @@ df_pool <- df |>
 # Proportionale Schichtung: n pro Kapitel relativ zur Kapitelgröße
 kapitel_groesse <- df_pool |>
   count(qmd_datei) |>
-  mutate(anteil = n / sum(n),
-         n_ziehen = round(anteil * n_gesamt))
+  mutate(
+    anteil = n / sum(n),
+    n_ziehen = round(anteil * n_gesamt)
+  )
 
 # Rundungsfehler korrigieren: fehlende Aufgaben dem größten Kapitel zuschlagen
 diff <- n_gesamt - sum(kapitel_groesse$n_ziehen)
 if (diff != 0) {
-  idx <- which.max(kapitel_groelle$n)  # größtes Kapitel
+  idx <- which.max(kapitel_groelle$n) # größtes Kapitel
   idx <- which.max(kapitel_groesse$n)
   kapitel_groesse$n_ziehen[idx] <- kapitel_groesse$n_ziehen[idx] + diff
 }
@@ -38,3 +40,6 @@ print(auswahl, n = Inf)
 
 cat("\nAufgaben pro Kapitel:\n")
 print(count(auswahl, qmd_datei))
+
+
+write.csv(auswahl, "exrs_zufallsauswahl.csv")

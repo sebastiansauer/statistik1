@@ -56,16 +56,15 @@ source("_common.R")
 ### Benötigte R-Pakete und Daten
 
 Neben den üblichen Paketen `tidyverse` [@wickham2019a] und `easystats` [@ludecke2022]
-benötigen Sie in diesem Kapitel noch `DataExplorer` [@cui2024]
-und optional `ggpubr` [@kassambara2023] und `ggstatsplot` [@patil2021].
+benötigen Sie in diesem Kapitel noch `ggpubr` [@kassambara2023]
+und optional `ggstatsplot` [@patil2021].
 Wir arbeiten wieder mit dem Datensatz `mariokart`, s. @sec-import-mariokart.
 
 ```{r}
 #| message: false
 library(tidyverse)
 library(easystats)
-library(DataExplorer)  # nicht vergessen zu installieren
-library(ggpubr)  # optional, Datenvisualisierung
+library(ggpubr)  # Datenvisualisierung
 library(ggstatsplot)  # optional, Datenvisualisierung
 ```
 
@@ -123,6 +122,13 @@ plot(qr)
 
 
 
+
+
+### Folienskript
+
+::: {.callout-note}
+Die Folien zu diesem Kapitel finden Sie [hier](slides/040-verbildlichen.html).
+:::
 
 
 ## Ein Dino sagt mehr als 1000 Worte
@@ -381,16 +387,17 @@ mario_n2
 
 
 Es gibt viele Methoden, sich mit R ein Balkendiagramm ausgeben zu lassen.
-Eine einfache, komfortable ist die mit dem Paket `DataExplorer`, 
+Eine einfache, komfortable ist die mit dem Paket `ggpubr`,
 s. @fig-mario-n-plot-cond;
 wir betrachten gleich die Syntax.
 Zuerst importieren wir die Daten, s.  @lst-mariokart.
-Außerdem nicht vergessen, das Paket `DataExplorer` mit dem Befehl `library` zu starten.
-(Natürlich müssen Sie das Paket einmalig installiert haben, 
+Außerdem nicht vergessen, das Paket `ggpubr` mit dem Befehl `library` zu starten.
+(Natürlich müssen Sie das Paket einmalig installiert haben,
 bevor Sie es starten können.)
-In diesem Paket "wohnen" die Befehle, die wir zum Erstellen der Datendiagramme nutzen werden. 
-@lst-de1 zeigt die Syntax, um ein Balkendiagramm zu erstellen. 
+In diesem Paket "wohnen" die Befehle, die wir zum Erstellen der Datendiagramme nutzen werden.
+@lst-de1 zeigt die Syntax, um ein Balkendiagramm zu erstellen.
 Auf der Hilfeseite der Funktion finden Sie weitere Details zur Funktion.
+`ggbarplot` erwartet -- anders als ein automatisches EDA-Tool -- fertige Balkenhöhen; daher zählen wir die Ausprägungen zuerst mit `count`.
 
 
 
@@ -405,11 +412,11 @@ Auf der Hilfeseite der Funktion finden Sie weitere Details zur Funktion.
 #| lst-cap: "Syntax zur Erstellung eines Balkendiagramms"
 #| out-width: 50%
 #| fig-cap: "Ein Balkendiagramm. Unglaublich."
-library(DataExplorer)
+library(ggpubr)
 
-mariokart %>% 
-  select(cond) %>% 
-  plot_bar()
+mariokart %>%
+  count(cond) %>%
+  ggbarplot(x = "cond", y = "n")
 
 ```
 
@@ -422,14 +429,13 @@ vgl. @sec-pipe).
 
 ```
 Nimm den Datensatz `mariokart` *und dann*
-  wähle die Spalte cond *und dann*
-  zeichne ein Balkendiagramm. Fertig!
-```  
+  zähle die Ausprägungen der Spalte cond *und dann*
+  zeichne ein Balkendiagramm daraus. Fertig!
+```
 
 :::{#exr-de1}
 ### Spalten wählen für das Balkendiagramm
-Hätten wir andere Spalten ausgewählt, so würde das Balkendiagramm die Verteilung jener Variablen zeigen. 
-Ja, Sie können auch mehrere Variablen auf einmal auswählen. 
+Hätten wir eine andere Spalte gezählt und geplottet, so würde das Balkendiagramm die Verteilung jener Variablen zeigen.
 Probieren Sie das doch mal aus! $\square$
 :::
 
@@ -445,12 +451,12 @@ Erstellen Sie ein geeignetes Diagramm, um die Häufigkeit jeder Ausprägung von 
 ```{r}
 #| eval: !expr knitr:::is_html_output()
 #| out-width: 50%
-mariokart |> 
-  select(stock_photo) |> 
-  plot_bar()
+mariokart |>
+  count(stock_photo) |>
+  ggbarplot(x = "stock_photo", y = "n")
 ```
 
-Mit `plot_bar` aus `DataExplorer` kann man Balkendiagramme darstellen. $\square$
+Mit `ggbarplot` aus `ggpubr` kann man Balkendiagramme darstellen -- die Balkenhöhen (hier: Häufigkeiten je Ausprägung) müssen vorher mit `count` berechnet werden. $\square$
 
 ::::
 
@@ -578,10 +584,9 @@ p_mario_zu_wenige
 #| eval: false
 #| lst-cap: Syntax zur Erstellung eines Histogramms
 #| lst-label: lst-de2
-mariokart %>% 
-  select(total_pr) %>% 
+mariokart %>%
   filter(total_pr < 100) %>%  # ohne Extremwerte
-  plot_histogram()
+  gghistogram(x = "total_pr")
 ```
 
 
@@ -594,15 +599,13 @@ mariokart %>%
 #|   - Histogramm
 #|   - Dichtediagramm 
 
-mariokart %>% 
-  select(total_pr) %>% 
+mariokart %>%
   filter(total_pr < 100) %>%  # ohne Extremwerte
-  plot_histogram(ggtheme = theme_minimal())
+  gghistogram(x = "total_pr", ggtheme = theme_minimal())
 
-mariokart %>% 
-  select(total_pr) %>% 
+mariokart %>%
   filter(total_pr < 100) %>%  # ohne Extremwerte
-  plot_density(ggtheme = theme_minimal()) 
+  ggdensity(x = "total_pr", ggtheme = theme_minimal())
 ```
 
 
@@ -617,9 +620,8 @@ mariokart %>%
 ```{r}
 #| eval: !expr knitr:::is_html_output()
 #| out-width: 50%
-mariokart |> 
-  select(ship_pr) |> 
-  plot_histogram()
+mariokart |>
+  gghistogram(x = "ship_pr")
 ```
 
 ::::
@@ -660,7 +662,7 @@ m1a |>
 
 
 :::{#exr-plot-density}
-Erstellen Sie das Diagramm @fig-de-hist-density, rechtes Teildiagramm!^[Grob gesagt: `mariokart %>% plot_density()`.]$\square$
+Erstellen Sie das Diagramm @fig-de-hist-density, rechtes Teildiagramm!^[Grob gesagt: `mariokart %>% ggdensity(x = "total_pr")`.]$\square$
 :::
 
 
@@ -719,9 +721,8 @@ Benennen Sie die am besten passende Verteilungsform für die Variable `total_pr`
 ::: {.content-visible when-format="html"}
 
 ```{r}
-mariokart |> 
-  select(total_pr) |> 
-  plot_density()
+mariokart |>
+  ggdensity(x = "total_pr")
 ```
 :::
 Die Verteilung ist rechtsschief. $\square$
@@ -874,7 +875,7 @@ Wenn sich eine Variable $X$ als Summe mehrerer, unabhängiger, etwa gleich stark
 
 :::: {layout="[ 80, 20 ]"}
 ::: {#first-column}
-Die Entstehhung einer Normalverteilung kann man gut anhand des [Galton-Bretts](https://www.youtube.com/watch?v=3m4bxse2JEQ) veranschaulichen.
+Die Entstehung einer Normalverteilung kann man gut anhand des [Galton-Bretts](https://www.youtube.com/watch?v=3m4bxse2JEQ) veranschaulichen.
 :::
 
 ::: {#second-column}
@@ -989,9 +990,9 @@ Unterscheiden sich die Anteile in den Gruppen (neuwertige vs. gebrauchte Spiele)
 so spielt z.$\,$B. die Variable "Foto dabei" offenbar eine Rolle. 
 Dann hängen Neuwertigkeit und "Foto dabei" also zusammen!
 
-So können Sie sich in R ein gefülltes Balkendiagramm ausgeben lassen, 
-z.$\,$B. mit `plot_bar(mariokart, by = "cond")` (Paket `DataExplorer`). 
-Diese Darstellung eignet sich, 
+So können Sie sich in R ein gefülltes Balkendiagramm ausgeben lassen,
+z.$\,$B. mit `ggbarplot(x = "stock_photo", y = "n", fill = "cond", position = position_fill())` (Paket `ggpubr`), nachdem Sie die Häufigkeiten mit `count` berechnet haben.
+Diese Darstellung eignet sich,
 um Zusammenhänge zwischen zwei zweistufigen nominalskalierten Variablen zu verbildlichen. 
 Die verschiedenen Werte der Füllfarbe werden den Stufen der Variablen `cond` zugewiesen, s. @lst-plot-bar.
 
@@ -1002,9 +1003,10 @@ Die verschiedenen Werte der Füllfarbe werden den Stufen der Variablen `cond` zu
 #| eval: !expr knitr:::is_html_output()
 #| out-width: 50%
 #| fig-cap: "Ein gefülltes Balkendiagramm zur Untersuchung eines Zusammenhangs zwischen nominalskalierter Variablen"
-mariokart %>% 
-  select(cond, stock_photo) %>% 
-  plot_bar(by = "cond")  # aus dem Paket DataExplorer
+mariokart %>%
+  count(stock_photo, cond) %>%
+  ggbarplot(x = "stock_photo", y = "n", fill = "cond",
+            position = position_fill())  # aus dem Paket ggpubr
 ```
 
 
@@ -1024,11 +1026,12 @@ Visualisieren Sie den Zusammenhang der beiden nominalen Variablen `cond` und `wh
 ```{r}
 #| out-width: 50%
 #| eval: false
-mariokart |> 
-  # Mache aus einer metrischen eine nominale Variable: 
-  mutate(wheels = factor(wheels)) |> 
-  select(cond, wheels) |> 
-  plot_bar(by = "cond")
+mariokart |>
+  # Mache aus einer metrischen eine nominale Variable:
+  mutate(wheels = factor(wheels)) |>
+  count(wheels, cond) |>
+  ggbarplot(x = "wheels", y = "n", fill = "cond",
+            position = position_fill())
 ```
 
 
@@ -1044,7 +1047,7 @@ damit R sie als nominal skalierte Variable erkennt. $\square$
 
 
 Den Zusammenhang zweier metrischer Variablen kann man mit einem *Streudiagramm* visualisieren (engl. scatterplot). 
-@fig-streu1 links untersucht den Zusammenhang des Einstiegpreises (X-Achse) und Abschlusspreises (Y-Achse) von Geboten bei Versteigerungen des Computerspiels Mariokart.
+@fig-streu1 links untersucht den Zusammenhang des Einstiegspreises (X-Achse) und Abschlusspreises (Y-Achse) von Geboten bei Versteigerungen des Computerspiels Mariokart.
 In dem Diagramm ist eine "Trendgerade" (Regressionsgerade), 
 um die Art des Zusammenhangs besser zu verdeutlichen.
 Die Trendgerade steigt an (von links nach recht). 
@@ -1224,14 +1227,13 @@ Interaktives Beispiel für Zusammenhangsdiagramme.
 :::{#exm-scatter}
 Sie arbeiten nach wie vor bei einem Online-Auktionshaus, und manchmal gehört Datenanalyse zu Ihren Aufgaben.
 Daher interessiert Sie, ob welche Variablen mit dem Abschlusspreis (`total_pr`) im Datensatz `mariokart` zusammenhängen.
-Sie verbildlichen die Daten mit R, und zwar nutzen Sie das Paket `DataExplorer`.
+Sie verbildlichen die Daten mit R, und zwar nutzen Sie das Paket `ggpubr`.
 Außerdem müssen wir noch die Daten importieren, falls noch nicht getan, s. @lst-mariokart.
 So, jetzt kann die eigentliche Arbeit losgehen.
-Da Sie sich nur auf einige metrische Variablen konzentrieren wollen, 
-wählen Sie (mit `select`) nur diese Variablen aus.
-Dann weisen Sie R an, einen Scatterplot zu malen (`plot_scatterplot`) und zwar
-jeweils den Zusammenhang einer der gewählten Variablen mit dem Abschlusspreis (`total_pr`),
-da das die Variable ist, die Sie primär interessiert.
+Da Sie sich nur auf einige metrische Variablen konzentrieren wollen,
+bauen Sie für jede davon einen eigenen Scatterplot (`ggscatter`) gegen den Abschlusspreis (`total_pr`),
+da das die Variable ist, die Sie primär interessiert,
+und fügen die einzelnen Diagramme mit `ggarrange` zu einem Panel zusammen.
 Das Ergebnis sieht man in @fig-mario-scatter. $\square$
 :::
 
@@ -1240,9 +1242,9 @@ Das Ergebnis sieht man in @fig-mario-scatter. $\square$
 #| label: fig-mario-scatter
 #| out-width: 50%
 #| fig-cap: Der Zusammenhang einiger metrischer Variablen mit Abschlusspreis
-mariokart %>% 
-  select(n_bids, start_pr, total_pr) %>% 
-  plot_scatterplot(by = "total_pr", nrow = 1)
+c("n_bids", "start_pr") %>%
+  map(~ ggscatter(mariokart, x = .x, y = "total_pr")) %>%
+  ggarrange(plotlist = ., nrow = 1)
 ```
 
 
@@ -1269,18 +1271,17 @@ Das Ergebnis ist in @fig-mario-scatter2 zu sehen.
 #| label: fig-mario-scatter2
 #| out-width: 50%
 #| fig-cap: Der Zusammenhang metrischer Variablen mit Abschlusspreis - ohne Extremwerte
-mariokart_no_extreme %>% 
-  select(duration, n_bids, start_pr, 
-         ship_pr, total_pr, 
-         seller_rate, wheels) %>% 
-  plot_scatterplot(by = "total_pr")
+c("duration", "n_bids", "start_pr",
+  "ship_pr", "seller_rate", "wheels") %>%
+  map(~ ggscatter(mariokart_no_extreme, x = .x, y = "total_pr")) %>%
+  ggarrange(plotlist = .)
 ```
 
 
 :::
 
 Ohne Extremwerte schält sich ein deutlicheres Bild hervor: Startpreis (`start_pr`) und Anzahl  der Räder (`wheels`) scheinen am stärksten mit dem Abschlusspreis zusammenzuhängen.
-Das Argument `by = "total_pr"` bei `plot_scatterplot` weist R an, als Y-Variable stets `total_pr` zu verwenden. Alle übrigen Variablen kommen jeweils einmal als X-Variable vor. $\square$
+Wir bauen für jede X-Variable per `map` einen eigenen Scatterplot gegen `total_pr` und fügen alle mit `ggarrange` zu einem Panel zusammen. $\square$
 
 
 
@@ -1291,7 +1292,7 @@ Das Argument `by = "total_pr"` bei `plot_scatterplot` weist R an, als Y-Variable
 
 ::::{#exr-zsmnhang-metrisch}
 :::{.panel-tabset}
-### Zuammenhang visualisieren
+### Zusammenhang visualisieren
 
 Visualisieren Sie den Zusammenhang der beiden metrischen Variablen `start_pr` und `total_pr`. Verwenden Sie den Datensatz ohne Extremwerte wie oben definiert.
 
@@ -1300,12 +1301,11 @@ Visualisieren Sie den Zusammenhang der beiden metrischen Variablen `start_pr` un
 
 ```{r}
 #| eval: !expr knitr:::is_html_output()
-mariokart_no_extreme |> 
-  select(start_pr, total_pr) |> 
-  plot_scatterplot(by = "total_pr")
+mariokart_no_extreme |>
+  ggscatter(x = "start_pr", y = "total_pr")
 ```
 
-Zuerst wählt man die Spalten (mit `select`), die man visualisieren möchte, dann ruft man die Funktion `plot_scatterplot` auf. $\square$
+Man ruft `ggscatter` mit den gewünschten X- und Y-Variablen auf. $\square$
 
 
 
@@ -1320,7 +1320,7 @@ Zuerst wählt man die Spalten (mit `select`), die man visualisieren möchte, dan
 
 ::::{#exr-zsmnhang-metrisch}
 
-### Zuammenhang visualisieren
+### Zusammenhang visualisieren
 
 Visualisieren Sie den Zusammenhang der beiden metrischen Variablen `start_pr` und `total_pr`. Verwenden Sie den Datensatz ohne Extremwerte wie oben definiert.
 
@@ -1330,12 +1330,11 @@ Visualisieren Sie den Zusammenhang der beiden metrischen Variablen `start_pr` un
 ```{r}
 #| eval: !expr knitr:::is_html_output()
 #| out-width: 50%
-mariokart_no_extreme |> 
-  select(start_pr, total_pr) |> 
-  plot_scatterplot(by = "total_pr")
+mariokart_no_extreme |>
+  ggscatter(x = "start_pr", y = "total_pr")
 ```
 
-Zuerst wählt man die Spalten (mit `select`), die man visualisieren möchte, dann ruft man die Funktion `plot_scatterplot` auf. $\square$
+Man ruft `ggscatter` mit den gewünschten X- und Y-Variablen auf. $\square$
 
 
 ::::
@@ -1400,7 +1399,7 @@ ggplot(mariokart_no_extreme, aes(x = cond, y = total_pr)) +
 Das linke Teildiagramm von @fig-compare-groups1 zeigt das Histogramm von `total_pr`, 
 getrennt für neue und gebrauchte Spiele, vgl. @fig-de-hist-density.
 Das rechte Teildiagramm zeigt die gleichen Verteilungen, 
-aber mit einer vereinfachten, groberen Darstellungsform, 
+aber mit einer vereinfachten, gröberen Darstellungsform, 
 den *Boxplot*.^[Übrigens: 
 Freunde lassen Freunde nicht Balkendiagramme verwenden, um Mittelwerte darzustellen: <https://github.com/cxli233/FriendsDontLetFriends#1-friends-dont-let-friends-make-bar-plots-for-means-separation>.]
 Was ein "deutlicher" (substanzieller, bedeutsamer, relevanter oder signifikanter) Zusammenhang ist, 
@@ -1475,51 +1474,21 @@ Schauen wir uns die "Anatomie" des Boxplots näher an:
 In einer vorherigen Analyse haben Sie den Zusammenhang von Abschlusspreis und der Anzahl der Lenkräder untersucht.
 Jetzt möchten Sie eine sehr ähnliche Fragestellung betrachten:
 Wie *unterscheiden* sich die Verkaufspreise je nach Anzahl der beigelegten Lenkräder?
-Flink erstellen Sie dazu folgendes Diagramm, @fig-box-wheels1, links.
-Es zeigt die Verteilung des Abschlusspreises, aufgebrochen nach Anzahl Lenkräder (`by = "wheels"`). $\square$
+Flink erstellen Sie dazu folgendes Diagramm, @fig-box-wheels1.
+Es zeigt die Verteilung des Abschlusspreises, gruppiert nach Anzahl Lenkräder (`x = "wheels"`). $\square$
 :::
 
 
-
-Aber ganz glücklich sind Sie mit dem Diagramm nicht: 
-R hat die Variable `wheels` komisch aufgeteilt. 
-Es wäre eigentlich ganz einfach,
-wenn R die Gruppen `0`, `1`, `2`, `3` und `4` aufteilen würde.
-Aber schaut man sich die Y-Achse (im linken Teildiagramm von @fig-box-wheels1) an,
-so erkennt man, 
-dass R `wheels` als stetige Zahl betrachtet und nicht in ganze Zahlen gruppiert. Vielleicht wird so gruppiert, dass in jeder Gruppe gleich viele Werte sind?
-Aber wir möchten jeden einzelnen Wert von `wheels` (0, 1, 2, 3, 4) als *Gruppe* verstehen.
-Mit anderen Worten, wir möchten `wheels` als nominale Variable definieren.
-Das kann man mit dem Befehl `factor(wheels)` erreichen (verpackt in `mutate`), s.
-@fig-box-wheels1 rechts.
-
-```{r}
-#| eval: false
-#| echo: true
-mariokart_no_extreme |> 
-  select(total_pr, wheels) %>% 
-  # Probieren Sie den Code mit bzw. ohne folgender Zeile:
-  mutate(wheels = factor(wheels)) |>  # wheels als nominale Variable
-  plot_boxplot(by = "wheels")  # Boxplot mit "wheels" auf der Y-Achse
-```
-
+`ggboxplot` gruppiert eine numerische X-Variable wie `wheels` automatisch nach jedem einzelnen vorkommenden Wert (`0`, `1`, `2`, `3`, `4`) -- ganz ohne dass wir sie extra in eine Faktorvariable umwandeln müssten.
+Trotzdem ist es guter Stil, `wheels` explizit mit `factor(wheels)` (verpackt in `mutate`) als nominale Variable zu kennzeichnen:
+Das dokumentiert Ihre Absicht und verhindert, dass spätere Analysen (z.$\,$B. Korrelationen oder Regressionsmodelle) `wheels` versehentlich als stetige Zahl behandeln.
 
 ```{r}
 #| label: fig-box-wheels1
-#| echo: false
 #| fig-cap: "Abschlusspreis nach Anzahl von beigelegten Lenkrädern"
-#| fig-subcap: 
-#|   - "`wheels` als metrische Variable"
-#|   - "`wheels` als nominale Variable"
-#| layout-ncol: 2
-mariokart_no_extreme %>%  # `wheels as metrische Variable`: 
-  select(total_pr, wheels) %>% 
-  plot_boxplot(by = "wheels") 
-
-mariokart_no_extreme %>%  # `wheels as nominale Variable`: 
-  select(total_pr, wheels) %>% 
-  mutate(wheels = factor(wheels)) %>% 
-  plot_boxplot(by = "wheels")
+mariokart_no_extreme |>
+  mutate(wheels = factor(wheels)) |>  # wheels als nominale Variable kennzeichnen
+  ggboxplot(x = "wheels", y = "total_pr")
 ```
 
 Sie schließen aus dem Bild, dass Lenkräder und Preis (positiv) zusammenhängen.
@@ -1548,9 +1517,8 @@ mehrere Lösungen sind also möglich.
 ```{r}
 #| eval: !expr knitr:::is_html_output()
 #| out-width: 50%
-mariokart_no_extreme |> 
-  select(cond, total_pr) |> 
-  plot_boxplot(by = "cond")
+mariokart_no_extreme |>
+  ggboxplot(x = "cond", y = "total_pr")
 ```
 
 Boxplots sind eine gute Möglichkeit, die Verteilung einer metrischen Variablen, 
@@ -1576,15 +1544,14 @@ Interpretieren Sie das Ergebnis.
 ```{r}
 #| eval: !expr knitr:::is_html_output()
 #| out-width: 50%
-mariokart_no_extreme |> 
-  select(ship_pr, total_pr) |> 
-  plot_boxplot(by = "ship_pr")
+mariokart_no_extreme |>
+  mutate(ship_pr_grp = cut_interval(ship_pr, 5)) |>  # 5 Gruppen mit gleichen Ranges
+  ggboxplot(x = "ship_pr_grp", y = "total_pr")
 ```
 
-`plot_boxplot` gruppiert *metrische* Variablen, wie `ship_pr` automatisch in fünf Gruppen (mit gleichen Ranges). 
-Wir müssen also nichts tun, um die metrische Variable `ship_pr` 
-in eine Gruppierungsvariable (Faktorvariable) umzuwandeln.
-Es sieht so aus, als würde der Median zwischen den Gruppen leicht steigen, 
+`ggboxplot` gruppiert -- anders als ein automatisches EDA-Tool -- keine metrische Variable von selbst.
+Wir müssen `ship_pr` also explizit mit `cut_interval(ship_pr, 5)` in fünf Gruppen mit gleichen Ranges einteilen, bevor wir sie als Gruppierungsvariable nutzen können.
+Es sieht so aus, als würde der Median zwischen den Gruppen leicht steigen,
 mit Ausnahme der mittleren Gruppe. $\square$
 
 
@@ -1900,7 +1867,7 @@ das sie über über optisch gut unterscheidbarer und klar benennbare Farben verf
 Außerdem erlaubt sie bei Sehschwächen die Farben noch recht gut zu unterscheiden, s. @fig-okabe.
 Möchte man sie für Schwarz-Weiß-Druck verwenden, 
 kann man angeben, dass als erste Farbe Schwarz verwendet werden soll;
-dazu nutzt man den Paramter `palette = "black_first"`.
+dazu nutzt man den Parameter `palette = "black_first"`.
 Alternativ kann man händisch eine helle Farbe und eine dunkle Farbe als Kontrast aussuchen.
 
 

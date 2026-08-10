@@ -1,0 +1,382 @@
+---
+title: "Statistik1"
+subtitle: "Daten umformen"
+author: "Sebastian Sauer"
+lang: de-DE
+format:
+  revealjs:
+    theme: default
+    lightbox: true
+    slide-number: true
+    chalkboard: true
+    incremental: false
+    toc: false
+    logo: ../img/statistik1_icon.png
+    footer: "Statistik1 — Daten umformen"
+    css: slides.css
+mermaid:
+  theme: neutral
+bibliography: ../specifics/bib-local.bib
+csl: ../specifics/apa7.csl
+---
+
+# Einstieg {.center footer=false}
+
+## Lernziele {.smaller}
+
+- Sie können folgende Verben des Datenjudos anwenden: `arrange`, `filter`, `select`, `summarise`, `group_by`, `mutate`.
+- Sie können R-Befehle mit der "Pfeife" verketten.
+
+::: footer
+Einstieg
+:::
+
+## Definition: Datenjudo
+
+:::{.callout-note title="Definition: Datenjudo"}
+Mit *Datenjudo* meint man den Prozess des Aufbereitens, Umformens oder Zusammenfassens von Daten — sei es für einzelne Beobachtungen (Zeilen), Variablen (Spalten) oder eine ganze Datentabelle.
+:::
+
+::: footer
+Einstieg
+:::
+
+## Praxisbezug: Data Science ist 80 % Aufbereiten
+
+Laut *Harvard Business Review* verbringen Data Scientisten ca. **80 %** ihrer Zeit mit dem *Aufbereiten* von Daten [@bowne-anderson_what_2018].
+
+Uncoole Tätigkeiten wie Tippfehler entfernen oder Daten nutzbar machen — aber unverzichtbar. Das Aufbereiten von Daten verlangt keine aufwändige Mathematik, sondern ein paar Handgriffe und Kniffe: das *Datenjudo*.
+
+::: footer
+Einstieg
+:::
+
+## Das Lego-Prinzip
+
+![Das Lego-Prinzip [@sauer_moderne_2019]](../img/Bausteine_dplyr_crop.png){width="75%"}
+
+Komplexe Datenaufbereitung wird elegant, wenn man sie in einfache Teilschritte zergliedert — so wie ein komplexes Lego-Modell aus einfachen Bausteinen besteht.
+
+::: footer
+Einstieg
+:::
+
+# Die Verben des Datenjudos {.center footer=false}
+
+## Ein einfacher Beispieldatensatz {.smaller}
+
+Im R-Paket `dplyr` (Teil von `tidyverse`) gibt es eine Handvoll Verben, die das Datenjudo abdecken. Wir betrachten sie zunächst an einem kleinen Spielzeug-Datensatz:
+
+| id | name   | gruppe | note |
+|----|--------|--------|------|
+| 1  | Anni   | A      | 2.7  |
+| 2  | Berti  | A      | 2.7  |
+| 3  | Charli | B      | 1.7  |
+
+Die Verben wohnen im Paket `dplyr`, das mit `library(tidyverse)` gestartet wird.
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Tabelle sortieren: `arrange`
+
+![Sortieren einer Tabelle mit `arrange`: Die Noten wurden aufsteigend sortiert.](../030-aufbereiten_files/figure-html/fig-arrange-1.png){width="55%"}
+
+```r
+arrange(mariokart, total_pr)     # aufsteigend (Voreinstellung)
+arrange(mariokart, -total_pr)    # absteigend
+```
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Zeilen filtern: `filter`
+
+![Filtern einer Tabelle mit `filter`: Gruppe *B* wurde entfernt.](../030-aufbereiten_files/figure-html/fig-filter-1.png){width="55%"}
+
+```r
+filter(mariokart, stock_photo == "yes" & cond == "new")  # UND
+filter(mariokart, stock_photo == "yes" | cond == "new")  # ODER
+```
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Spalten auswählen: `select`
+
+![Auswählen von Spalten mit `select`](../030-aufbereiten_files/figure-html/fig-select-1.png){width="55%"}
+
+```r
+select(mariokart, cond, total_pr)
+select(mariokart, 2:5)   # Spalten 2 bis 5
+select(mariokart, -1)    # alle Spalten außer Spalte 1
+```
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Spalten zusammenfassen: `summarise`
+
+![Zusammenfassen mit `summarise`: Die Noten wurden zum Mittelwert zusammengefasst.](../030-aufbereiten_files/figure-html/fig-summarise-1.png){width="55%"}
+
+```r
+mariokart_mittelwert <- summarise(mariokart,
+                                   preis_mw = mean(total_pr))
+```
+
+`summarise` fasst eine *Spalte* zu einer einzelnen *Zahl* zusammen.
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Tabelle gruppieren: `group_by` {.smaller}
+
+![Gruppieren mit `group_by`: Aufteilung anhand der Variable `gruppe`.](../030-aufbereiten_files/figure-html/fig-group-1.png){width="50%"}
+
+```r
+mariokart_gruppiert <- group_by(mariokart, cond)
+summarise(mariokart_gruppiert, preis_mw = mean(total_pr))
+```
+
+Gruppieren teilt die Tabelle in Teiltabellen — nachfolgende Berechnungen laufen *für jede Teiltabelle einzeln*.
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Spalten verändern: `mutate`
+
+![Spalten verändern/neu berechnen mit `mutate`](../030-aufbereiten_files/figure-html/fig-mutate-1.png){width="55%"}
+
+```r
+mariokart_yen <- mutate(mariokart, total_pr_yen = total_pr * 133)
+```
+
+`mutate` berechnet eine (neue oder bestehende) Spalte für jede Zeile neu — z. B. addieren, multiplizieren, transformieren.
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Zeilen zählen: `count`
+
+Bei nominalskalierten Daten reicht oft schon das Zählen der Zeilen:
+
+```r
+mariocart_counted <- count(mariokart, cond)
+mutate(mariocart_counted, Anteil = n / sum(n))
+```
+
+Liefert Häufigkeiten je Ausprägung — und mit `mutate` gleich noch den Anteil.
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Verben am Fließband
+
+Tidyverse-Befehle erwarten typischerweise eine Tabelle als Input und liefern eine Tabelle als Output zurück.
+
+```{mermaid}
+flowchart LR
+  A["▥"] --> B[tidyverse-Befehl] --> C["▥"]
+```
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+# Die Pfeife {.center footer=false}
+
+## Definition: Pfeife
+
+:::{.callout-note title="Definition: Pfeife"}
+"Und dann" heißt auf Errisch ` %>% ` oder (synonym) ` |> `. Man nennt diesen Befehl "Pfeife" (engl. *pipe*).
+:::
+
+Die Pfeife `%>%` wohnt im Paket `tidyverse` (genauer: `magrittr`). Seit R 4.1 gibt es auch eine eingebaute Pfeife: `|>`.
+
+::: footer
+Die Pfeife
+:::
+
+## Russische Puppen: verschachtelte Befehle {.smaller}
+
+R arbeitet einen verschachtelten Befehl *von innen nach außen* ab:
+
+1. `sum(x - mean(x))`
+2. `sum(x - 2)`
+3. `sum(-1, 0, 1)`
+4. `0`
+
+Bei mehr Verschachtelung wird es schnell unübersichtlich:
+
+```r
+fasse_zusammen(
+  gruppiere(
+    wähle_spalten(
+      filter_zeilen(meine_daten))))
+```
+
+::: footer
+Die Pfeife
+:::
+
+## Die Pfeife zur Rettung
+
+Statt verschachtelt schreibt man mit der Pfeife die Schritte nacheinander:
+
+```{mermaid}
+flowchart LR
+  A["▥"] --filter<br>zeilen-->B["▥"]
+  B --wähle<br>spalten--> C["▥"]
+  C --gruppiere--> D["▥"]
+  D --fasse<br>zusammen--> E["▥"]
+```
+
+```r
+mariokart %>%
+  filter(total_pr < 100) %>%
+  select(cond, total_pr) %>%
+  group_by(cond) %>%
+  summarise(total_pr_mean = mean(total_pr))
+```
+
+`filter(mariokart, x)` entspricht `mariokart |> filter(x)`. Allgemein: `d |> f(x)` = `f(d, x)`.
+
+::: footer
+Die Pfeife
+:::
+
+# Beispiele für Forschungsfragen {.center footer=false}
+
+## Das teuerste Spiel?
+
+```r
+mariokart %>%
+  filter(stock_photo == "yes") %>%
+  group_by(cond) %>%
+  summarise(total_pr_max = max(total_pr))
+```
+
+Das teuerste Spiel mit Foto kostet 75 Dollar (neu) bzw. 62 Dollar (gebraucht).
+
+::: footer
+Beispiele für Forschungsfragen
+:::
+
+## Die mittlere Versandpauschale? {.smaller}
+
+Getrennt nach Anzahl der Lenkräder, nur Gruppen mit mind. 10 Spielen:
+
+```r
+mariokart %>%
+  filter(wheels < 3) %>%
+  group_by(wheels) %>%
+  summarise(mittlere_versandkosten = mean(ship_pr),
+            anzahl_spiele = n())
+```
+
+Die mittleren Versandkosten liegen zwischen 2.7 und 3.6 Dollar, je nach Anzahl der Lenkräder.
+
+::: footer
+Beispiele für Forschungsfragen
+:::
+
+## Verkaufspreis in Yen?
+
+Mittlerer Verkaufspreis in Yen, minus 10 % Provision:
+
+```r
+mariokart %>%
+  select(total_pr) %>%
+  mutate(total_pr_yen = total_pr * 133) %>%
+  summarise(
+    preis_yen_mw = mean(total_pr_yen),
+    preis_yen_mw_minus_10proz = preis_yen_mw - 0.1 * preis_yen_mw)
+```
+
+`summarise` kann auch mehrere Berechnungen gleichzeitig ausführen.
+
+::: footer
+Beispiele für Forschungsfragen
+:::
+
+# Praxisbezug {.center footer=false}
+
+## Datenjudo in der Forschung: COVIDiSTRESS
+
+@mulukom_psychological_2020 untersuchten psychologische Auswirkungen der Covid19-Pandemie (Vereinsamung, Angst, Depression) — angemeldet unter der Projekt-ID *tsjnb* bei der Open Science Foundation.
+
+Die R-Syntax zur Datenaufbereitung ist öffentlich einsehbar — ein guter Teil davon entspricht dem, was Sie in diesem Kapitel gelernt haben. Ein Beispiel dafür, wie angewandte Forschung und ein akutes gesellschaftliches Problem zusammenkommen.
+
+::: footer
+Praxisbezug
+:::
+
+# Wie man mit Statistik lügt {.center footer=false}
+
+## Der ungewichtete-Mittelwert-Trick {.smaller}
+
+Eine Analystin möchte zeigen, dass der Verkaufspreis "viel zu niedrig" ist (Ist-Wert: 50 Euro):
+
+```r
+mariokart_wheels <- mariokart %>%
+  group_by(wheels) %>%
+  summarise(pr_mean = mean(total_pr), count_n = n())
+
+mariokart_wheels %>%
+  summarise(mean(pr_mean))   # ungewichteter Mittelwert -> 56 Euro
+```
+
+Der *ungewichtete* Mittelwert über die Gruppen (56 Euro) ist falsch und irreführend — der korrekte, *gewichtete* Mittelwert ergibt weiterhin 50 Euro.
+
+::: footer
+Wie man mit Statistik lügt
+:::
+
+# Fallstudien {.center footer=false}
+
+## Die Pinguine {.smaller}
+
+![Possierlich: Die Pinguine [@horst_statistics_2024]](../img/penguins.png){width="35%"}
+
+Forschungsfragen zum Datensatz `penguins` (Zielvariable: Gewicht):
+
+1. Medianes Gewicht, gruppiert nach Spezies?
+2. Wie viele Pinguine pro Spezies?
+3. Schwerster und leichtester Pinguin pro Spezies?
+
+::: footer
+Fallstudien
+:::
+
+## Fallstudie COVIDiSTRESS
+
+![Studie COVIDiSTRESS [@lieberoth2022]](../img/Covidistress1.jpg){width="55%"}
+
+Internationale Erhebung zu psychologischem Stress, Verhaltensregeln und Vertrauen in Institutionen während der Covid19-Pandemie — Daten frei verfügbar zur eigenständigen Analyse.
+
+::: footer
+Fallstudien
+:::
+
+## Zusammenfassung
+
+- **Datenjudo**: Aufbereiten, Umformen, Zusammenfassen von Daten
+- Sechs Kern-Verben: `arrange`, `filter`, `select`, `summarise`, `group_by`, `mutate` (+ `count`)
+- Jedes Verb: Tabelle rein, Tabelle raus
+- **Pfeife** (`%>%` bzw. `|>`) verkettet Befehle statt sie zu verschachteln: `d |> f(x)` = `f(d, x)`
+- Vorsicht bei Mittelwerten über Gruppen: ungewichtet ≠ gewichtet
+
+## Literaturhinweise
+
+- @sauer_moderne_2019, Kap. 7 — Einführung in die Datenaufbereitung mit R
+- @wickham_r_2018, Kap. 5 — vertieft die Themen dieses Kapitels
+
+## Referenzen {.smaller}

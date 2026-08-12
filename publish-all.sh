@@ -17,13 +17,14 @@ quarto render
 
 echo "==> Foliendecks nach _book/slides/ spiegeln..."
 mkdir -p _book/slides
-# Allowlist statt Ausschlussliste: nur die fertigen RevealJS-Ausgaben
-# (*.html, *_files/, slides.css) werden gespiegelt. Das ist bewusst robust
-# gegen alles andere, was in slides/ (z.B. Hilfsskripte, Tool-Ordner mit
-# node_modules, PDFs, Quelltexte) liegen könnte, auch wenn es dort noch
-# nicht existiert(e) -- so landet so etwas nie versehentlich auf gh-pages.
+# Allowlist statt Ausschlussliste: nur die fertigen Ausgaben
+# (*.html, *.pdf, *_files/, slides.css) werden gespiegelt. Das ist bewusst
+# robust gegen alles andere, was in slides/ (z.B. Hilfsskripte, Tool-Ordner
+# mit node_modules, Quelltexte) liegen könnte, auch wenn es dort noch nicht
+# existiert(e) -- so landet so etwas nie versehentlich auf gh-pages.
 rsync -a --delete --delete-excluded \
   --include='/*.html' \
+  --include='/*.pdf' \
   --include='/*_files/' \
   --include='/*_files/**' \
   --include='/slides.css' \

@@ -275,7 +275,7 @@ parameters(lm_wetter1) |>
 ```
 
 
-Laut dem Modell wurde es pro Jahr im Schnitt um 0.01$\,$°C wärmer, pro Jahrzehnt also 0.1$\,$°C und pro Jahrhundert 1$\,$°C.
+Laut dem Modell wurde es pro Jahr im Schnitt um `r round(coef(lm_wetter1)["year"], 2)`$\,$°C wärmer, pro Jahrzehnt also `r round(coef(lm_wetter1)["year"] * 10, 2)`$\,$°C und pro Jahrhundert `r round(coef(lm_wetter1)["year"] * 100, 2)`$\,$°C.
 
 
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Das ist sicherlich nicht linear! Vermutlich ist die Temperatur bis 1950 konstant geblieben und jetzt knallt sie durch die Decke!
@@ -294,8 +294,8 @@ Das ist sozusagen der Wert, für den sich das Modell festlegen würde, wenn es s
 2. *Bereichsschätzungen* Cleverer als Punktschätzungen sind Bereichsschätzungen (Intervallschätzungen): Hier wird ein Bereich plausibler Werte für den entsprechenden Koeffizienten angegeben. In der Spalte `CI` sehen Sie die untere bzw. die obere Grenze eines "Bereichs plausibler Werte". Dieser Schätzbereich wird auch als *Konfidenzintervall* (engl. confidence interval, CI) bezeichnet.
 Ein Konfidenzintervall ist mit einer Sicherheit zwischen 0 und 1 angegeben, z.B. 95$\,$% (0.95).
 Grob gesagt bedeutet ein 95$\,$%-Konfidenzintervall, dass wir uns (laut Modell) zu 95$\,$% sicher sein können, dass der wahre Wert sich in diesem Bereich befindet.
-In @tbl-lm-wetter1 können wir ablesen, dass das Regressionsgewicht von `year` irgendwo zwischen praktisch Null (0.009) 
-und ca. 0.01 Grad geschätzt wird.
+In @tbl-lm-wetter1 können wir ablesen, dass das Regressionsgewicht von `year` irgendwo zwischen praktisch Null (`r round(confint(lm_wetter1)["year", 1], 3)`)
+und ca. `r round(confint(lm_wetter1)["year", 2], 3)` Grad geschätzt wird.
 Je schmaler das Konfidenzintervall, desto genauer wird der Effekt geschätzt 
 (unter sonst gleichen Umständen). 
 
@@ -434,9 +434,9 @@ parameters(lm_wetter1_zentriert) |>
 ```
 
 Jetzt ist die Interpretation des Achsenabschnitts komfortabel:
-Im Jahr 1951 (x=0) lag die mittlere Temperatur in Deutschland (laut DWD) bei ca. 8.5$\,$°C.
-Die Regressionsgleichung lautet: `temp_pred = 8.49 + 0.01*year_c`.
-In Worten: Wir sagen eine Temperatur vorher, die sich als Summe von 8.49$\,$°C plus 0.01 mal das Jahr (in zentrierter Form) berechnet.
+Im Jahr 1951 (x=0) lag die mittlere Temperatur in Deutschland (laut DWD) bei ca. `r round(coef(lm_wetter1_zentriert)["(Intercept)"], 1)`$\,$°C.
+Die Regressionsgleichung lautet: *temp_pred = `r round(coef(lm_wetter1_zentriert)["(Intercept)"], 2)` + `r round(coef(lm_wetter1_zentriert)["year_c"], 2)`\*year_c*.
+In Worten: Wir sagen eine Temperatur vorher, die sich als Summe von `r round(coef(lm_wetter1_zentriert)["(Intercept)"], 2)`$\,$°C plus `r round(coef(lm_wetter1_zentriert)["year_c"], 2)` mal das Jahr (in zentrierter Form) berechnet.
 
 
 Wie gut erklärt unser Modell die Daten?
@@ -536,9 +536,9 @@ parameters(lm_wetter_bin_uv) |>
 ```
 
 
-Die Parameterwerte des Modells lassen darauf schließen, 
-dass es tatsächlich wärmer geworden ist nach 1950, 
-und zwar offenbar ein gutes halbes Grad, s. @fig-wetter2.
+Die Parameterwerte des Modells lassen darauf schließen,
+dass es tatsächlich wärmer geworden ist nach 1950,
+und zwar offenbar um `r round(coef(lm_wetter_bin_uv)["after_1950TRUE"], 2)` Grad, s. @fig-wetter2.
 
 
 
@@ -546,7 +546,7 @@ und zwar offenbar ein gutes halbes Grad, s. @fig-wetter2.
 #| echo: false
 #| label: fig-wetter2
 #| layout: [[45,-10, 45], [100]]
-#| fig-cap: "Modell: `temp ~ after_1950`, (a) Der Schätzbereich für den Parameter reicht von ca. 0.5 bis 0.8 Grad Unterschied. (b) Der Unterschied sieht in dieser Darstellung nicht groß aus."
+#| fig-cap: !expr 'sprintf("Modell: `temp ~ after_1950`, (a) Der Schätzbereich für den Parameter reicht von ca. %.2f bis %.2f Grad Unterschied. (b) Der Unterschied sieht in dieser Darstellung nicht groß aus.", confint(lm_wetter_bin_uv)["after_1950TRUE", 1], confint(lm_wetter_bin_uv)["after_1950TRUE", 2])'
 #| fig-subcap: 
 #|   - "Mittelwertsunterschied als Regressionsparameter"
 #|   - "Mittelwertsunterschied als Verteilungsvergleich"
@@ -725,18 +725,18 @@ Fassen wir die Interpretation der Koeffizienten für das Modell mit binärer UV 
 ::: {.content-visible unless-format="epub"}
 Für die Modellwerte $\color{modelcol}{\hat{y}}$ gilt also:
 
-- Temperatur laut Modell bis 1950: $\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} = 17.7$ 
+- Temperatur laut Modell bis 1950: $\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} = `r round(coef(lm4)[1], 1)`$
 
-- Temperatur laut Modell bis 1950: $\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} +  \color{beta1col}{\beta_1}= \color{beta0col}{17.7} + \color{beta1col}{0.6} = 18.3$ 
+- Temperatur laut Modell nach 1950: $\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} +  \color{beta1col}{\beta_1}= \color{beta0col}{`r round(coef(lm4)[1], 1)`} + \color{beta1col}{`r round(coef(lm4)[2], 1)`} = `r round(coef(lm4)[1] + coef(lm4)[2], 1)`$
 :::
 
 
 :::: {.content-visible when-format="epub"}
 Für die Modellwerte ${\hat{y}}$ gilt also:
 
-- Temperatur laut Modell bis 1950: ${\hat{y}} = {\beta_0} = 17.7$ 
+- Temperatur laut Modell bis 1950: ${\hat{y}} = {\beta_0} = `r round(coef(lm4)[1], 1)`$
 
-- Temperatur laut Modell bis 1950: ${\hat{y}} = {\beta_0} + {\beta_1}= {17.7} + {0.6} = 18.3$ 
+- Temperatur laut Modell nach 1950: ${\hat{y}} = {\beta_0} + {\beta_1}= {`r round(coef(lm4)[1], 1)`} + {`r round(coef(lm4)[2], 1)`} = `r round(coef(lm4)[1] + coef(lm4)[2], 1)`$
 ::::
 
 
@@ -1144,16 +1144,16 @@ parameters(lm_year_month) %>%
 
 Die Modellkoeffizienten sind so zu interpretieren:
 
-1. Achsenabschnitt ($\beta_0$, `Intercept`): Im Referenzjahr (1951) im *Referenzmonat Januar* lag die Niederschlagsmenge bei 57$\,$mm pro Quadratmeter.
-2. Regressionskoeffizient für Jahr ($\beta_1$, `year_c`): Pro Jahr ist die Niederschlagsmenge im Schnitt um 0.03$\,$mm an (im Referenzmonat).
-3. Regressionskoeffizient für Monat ($\beta_2$, `month_factor7`) Im Monat `7` (Juli) lag die mittlere Niederschlagsmenge (im Referenzjahr) knapp 25$\,$mm über dem mittleren Wert des Referenzmonats (Januar).
+1. Achsenabschnitt ($\beta_0$, `Intercept`): Im Referenzjahr (1951) im *Referenzmonat Januar* lag die Niederschlagsmenge bei `r round(coef(lm_year_month)["(Intercept)"], 0)`$\,$mm pro Quadratmeter.
+2. Regressionskoeffizient für Jahr ($\beta_1$, `year_c`): Pro Jahr ist die Niederschlagsmenge im Schnitt um `r round(coef(lm_year_month)["year_c"], 2)`$\,$mm an (im Referenzmonat).
+3. Regressionskoeffizient für Monat ($\beta_2$, `month_factor7`) Im Monat `7` (Juli) lag die mittlere Niederschlagsmenge (im Referenzjahr) knapp `r round(coef(lm_year_month)["month_factor7"], 0)`$\,$mm über dem mittleren Wert des Referenzmonats (Januar).
 
 
 Die Regressionsgleichung von `lm_year_month` lautet:
-`precip_pred = 56.94 + 0.03*year_c + 24.37*month_factor_7`.
-Im Monat Juli ist `month_factor_7 = 1`, 
-ansonsten (Januar) ist `month_factor = 0`. 
-Demnach erwarten wir laut Modell `lm_year_month` im Juli des Referenzjahres `r 56.94 + 24.37`$\,$mm Niederschlag.
+`r sprintf("precip_pred = %.2f + %.2f*year_c + %.2f*month_factor_7", coef(lm_year_month)["(Intercept)"], coef(lm_year_month)["year_c"], coef(lm_year_month)["month_factor7"])`.
+Im Monat Juli ist `month_factor_7 = 1`,
+ansonsten (Januar) ist `month_factor = 0`.
+Demnach erwarten wir laut Modell `lm_year_month` im Juli des Referenzjahres `r round(coef(lm_year_month)["(Intercept)"] + coef(lm_year_month)["month_factor7"], 2)`$\,$mm Niederschlag.
 Die Werte der Regressionskoeffizienten sind @tbl-lm-year-month entnommen.
 
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Puh, kompliziert!
@@ -1352,12 +1352,12 @@ Sie gibt die Stärke des Interaktionseffekts an.
 Die Zeile zeigt, 
 wie unterschiedlich sich die die Niederschlagsmenge 
 zwischen den beiden Monaten im Verlauf der Jahre ändert: 
-Pro Jahr ist die Zunahme an Niederschlag um 0.20$\,$mm geringer
+Pro Jahr ist die Zunahme an Niederschlag um `r round(abs(coef(lm_year_month_interaktion)["year_c:month_factor7"]), 2)`$\,$mm geringer
 als im Referenzmonat (Januar).
-Damit resultiert für Juli insgesamt ein positiver Effekt: 
-`0.13 - -0.20 = 0.07`.
+Damit resultiert für Juli insgesamt ein `r ifelse(coef(lm_year_month_interaktion)["year_c"] + coef(lm_year_month_interaktion)["year_c:month_factor7"] < 0, "negativer", "positiver")` Effekt:
+`r sprintf("%.2f + (%.2f) = %.2f", coef(lm_year_month_interaktion)["year_c"], coef(lm_year_month_interaktion)["year_c:month_factor7"], coef(lm_year_month_interaktion)["year_c"] + coef(lm_year_month_interaktion)["year_c:month_factor7"])`.
 Insgesamt lautet die Regressionsgleichung:
-`precip_pred = 56.91 + 0.13 * year_c + 24.37 * month_factor_7 - 0.20 * year_c:month_factor_7`.
+`r sprintf("precip_pred = %.2f + %.2f * year_c + %.2f * month_factor_7 + (%.2f) * year_c:month_factor_7", coef(lm_year_month_interaktion)["(Intercept)"], coef(lm_year_month_interaktion)["year_c"], coef(lm_year_month_interaktion)["month_factor7"], coef(lm_year_month_interaktion)["year_c:month_factor7"])`.
 
 
 :::{.callout-important}

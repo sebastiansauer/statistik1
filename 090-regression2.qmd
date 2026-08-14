@@ -94,8 +94,7 @@ wetter <- read.csv(wetter_path)
 
 ```{r import-mariokart-csv2}
 wetter_path <- paste0(
-  "https://raw.githubusercontent.com/sebastiansauer/",
-  "statistik1/main/data/wetter-dwd/precip_temp_DWD.csv")
+  "https://raw.githubusercontent.com/sebastiansauer/data_se/refs/heads/master/content/post/","2026-08-14-wetterdaten-des-dwd-aufbereiten/wetterdaten_monat.csv")
 wetter <- read.csv(wetter_path)
 ```
 
@@ -179,16 +178,72 @@ Hervorragend! An die Arbeit!
 
 ### Temperaturverlauf
 
-![Temperatur (Grad Celsius) im Verlauf der Jahre](img/wetter1.gif)
+```{r fig-wetter-temp}
+#| echo: false
+#| warning: false
+#| fig-cap: "Temperatur (Grad Celsius) im Verlauf der Jahre"
+
+wetter_temp_jahr <- wetter |>
+  filter(region == "Deutschland") |>
+  summarise(temp = mean(temp), .by = year)
+
+ggplot(wetter_temp_jahr, aes(x = year, y = temp)) +
+  geom_line(color = beta1col) +
+  geom_smooth(color = errorcol, se = FALSE) +
+  labs(x = "Jahr", y = "Temperatur (°C)")
+```
 
 
 ### Niederschlagsverlauf
 
-![Niederschlag (mm) im Verlauf der Jahre](img/wetter2.gif)
+```{r fig-wetter-precip}
+#| echo: false
+#| warning: false
+#| fig-cap: "Niederschlag (mm) im Verlauf der Jahre"
+
+wetter_precip_jahr <- wetter |>
+  filter(region == "Deutschland") |>
+  summarise(precip = mean(precip), .by = year)
+
+ggplot(wetter_precip_jahr, aes(x = year, y = precip)) +
+  geom_line(color = beta1col) +
+  geom_smooth(color = errorcol, se = FALSE) +
+  labs(x = "Jahr", y = "Niederschlag (mm)")
+```
 
 ### Monatstemperaturverlauf
 
-![Veränderung der Temperatur pro Monat in Deutschland im Zeitverlauf (10-Jahres-Mittelwerte](img/wetter3.gif)
+```{r fig-wetter-temp-monat}
+#| echo: false
+#| warning: false
+#| fig-cap: "Veränderung der Temperatur pro Monat in Deutschland im Zeitverlauf"
+
+wetter_temp_monat <- wetter |>
+  filter(region == "Deutschland") |>
+  summarise(temp = mean(temp), .by = c(year, month))
+
+ggplot(wetter_temp_monat, aes(x = year, y = temp, color = factor(month))) +
+  geom_line() +
+  geom_smooth(aes(group = 1), color = "black", se = FALSE) +
+  labs(x = "Jahr", y = "Temperatur (°C)", color = "Monat")
+```
+
+### Monatsniederschlagsverlauf
+
+```{r fig-wetter-precip-monat}
+#| echo: false
+#| warning: false
+#| fig-cap: "Veränderung des Niederschlags pro Monat in Deutschland im Zeitverlauf"
+
+wetter_precip_monat <- wetter |>
+  filter(region == "Deutschland") |>
+  summarise(precip = mean(precip), .by = c(year, month))
+
+ggplot(wetter_precip_monat, aes(x = year, y = precip, color = factor(month))) +
+  geom_line() +
+  geom_smooth(aes(group = 1), color = "black", se = FALSE) +
+  labs(x = "Jahr", y = "Niederschlag (mm)", color = "Monat")
+```
 
 :::
 

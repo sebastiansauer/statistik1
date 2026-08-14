@@ -1,7 +1,7 @@
 library(tidyverse)
 library(magick)
 
-img_path <- "https://statistik1.netlify.app/index_files/figure-html/unnamed-chunk-2-1.png"
+img_path <- "https://sebastiansauer.github.io/statistik1/index_files/figure-html/unnamed-chunk-2-1.png"
 
 img <- image_read(img_path)
 img %>% 

@@ -1645,7 +1645,7 @@ R verweigert störrisch den Dienst, vermutlich rein aus Boshaftigkeit,
 rein um Sie zu ärgern? 
 Ausführliches Googeln und ChatGPT befragen hat keine Lösung gebracht?
 Kurz, Sie brauchen die Hilfe eines kundigen Menschens?
-[Sie sollten Ihren Hilfeschrei so artikulieren](https://data-se.netlify.app/2022/01/31/erbie-einfache-reproduzierbare-beispiele-ihres-problems-mit-r-syntax/), 
+[Sie sollten Ihren Hilfeschrei so artikulieren](https://sebastiansauer.github.io/data_se/2022/01/31/erbie-einfache-reproduzierbare-beispiele-ihres-problems-mit-r-syntax/), 
 dass er nicht nur gehört, sondern auch verstanden wird 
 und einen anderen Menschen veranlasst und ermöglicht, Ihnen zu helfen.
 

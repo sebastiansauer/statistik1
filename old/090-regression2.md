@@ -153,7 +153,7 @@ das Ihnen sinnvoll erscheint: Die Analyse des Klimawandels. $\square$
 :::
 
 Beim [Deutschen Wetterdienst, DWD](https://www.dwd.de/DE/Home/home_node.html), haben Sie sich Wetterdaten von Deutschland heruntergeladen.
-Nach etwas [Datenjudo, auf das wir hier nicht eingehen wollen,](https://data-se.netlify.app/2022/07/24/preparing-german-weather-data/) 
+Nach etwas [Datenjudo, auf das wir hier nicht eingehen wollen,](https://sebastiansauer.github.io/data_se/2022/07/24/preparing-german-weather-data/) 
 resultiert ein schöner Datensatz, den Sie jetzt analysieren möchten.
 (Im Datensatz ist die Temperatur ist in Grad Celsius angegeben; der Niederschlag  (`precip`) in mm Niederschlag pro Quadratmeter.)
 Hervorragend! An die Arbeit!  
@@ -2196,7 +2196,7 @@ Nutzen Sie diese Fallstudien, um sich intensiver mit der Entwicklung eines Progn
 ### Filmerlöse
 
 
-[Vorhersagen von Filmerlösen](https://data-se.netlify.app/2020/11/13/fallstudie-zur-regressionsanalyse-ggplot2movies/)
+[Vorhersagen von Filmerlösen](https://sebastiansauer.github.io/data_se/2020/11/13/fallstudie-zur-regressionsanalyse-ggplot2movies/)
 
 ## Vertiefung
 

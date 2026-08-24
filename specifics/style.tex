@@ -1,7 +1,6 @@
 % load packages
 %\usepackage{multicol}
 \usepackage{fontspec}
-\usepackage{emoji}
 \usepackage{xltxtra}
 %\usepackage{xcolor}
 \usepackage{listings}
@@ -10,6 +9,31 @@
 \usepackage[german]{csquotes}
 \usepackage{tocloft}  % more space in TOC
 \usepackage{microtype}
+
+% Farbige Emoji-Darstellung im PDF: Der Buchtext enthaelt literale Unicode-
+% Emoji, auch in Ueberschriften (-> PDF-Bookmarks/hyperref) und in
+% R-Code-Kommentaren (-> Highlighting/Verbatim-Umgebung). mainfont/sansfont/
+% monofont enthalten keine Emoji-Glyphen. Registriert hier nur eine
+% luaotfload-Fallback-Schriftklasse ("emojifallback"); tatsaechlich
+% aktiviert wird sie ueber die RawFeature={fallback=emojifallback}-Option
+% an mainfontoptions/sansfontoptions/monofontoptions (siehe _quarto.yml,
+% pdf/titlepage-pdf-Format). Das ist bewusst KEIN Text-/Zeichenketten-Eingriff
+% (z. B. per LuaTeX process_input_buffer-Callback), weil ein solcher Eingriff
+% Zeichenfolgen roh im Eingabepuffer umschreibt und dabei den TOC/Bookmark-
+% Text (hyperref/pdfstringdef) sowie den catcode-sensitiven Inhalt von
+% Highlighting/Verbatim-Bloecken beschaedigen kann -- getestet und
+% verworfen. Der reine Glyph-Fallback wirkt dagegen unabhaengig vom Kontext
+% korrekt ueberall dort, wo die aktuelle Schrift die Glyphe nicht hat.
+% Bekannter, akzeptierter Kompromiss: mehrteilige ZWJ-Emoji (z. B. Person +
+% Beruf + Geschlecht wie "🧑‍🏫") werden dadurch als mehrere nebeneinander
+% stehende Einzelsymbole gesetzt statt als ein fusioniertes Emoji-Glyph --
+% inhaltlich weiterhin eindeutig erkennbar, nur nicht perfekt verschmolzen.
+\directlua{
+  luaotfload.add_fallback
+    ("emojifallback",
+     { "Noto Color Emoji:mode=harf;" }
+    )
+}
 
 
 \definecolor{ycol}{RGB}{230,159,0}

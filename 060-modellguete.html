@@ -592,7 +592,7 @@ window.Quarto = {
 \]</span></p>
 <section id="einstieg" class="level2" data-number="7.1"><h2 data-number="7.1" class="anchored" data-anchor-id="einstieg">
 <span class="header-section-number">7.1</span> Einstieg</h2>
-<p>In diesem Kapitel benötigen Sie die üblichen R-Pakete (<code>tidyverse</code>, <code>easystats</code>) und Daten (<code>mariokart</code>), s. <span class="quarto-unresolved-ref">?sec-import-mariokart</span> und <a href="020-R.html#sec-r-pckgs" class="quarto-xref"><span>Kapitel 3.4</span></a>.</p>
+<p>In diesem Kapitel benötigen Sie die üblichen R-Pakete (<code>tidyverse</code>, <code>easystats</code>) und Daten (<code>mariokart</code>), s. <a href="020-R.html#sec-import-mariokart" class="quarto-xref"><span>Kapitel 3.7.3</span></a> und <a href="020-R.html#sec-r-pckgs" class="quarto-xref"><span>Kapitel 3.4</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/easystats/">easystats</a></span><span class="op">)</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
@@ -949,11 +949,11 @@ Abbildung&nbsp;7.9: Sinnbild zur Varianz als typischer Fehlerbalken
 Listing&nbsp;7.1: Berechnung der Streuung des Verkaufspreises als Indikator für die Modellgüte des Mittelwerts
 </figcaption><div aria-describedby="lst-mario-streu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_no_extreme</span> <span class="op">&lt;-</span></span>
-<span>  <span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="va">mariokart</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span>  <span class="co"># ohne Extremwerte</span></span>
 <span></span>
 <span><span class="va">m_summ</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="va">mariokart_no_extreme</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="va">mariokart_no_extreme</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
 <span>    pr_mw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span>,</span>
 <span>    pr_iqr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/IQR.html">IQR</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span>,</span>
@@ -982,10 +982,10 @@ Tabelle&nbsp;7.1: Kennwerte der Streuung für den Mariokart-Datensatz
 </div>
 <p>Statistiken sind ja schön … aber Bilder sind auch gut, s. <a href="#fig-var" class="quarto-xref">Abbildung&nbsp;<span>7.10</span></a>. Datendiagramme eignen sich gut, um (grob) die Streuung einer Variable zu erfassen.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="va">mariokart_no_extreme</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>   <span class="co"># ohne Extremwerte</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu">plot_density</span><span class="op">(</span><span class="op">)</span>  <span class="co"># oder plot_violin</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  mariokart_no_extreme <span class="sc">|&gt;</span>   <span class="co"># ohne Extremwerte</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_pr) <span class="sc">|&gt;</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_density</span>()  <span class="co"># oder plot_violin</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="fig-var" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1048,7 +1048,7 @@ Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Die SD ist i.d.R. <em>un</em>gleich zur MAE, aber (fast) gleich zur RMSE. Entsprechend ist die Varianz (fast) gleich zur MSE. <span class="math inline">\(\square\)</span></p>
+<p>Die SD ist i. d. R. <em>un</em>gleich zur MAE, aber (fast) gleich zur RMSE. Entsprechend ist die Varianz (fast) gleich zur MSE. <span class="math inline">\(\square\)</span></p>
 </div>
 </div>
 <div id="exm-sd-mario" class="theorem example">
@@ -1056,8 +1056,8 @@ Hinweis
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/easystats/">easystats</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span><span class="va">mariokart</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">total_pr</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">describe_distribution</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -1130,7 +1130,7 @@ Tabelle&nbsp;7.2: Ausgabe der Funktion <code>describe_distribution</code> (Auszu
 Listing&nbsp;7.2: Mariokart ohne Extremwerte
 </figcaption><div aria-describedby="lst-mariokart-no-extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_no_extreme</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="va">mariokart</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="va">mariokart</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">total_pr</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
@@ -1151,7 +1151,7 @@ Abbildung&nbsp;7.11: Verteilung von <code>mariokart_no_extreme</code>; das Zentr
 </div>
 </div>
 </div>
-<div class="cell quarto-layout-panel" data-layout-align="center" data-layout="[[45,-10,45],[100]]">
+<div class="cell quarto-layout-panel" data-layout="[[45,-10,45],[100]]" data-layout-align="center">
 
 </div>
 <p>Man sieht, dass es eine gewisse Streuung um den Mittelwert herum gibt. Aber ist das viel oder wenig Streuung?</p>
@@ -1176,7 +1176,7 @@ Wichtig
 Listing&nbsp;7.3: Zentrieren einer Variablen
 </figcaption><div aria-describedby="lst-zentrieren-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_no_extreme_zentriert</span> <span class="op">&lt;-</span></span>
-<span>  <span class="va">mariokart_no_extreme</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="va">mariokart_no_extreme</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    total_pr_zentriert <span class="op">=</span> <span class="va">total_pr</span> <span class="op">-</span> <span class="fl">47.7</span><span class="op">)</span>  </span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1700,7 +1700,7 @@ Tabelle&nbsp;7.3: Die ersten paar Zeilen von <code>total_pr</code> zentriert: <c
 <p>Also: Wenn ein Spiel 10 Dollar vom Mittelwert abweicht und die SD 10 Dollar betragen sollte, dann hätten wir eine “standardisierte” (abgekürzt manchmal mit <code>std</code>) Abweichung von 1, weil 10/10=1. Begeistert über Ihre Geistesblitze machen Sie sich ans Werk.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_no_extreme</span> <span class="op">&lt;-</span></span>
-<span>  <span class="va">mariokart_no_extreme</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="va">mariokart_no_extreme</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>abw_std <span class="op">=</span> <span class="va">abw</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">abw</span><span class="op">)</span>,  <span class="co"># std wie "standardisiert"</span></span>
 <span>         abw_std2 <span class="op">=</span> <span class="va">abw</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">abw</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  </span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1747,8 +1747,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Was ist das mathematische Resultat, wenn man alle (nicht-absoluten) Residuen einer Verteilung vom Mittelwert aufsummiert? Betrachten Sie die Eigenschaft des Mittelwerts als Schwerpunkt.</p>
-<div id="webex-966b91ee3553dfe981e23aa91a8e9d05" class="webex-radiogroup" data-answer="YgYaUxUBSVUfBWg=">
-<label><input type="radio" autocomplete="off" name="966b91ee3553dfe981e23aa91a8e9d05"><span>Die Summe entspricht dem Stichprobenumfang n.</span></label><label><input type="radio" autocomplete="off" name="966b91ee3553dfe981e23aa91a8e9d05"><span>Die Summe ist immer exakt Null.</span></label><label><input type="radio" autocomplete="off" name="966b91ee3553dfe981e23aa91a8e9d05"><span>Die Summe entspricht der Varianz der Daten.</span></label><label><input type="radio" autocomplete="off" name="966b91ee3553dfe981e23aa91a8e9d05"><span>Das Ergebnis ist abhängig von der Standardabweichung.</span></label><label><input type="radio" autocomplete="off" name="966b91ee3553dfe981e23aa91a8e9d05"><span>Das Ergebnis ist immer positiv.</span></label>
+<div id="webex-a0cbe82b4e3be5d5bab9edcb5fbf974e" class="webex-radiogroup" data-answer="OgBPU0kIHlIYVW4=">
+<label><input type="radio" autocomplete="off" name="a0cbe82b4e3be5d5bab9edcb5fbf974e"><span>Die Summe entspricht dem Stichprobenumfang n.</span></label><label><input type="radio" autocomplete="off" name="a0cbe82b4e3be5d5bab9edcb5fbf974e"><span>Die Summe ist immer exakt Null.</span></label><label><input type="radio" autocomplete="off" name="a0cbe82b4e3be5d5bab9edcb5fbf974e"><span>Die Summe entspricht der Varianz der Daten.</span></label><label><input type="radio" autocomplete="off" name="a0cbe82b4e3be5d5bab9edcb5fbf974e"><span>Das Ergebnis ist abhängig von der Standardabweichung.</span></label><label><input type="radio" autocomplete="off" name="a0cbe82b4e3be5d5bab9edcb5fbf974e"><span>Das Ergebnis ist immer positiv.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1765,8 +1765,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie haben ein Modell <code>lm1</code> (nur Mittelwert) und ein Modell <code>lm2</code> (mit einer UV). In R liefert <code>mae(lm1)</code> den Wert 10 und <code>mae(lm2)</code> den Wert 7,4. Wie beurteilen Sie die Veränderung der Modellgüte?</p>
-<div id="webex-08815466f5d4fdee5506a0577ab800ca" class="webex-radiogroup" data-answer="awgUARkFGgZKBTk=">
-<label><input type="radio" autocomplete="off" name="08815466f5d4fdee5506a0577ab800ca"><span>Die Güte hat sich verschlechtert, da der MAE gesunken ist.</span></label><label><input type="radio" autocomplete="off" name="08815466f5d4fdee5506a0577ab800ca"><span>Das erste Modell ist besser, da größere Fehler für die Forschung nützlicher sind.</span></label><label><input type="radio" autocomplete="off" name="08815466f5d4fdee5506a0577ab800ca"><span>Das zweite Modell ist besser, da der durchschnittliche Vorhersagefehler gesunken ist.</span></label><label><input type="radio" autocomplete="off" name="08815466f5d4fdee5506a0577ab800ca"><span>Ein MAE von 7,4 bedeutet, dass das Modell zu 74 % korrekt ist.</span></label><label><input type="radio" autocomplete="off" name="08815466f5d4fdee5506a0577ab800ca"><span>Man kann die Modelle nicht vergleichen, da die Skalierung unterschiedlich ist.</span></label>
+<div id="webex-eac5840a3b15977e7bca3aee77c8a70b" class="webex-radiogroup" data-answer="PlFPBRQFHFEfUmw=">
+<label><input type="radio" autocomplete="off" name="eac5840a3b15977e7bca3aee77c8a70b"><span>Die Güte hat sich verschlechtert, da der MAE gesunken ist.</span></label><label><input type="radio" autocomplete="off" name="eac5840a3b15977e7bca3aee77c8a70b"><span>Das erste Modell ist besser, da größere Fehler für die Forschung nützlicher sind.</span></label><label><input type="radio" autocomplete="off" name="eac5840a3b15977e7bca3aee77c8a70b"><span>Das zweite Modell ist besser, da der durchschnittliche Vorhersagefehler gesunken ist.</span></label><label><input type="radio" autocomplete="off" name="eac5840a3b15977e7bca3aee77c8a70b"><span>Ein MAE von 7,4 bedeutet, dass das Modell zu 74 % korrekt ist.</span></label><label><input type="radio" autocomplete="off" name="eac5840a3b15977e7bca3aee77c8a70b"><span>Man kann die Modelle nicht vergleichen, da die Skalierung unterschiedlich ist.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1783,8 +1783,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>In R berechnen Sie für ein Nullmodell (Punktmodell) den RMSE. Welcher statistische Kennwert der abhängigen Variable entspricht diesem Ergebnis (nahezu) exakt? Berücksichtigen Sie die Definition des RMSE im Kontext des Mittelwerts.</p>
-<div id="webex-b508d1dc52cd4b503da85f3b203188ec" class="webex-radiogroup" data-answer="OQUcCEgBSFIZAj4=">
-<label><input type="radio" autocomplete="off" name="b508d1dc52cd4b503da85f3b203188ec"><span>Der Interquartilsabstand (IQR)</span></label><label><input type="radio" autocomplete="off" name="b508d1dc52cd4b503da85f3b203188ec"><span>Der Median</span></label><label><input type="radio" autocomplete="off" name="b508d1dc52cd4b503da85f3b203188ec"><span>Der Modus</span></label><label><input type="radio" autocomplete="off" name="b508d1dc52cd4b503da85f3b203188ec"><span>Die Standardabweichung (SD)</span></label><label><input type="radio" autocomplete="off" name="b508d1dc52cd4b503da85f3b203188ec"><span>Die Spannweite (Range)</span></label>
+<div id="webex-51cfd929c57981ce88fcdd91beead6f7" class="webex-radiogroup" data-answer="bgFPVkgJHghPBWo=">
+<label><input type="radio" autocomplete="off" name="51cfd929c57981ce88fcdd91beead6f7"><span>Der Interquartilsabstand (IQR)</span></label><label><input type="radio" autocomplete="off" name="51cfd929c57981ce88fcdd91beead6f7"><span>Der Median</span></label><label><input type="radio" autocomplete="off" name="51cfd929c57981ce88fcdd91beead6f7"><span>Der Modus</span></label><label><input type="radio" autocomplete="off" name="51cfd929c57981ce88fcdd91beead6f7"><span>Die Standardabweichung (SD)</span></label><label><input type="radio" autocomplete="off" name="51cfd929c57981ce88fcdd91beead6f7"><span>Die Spannweite (Range)</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1801,8 +1801,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ein Student hat in einem Statistiktest einen z-Wert von -2,0 erzielt. Wie ist dieses Ergebnis im Vergleich zur restlichen Gruppe zu interpretieren? Nutzen Sie die Definition von z-Werten als relative Abweichungen.</p>
-<div id="webex-fcf68f71f37b5c70b8adc8354617c4a5" class="webex-radiogroup" data-answer="PVNKBhRWGwFKAmo=">
-<label><input type="radio" autocomplete="off" name="fcf68f71f37b5c70b8adc8354617c4a5"><span>Der Student hat zwei Fehler mehr gemacht als der Durchschnitt.</span></label><label><input type="radio" autocomplete="off" name="fcf68f71f37b5c70b8adc8354617c4a5"><span>Das Ergebnis ist ein extremer Ausreißer nach oben.</span></label><label><input type="radio" autocomplete="off" name="fcf68f71f37b5c70b8adc8354617c4a5"><span>Der tatsächliche Punktwert des Studenten muss negativ sein.</span></label><label><input type="radio" autocomplete="off" name="fcf68f71f37b5c70b8adc8354617c4a5"><span>Der Student gehört zu den besten 2 % der Teilnehmer.</span></label><label><input type="radio" autocomplete="off" name="fcf68f71f37b5c70b8adc8354617c4a5"><span>Der Student liegt zwei Standardabweichungen unter dem Durchschnitt der Gruppe.</span></label>
+<div id="webex-1ad331af8e9952d4771cd4e6a84fb90a" class="webex-radiogroup" data-answer="alFIAx8BTVYUVGQ=">
+<label><input type="radio" autocomplete="off" name="1ad331af8e9952d4771cd4e6a84fb90a"><span>Der Student hat zwei Fehler mehr gemacht als der Durchschnitt.</span></label><label><input type="radio" autocomplete="off" name="1ad331af8e9952d4771cd4e6a84fb90a"><span>Das Ergebnis ist ein extremer Ausreißer nach oben.</span></label><label><input type="radio" autocomplete="off" name="1ad331af8e9952d4771cd4e6a84fb90a"><span>Der tatsächliche Punktwert des Studenten muss negativ sein.</span></label><label><input type="radio" autocomplete="off" name="1ad331af8e9952d4771cd4e6a84fb90a"><span>Der Student gehört zu den besten 2 % der Teilnehmer.</span></label><label><input type="radio" autocomplete="off" name="1ad331af8e9952d4771cd4e6a84fb90a"><span>Der Student liegt zwei Standardabweichungen unter dem Durchschnitt der Gruppe.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1819,8 +1819,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Was passiert bei einer z-Transformation mit dem Mittelwert und der Standardabweichung einer beliebigen Verteilung? Die Transformation besteht aus Zentrieren und Standardisieren.</p>
-<div id="webex-84d2653a9abf214ccc1e376d1d9007da" class="webex-radiogroup" data-answer="YwRIAhoEH1EVUT8=">
-<label><input type="radio" autocomplete="off" name="84d2653a9abf214ccc1e376d1d9007da"><span>Alle Ausreißer werden automatisch aus dem Datensatz gelöscht.</span></label><label><input type="radio" autocomplete="off" name="84d2653a9abf214ccc1e376d1d9007da"><span>Die Werte werden alle positiv.</span></label><label><input type="radio" autocomplete="off" name="84d2653a9abf214ccc1e376d1d9007da"><span>Der Mittelwert wird 0 und die Standardabweichung wird 1.</span></label><label><input type="radio" autocomplete="off" name="84d2653a9abf214ccc1e376d1d9007da"><span>Der Mittelwert wird 1 und die Standardabweichung wird 0.</span></label><label><input type="radio" autocomplete="off" name="84d2653a9abf214ccc1e376d1d9007da"><span>Die Form der Verteilung wird immer perfekt symmetrisch.</span></label>
+<div id="webex-05d081b611b623d7c43aeaba3de94529" class="webex-radiogroup" data-answer="awVIABQATgYdAT8=">
+<label><input type="radio" autocomplete="off" name="05d081b611b623d7c43aeaba3de94529"><span>Alle Ausreißer werden automatisch aus dem Datensatz gelöscht.</span></label><label><input type="radio" autocomplete="off" name="05d081b611b623d7c43aeaba3de94529"><span>Die Werte werden alle positiv.</span></label><label><input type="radio" autocomplete="off" name="05d081b611b623d7c43aeaba3de94529"><span>Der Mittelwert wird 0 und die Standardabweichung wird 1.</span></label><label><input type="radio" autocomplete="off" name="05d081b611b623d7c43aeaba3de94529"><span>Der Mittelwert wird 1 und die Standardabweichung wird 0.</span></label><label><input type="radio" autocomplete="off" name="05d081b611b623d7c43aeaba3de94529"><span>Die Form der Verteilung wird immer perfekt symmetrisch.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1837,8 +1837,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ein Datensatz weist einen sehr extremen Ausreißer auf. Welches Streuungsmaß ist in dieser Situation am ehesten zu empfehlen, um ein verzerrtes Bild zu vermeiden? Nutzen Sie das Konzept der Robustheit.</p>
-<div id="webex-f75f5a1bfc340ccd7f139f4a3b399468" class="webex-radiogroup" data-answer="PQYZVhlRHVJKU24=">
-<label><input type="radio" autocomplete="off" name="f75f5a1bfc340ccd7f139f4a3b399468"><span>Interquartilsabstand (IQR)</span></label><label><input type="radio" autocomplete="off" name="f75f5a1bfc340ccd7f139f4a3b399468"><span>Varianz</span></label><label><input type="radio" autocomplete="off" name="f75f5a1bfc340ccd7f139f4a3b399468"><span>Spannweite (Range)</span></label><label><input type="radio" autocomplete="off" name="f75f5a1bfc340ccd7f139f4a3b399468"><span>Root Mean Squared Error (RMSE)</span></label><label><input type="radio" autocomplete="off" name="f75f5a1bfc340ccd7f139f4a3b399468"><span>Standardabweichung (SD)</span></label>
+<div id="webex-77b44e03ca44eb076b131daeb896c481" class="webex-radiogroup" data-answer="bAZOBBhVHANPUWk=">
+<label><input type="radio" autocomplete="off" name="77b44e03ca44eb076b131daeb896c481"><span>Interquartilsabstand (IQR)</span></label><label><input type="radio" autocomplete="off" name="77b44e03ca44eb076b131daeb896c481"><span>Varianz</span></label><label><input type="radio" autocomplete="off" name="77b44e03ca44eb076b131daeb896c481"><span>Spannweite (Range)</span></label><label><input type="radio" autocomplete="off" name="77b44e03ca44eb076b131daeb896c481"><span>Root Mean Squared Error (RMSE)</span></label><label><input type="radio" autocomplete="off" name="77b44e03ca44eb076b131daeb896c481"><span>Standardabweichung (SD)</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1855,12 +1855,12 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Warum wird in der Statistik die Standardabweichung (SD) oft der Varianz vorgezogen, wenn es um die Beschreibung von Daten geht? Betrachten Sie die mathematische Transformation bei der Berechnung der SD. Überlegen Sie, was mit der Maßeinheit der Daten passiert.</p>
-<div id="webex-6bbe172a6f19a3e7717be81e128e6a06" class="webex-radiogroup" data-answer="bVJOVR0GHlEaVmw=">
-<label><input type="radio" autocomplete="off" name="6bbe172a6f19a3e7717be81e128e6a06"><span>Die SD ist immer kleiner als der Mittelwert der Daten.</span></label><label><input type="radio" autocomplete="off" name="6bbe172a6f19a3e7717be81e128e6a06"><span>Die Varianz kann niemals für normalverteilte Daten berechnet werden.</span></label><label><input type="radio" autocomplete="off" name="6bbe172a6f19a3e7717be81e128e6a06"><span>Die SD besitzt wieder die gleiche Größenordnung und Maßeinheit wie die Originaldaten.</span></label><label><input type="radio" autocomplete="off" name="6bbe172a6f19a3e7717be81e128e6a06"><span>R kann die Varianz technisch nicht direkt berechnen.</span></label><label><input type="radio" autocomplete="off" name="6bbe172a6f19a3e7717be81e128e6a06"><span>Die SD ist robuster gegenüber Ausreißern als die Varianz.</span></label>
+<div id="webex-70de6a820f3851e78cd34b148bec7e53" class="webex-radiogroup" data-answer="bABIVRpQFAIcVm4=">
+<label><input type="radio" autocomplete="off" name="70de6a820f3851e78cd34b148bec7e53"><span>Die SD ist immer kleiner als der Mittelwert der Daten.</span></label><label><input type="radio" autocomplete="off" name="70de6a820f3851e78cd34b148bec7e53"><span>Die Varianz kann niemals für normalverteilte Daten berechnet werden.</span></label><label><input type="radio" autocomplete="off" name="70de6a820f3851e78cd34b148bec7e53"><span>Die SD besitzt wieder die gleiche Größenordnung und Maßeinheit wie die Originaldaten.</span></label><label><input type="radio" autocomplete="off" name="70de6a820f3851e78cd34b148bec7e53"><span>R kann die Varianz technisch nicht direkt berechnen.</span></label><label><input type="radio" autocomplete="off" name="70de6a820f3851e78cd34b148bec7e53"><span>Die SD ist robuster gegenüber Ausreißern als die Varianz.</span></label>
 </div>
 </div>
 <div class="webex-solution">
-<p>Die Varianz nutzt quadrierte Abweichungen, was die Einheit verändert (z. B. Quadrat-Euro). Durch das Wurzelziehen bei der SD kehrt man zur ursprünglichen Einheit (z. B. Euro) zurück.</p>
+<p>Die Varianz nutzt quadrierte Abweichungen, was die Einheit verändert (z. B. Quadrat-Euro). Durch das Wurzelziehen bei der SD kehrt man zur ursprünglichen Einheit (z. B. Euro) zurück.</p>
 <ul>
 <li>Falsch</li>
 <li>Falsch</li>
@@ -1873,8 +1873,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Vier Abweichungen von einem Mittelwert betragen: 1, -3, 1 und 1. Wie hoch ist der Mean Absolute Error (MAE) für diese Daten? Wenden Sie die Definition der mittleren Absolutabweichung an. Beachten Sie den Umgang mit negativen Vorzeichen.</p>
-<div id="webex-51b3f97b070f22f4406d1b353c0cd453" class="webex-radiogroup" data-answer="bgFOA0oIG1IcB20=">
-<label><input type="radio" autocomplete="off" name="51b3f97b070f22f4406d1b353c0cd453"><span>1,25</span></label><label><input type="radio" autocomplete="off" name="51b3f97b070f22f4406d1b353c0cd453"><span>0</span></label><label><input type="radio" autocomplete="off" name="51b3f97b070f22f4406d1b353c0cd453"><span>1,5</span></label><label><input type="radio" autocomplete="off" name="51b3f97b070f22f4406d1b353c0cd453"><span>6</span></label><label><input type="radio" autocomplete="off" name="51b3f97b070f22f4406d1b353c0cd453"><span>2</span></label>
+<div id="webex-e5fb6b34e3dd3e981b2ffc569994357c" class="webex-radiogroup" data-answer="PgVKUhpTHwRJAzk=">
+<label><input type="radio" autocomplete="off" name="e5fb6b34e3dd3e981b2ffc569994357c"><span>1,25</span></label><label><input type="radio" autocomplete="off" name="e5fb6b34e3dd3e981b2ffc569994357c"><span>0</span></label><label><input type="radio" autocomplete="off" name="e5fb6b34e3dd3e981b2ffc569994357c"><span>1,5</span></label><label><input type="radio" autocomplete="off" name="e5fb6b34e3dd3e981b2ffc569994357c"><span>6</span></label><label><input type="radio" autocomplete="off" name="e5fb6b34e3dd3e981b2ffc569994357c"><span>2</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1891,8 +1891,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie betrachten ein einfaches Punktmodell für Klausurnoten. Nun erweitern Sie das Modell, indem Sie die Studierenden in zwei Gruppen (viel gelernt vs.&nbsp;wenig gelernt) aufteilen. Was passiert im Idealfall mit den Residuen (Fehlerbalken) im Vergleich zum ungruppierten Modell? Denken Sie an die grafische Darstellung der Abweichungen in Teilsamples.</p>
-<div id="webex-a818d54199fcee2994eff828352a3aa9" class="webex-radiogroup" data-answer="OggdCEgFGAAVCTs=">
-<label><input type="radio" autocomplete="off" name="a818d54199fcee2994eff828352a3aa9"><span>Die Residuen verändern ihre Richtung von positiv zu negativ.</span></label><label><input type="radio" autocomplete="off" name="a818d54199fcee2994eff828352a3aa9"><span>Die Summe der Residuen wird deutlich größer als Null.</span></label><label><input type="radio" autocomplete="off" name="a818d54199fcee2994eff828352a3aa9"><span>Das Modell wird ungenauer, da man nun zwei Mittelwerte schätzen muss.</span></label><label><input type="radio" autocomplete="off" name="a818d54199fcee2994eff828352a3aa9"><span>Die Fehlerbalken innerhalb der Gruppen werden im Durchschnitt kürzer.</span></label><label><input type="radio" autocomplete="off" name="a818d54199fcee2994eff828352a3aa9"><span>Die Standardabweichung der gesamten Stichprobe sinkt automatisch auf Null.</span></label>
+<div id="webex-d87fedb72687894cbefe3dd3a1432203" class="webex-radiogroup" data-answer="PwgbVklUTgYeBmU=">
+<label><input type="radio" autocomplete="off" name="d87fedb72687894cbefe3dd3a1432203"><span>Die Residuen verändern ihre Richtung von positiv zu negativ.</span></label><label><input type="radio" autocomplete="off" name="d87fedb72687894cbefe3dd3a1432203"><span>Die Summe der Residuen wird deutlich größer als Null.</span></label><label><input type="radio" autocomplete="off" name="d87fedb72687894cbefe3dd3a1432203"><span>Das Modell wird ungenauer, da man nun zwei Mittelwerte schätzen muss.</span></label><label><input type="radio" autocomplete="off" name="d87fedb72687894cbefe3dd3a1432203"><span>Die Fehlerbalken innerhalb der Gruppen werden im Durchschnitt kürzer.</span></label><label><input type="radio" autocomplete="off" name="d87fedb72687894cbefe3dd3a1432203"><span>Die Standardabweichung der gesamten Stichprobe sinkt automatisch auf Null.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1909,8 +1909,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Zwei Medikamente zur Gewichtsreduktion zeigen in einer Studie den exakt gleichen mittleren Effekt. Bei Präparat A ist die Streuung der individuellen Ergebnisse jedoch minimal. Bei Präparat B ist die Streuung der Ergebnisse extrem hoch. Welche Aussage zur Modellgüte des Mittelwerts ist in diesem Fall korrekt? Betrachten Sie die Verlässlichkeit der Vorhersage für eine einzelne Person.</p>
-<div id="webex-9b8a5bd60123dd93895bfec334059fec" class="webex-radiogroup" data-answer="YlIUURlSSAYcAG8=">
-<label><input type="radio" autocomplete="off" name="9b8a5bd60123dd93895bfec334059fec"><span>Ein Modell mit hoher Streuung ist immer präziser in der Vorhersage.</span></label><label><input type="radio" autocomplete="off" name="9b8a5bd60123dd93895bfec334059fec"><span>Die Modellgüte ist bei beiden Präparaten identisch, da der Mittelwert gleich ist.</span></label><label><input type="radio" autocomplete="off" name="9b8a5bd60123dd93895bfec334059fec"><span>Präparat B hat eine höhere Modellgüte, weil extreme Erfolge möglich sind.</span></label><label><input type="radio" autocomplete="off" name="9b8a5bd60123dd93895bfec334059fec"><span>Die Standardabweichung hat keinen Einfluss auf die Güte eines Punktmodells.</span></label><label><input type="radio" autocomplete="off" name="9b8a5bd60123dd93895bfec334059fec"><span>Die Modellgüte ist bei Präparat A höher, da die tatsächlichen Werte näher am Modellwert liegen.</span></label>
+<div id="webex-ffbf831a69be27b239c45a0755c66a2f" class="webex-radiogroup" data-answer="PVZOVhQDHVEaCD8=">
+<label><input type="radio" autocomplete="off" name="ffbf831a69be27b239c45a0755c66a2f"><span>Ein Modell mit hoher Streuung ist immer präziser in der Vorhersage.</span></label><label><input type="radio" autocomplete="off" name="ffbf831a69be27b239c45a0755c66a2f"><span>Die Modellgüte ist bei beiden Präparaten identisch, da der Mittelwert gleich ist.</span></label><label><input type="radio" autocomplete="off" name="ffbf831a69be27b239c45a0755c66a2f"><span>Präparat B hat eine höhere Modellgüte, weil extreme Erfolge möglich sind.</span></label><label><input type="radio" autocomplete="off" name="ffbf831a69be27b239c45a0755c66a2f"><span>Die Standardabweichung hat keinen Einfluss auf die Güte eines Punktmodells.</span></label><label><input type="radio" autocomplete="off" name="ffbf831a69be27b239c45a0755c66a2f"><span>Die Modellgüte ist bei Präparat A höher, da die tatsächlichen Werte näher am Modellwert liegen.</span></label>
 </div>
 </div>
 <div class="webex-solution">

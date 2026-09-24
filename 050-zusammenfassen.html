@@ -610,7 +610,7 @@ window.Quarto = {
 \]</span></p>
 <section id="einstieg" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="einstieg"><span class="header-section-number">6.1</span> Einstieg</h2>
-<p>In diesem Kapitel benötigen Sie die üblichen R-Pakete (<code>tidyverse</code>, <code>easystats</code>) und Daten (<code>mariokart</code>), s. <span class="quarto-unresolved-ref">?sec-import-mariokart</span> und <a href="020-R.html#sec-r-pckgs" class="quarto-xref"><span>Kapitel 3.4</span></a>.</p>
+<p>In diesem Kapitel benötigen Sie die üblichen R-Pakete (<code>tidyverse</code>, <code>easystats</code>) und Daten (<code>mariokart</code>), s. <a href="020-R.html#sec-import-mariokart" class="quarto-xref"><span>Kapitel 3.7.3</span></a> und <a href="020-R.html#sec-r-pckgs" class="quarto-xref"><span>Kapitel 3.4</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1026,24 +1026,15 @@ Abbildung&nbsp;6.8: Der Median als der Wert des “mittleren” Objekts, wenn di
 <div id="exm-md3" class="theorem example">
 <p><span class="theorem-title"><strong>Beispiel 6.7 (Ein “mittlerer” Preis für Mariokart)</strong></span> Der Mittelwert (das arithmetische Mittel) und der Median für das Start-Gebot (<code>start_pr)</code> von Mariokart-Spielen sind nicht gleich, der Mittelwert ist höher als der Median.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">|&gt;</span> </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">price_mw =</span> <span class="fu">mean</span>(start_pr),</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">price_md =</span> <span class="fu">median</span>(start_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">price_mw</th>
-<th style="text-align: right;">price_md</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">8.8</td>
-<td style="text-align: right;">1</td>
-</tr>
-</tbody>
-</table>
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["price_mw"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["price_md"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"8.8","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[5],"max":[5]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -1069,7 +1060,7 @@ Abbildung&nbsp;6.9: Das Startgebot bei Mariokart-Spielen ist schief verteilt: Me
 <p><strong>Lösung</strong></p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mariokart_no_extreme <span class="ot">&lt;-</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">|&gt;</span> </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># mit Extremwerten:</span></span>
@@ -1082,34 +1073,15 @@ Abbildung&nbsp;6.9: Das Startgebot bei Mariokart-Spielen ist schief verteilt: Me
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_pr_mittelwert_no_extreme =</span> <span class="fu">mean</span>(total_pr),</span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">total_pr_median_no_extreme =</span> <span class="fu">median</span>(total_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">total_pr_mittelwert</th>
-<th style="text-align: right;">total_pr_median</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">50</td>
-<td style="text-align: right;">46</td>
-</tr>
-</tbody>
-</table>
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">total_pr_mittelwert_no_extreme</th>
-<th style="text-align: right;">total_pr_median_no_extreme</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">47</td>
-<td style="text-align: right;">46</td>
-</tr>
-</tbody>
-</table>
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["total_pr_mittelwert"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["total_pr_median"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"50","2":"46"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[5],"max":[5]},"pages":{}}}
+  </script>
+</div><div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["total_pr_mittelwert_no_extreme"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["total_pr_median_no_extreme"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"47","2":"46"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[5],"max":[5]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Wie man sieht, verändert sich der Mittelwert, wenn man die Extremwerte entfernt. Für den Median trifft das nicht zu, er bleibt, wo er ist. <span class="math inline">\(\square\)</span></p>
@@ -1171,8 +1143,8 @@ Abbildung&nbsp;6.10: Q1, Q2 und Q3 für das Schlussgebot (nur Spiele für wenige
 </div>
 <p>Quantile kann man in R mit dem Befehl <code>quantile</code> berechnen:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">q25 =</span> <span class="fu">quantile</span>(total_pr, .<span class="dv">25</span>),  <span class="co"># 1. Quartil</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">q50 =</span> <span class="fu">quantile</span>(total_pr, .<span class="dv">50</span>),  <span class="co"># 2. Quartil</span></span>
@@ -1226,7 +1198,7 @@ Abbildung&nbsp;6.11: Verschiedene Quantile animiert
 <div id="fig-quantile-mosaic-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-quantile-mosaic-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="050-zusammenfassen_files/figure-html/fig-quantile-mosaic-1.png" class="lightbox" data-gallery="fig-quantile-mosaic" title="Abbildung&nbsp;6.12&nbsp;(a): 10%-Schritte: Dezile"><img src="050-zusammenfassen_files/figure-html/fig-quantile-mosaic-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-quantile-mosaic"></a>
+<a href="050-zusammenfassen_files/figure-html/fig-quantile-mosaic-1.png" class="lightbox" data-gallery="fig-quantile-mosaic" title="Abbildung&nbsp;6.12&nbsp;(a): 10%-Schritte: Dezile"><img src="050-zusammenfassen_files/figure-html/fig-quantile-mosaic-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-quantile-mosaic"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-quantile-mosaic-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) 10%-Schritte: Dezile
@@ -1238,7 +1210,7 @@ Abbildung&nbsp;6.11: Verschiedene Quantile animiert
 <div id="fig-quantile-mosaic-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-quantile-mosaic-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="050-zusammenfassen_files/figure-html/fig-quantile-mosaic-2.png" class="lightbox" data-gallery="fig-quantile-mosaic" title="Abbildung&nbsp;6.12&nbsp;(b): 1%-Schritte: Perzentile"><img src="050-zusammenfassen_files/figure-html/fig-quantile-mosaic-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-quantile-mosaic"></a>
+<a href="050-zusammenfassen_files/figure-html/fig-quantile-mosaic-2.png" class="lightbox" data-gallery="fig-quantile-mosaic" title="Abbildung&nbsp;6.12&nbsp;(b): 1%-Schritte: Perzentile"><img src="050-zusammenfassen_files/figure-html/fig-quantile-mosaic-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-quantile-mosaic"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-quantile-mosaic-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) 1%-Schritte: Perzentile
@@ -1263,42 +1235,28 @@ Abbildung&nbsp;6.12: Verschiedene Quantile visualisiert
 <li>Schaue, was der größte verbleibende Wert ist.</li>
 </ol>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(total_pr) <span class="sc">%&gt;%</span>   <span class="co"># sortiere aufsteigend</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">130</span>) <span class="sc">%&gt;%</span>  <span class="co"># nur die ersten ca. 90%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(total_pr) <span class="sc">|&gt;</span>   <span class="co"># sortiere aufsteigend</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">130</span>) <span class="sc">|&gt;</span>  <span class="co"># nur die ersten ca. 90%</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">p90 =</span> <span class="fu">max</span>(total_pr))  <span class="co"># was ist der größte verbleibende Wert?</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">p90</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">63</td>
-</tr>
-</tbody>
-</table>
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["p90"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"63"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[5],"max":[5]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Das (annähernd) gleiche Ergebnis liefert <code>quantile()</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">%&gt;%</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mariokart <span class="sc">|&gt;</span> </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">q90 =</span> <span class="fu">quantile</span>(total_pr, .<span class="dv">9</span>))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">q90</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">62</td>
-</tr>
-</tbody>
-</table>
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["q90"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"62"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[5],"max":[5]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 </section>
@@ -1311,7 +1269,7 @@ Abbildung&nbsp;6.12: Verschiedene Quantile visualisiert
 <div id="fig-nv-quants2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-nv-quants2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="050-zusammenfassen_files/figure-html/fig-nv-quants2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-21" title="Abbildung&nbsp;6.13: Verschiedene Quantile der Normalverteilung"><img src="050-zusammenfassen_files/figure-html/fig-nv-quants2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></a>
+<a href="050-zusammenfassen_files/figure-html/fig-nv-quants2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-21" title="Abbildung&nbsp;6.13: Verschiedene Quantile der Normalverteilung"><img src="050-zusammenfassen_files/figure-html/fig-nv-quants2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nv-quants2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;6.13: Verschiedene Quantile der Normalverteilung
@@ -1324,17 +1282,17 @@ Abbildung&nbsp;6.13: Verschiedene Quantile der Normalverteilung
 <section id="beispiel-wie-groß-sind-studierende" class="level3" data-number="6.4.5">
 <h3 data-number="6.4.5" class="anchored" data-anchor-id="beispiel-wie-groß-sind-studierende"><span class="header-section-number">6.4.5</span> Beispiel: Wie groß sind Studierende?</h3>
 <p>Untersuchen wir die Verteilung der Körpergröße von Studierenden auf Basis eines Datensatzes von <span class="citation" data-cites="openintro">Çetinkaya-Rundel et al. (<a href="references.html#ref-openintro" role="doc-biblioref">2024</a>)</span>.</p>
-<p>Das Quantil von z.B. 25% zeigt die Körpergröße der 25% kleinsten Studentis an, analog für 50%, 75%, in Inches bzw. in Zentimetern<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</p>
+<p>Das Quantil von z. B. 25% zeigt die Körpergröße der 25% kleinsten Studentis an, analog für 50%, 75%, in Inches bzw. in Zentimetern<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-5"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-5-1" class="code-annotation-target"><a href="#annotated-cell-5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"speed_gender_height"</span>, <span class="at">package =</span> <span class="st">"openintro"</span>)</span>
 <span id="annotated-cell-5-2"><a href="#annotated-cell-5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="annotated-cell-5-3"><a href="#annotated-cell-5-3" aria-hidden="true" tabindex="-1"></a>height_summary <span class="ot">&lt;-</span> </span>
-<span id="annotated-cell-5-4"><a href="#annotated-cell-5-4" aria-hidden="true" tabindex="-1"></a>  speed_gender_height <span class="sc">%&gt;%</span> </span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-5-5" class="code-annotation-target"><a href="#annotated-cell-5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">height_cm =</span> height<span class="sc">*</span><span class="fl">2.54</span>) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-5-6"><a href="#annotated-cell-5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">height_inch =</span> height, height_cm) <span class="sc">%&gt;%</span> </span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-5-7" class="code-annotation-target"><a href="#annotated-cell-5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-5-8" class="code-annotation-target"><a href="#annotated-cell-5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"Einheit"</span>, <span class="at">values_to =</span> <span class="st">"Messwert"</span>) <span class="sc">%&gt;%</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-5-9" class="code-annotation-target"><a href="#annotated-cell-5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Einheit) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-5-4"><a href="#annotated-cell-5-4" aria-hidden="true" tabindex="-1"></a>  speed_gender_height <span class="sc">|&gt;</span> </span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-5-5" class="code-annotation-target"><a href="#annotated-cell-5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">height_cm =</span> height<span class="sc">*</span><span class="fl">2.54</span>) <span class="sc">|&gt;</span></span>
+<span id="annotated-cell-5-6"><a href="#annotated-cell-5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">height_inch =</span> height, height_cm) <span class="sc">|&gt;</span> </span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-5-7" class="code-annotation-target"><a href="#annotated-cell-5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-5-8" class="code-annotation-target"><a href="#annotated-cell-5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"Einheit"</span>, <span class="at">values_to =</span> <span class="st">"Messwert"</span>) <span class="sc">|&gt;</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-5-9" class="code-annotation-target"><a href="#annotated-cell-5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Einheit) <span class="sc">|&gt;</span></span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="6" onclick="event.preventDefault();">6</a><span id="annotated-cell-5-10" class="code-annotation-target"><a href="#annotated-cell-5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">q25 =</span> <span class="fu">quantile</span>(Messwert, <span class="at">prob =</span> .<span class="dv">25</span>),</span>
 <span id="annotated-cell-5-11"><a href="#annotated-cell-5-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">q50 =</span> <span class="fu">quantile</span>(Messwert, <span class="at">prob =</span> .<span class="dv">5</span>),</span>
 <span id="annotated-cell-5-12"><a href="#annotated-cell-5-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">q75 =</span> <span class="fu">quantile</span>(Messwert, <span class="at">prob =</span> .<span class="dv">75</span>))</span>
@@ -1369,30 +1327,11 @@ Abbildung&nbsp;6.13: Verschiedene Quantile der Normalverteilung
 </dl>
 </div>
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">Einheit</th>
-<th style="text-align: right;">q25</th>
-<th style="text-align: right;">q50</th>
-<th style="text-align: right;">q75</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">height_cm</td>
-<td style="text-align: right;">160</td>
-<td style="text-align: right;">168</td>
-<td style="text-align: right;">175</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">height_inch</td>
-<td style="text-align: right;">63</td>
-<td style="text-align: right;">66</td>
-<td style="text-align: right;">69</td>
-</tr>
-</tbody>
-</table>
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Einheit"],"name":[1],"type":["chr"],"align":["left"]},{"label":["q25"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["q50"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["q75"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"height_cm","2":"160","3":"168","4":"175"},{"1":"height_inch","2":"63","3":"66","4":"69"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[5],"max":[5]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Das 25%-Quantil nennt man auch 1. Quartil; das 50%-Quantil (Median) auch 2. Quartil und das 75%-Quantil auch 3. Quartil.</p>
@@ -1402,7 +1341,7 @@ Abbildung&nbsp;6.13: Verschiedene Quantile der Normalverteilung
 <div id="fig-stud-height" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-stud-height-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="050-zusammenfassen_files/figure-html/fig-stud-height-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-22" title="Abbildung&nbsp;6.14: Größenverteilung von 1325 amerikanischen Studentis"><img src="050-zusammenfassen_files/figure-html/fig-stud-height-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></a>
+<a href="050-zusammenfassen_files/figure-html/fig-stud-height-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-22" title="Abbildung&nbsp;6.14: Größenverteilung von 1325 amerikanischen Studentis"><img src="050-zusammenfassen_files/figure-html/fig-stud-height-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stud-height-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;6.14: Größenverteilung von 1325 amerikanischen Studentis
@@ -1457,8 +1396,8 @@ Listing&nbsp;6.3: Gruppierte Lagemaße
 </figcaption>
 <div aria-describedby="lst-mario-lage-gruppiert-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mariokart_lagemaße_gruppiert <span class="ot">&lt;-</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">%&gt;%</span> </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(wheels) <span class="sc">%&gt;%</span>  <span class="co"># neue Zeile, der Rest ist gleich!</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  mariokart <span class="sc">|&gt;</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(wheels) <span class="sc">|&gt;</span>  <span class="co"># neue Zeile, der Rest ist gleich!</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mw =</span> <span class="fu">mean</span>(total_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
@@ -1472,36 +1411,11 @@ Tabelle&nbsp;6.1: Gruppierte Mittelwerte
 </figcaption>
 <div aria-describedby="tbl-group-mean-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">wheels</th>
-<th style="text-align: right;">mw</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">41</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">44</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">61</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">70</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">65</td>
-</tr>
-</tbody>
-</table>
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["wheels"],"name":[1],"type":["int"],"align":["right"]},{"label":["mw"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"0","2":"41"},{"1":"1","2":"44"},{"1":"2","2":"61"},{"1":"3","2":"70"},{"1":"4","2":"65"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[5],"max":[5]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 </figure>
@@ -1606,8 +1520,8 @@ Abbildung&nbsp;6.16: Der mittlere Preis von Mariokart-Spielen als horizontale Ge
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Was versteht man unter dem “File-Drawer-Problem” (Schubladenproblem) im Kontext wissenschaftlicher Redlichkeit? Überlegen Sie, wie selektives Berichten die statistische Gesamtlage verzerrt.</p>
-<div id="webex-7c888c5afbc76614bd4f90bd07da30c6" class="webex-radiogroup" data-answer="bFIUCBRTGVFKUj4=">
-<label><input type="radio" autocomplete="off" name="7c888c5afbc76614bd4f90bd07da30c6"><span>Das Verschweigen von Ergebnissen, die nicht den Erwartungen entsprechen oder nicht signifikant sind.</span></label><label><input type="radio" autocomplete="off" name="7c888c5afbc76614bd4f90bd07da30c6"><span>Die Verwendung von veralteten R-Paketen für eine neue Analyse.</span></label><label><input type="radio" autocomplete="off" name="7c888c5afbc76614bd4f90bd07da30c6"><span>Das Speichern von zu vielen Variablen in einem einzigen Dataframe.</span></label><label><input type="radio" autocomplete="off" name="7c888c5afbc76614bd4f90bd07da30c6"><span>Die Unfähigkeit, CSV-Dateien mit einem Texteditor zu öffnen.</span></label><label><input type="radio" autocomplete="off" name="7c888c5afbc76614bd4f90bd07da30c6"><span>Das Verlieren von Datendateien aufgrund schlechter Ordnerstruktur in RStudio.</span></label>
+<div id="webex-08e6e19a7a61fbd060dd96c6fb676d75" class="webex-radiogroup" data-answer="awlJBkkBFVEbUWs=">
+<label><input type="radio" autocomplete="off" name="08e6e19a7a61fbd060dd96c6fb676d75"><span>Das Verschweigen von Ergebnissen, die nicht den Erwartungen entsprechen oder nicht signifikant sind.</span></label><label><input type="radio" autocomplete="off" name="08e6e19a7a61fbd060dd96c6fb676d75"><span>Die Verwendung von veralteten R-Paketen für eine neue Analyse.</span></label><label><input type="radio" autocomplete="off" name="08e6e19a7a61fbd060dd96c6fb676d75"><span>Das Speichern von zu vielen Variablen in einem einzigen Dataframe.</span></label><label><input type="radio" autocomplete="off" name="08e6e19a7a61fbd060dd96c6fb676d75"><span>Die Unfähigkeit, CSV-Dateien mit einem Texteditor zu öffnen.</span></label><label><input type="radio" autocomplete="off" name="08e6e19a7a61fbd060dd96c6fb676d75"><span>Das Verlieren von Datendateien aufgrund schlechter Ordnerstruktur in RStudio.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1624,8 +1538,8 @@ Abbildung&nbsp;6.16: Der mittlere Preis von Mariokart-Spielen als horizontale Ge
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Was ist das entscheidende Merkmal eines “Punktmodells” in der Statistik? Denken Sie an die Anzahl der vorhergesagten Werte.</p>
-<div id="webex-d1ab8027d3710c25e6e047b82265b313" class="webex-radiogroup" data-answer="PwFNUhQAHgZIA2o=">
-<label><input type="radio" autocomplete="off" name="d1ab8027d3710c25e6e047b82265b313"><span>Es löscht alle Datenpunkte, die nicht genau auf dem Mittelwert liegen.</span></label><label><input type="radio" autocomplete="off" name="d1ab8027d3710c25e6e047b82265b313"><span>Es verbindet alle Datenpunkte mit einer komplexen Kurve.</span></label><label><input type="radio" autocomplete="off" name="d1ab8027d3710c25e6e047b82265b313"><span>Es berechnet für jede einzelne Beobachtung eine individuelle Gerade.</span></label><label><input type="radio" autocomplete="off" name="d1ab8027d3710c25e6e047b82265b313"><span>Es sagt für alle Beobachtungen ein und denselben Wert vorher.</span></label><label><input type="radio" autocomplete="off" name="d1ab8027d3710c25e6e047b82265b313"><span>Es kann nur für Daten verwendet werden, die als Koordinaten (X/Y) vorliegen.</span></label>
+<div id="webex-6415b1b2f1f49a959a0f493c480dbd69" class="webex-radiogroup" data-answer="bQQdBU4BTgNKATs=">
+<label><input type="radio" autocomplete="off" name="6415b1b2f1f49a959a0f493c480dbd69"><span>Es löscht alle Datenpunkte, die nicht genau auf dem Mittelwert liegen.</span></label><label><input type="radio" autocomplete="off" name="6415b1b2f1f49a959a0f493c480dbd69"><span>Es verbindet alle Datenpunkte mit einer komplexen Kurve.</span></label><label><input type="radio" autocomplete="off" name="6415b1b2f1f49a959a0f493c480dbd69"><span>Es berechnet für jede einzelne Beobachtung eine individuelle Gerade.</span></label><label><input type="radio" autocomplete="off" name="6415b1b2f1f49a959a0f493c480dbd69"><span>Es sagt für alle Beobachtungen ein und denselben Wert vorher.</span></label><label><input type="radio" autocomplete="off" name="6415b1b2f1f49a959a0f493c480dbd69"><span>Es kann nur für Daten verwendet werden, die als Koordinaten (X/Y) vorliegen.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1642,8 +1556,8 @@ Abbildung&nbsp;6.16: Der mittlere Preis von Mariokart-Spielen als horizontale Ge
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie haben einen Vektor mit den Werten: 10, 20, 30, 40. Wie berechnen Sie den Median für diese gerade Anzahl an Beobachtungen (<span class="math inline">\(n=4\)</span>)?</p>
-<div id="webex-ae81315d694183f058062cfcf053bf06" class="webex-radiogroup" data-answer="OlUUAB8BGVQaCWk=">
-<label><input type="radio" autocomplete="off" name="ae81315d694183f058062cfcf053bf06"><span>Man muss zuerst eine fünfte Beobachtung hinzufügen, um die Mitte zu finden.</span></label><label><input type="radio" autocomplete="off" name="ae81315d694183f058062cfcf053bf06"><span>Man bildet das arithmetische Mittel der beiden mittleren Werte (20 und 30).</span></label><label><input type="radio" autocomplete="off" name="ae81315d694183f058062cfcf053bf06"><span>Der Median entspricht in diesem Fall immer dem kleinsten Wert (10).</span></label><label><input type="radio" autocomplete="off" name="ae81315d694183f058062cfcf053bf06"><span>Man nimmt den höheren der beiden mittleren Werte, also 30.</span></label><label><input type="radio" autocomplete="off" name="ae81315d694183f058062cfcf053bf06"><span>Der Median ist bei gerader Anzahl an Beobachtungen mathematisch nicht definiert.</span></label>
+<div id="webex-050a23282848e5840dae02fdcbe404a0" class="webex-radiogroup" data-answer="awUcUB4DHggeCGk=">
+<label><input type="radio" autocomplete="off" name="050a23282848e5840dae02fdcbe404a0"><span>Man muss zuerst eine fünfte Beobachtung hinzufügen, um die Mitte zu finden.</span></label><label><input type="radio" autocomplete="off" name="050a23282848e5840dae02fdcbe404a0"><span>Man bildet das arithmetische Mittel der beiden mittleren Werte (20 und 30).</span></label><label><input type="radio" autocomplete="off" name="050a23282848e5840dae02fdcbe404a0"><span>Der Median entspricht in diesem Fall immer dem kleinsten Wert (10).</span></label><label><input type="radio" autocomplete="off" name="050a23282848e5840dae02fdcbe404a0"><span>Man nimmt den höheren der beiden mittleren Werte, also 30.</span></label><label><input type="radio" autocomplete="off" name="050a23282848e5840dae02fdcbe404a0"><span>Der Median ist bei gerader Anzahl an Beobachtungen mathematisch nicht definiert.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1659,13 +1573,13 @@ Abbildung&nbsp;6.16: Der mittlere Preis von Mariokart-Spielen als horizontale Ge
 </div>
 <div class="webex-question">
 <div class="webex-check webex-box">
-<p>Warum kann ein gruppiertes Mittelwert-Modell (z. B. getrennt nach Geschlecht) besser sein als ein ungruppierter Mittelwert? Beziehen Sie sich auf die Fehlerbalken (Residuen).</p>
-<div id="webex-90de26d0857038e30dad74f4a87e85cf" class="webex-radiogroup" data-answer="YgBIVR4GSAEUBWo=">
-<label><input type="radio" autocomplete="off" name="90de26d0857038e30dad74f4a87e85cf"><span>Weil R-Befehle wie <code>group_by</code> automatisch alle Ausreißer aus den Daten löschen.</span></label><label><input type="radio" autocomplete="off" name="90de26d0857038e30dad74f4a87e85cf"><span>Weil der Median einer Gruppe immer identisch mit dem globalen Mittelwert ist.</span></label><label><input type="radio" autocomplete="off" name="90de26d0857038e30dad74f4a87e85cf"><span>Weil ein gruppiertes Modell immer weniger Rechenleistung benötigt.</span></label><label><input type="radio" autocomplete="off" name="90de26d0857038e30dad74f4a87e85cf"><span>Weil die Abweichungen (Residuen) zum jeweiligen Gruppenmittelwert im Schnitt kleiner sein können als zum globalen Mittelwert.</span></label><label><input type="radio" autocomplete="off" name="90de26d0857038e30dad74f4a87e85cf"><span>Weil man bei Gruppierungen keine Standardabweichung mehr berechnen muss.</span></label>
+<p>Warum kann ein gruppiertes Mittelwert-Modell (z. B. getrennt nach Geschlecht) besser sein als ein ungruppierter Mittelwert? Beziehen Sie sich auf die Fehlerbalken (Residuen).</p>
+<div id="webex-ea7c7a1aaefa686c2cf70a99d96890fe" class="webex-radiogroup" data-answer="PlEbUxtRHVBNVTs=">
+<label><input type="radio" autocomplete="off" name="ea7c7a1aaefa686c2cf70a99d96890fe"><span>Weil R-Befehle wie <code>group_by</code> automatisch alle Ausreißer aus den Daten löschen.</span></label><label><input type="radio" autocomplete="off" name="ea7c7a1aaefa686c2cf70a99d96890fe"><span>Weil der Median einer Gruppe immer identisch mit dem globalen Mittelwert ist.</span></label><label><input type="radio" autocomplete="off" name="ea7c7a1aaefa686c2cf70a99d96890fe"><span>Weil ein gruppiertes Modell immer weniger Rechenleistung benötigt.</span></label><label><input type="radio" autocomplete="off" name="ea7c7a1aaefa686c2cf70a99d96890fe"><span>Weil die Abweichungen (Residuen) zum jeweiligen Gruppenmittelwert im Schnitt kleiner sein können als zum globalen Mittelwert.</span></label><label><input type="radio" autocomplete="off" name="ea7c7a1aaefa686c2cf70a99d96890fe"><span>Weil man bei Gruppierungen keine Standardabweichung mehr berechnen muss.</span></label>
 </div>
 </div>
 <div class="webex-solution">
-<p>Durch die Berücksichtigung einer Gruppierung (z. B. <span class="math inline">\(y \sim G\)</span>) passt sich das Modell besser an die Daten an. Dies führt dazu, dass die Vorhersagefehler innerhalb der Gruppen oft deutlich sinken.</p>
+<p>Durch die Berücksichtigung einer Gruppierung (z. B. <span class="math inline">\(y \sim G\)</span>) passt sich das Modell besser an die Daten an. Dies führt dazu, dass die Vorhersagefehler innerhalb der Gruppen oft deutlich sinken.</p>
 <ul>
 <li>Falsch</li>
 <li>Falsch</li>
@@ -1678,8 +1592,8 @@ Abbildung&nbsp;6.16: Der mittlere Preis von Mariokart-Spielen als horizontale Ge
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ein Immobilienportal gibt das 0.90-Quantil für Hauspreise in einer Stadt mit 800.000 Euro an. Wie ist dieser Wert für einen potenziellen Käufer zu interpretieren? Nutzen Sie die Definition von Quantilen als Schwellenwerte.</p>
-<div id="webex-6ce772e3732e79ee878305710019f4c0" class="webex-radiogroup" data-answer="bVJJBxsCSQMbA28=">
-<label><input type="radio" autocomplete="off" name="6ce772e3732e79ee878305710019f4c0"><span>90 % der Häuser kosten 800.000 Euro oder weniger.</span></label><label><input type="radio" autocomplete="off" name="6ce772e3732e79ee878305710019f4c0"><span>Der Durchschnittspreis aller Häuser liegt bei genau 800.000 Euro.</span></label><label><input type="radio" autocomplete="off" name="6ce772e3732e79ee878305710019f4c0"><span>Das günstigste Haus kostet 10 % von 800.000 Euro.</span></label><label><input type="radio" autocomplete="off" name="6ce772e3732e79ee878305710019f4c0"><span>90 % der Häuser kosten exakt 800.000 Euro.</span></label><label><input type="radio" autocomplete="off" name="6ce772e3732e79ee878305710019f4c0"><span>Nur 10 % der Häuser kosten weniger als 800.000 Euro.</span></label>
+<div id="webex-54b76b53df315559e6891882970b86d1" class="webex-radiogroup" data-answer="bgVOBxpSGQNIVm4=">
+<label><input type="radio" autocomplete="off" name="54b76b53df315559e6891882970b86d1"><span>90 % der Häuser kosten 800.000 Euro oder weniger.</span></label><label><input type="radio" autocomplete="off" name="54b76b53df315559e6891882970b86d1"><span>Der Durchschnittspreis aller Häuser liegt bei genau 800.000 Euro.</span></label><label><input type="radio" autocomplete="off" name="54b76b53df315559e6891882970b86d1"><span>Das günstigste Haus kostet 10 % von 800.000 Euro.</span></label><label><input type="radio" autocomplete="off" name="54b76b53df315559e6891882970b86d1"><span>90 % der Häuser kosten exakt 800.000 Euro.</span></label><label><input type="radio" autocomplete="off" name="54b76b53df315559e6891882970b86d1"><span>Nur 10 % der Häuser kosten weniger als 800.000 Euro.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1696,8 +1610,8 @@ Abbildung&nbsp;6.16: Der mittlere Preis von Mariokart-Spielen als horizontale Ge
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Was bedeutet die Aussage <span class="math inline">\(y = m + e\)</span> im Kontext eines statistischen Punktmodells? Betrachten Sie die Komponenten der Gleichung.</p>
-<div id="webex-8ecf71835e0370886124da81f83fabef" class="webex-radiogroup" data-answer="Y1VPVhsBFAMZVG0=">
-<label><input type="radio" autocomplete="off" name="8ecf71835e0370886124da81f83fabef"><span>Der Modellwert <span class="math inline">\(m\)</span> wird berechnet, indem man den Fehler vom Median abzieht.</span></label><label><input type="radio" autocomplete="off" name="8ecf71835e0370886124da81f83fabef"><span>Der Fehler <span class="math inline">\(e\)</span> gibt an, wie viele Beobachtungseinheiten im Datensatz fehlen.</span></label><label><input type="radio" autocomplete="off" name="8ecf71835e0370886124da81f83fabef"><span>Das Modell ist nur dann gültig, wenn der Fehler <span class="math inline">\(e\)</span> exakt Null beträgt.</span></label><label><input type="radio" autocomplete="off" name="8ecf71835e0370886124da81f83fabef"><span>Die Variable <span class="math inline">\(m\)</span> steht für den Median, da dieser immer als Modellwert genutzt werden muss.</span></label><label><input type="radio" autocomplete="off" name="8ecf71835e0370886124da81f83fabef"><span>Der beobachtete Wert setzt sich aus dem Modellwert und einem Fehler (Residuum) zusammen.</span></label>
+<div id="webex-9c9b8a119c6da30ef4b42e49400e7930" class="webex-radiogroup" data-answer="YlMVUhRRHQEVUms=">
+<label><input type="radio" autocomplete="off" name="9c9b8a119c6da30ef4b42e49400e7930"><span>Der Modellwert <span class="math inline">\(m\)</span> wird berechnet, indem man den Fehler vom Median abzieht.</span></label><label><input type="radio" autocomplete="off" name="9c9b8a119c6da30ef4b42e49400e7930"><span>Der Fehler <span class="math inline">\(e\)</span> gibt an, wie viele Beobachtungseinheiten im Datensatz fehlen.</span></label><label><input type="radio" autocomplete="off" name="9c9b8a119c6da30ef4b42e49400e7930"><span>Das Modell ist nur dann gültig, wenn der Fehler <span class="math inline">\(e\)</span> exakt Null beträgt.</span></label><label><input type="radio" autocomplete="off" name="9c9b8a119c6da30ef4b42e49400e7930"><span>Die Variable <span class="math inline">\(m\)</span> steht für den Median, da dieser immer als Modellwert genutzt werden muss.</span></label><label><input type="radio" autocomplete="off" name="9c9b8a119c6da30ef4b42e49400e7930"><span>Der beobachtete Wert setzt sich aus dem Modellwert und einem Fehler (Residuum) zusammen.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1714,8 +1628,8 @@ Abbildung&nbsp;6.16: Der mittlere Preis von Mariokart-Spielen als horizontale Ge
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>In einem Datensatz ist der Mittelwert deutlich größer als der Median. Was lässt sich daraus über die Form der Verteilung ableiten? Stellen Sie sich die Position der Ausreißer im Verhältnis zum “Zentrum” vor.</p>
-<div id="webex-adc66e2d26f8e5f1e56a2b66a3e2d834" class="webex-radiogroup" data-answer="OlRPBhpUHlQeBjs=">
-<label><input type="radio" autocomplete="off" name="adc66e2d26f8e5f1e56a2b66a3e2d834"><span>Es handelt sich um eine perfekte, symmetrische Normalverteilung.</span></label><label><input type="radio" autocomplete="off" name="adc66e2d26f8e5f1e56a2b66a3e2d834"><span>Die Verteilung ist linksschief.</span></label><label><input type="radio" autocomplete="off" name="adc66e2d26f8e5f1e56a2b66a3e2d834"><span>Die Verteilung ist rechtsschief.</span></label><label><input type="radio" autocomplete="off" name="adc66e2d26f8e5f1e56a2b66a3e2d834"><span>Die Verteilung hat zwei gleich große Gipfel (bimodal).</span></label><label><input type="radio" autocomplete="off" name="adc66e2d26f8e5f1e56a2b66a3e2d834"><span>Es gibt keine Extremwerte im Datensatz.</span></label>
+<div id="webex-2186fb877ecb9e0df0b3a973920e64b3" class="webex-radiogroup" data-answer="aQEUBkpTFAcbVT4=">
+<label><input type="radio" autocomplete="off" name="2186fb877ecb9e0df0b3a973920e64b3"><span>Es handelt sich um eine perfekte, symmetrische Normalverteilung.</span></label><label><input type="radio" autocomplete="off" name="2186fb877ecb9e0df0b3a973920e64b3"><span>Die Verteilung ist linksschief.</span></label><label><input type="radio" autocomplete="off" name="2186fb877ecb9e0df0b3a973920e64b3"><span>Die Verteilung ist rechtsschief.</span></label><label><input type="radio" autocomplete="off" name="2186fb877ecb9e0df0b3a973920e64b3"><span>Die Verteilung hat zwei gleich große Gipfel (bimodal).</span></label><label><input type="radio" autocomplete="off" name="2186fb877ecb9e0df0b3a973920e64b3"><span>Es gibt keine Extremwerte im Datensatz.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1732,8 +1646,8 @@ Abbildung&nbsp;6.16: Der mittlere Preis von Mariokart-Spielen als horizontale Ge
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie führen in R den Befehl <code>lm(total_pr ~ 1, data = mariokart)</code> aus. Welchen statistischen Kennwert erhalten Sie als “Intercept” (Achsenabschnitt) zurück? Denken Sie an die Definition eines Nullmodells ohne unabhängige Variablen.</p>
-<div id="webex-8e5158947a58179fe93affab19b843b3" class="webex-radiogroup" data-answer="Y1UZARkIFQQbUGg=">
-<label><input type="radio" autocomplete="off" name="8e5158947a58179fe93affab19b843b3"><span>Die Standardabweichung der Variable <code>total_pr</code>.</span></label><label><input type="radio" autocomplete="off" name="8e5158947a58179fe93affab19b843b3"><span>Den häufigsten Wert (Modus) der Verteilung.</span></label><label><input type="radio" autocomplete="off" name="8e5158947a58179fe93affab19b843b3"><span>Den Median der Variable <code>total_pr</code>.</span></label><label><input type="radio" autocomplete="off" name="8e5158947a58179fe93affab19b843b3"><span>Den Korrelationskoeffizienten zwischen Preis und Zustand.</span></label><label><input type="radio" autocomplete="off" name="8e5158947a58179fe93affab19b843b3"><span>Das arithmetische Mittel der Variable <code>total_pr</code>.</span></label>
+<div id="webex-857ddf04753287781de1dce691ed114c" class="webex-radiogroup" data-answer="YwUbVEhWHAQbBG4=">
+<label><input type="radio" autocomplete="off" name="857ddf04753287781de1dce691ed114c"><span>Die Standardabweichung der Variable <code>total_pr</code>.</span></label><label><input type="radio" autocomplete="off" name="857ddf04753287781de1dce691ed114c"><span>Den häufigsten Wert (Modus) der Verteilung.</span></label><label><input type="radio" autocomplete="off" name="857ddf04753287781de1dce691ed114c"><span>Den Median der Variable <code>total_pr</code>.</span></label><label><input type="radio" autocomplete="off" name="857ddf04753287781de1dce691ed114c"><span>Den Korrelationskoeffizienten zwischen Preis und Zustand.</span></label><label><input type="radio" autocomplete="off" name="857ddf04753287781de1dce691ed114c"><span>Das arithmetische Mittel der Variable <code>total_pr</code>.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1750,8 +1664,8 @@ Abbildung&nbsp;6.16: Der mittlere Preis von Mariokart-Spielen als horizontale Ge
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ein Statistikkurs besteht aus fünf Personen mit den Noten 1, 2, 3, 4 und 5. Der Professor behauptet, der Mittelwert von 3 sei ein “Modell” für diese Daten. Welche mathematische Eigenschaft des Mittelwerts stützt diese Aussage am besten? Betrachten Sie die Summe der Abweichungen (Residuen) vom Mittelwert. Überlegen Sie, was passiert, wenn Sie alle <span class="math inline">\(e_i = y_i - \bar{x}\)</span> addieren.</p>
-<div id="webex-4672cd7c779f7615eb24447a8b0b3fb5" class="webex-radiogroup" data-answer="bwYbAk9UG1MbBmQ=">
-<label><input type="radio" autocomplete="off" name="4672cd7c779f7615eb24447a8b0b3fb5"><span>Der Mittelwert ist unempfindlich gegenüber extrem hohen Werten.</span></label><label><input type="radio" autocomplete="off" name="4672cd7c779f7615eb24447a8b0b3fb5"><span>Die Summe der quadrierten Abweichungen wird durch den Mittelwert maximiert.</span></label><label><input type="radio" autocomplete="off" name="4672cd7c779f7615eb24447a8b0b3fb5"><span>Der Mittelwert ist immer die Zahl, die am häufigsten im Datensatz vorkommt.</span></label><label><input type="radio" autocomplete="off" name="4672cd7c779f7615eb24447a8b0b3fb5"><span>Der Mittelwert teilt die Daten exakt in zwei Hälften mit gleich vielen Beobachtungen.</span></label><label><input type="radio" autocomplete="off" name="4672cd7c779f7615eb24447a8b0b3fb5"><span>Die Summe aller Abweichungen vom Mittelwert ist exakt Null.</span></label>
+<div id="webex-4b41ac8f85c2bcfa8cadc4f92daa2385" class="webex-radiogroup" data-answer="b1IYAU1TFFYUBD4=">
+<label><input type="radio" autocomplete="off" name="4b41ac8f85c2bcfa8cadc4f92daa2385"><span>Der Mittelwert ist unempfindlich gegenüber extrem hohen Werten.</span></label><label><input type="radio" autocomplete="off" name="4b41ac8f85c2bcfa8cadc4f92daa2385"><span>Die Summe der quadrierten Abweichungen wird durch den Mittelwert maximiert.</span></label><label><input type="radio" autocomplete="off" name="4b41ac8f85c2bcfa8cadc4f92daa2385"><span>Der Mittelwert ist immer die Zahl, die am häufigsten im Datensatz vorkommt.</span></label><label><input type="radio" autocomplete="off" name="4b41ac8f85c2bcfa8cadc4f92daa2385"><span>Der Mittelwert teilt die Daten exakt in zwei Hälften mit gleich vielen Beobachtungen.</span></label><label><input type="radio" autocomplete="off" name="4b41ac8f85c2bcfa8cadc4f92daa2385"><span>Die Summe aller Abweichungen vom Mittelwert ist exakt Null.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1768,8 +1682,8 @@ Abbildung&nbsp;6.16: Der mittlere Preis von Mariokart-Spielen als horizontale Ge
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Gegeben ist eine normalverteilte Variable (IQ) mit einem Mittelwert von 100 und einer Streuung von 15. Ein Student erzielt einen Wert von 130 Punkten. Welcher Anteil der Bevölkerung liegt laut der 68-95-99.7-Prozentregel über diesem Wert? Kombinieren Sie das Wissen über die Standardabweichung mit der Flächenverteilung.</p>
-<div id="webex-e59454e6aaf4a25a4dadc899e9be519c" class="webex-radiogroup" data-answer="PgUVBRkESQZNUTs=">
-<label><input type="radio" autocomplete="off" name="e59454e6aaf4a25a4dadc899e9be519c"><span>ca. 0,15 %</span></label><label><input type="radio" autocomplete="off" name="e59454e6aaf4a25a4dadc899e9be519c"><span>ca. 2,5 %</span></label><label><input type="radio" autocomplete="off" name="e59454e6aaf4a25a4dadc899e9be519c"><span>ca. 5 %</span></label><label><input type="radio" autocomplete="off" name="e59454e6aaf4a25a4dadc899e9be519c"><span>ca. 16 %</span></label><label><input type="radio" autocomplete="off" name="e59454e6aaf4a25a4dadc899e9be519c"><span>ca. 34 %</span></label>
+<div id="webex-830ab39be437e2cf1b28668378badb03" class="webex-radiogroup" data-answer="YwMcUE4DFVJJBG4=">
+<label><input type="radio" autocomplete="off" name="830ab39be437e2cf1b28668378badb03"><span>ca. 0,15 %</span></label><label><input type="radio" autocomplete="off" name="830ab39be437e2cf1b28668378badb03"><span>ca. 2,5 %</span></label><label><input type="radio" autocomplete="off" name="830ab39be437e2cf1b28668378badb03"><span>ca. 5 %</span></label><label><input type="radio" autocomplete="off" name="830ab39be437e2cf1b28668378badb03"><span>ca. 16 %</span></label><label><input type="radio" autocomplete="off" name="830ab39be437e2cf1b28668378badb03"><span>ca. 34 %</span></label>
 </div>
 </div>
 <div class="webex-solution">

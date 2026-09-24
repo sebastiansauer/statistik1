@@ -162,11 +162,11 @@ die Korrelation aller UV mit der AV zu berechnen, s.
 #| results: hide
 #| lst-label: lst-get-high-corrs
 #| lst-cap: "Welche Variablen korrelieren stärker als .3?"
-d_train %>% 
-  select(-Id) %>% 
-  correlation() %>%  # berechne Korrelationen
-  filter(Parameter2 == "SalePrice") %>%   # aber nur, wo die zweite Variable "SalesPrice" ist
-  arrange(-abs(r)) %>%   # sortiere absteigend nach der Höhe des Korrelationskoeffizienten r
+d_train |> 
+  select(-Id) |> 
+  correlation() |>  # berechne Korrelationen
+  filter(Parameter2 == "SalePrice") |>   # aber nur, wo die zweite Variable "SalesPrice" ist
+  arrange(-abs(r)) |>   # sortiere absteigend nach der Höhe des Korrelationskoeffizienten r
   filter(abs(r) > .3)  # nur |r| > .3
 ```
 
@@ -176,12 +176,12 @@ d_train %>%
 #| results: hide
 #| label: tbl-d_train_corr
 #| tbl-cap: "Korrelation der UV mit der AV"
-d_train %>% 
-  select(-Id) %>% 
-  correlation() %>%  # berechne Korrelationen
-  filter(Parameter2 == "SalePrice") %>%   # aber nur, wo die zweite Variable "SalesPrice" ist
-  arrange(-abs(r)) %>%   # sortiere absteigend nach der Höhe des Korrelationskoeffizienten r
-  filter(abs(r) > .3)  %>%  # nur |r| > .3
+d_train |> 
+  select(-Id) |> 
+  correlation() |>  # berechne Korrelationen
+  filter(Parameter2 == "SalePrice") |>   # aber nur, wo die zweite Variable "SalesPrice" ist
+  arrange(-abs(r)) |>   # sortiere absteigend nach der Höhe des Korrelationskoeffizienten r
+  filter(abs(r) > .3)  |>  # nur |r| > .3
   print_md()
 ```
 
@@ -189,7 +189,7 @@ Aha! Ein Menge Information … Wenn Sie Teile der Ausgabe der Tabelle nicht vers
 Im Zweifel einfach ignorieren. 
 Wenn Sie die R-Syntax nicht verstehen: 
 Führen Sie die Syntax schrittweise aus. Zuerst `d_train` ausführen und das Ergebnis betrachten. 
-Dann `d_train %>% select(-Id)` ausführen, wieder die Ausgabe betrachten, usw.
+Dann `d_train |> select(-Id)` ausführen, wieder die Ausgabe betrachten, usw.
 Die als Output von @lst-get-high-corrs aufgeführten Variablen sind
 einigermaßen stark mit unserer Zielvariablen `SalePrice` korreliert.
 Nutzen wir also diese Variablen (oder einige von ihnen) zur Vorhersage.
@@ -268,7 +268,7 @@ parameters(lm_immo2)
 #| echo: false
 #| label: tbl-m2-params
 #| tbl-cap: "Modellparameter von lm_immo2"
-parameters(lm_immo2) %>% 
+parameters(lm_immo2) |> 
   select(Parameter, Coefficient) |> 
   print_md()
 ```
@@ -349,7 +349,7 @@ head(lm_immo2_pred) # <2>
 Die Vorhersagen fügen wir jetzt dem Test-Sample hinzu:
 ```{r}
 d_test <- 
-  d_test %>% 
+  d_test |> 
   mutate(SalePrice = lm_immo2_pred)
 ```
 
@@ -367,7 +367,7 @@ Für die Prognosedatei (submission file) brauchen wir nur die Spalten `id` und `
 
 ```{r}
 lm_immo2_subm <-
-  d_test %>% 
+  d_test |> 
   select(Id, SalePrice)
 ```
 
@@ -377,8 +377,8 @@ lm_immo2_subm <-
 <!-- ```{r} -->
 <!-- #| eval: true -->
 <!-- #| code-annotations: hover -->
-<!-- lm_immo2_subm %>%  -->
-<!--   drop_na() %>%  # <1> -->
+<!-- lm_immo2_subm |>  -->
+<!--   drop_na() |>  # <1> -->
 <!--   nrow()         # <2> -->
 <!-- ``` -->
 
@@ -402,7 +402,7 @@ lm_immo2_subm <-
 <!-- Filtern wir die Spalte `SalePrice` mal nach "ist NA": -->
 
 <!-- ```{r} -->
-<!-- m1_subm %>% # <1) -->
+<!-- m1_subm |> # <1) -->
 <!--   filter(is.na(SalePrice)) # <2> -->
 <!-- ``` -->
 
@@ -420,7 +420,7 @@ lm_immo2_subm <-
 
 <!-- ```{r} -->
 <!-- m1_subm_nona <- # <1> -->
-<!--   m1_subm %>%  # <2> -->
+<!--   m1_subm |>  # <2> -->
 <!--   mutate(SalePrice = replace_na(SalePrice, mean(SalePrice, na.rm = TRUE))) # <3> -->
 <!-- ``` -->
 
@@ -434,7 +434,7 @@ lm_immo2_subm <-
 <!-- Und? Gib es jetzt noch fehlende Werte? -->
 
 <!-- ```{r} -->
-<!-- m1_subm_nona %>%  -->
+<!-- m1_subm_nona |>  -->
 <!--   filter(is.na(SalePrice)) -->
 <!-- ``` -->
 

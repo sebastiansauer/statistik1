@@ -264,7 +264,7 @@ mariokart |>
              color = cond, size = wheels, 
              shape = stock_photo)) +
   geom_point() +
-  scale_color_manual(values = c(yellow, blue)) 
+  scale_color_manual(values = c(beta0col, beta1col))
 
 ```
 
@@ -328,7 +328,7 @@ z.$\,$B. kommt die Ausprägung `new`  59 mal vor. $\square$
 #| tbl-cap: "Häufigkeitsverteilung von `cond` aus dem Datensatz `mariokart`"
 
 mariokart |> 
-  count(cond) %>% print_md()
+  count(cond) |> print_md()
 ```
 
 Zugegeben, das Datendiagramm von `cond` ist nicht so aufregend, 
@@ -414,8 +414,8 @@ Auf der Hilfeseite der Funktion finden Sie weitere Details zur Funktion.
 #| fig-cap: "Ein Balkendiagramm. Unglaublich."
 library(ggpubr)
 
-mariokart %>%
-  count(cond) %>%
+mariokart |>
+  count(cond) |>
   ggbarplot(x = "cond", y = "n")
 
 ```
@@ -423,7 +423,7 @@ mariokart %>%
 
 
 Die Syntax ist in @lst-de1 abgedruckt 
-(Zur Erinnerung: ` %>% ` nennt man die "Pfeife und lässt sich als "und dann" übersetzen, 
+(Zur Erinnerung: ` |> ` nennt man die "Pfeife und lässt sich als "und dann" übersetzen, 
 vgl. @sec-pipe). 
 Übersetzen wir die Syntax ins Deutsche:
 
@@ -584,8 +584,8 @@ p_mario_zu_wenige
 #| eval: false
 #| lst-cap: Syntax zur Erstellung eines Histogramms
 #| lst-label: lst-de2
-mariokart %>%
-  filter(total_pr < 100) %>%  # ohne Extremwerte
+mariokart |>
+  filter(total_pr < 100) |>  # ohne Extremwerte
   gghistogram(x = "total_pr")
 ```
 
@@ -599,12 +599,12 @@ mariokart %>%
 #|   - Histogramm
 #|   - Dichtediagramm 
 
-mariokart %>%
-  filter(total_pr < 100) %>%  # ohne Extremwerte
+mariokart |>
+  filter(total_pr < 100) |>  # ohne Extremwerte
   gghistogram(x = "total_pr", ggtheme = theme_minimal())
 
-mariokart %>%
-  filter(total_pr < 100) %>%  # ohne Extremwerte
+mariokart |>
+  filter(total_pr < 100) |>  # ohne Extremwerte
   ggdensity(x = "total_pr", ggtheme = theme_minimal())
 ```
 
@@ -662,7 +662,7 @@ m1a |>
 
 
 :::{#exr-plot-density}
-Erstellen Sie das Diagramm @fig-de-hist-density, rechtes Teildiagramm!^[Grob gesagt: `mariokart %>% ggdensity(x = "total_pr")`.]$\square$
+Erstellen Sie das Diagramm @fig-de-hist-density, rechtes Teildiagramm!^[Grob gesagt: `mariokart |> ggdensity(x = "total_pr")`.]$\square$
 :::
 
 
@@ -949,13 +949,13 @@ bei gebrauchten Spielen immerhin bei gut der Hälfte der Fälle.
 #| 
 
 mario_bar1 <- 
-mariokart %>% 
+mariokart |> 
   ggplot(aes(x = cond, fill = stock_photo, pattern = stock_photo)) +
   geom_bar_pattern(
     position = "fill", 
     pattern_fill = "grey30",
     pattern_color = "black") +
-  scale_fill_okabeito() +
+  scale_fill_manual(values = c(beta0col, beta1col)) +
   theme(legend.position = "bottom") +
   theme_minimal() +
   theme_large_text() +
@@ -964,10 +964,10 @@ mariokart %>%
   labs(fill = "Group", pattern = "Stock photo") # Customize legend titles
 
 mario_bar2 <- 
-mariokart %>% 
+mariokart |> 
   ggplot(aes(x = wheels > 0, fill = stock_photo)) +
   geom_bar(position = "fill") +
-  scale_fill_manual(values = c(yellow, blue)) +
+  scale_fill_manual(values = c(beta0col, beta1col)) +
   theme(legend.position = "bottom") +
   theme_minimal() +
   theme_large_text()
@@ -1003,8 +1003,8 @@ Die verschiedenen Werte der Füllfarbe werden den Stufen der Variablen `cond` zu
 #| eval: !expr knitr:::is_html_output()
 #| out-width: 50%
 #| fig-cap: "Ein gefülltes Balkendiagramm zur Untersuchung eines Zusammenhangs zwischen nominalskalierter Variablen"
-mariokart %>%
-  count(stock_photo, cond) %>%
+mariokart |>
+  count(stock_photo, cond) |>
   ggbarplot(x = "stock_photo", y = "n", fill = "cond",
             position = position_fill())  # aus dem Paket ggpubr
 ```
@@ -1074,10 +1074,10 @@ Die Ellipse zeigt an, wie eng die Daten um die Trendgerade streuen. Daraus kann 
 #| layout: [[45, -10, 45], [100]]
 
 library(ggpubr)
-mariokart %>% 
-  select(total_pr, start_pr) %>% 
-  filter(total_pr < 100) %>% 
-  filter(start_pr > 10) %>% 
+mariokart |> 
+  select(total_pr, start_pr) |> 
+  filter(total_pr < 100) |> 
+  filter(start_pr > 10) |> 
   ggscatter(x = "start_pr", 
             y = "total_pr",
             add = "reg.line",
@@ -1086,10 +1086,10 @@ mariokart %>%
   theme_large_text()
 
 
-mariokart %>% 
-  #select(total_pr, start_pr) %>% 
-  filter(total_pr < 100) %>% 
-  filter(start_pr > 10) %>% 
+mariokart |> 
+  #select(total_pr, start_pr) |> 
+  filter(total_pr < 100) |> 
+  filter(start_pr > 10) |> 
   ggscatter(x = "n_bids", 
             y = "total_pr",
             add = "reg.line",
@@ -1242,9 +1242,9 @@ Das Ergebnis sieht man in @fig-mario-scatter. $\square$
 #| label: fig-mario-scatter
 #| out-width: 50%
 #| fig-cap: Der Zusammenhang einiger metrischer Variablen mit Abschlusspreis
-c("n_bids", "start_pr") %>%
-  map(~ ggscatter(mariokart, x = .x, y = "total_pr")) %>%
-  ggarrange(plotlist = ., nrow = 1)
+c("n_bids", "start_pr") |>
+  map(~ ggscatter(mariokart, x = .x, y = "total_pr")) |>
+  ggarrange(plotlist = _, nrow = 1)
 ```
 
 
@@ -1257,7 +1257,7 @@ Sie entscheiden sich, nur Verkäufe mit einem Abschlusspreis von weniger als 100
 #| lst-label: lst-no-extreme
 #| lst-cap: Mariokart ohne Extremwerte
 mariokart_no_extreme <-
-  mariokart %>% 
+  mariokart |> 
   filter(total_pr < 100)
 ```
 
@@ -1272,9 +1272,9 @@ Das Ergebnis ist in @fig-mario-scatter2 zu sehen.
 #| out-width: 50%
 #| fig-cap: Der Zusammenhang metrischer Variablen mit Abschlusspreis - ohne Extremwerte
 c("duration", "n_bids", "start_pr",
-  "ship_pr", "seller_rate", "wheels") %>%
-  map(~ ggscatter(mariokart_no_extreme, x = .x, y = "total_pr")) %>%
-  ggarrange(plotlist = .)
+  "ship_pr", "seller_rate", "wheels") |>
+  map(~ ggscatter(mariokart_no_extreme, x = .x, y = "total_pr")) |>
+  ggarrange(plotlist = _)
 ```
 
 
@@ -1416,13 +1416,13 @@ die man mit Sachverstand zum Forschungsgegenstand beantworten muss.
 #|   - "Y: Abschlusspreis, X: Foto dabei?"
 #| label: fig-compare-groups
 #| layout-ncol: 2
-mariokart %>% 
-  filter(total_pr < 100) %>% 
-  ggpubr::ggboxplot(., x = "cond", y = "total_pr")
+mariokart |> 
+  filter(total_pr < 100) |> 
+  ggpubr::ggboxplot(x = "cond", y = "total_pr")
 
-mariokart %>% 
-  filter(total_pr < 100) %>% 
-  ggpubr::ggboxplot(., x = "stock_photo", y = "total_pr")
+mariokart |>
+  filter(total_pr < 100) |>
+  ggpubr::ggboxplot(x = "stock_photo", y = "total_pr")
 ```
 
 
@@ -1496,7 +1496,7 @@ Allerdings scheint es wenig Daten für `wheels == 4` zu geben.
 Das prüfen Sie nach:
 
 ```{r}
-mariokart_no_extreme %>% 
+mariokart_no_extreme |> 
   count(wheels)
 ```
 
@@ -1754,8 +1754,8 @@ Außerdem sind sie mitunter nett anzuschauen, s. @fig-anim1.
 <!-- fig2 <- plot_ly(mariokart |> filter(total_pr < 100),  -->
 <!--                 x = ~duration, y = ~n_bids, z = ~total_pr,  -->
 <!--                 color = ~cond, colors = c('#BF382A', '#0C4B8E')) -->
-<!-- fig2 <- fig2 %>% add_markers() -->
-<!-- fig2 <- fig2 %>% layout(scene = list(xaxis = list(title = 'duration'), -->
+<!-- fig2 <- fig2 |> add_markers() -->
+<!-- fig2 <- fig2 |> layout(scene = list(xaxis = list(title = 'duration'), -->
 <!--                      yaxis = list(title = 'number of bids'), -->
 <!--                      zaxis = list(title = 'total price'))) -->
 
@@ -1785,8 +1785,8 @@ Mit diesem Paket lassen sich einfach ansprechende Datendiagramme erstellen.
 ```{r}
 #| eval: false
 library(ggpubr)  # einmalig instalieren nicht vergessen
-mariokart %>% 
-  filter(total_pr < 100) %>% 
+mariokart |> 
+  filter(total_pr < 100) |> 
   ggboxplot(x = "cond", y = "total_pr")
 ```
 
@@ -1877,8 +1877,8 @@ Alternativ kann man händisch eine helle Farbe und eine dunkle Farbe als Kontras
 #| out-width: 50%
 #| fig-cap: "Die Farbpalette von Okabe und Ito: Geeignet bei Farbseh-Schwächen. Außerdem nett anzuschauen. Die Einkerbungen (engl. notches) zeigen ein 95%-Konfidenzintervall für den Median."
 
-mariokart %>% 
-  filter(total_pr < 100) %>% 
+mariokart |> 
+  filter(total_pr < 100) |> 
   ggboxplot(x = "cond", y = "total_pr", fill = "cond", notch = TRUE) +
   scale_fill_okabeito(palette = "black_first")
   #scale_fill_manual(values = c("#0072B2", "#E69F00"))

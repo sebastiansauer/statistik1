@@ -181,23 +181,23 @@ d <-
     id = 1:100,
     x1 = rnorm(100, 0, 1),
     x2 = rnorm(100, 0, 7)
-  ) %>% 
-  pivot_longer(-id) %>% 
-  group_by(name) %>% 
+  ) |> 
+  pivot_longer(-id) |> 
+  group_by(name) |> 
   mutate(avg = mean(value),
-         e = value - avg) %>% 
+         e = value - avg) |> 
   ungroup()
 
 d_sum <-
-  d %>% 
-  group_by(name) %>% 
+  d |> 
+  group_by(name) |> 
   summarise(avg = mean(value))
 
 group_names <-
   c(x1 = "wenig Streuung:\nDickableibtin",
     x2 = "viel Streuung:\nPfundafliptan")
 
-d %>% 
+d |> 
   ggplot(aes(x = id, y = value)) +
   geom_point() +
   facet_wrap(~ name, labeller = as_labeller(group_names)) +
@@ -276,25 +276,25 @@ von weniger als 100 Euros berücksichtigt und nur Spiele mit 0 oder mit 2 Lenkr�
  
 data(mariokart, package = "openintro")
 m <-
-  mariokart %>%
-  filter(total_pr < 100) %>% 
-  filter(wheels %in% c(0, 2)) %>% 
-  mutate(ID = 1:nrow(.),
+  mariokart |>
+  filter(total_pr < 100) |> 
+  filter(wheels %in% c(0, 2)) |> 
+  mutate(ID = row_number(),
          total_pr_resid = total_pr - mean(total_pr),
-         total_pr_resid_quad = total_pr_resid^2) %>% 
-  group_by(wheels) %>% 
-  mutate(total_pr_mean_group = mean(total_pr)) %>% 
+         total_pr_resid_quad = total_pr_resid^2) |> 
+  group_by(wheels) |> 
+  mutate(total_pr_mean_group = mean(total_pr)) |> 
   ungroup()
 
 
 m_sum <- 
-  m %>% 
-  group_by(wheels) %>% 
-  summarise(total_pr = mean(total_pr)) %>% 
+  m |> 
+  group_by(wheels) |> 
+  summarise(total_pr = mean(total_pr)) |> 
   ungroup()
 
 
-m %>% 
+m |> 
   ggplot() +
   geom_hline(aes(yintercept = mean(total_pr))) +
   geom_segment(aes(x = ID,
@@ -308,7 +308,7 @@ m %>%
 
 
 
-m %>% 
+m |> 
   ggplot() +
   geom_segment(data = filter(m, wheels == 0),
                aes(x = ID,
@@ -337,7 +337,7 @@ m %>%
         y = total_pr, color = factor(wheels)), 
     x = max(m$ID), hjust = 1, size = 6,
     show.legend = FALSE) +
-  scale_color_manual(values = c(blue, yellow)) +
+  scale_color_manual(values = c(beta0col, beta1col)) +
   scale_x_continuous(limits = c(-10, 90)) +
   theme_large_text() +
   theme(legend.position = "none")
@@ -500,19 +500,19 @@ $IQR = Q_3-Q_1 = 1.75\,m - 1.65\,m = 0.10\,m$, d.$\,$h. 10$\,$cm. $\square$
 #|   - "Dichtediagramm"
 
 mario_quantile2 <- 
-mariokart %>% 
-  filter(total_pr < 100) %>% 
+mariokart |> 
+  filter(total_pr < 100) |> 
   summarise(q25 = quantile(total_pr, .25),
             q50 = quantile(total_pr, .50),
             q75 = quantile(total_pr, .75))
 
 mario_quantile <- 
-  mariokart %>% 
-  filter(total_pr < 100) %>% 
+  mariokart |> 
+  filter(total_pr < 100) |> 
   reframe(qs = quantile(total_pr, c(.25, .5, .75)))
 
-mariokart %>% 
-  filter(total_pr < 100) %>%  
+mariokart |> 
+  filter(total_pr < 100) |>  
   ggplot(aes(x = total_pr)) +
   geom_histogram() +
   geom_vline(xintercept = mario_quantile$qs) +
@@ -534,8 +534,8 @@ mariokart %>%
            label = "IQR", color = "#56B4E9") +
   theme_large_text()
 
-mariokart %>% 
-  filter(total_pr < 100) %>%  
+mariokart |> 
+  filter(total_pr < 100) |>  
   ggplot(aes(x = total_pr)) +
   geom_density() +
   geom_vline(xintercept = mario_quantile$qs) +
@@ -589,13 +589,13 @@ d <-
          groesse_zentriert = groesse - mean(groesse))
 
 d_sum <-
-  d %>% 
-  pivot_longer(everything()) %>%
-  group_by(name) %>% 
+  d |> 
+  pivot_longer(everything()) |>
+  group_by(name) |> 
   summarise(MW = mean(value))
   
 
-d %>% 
+d |> 
   ggplot() +
   stat_function(fun = dnorm,
                 args = list(mean = 0, sd = streuung), 
@@ -623,8 +623,8 @@ d %>%
 
 
 
-# d %>% 
-#   pivot_longer(everything()) %>% 
+# d |> 
+#   pivot_longer(everything()) |> 
 #   ggplot() +
 #   aes(x = value) +
 #   geom_density() +
@@ -719,7 +719,7 @@ library(viridis)
 
 d <-
   tibble(id = 1:4,
-         y = c(0.1, -.3, .1, .1)) %>% 
+         y = c(0.1, -.3, .1, .1)) |> 
   mutate(y_avg = mean(y),
          delta = y - y_avg,
          delta_abs = abs(delta),
@@ -729,7 +729,7 @@ d <-
 var_smpl <- mean(d$delta_sq)
 
 p_deltas <- 
-d %>%   
+d |>   
   ggplot(aes(x = id, y = y)) +
   geom_hline(yintercept = mean(d$y), linetype = "dashed", show.legend = FALSE) +
   geom_segment(aes(y = mean(d$y),
@@ -765,7 +765,7 @@ d %>%
 
 
 p_var <- 
-  d %>%   
+  d |>   
   ggplot(aes(x = id, y = y)) + 
   geom_hline(yintercept = mean(d$y), linetype = "dashed") +
   annotate(geom = "label",
@@ -823,11 +823,11 @@ Dazu berechnen Sie die Streuung in den Verkaufspreisen, s. @lst-mario-streu bzw.
 #| lst-cap: Berechnung der Streuung des Verkaufspreises als Indikator für die Modellgüte des Mittelwerts 
 
 mariokart_no_extreme <-
-  mariokart %>%
+  mariokart |>
   filter(total_pr < 100)  # ohne Extremwerte
 
 m_summ <- 
-  mariokart_no_extreme %>% 
+  mariokart_no_extreme |> 
   summarise(
     pr_mw = mean(total_pr),
     pr_iqr = IQR(total_pr),
@@ -855,9 +855,9 @@ um (grob) die Streuung einer Variable zu erfassen.
 
 ```{r}
 #| eval: false
-mariokart %>% 
-  mariokart_no_extreme %>%   # ohne Extremwerte
-  select(total_pr) %>% 
+mariokart |> 
+  mariokart_no_extreme |>   # ohne Extremwerte
+  select(total_pr) |> 
   plot_density()  # oder plot_violin
 ```
 
@@ -871,9 +871,9 @@ mariokart %>%
 #| fig-subcap: 
 #|   - Dichtediagramm 
 #|   - Violindiagramm
-mariokart %>% 
-  select(total_pr) %>% 
-  filter(total_pr < 100) %>%  # ohne Extremwerte
+mariokart |> 
+  select(total_pr) |> 
+  filter(total_pr < 100) |>  # ohne Extremwerte
   ggplot() +
   geom_density(aes(x = total_pr)) +
   geom_rect(data = m_summ, 
@@ -887,9 +887,9 @@ mariokart %>%
             fill = okabeito_colors()[1]) +
   theme_large_text()
 
-mariokart %>% 
-  select(total_pr) %>% 
-  filter(total_pr < 100) %>%  # ohne Extremwerte
+mariokart |> 
+  select(total_pr) |> 
+  filter(total_pr < 100) |>  # ohne Extremwerte
   ggplot() +
   geom_violin(aes(
     x = 1,
@@ -991,8 +991,8 @@ s. @tbl-describe-dist1.
 #| eval: false
 library(easystats)
 
-mariokart %>% 
-  select(total_pr) %>% 
+mariokart |> 
+  select(total_pr) |> 
   describe_distribution()
 ```
 
@@ -1002,8 +1002,8 @@ mariokart %>%
 #| label: tbl-describe-dist1
 library(easystats)
 
-mariokart %>% 
-  select(total_pr) %>% 
+mariokart |> 
+  select(total_pr) |> 
   describe_distribution() |> 
   select(Variable, Mean, SD, IQR, n)
 ```
@@ -1111,7 +1111,7 @@ Schon ist das Leben leichter, s. @lst-mariokart-no-extreme.
 #| lst-label: lst-mariokart-no-extreme
 #| lst-cap: "Mariokart ohne Extremwerte"
 mariokart_no_extreme <- 
-  mariokart %>% 
+  mariokart |> 
   filter(total_pr < 100)
 ```
 
@@ -1119,7 +1119,7 @@ mariokart_no_extreme <-
 ```{r}
 #| echo: false
 mariokart_no_extreme <-
-  mariokart_no_extreme %>% 
+  mariokart_no_extreme |> 
   mutate(abw = 47.4 - total_pr)
 ```
 
@@ -1148,8 +1148,8 @@ total_pr_zentriert_mean <- mean(mariokart_no_extreme_zentriert$total_pr_zentrier
 
 
 
-mariokart_no_extreme_zentriert %>% 
-  select(total_pr, total_pr_zentriert) %>% 
+mariokart_no_extreme_zentriert |> 
+  select(total_pr, total_pr_zentriert) |> 
   ggplot() +
   geom_density(aes(x = total_pr), fill = "grey40") +
   geom_density(aes(x = total_pr_zentriert), fill = "black") +
@@ -1220,7 +1220,7 @@ Also rechnen Sie diese Abweichung aus, @lst-zentrieren und @tbl-zentriert.
 #| lst-label: lst-zentrieren
 #| lst-cap: Zentrieren einer Variablen
 mariokart_no_extreme_zentriert <-
-  mariokart_no_extreme %>% 
+  mariokart_no_extreme |> 
   mutate(
     total_pr_zentriert = total_pr - 47.7)  
 ```
@@ -1269,7 +1269,7 @@ Begeistert über Ihre Geistesblitze machen Sie sich ans Werk.
 
 ```{r}
 mariokart_no_extreme <-
-  mariokart_no_extreme %>% 
+  mariokart_no_extreme |> 
   mutate(abw_std = abw / sd(abw),  # std wie "standardisiert"
          abw_std2 = abw / mean(abs(abw)))  
 ```

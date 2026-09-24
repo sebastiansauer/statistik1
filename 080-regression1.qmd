@@ -131,7 +131,7 @@ noten2 <- read.csv("data/noten2.csv")
 
 
 ```{r}
-noten2 %>% 
+noten2 |> 
   summarise(mw = mean(y))  # y ist der Punktwert in der Klausur
 ```
 ::::
@@ -214,7 +214,7 @@ Sie visualisieren sich zur Hilfe die vorliegenden Daten, s. @fig-noten4, (a).
 ```{r}
 #| eval: false
 library(DataExplorer)
-noten2 %>% 
+noten2 |> 
   plot_scatterplot(by = "y")  # Y-Variable muss angegeben werden
 ```
 
@@ -262,7 +262,7 @@ ggplot(noten2) +
   theme_minimal() +
   theme_large_text()
 
-noten2 %>% 
+noten2 |> 
   ggplot(aes(x, y)) +
   geom_point() +
   geom_vline(xintercept = mean(noten2$x), linetype = "dashed", color = "grey") +  
@@ -548,7 +548,7 @@ Puh, die Antwort wird Toni nicht gefallen … $\square$
 lm1 <- lm(y ~ x, data = noten2)
 lm1_b0 <- coef(lm1)[1]
 
-noten2 %>% 
+noten2 |> 
   ggplot(aes(x, y)) +
   geom_point() +
   geom_vline(xintercept = mean(noten2$x), linetype = "dashed", color = "grey") +  
@@ -755,10 +755,10 @@ ${e_i} = {y_i} - {\hat{y}_i}$.
 #|   - Punktmodell (lm0)
 
 noten2 <-
-  noten2 %>% 
+  noten2 |> 
   mutate(yhat = predict(lm_toni, newdata = noten2))
 
-noten2 %>% 
+noten2 |> 
   ggplot(aes(x, y)) +
   geom_point(color = ycol) +
   geom_abline(slope = coef(lm_toni)[2], intercept = coef(lm_toni)[1], color = modelcol, size = 1.5) +
@@ -766,7 +766,7 @@ noten2 %>%
   geom_segment(aes(xend = x, yend = yhat), color = errorcol) +
 theme_large_text()
 
-noten2 %>% 
+noten2 |> 
   ggplot(aes(x, y)) +
   geom_point(color = ycol) +
   geom_hline(yintercept = mean(noten2$y), color = modelcol, size = 1.5) +
@@ -946,7 +946,7 @@ d0 <-
   tibble(x = rnorm(100),
          y = rnorm(100))
 
-d0 %>% 
+d0 |> 
   ggplot(aes(x,y)) + 
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, color = modelcol) +
@@ -958,7 +958,7 @@ d_r1 =
   tibble(x = 1:10,
          y = seq(10, 100, by = 10))
 
-d_r1 %>% 
+d_r1 |> 
   ggplot(aes(x,y)) + 
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, color = modelcol) +
@@ -1038,7 +1038,7 @@ Nutzt man Körpergröße und das Gewicht von Menschen vorherzusagen, ist der Ach
 
 ```{r}
 #| echo: false
-lm_toni_b1 <- coef(lm_toni)[2] %>% round(2)
+lm_toni_b1 <- coef(lm_toni)[2] |> round(2)
 ```
 
 So interpretiert man die Geradensteigung, $\beta_1$:
@@ -1136,7 +1136,7 @@ lm3 <- lm(total_pr ~ ship_pr, data = mariokart)
 #| echo: false
 #| label: tbl-lm3
 #| tbl-cap: "Modellparameter von lm3"
-parameters(lm3) %>% print_md()
+parameters(lm3) |> print_md()
 ```
 
 
@@ -1170,7 +1170,8 @@ Man kann sich die erwarteten Werte ("expectations") des Verkaufspreises in Abhä
 #| echo: false
 #| label: tbl-lm3-expect
 #| tbl-cap: "Die vorhergesagten (predicted) Werte und die Abweichungen vom vorhergesagten Wert (Residuals)"
-estimate_expectation(lm3) %>% head() |> print_md()  # nur die ersten paar vorhergesagten Werte
+estimate_expectation(lm3) |> 
+  head(show_data = TRUE) |> print_md()  # nur die ersten paar vorhergesagten Werte
 ```
 
 ```{r}
@@ -1213,7 +1214,8 @@ Das erreicht man z.$\,$B. so, s. @fig-lm3.
 #| label: fig-lm3
 #| fig-cap: Verbildlichung der erwarteteten Werte laut lm3
 #| out-width: 75%
-estimate_prediction(lm3, by = "ship_pr") %>% plot()
+estimate_prediction(lm3, by = "ship_pr") |> 
+  plot(show_data = TRUE)
 ```
 
 `estimate_expectation` heißt sinngemäß "schätze den zu erwartenden Wert".

@@ -434,14 +434,14 @@ d <- tibble::tribble(
 d$names <- c("Anna", "Berta", "Carla", "Dani")
 
 
-d <- d %>% 
+d <- d |> 
   mutate(delta_abs = abs(delta),
          pos = ifelse(delta > 0, "positiv", "negativ"),
          delta_sq = delta^2)
 
 
 p_mean_deltas <- 
-  d %>%
+  d |>
   ggplot(aes(x = id, 
              y = note)) +
   geom_hline(yintercept = mean(d$note), 
@@ -468,7 +468,7 @@ p_mean_deltas <-
   labs(x = "",
        y = "Note") +
   scale_x_continuous(breaks = 1:4, labels = d$names) +
-  scale_color_okabeito() 
+  scale_color_manual(values = c(beta0col, beta1col))
 
 p_mean_deltas
 ```
@@ -578,11 +578,11 @@ Es erklärt die Daten anhand einer Geraden. $\square$
 mariokart$X <- 1:nrow(mariokart)
 
 mariokart <-
-  mariokart %>% 
+  mariokart |> 
   mutate(is_extreme = total_pr > 100)
 
 mariokart_extreme <-
-  mariokart %>% 
+  mariokart |> 
   filter(is_extreme)
 
 ggplot(mariokart) +
@@ -604,7 +604,7 @@ ggplot(mariokart) +
   theme_large_text()
 
 mariokart2 <- 
-mariokart %>% 
+mariokart |> 
   filter(total_pr < 100)
   
 ggplot(mariokart2) +
@@ -747,7 +747,7 @@ d <-
          name = c("Anna", "Berta", "Carla", "Dora", "Emma"),
          einkommen = c(1, 2, 3, 4, 100))
 
-# d %>% 
+# d |> 
 #   ggplot(aes(x = id, y = einkommen)) +
 #   geom_vline(xintercept = 3, color = okabeito_colors()[2]) +
 #   geom_col() +
@@ -758,7 +758,7 @@ d <-
 #   labs(y = "Einkommen")
 
 
-d %>% 
+d |> 
   ggplot(aes(x = einkommen)) +
   geom_point(y = 0, size = 3, alpha = .7) +
   # geom_histogram(binwidth = 1, color = "white") +
@@ -867,7 +867,7 @@ Nehmen Sie Stellung zu dieser Diskussion! $\square$
 Der Mittelwert (das arithmetische Mittel) und der Median für das Start-Gebot (`start_pr)` von Mariokart-Spielen sind nicht gleich, der Mittelwert ist höher als der Median.
 
 ```{r}
-mariokart %>% 
+mariokart |> 
   summarise(price_mw = mean(start_pr),
             price_md = median(start_pr))
 ```
@@ -880,8 +880,8 @@ mariokart %>%
 #| fig-cap: "Das Startgebot bei Mariokart-Spielen ist schief verteilt: Median und Mittelwert sind unterschiedlich"
 #| label: fig-mario-md
 #| out-width: 75%
-mariokart %>% 
-  select(start_pr) %>% 
+mariokart |> 
+  select(start_pr) |> 
   ggplot(aes(x = start_pr)) +
   geom_histogram() +
   geom_vline(xintercept = 1, color = okabeito_colors()[1]) +
@@ -922,7 +922,7 @@ Entfernen Sie diese Werte und berechnen Sie dann Mittelwert und Median erneut. V
 ```{r}
 #| eval: true
 mariokart_no_extreme <- 
-mariokart %>% 
+mariokart |> 
   filter(total_pr < 100)
 
 # mit Extremwerten:
@@ -1052,19 +1052,19 @@ Die neun Quantile $p= 0.1, 0.2, \ldots, 1$, die die Verteilung in 10 gleich gro�
 
 
 mario_quantile <- 
-mariokart %>% 
-  filter(total_pr < 100) %>% 
+mariokart |> 
+  filter(total_pr < 100) |> 
   summarise(q25 = quantile(total_pr, .25) |> round(),
             q50 = quantile(total_pr, .50)|> round(),
             q75 = quantile(total_pr, .75)|> round())
 
 mario_quantile <- 
-  mariokart %>% 
-  filter(total_pr < 100) %>% 
+  mariokart |> 
+  filter(total_pr < 100) |> 
   reframe(qs = quantile(total_pr, c(.25, .5, .75)))
 
-# mariokart %>% 
-#   filter(total_pr < 100) %>%  
+# mariokart |> 
+#   filter(total_pr < 100) |>  
 #   ggplot(aes(x = total_pr)) +
 #   geom_histogram() +
 #   geom_vline(xintercept = mario_quantile$qs) +
@@ -1076,19 +1076,19 @@ mario_quantile <-
 #   theme_large_text()
 
 mario_quantile <- 
-mariokart %>% 
-  filter(total_pr < 100) %>% 
+mariokart |> 
+  filter(total_pr < 100) |> 
   summarise(q25 = quantile(total_pr, .25),
             q50 = quantile(total_pr, .50),
             q75 = quantile(total_pr, .75))
 
 mario_quantile <- 
-  mariokart %>% 
-  filter(total_pr < 100) %>% 
+  mariokart |> 
+  filter(total_pr < 100) |> 
   reframe(qs = round(quantile(total_pr, c(.25, .5, .75))))
 
-mariokart %>% 
-  filter(total_pr < 100) %>%  
+mariokart |> 
+  filter(total_pr < 100) |>  
   ggplot(aes(x = total_pr)) +
   geom_density() +
   geom_vline(xintercept = mario_quantile$qs) +
@@ -1116,8 +1116,8 @@ Quantile kann man in R mit dem Befehl `quantile` berechnen:
 
 ```{r}
 #| eval: false
-mariokart %>% 
-  filter(total_pr < 100) %>% 
+mariokart |> 
+  filter(total_pr < 100) |> 
   summarise(
     q25 = quantile(total_pr, .25),  # 1. Quartil
     q50 = quantile(total_pr, .50),  # 2. Quartil
@@ -1199,9 +1199,9 @@ Das können wir im Datensatz `mariokart` wie folgt erreichen:
 3. Schaue, was der größte verbleibende Wert ist.
 
 ```{r}
-mariokart %>% 
-  arrange(total_pr) %>%   # sortiere aufsteigend
-  slice_head(n = 130) %>%  # nur die ersten ca. 90%
+mariokart |> 
+  arrange(total_pr) |>   # sortiere aufsteigend
+  slice_head(n = 130) |>  # nur die ersten ca. 90%
   summarise(p90 = max(total_pr))  # was ist der größte verbleibende Wert?
 ```
 
@@ -1209,7 +1209,7 @@ mariokart %>%
 Das (annähernd) gleiche Ergebnis liefert `quantile()`:
 
 ```{r}
-mariokart %>% 
+mariokart |> 
   summarise(q90 = quantile(total_pr, .9))
 ```
 
@@ -1331,12 +1331,12 @@ Das Quantil von z. B. 25% zeigt die Körpergröße der 25% kleinsten Studentis
 data("speed_gender_height", package = "openintro")  # <1>
 
 height_summary <- 
-  speed_gender_height %>% 
-  mutate(height_cm = height*2.54) %>%  # <2>
-  select(height_inch = height, height_cm) %>% 
-  drop_na() %>%   # <3>
-  pivot_longer(everything(), names_to = "Einheit", values_to = "Messwert") %>%   # <4>
-  group_by(Einheit) %>%   # <5>
+  speed_gender_height |> 
+  mutate(height_cm = height*2.54) |>  # <2>
+  select(height_inch = height, height_cm) |> 
+  drop_na() |>   # <3>
+  pivot_longer(everything(), names_to = "Einheit", values_to = "Messwert") |>   # <4>
+  group_by(Einheit) |>   # <5>
   summarise(q25 = quantile(Messwert, prob = .25),  # <6>
             q50 = quantile(Messwert, prob = .5),
             q75 = quantile(Messwert, prob = .75))
@@ -1368,7 +1368,7 @@ speed_gender_height <-
   speed_gender_height |> 
    mutate(height_cm = height*2.54)
 
-p1 <- speed_gender_height %>% 
+p1 <- speed_gender_height |> 
   ggplot() +
   aes(x = 1, y = height_cm) +
   geom_boxplot() +
@@ -1378,18 +1378,18 @@ p1 <- speed_gender_height %>%
   theme_minimal()
 
 height_summary_long <- 
-  speed_gender_height %>% 
-  select(height_cm) %>% 
-  drop_na() %>% 
+  speed_gender_height |> 
+  select(height_cm) |> 
+  drop_na() |> 
   summarise(q25 = quantile(height_cm, prob = .25),
             q50 = quantile(height_cm, prob = .5),
-            q75 = quantile(height_cm, prob = .75)) %>% 
+            q75 = quantile(height_cm, prob = .75)) |> 
   pivot_longer(everything(),
                names_to = "q",
                values_to = "height_cm") 
 
 p2 <- 
-  speed_gender_height %>% 
+  speed_gender_height |> 
   ggplot() +
   aes(x = height_cm) +
   geom_histogram() +
@@ -1485,8 +1485,8 @@ Gruppierte Lagemaße lassen sich in R z.$\,$B. so berechnen, s. @lst-mario-lage-
 #| lst-label: lst-mario-lage-gruppiert
 #| lst-cap: Gruppierte Lagemaße
 mariokart_lagemaße_gruppiert <-
-  mariokart %>% 
-  group_by(wheels) %>%  # neue Zeile, der Rest ist gleich!
+  mariokart |> 
+  group_by(wheels) |>  # neue Zeile, der Rest ist gleich!
   summarise(mw = mean(total_pr))
 ```
 
@@ -1544,15 +1544,15 @@ sie sind uns also ein Modell.
 mariokart$X <- 1:nrow(mariokart)
 
 mariokart <-
-  mariokart %>% 
+  mariokart |> 
   mutate(is_extreme = total_pr > 100)
 
 mariokart_extreme <-
-  mariokart %>% 
+  mariokart |> 
   filter(is_extreme)
 
 mariokart2 <- 
-mariokart %>% 
+mariokart |> 
   filter(total_pr < 100)
 
 
@@ -1589,7 +1589,7 @@ p2 <- mariokart3 |>
   geom_hline(data = mariokart3_summ, aes(yintercept = total_pr,
                                          color = wheels),
              size = 2) +
-  scale_color_okabeito(palette = "black_first") +
+  scale_color_manual(values = c(beta0col, beta1col)) +
   annotate("label", x = -Inf, y = round(mariokart3_summ$total_pr[1], 2),
            label = paste0("MW: ", round(mariokart3_summ$total_pr[1], 0)),
            hjust = 0, size = labeltextsize) +

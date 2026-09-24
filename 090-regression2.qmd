@@ -71,7 +71,7 @@ source("_common.R")
 Dieses Mal arbeiten wir nicht nur mit den Mariokartdaten,
 sondern auch mit Wetterdaten.
 
-::: {.content-visible when-format="html"}
+
 
 ```{r import-mariokart-csv}
 mariokart_path <- "https://vincentarelbundock.github.io/Rdatasets/csv/openintro/mariokart.csv"
@@ -84,8 +84,8 @@ wetter <- read.csv(wetter_path)
 ```
 
 
+::: {.content-visible when-format="html"}
 {{< downloadthis data/wetter.csv dname = "wetter" >}}
-
 :::
 
  
@@ -160,7 +160,7 @@ Hervorragend! An die Arbeit!
 
 ::::: {.content-visible when-format="html" unless-format="epub"}
 
-@fig-wetter-anim zeigen die Wetterdaten animiert.
+@fig-wetter-anim zeigen die Wetterdaten - Niederschlag und Temperatur in Deutschland.
 
 
 ::::{#fig-wetter-anim}
@@ -174,7 +174,8 @@ Hervorragend! An die Arbeit!
 #| warning: false
 #| fig-cap: "Temperatur (Grad Celsius) im Verlauf der Jahre"
 
-wetter_temp_jahr <- wetter |>
+wetter_temp_jahr <- 
+  wetter |>
   filter(region == "Deutschland") |>
   summarise(temp = mean(temp), .by = year)
 
@@ -190,9 +191,10 @@ ggplot(wetter_temp_jahr, aes(x = year, y = temp)) +
 ```{r fig-wetter-precip}
 #| echo: false
 #| warning: false
-#| fig-cap: "Niederschlag (mm) im Verlauf der Jahre"
+#| fig-cap: "Niederschlag pro Monat (mm) im Verlauf der Jahre"
 
-wetter_precip_jahr <- wetter |>
+wetter_precip_jahr <- 
+  wetter |>
   filter(region == "Deutschland") |>
   summarise(precip = mean(precip), .by = year)
 
@@ -204,19 +206,36 @@ ggplot(wetter_precip_jahr, aes(x = year, y = precip)) +
 
 ### Monatstemperaturverlauf
 
-```{r fig-wetter-temp-monat}
+```{r}
 #| echo: false
 #| warning: false
-#| fig-cap: "Veränderung der Temperatur pro Monat in Deutschland im Zeitverlauf"
 
 wetter_temp_monat <- wetter |>
   filter(region == "Deutschland") |>
   summarise(temp = mean(temp), .by = c(year, month))
 
-ggplot(wetter_temp_monat, aes(x = year, y = temp, color = factor(month))) +
+p_wetter_temp_monat <- ggplot(wetter_temp_monat, aes(x = year, y = temp, color = factor(month))) +
   geom_line() +
   geom_smooth(aes(group = 1), color = "black", se = FALSE) +
   labs(x = "Jahr", y = "Temperatur (°C)", color = "Monat")
+```
+
+```{r fig-wetter-temp-monat}
+#| echo: false
+#| warning: false
+#| eval: !expr knitr:::is_html_output()
+#| fig-cap: "Veränderung der Temperatur pro Monat in Deutschland im Zeitverlauf"
+
+ggplotly(p_wetter_temp_monat)
+```
+
+```{r fig-wetter-temp-monat-pdf}
+#| echo: false
+#| warning: false
+#| eval: !expr knitr:::is_latex_output()
+#| fig-cap: "Veränderung der Temperatur pro Monat in Deutschland im Zeitverlauf"
+
+p_wetter_temp_monat
 ```
 
 ### Monatsniederschlagsverlauf
@@ -244,7 +263,7 @@ Veränderung der Temperatur und Niederschlag (10-Jahres-Mittel) in Deutschland i
 :::::
 
 
-Weitere Auswertungen zum Klimaverlauf bzw. Klimawandel finden Sie z. B. [hier](https://sebastiansauer.github.io/data_se/2026/08/14/wetterdaten-des-dwd-analysieren-2026/).
+Weitere Auswertungen zum Klimaverlauf bzw. Klimawandel finden Sie z.B. [hier](https://sebastiansauer.github.io/data_se/2026/08/14/wetterdaten-des-dwd-analysieren-2026/).
 
 
 
@@ -275,7 +294,7 @@ parameters(lm_wetter1) |>
 ```
 
 
-Laut dem Modell wurde es pro Jahr im Schnitt um `r round(coef(lm_wetter1)["year"], 2)`$\,$°C wärmer, pro Jahrzehnt also `r round(coef(lm_wetter1)["year"] * 10, 2)`$\,$°C und pro Jahrhundert `r round(coef(lm_wetter1)["year"] * 100, 2)`$\,$°C.
+Laut dem Modell wurde es pro Jahr im Schnitt um 0.01$\,$°C wärmer, pro Jahrzehnt also 0.1$\,$°C und pro Jahrhundert 1$\,$°C.
 
 
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Das ist sicherlich nicht linear! Vermutlich ist die Temperatur bis 1950 konstant geblieben und jetzt knallt sie durch die Decke!
@@ -292,10 +311,10 @@ In @tbl-lm-wetter1 finden sich zwei Arten von Information für den Wert des Achs
 Das ist sozusagen der Wert, für den sich das Modell festlegen würde, wenn es sonst nichts sagen dürfte.
 
 2. *Bereichsschätzungen* Cleverer als Punktschätzungen sind Bereichsschätzungen (Intervallschätzungen): Hier wird ein Bereich plausibler Werte für den entsprechenden Koeffizienten angegeben. In der Spalte `CI` sehen Sie die untere bzw. die obere Grenze eines "Bereichs plausibler Werte". Dieser Schätzbereich wird auch als *Konfidenzintervall* (engl. confidence interval, CI) bezeichnet.
-Ein Konfidenzintervall ist mit einer Sicherheit zwischen 0 und 1 angegeben, z. B. 95$\,$% (0.95).
+Ein Konfidenzintervall ist mit einer Sicherheit zwischen 0 und 1 angegeben, z.B. 95$\,$% (0.95).
 Grob gesagt bedeutet ein 95$\,$%-Konfidenzintervall, dass wir uns (laut Modell) zu 95$\,$% sicher sein können, dass der wahre Wert sich in diesem Bereich befindet.
-In @tbl-lm-wetter1 können wir ablesen, dass das Regressionsgewicht von `year` irgendwo zwischen praktisch Null (`r round(confint(lm_wetter1)["year", 1], 3)`)
-und ca. `r round(confint(lm_wetter1)["year", 2], 3)` Grad geschätzt wird.
+In @tbl-lm-wetter1 können wir ablesen, dass das Regressionsgewicht von `year` irgendwo zwischen praktisch Null (0.009) 
+und ca. 0.01 Grad geschätzt wird.
 Je schmaler das Konfidenzintervall, desto genauer wird der Effekt geschätzt 
 (unter sonst gleichen Umständen). 
 
@@ -320,8 +339,8 @@ Auf dieser Basis erstellen wir ein neues lineares Modell, `lm_wetter1_pro_jahr`,
 
 ```{r}
 wetter_summ <-
-  wetter %>% 
-  group_by(year) %>% 
+  wetter |> 
+  group_by(year) |> 
   summarise(temp = mean(temp),
             precip = mean(precip))  # precipitation: engl. für Niederschlag
 ```
@@ -340,7 +359,7 @@ parameters(lm_wetter1_pro_jahr) |>
 #| echo: false
 #| label: tbl-lm-wetter1a
 #| tbl-cap: "Modellparameter von lm_wetter1a"
-parameters(lm_wetter1_pro_jahr) %>%
+parameters(lm_wetter1_pro_jahr) |>
   select(Parameter, Coefficient) |> print_md()
 ```
 
@@ -405,11 +424,11 @@ Diese Transformation bezeichnet man als *Zentrierung* (engl. centering) der Date
 
 ```{r}
 wetter <-
-  wetter %>% 
+  wetter |> 
   mutate(year_c = year - mean(year))  # "c" wie centered
 ```
 
-Das mittlere Jahr in unserer Messwertereihe ist übrigens 1951, wie etas Datenjudo zeigt: `wetter %>% summarise(mean(year))`
+Das mittlere Jahr in unserer Messwertereihe ist übrigens 1951, wie etas Datenjudo zeigt: `wetter |> summarise(mean(year))`
 
 
 
@@ -429,14 +448,14 @@ parameters(lm_wetter1_zentriert) |>
 #| label: tbl-lm_wetter1_zentriert
 #| tbl-cap: "Modellparameter von lm_wetter1_zentriert"
 parameters(lm_wetter1_zentriert) |> 
-  select(Coefficient, Parameter, CI_low, CI_high) %>% 
+  select(Coefficient, Parameter, CI_low, CI_high) |> 
   print_md()
 ```
 
 Jetzt ist die Interpretation des Achsenabschnitts komfortabel:
-Im Jahr 1951 (x=0) lag die mittlere Temperatur in Deutschland (laut DWD) bei ca. `r round(coef(lm_wetter1_zentriert)["(Intercept)"], 1)`$\,$°C.
-Die Regressionsgleichung lautet: *temp_pred = `r round(coef(lm_wetter1_zentriert)["(Intercept)"], 2)` + `r round(coef(lm_wetter1_zentriert)["year_c"], 2)`\*year_c*.
-In Worten: Wir sagen eine Temperatur vorher, die sich als Summe von `r round(coef(lm_wetter1_zentriert)["(Intercept)"], 2)`$\,$°C plus `r round(coef(lm_wetter1_zentriert)["year_c"], 2)` mal das Jahr (in zentrierter Form) berechnet.
+Im Jahr 1951 (x=0) lag die mittlere Temperatur in Deutschland (laut DWD) bei ca. 8.5$\,$°C.
+Die Regressionsgleichung lautet: `temp_pred = 8.49 + 0.01*year_c`.
+In Worten: Wir sagen eine Temperatur vorher, die sich als Summe von 8.49$\,$°C plus 0.01 mal das Jahr (in zentrierter Form) berechnet.
 
 
 Wie gut erklärt unser Modell die Daten?
@@ -513,8 +532,8 @@ Ja, so könnte das klappen! Diese Syntax übertragen Sie auf Ihre `wetter`-Daten
 
 ```{r}
 wetter <-
-  wetter %>% 
-  mutate(after_1950 = year > 1950) %>% 
+  wetter |> 
+  mutate(after_1950 = year > 1950) |> 
   filter(region != "Deutschland")  # ohne Daten für Gesamt-Deutschland
 ```
 
@@ -536,9 +555,9 @@ parameters(lm_wetter_bin_uv) |>
 ```
 
 
-Die Parameterwerte des Modells lassen darauf schließen,
-dass es tatsächlich wärmer geworden ist nach 1950,
-und zwar offenbar um `r round(coef(lm_wetter_bin_uv)["after_1950TRUE"], 2)` Grad, s. @fig-wetter2.
+Die Parameterwerte des Modells lassen darauf schließen, 
+dass es tatsächlich wärmer geworden ist nach 1950, 
+und zwar offenbar ein gutes halbes Grad, s. @fig-wetter2.
 
 
 
@@ -546,7 +565,7 @@ und zwar offenbar um `r round(coef(lm_wetter_bin_uv)["after_1950TRUE"], 2)` Grad
 #| echo: false
 #| label: fig-wetter2
 #| layout: [[45,-10, 45], [100]]
-#| fig-cap: !expr 'sprintf("Modell: `temp ~ after_1950`, (a) Der Schätzbereich für den Parameter reicht von ca. %.2f bis %.2f Grad Unterschied. (b) Der Unterschied sieht in dieser Darstellung nicht groß aus.", confint(lm_wetter_bin_uv)["after_1950TRUE", 1], confint(lm_wetter_bin_uv)["after_1950TRUE", 2])'
+#| fig-cap: "Modell: `temp ~ after_1950`, (a) Der Schätzbereich für den Parameter reicht von ca. 0.5 bis 0.8 Grad Unterschied. (b) Der Unterschied sieht in dieser Darstellung nicht groß aus."
 #| fig-subcap: 
 #|   - "Mittelwertsunterschied als Regressionsparameter"
 #|   - "Mittelwertsunterschied als Verteilungsvergleich"
@@ -635,7 +654,7 @@ d2 <- tribble(
   2,  "Frau",       0
 )
 
-d2[1:2] %>% knitr::kable()
+d2[1:2] |> knitr::kable()
 ```
 
 :::
@@ -654,7 +673,7 @@ d2 <- tribble(
   2,  "Frau",        0
 )
 
-d2[c(1,3)] %>% knitr::kable()
+d2[c(1,3)] |> knitr::kable()
 
 ```
 :::
@@ -666,8 +685,8 @@ Ein lineares Modell mit binärer UV zeigt nichts anderes als die Differenz der G
 :::
 
 ```{r}
-wetter %>% 
-  group_by(after_1950) %>% 
+wetter |> 
+  group_by(after_1950) |> 
   summarise(temp_mean = mean(temp))
 ```
 
@@ -689,7 +708,7 @@ wetter4 <-
 
 lm4 <- lm(temp ~ after1950_TRUE, data = wetter4)
 
-wetter4 %>% 
+wetter4 |> 
   ggplot(aes(x = after1950_TRUE, y = temp)) +
   geom_jitter(alpha = .5, width = .2) +
   #geom_violin(alpha = .7) +
@@ -725,18 +744,18 @@ Fassen wir die Interpretation der Koeffizienten für das Modell mit binärer UV 
 ::: {.content-visible unless-format="epub"}
 Für die Modellwerte $\color{modelcol}{\hat{y}}$ gilt also:
 
-- Temperatur laut Modell bis 1950: $\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} = `r round(coef(lm4)[1], 1)`$
+- Temperatur laut Modell bis 1950: $\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} = 17.7$ 
 
-- Temperatur laut Modell nach 1950: $\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} +  \color{beta1col}{\beta_1}= \color{beta0col}{`r round(coef(lm4)[1], 1)`} + \color{beta1col}{`r round(coef(lm4)[2], 1)`} = `r round(coef(lm4)[1] + coef(lm4)[2], 1)`$
+- Temperatur laut Modell bis 1950: $\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} +  \color{beta1col}{\beta_1}= \color{beta0col}{17.7} + \color{beta1col}{0.6} = 18.3$ 
 :::
 
 
 :::: {.content-visible when-format="epub"}
 Für die Modellwerte ${\hat{y}}$ gilt also:
 
-- Temperatur laut Modell bis 1950: ${\hat{y}} = {\beta_0} = `r round(coef(lm4)[1], 1)`$
+- Temperatur laut Modell bis 1950: ${\hat{y}} = {\beta_0} = 17.7$ 
 
-- Temperatur laut Modell nach 1950: ${\hat{y}} = {\beta_0} + {\beta_1}= {`r round(coef(lm4)[1], 1)`} + {`r round(coef(lm4)[2], 1)`} = `r round(coef(lm4)[1] + coef(lm4)[2], 1)`$
+- Temperatur laut Modell bis 1950: ${\hat{y}} = {\beta_0} + {\beta_1}= {17.7} + {0.6} = 18.3$ 
 ::::
 
 
@@ -808,7 +827,7 @@ d <- tribble(
   3, "Brandenburg",   0,  1
 )
 
-d[1:2] %>% knitr::kable()
+d[1:2] |> knitr::kable()
 ```
 
 :::
@@ -824,7 +843,7 @@ $\quad \rightarrow$
 ```{r}
 #| echo: false
 
-d[c(1,3, 4)] %>% knitr::kable()
+d[c(1,3, 4)] |> knitr::kable()
 ```
 :::
 ::::
@@ -871,16 +890,16 @@ Am einfachsten verdeutlicht sich `lm_wetter_region` vielleicht mit einem Diagram
 #| fig-cap: Sinnbild zur Interpretation eines linearen Modells mit nominaler UV (reingezoomt, um den Mittelwertsunterschied hervorzuheben). 
 
 wetter_summ <- 
-  wetter %>% 
-  group_by(region) %>% 
-  summarise(temp = mean(temp)) %>% 
-  mutate(id = 0:15) %>% 
-  ungroup() %>%
+  wetter |> 
+  group_by(region) |> 
+  summarise(temp = mean(temp)) |> 
+  mutate(id = 0:15) |> 
+  ungroup() |>
   mutate(grandmean = mean(temp),
          delta = temp - grandmean)
 
-wetter_summ %>%  
-# filter(region != "Deutschland") %>% 
+wetter_summ |>  
+# filter(region != "Deutschland") |> 
   ggplot(aes(y = region, x = temp)) +
   theme_minimal() +
   geom_label(aes(label = paste0("b", id),
@@ -936,7 +955,7 @@ parameters(lm_wetter_month)
 #| eval: !expr knitr:::is_html_output()
 #| label: tbl-lm_wetter-month
 #| tbl-cap: Modellparameter für lm_wetter_month
-parameters(lm_wetter_month) %>% print_md()
+parameters(lm_wetter_month) |> print_md()
 ```
 
 
@@ -960,7 +979,7 @@ Alle metrischen Eigenschaften gehen verloren; die Variable ist jetzt auf nominal
 
 ```{r}
 wetter <-
-  wetter %>% 
+  wetter |> 
   mutate(month_factor = factor(month))
 ```
 
@@ -992,8 +1011,8 @@ In ähnlicher Form zu @fig-wetter-month könnten Sie auch die Regressionsgewicht
 
 ```{r}
 #| echo: false
-wetter_summ2 <- wetter %>%
-  group_by(month_factor) %>%
+wetter_summ2 <- wetter |>
+  group_by(month_factor) |>
   summarise(
     mean_precip = mean(precip, na.rm = TRUE),
     sd_precip = sd(precip, na.rm = TRUE)
@@ -1022,7 +1041,7 @@ kann man dies mit `relevel` tun:
 
 ```{r}
 wetter <-
-  wetter %>% 
+  wetter |> 
   mutate(month_factor = relevel(month_factor, ref = "7"))
 ```
 
@@ -1045,7 +1064,7 @@ Der Einfachheit halber greifen Sie sich nur zwei Monate heraus (Januar und Juli)
 
 ```{r def-wetter-month}
 wetter_month_1_7 <-
-  wetter %>% 
+  wetter |> 
   filter(month == 1  | month == 7) 
 ```
 
@@ -1084,8 +1103,8 @@ so können Sie einfach die Faktorvariable neu definieren (mit `factor`).
 
 ```{r wetter-month-1-7}
 wetter_month_1_7 <-
-  wetter %>% 
-  filter(month == 1  | month == 7) %>% 
+  wetter |> 
+  filter(month == 1  | month == 7) |> 
   # Faktor (und damit die Faktorstufen) neu definieren:
   mutate(month_factor = factor(month))
 ```
@@ -1135,7 +1154,7 @@ Die Modellparameter sind in @tbl-lm-year-month zu sehen.
 #| echo: false
 #| label: tbl-lm-year-month
 #| tbl-cap: "Modellparameter von lm_year_month"
-parameters(lm_year_month) %>% 
+parameters(lm_year_month) |> 
   select(Coefficient, Parameter, CI_low, CI_high) |> 
   print_md()
 ```
@@ -1144,16 +1163,16 @@ parameters(lm_year_month) %>%
 
 Die Modellkoeffizienten sind so zu interpretieren:
 
-1. Achsenabschnitt ($\beta_0$, `Intercept`): Im Referenzjahr (1951) im *Referenzmonat Januar* lag die Niederschlagsmenge bei `r round(coef(lm_year_month)["(Intercept)"], 0)`$\,$mm pro Quadratmeter.
-2. Regressionskoeffizient für Jahr ($\beta_1$, `year_c`): Pro Jahr ist die Niederschlagsmenge im Schnitt um `r round(coef(lm_year_month)["year_c"], 2)`$\,$mm an (im Referenzmonat).
-3. Regressionskoeffizient für Monat ($\beta_2$, `month_factor7`) Im Monat `7` (Juli) lag die mittlere Niederschlagsmenge (im Referenzjahr) knapp `r round(coef(lm_year_month)["month_factor7"], 0)`$\,$mm über dem mittleren Wert des Referenzmonats (Januar).
+1. Achsenabschnitt ($\beta_0$, `Intercept`): Im Referenzjahr (1951) im *Referenzmonat Januar* lag die Niederschlagsmenge bei 57$\,$mm pro Quadratmeter.
+2. Regressionskoeffizient für Jahr ($\beta_1$, `year_c`): Pro Jahr ist die Niederschlagsmenge im Schnitt um 0.03$\,$mm an (im Referenzmonat).
+3. Regressionskoeffizient für Monat ($\beta_2$, `month_factor7`) Im Monat `7` (Juli) lag die mittlere Niederschlagsmenge (im Referenzjahr) knapp 25$\,$mm über dem mittleren Wert des Referenzmonats (Januar).
 
 
 Die Regressionsgleichung von `lm_year_month` lautet:
-`r sprintf("precip_pred = %.2f + %.2f*year_c + %.2f*month_factor_7", coef(lm_year_month)["(Intercept)"], coef(lm_year_month)["year_c"], coef(lm_year_month)["month_factor7"])`.
-Im Monat Juli ist `month_factor_7 = 1`,
-ansonsten (Januar) ist `month_factor = 0`.
-Demnach erwarten wir laut Modell `lm_year_month` im Juli des Referenzjahres `r round(coef(lm_year_month)["(Intercept)"] + coef(lm_year_month)["month_factor7"], 2)`$\,$mm Niederschlag.
+`precip_pred = 56.94 + 0.03*year_c + 24.37*month_factor_7`.
+Im Monat Juli ist `month_factor_7 = 1`, 
+ansonsten (Januar) ist `month_factor = 0`. 
+Demnach erwarten wir laut Modell `lm_year_month` im Juli des Referenzjahres `r 56.94 + 24.37`$\,$mm Niederschlag.
 Die Werte der Regressionskoeffizienten sind @tbl-lm-year-month entnommen.
 
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Puh, kompliziert!
@@ -1275,9 +1294,9 @@ ggplot(wetter_month_1_7) +
       color = month_factor,
       linetype = month_factor,
       group = month_factor) +
-  geom_point(alpha = .2, aes(shape = month_factor)) +  # Removed geom_point2 (assuming it was a typo)
+  geom_point2(alpha = .2, aes(shape = month_factor)) + 
   geom_smooth(method = "lm", size = 2, fullrange = TRUE) +
-  scale_color_okabeito() +
+  scale_color_manual(values = c("1" = beta0col, "7" = beta1col)) +
   scale_x_continuous(limits = c(-100, 125)) +
   theme(legend.position = "none") +
   geom_label_repel(
@@ -1343,7 +1362,7 @@ s. @tbl-lm_year_month_interaktion.
 #| echo: false
 #| label: tbl-lm_year_month_interaktion
 #| tbl-cap: "Modellparameter von lm_year_month_interaktion"
-parameters(lm_year_month_interaktion) %>% select(Parameter, Coefficient, CI_low, CI_high)
+parameters(lm_year_month_interaktion) |> select(Parameter, Coefficient, CI_low, CI_high)
 ```
 
 Neu bei der Ausgabe zu diesem Modell ist die unterste Zeile für den Parameter `year c × month factor [7]`.
@@ -1352,12 +1371,12 @@ Sie gibt die Stärke des Interaktionseffekts an.
 Die Zeile zeigt, 
 wie unterschiedlich sich die die Niederschlagsmenge 
 zwischen den beiden Monaten im Verlauf der Jahre ändert: 
-Pro Jahr ist die Zunahme an Niederschlag um `r round(abs(coef(lm_year_month_interaktion)["year_c:month_factor7"]), 2)`$\,$mm geringer
+Pro Jahr ist die Zunahme an Niederschlag um 0.20$\,$mm geringer
 als im Referenzmonat (Januar).
-Damit resultiert für Juli insgesamt ein `r ifelse(coef(lm_year_month_interaktion)["year_c"] + coef(lm_year_month_interaktion)["year_c:month_factor7"] < 0, "negativer", "positiver")` Effekt:
-`r sprintf("%.2f + (%.2f) = %.2f", coef(lm_year_month_interaktion)["year_c"], coef(lm_year_month_interaktion)["year_c:month_factor7"], coef(lm_year_month_interaktion)["year_c"] + coef(lm_year_month_interaktion)["year_c:month_factor7"])`.
+Damit resultiert für Juli insgesamt ein positiver Effekt: 
+`0.13 - -0.20 = 0.07`.
 Insgesamt lautet die Regressionsgleichung:
-`r sprintf("precip_pred = %.2f + %.2f * year_c + %.2f * month_factor_7 + (%.2f) * year_c:month_factor_7", coef(lm_year_month_interaktion)["(Intercept)"], coef(lm_year_month_interaktion)["year_c"], coef(lm_year_month_interaktion)["month_factor7"], coef(lm_year_month_interaktion)["year_c:month_factor7"])`.
+`precip_pred = 56.91 + 0.13 * year_c + 24.37 * month_factor_7 - 0.20 * year_c:month_factor_7`.
 
 
 :::{.callout-important}
@@ -1439,7 +1458,7 @@ Ein lineares Modell, `y ~ x1 + x2` mit zwei UV im 3D-Raum.
 #| out-width: 75%
 #| label: fig-3d-regr-2d
 lm3d_expect <- estimate_relation(lm3d)
-plot(lm3d_expect)
+plot(lm3d_expect, show_data = TRUE)
 ```
 
 
@@ -1467,7 +1486,7 @@ plot(lm3d_expect)
 #| label: 2D-Diagramm für 3D-Modell
 #| echo: false
 lm3d_expect <- estimate_relation(lm3d)
-plot(lm3d_expect)
+plot(lm3d_expect, show_data = TRUE)
 ```
 
 
@@ -1490,7 +1509,7 @@ Betrachten wir z.$\,$B. folgendes lineares Modell mit zwei metrischen UV, `lm_ma
 
 ```{r}
 lm_mario_2uv <- lm(total_pr ~ start_pr + ship_pr, 
-                   data = mariokart %>% filter(total_pr < 100))
+                   data = mariokart |> filter(total_pr < 100))
 ```
 
 
@@ -1704,7 +1723,7 @@ Nächster Versuch.
 
 ```{r mariokart-train2}
 mariokart_train2 <-
-  mariokart_train %>% 
+  mariokart_train |> 
   select(-c(title, id))
 
 lm_allin_no_title_no_id <- lm(total_pr ~ ., data = mariokart_train2)
@@ -1748,8 +1767,8 @@ Sie rennen zu Ihrer Chefin, die jetzt die Güte Ihrer Vorhersagen in den *restli
 Ihre Chefin schaut sich die Verkaufspreise im Test-Sample an:
 
 ```{r}
-mariokart_test %>% 
-  select(id, total_pr) %>% 
+mariokart_test |> 
+  select(id, total_pr) |> 
   head()
 ```
 
@@ -1773,7 +1792,7 @@ mit den Test-Daten ein:
 
 ```{r}
 mariokart_test <-
-  mariokart_test %>% 
+  mariokart_test |> 
   mutate(lm_allin_predictions = predict(lm_allin_no_title_no_id, 
 newdata = mariokart_test))
 ```
@@ -1918,8 +1937,8 @@ mariokart_test <-
   testing(meine_aufteilung)  # Assessment-Sample
 ```
 
-`training` wählt die Zeilen aus, die in das Train-Sample ihres Train-Samples, d. h. Ihr Analyse-Sample, kommen sollen.
-`testing`  wählt die Zeilen aus, die in das Test-Sample ihres Train-Samples, d. h. Ihr Assessment-Sample, kommen sollen.
+`training` wählt die Zeilen aus, die in das Train-Sample ihres Train-Samples, d.h. Ihr Analyse-Sample, kommen sollen.
+`testing`  wählt die Zeilen aus, die in das Test-Sample ihres Train-Samples, d.h. Ihr Assessment-Sample, kommen sollen.
 
 Ich persönliche nenne die Tabelle mit den Daten gerne `d_analysis` bzw. `d_assess`,
 das ist kürzer zu tippen und einheitlich.
@@ -2156,7 +2175,7 @@ d_sim <-
     x = rnorm(n, 0, 0.5),
     y = rnorm(n, 0, 0.5),
     group = "A"
-  ) %>%
+  ) |>
   bind_rows(
     tibble(
       x = rnorm(n, 1, 0.5),
@@ -2165,7 +2184,7 @@ d_sim <-
   )
 
 p_super_korr <- 
-d_sim %>%
+d_sim |>
   ggplot(aes(x = x, y = y)) +
   geom_point2() +
   geom_smooth(method = "lm", se = FALSE, color = modelcol) +
@@ -2176,7 +2195,7 @@ d_sim %>%
   theme_large_text()
 
 p_no_korr <- 
-d_sim %>%
+d_sim |>
   ggplot(aes(x = x, y = y, color = group, shape = group)) +
   geom_point() +
   geom_smooth(method = "lm") +
@@ -2184,7 +2203,7 @@ d_sim %>%
        subtitle = "keine Korrelation!") +
   theme(legend.position = "bottom") +
   theme_minimal() +
-  scale_color_okabeito() +
+  scale_color_manual(values = c(beta0col, beta1col)) +
   theme(
     legend.position = c(0.97, 0.05),  # Adjust these values to position the legend
     legend.justification = c(1, 0)) +

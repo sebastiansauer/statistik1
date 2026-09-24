@@ -245,13 +245,13 @@ dann funktionieren diese Befehle nicht.
 #| fig-asp: .5
 #| fig-cap: "Sinnbild für das Sortieren einer Tabelle mit `arrange`: Hier wurden die Noten aufsteigend sortiert."
 d_arranged <-
-  d %>% 
+  d |> 
   arrange(note)
 
 p_d_arranged <- ggtexttable(d_arranged, rows=NULL) 
 
 p_d_arranged <-
-  p_d_arranged %>% 
+  p_d_arranged |> 
   table_cell_bg(column = 4, fill = okabeito_colors()[1], 
                 row = 2:tab_nrow(p_d_arranged))
 
@@ -373,7 +373,7 @@ anhand dessen wir die Tabelle filern, s. @fig-filter.
 #| label: fig-filter
 #| fig-cap: "Sinnbild für das Filtern einer Tabelle mit `filter`: Gruppe *B* wurde entfernt, also wurde nach Gruppe *A* gefiltert."
 d_filter <-
-  d %>% 
+  d |> 
   filter(note > 2)
 
 
@@ -382,7 +382,7 @@ p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1)
 p_d_filter <- ggtexttable(d_filter, rows=NULL) 
 
 p_d_filter <- 
-  p_d_filter %>% 
+  p_d_filter |> 
   table_cell_bg(column = 1:4, fill = okabeito_colors()[1], row = 2:tab_nrow(p_d_filter))
 
 p_text_filter <- grid::textGrob("filter")
@@ -504,7 +504,7 @@ Wählen wir also *nur* die Spalten aus, die uns interessieren und entfernen wir 
 #| fig-asp: 0.5
 #| fig-cap: "Sinnbild für das Auswählen von Spalten mit `select`"
 d_select <-
-  d %>% 
+  d |> 
   select(id, note)
 
 p_d1 <- ggtexttable(d, rows=NULL)
@@ -512,7 +512,7 @@ p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1)
 p_d_select <- ggtexttable(d_select, rows=NULL) 
 
 p_d_select2 <- 
-  p_d1 %>% 
+  p_d1 |> 
   table_cell_bg(column = 2, fill = okabeito_colors()[1], row = 2:tab_nrow(p_d_select))
 
 p_text_select <- grid::textGrob("select")
@@ -604,7 +604,7 @@ Damit lag der Notenschnitt (der Mittelwert) bei 2.4; s. @fig-summarise.
 #| fig-asp: 0.5
 #| fig-cap: "Spalten zu einer einzelnen Zahl zusammenfassen mit `summarise`: Hier wurden die Noten anhand des Mittelwerts zusammengefasst."
 d_summ <-
-  d %>% 
+  d |> 
   summarise(note_mw = round(mean(note), 1))
 
 
@@ -709,15 +709,15 @@ Also gut, R, dann gruppiere die Tabelle, s. @fig-group.
 #| label: fig-group
 #| fig-cap: "Gruppieren von Datensätzen mit `group_by`: Hier wurde anhand der Variable `gruppe` gruppiert."
 d_groupby <-
-  d %>% 
+  d |> 
   group_by(gruppe)
 
 d_g1 <-
-  d %>% 
+  d |> 
   filter(gruppe == "A")
 
 d_g2 <-
-  d %>% 
+  d |> 
   filter(gruppe == "B")
 
 
@@ -726,11 +726,11 @@ p_d_g2 <- ggtexttable(d_g2, rows=NULL)
 
 
 p_d_g1 <- 
-  p_d_g1 %>% 
+  p_d_g1 |> 
   table_cell_bg(column = 3, fill = okabeito_colors()[1], row = 2:tab_nrow(p_d_g1))
 
 p_d_g2 <- 
-  p_d_g2 %>% 
+  p_d_g2 |> 
   table_cell_bg(column = 3, fill = okabeito_colors()[2], row = 2:tab_nrow(p_d_g2))
 
 p_text_summ <- grid::textGrob("group_by(gruppe)",
@@ -854,13 +854,13 @@ Immer mal wieder möchte man *Spalten verändern*, bzw. deren Werte umrechnen, s
 #| fig-asp: 0.5
 #| fig-cap: "Spalten verändern/neu berechnen mit `mutate`"
 d_mutate <-
-  d %>% 
+  d |> 
   mutate(punkte = c(73, 72, 89))
 
 p_d_mutate <- ggtexttable(d_mutate, rows=NULL) 
 
 p_d_mutate <- 
-  p_d_mutate %>% 
+  p_d_mutate |> 
   table_cell_bg(column = 5, fill = okabeito_colors()[1], row = 2:tab_nrow(p_d_select))
 
 p_text_mutate <- grid::textGrob("mutate",
@@ -1062,7 +1062,7 @@ s. @fig-pfeifen.
 
 ::: {.column width="30%"}
 :::{.xlarge}
-%>%   
+|>   
 :::
 :::
 
@@ -1161,24 +1161,23 @@ Nimm "meine_daten" *und dann*
 
 :::{#def-pipe}
 ### Pfeife
-"Und dann" heißt auf Errisch ` %>% ` oder (synonym) ` |> `.
+"Und dann" heißt auf Errisch ` |> ` oder (synonym) ` |> `.
 Man nennt diesen Befehl "Pfeife" (engl. *pipe*). $\square$
 :::
 
 :::{.callout-note}
-Der Befehl ` %>% ` *verknüpft* Befehle.
+Der Befehl ` |> ` *verknüpft* Befehle.
 Der Shortcut für diesen Befehl ist Strg-Shift-M.
-Die Pfeife `%>%` "wohnt" im Paket `tidyverse`.^[Genauer gesagt im Paket `magrittr`,
-welches aber von `tidyverse` geladen wird. 
-Also nichts, um das Sie sich kümmern müssten.]
+Die Pfeife `|>` ist seit R 4.1 fest in R eingebaut (die "native pipe").^[Es gibt noch eine ältere Pfeife, `|>`, aus dem Paket `magrittr`,
+welches vom Paket `tidyverse` geladen wird. Beide Pfeifen funktionieren praktisch gleich;
+in diesem Buch verwenden wir durchgehend die eingebaute Pfeife `|>`.]
 :::
 
-Mittlerweile (Seit R 4.1) ist auch im Standard-R eine Pfeife eingebaut.
-Die sieht so aus: `|>`.
-Die eingebaute Pfeife funktioniert praktisch gleich zur anderen Pfeife, `%>% `,
-hat aber den Vorteil, dass Sie nicht `tidyverse` starten müssen.
-Da wir `tidyverse` aber sowieso praktisch immer starten werden, 
-bringt es uns keinen Vorteil, die neuere Pfeife des Standard-R `|>` zu verwenden. Aber auch keinen Nachteil. Unter *Tools > Global Options …* können Sie einstellen, 
+Vor R 4.1 gab es nur die Pfeife aus dem `tidyverse` (genauer: aus dem Paket `magrittr`), geschrieben als `|>`.
+Mittlerweile (seit R 4.1) ist auch im Standard-R eine Pfeife eingebaut, geschrieben als `|>`.
+Die eingebaute Pfeife funktioniert praktisch gleich zur älteren Pfeife `|>`,
+hat aber den Vorteil, dass Sie kein zusätzliches Paket dafür benötigen.
+Deswegen verwenden wir in diesem Buch durchgehend die eingebaute Pfeife `|>`. Unter *Tools > Global Options …* können Sie einstellen,
 welche der beiden Pfeifen-Varianten der Shortcut *Strg-Shift-M* verwenden soll.
 
 
@@ -1199,10 +1198,10 @@ flowchart LR
 
 
 ```{#lst-pfeife .r lst-cap="Eine Pfeifen-Befehlssequenz (Pseudo-Syntax)"}
-meine_daten %>%
-  filter_gewünschte_zeilen() %>%
-  wähle_gewünschte_spalten() %>%
-  gruppiere() %>%
+meine_daten |>
+  filter_gewünschte_zeilen() |>
+  wähle_gewünschte_spalten() |>
+  gruppiere() |>
   fasse_zusammen() 
 ```
 
@@ -1219,13 +1218,13 @@ So könnte Ihre "Pfeifen-Sequenz" für den Mariokart-Datensatz aussehen, s. @lst
 #| lst-cap: "Mariokart am Fließband: Die 'Pfeifen-Syntax'"
 #| tbl-cap: "Endprodukt einer Pfeifen-Syntax"
 # Hey R, nimm die Tabelle "mariokart":
-mariokart %>%  
+mariokart |>  
    # filter nur die günstigen Spiele:
-  filter(total_pr < 100) %>% 
+  filter(total_pr < 100) |> 
   # wähle die zwei Spalten:
-  select(cond, total_pr) %>%  
+  select(cond, total_pr) |>  
   # gruppiere die Tabelle nach Zustand des Spiels:
-  group_by(cond) %>%  
+  group_by(cond) |>  
   # fasse beide Gruppen nach dem mittleren Preis zusammen:
   summarise(total_pr_mean = mean(total_pr))  
 ```
@@ -1270,9 +1269,9 @@ Aber nur für Spiele, die mit Foto verkauft wurden!
 **Lösung**
 
 ```{r}
-mariokart %>% 
-  filter(stock_photo == "yes") %>% 
-  group_by(cond) %>% 
+mariokart |> 
+  filter(stock_photo == "yes") |> 
+  group_by(cond) |> 
   summarise(total_pr_max = max(total_pr))
 ```
 
@@ -1309,7 +1308,7 @@ bekommen wir eine Tabelle mit zwei Spalten: `wheels` und `n`.
 in der jeweiligen Gruppe ("Teiltabelle") von `wheels` sind.
 
 ```{r}
-mariokart %>%
+mariokart |>
   count(wheels)
 ```
 
@@ -1318,9 +1317,9 @@ beigelegt wurden und wir solche Spiele herausfiltern sollten,
 bevor wir den Mittelwert der Versandkosten ausrechnen:
 
 ```{r}
-mariokart %>%
-  filter(wheels < 3) %>% 
-  group_by(wheels) %>% 
+mariokart |>
+  filter(wheels < 3) |> 
+  group_by(wheels) |> 
   summarise(mittlere_versandkosten = mean(ship_pr),
             anzahl_spiele = n())
 ```
@@ -1346,9 +1345,9 @@ die wir als Provision unseren Verkäufern zahlen müssen.
 **Lösung**
 
 ```{r}
-mariokart %>% 
-  select(total_pr) %>% 
-  mutate(total_pr_yen = total_pr * 133) %>% 
+mariokart |> 
+  select(total_pr) |> 
+  mutate(total_pr_yen = total_pr * 133) |> 
   summarise(
     preis_yen_mw = mean(total_pr_yen),
     preis_yen_mw_minus_10proz = preis_yen_mw - 0.1*preis_yen_mw)
@@ -1413,8 +1412,8 @@ Dann wird der Mittelwert pro Gruppe berechnet.
 
 ```{r}
 mariokart_wheels <- 
-mariokart %>% 
-  group_by(wheels) %>% 
+mariokart |> 
+  group_by(wheels) |> 
   summarise(pr_mean = mean(total_pr),
             count_n = n())  # `n` gibt die Anzahl der Zeilen pro Gruppe an
 
@@ -1424,7 +1423,7 @@ mariokart_wheels
 Schließlich berechnet unsere Analystin den *ungewichteten* Mittelwert über diese 5 Gruppen:
 
 ```{r}
-mariokart_wheels %>% 
+mariokart_wheels |> 
   summarise(mean(pr_mean))
 ```
 
@@ -1662,7 +1661,7 @@ Das nennt man auch ein *ERBie*: ein *einfaches, reproduzierbares Beispiel* Ihres
 data(mtcars)
 library(dplyr)  # nicht "tidyverse", denn "dplyr" reicht
 
-mtcars %>% 
+mtcars |> 
   filter(am = 0)  # den kürzesten Code, der Ihren Fehler entstehen lässt!
 
 sessionInfo()  # gibt Infos zur R-Version etc. aus

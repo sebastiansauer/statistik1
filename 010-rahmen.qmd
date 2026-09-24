@@ -272,25 +272,25 @@ groesse <-
      )
 
 groesse <- 
-  groesse %>%
+  groesse |>
   mutate(label = 
            if_else(team == "Basketball", 
                    "geringe Variation", 
                    "hohe Variation")) |> 
-  group_by(team) %>% 
-  mutate(groesse_mw = mean(groesse)) %>% 
-  mutate(abweichung = groesse - groesse_mw) %>% 
+  group_by(team) |> 
+  mutate(groesse_mw = mean(groesse)) |> 
+  mutate(abweichung = groesse - groesse_mw) |> 
   mutate(Vorzeichen = factor(sign(abweichung)))
 
 groesse_summ <-
-  groesse %>% 
-  group_by(team) %>% 
+  groesse |> 
+  group_by(team) |> 
   summarise(groesse_mw = mean(groesse))
 
 facet_labels <- c(`Basketball` = "Basketball\nGeringe Variation",
                   `Schach️` = "Schach\nHohe Variation")
 
-groesse %>% 
+groesse |> 
   ggplot(aes(x = id, y = groesse)) +
   #geom_col(width=.5, alpha = .5) +
   facet_wrap(~team, labeller = as_labeller(facet_labels)) +
@@ -317,7 +317,7 @@ groesse %>%
                size = 2) +
   geom_point(aes(x = id, y = groesse), color = "black", alpha = .8, size = 2) +
   scale_x_continuous(limits = c(0, 7), breaks = 1:5) +
-  scale_color_okabeito(palette = "contrast") +
+  scale_color_manual(values = c(beta0col, beta1col)) +
   theme(legend.position = "none")
 ```
 
@@ -335,18 +335,18 @@ groesse %>%
 #| dev: "ragg_png"
 
 groesse_summ <-
-  groesse %>% 
-  group_by(team) %>% 
+  groesse |> 
+  group_by(team) |> 
   summarise(groesse_mw = mean(groesse))
 
 groesse <-
-  groesse %>% 
-  group_by(team) %>% 
-  mutate(groesse_mw = mean(groesse)) %>% 
-  mutate(abweichung = groesse - groesse_mw) %>% 
+  groesse |> 
+  group_by(team) |> 
+  mutate(groesse_mw = mean(groesse)) |> 
+  mutate(abweichung = groesse - groesse_mw) |> 
   mutate(Vorzeichen = factor(sign(abweichung)))
 
-groesse %>% 
+groesse |> 
   ggplot(aes(x = id)) +
   geom_segment(aes(x = id, xend = id, y = groesse, yend = groesse_mw, color = Vorzeichen)) +
   geom_point(aes(x = id, y = groesse), color = "grey60", alpha = .7, size = 2) +
@@ -354,8 +354,8 @@ groesse %>%
   geom_hline(aes(yintercept = groesse_mw), data = groesse_summ) +
   labs(
        subtitle = "Basketball: Wenig Variation; Schach: Viel Variation",
-       x= "Nummer der Spielers") + 
-  scale_color_okabeito() +
+       x= "Nummer der Spielers") +
+  scale_color_manual(values = c(beta0col, beta1col)) +
   geom_label(x = 5, label = "MW",
             aes(y = groesse_mw),
             hjust = "right",
@@ -712,14 +712,14 @@ head(mariokart) |>
   kable()
 
 # if (knitr:::is_html_output()) {
-#   mariokart %>% 
-#     select(-title) %>% 
+#   mariokart |> 
+#     select(-title) |> 
 #     DT::datatable() 
 # }
 # 
 # if (knitr:::is_latex_output()) {
-#   mariokart %>% 
-#     select(-title) %>% 
+#   mariokart |> 
+#     select(-title) |> 
 #     head() 
 # }
 
@@ -909,9 +909,9 @@ Suchen Sie ein Beispiel für eine Konfiguration einer Tabelle im Lang- vs. Breit
 #| out-width: "75%"
 #| fig-cap: "Beispiel für eine Visualisierung auf Basis einer Tidy-Tabelle,  vgl. @tbl-tidy1"
 
-last_points <- tidy_untidy_long %>%
-  group_by(Produkt) %>%
-  filter(Jahr == max(Jahr)) %>%
+last_points <- tidy_untidy_long |>
+  group_by(Produkt) |>
+  filter(Jahr == max(Jahr)) |>
   ungroup()
 
 tidy_untidy_long |> 
@@ -924,7 +924,7 @@ tidy_untidy_long |>
             hjust = -0.2, vjust = 0.5, size = 4, show.legend = FALSE) +
   theme(legend.position = "none") +
   scale_y_continuous(limits = c(0,15)) +
-  scale_color_okabeito(palette = "black_first") 
+  scale_color_manual(values = c(beta0col, beta1col))
 ```
 
 
@@ -1287,7 +1287,7 @@ Die Abstände zwischen den Objekten können dabei nicht quantifiziert werden.
 #| fig-asp: 0.3
 #| fig-cap: "Die Ordinalskala: Je weiter rechts auf der X-Achse, desto lieber esse ich das Gericht."
 
-tibble(x = c(1,2,5), Liebling = c("🥩", "🍝", "🍕")) %>% 
+tibble(x = c(1,2,5), Liebling = c("🥩", "🍝", "🍕")) |> 
   ggplot()+
   aes(x=x) +
   geom_label(aes(label = Liebling), y = 1, size = 10) +
@@ -1369,7 +1369,7 @@ df <- tibble(
 
 # Einzelne Diagramme
 # Diagramm 1
-df1 <- df %>% filter(id == 1)
+df1 <- df |> filter(id == 1)
 p1 <- ggplot(df1, aes(y = Preis, x = factor(id))) +
   geom_col() +
   scale_x_discrete(breaks = "Möhre") +
@@ -1386,7 +1386,7 @@ p1 <- ggplot(df1, aes(y = Preis, x = factor(id))) +
   annotate("label", x = 1, y = 12000, label = "10 Tsd")
 
 # Diagramm 2
-df2 <- df %>% filter(id == 2)
+df2 <- df |> filter(id == 2)
 p2 <- ggplot(df2, aes(y = Preis, x = factor(id))) +
   geom_col() +
   scale_x_discrete() +
@@ -1409,7 +1409,7 @@ p2
 
 # tibble(Preis = c(1e4, 1e5),
 #        id = c(1, 2),
-#        Auto = c("🚙", "🏎️"  )) %>% 
+#        Auto = c("🚙", "🏎️"  )) |> 
 #   ggplot(aes(y = Preis, x = id)) +
 #   geom_col() +
 #   scale_x_discrete() +

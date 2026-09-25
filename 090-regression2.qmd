@@ -581,14 +581,16 @@ wetter |>
   ggplot(aes(x = after_1950, y = temp)) +
   geom_boxplot(alpha = .5) +
   #geom_violin(alpha = .5) +
-  stat_summary(fun = mean, 
-               geom = "point", color = okabeito_colors()[1], 
+  stat_summary(fun = mean,
+               # order = c(5, 4): Blau/Amber statt Orange/Hellblau, da Letztere im
+               # Graustufendruck fast identisch hell sind (schlechter S/W-Kontrast)
+               geom = "point", color = okabeito_colors()[5],
                alpha = .7,
                size = 5) +  # Add mean points
-  stat_summary(fun = mean, 
-               geom = "line", 
-               aes(group = 1), color = okabeito_colors()[2], 
-               linewidth = 1)  + # Connect means | 
+  stat_summary(fun = mean,
+               geom = "line",
+               aes(group = 1), color = okabeito_colors()[4],
+               linewidth = 1)  + # Connect means |
   theme_large_text()
 ```
 
@@ -1218,13 +1220,15 @@ ggplot(wetter_month_1_7) +
       color = month_factor,
       group = month_factor) +
   geom_point(alpha = .1, aes(shape = month_factor)) +
-  scale_color_okabeito() +
+  # order = c(5, 4): Blau/Amber statt Orange/Hellblau, da Letztere im
+  # Graustufendruck fast identisch hell sind (schlechter S/W-Kontrast)
+  scale_color_okabeito(order = c(5, 4)) +
   geom_abline(slope = coef(lm_year_month)[2],
-              intercept = coef(lm_year_month)[1], 
-              color = okabeito_colors()[1], size = 2,
+              intercept = coef(lm_year_month)[1],
+              color = okabeito_colors()[5], size = 2,
               linetype = "1111") +
   geom_abline(slope = coef(lm_year_month)[2],
-              intercept = coef(lm_year_month)[1] + coef(lm_year_month)[3], color = okabeito_colors()[2], size = 2) +
+              intercept = coef(lm_year_month)[1] + coef(lm_year_month)[3], color = okabeito_colors()[4], size = 2) +
   annotate("label", x = Inf,
            y = predict(lm_year_month, newdata = tibble(year_c = 50, month_factor = factor("1"))),
            label = "month 1", hjust = 1.1) +

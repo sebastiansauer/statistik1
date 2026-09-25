@@ -28,9 +28,11 @@ histogram_to_boxplot <- function(d = mariokart,
                        breaks = pretty(d[[var_chosen]], n = 10)) +
     labs(x = "", y = "Anzahl") +
     scale_y_continuous(breaks = c(0, 5, 10, 15)) +
-    geom_vline(xintercept = var_md, linetype = "dashed", color = okabeito_colors()[1]) +
-    geom_vline(xintercept = var_q1, linetype = "dashed", color = okabeito_colors()[2]) +
-    geom_vline(xintercept = var_q3, linetype = "dashed", color = okabeito_colors()[2]) +
+    # order = c(5, 4): Blau/Amber statt Orange/Hellblau, da Letztere im
+    # Graustufendruck fast identisch hell sind (schlechter S/W-Kontrast)
+    geom_vline(xintercept = var_md, linetype = "dashed", color = okabeito_colors()[5]) +
+    geom_vline(xintercept = var_q1, linetype = "dashed", color = okabeito_colors()[4]) +
+    geom_vline(xintercept = var_q3, linetype = "dashed", color = okabeito_colors()[4]) +
     geom_boxplot(aes(y = -1), width = 1.5, outlier.size = 2, color = "black", fill = "grey40") +
     annotate("label", x = var_md, y = Inf, label = paste0("Md: ", round(var_md, digits)), vjust = "top") +
     annotate("label", x = var_q1, y = -0.5, label = paste0("Q1: ", round(var_q1, digits)), vjust = "bottom") +

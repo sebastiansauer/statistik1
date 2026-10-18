@@ -8,9 +8,9 @@
 #   
 
 ycol <- "#E69F00"
-modelcol <- "#56B4E9"
+modelcol <- "#0072B2"
 errorcol <- "#009E73"
-beta0col <- "#D55E00"
+beta0col <- "#E69F00"
 beta1col <- "#0072B2"
 xcol <- "#CC79A7"
 

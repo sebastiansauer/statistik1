@@ -582,14 +582,14 @@ wetter |>
   geom_boxplot(alpha = .5) +
   #geom_violin(alpha = .5) +
   stat_summary(fun = mean,
-               # order = c(5, 4): Blau/Amber statt Orange/Hellblau, da Letztere im
-               # Graustufendruck fast identisch hell sind (schlechter S/W-Kontrast)
+               # Orange/Blau (Okabe-Ito) fuer 2 Gruppen -- Index 4 war faelschlich als
+               # "Amber" bezeichnet, ist aber Gelb und daher hier durch Orange ersetzt.
                geom = "point", color = okabeito_colors()[5],
                alpha = .7,
                size = 5) +  # Add mean points
   stat_summary(fun = mean,
                geom = "line",
-               aes(group = 1), color = okabeito_colors()[4],
+               aes(group = 1), color = okabeito_colors()[1],
                linewidth = 1)  + # Connect means |
   theme_large_text()
 ```
@@ -1220,15 +1220,15 @@ ggplot(wetter_month_1_7) +
       color = month_factor,
       group = month_factor) +
   geom_point(alpha = .1, aes(shape = month_factor)) +
-  # order = c(5, 4): Blau/Amber statt Orange/Hellblau, da Letztere im
-  # Graustufendruck fast identisch hell sind (schlechter S/W-Kontrast)
-  scale_color_okabeito(order = c(5, 4)) +
+  # Orange/Blau (Okabe-Ito) fuer 2 Gruppen -- Index 4 war faelschlich als
+  # "Amber" bezeichnet, ist aber Gelb und daher hier durch Orange ersetzt.
+  scale_color_okabeito(order = c(5, 1)) +
   geom_abline(slope = coef(lm_year_month)[2],
               intercept = coef(lm_year_month)[1],
               color = okabeito_colors()[5], size = 2,
               linetype = "1111") +
   geom_abline(slope = coef(lm_year_month)[2],
-              intercept = coef(lm_year_month)[1] + coef(lm_year_month)[3], color = okabeito_colors()[4], size = 2) +
+              intercept = coef(lm_year_month)[1] + coef(lm_year_month)[3], color = okabeito_colors()[1], size = 2) +
   annotate("label", x = Inf,
            y = predict(lm_year_month, newdata = tibble(year_c = 50, month_factor = factor("1"))),
            label = "month 1", hjust = 1.1) +
@@ -2191,7 +2191,7 @@ p_super_korr <-
 d_sim |>
   ggplot(aes(x = x, y = y)) +
   geom_point2() +
-  geom_smooth(method = "lm", se = FALSE, color = modelcol) +
+  geom_smooth(method = "lm", color = modelcol) +
   labs(title = "Oh yeah,",
        subtitle = "super Korrelation!") +
   theme_minimal() +
@@ -2267,7 +2267,7 @@ Nutzen Sie diese Fallstudien, um sich intensiver mit der Entwicklung eines Progn
 
 
 
-[Vorhersage von Flugverspätungen](https://sebastiansauer.github.io/Datenwerk/posts/flights-delay-simplified//)
+[Vorhersage von Flugverspätungen](https://sebastiansauer.github.io/datenwerk/posts/flights-delay-simplified//)
 
 
 ### Filmerlöse

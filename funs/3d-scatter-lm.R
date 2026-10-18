@@ -1,7 +1,7 @@
 
 set.seed(42)  # For reproducibility
 
-modelcol <- "#56B4E9"
+modelcol <- "#0072B2"
 ycol <- "#E69F00"
 
 df_3d <-

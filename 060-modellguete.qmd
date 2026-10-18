@@ -528,10 +528,10 @@ mariokart |>
   labs(y = "Anzahl") +
   geom_segment( 
            aes(x = q25, xend = q75), 
-           y = 5, yend = 5, color = "#56B4E9",
+           y = 5, yend = 5, color = "#0072B2",
            data = mario_quantile2, size = 3) +
   annotate("label", x = mario_quantile2$q50, y = 5,
-           label = "IQR", color = "#56B4E9") +
+           label = "IQR", color = "#0072B2") +
   theme_large_text()
 
 mariokart |> 
@@ -548,10 +548,10 @@ mariokart |>
   labs(y = "Anteil") +
   geom_segment( 
            aes(x = q25, xend = q75), 
-           y = 0.01, yend = 0.01, color = "#56B4E9",
+           y = 0.01, yend = 0.01, color = "#0072B2",
            data = mario_quantile2, size = 3) +
   annotate("label", x = mario_quantile2$q50, y = .01,
-           label = "IQR", color = "#56B4E9")  +
+           label = "IQR", color = "#0072B2")  +
   scale_y_continuous(labels = NULL) +
   theme_large_text()
 ```
@@ -599,14 +599,14 @@ d |>
   ggplot() +
   stat_function(fun = dnorm,
                 args = list(mean = 0, sd = streuung),
-                # order = c(5, 4): Blau/Amber statt Orange/Hellblau, da Letztere im
-                # Graustufendruck fast identisch hell sind (schlechter S/W-Kontrast)
+                # Orange/Blau (Okabe-Ito) fuer 2 Gruppen -- Index 4 war faelschlich als
+                # "Amber" bezeichnet, ist aber Gelb und daher hier durch Orange ersetzt.
                 color = okabeito_colors()[5]) +
   stat_function(fun = dnorm,
                 args = list(mean = mw, sd = streuung),
-                color = okabeito_colors()[4]) +
+                color = okabeito_colors()[1]) +
   #geom_density(aes(x = groesse), color = "#E69F00FF", size = 2) +
-  #geom_density(aes(x = groesse_zentriert), color = "#56B4E9FF", size = 2) +
+  #geom_density(aes(x = groesse_zentriert), color = "#0072B2FF", size = 2) +
   theme_minimal() +
   geom_vline(
              xintercept = mw,
@@ -777,11 +777,11 @@ p_var <-
            label = paste0("MW = ", round(mean(d$y), 2))) +
   annotate("rect", 
            xmin = 5, ymin = 0, xmax = 5.2, ymax = var_smpl, 
-           fill = "#56B4E9FF") +
+           fill = "#0072B2FF") +
   geom_segment(aes(x = 5.1, y = var_smpl / 2, 
                    xend = 4, yend = -0.1), 
                arrow = arrow(length = unit(0.02, "npc")), 
-               color = "#56B4E9FF", size = 1) +  # Adds a line
+               color = "#0072B2FF", size = 1) +  # Adds a line
   scale_y_continuous(limits = c(-.3, .1)) +
   scale_x_continuous(limits = c(0, 6)) +
   annotate(geom = "label",
@@ -789,7 +789,7 @@ p_var <-
            hjust = 0.5,
            y = -0.1,
            label = "Varianz",
-           color = "#56B4E9FF",
+           color = "#0072B2FF",
            size = 8) +
   annotate("label", 
            x = 3, 
@@ -1153,10 +1153,10 @@ total_pr_zentriert_mean <- mean(mariokart_no_extreme_zentriert$total_pr_zentrier
 mariokart_no_extreme_zentriert |> 
   select(total_pr, total_pr_zentriert) |> 
   ggplot() +
-  geom_density(aes(x = total_pr), fill = "grey40") +
-  geom_density(aes(x = total_pr_zentriert), fill = "black") +
-  # geom_histogram(aes(x = total_pr), fill = "grey40", bins = 15) +
-  # geom_histogram(aes(x = total_pr_zentriert), fill = "black", bins = 15) +
+  geom_density(aes(x = total_pr), fill = "#E69F00", alpha = .6) +
+  geom_density(aes(x = total_pr_zentriert), fill = "#0072B2", alpha = .6) +
+  # geom_histogram(aes(x = total_pr), fill = "#E69F00", bins = 15) +
+  # geom_histogram(aes(x = total_pr_zentriert), fill = "#0072B2", bins = 15) +
   theme_minimal() +
   geom_segment(x = total_pr_mean, 
                xend = 0, 
@@ -1494,7 +1494,7 @@ glimpse(smartphone_raw)
 ### Fallstudie zur Lebenszufriedenheit
 
 Die OECD führt eine [weltweite Studie zur Lebenszufriedenheit](https://www.oecd.org/wise/measuring-well-being-and-progress.htm) durch.^[<https://www.oecd.org/wise/measuring-well-being-and-progress.htm>]
-Arbeiten Sie die die [Fallstudie "oecd-yacsda" im Datenwerk](https://sebastiansauer.github.io/Datenwerk/posts/oecd-yacsda/) durch, 
+Arbeiten Sie die die [Fallstudie "oecd-yacsda" im Datenwerk](https://sebastiansauer.github.io/datenwerk/posts/oecd-yacsda/) durch, 
 um ein tieferes Verständnis für die Lebenszufriedenheit in verschiedenen Ländern der Welt zu bekommen. 
 
 :::::::

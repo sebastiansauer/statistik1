@@ -61,10 +61,13 @@ options(
 
    
 
+# Buchweites Farbschema (Okabe-Ito). Bei 1 Gruppe/Linie: Blau (modelcol).
+# Bei 2 Gruppen: Orange + Blau (beta0col/beta1col) -- vorher Zinnober/Himmelblau,
+# auf Orange/Blau vereinheitlicht fuer Konsistenz mit dem ggplot-Diagramme-Styleguide.
 ycol <- "#E69F00"
-modelcol <- "#56B4E9"
+modelcol <- "#0072B2"
 errorcol <- "#009E73"
-beta0col <- "#D55E00"
+beta0col <- "#E69F00"
 beta1col <- "#0072B2"
 xcol <- "#CC79A7"
 

@@ -30,7 +30,87 @@ theme_large_text <- function(base_size = 18) {
 
 
 
-ggplot2::theme_set(see::theme_modern())
+# ---------------------------------------------------------------------------
+# Buchweites Diagramm-Setup (Styleguide "ggplot-Diagramme")
+# Grau ist Standard; Farbe nur fuer Hervorhebung/Gruppen (Okabe-Ito, kein Gelb).
+# ---------------------------------------------------------------------------
+
+grau_dunkel <- "#4D4D4D"   # Punkte, Linien (1 Gruppe)
+grau_mittel <- "#999999"   # Fuellung (1 Gruppe), Balken, Histogramm
+grau_hell   <- "#D9D9D9"   # Gitterlinien
+trendcol    <- "#0072B2"   # Regressionsgerade ueber Punktwolke
+fast_schwarz <- "#1A1A1A"  # Text auf farbiger Flaeche
+
+# Linien-/Fuellfarben und (abgedunkelte) Textfarben fuer Gruppen 1..6
+okabe_linie <- c("#E69F00", "#0072B2", "#009E73", "#56B4E9", "#D55E00", "#CC79A7")
+okabe_text  <- c("#B36B00", "#0072B2", "#007A59", "#2B7FB0", "#D55E00", "#A5527F")
+formen      <- c(16, 17, 15, 18)  # Kreis, Dreieck, Quadrat, Raute
+
+# Medium erkennen (Folien: options(plot_medium = "folien") im Setup-Chunk)
+plot_medium <- function() {
+  if (knitr::is_latex_output()) "pdf" else getOption("plot_medium", "html")
+}
+
+# Theme; grid: "h" = Wilke-Gitter nur horizontal (Standard: Histogramm,
+# Boxplot, Dichte), "v" = nur vertikal (liegende Werteachse), "none" (Streu-
+# und Liniendiagramme, Balken mit Wertelabels), "both".
+# Der y-Titel wird oben ueber dem Panel gesetzt: labs(y = NULL, subtitle = "...")
+theme_med <- function(medium = plot_medium(),
+                      grid = c("h", "v", "none", "both")) {
+  medium <- match.arg(medium, c("html", "pdf", "folien"))
+  grid <- match.arg(grid)
+  bs <- switch(medium, html = 11, pdf = 10.5, folien = 19)
+  lw <- if (medium == "folien") 0.6 else 0.4
+  gl <- ggplot2::element_line(color = grau_hell, linewidth = lw)
+  off <- ggplot2::element_blank()
+
+  ggplot2::theme_minimal(base_size = bs) +
+    ggplot2::theme(
+      plot.title.position = "plot",
+      plot.title = ggplot2::element_text(face = "bold"),
+      plot.subtitle = ggplot2::element_text(hjust = 0, color = fast_schwarz),
+      plot.caption = ggplot2::element_text(color = grau_dunkel),
+      panel.grid.minor = off,
+      panel.grid.major.x = if (grid %in% c("both", "v")) gl else off,
+      panel.grid.major.y = if (grid %in% c("both", "h")) gl else off,
+      axis.line = off,
+      axis.ticks = off,
+      strip.text = ggplot2::element_text(face = "bold"),
+      panel.spacing = ggplot2::unit(1.5, "lines"),
+      legend.position = "bottom"   # Fallback; Linien/Balken direkt beschriften
+    )
+}
+
+# Streu-/Liniendiagramm: kein Gitter, Range-Frame (Achsenlinie nur im
+# Datenbereich) mit Ticks. Verwendung: + rangeframe() + theme_streu()
+theme_streu <- function(medium = plot_medium()) {
+  theme_med(medium, grid = "none") +
+    ggplot2::theme(axis.ticks = ggplot2::element_line(color = grau_dunkel),
+                   axis.ticks.length = ggplot2::unit(3, "pt"))
+}
+rangeframe <- function(...) ggthemes::geom_rangeframe(color = grau_dunkel, ...)
+
+# Rug (graue Striche an der Achse); sides = "bl" fuer beide Achsen
+rug_grau <- function(sides = "bl", ...) {
+  ggplot2::geom_rug(color = grau_dunkel, alpha = 0.3, sides = sides, ...)
+}
+
+# Overplotting-Alpha nach Anzahl Punkte
+alpha_n <- function(n) {
+  if (n >= 1000) 0.15 else if (n >= 300) 0.35 else if (n >= 100) 0.6 else 1
+}
+
+ggplot2::theme_set(theme_med())
+
+# Grau als Standardfarbe der Geome (auch fuer sichtbaren Lehr-Code)
+ggplot2::update_geom_defaults("point", list(colour = grau_dunkel))
+ggplot2::update_geom_defaults("line", list(colour = grau_dunkel))
+ggplot2::update_geom_defaults("path", list(colour = grau_dunkel))
+ggplot2::update_geom_defaults("bar", list(fill = grau_mittel))
+ggplot2::update_geom_defaults("col", list(fill = grau_mittel))
+ggplot2::update_geom_defaults("rect", list(fill = grau_mittel))
+ggplot2::update_geom_defaults("boxplot", list(fill = "white", colour = grau_dunkel))
+ggplot2::update_geom_defaults("smooth", list(colour = trendcol, fill = trendcol, alpha = 0.2, linewidth = 1.2))
 
 knitr::opts_chunk$set(tidy = FALSE, 
                       width = 60, 
@@ -111,6 +191,6 @@ if (knitr:::is_latex_output()) {
   
 
   
-  ggplot2::theme_set(ggplot2::theme_minimal())
+  ggplot2::theme_set(theme_med("pdf"))
   
   }

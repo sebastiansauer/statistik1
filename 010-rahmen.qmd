@@ -1314,7 +1314,7 @@ tibble(x = c(1,2,5), Liebling = c("🥩", "🍝", "🍕")) |>
 Wenn die Temperatur heute bei 10$\,$°C liegt und morgen 5$\,$°C -- 
 dann ist es heute *nicht* doppelt so warm wie morgen. 
 Ja, 10 ist das Doppelte von 5. 
-Aber *10$\,$°C* ist *nicht* doppelt so warm wie 20$\,$°C. 
+Aber *10$\,$°C* ist *nicht* doppelt so warm wie 5$\,$°C. 
 Wenn Sie das verwundert: 
 Das ist normal, so geht es vielen Leuten, wenn sie das zum ersten Mal hören.
 Der Grund, warum es nicht sinnvoll ("erlaubt") ist, 
@@ -1331,24 +1331,99 @@ Oder: Im Schnitt waren es 7,5$\,$°C, das ist genau in der Mitte von 5 und 10$\,
 ```{r}
 #| dev: "ragg_png"
 #| echo: false
-#| out-width: "50%"
-#| fig-asp: 0.5
+#| out-width: "75%"
+#| fig-asp: 0.85
 #| label: fig-intervall
-#| fig-cap: "Ein Metermaß steckt im trüben Wasser. Auf dem Metermaß können wir die aufgedruckten Zahlen ablesen. Aber wir wissen nicht, ob der Metermaß auf dem Boden steht. Wir wissen demnach nicht, ob der vom Metermaß angegebene Nullpunkt der wahre Nullpunkt (Meeresboden) ist."
+#| fig-cap: "Ein Metermaß steckt im trüben Wasser. Abstände können wir ablesen (von 10 bis 30 sind es 20 cm), aber wo der wahre Nullpunkt liegt, sehen wir nicht. So ist es bei der Intervallskala: Differenzen sind sinnvoll, Verhältnisse nicht."
 
-data_fig_intervall <- tibble(x = 0, y = c(10, 20, 30)) 
+# --- Geometrie (Einheiten: cm auf dem Metermass) ---
+wasser_y  <- 7      # Wasseroberflaeche
+boden_y   <- -24    # Meeresboden (wahrer Nullpunkt)
+klar_bis  <- 1      # ab hier ist das Wasser undurchsichtig
+mass_l    <- -0.25  # Metermass, linke Kante
+mass_r    <-  0.25  # Metermass, rechte Kante
+mass_oben <- 43
+wasser_l  <- -1.6
+wasser_r  <-  0.9
 
-ggplot(data_fig_intervall) +
-  aes(x = x) +
-  annotate("segment", x = 0, xend = 0, y = 0, yend = 30) +
-  annotate("rect", fill = "blue", alpha = .8,
-           xmin = -1, xmax = 1, ymin = 0, ymax = 10) + # ymin and ymax order fixed
-  geom_label(aes(y = y, label = y), x = 0, size = 12) + 
-  theme_void() +
-  ylim(0, 35) +  # Extend y-axis range to avoid clipping
-  theme(
-    plot.margin = margin(10, 10, 10, 10) # Add margin space
-  ) 
+# Metermass mit Strichen (1er, 5er, 10er); beginnt bei 0 (unsichtbar)
+striche <- tibble(y = 0:42) |>
+  mutate(laenge = case_when(y %% 10 == 0 ~ 0.24,
+                            y %% 5 == 0 ~ 0.15,
+                            TRUE ~ 0.08))
+zahlen <- tibble(y = seq(10, 40, by = 10))
+
+# Truebes Wasser: Streifen, nach unten zunehmend deckend und dunkler
+n_streifen <- 240
+wasser <- tibble(oben = seq(wasser_y, boden_y - 12, length.out = n_streifen + 1)) |>
+  mutate(unten = lead(oben)) |>
+  drop_na() |>
+  mutate(mitte = (oben + unten) / 2,
+         t = pmin(1, (wasser_y - mitte) / (wasser_y - klar_bis)),
+         deckung = 0.30 + 0.70 * t^1.3,
+         farbe = colorRampPalette(c("#56B4E9", "#0072B2", "#0B4F78"))(n_streifen))
+
+# Gewellte Wasserlinie
+x_welle <- seq(wasser_l, wasser_r, length.out = 200)
+welle <- tibble(x = x_welle, y = wasser_y + 0.45 * sin(x_welle * 9))
+welle_flaeche <- bind_rows(welle,
+                           tibble(x = c(wasser_r, wasser_l), y = wasser_y - 0.5))
+
+# Meeresboden: unscharfe Kante durch mehrere versetzte, transparente Flaechen
+x_boden <- seq(wasser_l, wasser_r, length.out = 200)
+boden_kante <- function(versatz) {
+  tibble(x = c(x_boden, wasser_r, wasser_l),
+         y = c(boden_y + versatz + 0.9 * sin(x_boden * 3.1) + 0.5 * sin(x_boden * 7.3 + 1),
+               boden_y - 12, boden_y - 12),
+         ebene = versatz)
+}
+boden <- map_dfr(seq(2.4, 0, by = -0.4), boden_kante)
+
+# Beschriftungen rechts
+label_x <- wasser_r + 0.15
+beschriftung <- tibble(
+  y_ziel  = c(wasser_y, 0, boden_y + 0.5),
+  x_ziel  = c(wasser_r, mass_r + 0.05, wasser_r),
+  y_text  = c(wasser_y + 4, 0, boden_y),
+  text    = c("Wasseroberfläche",
+              "Wo ist die 0\ndes Metermaßes?",
+              "Wahrer Nullpunkt\n(Meeresboden)")
+)
+
+p <- ggplot() +
+  # Metermass (wird vom Wasser ueberdeckt)
+  annotate("rect", xmin = mass_l, xmax = mass_r, ymin = 0, ymax = mass_oben,
+           fill = "#F2F2F2", color = grau_dunkel, linewidth = 0.4) +
+  geom_segment(data = striche,
+               aes(x = mass_l, xend = mass_l + laenge, y = y, yend = y),
+               color = fast_schwarz, linewidth = 0.35) +
+  geom_text(data = zahlen, aes(x = 0.07, y = y, label = y),
+            size = 4.2, color = fast_schwarz, fontface = "bold") +
+  # Wasser
+  geom_rect(data = wasser,
+            aes(xmin = wasser_l, xmax = wasser_r, ymin = unten, ymax = oben,
+                fill = farbe, alpha = deckung), color = NA) +
+  geom_polygon(data = welle_flaeche, aes(x, y), fill = "#56B4E9", alpha = 0.30) +
+  geom_line(data = welle, aes(x, y), color = "#0072B2", linewidth = 0.8) +
+  # Boden, schemenhaft im Trueben
+  geom_polygon(data = boden, aes(x, y, group = ebene),
+               fill = "#2B2B2B", alpha = 0.10) +
+  # Fragezeichen in der Luecke
+  annotate("text", x = 0, y = (0 + boden_y) / 2 + 1, label = "?",
+           size = 13, color = "white", fontface = "bold", alpha = 0.9) +
+  # Beschriftungen mit Hinweislinien
+  geom_segment(data = beschriftung,
+               aes(x = x_ziel, xend = label_x - 0.04, y = y_ziel, yend = y_text),
+               color = grau_dunkel, linewidth = 0.3) +
+  geom_text(data = beschriftung, aes(x = label_x, y = y_text, label = text),
+            hjust = 0, size = 3.8, color = fast_schwarz, lineheight = 0.95) +
+  scale_fill_identity() +
+  scale_alpha_identity() +
+  coord_cartesian(xlim = c(wasser_l, 2.6), ylim = c(boden_y - 8, mass_oben + 2),
+                  expand = FALSE) +
+  theme_void()
+
+p
 ```
 
 

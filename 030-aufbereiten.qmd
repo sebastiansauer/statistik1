@@ -1,4 +1,20 @@
+---
+# WebR-Test (quarto-live): interaktive R-Zellen nur in diesem Kapitel
+filters:
+  - live
+ojs-engine: true
+resources:
+  - data/mariokart.csv   # damit die CSV-Datei mit ins _book kopiert wird
+webr:
+  packages:
+    - dplyr
+  resources:
+    - data/mariokart.csv
+---
+
 # Daten umformen
+
+{{< include children/webr-knitr.qmd >}}
 
 <!-- <style> -->
 <!-- q { -->
@@ -328,9 +344,16 @@ mariokart <-
 Die Funktion `arrange` macht es uns ziemlich einfach, s. @tbl-arrange.
 
 ```{r}
-#| tbl-cap: Die Datentabelle, (aufsteigend) sortiert nach `total_pr`
-#| label: tbl-arrange
+#| eval: false
 arrange(mariokart, total_pr)
+```
+
+```{r}
+#| echo: false
+#| tbl-cap: Die Datentabelle, (aufsteigend) sortiert nach `total_pr` (die ersten sechs Zeilen)
+#| label: tbl-arrange
+arrange(mariokart, total_pr) |>
+  head()
 ```
 
 :::
@@ -445,7 +468,14 @@ mariokart_neu <- filter(mariokart, stock_photo == "yes")
 ::: {.content-visible when-format="html"}
 
 ```{r}
-mariokart_neu 
+#| eval: false
+mariokart_neu
+```
+
+```{r}
+#| echo: false
+# nur die ersten sechs Zeilen zeigen (kable druckt sonst alle)
+head(mariokart_neu)
 ```
 
 
@@ -478,7 +508,14 @@ mario_filter1 <-
 
 ::: {.content-visible when-format="html"}
 ```{r}
+#| eval: false
 mario_filter1
+```
+
+```{r}
+#| echo: false
+# nur die ersten sechs Zeilen zeigen (kable druckt sonst alle)
+head(mario_filter1)
 ```
 :::
 
@@ -492,7 +529,14 @@ mario_filter2 <-
 
 ::: {.content-visible when-format="html"}
 ```{r}
+#| eval: false
 mario_filter2
+```
+
+```{r}
+#| echo: false
+# nur die ersten sechs Zeilen zeigen (kable druckt sonst alle)
+head(mario_filter2)
 ```
 :::
 
@@ -506,6 +550,52 @@ Hier könnte man noch viele interessante Hypothesen prüfen, denken Sie sich und
 
 :::{#exr-filter2}
 Filtern Sie die Spiele mit nur einem Lenkrad und ohne Versandkosten. $\square$
+:::
+
+
+::: {.content-visible when-format="html"}
+
+```{webr}
+#| edit: false
+#| echo: false
+#| output: false
+# Unsichtbare Vorbereitung: Paket laden und Daten einlesen
+library(dplyr)
+mariokart <- tibble::as_tibble(read.csv("data/mariokart.csv"))[, -1]  # ohne Zeilennummer V1
+```
+
+:::{.callout-tip}
+#### Probieren Sie es direkt hier aus 🧪
+
+Der folgende R-Code läuft direkt in Ihrem Browser – ohne Installation.
+Ändern Sie den Code und klicken Sie auf *Run Code*.
+Der erste Start dauert einige Sekunden, da R im Hintergrund geladen wird.
+:::
+
+```{webr}
+filter(mariokart, stock_photo == "yes" & cond == "new")
+```
+
+Und jetzt Sie: Lösen Sie @exr-filter2 im Browser.
+Ersetzen Sie die Unterstriche `______` durch die passenden Filterbedingungen.
+
+```{webr}
+#| exercise: ex_filter2
+filter(mariokart, ______ & ______)
+```
+
+::: {.hint exercise="ex_filter2"}
+Die Anzahl der Lenkräder steht in `wheels`, die Versandkosten in `ship_pr`.
+:::
+
+::: {.solution exercise="ex_filter2"}
+```{webr}
+#| exercise: ex_filter2
+#| solution: true
+filter(mariokart, wheels == 1 & ship_pr == 0)
+```
+:::
+
 :::
 
 

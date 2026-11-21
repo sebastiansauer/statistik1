@@ -1,0 +1,35 @@
+```{r}
+#| echo: false
+#| cache: false
+# knitr-Engine für interaktive {webr}-Zellen (quarto-live).
+#
+# Ersetzt _extensions/r-wasm/live/_knitr.qmd: Dort werden die Zellen-
+# optionen (#| exercise: ..., #| echo: false, ...) über options$yaml.code
+# durchgereicht, das es ab knitr 1.51 nicht mehr gibt. Dann gehen alle
+# #|-Optionen verloren. Hier werden sie aus den vom Autor gesetzten
+# Chunk-Optionen (Attribut "chunk_opts" von knit_code) neu aufgebaut.
+
+# include: false behandelt quarto-live selbst, knitr soll die Zelle behalten
+knitr::opts_hooks$set(include = function(options) {
+  if (options$engine == "webr") options$include <- TRUE
+  options
+})
+
+webr_optionszeilen <- function(label) {
+  opts <- attr(knitr::knit_code$get(label), "chunk_opts")
+  opts <- opts[setdiff(names(opts), c("engine", "label"))]
+  vapply(names(opts), function(nm) {
+    wert <- opts[[nm]]
+    wert <- if (is.logical(wert)) tolower(as.character(wert)) else as.character(wert)
+    paste0("#| ", nm, ": ", paste(wert, collapse = ", "))
+  }, character(1), USE.NAMES = FALSE)
+}
+
+knitr::knit_engines$set(webr = function(options) {
+  paste(c("```{webr}",
+          webr_optionszeilen(options$label),
+          options$code,
+          "```"),
+        collapse = "\n")
+})
+```

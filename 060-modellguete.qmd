@@ -197,16 +197,23 @@ group_names <-
   c(x1 = "wenig Streuung:\nDickableibtin",
     x2 = "viel Streuung:\nPfundafliptan")
 
+# Modell (MW) blau, Abweichungen bläulichgrün, Punkte grau
 d |> 
   ggplot(aes(x = id, y = value)) +
-  geom_point() +
-  facet_wrap(~ name, labeller = as_labeller(group_names)) +
-  geom_hline(color = okabeito_colors()[1], yintercept = 0) +
   geom_segment(aes(x = id, xend = id, y = value, yend = avg), 
-               alpha = .5, color = "grey40") +
-  theme_minimal() +
-  geom_label(x = 0, y = 0, label = "MW", color = okabeito_colors()[1]) +
-  scale_x_continuous(limits = c(-10,100))
+               alpha = .6, color = errorcol) +
+  geom_hline(data = d_sum, aes(yintercept = avg),
+             color = trendcol, linewidth = 1.2) +
+  geom_point(alpha = alpha_n(100), size = 1.2) +
+  facet_wrap(~ name, labeller = as_labeller(group_names)) +
+  geom_label(data = d_sum, aes(y = avg), x = -10, hjust = 0, label = "MW",
+             color = trendcol, fontface = "bold",
+             fill = alpha("white", 0.85), border.colour = NA) +
+  scale_x_continuous(limits = c(-10,100)) +
+  labs(x = "Versuchsperson (id)", y = NULL,
+       subtitle = "Gewichtsveränderung") +
+  rangeframe() +
+  theme_streu()
 ```
 
 
@@ -277,6 +284,7 @@ von weniger als 100 Euros berücksichtigt und nur Spiele mit 0 oder mit 2 Lenkr�
 #| label: fig-fehler-red
 #| fig-cap: "Fehlerbalken in einem einfachen und komplexeren Modell. (a) Fehlerbalken im einfachen Modell. Ein Mittelwert; viel Streuung insgesamt, y ~ 1. (b) Fehlerbalken im komplexeren Modell. Zwei Mittelwerte; weniger Streuung in jeder Gruppe, y ~ G. Die geringere Streuung erkennt man daran, dass die vertikalen Abstandsbalken im Schnitt kürzer sind als im einfachen Modell."
 #| layout-ncol: 2
+#| teilbild: true
 #| fig-subcap:
 #|   - "Einfaches Modell"
 #|   - "Komplexeres Modell"
@@ -302,53 +310,62 @@ m_sum <-
   ungroup()
 
 
+# (a) Modell (MW) blau, Abweichungen bläulichgrün, Punkte grau
 m |> 
   ggplot() +
-  geom_hline(aes(yintercept = mean(total_pr))) +
   geom_segment(aes(x = ID,
                    xend = ID,
                    y = total_pr,
                    yend = mean(total_pr)
-                   ), color = "grey") +
+                   ), color = errorcol, alpha = 0.7) +
+  geom_hline(aes(yintercept = mean(total_pr)),
+             color = trendcol, linewidth = 1.2) +
   geom_point(aes(x = ID, y = total_pr)) +
-  annotate("label", x = 0, y = 47, label = "MW", hjust = "left", size = 6) +
-  theme_large_text()
+  annotate("label", x = 0, y = mean(m$total_pr), vjust = -0.3,
+           label = sprintf("MW: %.1f", mean(m$total_pr)), hjust = "left",
+           color = trendcol, fontface = "bold",
+           fill = alpha("white", 0.85), border.colour = NA) +
+  scale_y_continuous(limits = range(m$total_pr)) +  # gleiche Skala in (a) und (b)
+  labs(x = "Spiel (ID)", y = NULL, subtitle = "Verkaufspreis (Euro)") +
+  rangeframe() +
+  theme_streu()
 
 
+
+# (b) zwei Gruppenmittelwerte: Orange (0 Räder), Blau (2 Räder);
+# Abweichungen zum jeweiligen Gruppen-MW bläulichgrün; Gruppen per Farbe + Symbol
+farben_wheels <- c("0" = okabe_linie[1], "2" = okabe_linie[2])
+texte_wheels  <- c("0" = okabe_text[1], "2" = okabe_text[2])
 
 m |> 
   ggplot() +
-  geom_segment(data = filter(m, wheels == 0),
-               aes(x = ID,
+  geom_segment(aes(x = ID,
                    xend = ID,
                    y = total_pr,
-                   yend = mean(total_pr)
-               ), color = "grey") +
+                   yend = total_pr_mean_group
+               ), color = errorcol, alpha = 0.7) +
    geom_hline(data = m_sum,
      aes(yintercept = total_pr,
-                 color = factor(wheels))) +
-   geom_segment(data = filter(m, wheels == 2),
-               aes(x = ID,
-                   xend = ID,
-                   y = total_pr,
-                   yend = mean(total_pr)
-               ), color = "grey") +
+                 color = factor(wheels)), linewidth = 1.2) +
   geom_point(
     aes(x = ID, y = total_pr, 
         color = factor(wheels), 
-        size = 2,
-        shape = factor(wheels))) +
-  labs(color = "wheels") +
-  theme(legend.position = "none") +
+        shape = factor(wheels)), size = 2) +
   geom_label(data = m_sum,
-    aes(label = paste0("MW bei ", wheels, " Räder"), 
-        y = total_pr, color = factor(wheels)), 
-    x = max(m$ID), hjust = 1, size = 6,
-    show.legend = FALSE) +
-  scale_color_manual(values = c(beta0col, beta1col)) +
-  scale_x_continuous(limits = c(-10, 90)) +
-  theme_large_text() +
-  theme(legend.position = "none")
+    aes(label = sprintf("MW: %.1f", total_pr), 
+        y = total_pr, color = I(texte_wheels[as.character(wheels)])), 
+    x = max(m$ID), hjust = 1, vjust = -0.3, fontface = "bold",
+    fill = alpha("white", 0.85), border.colour = NA) +
+  scale_color_manual(values = farben_wheels, guide = "none") +
+  scale_shape_manual(values = c("0" = formen[1], "2" = formen[2]), guide = "none") +
+  scale_y_continuous(limits = range(m$total_pr)) +  # gleiche Skala in (a) und (b)
+  labs(x = "Spiel (ID)", y = NULL,
+       subtitle = paste0("Verkaufspreis (Euro); ",
+                         "<b style='color:", okabe_text[1], "'>&#9679; 0 Räder</b> / ",
+                         "<b style='color:", okabe_text[2], "'>&#9650; 2 Räder</b>")) +
+  rangeframe() +
+  theme_streu() +
+  theme(plot.subtitle = ggtext::element_markdown())
 ```
 
 
@@ -428,15 +445,22 @@ d <-
          y = c(1, -3, 1, 1))
 
 
+# Mittelwert (Modell) blau gestrichelt, Abweichungen bläulichgrün mit Wert
 ggplot(d) +
   aes(x = id, y = y) +
-  geom_point(size = 5, alpha = .7, color = ycol) +
-  geom_segment(aes(x = id, xend = id, y = y, yend = mean(y))) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  annotate("label", x = 0.5, y = 0, label = "Mittelwert") +
-  theme_minimal() +
-  scale_x_continuous(limits = c(0, 4)) +
-  theme_large_text()
+  geom_hline(yintercept = mean(d$y), linetype = "dashed",
+             color = trendcol, linewidth = 0.8) +
+  geom_segment(aes(x = id, xend = id, y = y, yend = mean(y)),
+               color = errorcol, linewidth = 1.2) +
+  geom_point(size = 4, color = grau_dunkel) +
+  geom_text(aes(y = y / 2, label = sprintf("%+.0f", y - mean(y))),
+            hjust = 0, nudge_x = 0.1, color = okabe_text[3],
+            fontface = "bold") +
+  annotate("label", x = 0, y = 0, hjust = 0, vjust = -0.3, label = "Mittelwert",
+           color = trendcol, fontface = "bold",
+           fill = alpha("white", 0.85), border.colour = NA) +
+  scale_x_continuous(limits = c(0, 4.4), breaks = 1:4) +
+  labs(x = "Beobachtung (id)", y = NULL, subtitle = "y")
 ```
 
 Natürlich können wir R auch die Rechenarbeit überlassen.
@@ -501,6 +525,7 @@ $IQR = Q_3-Q_1 = 1.75\,m - 1.65\,m = 0.10\,m$, d.$\,$h. 10$\,$cm. $\square$
 ```{r}
 #| echo: false
 #| layout-ncol: 2
+#| teilbild: true
 #| label: fig-iqr-mario
 #| fig-cap: "IQR, Q1, Q2 und Q3 für das Schlussgebot (nur Spiele für weniger als 100 Euro)"
 #| fig-subcap: 
@@ -522,46 +547,53 @@ mario_quantile <-
 mariokart |> 
   filter(total_pr < 100) |>  
   ggplot(aes(x = total_pr)) +
-  geom_histogram() +
-  geom_vline(xintercept = mario_quantile$qs) +
+  geom_histogram(color = "white") +
+  # Quartile als dünne, gestrichelte Referenzlinien; IQR als blauer Balken
+  geom_vline(xintercept = mario_quantile$qs, linetype = "dashed",
+             color = grau_dunkel) +
   annotate("label", 
            x =  mario_quantile$qs, 
            y = 0, 
-           label =  mario_quantile$qs) +
+           label =  sprintf("%.1f", mario_quantile$qs),
+           size = 3, border.colour = NA) +
   annotate("label",
            x =  mario_quantile$qs, 
            y = Inf, 
            label =  c("Q1", "Median", "Q3"), 
-           vjust = c(4,3, 2)) +
-  labs(y = "Anzahl") +
+           vjust = c(1.2, 2.6, 1.2), size = 3, border.colour = NA) +
+  labs(x = "Verkaufspreis (Euro)", y = NULL, subtitle = "Anzahl") +
   geom_segment( 
            aes(x = q25, xend = q75), 
-           y = 5, yend = 5, color = "#0072B2",
-           data = mario_quantile2, size = 3) +
+           y = 5, yend = 5, color = trendcol,
+           data = mario_quantile2, linewidth = 3) +
   annotate("label", x = mario_quantile2$q50, y = 5,
-           label = "IQR", color = "#0072B2") +
-  theme_large_text()
+           label = "IQR", color = trendcol, fontface = "bold",
+           border.colour = NA)
 
 mariokart |> 
   filter(total_pr < 100) |>  
   ggplot(aes(x = total_pr)) +
-  geom_density() +
-  geom_vline(xintercept = mario_quantile$qs) +
-  annotate("label", x =  mario_quantile$qs, y = 0, label =  mario_quantile$qs) +
+  geom_density(fill = grau_mittel, alpha = 0.3, color = grau_dunkel) +
+  geom_vline(xintercept = mario_quantile$qs, linetype = "dashed",
+             color = grau_dunkel) +
+  annotate("label", x =  mario_quantile$qs, y = 0,
+           label =  sprintf("%.1f", mario_quantile$qs),
+           size = 3, border.colour = NA) +
   annotate("label", x =  
              mario_quantile$qs, 
            y = Inf, 
            label =  c("Q1", "Median", "Q3"), 
-           vjust = c(4,3, 2)) +
-  labs(y = "Anteil") +
+           vjust = c(1.2, 2.6, 1.2), size = 3, border.colour = NA) +
+  labs(x = "Verkaufspreis (Euro)", y = NULL, subtitle = "Anteil (Dichte)") +
   geom_segment( 
            aes(x = q25, xend = q75), 
-           y = 0.01, yend = 0.01, color = "#0072B2",
-           data = mario_quantile2, size = 3) +
+           y = 0.01, yend = 0.01, color = trendcol,
+           data = mario_quantile2, linewidth = 3) +
   annotate("label", x = mario_quantile2$q50, y = .01,
-           label = "IQR", color = "#0072B2")  +
+           label = "IQR", color = trendcol, fontface = "bold",
+           border.colour = NA)  +
   scale_y_continuous(labels = NULL) +
-  theme_large_text()
+  theme_med(grid = "none")
 ```
 
 
@@ -605,31 +637,37 @@ d_sum <-
 
 d |> 
   ggplot() +
+  # zentriert: Blau, unzentriert: Orange; direkt beschriftet
   stat_function(fun = dnorm,
                 args = list(mean = 0, sd = streuung),
-                # Orange/Blau (Okabe-Ito) fuer 2 Gruppen -- Index 4 war faelschlich als
-                # "Amber" bezeichnet, ist aber Gelb und daher hier durch Orange ersetzt.
-                color = okabeito_colors()[5]) +
+                color = okabe_linie[2], linewidth = 1) +
   stat_function(fun = dnorm,
                 args = list(mean = mw, sd = streuung),
-                color = okabeito_colors()[1]) +
+                color = okabe_linie[1], linewidth = 1) +
   #geom_density(aes(x = groesse), color = "#E69F00FF", size = 2) +
   #geom_density(aes(x = groesse_zentriert), color = "#0072B2FF", size = 2) +
-  theme_minimal() +
   geom_vline(
              xintercept = mw,
-             color = "grey") +
+             color = grau_mittel, linetype = "dashed") +
   geom_vline(
              xintercept = 0,
-             color = "grey") +
-  annotate("label", x = 0, y = 0, label = "MW: 0") +
-  annotate("label", x = mw, y = 0, label = paste0("MW: ", mw)) +
+             color = grau_mittel, linetype = "dashed") +
+  annotate("label", x = 0, y = 0, label = "MW: 0.0",
+           color = okabe_text[2], fontface = "bold", border.colour = NA) +
+  annotate("label", x = mw, y = 0, label = sprintf("MW: %.1f", mw),
+           color = okabe_text[1], fontface = "bold", border.colour = NA) +
+  annotate("text", x = -streuung * 1.3, y = dnorm(streuung * 1.3, 0, streuung),
+           label = "zentriert", hjust = 1, color = okabe_text[2], fontface = "bold") +
+  annotate("text", x = mw + streuung * 1.3, y = dnorm(streuung * 1.3, 0, streuung),
+           label = "unzentriert", hjust = 0, color = okabe_text[1], fontface = "bold") +
   labs(x = "(zentrierte) Variable", 
-       y = "") +
+       y = NULL) +
   annotate("segment", x = mw, xend = 0, y = 0.01, yend = 0.01,
+           color = grau_dunkel,
            arrow = arrow(type = "closed", length = unit(0.02, "npc"))) +
   scale_y_continuous(labels = NULL) +
-  scale_x_continuous(limits = c(-50, 100))
+  scale_x_continuous(limits = c(-50, 100)) +
+  theme_med(grid = "none")
 
 
 
@@ -723,6 +761,7 @@ Die Varianz ist also ein Maß, das die typische *quadrierte* Abweichung der Beob
 #|   - "Varianz als 'typischer' Fehlerbalken"
 #| warning: false
 #| layout-ncol: 2
+#| teilbild: true
 #| out-width: 100%
 
 library(viridis)
@@ -741,71 +780,78 @@ var_smpl <- mean(d$delta_sq)
 p_deltas <- 
 d |>   
   ggplot(aes(x = id, y = y)) +
-  geom_hline(yintercept = mean(d$y), linetype = "dashed", show.legend = FALSE) +
+  # Mittelwert (Modell) blau gestrichelt; Abweichungsquadrate orange
+  geom_hline(yintercept = mean(d$y), linetype = "dashed",
+             color = trendcol, linewidth = 0.8) +
   geom_segment(aes(y = mean(d$y),
                    yend = y,
                    x = id,
                    xend = id,
-                   linetype = pos), show.legend = FALSE) +
+                   linetype = pos), color = grau_dunkel, show.legend = FALSE) +
   annotate(geom = "label",
            x = 0,
-           hjust = 0,
+           hjust = 0, vjust = 1.3,
            y = mean(d$y), 
-           label = paste0("MW = ", round(mean(d$y), 2)), show.legend = FALSE) +
+           label = sprintf("MW = %.2f", mean(d$y)),
+           color = trendcol, fontface = "bold",
+           fill = alpha("white", 0.85), border.colour = NA) +
   geom_rect(aes(ymin = y_avg,
                 ymax = y,
                 xmin = id,
                 xmax = id+delta_abs),
-            fill = "#E69F00FF" ,
+            fill = okabe_linie[1],
             alpha = .5, show.legend = FALSE) +
-  geom_text(aes(label=round(delta_sq,3)),
+  geom_text(aes(label = sprintf("%.3f", delta_sq)),
             hjust = "left", 
             nudge_x = 0.05,
             vjust = ifelse(d$pos == "positiv", "top", "bottom"),
             nudge_y = ifelse(d$pos == "positiv", -0.05, 0.05),
-            color = "#E69F00FF",
-            size = 6, show.legend = FALSE) +
-  geom_point(size = 5, show.legend = FALSE) +
-  labs(linetype = "",
-       x = "",
-       y = "")  +
+            color = okabe_text[1], fontface = "bold",
+            size = 4, show.legend = FALSE) +
+  geom_point(size = 4, color = grau_dunkel, show.legend = FALSE) +
+  labs(x = NULL, y = NULL, subtitle = "y")  +
   scale_y_continuous(limits = c(-.3, .1)) +
-  scale_x_continuous(limits = c(0, 5)) +
-  theme_minimal()
+  scale_x_continuous(limits = c(0, 5), breaks = 1:4)
 
 
 p_var <- 
   d |>   
   ggplot(aes(x = id, y = y)) + 
-  geom_hline(yintercept = mean(d$y), linetype = "dashed") +
+  geom_hline(yintercept = mean(d$y), linetype = "dashed",
+             color = trendcol, linewidth = 0.8) +
   annotate(geom = "label",
            x = 0,
-           hjust = 0,
+           hjust = 0, vjust = 1.3,
            y = mean(d$y), 
-           label = paste0("MW = ", round(mean(d$y), 2))) +
+           label = sprintf("MW = %.2f", mean(d$y)),
+           color = trendcol, fontface = "bold",
+           fill = alpha("white", 0.85), border.colour = NA) +
+  # Varianz als "typisches" Abweichungsquadrat: gleiche Farbe wie die Quadrate
   annotate("rect", 
            xmin = 5, ymin = 0, xmax = 5.2, ymax = var_smpl, 
-           fill = "#0072B2FF") +
-  geom_segment(aes(x = 5.1, y = var_smpl / 2, 
-                   xend = 4, yend = -0.1), 
+           fill = okabe_linie[1]) +
+  annotate("segment", x = 5.1, y = var_smpl / 2, 
+                   xend = 4, yend = -0.1, 
                arrow = arrow(length = unit(0.02, "npc")), 
-               color = "#0072B2FF", size = 1) +  # Adds a line
+               color = okabe_linie[1], linewidth = 1) +
   scale_y_continuous(limits = c(-.3, .1)) +
-  scale_x_continuous(limits = c(0, 6)) +
+  scale_x_continuous(limits = c(0, 6), breaks = NULL) +
   annotate(geom = "label",
            x = 4,
            hjust = 0.5,
            y = -0.1,
            label = "Varianz",
-           color = "#0072B2FF",
-           size = 8) +
+           color = okabe_text[1], fontface = "bold",
+           border.colour = NA,
+           size = 5) +
   annotate("label", 
            x = 3, 
            y = -0.2,
            hjust = 0.5,
-           label = paste0(var_smpl, " = (0.01+0.01+0.01+0.09)/4"),
-           size = 8) +
-  theme_minimal()
+           label = paste0(sprintf("%.2f", var_smpl), " = (0.01+0.01+0.01+0.09)/4"),
+           border.colour = NA,
+           size = 4) +
+  labs(x = NULL, y = NULL, subtitle = "y")
 
 p_deltas
 p_var
@@ -858,7 +904,7 @@ m_summ
 
 
 
-Statistiken sind ja schön … aber Bilder sind auch gut, s. @fig-var.
+Statistiken sind ja schön … aber Bilder sind auch gut, s. @fig-var-mario.
 Datendiagramme eignen sich gut, 
 um (grob) die Streuung einer Variable zu erfassen.
 
@@ -876,8 +922,9 @@ mariokart |>
 ```{r}
 #| echo: false
 #| fig-cap: "Die Verteilung des Verkaufspreises von Mariokart-Spielen mit MW±SD farblich markiert"
-#| label: fig-var
+#| label: fig-var-mario
 #| layout-ncol: 2
+#| teilbild: true
 #| fig-subcap: 
 #|   - Dichtediagramm 
 #|   - Violindiagramm
@@ -885,40 +932,41 @@ mariokart |>
   select(total_pr) |> 
   filter(total_pr < 100) |>  # ohne Extremwerte
   ggplot() +
-  geom_density(aes(x = total_pr)) +
+  # Bereich um den MW orange hervorgehoben
   geom_rect(data = m_summ, 
                aes(
-                 xmin = pr_mw - 0.5*(pr_sd),
-                 xmax = pr_mw + 0.5*(pr_sd),
+                 xmin = pr_mw - pr_sd,
+                 xmax = pr_mw + pr_sd,
                  ymin = 0,
                  ymax = Inf
                ),
-            alpha = .5,
-            fill = okabeito_colors()[1]) +
-  theme_large_text()
+            alpha = .3,
+            fill = okabe_linie[1]) +
+  geom_density(aes(x = total_pr), color = grau_dunkel, linewidth = 0.8) +
+  labs(x = "Verkaufspreis (Euro)", y = NULL, subtitle = "Dichte")
 
 mariokart |> 
   select(total_pr) |> 
   filter(total_pr < 100) |>  # ohne Extremwerte
   ggplot() +
-  geom_violin(aes(
-    x = 1,
-    y = total_pr)) +
-  geom_jitter(aes(
-    x = 1,
-    y = total_pr),
-    width = 0.1) +
-  scale_x_continuous(limits = c(0, 2)) +
   geom_rect(data = m_summ, 
                aes(
-                 ymin = pr_mw - 0.5*(pr_sd),
-                 ymax = pr_mw + 0.5*(pr_sd),
+                 ymin = pr_mw - pr_sd,
+                 ymax = pr_mw + pr_sd,
                  xmin = -Inf,
                  xmax = Inf
                ),
-            alpha = .5,
-            fill = okabeito_colors()[1]) +
-  theme_large_text()
+            alpha = .3,
+            fill = okabe_linie[1]) +
+  geom_violin(aes(
+    x = 1,
+    y = total_pr), fill = NA, color = grau_dunkel) +
+  geom_jitter(aes(
+    x = 1,
+    y = total_pr),
+    width = 0.1, alpha = 0.6) +
+  scale_x_continuous(limits = c(0, 2), breaks = NULL) +
+  labs(x = NULL, y = NULL, subtitle = "Verkaufspreis (Euro)")
 
 ```
 
@@ -1161,23 +1209,26 @@ total_pr_zentriert_mean <- mean(mariokart_no_extreme_zentriert$total_pr_zentrier
 mariokart_no_extreme_zentriert |> 
   select(total_pr, total_pr_zentriert) |> 
   ggplot() +
-  geom_density(aes(x = total_pr), fill = "#E69F00", alpha = .6) +
-  geom_density(aes(x = total_pr_zentriert), fill = "#0072B2", alpha = .6) +
-  # geom_histogram(aes(x = total_pr), fill = "#E69F00", bins = 15) +
-  # geom_histogram(aes(x = total_pr_zentriert), fill = "#0072B2", bins = 15) +
-  theme_minimal() +
-  geom_segment(x = total_pr_mean, 
+  # unzentriert Orange, zentriert Blau; direkt beschriftet
+  geom_density(aes(x = total_pr), fill = okabe_linie[1], alpha = .5,
+               color = okabe_linie[1]) +
+  geom_density(aes(x = total_pr_zentriert), fill = okabe_linie[2], alpha = .5,
+               color = okabe_linie[2]) +
+  annotate("segment", x = total_pr_mean, 
                xend = 0, 
                y = 0, yend = 0, 
                arrow = arrow(length = unit(0.2, "cm"), type = "closed"),
-               color = okabeito_colors()[1], size = 2) +
-  geom_vline(xintercept = total_pr_mean, color = okabeito_colors()[1], 
+               color = grau_dunkel, linewidth = 1.2) +
+  geom_vline(xintercept = total_pr_mean, color = okabe_linie[1], 
              linetype = "dashed") +
-  geom_vline(xintercept = 0, color = okabeito_colors()[1],
+  geom_vline(xintercept = 0, color = okabe_linie[2],
              linetype = "dashed") +
-  annotate("label", x = 0, y = Inf, label = "Preis zentriert", vjust = 1) +
-  annotate("label", x = total_pr_mean, y = Inf, label = "Preis unzentriert", vjust = 1)  +
-  labs(caption = "Die vertikalen gepunkteten Linien zeigen die Mittelwerte der Verteilungen.") +
+  annotate("label", x = 0, y = Inf, label = "Preis zentriert", vjust = 1,
+           color = okabe_text[2], fontface = "bold", border.colour = NA) +
+  annotate("label", x = total_pr_mean, y = Inf, label = "Preis unzentriert", vjust = 1,
+           color = okabe_text[1], fontface = "bold", border.colour = NA)  +
+  labs(caption = "Die vertikalen gestrichelten Linien zeigen die Mittelwerte der Verteilungen.",
+       x = "Verkaufspreis bzw. Abweichung vom MW (Euro)", y = NULL, subtitle = "Dichte") +
   scale_x_continuous(limits = c(-50, 100))
 ```
 
@@ -1298,20 +1349,25 @@ da wir sie in Bezug zur "typischen Abweichung", der SD, gesetzt haben.
 #| out-width: "100%"
 #| fig-cap: "Standardisierung von Abweichungswerten bzw. einer Verteilung; der vertikale Balken zeigt den Mittelwert"
 
-p1 <- gghistogram(mariokart_no_extreme, x = "abw",
-            add = "mean",  # Mittelwert wird hinzugefügt
-            add.params = list(color = okabeito_colors()[1], size = 3)) +
-  labs(title = "Zentrierte Werte") +
-  annotate("label", x = 0, y = 25, label = "MW", vjust = 1) +
-  labs(x = "Abweichung vom Mittelwert") 
+# Histogramme mit dem Mittelwert als (blauem) vertikalem Balken
+p1 <- ggplot(mariokart_no_extreme, aes(x = abw)) +
+  geom_histogram(bins = 30, color = "white") +
+  geom_vline(xintercept = mean(mariokart_no_extreme$abw),
+             color = trendcol, linewidth = 1.5) +
+  annotate("label", x = mean(mariokart_no_extreme$abw), y = Inf, label = "MW",
+           vjust = 1, color = trendcol, fontface = "bold", border.colour = NA) +
+  labs(title = "Zentrierte Werte",
+       x = "Abweichung vom Mittelwert", y = NULL, subtitle = "Anzahl") 
   
 
-p2 <-  gghistogram(mariokart_no_extreme, x = "abw_std",
-            add = "mean",  # Mittelwert wird hinzugefügt
-            add.params = list(color = okabeito_colors()[1], size = 3)) +
-  labs(title = "z-Standardisierte Werte") +
-  annotate("label", x = 0, y = 25, label = "MW", vjust = 1)  +
-  labs(x = "z-standardisierte Abweichung vom Mittelwert")
+p2 <- ggplot(mariokart_no_extreme, aes(x = abw_std)) +
+  geom_histogram(bins = 30, color = "white") +
+  geom_vline(xintercept = mean(mariokart_no_extreme$abw_std),
+             color = trendcol, linewidth = 1.5) +
+  annotate("label", x = mean(mariokart_no_extreme$abw_std), y = Inf, label = "MW",
+           vjust = 1, color = trendcol, fontface = "bold", border.colour = NA) +
+  labs(title = "z-Standardisierte Werte",
+       x = "z-standardisierte Abweichung vom Mittelwert", y = NULL, subtitle = "Anzahl")
 
 arrow_down <- png::readPNG("img/arrow-down.png", native = TRUE)
 p_ad <- ggplot() + inset_element(arrow_down, 0, 0, 1, 1)

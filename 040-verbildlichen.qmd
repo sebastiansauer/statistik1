@@ -175,12 +175,13 @@ library("datasauRus")
 
 datasaurus_dozen |> 
   filter(dataset %in% c("dino", "circle", "star", "bullseye")) |> 
-  ggplot(aes(x = x, y = y, colour = dataset))+
-  geom_point() +
+  ggplot(aes(x = x, y = y)) +
+  # Gruppen stehen in eigenen Facetten, daher eine Farbe (grau) genügt
+  geom_point(color = grau_dunkel, size = 0.8) +
   theme_void() +
-  theme(legend.position = "none")+
   facet_wrap(~dataset, ncol = 4) +
-  theme(strip.text = element_text(size = 16))
+  theme(strip.text = element_text(size = 16, face = "bold"),
+        panel.spacing = unit(1.5, "lines"))
 ```
 :::
 
@@ -358,23 +359,33 @@ und die Länge eines Balkens ist proportional zur dargestellten Häufigkeit. $\s
 #| fig-subcap: 
 #|   - horizontale Balken
 #|   - vertikale Balken
+#| teilbild: true
+
+# Balken mit Wertelabels: kein Gitter, keine Werteachse (Werte stehen am Balken)
+mario_n_cond <- mariokart |> count(cond)
 
 mario_n1 <-
-  mariokart |> 
-  count(cond) |> 
-  ggplot(aes(y = n, x = cond)) + 
-  geom_col() +
+  mario_n_cond |>
+  ggplot(aes(y = n, x = cond)) +
+  geom_col(width = 0.7) +
+  geom_text(aes(label = sprintf("%.0f", n)), hjust = -0.3,
+            fontface = "bold", color = fast_schwarz) +
   coord_flip() +
-  theme_modern() +
-  theme_large_text()
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(x = "cond", y = "Anzahl") +
+  theme_med(grid = "none") +
+  theme(axis.text.x = element_blank())
 
 mario_n2 <-
-  mariokart |> 
-  count(cond) |> 
-  ggplot(aes(y = n, x = cond)) + 
-  geom_col()   +
-  theme_modern() +
-  theme_large_text()
+  mario_n_cond |>
+  ggplot(aes(y = n, x = cond)) +
+  geom_col(width = 0.7) +
+  geom_text(aes(label = sprintf("%.0f", n)), vjust = -0.5,
+            fontface = "bold", color = fast_schwarz) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.12))) +
+  labs(x = "cond", y = NULL, subtitle = "Anzahl") +
+  theme_med(grid = "none") +
+  theme(axis.text.y = element_blank())
 
 
 mario_n1
@@ -477,9 +488,11 @@ s. @fig-balken-hist (links). Es gibt einfach zu viele Ausprägungen.
 mariokart_bar_total_pr <- 
 mariokart |> 
   filter(total_pr < 200) |> 
-  mutate(total_pr = round(total_pr, digits = 1)) |> 
+  mutate(total_pr = round(total_pr, digits = 1)) |>
   ggplot(aes(x = total_pr)) +
-  geom_bar()
+  geom_bar() +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+  labs(x = "total_pr (Dollar)", y = NULL, subtitle = "Anzahl")
 ```
 
 Die Lösung: Wir reduzieren die Anzahl der Ausprägungen, in dem wir auf ganze Dollar runden.
@@ -502,23 +515,25 @@ Zusätzlich sind noch die einzelnen Werte als schwarze Punkte gezeigt.
 #| fig-subcap: 
 #|   - Balkendiagramm
 #|   - Histogramm
+#| teilbild: true
 
-m1a <- 
-  mariokart |> 
+m1a <-
+  mariokart |>
   filter(total_pr < 100)
 
-mariokart_hist_total_pr <- 
-m1a |> 
+mariokart_hist_total_pr <-
+m1a |>
   ggplot(aes(x = total_pr)) +
   geom_histogram(binwidth = 5, alpha = .7, center = 0, color = "white")  +
-  geom_dotplot(binwidth = 1, method = "histodot") +
-  labs(caption = paste0("n = ", nrow(m1a))) +
-  scale_y_continuous(name = "Anzahl")
+  # Einzelwerte als (fast) schwarze Punkte
+  geom_dotplot(binwidth = 1, method = "histodot",
+               fill = fast_schwarz, color = fast_schwarz) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+  labs(x = "total_pr (Dollar)", y = NULL, subtitle = "Anzahl",
+       caption = paste0("n = ", nrow(m1a)))
 
-mariokart_bar_total_pr +
-  theme_large_text()
-mariokart_hist_total_pr +
-  theme_large_text()
+mariokart_bar_total_pr
+mariokart_hist_total_pr
 ```
 
 
@@ -552,22 +567,25 @@ vgl. @fig-de-hist-density, links.
 #| fig-subcap: 
 #|   - "Zu viele Gruppen (Balken)"
 #|   - "Zu wenige Gruppen (Balken)"
+#| teilbild: true
 
-p_mario_zu_viele <- 
-  mariokart |> 
-  filter(total_pr < 100) |> 
+p_mario_zu_viele <-
+  mariokart |>
+  filter(total_pr < 100) |>
   ggplot(aes(x = total_pr)) +
-  geom_histogram(binwidth = 1)  +
-  theme_large_text()
+  geom_histogram(binwidth = 1, color = "white", linewidth = 0.2)  +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+  labs(x = "total_pr (Dollar)", y = NULL, subtitle = "Anzahl")
 
 p_mario_zu_viele
 
-p_mario_zu_wenige <- 
-  mariokart |> 
-  filter(total_pr < 100) |> 
+p_mario_zu_wenige <-
+  mariokart |>
+  filter(total_pr < 100) |>
   ggplot(aes(x = total_pr)) +
-  geom_histogram(bins = 2) +
-  theme_large_text()
+  geom_histogram(bins = 2, color = "white") +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+  labs(x = "total_pr (Dollar)", y = NULL, subtitle = "Anzahl")
 
 p_mario_zu_wenige
 ```
@@ -595,15 +613,18 @@ mariokart |>
 #| fig-cap: "Eine stetige Verteilung verbildlichen"
 #| fig-subcap:
 #|   - Histogramm
-#|   - Dichtediagramm 
+#|   - Dichtediagramm
+#| teilbild: true
+
+# Entspricht lst-de2; nur Theme und Grautöne an das Buch angepasst
+mariokart |>
+  filter(total_pr < 100) |>  # ohne Extremwerte
+  gghistogram(x = "total_pr", fill = grau_mittel, color = "white",
+              ggtheme = theme_med())
 
 mariokart |>
   filter(total_pr < 100) |>  # ohne Extremwerte
-  gghistogram(x = "total_pr", ggtheme = theme_minimal())
-
-mariokart |>
-  filter(total_pr < 100) |>  # ohne Extremwerte
-  ggdensity(x = "total_pr", ggtheme = theme_minimal())
+  ggdensity(x = "total_pr", color = grau_dunkel, ggtheme = theme_med())
 ```
 
 
@@ -650,11 +671,12 @@ so kann Rauschen (Zufallsschwankung) besser ausgeblendet werden. (Mit *Dichte* i
 #| out-width: 75%
 
 m1a |> 
-  ggplot(aes(x = total_pr, y = ..density..)) +
-  geom_histogram(binwidth = 5, alpha = .7, center = 0, fill = "grey20")  +
-  #geom_dotplot(binwidth = 1, method = "histodot") +
-  geom_density(color = "#0072B2", size = 2)
-  #geom_dotplot(binwidth = 1, method = "histodot") +
+  ggplot(aes(x = total_pr, y = after_stat(density))) +
+  geom_histogram(binwidth = 5, center = 0, color = "white")  +
+  # Dichte als blaue Linie über dem grauen Histogramm hervorheben
+  geom_density(color = trendcol, linewidth = 1.2) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+  labs(x = "total_pr (Dollar)", y = NULL, subtitle = "Dichte")
 ```
 
 
@@ -678,18 +700,23 @@ Verteilungen unterscheiden sich z.$\,$B. in ihrem "typischen" oder "mittleren" W
 #| fig-subcap:
 #|   - "Symmetrisch (Normal)"
 #|   - "Schief"
-p_norm <- 
+#| teilbild: true
+p_norm <-
   ggplot(NULL) +
-  stat_function(fun = dnorm, args = list(mean = 0, sd = 1)) +
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
+                color = grau_dunkel, linewidth = 1) +
   scale_x_continuous(limits = c(-3, 3)) +
-  scale_y_continuous(NULL, breaks = NULL)
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(x = "X")
 
 p_norm
 
 ggplot(NULL) +
-  stat_function(fun = dgamma, args = list(shape = 2, rate = 3))  +
+  stat_function(fun = dgamma, args = list(shape = 2, rate = 3),
+                color = grau_dunkel, linewidth = 1)  +
   scale_x_continuous(limits = c(0, 3)) +
-  scale_y_continuous(NULL, breaks = NULL)
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(x = "X")
 ```
 
 
@@ -701,7 +728,10 @@ ggplot(NULL) +
 #| fig-cap: "Verschiedene Verteilungsformen"
 source("funs/plot-distribs.R")
 p_distribs <- plot_distribs()
-p_distribs
+# Schematische Skizze: keine Achsenwerte, kein Gitter, Facettentitel fett
+p_distribs +
+  theme_med(grid = "none") +
+  theme(axis.text = element_blank(), axis.title = element_blank())
 ```
 
 
@@ -946,31 +976,44 @@ bei gebrauchten Spielen immerhin bei gut der Hälfte der Fälle.
 #|   - "starker Zusammenhang"
 #|   - "schwacher Zusammenhang"
 #| layout: [[45,-5, 45], [100]]
-#| 
+#| teilbild: true
+#|
 
-mario_bar1 <- 
-mariokart |> 
-  ggplot(aes(x = cond, fill = stock_photo, pattern = stock_photo)) +
-  geom_bar_pattern(
-    position = "fill", 
-    pattern_fill = "grey30",
-    pattern_color = "black") +
-  scale_fill_manual(values = c(beta0col, beta1col)) +
-  theme(legend.position = "bottom") +
-  theme_minimal() +
-  theme_large_text() +
-  theme(legend.position = "none") +
-  scale_pattern_manual(values = c("yes" = "stripe", "no" = "circle")) +
-  labs(fill = "Group", pattern = "Stock photo") # Customize legend titles
+# Gefüllte Balken: Kategorie und Anteil direkt im Balken, keine Legende,
+# keine y-Achse; Orange/Dunkelblau trennen auch in Graustufen
+foto_balken <- function(d, gruppe, x_titel) {
+  d |>
+    count(gruppe = {{ gruppe }}, stock_photo) |>
+    group_by(gruppe) |>
+    mutate(anteil = n / sum(n)) |>
+    ungroup() |>
+    mutate(foto = factor(stock_photo, levels = c("no", "yes"),
+                         labels = c("ohne Foto", "mit Foto")),
+           # kleine Segmente einzeilig beschriften
+           label = paste0(foto, ifelse(anteil < 0.15, " ", "\n"),
+                          sprintf("%.0f%%", 100 * anteil)),
+           textfarbe = ifelse(foto == "mit Foto", "white", fast_schwarz)) |>
+    ggplot(aes(x = gruppe, y = anteil, fill = foto)) +
+    geom_col(position = "fill", color = "white", linewidth = 1.2, width = 0.85) +
+    geom_text(aes(label = ifelse(anteil < 0.15, "", label), color = textfarbe),
+              position = position_fill(vjust = 0.5),
+              fontface = "bold", lineheight = 0.9) +
+    # zu kleine Segmente (oben, "ohne Foto") oberhalb des Balkens beschriften
+    geom_text(data = \(x) filter(x, anteil < 0.15),
+              aes(y = 1.02, label = label), vjust = 0,
+              color = okabe_text[1], fontface = "bold") +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+    scale_fill_manual(values = c("ohne Foto" = okabe_linie[1],
+                                 "mit Foto" = okabe_linie[2])) +
+    scale_color_identity() +
+    labs(x = x_titel, y = NULL) +
+    theme_med(grid = "none") +
+    theme(legend.position = "none", axis.text.y = element_blank())
+}
 
-mario_bar2 <- 
-mariokart |> 
-  ggplot(aes(x = wheels > 0, fill = stock_photo)) +
-  geom_bar(position = "fill") +
-  scale_fill_manual(values = c(beta0col, beta1col)) +
-  theme_minimal() +
-  theme_large_text() +
-  theme(legend.position = "bottom")
+mario_bar1 <- foto_balken(mariokart, cond, "cond")
+
+mario_bar2 <- foto_balken(mariokart, wheels > 0, "wheels > 0")
 
 mario_bar1
 mario_bar2
@@ -1072,31 +1115,31 @@ Die Ellipse zeigt an, wie eng die Daten um die Trendgerade streuen. Daraus kann 
 #|   - "positiver, mittelstarker Zusammenhang"
 #|   - "negativer, schwacher Zusammenhang"
 #| layout: [[45, -10, 45], [100]]
+#| teilbild: true
 
-library(ggpubr)
-mariokart |> 
-  select(total_pr, start_pr) |> 
-  filter(total_pr < 100) |> 
-  filter(start_pr > 10) |> 
-  ggscatter(x = "start_pr", 
-            y = "total_pr",
-            add = "reg.line",
-            add.params = list(color = "blue"),
-            ellipse = TRUE) +
-  theme_large_text()
+# Streudiagramm: graue Punkte, blaue Trendgerade, graue Ellipse,
+# Range-Frame und Rug statt Gitter
+streu_ellipse <- function(d, x, x_titel) {
+  d |>
+    ggplot(aes(x = .data[[x]], y = total_pr)) +
+    stat_ellipse(type = "norm", geom = "polygon",
+                 fill = grau_mittel, alpha = 0.15, color = grau_mittel) +
+    geom_point(color = grau_dunkel) +
+    geom_smooth(method = "lm", se = FALSE) +
+    rug_grau() +
+    rangeframe() +
+    labs(x = x_titel, y = NULL, subtitle = "total_pr (Dollar)") +
+    theme_streu()
+}
 
+mario_streu <-
+  mariokart |>
+  filter(total_pr < 100) |>
+  filter(start_pr > 10)
 
-mariokart |> 
-  #select(total_pr, start_pr) |> 
-  filter(total_pr < 100) |> 
-  filter(start_pr > 10) |> 
-  ggscatter(x = "n_bids", 
-            y = "total_pr",
-            add = "reg.line",
-            add.params = list(color = "blue"),
-            ellipse = TRUE) +
-  theme_large_text()
+streu_ellipse(mario_streu, "start_pr", "start_pr (Dollar)")
 
+streu_ellipse(mario_streu, "n_bids", "n_bids (Anzahl Gebote)")
 
 ```
 
@@ -1164,10 +1207,12 @@ Cohen [-@cohen_power_1992] hat folgende Faustregeln angegeben:
 # fig-asp: 0.5
 source("funs/plot-different-cors.R")
 fig_cors <- plot_different_cors(plot_it = FALSE, alpha = .7)
+# Punkte grau (Trendgerade bleibt blau); schematisch: ohne Achsenwerte und Gitter
+fig_cors$layers[[1]]$aes_params$colour <- grau_dunkel
 fig_cors +
-  theme_minimal() +
+  theme_med(grid = "none") +
   scale_x_continuous(labels = NULL) +
-  scale_y_continuous(labels = NULL) 
+  scale_y_continuous(labels = NULL)
 ```
 
 
@@ -1191,7 +1236,12 @@ und *schwache* Zusammenhänge mit einer *breiten* Ellipse einhergehen.
 #| out-width: "75%"
 source("funs/plot-different-cors.R")
 fig_cors2 <- plot_different_cors(plot_it = FALSE, short = TRUE)
-fig_cors2
+# Punkte grau, Ellipse dunkelgrau gestrichelt (nur die Trendgerade ist blau)
+fig_cors2$layers[[1]]$aes_params$colour <- grau_dunkel
+fig_cors2$layers[[3]]$aes_params$colour <- grau_dunkel
+fig_cors2 +
+  theme_med(grid = "none") +
+  theme(axis.text = element_blank())
 ```
 
 
@@ -1381,17 +1431,16 @@ Am besten wir schauen uns einige Beispiele an, s. @fig-compare-groups1.
 #| label: fig-compare-groups1
 #| message: false
 #| layout-ncol: 2
+#| teilbild: true
 
 ggplot(mariokart_no_extreme, aes(x = cond, y = total_pr)) +
-  geom_violinhalf() +
-  theme_minimal() +
-  theme_large_text()
+  geom_violinhalf(fill = grau_mittel, color = grau_dunkel) +
+  labs(x = "cond", y = NULL, subtitle = "total_pr (Dollar)")
 
 
 ggplot(mariokart_no_extreme, aes(x = cond, y = total_pr)) +
-  geom_boxplot() +
-  theme_minimal()  +
-  theme_large_text()
+  geom_boxplot(width = 0.5) +
+  labs(x = "cond", y = NULL, subtitle = "total_pr (Dollar)")
 ```
 
 
@@ -1450,6 +1499,12 @@ In @fig-hist-to-box sieht man die "Übersetzung" von Histogramm (oben) zu einem 
 
 source("funs/histogram-to-boxplot.R")
 hist_to_box <- histogram_to_boxplot(mariokart_no_extreme, "total_pr", plot_it = FALSE)
+# Farben nach Styleguide (kein Gelb): Histogramm grau mit weißem Rand,
+# Median-Linie blau, Quartil-Linien orange
+hist_to_box$layers[[1]]$aes_params$colour <- "white"
+hist_to_box$layers[[2]]$aes_params$colour <- okabe_linie[2]
+hist_to_box$layers[[3]]$aes_params$colour <- okabe_linie[1]
+hist_to_box$layers[[4]]$aes_params$colour <- okabe_linie[1]
 hist_to_box +
   labs(caption = "Md: Median; Q1/3: 1./3. Quartil",
        x = "total_pr (Gesamtpreis)") +
@@ -1620,6 +1675,7 @@ ggplot(d, aes(Jahr, Umsatz)) +
 ```{r}
 #| echo: false
 #| label: fig-lie2
+#| teilbild: true
 #| fig-cap: "Abschneiden der Y-Achse, um mit Statistik zu lügen"
 #| out-width: "100%"
 #| fig-subcap: 

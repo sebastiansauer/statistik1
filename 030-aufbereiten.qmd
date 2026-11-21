@@ -1,4 +1,20 @@
+---
+# WebR-Test (quarto-live): interaktive R-Zellen nur in diesem Kapitel
+filters:
+  - live
+ojs-engine: true
+resources:
+  - data/mariokart.csv   # damit die CSV-Datei mit ins _book kopiert wird
+webr:
+  packages:
+    - dplyr
+  resources:
+    - data/mariokart.csv
+---
+
 # Daten umformen
+
+{{< include children/webr-knitr.qmd >}}
 
 <!-- <style> -->
 <!-- q { -->
@@ -30,6 +46,20 @@ source("_common.R")
 
 
 {{< include children/colors.qmd >}}
+
+::: {.content-visible when-format="html"}
+```{webr}
+#| edit: false
+#| echo: false
+#| output: false
+# Unsichtbare Vorbereitung für die interaktiven R-Zellen (WebR):
+# Paket laden und Daten so einlesen wie im Buch (ohne Zeilennummer und Titel)
+library(dplyr)
+mariokart <- read.csv("data/mariokart.csv") |> 
+  tibble::as_tibble() |> 
+  select(-V1, -title)
+```
+:::
 
 
 ## Einstieg
@@ -328,9 +358,16 @@ mariokart <-
 Die Funktion `arrange` macht es uns ziemlich einfach, s. @tbl-arrange.
 
 ```{r}
-#| tbl-cap: Die Datentabelle, (aufsteigend) sortiert nach `total_pr`
-#| label: tbl-arrange
+#| eval: false
 arrange(mariokart, total_pr)
+```
+
+```{r}
+#| echo: false
+#| tbl-cap: Die Datentabelle, (aufsteigend) sortiert nach `total_pr` (die ersten sechs Zeilen)
+#| label: tbl-arrange
+arrange(mariokart, total_pr) |>
+  head()
 ```
 
 :::
@@ -380,8 +417,51 @@ mario_sortiert <- arrange(mariokart, -total_pr)
 ```
 
 
+
+::: {.content-visible when-format="html"}
+
+:::{.callout-tip}
+#### R direkt im Browser ausprobieren 🧪
+
+In diesem Kapitel finden Sie Code-Felder, deren R-Code direkt in Ihrem Browser läuft -- ohne Installation.
+Ändern Sie den Code und klicken Sie auf *Run Code*.
+Bei Übungen hilft Ihnen *Show Hint* weiter; danach können Sie sich die Lösung zeigen lassen.
+Beim ersten Start dauert es einige Sekunden, bis R im Hintergrund geladen ist.
+:::
+
+Probieren Sie es aus: Sortieren Sie absteigend, indem Sie ein Minus vor `total_pr` setzen.
+
+```{webr}
+arrange(mariokart, total_pr)
+```
+
+:::
+
 :::{#exr-arrange2}
 Sortieren Sie die Mariokart-Daten absteigend nach der Anzahl der beigelegten Lenkräder. $\square$
+:::
+
+::: {.content-visible when-format="html"}
+
+Lösen Sie @exr-arrange2 hier im Browser.
+
+```{webr}
+#| exercise: ex_arrange2
+arrange(mariokart, ______)
+```
+
+::: {.hint exercise="ex_arrange2"}
+Die Anzahl der Lenkräder steht in der Spalte `wheels`. Für absteigendes Sortieren setzen Sie ein Minus davor.
+:::
+
+::: {.solution exercise="ex_arrange2"}
+```{webr}
+#| exercise: ex_arrange2
+#| solution: true
+arrange(mariokart, -wheels)
+```
+:::
+
 :::
 
 ### Zeilen filtern: `filter`
@@ -445,7 +525,14 @@ mariokart_neu <- filter(mariokart, stock_photo == "yes")
 ::: {.content-visible when-format="html"}
 
 ```{r}
-mariokart_neu 
+#| eval: false
+mariokart_neu
+```
+
+```{r}
+#| echo: false
+# nur die ersten sechs Zeilen zeigen (kable druckt sonst alle)
+head(mariokart_neu)
 ```
 
 
@@ -478,7 +565,14 @@ mario_filter1 <-
 
 ::: {.content-visible when-format="html"}
 ```{r}
+#| eval: false
 mario_filter1
+```
+
+```{r}
+#| echo: false
+# nur die ersten sechs Zeilen zeigen (kable druckt sonst alle)
+head(mario_filter1)
 ```
 :::
 
@@ -492,7 +586,14 @@ mario_filter2 <-
 
 ::: {.content-visible when-format="html"}
 ```{r}
+#| eval: false
 mario_filter2
+```
+
+```{r}
+#| echo: false
+# nur die ersten sechs Zeilen zeigen (kable druckt sonst alle)
+head(mario_filter2)
 ```
 :::
 
@@ -510,9 +611,67 @@ Filtern Sie die Spiele mit nur einem Lenkrad und ohne Versandkosten. $\square$
 
 
 
+::: {.content-visible when-format="html"}
+
+Probieren Sie es aus: Ändern Sie die Filterbedingungen.
+
+```{webr}
+filter(mariokart, stock_photo == "yes" & cond == "new")
+```
+
+:::
+
+::: {.content-visible when-format="html"}
+
+Lösen Sie @exr-filter2 hier im Browser. Ersetzen Sie die Unterstriche `______` durch die passenden Filterbedingungen.
+
+```{webr}
+#| exercise: ex_filter2
+filter(mariokart, ______ & ______)
+```
+
+::: {.hint exercise="ex_filter2"}
+Die Anzahl der Lenkräder steht in `wheels`, die Versandkosten in `ship_pr`.
+:::
+
+::: {.solution exercise="ex_filter2"}
+```{webr}
+#| exercise: ex_filter2
+#| solution: true
+filter(mariokart, wheels == 1 & ship_pr == 0)
+```
+:::
+
+:::
+
+
+
 :::{#exr-filter3}
 Filtern Sie die Spiele mit nur einem Lenkrad, die einen überdurchschnittlichen Verkaufspreis erzielen. 
 Tipp: Nutzen Sie die Funktion `describe_distribution`, um den Mittelwert einer Variable des Datensatzes zu erfahren (diese Funktion wohnt im R-Paket `easystats`). $\square$
+:::
+
+::: {.content-visible when-format="html"}
+
+Lösen Sie @exr-filter3 hier im Browser. (`easystats` steht im Browser nicht zur Verfügung; den Mittelwert berechnen Sie hier mit `mean`.)
+
+```{webr}
+#| exercise: ex_filter3
+filter(mariokart, ______ & ______)
+```
+
+::: {.hint exercise="ex_filter3"}
+Der Mittelwert des Verkaufspreises ist `mean(total_pr)`. Überdurchschnittlich heißt: `total_pr > mean(total_pr)`.
+:::
+
+::: {.solution exercise="ex_filter3"}
+```{webr}
+#| exercise: ex_filter3
+#| solution: true
+filter(mariokart, wheels == 1 & total_pr > mean(total_pr))
+```
+:::
+
 :::
 
 
@@ -593,6 +752,29 @@ select(mariokart, -1)  # Alle Spalte *außer* Spalte 1
 
 :::{#exr-select}
 Wählen Sie die Spalten `total_pr`, `cond` sowie die zweite Spalte der Tabelle `mariokart` aus!^[`select(mariokart, total_pr, cond, 2)`] $\square$
+:::
+
+::: {.content-visible when-format="html"}
+
+Lösen Sie @exr-select hier im Browser.
+
+```{webr}
+#| exercise: ex_select
+select(mariokart, ______)
+```
+
+::: {.hint exercise="ex_select"}
+Spalten können Sie über ihren Namen oder ihre Position (Nummer) auswählen; trennen Sie sie mit Kommas.
+:::
+
+::: {.solution exercise="ex_select"}
+```{webr}
+#| exercise: ex_select
+#| solution: true
+select(mariokart, total_pr, cond, 2)
+```
+:::
+
 :::
 
 
@@ -705,9 +887,55 @@ liefert der Dollar-Operator einen Vektor (Spalte) zurück.
 Identifizieren Sie den höchsten Kaufpreis eines Mariokart-Spiels!^[`summarise(mariokart, hoechster_preis = max(total_pr))`] $\square$
 :::
 
+::: {.content-visible when-format="html"}
+
+Lösen Sie @exr-summarise hier im Browser.
+
+```{webr}
+#| exercise: ex_summarise
+summarise(mariokart, hoechster_preis = ______)
+```
+
+::: {.hint exercise="ex_summarise"}
+Den größten Wert einer Spalte liefert die Funktion `max`.
+:::
+
+::: {.solution exercise="ex_summarise"}
+```{webr}
+#| exercise: ex_summarise
+#| solution: true
+summarise(mariokart, hoechster_preis = max(total_pr))
+```
+:::
+
+:::
+
 
 :::{#exr-summarise2}
-Identifizieren Sie den Mittelwert der Versandkostenpauschale!^[`summarise(mariokart, mw_versand = mean(total_pr))`] $\square$
+Identifizieren Sie den Mittelwert der Versandkostenpauschale!^[`summarise(mariokart, mw_versand = mean(ship_pr))`] $\square$
+:::
+
+::: {.content-visible when-format="html"}
+
+Lösen Sie @exr-summarise2 hier im Browser.
+
+```{webr}
+#| exercise: ex_summarise2
+summarise(mariokart, mw_versand = ______)
+```
+
+::: {.hint exercise="ex_summarise2"}
+Die Versandkosten stehen in der Spalte `ship_pr`; den Mittelwert berechnet `mean`.
+:::
+
+::: {.solution exercise="ex_summarise2"}
+```{webr}
+#| exercise: ex_summarise2
+#| solution: true
+summarise(mariokart, mw_versand = mean(ship_pr))
+```
+:::
+
 :::
 
 
@@ -870,6 +1098,37 @@ Bei Auktionen mit Foto wird im Schnitt ein höherer Preis erzielt als ohne Foto.
 
 :::::
 
+::: {.content-visible when-format="html"}
+
+Lösen Sie @exr-groupby hier im Browser, bevor Sie in die Lösung schauen.
+
+```{webr}
+#| exercise: ex_groupby
+mariokart_gruppiert_foto <- group_by(mariokart, ______)
+
+summarise(mariokart_gruppiert_foto,
+          total_pr_avg = ______,
+          total_pr_max = ______)
+```
+
+::: {.hint exercise="ex_groupby"}
+Gruppieren Sie nach `stock_photo`. Mittelwert und Maximum liefern `mean` und `max`.
+:::
+
+::: {.solution exercise="ex_groupby"}
+```{webr}
+#| exercise: ex_groupby
+#| solution: true
+mariokart_gruppiert_foto <- group_by(mariokart, stock_photo)
+
+summarise(mariokart_gruppiert_foto,
+          total_pr_avg = mean(total_pr),
+          total_pr_max = max(total_pr))
+```
+:::
+
+:::
+
 
 ### Spalten verändern mit `mutate`
 
@@ -987,6 +1246,64 @@ mariokart_duration_wochen_schmal |> head()
 
 ::: {.content-visible when-format="html"}
 
+Lösen Sie @exr-mutate hier im Browser.
+
+```{webr}
+#| exercise: ex_mutate
+mariokart_wochen <- mutate(mariokart, duration_week = ______)
+
+select(mariokart_wochen, duration, duration_week)
+```
+
+::: {.hint exercise="ex_mutate"}
+Eine Woche hat 7 Tage; die Dauer in Tagen steht in `duration`.
+:::
+
+::: {.solution exercise="ex_mutate"}
+```{webr}
+#| exercise: ex_mutate
+#| solution: true
+mariokart_wochen <- mutate(mariokart, duration_week = duration / 7)
+
+select(mariokart_wochen, duration, duration_week)
+```
+:::
+
+:::
+
+::: {.content-visible when-format="html"}
+
+Lösen Sie @exr-mutate2 hier im Browser.
+
+```{webr}
+#| exercise: ex_mutate2
+mariokart_wochen <- mutate(mariokart, 
+                           duration_week = duration / 7,
+                           duration_week_gerundet = ______)
+
+select(mariokart_wochen, duration, duration_week, duration_week_gerundet)
+```
+
+::: {.hint exercise="ex_mutate2"}
+Runden können Sie mit `round(x, digits = 0)`.
+:::
+
+::: {.solution exercise="ex_mutate2"}
+```{webr}
+#| exercise: ex_mutate2
+#| solution: true
+mariokart_wochen <- mutate(mariokart, 
+                           duration_week = duration / 7,
+                           duration_week_gerundet = round(duration_week, digits = 0))
+
+select(mariokart_wochen, duration, duration_week, duration_week_gerundet)
+```
+:::
+
+:::
+
+::: {.content-visible when-format="html"}
+
 >   [🧟‍♀️]{.content-visible when-format="html"}[\emoji{woman-zombie}]{.content-visible when-format="pdf"}️ Statist -- wann braucht man schon sowas!?
 
 >   [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Eigentlich nur dann, wenn man die Fakten gut verstehen will, sonst nicht.
@@ -1030,8 +1347,54 @@ mutate(mariocart_counted, Anteil = n / sum(n))
 Zählen Sie, wie viele der Auktionen ein Stock-Foto enthalten.^[`count(mariokart, stock_photo)`] $\square$
 :::
 
+::: {.content-visible when-format="html"}
+
+Lösen Sie @exr-count hier im Browser.
+
+```{webr}
+#| exercise: ex_count
+count(mariokart, ______)
+```
+
+::: {.hint exercise="ex_count"}
+Ob ein Foto dabei ist, steht in der Spalte `stock_photo`.
+:::
+
+::: {.solution exercise="ex_count"}
+```{webr}
+#| exercise: ex_count
+#| solution: true
+count(mariokart, stock_photo)
+```
+:::
+
+:::
+
 :::{#exr-count2}
 Zählen Sie Sie, wie viele Auktionen ein Foto enthalten -- innerhalb der gebrauchten Spiele und innerhalb der neuen Spiele. Anders gesagt: Teilen Sie den Datensatz sowohl nach Zustand als auch nach Foto auf und zählen Sie jeweils, wie viele Spiele/Auktionen in die jeweilige Gruppe gehören.^[`count(mariokart, stock_photo, cond)`] $\square$
+:::
+
+::: {.content-visible when-format="html"}
+
+Lösen Sie @exr-count2 hier im Browser.
+
+```{webr}
+#| exercise: ex_count2
+count(mariokart, ______, ______)
+```
+
+::: {.hint exercise="ex_count2"}
+`count` kann nach mehreren Spalten zugleich aufteilen: `stock_photo` und `cond`.
+:::
+
+::: {.solution exercise="ex_count2"}
+```{webr}
+#| exercise: ex_count2
+#| solution: true
+count(mariokart, stock_photo, cond)
+```
+:::
+
 :::
 
 
@@ -1260,6 +1623,20 @@ mariokart |>
 Die Syntax `filter(mariokart, total_pr < 100)` und die Syntax `mariokart |> filter(total_pr < 100)` sind identisch.
 Allgemeiner: `d |> f(x)` = `f(d, x)`.
 
+::: {.content-visible when-format="html"}
+
+Bauen Sie das Fließband selbst um: Lassen Sie z.$\,$B. den Filter weg, gruppieren Sie nach `stock_photo` oder berechnen Sie zusätzlich den Maximalpreis.
+
+```{webr}
+mariokart |>  
+  filter(total_pr < 100) |> 
+  select(cond, total_pr) |>  
+  group_by(cond) |>  
+  summarise(total_pr_mean = mean(total_pr))
+```
+
+:::
+
 
 <!-- TODO  -->
 <!-- ## Praxisprobleme des Datenaufbereitens -->
@@ -1292,6 +1669,35 @@ Heute sollen Sie zeigen, was Sie können (Schluck).
 >   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} Ich würde von Ihnen  gerne wissen, 
 was das teuerste Spiel ist, aber jeweils für neue und gebrauchte Spiele. 
 Aber nur für Spiele, die mit Foto verkauft wurden!
+
+::: {.content-visible when-format="html"}
+
+Versuchen Sie es zuerst selbst, hier im Browser:
+
+```{webr}
+#| exercise: ex_fofrage1
+mariokart |> 
+  filter(______) |> 
+  group_by(______) |> 
+  summarise(total_pr_max = ______)
+```
+
+::: {.hint exercise="ex_fofrage1"}
+Filtern Sie nach `stock_photo == "yes"`, gruppieren Sie nach `cond` und nutzen Sie `max(total_pr)`.
+:::
+
+::: {.solution exercise="ex_fofrage1"}
+```{webr}
+#| exercise: ex_fofrage1
+#| solution: true
+mariokart |> 
+  filter(stock_photo == "yes") |> 
+  group_by(cond) |> 
+  summarise(total_pr_max = max(total_pr))
+```
+:::
+
+:::
 
 **Lösung**
 
@@ -1326,6 +1732,40 @@ Das teuerste Spiel mit Foto kostet `75` Dollar, wenn es neu ist und `62`, wenn e
 >   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} Ich würde gerne die mittlere Versandpauschale wissen, 
 aber getrennt nach Anzahl der Lenkräder, die dem Spiel beigelegt sind. 
 Und ich will nur Gruppen berücksichtigen, die aus mindestens 10 Spielen bestehen!
+
+::: {.content-visible when-format="html"}
+
+Versuchen Sie es zuerst selbst, hier im Browser:
+
+```{webr}
+#| exercise: ex_fofrage2
+mariokart |>
+  count(wheels)
+
+mariokart |>
+  filter(______) |> 
+  group_by(______) |> 
+  summarise(mittlere_versandkosten = ______,
+            anzahl_spiele = n())
+```
+
+::: {.hint exercise="ex_fofrage2"}
+Zählen Sie zuerst mit `count(wheels)`, wie groß die Gruppen sind. Behalten Sie dann nur die Gruppen mit mindestens 10 Spielen (`wheels < 3`).
+:::
+
+::: {.solution exercise="ex_fofrage2"}
+```{webr}
+#| exercise: ex_fofrage2
+#| solution: true
+mariokart |>
+  filter(wheels < 3) |> 
+  group_by(wheels) |> 
+  summarise(mittlere_versandkosten = mean(ship_pr),
+            anzahl_spiele = n())
+```
+:::
+
+:::
 
 **Lösung**
 
@@ -1368,6 +1808,37 @@ je nach Anzahl der beigelegten Lenkräder. $\square$
 Dann rechne mal den mittleren Verkaufspreis aus und ziehe 10 % ab, 
 die wir als Provision unseren Verkäufern zahlen müssen.
 
+
+::: {.content-visible when-format="html"}
+
+Versuchen Sie es zuerst selbst, hier im Browser:
+
+```{webr}
+#| exercise: ex_fofrage3
+mariokart |> 
+  mutate(total_pr_yen = ______) |> 
+  summarise(
+    preis_yen_mw = ______,
+    preis_yen_mw_minus_10proz = ______)
+```
+
+::: {.hint exercise="ex_fofrage3"}
+Umrechnungskurs: 1 Dollar = 133 Yen. 10 % abziehen heißt: `preis_yen_mw - 0.1 * preis_yen_mw`.
+:::
+
+::: {.solution exercise="ex_fofrage3"}
+```{webr}
+#| exercise: ex_fofrage3
+#| solution: true
+mariokart |> 
+  mutate(total_pr_yen = total_pr * 133) |> 
+  summarise(
+    preis_yen_mw = mean(total_pr_yen),
+    preis_yen_mw_minus_10proz = preis_yen_mw - 0.1 * preis_yen_mw)
+```
+:::
+
+:::
 
 **Lösung**
 

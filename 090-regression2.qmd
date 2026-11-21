@@ -171,17 +171,21 @@ Hervorragend! An die Arbeit!
 ```{r fig-wetter-temp}
 #| echo: false
 #| warning: false
-#| fig-cap: "Temperatur (Grad Celsius) im Verlauf der Jahre"
+#| fig-cap: "Die Temperatur (Grad Celsius) steigt im Verlauf der Jahre"
 
 wetter_temp_jahr <- 
   wetter |>
   filter(region == "Deutschland") |>
   summarise(temp = mean(temp), .by = year)
 
+# Zeitreihe grau, Trend (loess) blau; Range-Frame, Rug nur an y
 ggplot(wetter_temp_jahr, aes(x = year, y = temp)) +
-  geom_line(color = beta1col) +
-  geom_smooth(color = errorcol, se = FALSE) +
-  labs(x = "Jahr", y = "Temperatur (°C)")
+  geom_line() +
+  geom_smooth(se = FALSE) +
+  rug_grau(sides = "l") +
+  rangeframe() +
+  labs(x = "Jahr", y = NULL, subtitle = "Temperatur (°C)") +
+  theme_streu()
 ```
 
 
@@ -197,10 +201,14 @@ wetter_precip_jahr <-
   filter(region == "Deutschland") |>
   summarise(precip = mean(precip), .by = year)
 
+# Zeitreihe grau, Trend (loess) blau; Range-Frame, Rug nur an y
 ggplot(wetter_precip_jahr, aes(x = year, y = precip)) +
-  geom_line(color = beta1col) +
-  geom_smooth(color = errorcol, se = FALSE) +
-  labs(x = "Jahr", y = "Niederschlag (mm)")
+  geom_line() +
+  geom_smooth(se = FALSE) +
+  rug_grau(sides = "l") +
+  rangeframe() +
+  labs(x = "Jahr", y = NULL, subtitle = "Niederschlag pro Monat (mm)") +
+  theme_streu()
 ```
 
 ### Monatstemperaturverlauf
@@ -209,14 +217,23 @@ ggplot(wetter_precip_jahr, aes(x = year, y = precip)) +
 #| echo: false
 #| warning: false
 
+monatsnamen <- c("Jan", "Feb", "Mär", "Apr", "Mai", "Jun",
+                 "Jul", "Aug", "Sep", "Okt", "Nov", "Dez")
+
 wetter_temp_monat <- wetter |>
   filter(region == "Deutschland") |>
-  summarise(temp = mean(temp), .by = c(year, month))
+  summarise(temp = mean(temp), .by = c(year, month)) |>
+  mutate(Monat = factor(month, levels = 1:12, labels = monatsnamen))
 
-p_wetter_temp_monat <- ggplot(wetter_temp_monat, aes(x = year, y = temp, color = factor(month))) +
-  geom_line() +
-  geom_smooth(aes(group = 1), color = "black", se = FALSE) +
-  labs(x = "Jahr", y = "Temperatur (°C)", color = "Monat")
+# 12 Monate: Facetten statt 12 Farben; Zeitreihe grau, Trend je Monat blau.
+# Eigene y-Achse je Monat, damit der Anstieg innerhalb jedes Monats sichtbar wird
+p_wetter_temp_monat <- ggplot(wetter_temp_monat, aes(x = year, y = temp)) +
+  geom_line(color = grau_mittel, linewidth = 0.3) +
+  geom_smooth(se = FALSE, linewidth = 0.8) +
+  facet_wrap(~ Monat, nrow = 3, scales = "free_y") +
+  scale_x_continuous(breaks = c(1900, 1960, 2020)) +
+  labs(x = "Jahr", y = NULL, subtitle = "Temperatur (°C)") +
+  theme_med(grid = "h")
 ```
 
 ```{r fig-wetter-temp-monat}
@@ -233,6 +250,7 @@ ggplotly(p_wetter_temp_monat)
 #| warning: false
 #| eval: !expr knitr:::is_latex_output()
 #| fig-cap: "Veränderung der Temperatur pro Monat in Deutschland im Zeitverlauf"
+#| fig-asp: 0.8
 
 p_wetter_temp_monat
 ```
@@ -243,15 +261,21 @@ p_wetter_temp_monat
 #| echo: false
 #| warning: false
 #| fig-cap: "Veränderung des Niederschlags pro Monat in Deutschland im Zeitverlauf"
+#| fig-asp: 0.8
 
 wetter_precip_monat <- wetter |>
   filter(region == "Deutschland") |>
-  summarise(precip = mean(precip), .by = c(year, month))
+  summarise(precip = mean(precip), .by = c(year, month)) |>
+  mutate(Monat = factor(month, levels = 1:12, labels = monatsnamen))
 
-ggplot(wetter_precip_monat, aes(x = year, y = precip, color = factor(month))) +
-  geom_line() +
-  geom_smooth(aes(group = 1), color = "black", se = FALSE) +
-  labs(x = "Jahr", y = "Niederschlag (mm)", color = "Monat")
+# 12 Monate: Facetten statt 12 Farben; Zeitreihe grau, Trend je Monat blau
+ggplot(wetter_precip_monat, aes(x = year, y = precip)) +
+  geom_line(color = grau_mittel, linewidth = 0.3) +
+  geom_smooth(se = FALSE, linewidth = 0.8) +
+  facet_wrap(~ Monat, nrow = 3) +
+  scale_x_continuous(breaks = c(1900, 1960, 2020)) +
+  labs(x = "Jahr", y = NULL, subtitle = "Niederschlag (mm)") +
+  theme_med(grid = "h")
 ```
 
 :::
@@ -375,19 +399,30 @@ Komfortabel ist es, das Modell `lm_wetter1_pro_jahr` mit `plot(estimate_relation
 #| fig-subcap:
 #|   - Ein Punkt pro *Tag*
 #|   - Ein Punkt pro *Jahr*
-ggplot(wetter) + 
-  geom_point(data = wetter, aes(x = year, y = temp)) +
-  geom_abline(color = ycol, 
-              size = 2,
-              intercept = coef(lm_wetter1)[1], 
-              slope = coef(lm_wetter1)[2])
+#| teilbild: true
 
-ggplot(wetter) + 
-  geom_point(data = wetter_summ, aes(x = year, y = temp)) +
-  geom_abline(color = ycol, 
-              size = 2,
+# Links: sehr viele Punkte -> kraeftiges alpha, kein Rug
+ggplot(wetter, aes(x = year, y = temp)) +
+  geom_point(alpha = alpha_n(nrow(wetter))) +
+  geom_abline(color = trendcol,
+              linewidth = 1.2,
+              intercept = coef(lm_wetter1)[1], 
+              slope = coef(lm_wetter1)[2]) +
+  rangeframe() +
+  labs(x = "Jahr", y = NULL, subtitle = "Temperatur (°C)") +
+  theme_streu()
+
+# Rechts: ein Punkt pro Jahr; Rug nur an y (Jahre liegen gleichabstaendig)
+ggplot(wetter_summ, aes(x = year, y = temp)) +
+  geom_point(alpha = alpha_n(nrow(wetter_summ))) +
+  geom_abline(color = trendcol,
+              linewidth = 1.2,
               intercept = coef(lm_wetter1_pro_jahr)[1], 
-              slope = coef(lm_wetter1_pro_jahr)[2])
+              slope = coef(lm_wetter1_pro_jahr)[2]) +
+  rug_grau(sides = "l") +
+  rangeframe() +
+  labs(x = "Jahr", y = NULL, subtitle = "Temperatur (°C)") +
+  theme_streu()
 ```
 
 
@@ -564,33 +599,41 @@ und zwar offenbar ein gutes halbes Grad, s. @fig-wetter2.
 #| echo: false
 #| label: fig-wetter2
 #| layout: [[45,-10, 45], [100]]
-#| fig-cap: "Modell: `temp ~ after_1950`, (a) Der Schätzbereich für den Parameter reicht von ca. 0.5 bis 0.8 Grad Unterschied. (b) Der Unterschied sieht in dieser Darstellung nicht groß aus."
+#| fig-cap: "Modell: `temp ~ after_1950`, (a) Der Schätzbereich für den Parameter reicht von ca. 0.6 bis 0.9 Grad Unterschied. (b) Der Unterschied sieht in dieser Darstellung nicht groß aus."
 #| fig-subcap: 
 #|   - "Mittelwertsunterschied als Regressionsparameter"
 #|   - "Mittelwertsunterschied als Verteilungsvergleich"
+#| teilbild: true
 
 
+# (a) Punkt + Intervall des Koeffizienten, selbst geplottet statt plot(parameters())
 lm_wetter_bin_uv |> 
   parameters() |> 
-  plot() +
-  theme_large_text() +
-    theme(legend.position = "none") 
+  as_tibble() |>
+  filter(Parameter != "(Intercept)") |>
+  ggplot(aes(x = Coefficient, y = Parameter)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = grau_mittel, linewidth = 0.4) +
+  geom_errorbar(aes(xmin = CI_low, xmax = CI_high), width = 0,
+                color = trendcol, linewidth = 1.2) +
+  geom_point(color = trendcol, size = 4) +
+  geom_text(aes(label = sprintf("%.2f", Coefficient)),
+            vjust = -1.2, color = trendcol, fontface = "bold") +
+  labs(x = "Koeffizient mit 95%-KI (°C)", y = NULL) +
+  theme_med(grid = "v")
 
+# (b) Boxplots; Mittelwerte als blaue Punkte, verbunden durch eine Linie
 wetter |> 
   ggplot(aes(x = after_1950, y = temp)) +
-  geom_boxplot(alpha = .5) +
-  #geom_violin(alpha = .5) +
-  stat_summary(fun = mean,
-               # Orange/Blau (Okabe-Ito) fuer 2 Gruppen -- Index 4 war faelschlich als
-               # "Amber" bezeichnet, ist aber Gelb und daher hier durch Orange ersetzt.
-               geom = "point", color = okabeito_colors()[5],
-               alpha = .7,
-               size = 5) +  # Add mean points
+  geom_boxplot() +
   stat_summary(fun = mean,
                geom = "line",
-               aes(group = 1), color = okabeito_colors()[1],
-               linewidth = 1)  + # Connect means |
-  theme_large_text()
+               aes(group = 1), color = trendcol,
+               linewidth = 1) +  # Mittelwerte verbinden
+  stat_summary(fun = mean,
+               geom = "point", color = trendcol,
+               size = 4) +  # Mittelwerte als Punkte
+  labs(x = "Nach 1950? (after_1950)", y = NULL, subtitle = "Temperatur (°C)") +
+  theme_med(grid = "h")
 ```
 
 
@@ -709,30 +752,40 @@ wetter4 <-
 
 lm4 <- lm(temp ~ after1950_TRUE, data = wetter4)
 
+# Farben von beta0 (orange) und beta1 (blau) wie im Text; Orange-Text abgedunkelt
+beta0col_text <- okabe_text[1]
+
 wetter4 |> 
   ggplot(aes(x = after1950_TRUE, y = temp)) +
-  geom_jitter(alpha = .5, width = .2) +
-  #geom_violin(alpha = .7) +
-  theme_minimal() +
-  geom_hline(yintercept = coef(lm4)[1], linetype = "dashed") +
-  geom_hline(yintercept = coef(lm4)[1] + coef(lm4)[2], linetype = "dashed") +
-  geom_abline(slope =  coef(lm4)[2], intercept =  coef(lm4)[1], color = "grey20") +
-  stat_summary(fun = "mean", color = "grey20") +
+  geom_jitter(alpha = alpha_n(nrow(wetter4)), width = .2, color = grau_mittel) +
+  geom_hline(yintercept = coef(lm4)[1], linetype = "dashed",
+             color = grau_dunkel, linewidth = 0.4) +
+  geom_hline(yintercept = coef(lm4)[1] + coef(lm4)[2], linetype = "dashed",
+             color = grau_dunkel, linewidth = 0.4) +
+  geom_abline(slope =  coef(lm4)[2], intercept =  coef(lm4)[1], color = grau_dunkel) +
+  stat_summary(fun = "mean", color = grau_dunkel) +
   annotate("point", x = 0, y = coef(lm4)[1], 
            color = beta0col, size = 5) +
   annotate("label", x = 0, y = coef(lm4)[1], 
-           color = beta0col, label = "hat(beta)[0]",
-           parse = TRUE, hjust = "left") +
+           color = beta0col_text, label = "hat(beta)[0]",
+           parse = TRUE, hjust = "left", fontface = "bold",
+           fill = alpha("white", 0.85), linewidth = 0) +
   geom_segment(x = 1, y = coef(lm4)[1], yend = coef(lm4)[1] + coef(lm4)[2], 
                color = beta1col,
                linewidth = 1.2,
              arrow = arrow(length = unit(0.03, "npc"))) +
   annotate("label", x = 1, y = coef(lm4)[1] +  coef(lm4)[2]*0.5, 
            color = beta1col, label = "hat(beta)[1]",
-           parse = TRUE, hjust = 2) +
+           parse = TRUE, hjust = 2, fontface = "bold",
+           fill = alpha("white", 0.85), linewidth = 0) +
   scale_x_continuous(breaks = c(0, 1)) +
+  scale_y_continuous(labels = \(x) sprintf("%.1f", x)) +
   coord_cartesian(ylim = c(16, 18)) +
-  annotate("label", x = c(0, 1), y = 16, label = c("bis 1950", "nach 1950"))
+  annotate("label", x = c(0, 1), y = 16, label = c("bis 1950", "nach 1950"),
+           color = fast_schwarz, linewidth = 0) +
+  labs(x = "after1950_TRUE (0 = bis 1950, 1 = nach 1950)", y = NULL,
+       subtitle = "Temperatur im Juli in Bayern (°C)") +
+  theme_med(grid = "h")
   
 ```
 
@@ -902,34 +955,34 @@ wetter_summ <-
 wetter_summ |>  
 # filter(region != "Deutschland") |> 
   ggplot(aes(y = region, x = temp)) +
-  theme_minimal() +
   geom_label(aes(label = paste0("b", id),
                  x = grandmean + delta), 
              vjust = 1,
-             size = 2) +
-  #stat_summary(fun = "mean", color = "grey20") + 
-  geom_vline(xintercept = coef(lm_wetter_region)[1], linetype = "dashed", color = okabeito_colors()[2]) +
+             size = 2,
+             color = grau_dunkel, linewidth = 0) +
+  # Referenzlinie beim Achsenabschnitt b0 (Farbe von beta0)
+  geom_vline(xintercept = coef(lm_wetter_region)[1], linetype = "dashed",
+             color = beta0col, linewidth = 0.4) +
   coord_cartesian(xlim = c(7, 10), ylim = c(0, 16))  +
-  
-  #coord_flip() +
   annotate("label",
            y = 1,
            x = coef(lm_wetter_region)[1],
            vjust = 1,
            label = paste0("b0"),
-           #size = 6,
-           color = beta0col) +
+           fontface = "bold",
+           color = okabe_text[1], linewidth = 0) +
   annotate("point", 
            y = 1, 
            x = coef(lm_wetter_region)[1], 
            color = beta0col,
-           #vjust = 1,
            size = 4) +
   geom_segment(aes(yend = region, xend = temp), 
-               x = coef(lm_wetter_region)[1])  +
-    geom_point() +
-  labs(y = "",
-       x = "Temperatur")
+               x = coef(lm_wetter_region)[1],
+               color = grau_mittel)  +
+  geom_point() +
+  labs(y = NULL,
+       x = "Mittlere Temperatur (°C)") +
+  theme_med(grid = "v")
 ```
 
 
@@ -1213,29 +1266,46 @@ s. @fig-lm3: `plot(estimate_expectation(lm_year_month))`
 #| echo: false
 #| fig-asp: 0.5
 
-ggplot(wetter_month_1_7) +
-  aes(x = year_c, 
-      y = precip, 
-      color = month_factor,
-      group = month_factor) +
-  geom_point(alpha = .1, aes(shape = month_factor)) +
-  # Orange/Blau (Okabe-Ito) fuer 2 Gruppen -- Index 4 war faelschlich als
-  # "Amber" bezeichnet, ist aber Gelb und daher hier durch Orange ersetzt.
-  scale_color_okabeito(order = c(5, 1)) +
-  geom_abline(slope = coef(lm_year_month)[2],
-              intercept = coef(lm_year_month)[1],
-              color = okabeito_colors()[5], size = 2,
-              linetype = "1111") +
-  geom_abline(slope = coef(lm_year_month)[2],
-              intercept = coef(lm_year_month)[1] + coef(lm_year_month)[3], color = okabeito_colors()[1], size = 2) +
-  annotate("label", x = Inf,
-           y = predict(lm_year_month, newdata = tibble(year_c = 50, month_factor = factor("1"))),
-           label = "month 1", hjust = 1.1) +
-  scale_x_continuous(limits = c(-100, 100)) +
-  theme(legend.position = "none") +
-  annotate("label", x = Inf,
-           y = predict(lm_year_month, newdata = tibble(year_c = 50, month_factor = factor("7"))),
-           label = "month 7", hjust = 1.1)
+# Gruppierte Punktwolke: Januar blau/Kreis, Juli orange/Dreieck (Okabe-Ito);
+# Label am Geradenende, Schluessel im y-Titel (Untertitel), keine Legende
+farben_monat <- c("1" = okabe_linie[2], "7" = okabe_linie[1])
+texte_monat  <- c("1" = okabe_text[2],  "7" = okabe_text[1])
+formen_monat <- c("1" = 16, "7" = 17)
+namen_monat  <- c("1" = "Januar", "7" = "Juli")
+
+# Vorhersagen des Modells (parallele Geraden) als Data Frame
+pred_lm3 <-
+  expand_grid(year_c = range(wetter_month_1_7$year_c),
+              month_factor = factor(c("1", "7"))) |>
+  mutate(precip = predict(lm_year_month, newdata = pick(everything())))
+
+enden_lm3 <- pred_lm3 |>
+  group_by(month_factor) |>
+  filter(year_c == max(year_c)) |>
+  ungroup()
+
+ggplot(wetter_month_1_7, aes(x = year_c, y = precip, color = month_factor)) +
+  geom_point(aes(shape = month_factor),
+             alpha = alpha_n(nrow(wetter_month_1_7) / 2)) +
+  geom_line(data = pred_lm3, linewidth = 1.2) +
+  geom_label(data = enden_lm3,
+             aes(label = namen_monat[as.character(month_factor)],
+                 color = I(texte_monat[as.character(month_factor)])),
+             hjust = 0, nudge_x = 3, fontface = "bold",
+             fill = alpha("white", 0.85), linewidth = 0) +
+  scale_color_manual(values = farben_monat, guide = "none") +
+  scale_shape_manual(values = formen_monat, guide = "none") +
+  scale_x_continuous(breaks = c(-50, 0, 50),
+                     expand = expansion(mult = c(0.02, 0.2))) +
+  # Range-Frame ohne Gruppierung (sonst ein Rahmen je Monat)
+  rangeframe(data = wetter_month_1_7, mapping = aes(x = year_c, y = precip),
+             inherit.aes = FALSE) +
+  labs(x = "Jahr (zentriert, year_c)", y = NULL,
+       subtitle = paste0("Niederschlag (mm); ",
+                         "<b style='color:", texte_monat["1"], "'>&#9679; Januar</b> / ",
+                         "<b style='color:", texte_monat["7"], "'>&#9650; Juli</b>")) +
+  theme_streu() +
+  theme(plot.subtitle = ggtext::element_markdown())
 
 ```
 
@@ -1281,37 +1351,54 @@ plot(estimate_relation(lm_year_month_interaktion))
 #| fig-asp: 0.5
 #| fig-cap: "Niederschlag im Jahresverlauf und Monatsvergleich mit Interaktionseffekt: Die Veränderung im Verlauf der Jahre ist unterschiedlich für die Monate (Januar vs. Juli). Die beiden Regressionsgeraden sind _nicht_ parallel."
 
-d <- tibble(
-    year_c = 100,  # Adjust x-position slightly for better spacing
-    precip = c(
-      predict(lm_year_month_interaktion, newdata = tibble(year_c = 50, month_factor = factor("7"))),
-      predict(lm_year_month_interaktion, newdata = tibble(year_c = 50, month_factor = factor("1")))
-    ),
-    label = c("month 7", "month 1"),
-    month_factor = c("7", "1")
-  )
+# Wie oben: Januar blau/Kreis, Juli orange/Dreieck; Label am Geradenende,
+# Schluessel im y-Titel (Untertitel), keine Legende.
+# Vorhersagen des Interaktionsmodells (nicht parallele Geraden) als Data Frame
+gitter_interakt <-
+  expand_grid(year_c = seq(min(wetter_month_1_7$year_c),
+                           max(wetter_month_1_7$year_c), length.out = 50),
+              month_factor = factor(c("1", "7")))
 
-ggplot(wetter_month_1_7) +
-  aes(x = year_c, 
-      y = precip, 
-      color = month_factor,
-      linetype = month_factor,
-      group = month_factor) +
-  geom_point2(alpha = .2, aes(shape = month_factor)) + 
-  geom_smooth(method = "lm", size = 2, fullrange = TRUE) +
-  scale_color_manual(values = c("1" = beta0col, "7" = beta1col)) +
-  scale_x_continuous(limits = c(-100, 125)) +
-  theme(legend.position = "none") +
-  geom_label_repel(
-    data = d,
-    aes(x = year_c, y = precip, label = label),
-    hjust = 1.1,
-    nudge_x = 5,  # Nudges labels slightly to the right
-    nudge_y = 0.1,  # Adjusts vertical spacing to reduce overlap
-    direction = "y",  # Moves labels along the y-axis
-    segment.color = "gray50",  # Draws connecting line
-    size = 5
-  ) 
+pred_interakt <-
+  gitter_interakt |>
+  bind_cols(predict(lm_year_month_interaktion,
+                    newdata = gitter_interakt, interval = "confidence") |>
+              as_tibble()) |>
+  rename(precip = fit)
+
+enden_interakt <- pred_interakt |>
+  group_by(month_factor) |>
+  filter(year_c == max(year_c)) |>
+  ungroup()
+
+ggplot(wetter_month_1_7, aes(x = year_c, y = precip, color = month_factor)) +
+  geom_point(aes(shape = month_factor),
+             alpha = alpha_n(nrow(wetter_month_1_7) / 2)) +
+  geom_ribbon(data = pred_interakt,
+              aes(ymin = lwr, ymax = upr, fill = month_factor),
+              alpha = 0.2, color = NA) +
+  geom_line(data = pred_interakt, linewidth = 1.2) +
+  # Geradenenden liegen dicht beieinander: Labels abstossen, weisser Halo
+  geom_text_repel(data = enden_interakt,
+             aes(label = namen_monat[as.character(month_factor)],
+                 color = I(texte_monat[as.character(month_factor)])),
+             hjust = 0, nudge_x = 3, fontface = "bold",
+             direction = "y", segment.color = NA,
+             bg.color = "white", bg.r = 0.15) +
+  scale_color_manual(values = farben_monat, guide = "none") +
+  scale_fill_manual(values = farben_monat, guide = "none") +
+  scale_shape_manual(values = formen_monat, guide = "none") +
+  scale_x_continuous(breaks = c(-50, 0, 50),
+                     expand = expansion(mult = c(0.02, 0.2))) +
+  # Range-Frame ohne Gruppierung (sonst ein Rahmen je Monat)
+  rangeframe(data = wetter_month_1_7, mapping = aes(x = year_c, y = precip),
+             inherit.aes = FALSE) +
+  labs(x = "Jahr (zentriert, year_c)", y = NULL,
+       subtitle = paste0("Niederschlag (mm); ",
+                         "<b style='color:", texte_monat["1"], "'>&#9679; Januar</b> / ",
+                         "<b style='color:", texte_monat["7"], "'>&#9650; Juli</b>")) +
+  theme_streu() +
+  theme(plot.subtitle = ggtext::element_markdown())
 ```
 
 
@@ -1461,7 +1548,34 @@ Ein lineares Modell, `y ~ x1 + x2` mit zwei UV im 3D-Raum.
 #| out-width: 75%
 #| label: fig-3d-regr-2d
 lm3d_expect <- estimate_relation(lm3d)
-plot(lm3d_expect, show_data = TRUE)
+
+# Selbst geplottet statt plot(estimate_relation(...)): drei Geraden fuer
+# x2 = -1, 0, 1 (ca. Mittelwert +/- SD), direkt am Geradenende beschriftet
+pred_3d <- 
+  expand_grid(x1 = range(df_3d$x1), x2 = c(-1, 0, 1)) |> 
+  mutate(y = predict(lm3d, newdata = pick(everything())),
+         gruppe = factor(x2))
+
+enden_3d <- pred_3d |> 
+  group_by(gruppe) |> 
+  filter(x1 == max(x1)) |> 
+  ungroup()
+
+p_3d_2d <- 
+  ggplot(df_3d, aes(x = x1, y = y)) +
+  geom_point() +
+  geom_line(data = pred_3d, aes(color = gruppe), linewidth = 1.2) +
+  geom_label(data = enden_3d, 
+             aes(label = paste("x2 =", x2), color = I(okabe_text[as.integer(gruppe)])),
+             hjust = 0, nudge_x = 0.1, fontface = "bold",
+             fill = alpha("white", 0.85), linewidth = 0) +
+  scale_color_manual(values = okabe_linie[1:3], guide = "none") +
+  scale_x_continuous(expand = expansion(mult = c(0.02, 0.2))) +
+  rug_grau() +
+  rangeframe() +
+  labs(x = "x1", y = NULL, subtitle = "y (vorhergesagt und beobachtet)") +
+  theme_streu()
+p_3d_2d
 ```
 
 
@@ -1489,7 +1603,7 @@ plot(lm3d_expect, show_data = TRUE)
 #| label: 2D-Diagramm für 3D-Modell
 #| echo: false
 lm3d_expect <- estimate_relation(lm3d)
-plot(lm3d_expect, show_data = TRUE)
+p_3d_2d  # Diagramm aus dem Chunk fig-3d-regr-2d
 ```
 
 
@@ -2085,12 +2199,53 @@ Es gibt einen *positiven* Zusammenhang von Schnabellänge und Schnabeltiefe, s. 
 #| label: fig-penguins-groups
 #| out-width: 75% 
 #| echo: false
-ggscatter(penguins, x = "bill_length_mm", y = "bill_depth_mm", 
-          add = "reg.line", color = "species") +
-          geom_abline(slope = coef(lm_ping1)[2], 
-          intercept = coef(lm_ping1)[1],
-          size = 2,
-          linetype = "dashed")
+# Gruppierte Punktwolke: Farbe + Symbol je Art, Label am Geradenende,
+# Schluessel im y-Titel (Untertitel); Gesamtgerade schwarz gestrichelt
+penguins_ok <- penguins |> 
+  drop_na(bill_length_mm, bill_depth_mm, species)
+
+arten <- sort(unique(penguins_ok$species))  # Adelie, Chinstrap, Gentoo
+farben_art <- setNames(okabe_linie[1:3], arten)
+texte_art  <- setNames(okabe_text[1:3], arten)
+formen_art <- setNames(formen[1:3], arten)
+
+# Endpunkte der Geraden je Art (Vorhersage am groessten x-Wert)
+enden_art <- penguins_ok |> 
+  group_by(species) |> 
+  filter(bill_length_mm == max(bill_length_mm)) |> 
+  slice(1) |> 
+  ungroup() |> 
+  mutate(bill_depth_mm = map2_dbl(species, bill_length_mm, \(s, x) {
+    m <- lm(bill_depth_mm ~ bill_length_mm, data = filter(penguins_ok, species == s))
+    predict(m, newdata = tibble(bill_length_mm = x))
+  }))
+
+symbole <- c("&#9679;", "&#9650;", "&#9632;")
+schluessel <- paste0("<b style='color:", texte_art, "'>", symbole, " ", arten, "</b>",
+                     collapse = " / ")
+
+ggplot(penguins_ok, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species, shape = species), alpha = 0.6) +
+  geom_smooth(aes(color = species, fill = species), method = "lm") +
+  geom_abline(slope = coef(lm_ping1)[2], 
+              intercept = coef(lm_ping1)[1],
+              color = fast_schwarz,
+              linewidth = 1,
+              linetype = "dashed") +
+  geom_label(data = enden_art,
+             aes(label = species, color = I(texte_art[as.character(species)])),
+             hjust = 0, nudge_x = 0.5, fontface = "bold",
+             fill = alpha("white", 0.85), linewidth = 0) +
+  scale_color_manual(values = farben_art, guide = "none") +
+  scale_fill_manual(values = farben_art, guide = "none") +
+  scale_shape_manual(values = formen_art, guide = "none") +
+  scale_x_continuous(expand = expansion(mult = c(0.02, 0.2))) +
+  rug_grau() +
+  rangeframe() +
+  labs(x = "Schnabellänge (mm)", y = NULL,
+       subtitle = paste0("Schnabeltiefe (mm); ", schluessel)) +
+  theme_streu() +
+  theme(plot.subtitle = ggtext::element_markdown())
 ```
 
 
@@ -2168,6 +2323,7 @@ Dann bleibt unklar, ob die Modellkoeffizienten belastbar, robust, stichhaltig si
 #| fig-subcap: 
 #|   - "Modell: `y ~ x`, starker positiver Zusammenhang"
 #|   - "Modell: `y ~ x + g`, kein Zusammenhang in beiden Gruppe"
+#| teilbild: true
 
 n <- 100
 
@@ -2186,32 +2342,52 @@ d_sim <-
       group = "B")
   )
 
+# (a) Eine Punktwolke, Regressionsgerade blau
 p_super_korr <- 
 d_sim |>
   ggplot(aes(x = x, y = y)) +
-  geom_point2() +
-  geom_smooth(method = "lm", color = modelcol) +
-  labs(title = "Oh yeah,",
-       subtitle = "super Korrelation!") +
-  theme_minimal() +
-  theme(plot.title = element_text(size = 12)) +
-  theme_large_text()
+  geom_point(alpha = alpha_n(nrow(d_sim))) +
+  geom_smooth(method = "lm") +
+  rug_grau() +
+  rangeframe() +
+  labs(title = "Oh yeah, super Korrelation!",
+       subtitle = "y", y = NULL) +
+  theme_streu()
+
+# (b) Zwei Gruppen: Farbe + Symbol, Label am Geradenende, Schluessel im y-Titel
+farben_ab <- c(A = okabe_linie[1], B = okabe_linie[2])
+texte_ab  <- c(A = okabe_text[1],  B = okabe_text[2])
+
+enden_ab <- d_sim |> 
+  group_by(group) |> 
+  filter(x == max(x)) |> 
+  ungroup() |> 
+  mutate(y = map2_dbl(group, x, \(g, xx) {
+    m <- lm(y ~ x, data = filter(d_sim, group == g))
+    predict(m, newdata = tibble(x = xx))
+  }))
 
 p_no_korr <- 
 d_sim |>
   ggplot(aes(x = x, y = y, color = group, shape = group)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  labs(title = "Oh nein,",
-       subtitle = "keine Korrelation!") +
-  theme(legend.position = "bottom") +
-  theme_minimal() +
-  scale_color_manual(values = c(beta0col, beta1col)) +
-  theme(
-    legend.position = c(0.97, 0.05),  # Adjust these values to position the legend
-    legend.justification = c(1, 0)) +
-  theme(plot.title = element_text(size = 12)) +
-  theme_large_text()
+  geom_point(alpha = alpha_n(nrow(d_sim))) +
+  geom_smooth(aes(fill = group), method = "lm") +
+  geom_label(data = enden_ab,
+             aes(label = paste("Gruppe", group), color = I(texte_ab[group])),
+             hjust = 0, nudge_x = 0.1, fontface = "bold",
+             fill = alpha("white", 0.85), linewidth = 0) +
+  scale_color_manual(values = farben_ab, guide = "none") +
+  scale_fill_manual(values = farben_ab, guide = "none") +
+  scale_shape_manual(values = c(A = 16, B = 17), guide = "none") +
+  scale_x_continuous(breaks = -1:2, expand = expansion(mult = c(0.02, 0.3))) +
+  rug_grau() +
+  rangeframe(data = d_sim, mapping = aes(x = x, y = y), inherit.aes = FALSE) +
+  labs(title = "Oh nein, keine Korrelation!", y = NULL,
+       subtitle = paste0("y; ",
+                         "<b style='color:", texte_ab["A"], "'>&#9679; A</b> / ",
+                         "<b style='color:", texte_ab["B"], "'>&#9650; B</b>")) +
+  theme_streu() +
+  theme(plot.subtitle = ggtext::element_markdown())
 
 p_super_korr
 p_no_korr

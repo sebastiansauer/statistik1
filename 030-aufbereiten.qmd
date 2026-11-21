@@ -980,13 +980,17 @@ p_d_g2 <- ggtexttable(d_g2, rows=NULL)
 
 p_d_g1 <-
   p_d_g1 |>
-  # order = c(5, 4): Blau/Amber statt Orange/Hellblau, da Letztere im
-  # Graustufendruck fast identisch hell sind (schlechter S/W-Kontrast)
-  table_cell_bg(column = 3, fill = okabeito_colors()[5], row = 2:tab_nrow(p_d_g1))
+  # 2 Gruppen: Dunkelblau und Orange (kein Gelb); hell/dunkel trennt auch
+  # im Graustufendruck. Text weiß auf Blau, fast schwarz auf Orange, fett.
+  table_cell_bg(column = 3, fill = okabe_linie[2], row = 2:tab_nrow(p_d_g1)) |>
+  table_cell_font(column = 3, color = "white", face = "bold",
+                  row = 2:tab_nrow(p_d_g1))
 
 p_d_g2 <-
   p_d_g2 |>
-  table_cell_bg(column = 3, fill = okabeito_colors()[4], row = 2:tab_nrow(p_d_g2))
+  table_cell_bg(column = 3, fill = okabe_linie[1], row = 2:tab_nrow(p_d_g2)) |>
+  table_cell_font(column = 3, color = fast_schwarz, face = "bold",
+                  row = 2:tab_nrow(p_d_g2))
 
 p_text_summ <- grid::textGrob("group_by(gruppe)",
                               gp=grid::gpar(fontsize=8))

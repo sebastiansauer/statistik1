@@ -115,28 +115,35 @@ hilft noch einmal @fig-zshg.
 ```{r}
 #| echo: false
 #| label: fig-zshg
-#| fig-cap: "Visualisierung des Zusammenhangs von wheels und total_pr. (a) Streudiagramm mit Trendlinie (und Ellipse zur Verdeutlichung). (b) 'Verwackeltes' Streudiagramm, um die einzelnen Punkte besser zu erkennen"
+#| teilbild: true
+#| fig-cap: "Mit der Anzahl der Lenkräder (wheels) steigt der Verkaufspreis (total_pr). (a) Streudiagramm mit Trendlinie. (b) 'Verwackeltes' Streudiagramm, um die einzelnen Punkte besser zu erkennen"
 #| fig-subcap: 
 #|   - Streudiagramm mit Trendlinie
 #|   - Verwackeltes Streudiagramm
 #| layout: [[45,-10, 45], [100]]
 data(mariokart, package = "openintro")
 
-mariokart |> 
-  filter(total_pr < 100) |> 
-  ggscatter(x = "wheels", 
-            y = "total_pr",
-            add = "reg.line",
-            add.params = list(color = modelcol),
-            ellipse = FALSE) +
-  theme_large_text()
+mario_zshg <- mariokart |> filter(total_pr < 100)
 
-mariokart |> 
-  filter(total_pr < 100) |> 
-  ggplot() +
-  aes(x = wheels, y = total_pr) +
-  geom_jitter()  +
-  theme_large_text()
+
+mario_zshg |> 
+  ggplot(aes(x = wheels, y = total_pr)) +
+  geom_point(alpha = alpha_n(nrow(mario_zshg))) +
+  geom_smooth(method = "lm", se = FALSE) +
+  rangeframe() +
+  rug_grau(sides = "l") +  # x hat nur 5 Stufen: kein Rug an der x-Achse
+  labs(x = "Anzahl Lenkräder (wheels)", y = NULL,
+       subtitle = "Verkaufspreis (total_pr, Dollar)") +
+  theme_streu()
+
+mario_zshg |> 
+  ggplot(aes(x = wheels, y = total_pr)) +
+  geom_jitter(width = 0.2, height = 0, alpha = alpha_n(nrow(mario_zshg))) +
+  rangeframe() +
+  rug_grau(sides = "l") +
+  labs(x = "Anzahl Lenkräder (wheels)", y = NULL,
+       subtitle = "Verkaufspreis (total_pr, Dollar)") +
+  theme_streu()
 ```
 
 
@@ -216,31 +223,38 @@ Die Fläche des Abweichungsrechtecks ist dann das Produkt der Abweichungen: $dx_
 p_cov <- 
 ggplot(d) +
   aes(x = x, y = y) +
-  geom_vline(xintercept = mean(d$x), linetype = "dashed") +
-  geom_hline(yintercept = mean(d$y), linetype = "dashed") +
+  geom_vline(xintercept = mean(d$x), linetype = "dashed", color = grau_mittel) +
+  geom_hline(yintercept = mean(d$y), linetype = "dashed", color = grau_mittel) +
   geom_rect(aes(xmin = x, xmax = x_avg, ymin = y, ymax = y_avg,
                 fill = factor(cov_sign)),
-            alpha = .7, color = "grey40") +
-  #geom_rect(xmin = mean (d$x), xmax = 67, ymax = mean(d$y), ymin = 50) +
-  labs(x = "Lernzeit",
-       y = "Punkte (0-100)",
-       fill = "Vorzeichen") + 
-  theme_minimal() +
-  annotate("label", x = Inf, y = Inf, 
-           label = "Q1: +", hjust = "right", vjust = "top") +
-  annotate("label", x = Inf, y = -Inf, 
-           label = "Q2: -", hjust = "right", vjust = "bottom") +
-  annotate("label", x = -Inf, y = -Inf, 
-           label = "Q3: +", hjust = "left", vjust = "bottom") +
-  annotate("label", x = -Inf, y = Inf, 
-           label = "Q4: -", hjust = "left", vjust = "top") +
-    geom_point(size = 2, color = "black") +
-  scale_fill_manual(values = c(beta0col, beta1col)) +
-  theme(
-    legend.position = c(0.95, 0.05),  # Adjust these values to position the legend
-    legend.justification = c(1, 0)    # 1 = right, 0 = bottom
-  )  +
-  theme(plot.margin = margin(1, 1, 1, 1, "cm"))
+            alpha = .7, color = "white", linewidth = 0.8) +
+  # Quadranten direkt beschriften, Textfarbe = Vorzeichen (statt Legende)
+  annotate("text", x = Inf, y = Inf, label = "Q1: +", color = okabe_text[2],
+           fontface = "bold", hjust = 1, vjust = 1) +
+  annotate("text", x = Inf, y = -Inf, label = "Q2: -", color = okabe_text[1],
+           fontface = "bold", hjust = 1, vjust = 0) +
+  annotate("text", x = -Inf, y = -Inf, label = "Q3: +", color = okabe_text[2],
+           fontface = "bold", hjust = 0, vjust = 0) +
+  annotate("text", x = -Inf, y = Inf, label = "Q4: -", color = okabe_text[1],
+           fontface = "bold", hjust = 0, vjust = 1) +
+  geom_point(size = 2.5, color = fast_schwarz) +
+  rangeframe() +
+  # Platz am Rand für die Quadranten-Beschriftung
+  # Ticks nur im Datenbereich (Range-Frame)
+  scale_x_continuous(breaks = \(l) scales::breaks_extended()(range(d$x)) |>
+                       (\(b) b[b >= min(d$x) & b <= max(d$x)])(),
+                     expand = expansion(mult = 0.15)) +
+  scale_y_continuous(breaks = \(l) scales::breaks_extended()(range(d$y)) |>
+                       (\(b) b[b >= min(d$y) & b <= max(d$y)])(),
+                     expand = expansion(mult = 0.12)) +
+  # negatives Vorzeichen orange, positives dunkelblau
+  scale_fill_manual(values = c(`-1` = beta0col, `1` = beta1col), guide = "none") +
+  labs(x = "Lernzeit", y = NULL,
+       subtitle = paste0("Punkte (0-100); Vorzeichen des Rechtecks: ",
+                         "<b style='color:#B36B00'>negativ</b> / ",
+                         "<b style='color:#0072B2'>positiv</b>")) +
+  theme_streu() +
+  theme(plot.subtitle = ggtext::element_markdown())
 
 p_cov
 ```
@@ -745,6 +759,7 @@ d |> filter(between(x, x_min, x_max))
 ```{r}
 #| echo: false
 #| label: fig-corr-range
+#| teilbild: true
 #| out-width: 100%
 #| fig-cap: Schränkt man den Range einer (oder beider) Variablen ein, so sinkt die Stärke der Korrelation
 #| layout: [[45,-10, 45], [100]]
@@ -753,22 +768,26 @@ d |> filter(between(x, x_min, x_max))
 #|   - "Ohne Einschränkung des Range: Starke Korrelation"
 #|   - "Mit Einschränkung des Range: Schwächere Korrelation"
 
+
 d |> 
 ggplot(aes(x = x, y = y)) +
-  geom_point() +
-  labs(title = paste0("r: ", round(cor(d$x, d$y), 2))) +
-  theme_modern() +
-  theme(plot.title = element_text(size = 16)) +
-  theme_large_text()
+  geom_point(alpha = alpha_n(nrow(d))) +
+  rangeframe() +
+  rug_grau() +
+  labs(title = sprintf("r = %.2f", cor(d$x, d$y)), y = NULL, subtitle = "y") +
+  theme_streu()
 
 d_filtered |>   
 ggplot(aes(x = x, y = y)) +
-  annotate("rect", xmin = x_min, xmax = x_max, ymin = -Inf, ymax = Inf, fill = okabeito_colors()[1], alpha = .5) +
-  geom_point(data = d, color = "grey80") +
-  geom_point() +
-  labs(title = paste0("r: ", round(cor(d_filtered$x, d_filtered$y), 2))) +
-  theme_modern() +
-  theme_large_text()
+  # eingeschränkter Bereich von x als orange Fläche hervorgehoben
+  annotate("rect", xmin = x_min, xmax = x_max, ymin = -Inf, ymax = Inf,
+           fill = okabe_linie[1], alpha = .25) +
+  geom_point(data = d, color = grau_hell) +
+  geom_point(color = grau_dunkel) +
+  rangeframe(data = d) +
+  rug_grau() +
+  labs(title = sprintf("r = %.2f", cor(d_filtered$x, d_filtered$y)), y = NULL, subtitle = "y") +
+  theme_streu()
   
 ```
 

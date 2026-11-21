@@ -49,7 +49,8 @@ vom Anfang bis Ende, erarbeiten wir unser "Datenprodukt".
 
 ```{r}
 #| echo: false
-ggplot2::theme_set(theme_minimal())
+# Buchweites Theme aus _common.R (theme_med) beibehalten
+ggplot2::theme_set(theme_med())
 ```
 
 
@@ -199,6 +200,8 @@ Eine einzelne Zahl ist wesentlich besser zu verstehen als eine große Anzahl von
 #| fig-cap: "Daten zusammenfassen. (a) Zusammenfassen einer Variable zu einem Punktwert, hier zum Mittelwert. (b) Zusammenfassen zweier Variablen zu einer Geraden."
 #| layout: [[45,-10, 45], [100]]
 #| out-width: "100%"
+#| teilbild: true
+#| fig-asp: 0.8
 #| fig-subcap: 
 #|   - "Zusammengefasst zu einem Punkt"
 #|   - "Zusammengefasst zu einer Geraden"
@@ -209,28 +212,29 @@ d <-
          e = rnorm(100, mean = 0, sd = 0.3),
          x = y + e)
 
-d |> 
+# (a) Einzelne Variable: Rohwerte (grau) und ihr Mittelwert (blau)
+d |>
   ggplot(aes(y = y, x = 1)) +
-  geom_jitter(width = .1) +
-  scale_x_continuous(limits = c(0, 2), breaks = c(0,1,2)) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  annotate("point", size = 7, x = 1, y = 0,
-           color = modelcol) +
-  annotate("label", x = 0, y = 0, label = "MW", hjust = 0, size = 6) +
-  labs(caption = "MW: Mittelwert") +
-  theme_modern()  +
-  theme(strip.text = element_text(size = 16)) +
-  theme(plot.caption = element_text(size = 16))+
-  theme_large_text() 
+  geom_hline(yintercept = 0, linetype = "dashed", color = grau_mittel) +
+  geom_jitter(width = .1, alpha = alpha_n(nrow(d))) +
+  annotate("point", size = 6, x = 1, y = 0,
+           color = trendcol) +
+  annotate("text", x = 0.2, y = 0, label = "MW", hjust = 0, vjust = -0.5,
+           fontface = "bold", color = trendcol) +
+  scale_x_continuous(limits = c(0, 2), breaks = NULL) +
+  labs(x = NULL, y = NULL, subtitle = "y",
+       caption = "MW: Mittelwert") +
+  theme_med()
 
-
-
-d |> 
+# (b) Zwei Variablen: Punktwolke und Regressionsgerade
+d |>
   ggplot(aes(x = x, y = y)) +
-  geom_smooth(method = "lm", color = modelcol, se = FALSE, size = 2) +
-  geom_point2() +
-  theme_modern() +
-  theme_large_text()
+  geom_point(alpha = alpha_n(nrow(d))) +
+  rug_grau() +
+  geom_smooth(method = "lm", se = FALSE) +
+  rangeframe() +
+  labs(y = NULL, subtitle = "y") +
+  theme_streu()
 ```
 
 :::{#exm-schraube}
@@ -297,35 +301,29 @@ groesse_summ <-
 facet_labels <- c(`Basketball` = "Basketball\nGeringe Variation",
                   `Schach️` = "Schach\nHohe Variation")
 
-groesse |> 
+groesse |>
   ggplot(aes(x = id, y = groesse)) +
-  #geom_col(width=.5, alpha = .5) +
   facet_wrap(~team, labeller = as_labeller(facet_labels)) +
   labs(
-       y = "Körpergröße",
+       y = NULL,
+       subtitle = "Körpergröße (cm)",
        x = "Spielernummer") +
-  # geom_label(data = distinct(groesse, team, .keep_all = TRUE), 
-  #           aes(label = label, x = 3, y = 50), 
-  #           size = labeltextsize-4, 
-  #           vjust = 0) +
-  theme(strip.text = element_text(size = 16)) +
-  theme_modern()  +
-  theme(plot.caption = element_text(size = 16)) +
-  geom_hline(aes(yintercept = groesse_mw), data = groesse_summ, color = "grey60") + 
-  geom_label(x = 5.5, label = "MW",
-            aes(y = groesse_mw),
-            hjust = "left",
-            size = labeltextsize-4)  +
-  # Abweichungsbalken:
-  geom_segment(aes(x = id, xend = id, 
-                   y = groesse, yend = groesse_mw, 
+  # Mittelwert je Team als Referenzlinie, Wert direkt daneben
+  geom_hline(aes(yintercept = groesse_mw), data = groesse_summ,
+             color = grau_mittel, linetype = "dashed") +
+  geom_text(data = groesse_summ,
+            aes(y = groesse_mw, label = "MW"),
+            x = 5.5, hjust = 0, vjust = -0.4,
+            color = grau_dunkel, fontface = "bold")  +
+  # Abweichungsbalken (unter MW: Orange, über MW: Blau):
+  geom_segment(aes(x = id, xend = id,
+                   y = groesse, yend = groesse_mw,
                    color = Vorzeichen),
-               linetype = "solid",
-               size = 2) +
-  geom_point(aes(x = id, y = groesse), color = "black", alpha = .8, size = 2) +
-  scale_x_continuous(limits = c(0, 7), breaks = 1:5) +
-  scale_color_manual(values = c(beta0col, beta1col)) +
-  theme(legend.position = "none")
+               linewidth = 1.5) +
+  geom_point(aes(x = id, y = groesse), color = grau_dunkel, size = 2) +
+  scale_x_continuous(limits = c(0.5, 6.5), breaks = 1:5) +
+  scale_color_manual(values = c(beta0col, beta1col), guide = "none") +
+  theme_med()
 ```
 
 
@@ -400,7 +398,9 @@ Die beiden Studentinnen unterscheiden sich also stark in der Ungewissheit hinsic
 #| layout-ncol: 2
 #| fig-cap: "Die Ungewissheit, die wir Ereignissen zuschreiben, kann variieren. Anna ist sich maximal unsicher, ob sie besteht. Berta ist sich ziemlich sicher, dass sie besteht."
 #| label: fig-ungewiss-anna-berta
-#| fig-subcap: 
+#| teilbild: true
+#| fig-asp: 0.8
+#| fig-subcap:
 #|   - "Was Anna denkt"
 #|   - "Was Berta denkt"
 
@@ -411,23 +411,23 @@ d1 <- tibble(
   p2  = c(0.9, .1)
 )
 
-ggplot(d1) +
-  aes(x = x, y = p1) +
-  geom_col() +
-  geom_bar_text(size = 28) +
-  labs(y = "Wahrscheinlichkeit",
-       title = "",
-       x = "") +
-  theme_large_text() 
+# Balken mit Wert am Balken: kein Gitter, keine y-Achse
+plot_ungewiss <- function(d, p) {
+  ggplot(d) +
+    aes(x = x, y = {{ p }}) +
+    geom_col(width = 0.7) +
+    geom_text(aes(label = sprintf("%.1f", {{ p }})),
+              vjust = -0.4, fontface = "bold", size = 5,
+              color = fast_schwarz) +
+    scale_y_continuous(limits = c(0, 1.05), expand = expansion(mult = c(0, 0.02))) +
+    labs(y = NULL, subtitle = "Wahrscheinlichkeit", x = NULL) +
+    theme_med(grid = "none") +
+    theme(axis.text.y = element_blank())
+}
 
-ggplot(d1) +
-  aes(x = x, y = p2) +
-  geom_col() +
-  geom_bar_text(size = 28) +
-  labs(y = "Wahrscheinlichkeit",
-       title = "",
-       x = "")  +
-  theme_large_text()
+plot_ungewiss(d1, p1)
+
+plot_ungewiss(d1, p2)
 ```
 
 
@@ -917,22 +917,36 @@ Suchen Sie ein Beispiel für eine Konfiguration einer Tabelle im Lang- vs. Breit
 #| out-width: "75%"
 #| fig-cap: "Beispiel für eine Visualisierung auf Basis einer Tidy-Tabelle,  vgl. @tbl-tidy1"
 
-last_points <- tidy_untidy_long |>
+# Jahr als Zahl, damit Range-Frame und Platz rechts fuer die Labels gehen
+d_tidy_plot <- tidy_untidy_long |>
+  mutate(Jahr = as.integer(Jahr))
+
+last_points <- d_tidy_plot |>
   group_by(Produkt) |>
   filter(Jahr == max(Jahr)) |>
   ungroup()
 
-tidy_untidy_long |> 
-  ggplot(aes(x = Jahr, y = Umsatz, color = Produkt, 
+# Linien- und Textfarbe je Produkt (2 Gruppen: Orange, Blau)
+farben_produkt <- c(Hämmer = okabe_linie[1], Nägel = okabe_linie[2])
+texte_produkt  <- c(Hämmer = okabe_text[1],  Nägel = okabe_text[2])
+
+d_tidy_plot |>
+  ggplot(aes(x = Jahr, y = Umsatz, color = Produkt,
              group = Produkt, shape = Produkt)) +
+  geom_line(linewidth = 1) +
   geom_point(size = 3) +
-  geom_line() +
-  theme_minimal() +
-  geom_text(data = last_points, aes(label = Produkt), 
-            hjust = -0.2, vjust = 0.5, size = 4, show.legend = FALSE) +
-  theme(legend.position = "none") +
-  scale_y_continuous(limits = c(0,15)) +
-  scale_color_manual(values = c(beta0col, beta1col))
+  # Gruppen direkt am Linienende beschriften statt Legende
+  geom_text(data = last_points,
+            aes(label = Produkt, color = I(texte_produkt[Produkt])),
+            hjust = 0, nudge_x = 0.1, fontface = "bold", show.legend = FALSE) +
+  rangeframe() +
+  scale_x_continuous(breaks = 2021:2023,
+                     expand = expansion(mult = c(0.05, 0.25))) +
+  scale_y_continuous(limits = c(0, 15), breaks = c(5, 10, 15)) +
+  scale_color_manual(values = farben_produkt, guide = "none") +
+  scale_shape_manual(values = formen[1:2], guide = "none") +
+  labs(y = NULL, subtitle = "Umsatz") +
+  theme_streu()
 ```
 
 
@@ -998,17 +1012,19 @@ custom_labels <- c(x1 = "Kleine Stichproben (n=20)", x2 = "Große Stichproben (n
 
 
 ggplot(d_long, aes(x = id, y = value)) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_point() +
-  facet_wrap(~ variable, labeller = labeller(variable = custom_labels)) +
-  theme_minimal() +
-  labs(
-    x = "Nummer der Beobachtung",
-    y = "Wert") +  
-    geom_segment(aes(x = id, xend = id,
+  geom_hline(yintercept = 0, linetype = "dashed", color = grau_mittel) +
+  # Abweichung jedes Stichprobenmittelwerts vom wahren Mittelwert (0)
+  geom_segment(aes(x = id, xend = id,
                    y = value, yend = 0),
-               linetype = "dotted", 
-               color = "grey40")
+               linetype = "dotted",
+               color = grau_dunkel) +
+  geom_point(color = grau_dunkel) +
+  facet_wrap(~ variable, labeller = labeller(variable = custom_labels)) +
+  labs(
+    x = "Nummer der Stichprobe",
+    y = NULL,
+    subtitle = "Mittelwert der Stichprobe (wahrer Mittelwert: 0)") +
+  theme_med()
 ```
 
 :::

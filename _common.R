@@ -56,10 +56,11 @@ plot_medium <- function() {
 # und Liniendiagramme, Balken mit Wertelabels), "both".
 # Der y-Titel wird oben ueber dem Panel gesetzt: labs(y = NULL, subtitle = "...")
 theme_med <- function(medium = plot_medium(),
-                      grid = c("h", "v", "none", "both")) {
+                      grid = c("h", "v", "none", "both"),
+                      base_size = NULL) {
   medium <- match.arg(medium, c("html", "pdf", "folien"))
   grid <- match.arg(grid)
-  bs <- switch(medium, html = 11, pdf = 10.5, folien = 19)
+  bs <- if (is.null(base_size)) switch(medium, html = 11, pdf = 10.5, folien = 19) else base_size
   lw <- if (medium == "folien") 0.6 else 0.4
   gl <- ggplot2::element_line(color = grau_hell, linewidth = lw)
   off <- ggplot2::element_blank()
@@ -83,8 +84,8 @@ theme_med <- function(medium = plot_medium(),
 
 # Streu-/Liniendiagramm: kein Gitter, Range-Frame (Achsenlinie nur im
 # Datenbereich) mit Ticks. Verwendung: + rangeframe() + theme_streu()
-theme_streu <- function(medium = plot_medium()) {
-  theme_med(medium, grid = "none") +
+theme_streu <- function(medium = plot_medium(), base_size = NULL) {
+  theme_med(medium, grid = "none", base_size = base_size) +
     ggplot2::theme(axis.ticks = ggplot2::element_line(color = grau_dunkel),
                    axis.ticks.length = ggplot2::unit(3, "pt"))
 }
@@ -101,6 +102,20 @@ alpha_n <- function(n) {
 }
 
 ggplot2::theme_set(theme_med())
+
+# Teilbilder (zwei Diagramme nebeneinander per layout/layout-ncol):
+# Chunk-Option `#| teilbild: true` setzen. Das Bild wird dann kleiner
+# gerechnet (fig-width 4 statt 6) und anschliessend auf die halbe Spalte
+# skaliert. So wachsen Schrift, Punkte und Linien gemeinsam um den Faktor 1.5
+# und sind im halbbreiten Bild genauso gross wie im Einzelbild.
+# Nicht theme_large_text() oder theme(text = ...) verwenden.
+teilbild_breite <- 4
+knitr::opts_hooks$set(teilbild = function(options) {
+  if (isTRUE(options$teilbild)) {
+    options$fig.width <- teilbild_breite
+  }
+  options
+})
 
 # Grau als Standardfarbe der Geome (auch fuer sichtbaren Lehr-Code)
 ggplot2::update_geom_defaults("point", list(colour = grau_dunkel))

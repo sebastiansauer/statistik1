@@ -161,13 +161,16 @@ Wir nutzen den Mittelwert als Punktmodell für den Klausurerfolg. $\square$
 
 ggplot(noten2) +
   aes(id, y) +
-  geom_point() +
-  geom_hline(yintercept = mean(noten2$y), color = modelcol) +
+  geom_point(alpha = alpha_n(nrow(noten2))) +
+  geom_hline(yintercept = mean(noten2$y), color = modelcol, linewidth = 1.2) +
   annotate("label", x = -Inf, y = mean(noten2$y), 
-           label = paste0("MW: ", round(mean(noten2$y))), 
-           hjust = 0,
-           size = 6) +
-  theme_minimal()
+           label = sprintf("MW: %.0f", mean(noten2$y)), 
+           hjust = 0, color = modelcol, fontface = "bold",
+           fill = alpha("white", 0.85), border.colour = NA, size = 5) +
+  rangeframe() +
+  rug_grau(sides = "l") +
+  labs(x = "Studierende (ID)", y = NULL, subtitle = "Klausurpunkte") +
+  theme_streu()
 ```
 
 :::{#def-nullmodell}
@@ -243,6 +246,7 @@ Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einz
 
 ```{r fig-noten}
 #| label: fig-noten4
+#| teilbild: true
 #| echo: false
 #| fig-cap: "Noten und Lernzeit: Rohdaten (a) und mit Modell (b). Mittelwerte sind mit gestrichelten Linien eingezeichnet. Tonis Vorhersage ist mit einem Punkt markiert."
 #| layout-ncol: 2
@@ -254,47 +258,44 @@ Mit einem Lineal könnte man eine entsprechende Gerade in das Streudiagramm einz
 
 
 
+
 ggplot(noten2) +
   aes(x, y) +
-  geom_point() +
-  labs(x = "Lernzeit",
-       y = "Klausurpunkte") +
-  theme_minimal() +
-  theme_large_text()
+  geom_point(alpha = alpha_n(nrow(noten2))) +
+  rangeframe() +
+  rug_grau() +
+  labs(x = "Lernzeit (Stunden)", y = NULL, subtitle = "Klausurpunkte") +
+  theme_streu()
 
 noten2 |> 
   ggplot(aes(x, y)) +
-  geom_point() +
-  geom_vline(xintercept = mean(noten2$x), linetype = "dashed", color = "grey") +  
-  geom_hline(yintercept = mean(noten2$y), linetype = "dashed", color = "grey") +   
-  geom_abline(slope = coef(lm_toni)[2], intercept = coef(lm_toni)[1], color = modelcol, size = 1.5) +
-  theme_minimal() +
-  annotate("label", x = mean(noten2$x), y = -Inf, 
-           label = paste0("MW: ", round(mean(noten2$x))), vjust = "bottom") +
-  annotate("label", y = mean(noten2$y), x = -Inf, 
-           label = paste0("MW: ", round(mean(noten2$y))), hjust = "left")   +
-  annotate("point", x = 42, y = toni_punkte, color = ycol,
-           alpha = .7, size = 7) +
+  geom_vline(xintercept = mean(noten2$x), linetype = "dashed", color = grau_mittel) +  
+  geom_hline(yintercept = mean(noten2$y), linetype = "dashed", color = grau_mittel) +   
+  geom_point(alpha = alpha_n(nrow(noten2))) +
+  geom_abline(slope = coef(lm_toni)[2], intercept = coef(lm_toni)[1],
+              color = trendcol, linewidth = 1.2) +
+  annotate("text", x = mean(noten2$x), y = Inf, 
+           label = sprintf(" MW: %.0f", mean(noten2$x)), 
+           hjust = 0, vjust = 1, color = grau_dunkel, size = 3.5) +
+  annotate("text", y = mean(noten2$y), x = -Inf, 
+           label = sprintf("MW: %.0f", mean(noten2$y)), 
+           hjust = -0.1, vjust = -0.5, color = grau_dunkel, size = 3.5) +
+  # Tonis Vorhersage als Hervorhebung in Orange
+  annotate("point", x = 42, y = toni_punkte, color = ycol, size = 3.5) +
+  geom_label_repel(data = data.frame(x = 42, y = toni_punkte), 
+                   aes(x = x, y = y), label = "Toni",
+                   force = 20,
+                   box.padding = unit(1, "lines"),
+                   point.padding = unit(1, "lines"),
+                   segment.color = grau_mittel,
+                   color = okabe_text[1], fontface = "bold",
+                   fill = alpha("white", 0.85), linewidth = 0,
+                   size = 4) +
   scale_x_continuous(breaks = c(20, 40, 60, 80, 100)) +
-  labs(x = "Lernzeit",
-       y = "Klausurpunkte") +
-  theme_large_text() +
-  geom_label_repel(data = data.frame(x = 42, y = toni_punkte), label = "Toni",
-       force = 20,
-                      box.padding = unit(1, "lines"),
-                      point.padding = unit(1, "lines"),
-                      segment.color = "grey50",
-                      segment.size = 1,
-                      arrow = arrow(length = unit(0.01, "npc")),
-                      # Styling to create a label-like appearance
-                      bg.color = "white",       # Background color of the label
-                      color = "black",           # Text color
-                      fill = "white",          # Alternative way to set background
-                      alpha = 0.8,             # Transparency of the background
-                      segment.alpha = 1,     # Transparency of the segment
-                     
-                      size = 6)  +               # Adjust text size
- theme(plot.margin = margin(1, 1, 1, 1, "cm"))
+  rangeframe() +
+  rug_grau() +
+  labs(x = "Lernzeit (Stunden)", y = NULL, subtitle = "Klausurpunkte") +
+  theme_streu()
 ```
 
 
@@ -479,26 +480,32 @@ cap2 <- paste0("Datensatz 2: b0 = ", round(lm12_coef[1], 2), "; b1 = ", round(lm
 #| cache: false
 #| fig-cap: "Regressionsanalysen mit verschiedenen Koeffizienten, aber gleicher Modellgüte"
 #| label: fig-regr-div
+#| teilbild: true
 #| layout-ncol: 2
 #| fig-subcap: 
 #|   - Datensatz 1
 #|   - Datensatz 2
 
+
 ggplot(d1, aes(x1, y1)) + 
   geom_point() +
-  geom_smooth(method = "lm", se = TRUE, color = okabeito_colors()[5]) +
+  geom_smooth(method = "lm", se = TRUE) +
   scale_y_continuous(limits = c(-4, 4)) +
-  labs(title = paste0("b0 = ",round(lm11_coef[1], 2), "; b1 = ", round(lm11_coef[2]), 2)) +
-  theme_modern() +
-theme(plot.title = element_text(size = 16))
+  rangeframe() +
+  rug_grau() +
+  labs(title = sprintf("b0 = %.2f; b1 = %.2f", lm11_coef[1], lm11_coef[2]),
+       x = "x", y = NULL, subtitle = "y") +
+  theme_streu()
 
 ggplot(d2, aes(x2, y2)) + 
   geom_point() +
-  geom_smooth(method = "lm", se = TRUE, color = okabeito_colors()[5]) +
+  geom_smooth(method = "lm", se = TRUE) +
   scale_y_continuous(limits = c(-4, 4)) +
-  labs(title = paste0("b0 = ",round(lm12_coef[1], 1), "; b1 = ", round(lm12_coef[2]), 2)) +
-  theme_modern() +
-theme(plot.title = element_text(size = 16))
+  rangeframe() +
+  rug_grau() +
+  labs(title = sprintf("b0 = %.2f; b1 = %.2f", lm12_coef[1], lm12_coef[2]),
+       x = "x", y = NULL, subtitle = "y") +
+  theme_streu()
 ```
 
 
@@ -550,41 +557,31 @@ lm1_b0 <- coef(lm1)[1]
 
 noten2 |> 
   ggplot(aes(x, y)) +
-  geom_point() +
-  geom_vline(xintercept = mean(noten2$x), linetype = "dashed", color = "grey") +  
-  geom_hline(yintercept = mean(noten2$y), linetype = "dashed", color = "grey") +   
-  geom_abline(slope = coef(lm1)[2], intercept = coef(lm1)[1], color = okabeito_colors()[5], size = 1.5) +
-  theme_minimal() +
-  #scale_x_continuous(limits = c(0, 100)) +
-  #scale_y_continuous(limits = c(0, 100)) +
-  annotate("point", x = 0, y = lm1_b0, color = ycol, size = 7, alpha = .7) +
-  annotate("label", x = mean(noten2$x), y = 0, vjust = "bottom",
-           label = "MW Lernzeit") +
-  annotate("label", y = mean(noten2$y), x = 12, vjust = "left",
-           label = "MW Klausurpunkte") +
-  # geom_text_repel(data = tibble(x = 0, y = predict(lm1, newdata = tibble(x = 0))), 
-  #                 aes(x = x, y = y,), 
-  #                 label = "Toni",
-  #                 point.padding = .5,
-  #                 size = 8) +
-  labs(x = "Lernzeit",
-       y = "Klausurpunkte") +
- geom_label_repel(
-  data = tibble(x = 0, y = predict(lm1, newdata = tibble(x = 0))), 
-  aes(x = x, y = y,),
-  label = "Toni",
-  box.padding = unit(1, "lines"),
-  point.padding = unit(1, "lines"),
-  segment.color = "grey50",
-  segment.size = 1,
-  arrow = arrow(length = unit(0.01, "npc")),
-  # Styling to create a label-like appearance
-  bg.color = "white",       # Background color of the label
-  color = "black",           # Text color
-  fill = "white",          # Alternative way to set background
-  alpha = 0.8,             # Transparency of the background
-  segment.alpha = 1,     # Transparency of the segment
-  size = 6)                 # Adjust text size
+  geom_vline(xintercept = mean(noten2$x), linetype = "dashed", color = grau_mittel) +  
+  geom_hline(yintercept = mean(noten2$y), linetype = "dashed", color = grau_mittel) +   
+  geom_point(alpha = alpha_n(nrow(noten2))) +
+  geom_abline(slope = coef(lm1)[2], intercept = coef(lm1)[1],
+              color = trendcol, linewidth = 1.2) +
+  # Achsenabschnitt (x = 0) als roter Punkt hervorgehoben
+  annotate("point", x = 0, y = lm1_b0, color = okabe_linie[5], size = 5) +
+  annotate("text", x = mean(noten2$x), y = Inf, hjust = 0, vjust = 1,
+           label = " MW Lernzeit", color = grau_dunkel) +
+  annotate("text", y = mean(noten2$y), x = 0, hjust = 0, vjust = -0.5,
+           label = "MW Klausurpunkte", color = grau_dunkel) +
+  geom_label_repel(
+    data = tibble(x = 0, y = predict(lm1, newdata = tibble(x = 0))), 
+    aes(x = x, y = y),
+    label = "Toni",
+    box.padding = unit(1, "lines"),
+    point.padding = unit(1, "lines"),
+    segment.color = grau_mittel,
+    color = okabe_text[5], fontface = "bold",
+    fill = alpha("white", 0.85), linewidth = 0,
+    size = 5) +
+  rangeframe() +
+  rug_grau() +
+  labs(x = "Lernzeit (Stunden)", y = NULL, subtitle = "Klausurpunkte") +
+  theme_streu()
 ```
 
 
@@ -749,6 +746,7 @@ ${e_i} = {y_i} - {\hat{y}_i}$.
 #| echo: false
 #| fig-cap: "Vorhersagefehler als Abweichungsbalken. (a) Beim Geradenmodell, sind die Vorhersagefehler (Abweichungsbalken) kleiner (kürzer) als in (b), beim Punktmodell."
 #| label: fig-resid
+#| teilbild: true
 #| layout-ncol: 2
 #| fig-subcap: 
 #|   - Geradenmodell (lm_toni)
@@ -758,21 +756,26 @@ noten2 <-
   noten2 |> 
   mutate(yhat = predict(lm_toni, newdata = noten2))
 
+
+# Farben wie in der Formel: y (orange), Modell (blau), Fehler (grün)
 noten2 |> 
   ggplot(aes(x, y)) +
-  geom_point(color = ycol) +
-  geom_abline(slope = coef(lm_toni)[2], intercept = coef(lm_toni)[1], color = modelcol, size = 1.5) +
-  theme_minimal() +
   geom_segment(aes(xend = x, yend = yhat), color = errorcol) +
-theme_large_text()
+  geom_abline(slope = coef(lm_toni)[2], intercept = coef(lm_toni)[1],
+              color = modelcol, linewidth = 1.2) +
+  geom_point(color = ycol) +
+  rangeframe() +
+  labs(x = "Lernzeit (Stunden)", y = NULL, subtitle = "Klausurpunkte") +
+  theme_streu()
 
 noten2 |> 
   ggplot(aes(x, y)) +
+  geom_segment(aes(xend = x, yend = mean(noten2$y)), color = errorcol) +
+  geom_hline(yintercept = mean(noten2$y), color = modelcol, linewidth = 1.2) +
   geom_point(color = ycol) +
-  geom_hline(yintercept = mean(noten2$y), color = modelcol, size = 1.5) +
-  theme_minimal() +
-  geom_segment(aes(xend = x, yend = mean(noten2$y)), color = errorcol)  +
-theme_large_text()
+  rangeframe() +
+  labs(x = "Lernzeit (Stunden)", y = NULL, subtitle = "Klausurpunkte") +
+  theme_streu()
 
 ```
 
@@ -939,6 +942,7 @@ vgl. @fig-r2-extreme.
 #|   - "Keine Korrelation"
 #|   - "Perfekte Korrelation"
 #| label: fig-r2-extreme
+#| teilbild: true
 #| layout: [[45,-10, 45], [100]]
 
 
@@ -946,12 +950,15 @@ d0 <-
   tibble(x = rnorm(100),
          y = rnorm(100))
 
+
 d0 |> 
   ggplot(aes(x,y)) + 
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE, color = modelcol) +
-  theme_modern() + 
-theme_large_text()
+  geom_point(alpha = alpha_n(nrow(d0))) +
+  geom_smooth(method = "lm", se = FALSE) +
+  rangeframe() +
+  rug_grau() +
+  labs(y = NULL, subtitle = "y") +
+  theme_streu()
 
 
 d_r1 =
@@ -960,10 +967,12 @@ d_r1 =
 
 d_r1 |> 
   ggplot(aes(x,y)) + 
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE, color = modelcol) +
-  theme_modern() + 
-theme_large_text()
+  geom_smooth(method = "lm", se = FALSE) +
+  geom_point(size = 2.5) +
+  rangeframe() +
+  rug_grau() +
+  labs(y = NULL, subtitle = "y") +
+  theme_streu()
 ```
 
 Bei einer perfekten Korrelation $R^2=1$ liegen die Punkte auf der Geraden.
@@ -1082,10 +1091,9 @@ d <-
 
 d |> 
   ggplot(aes(x = r, y = r2)) +
-  geom_line() +
-  theme_modern() +
-  labs(y = "R-Quadrat") + 
-  theme_large_text()
+  geom_line(linewidth = 1) +
+  labs(x = "Korrelation r", y = NULL, subtitle = "R-Quadrat") +
+  theme_med(grid = "h")
 ```
 
 

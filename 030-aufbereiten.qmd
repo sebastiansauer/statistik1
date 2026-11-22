@@ -606,17 +606,37 @@ sum(is.na(mariokart_roh$seller_rate))
 
 ## Die Verben des Datenjudos {#sec-verben-datenjudo}
 
-Im R-Paket `dplyr`, das wiederum Teil des R-Pakets `tidyverse` ist,
-gibt es eine Reihe von R-Befehlen,
-die das Datenjudo in eine Handvoll einfacher Verben herunterbrechen. 
-(Falls Sie das R-Paket `tidyverse` noch nicht installiert haben sollten, wäre jetzt ein guter Zeitpunkt dafür.)
-Die wichtigsten Verben des Datenjudos schauen wir uns im Folgenden an.
-Wir betrachten dazu im Folgenden einen einfachen (Spielzeug-)Datensatz,
-an dem wir zunächst die Verben des Datenjudos vorstellen, s. @tbl-datenjudo.
+In @sec-rohdaten-probleme ging es darum, *was* man mit Daten tun muss.
+Jetzt geht es darum, *wie* man es R sagt.
+Dafür gibt es im R-Paket `dplyr` (Teil des `tidyverse`) eine Handvoll Befehle,
+die man die *Verben des Datenjudos* nennt.
+Jedes Verb erledigt genau eine typische Aufgabe, s. @tbl-verben-aufgaben.
 
-```{r d-base}
+| Aufgabe | Verb | Beispiel |
+|:--------|:-----|:---------|
+| Zeilen (Fälle) auswählen | `filter` | nur die neuen Spiele |
+| Spalten (Variablen) auswählen | `select` | nur Zustand und Preis |
+| Zeilen sortieren | `arrange` | die teuersten Spiele zuerst |
+| Spalte neu berechnen | `mutate` | Preis in Yen umrechnen |
+| Zeilen zählen | `count` | Wie viele Spiele sind neu? |
+| aufteilen und zusammenfassen | `group_by` + `summarise` | mittlerer Preis je Zustand |
+
+: Die Verben des Datenjudos und ihre Aufgaben {#tbl-verben-aufgaben}
+
+Wenn Sie wissen, welche Aufgabe Sie erledigen wollen,
+wissen Sie also auch, welches Verb Sie brauchen,
+und können es einer KI präzise sagen oder in deren Code wiedererkennen.
+
+Die Verben wohnen im Paket `dplyr`,
+das gestartet wird, wenn Sie `library(tidyverse)` eingeben.
+Falls Sie vergessen, das Paket `tidyverse` zu starten,
+dann funktionieren diese Befehle nicht.
+Wir stellen jedes Verb zuerst an einem Spielzeug-Datensatz vor, s. @tbl-datenjudo,
+und dann an den Mariokart-Daten.
+
+```{r}
 #| echo: false
-d <- 
+d <-
 tibble(id = c(1, 2, 3),
        name = c("Anni", "Berti", "Charli"),
        gruppe = c("A", "A", "B"),
@@ -635,145 +655,12 @@ p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1) + theme_void()
 d |> knitr::kable()
 ```
 
-
-
-Die Verben des Datenjudos wohnen im Paket `dplyr`,
-welches gestartet wird, wenn Sie `library(tidyverse)` eingeben.
-Falls Sie vergessen, das Paket `tidyverse` zu starten, 
-dann funktionieren diese Befehle nicht.
-
-
-<!-- :::{.callout-note} -->
-<!-- Zur Erinnerung: In RStudio können Sie per Klick auf das kleine Tabellen-Icon im Bereich *Environment* die Tabellenansicht einer Tabelle öffnen, s. @sec-viewtab. $\square$ -->
-<!-- ::: -->
-
-
-### Tabelle sortieren: `arrange`
-
-*Sortieren* der Zeilen ist eine einfache, aber häufige Tätigkeit des Datenjudos, s. @fig-arrange.
-
-```{r plot-arrange}
-#| echo: false
-#| label: fig-arrange
-#| fig-asp: .5
-#| fig-cap: "Sinnbild für das Sortieren einer Tabelle mit `arrange`: Hier wurden die Noten aufsteigend sortiert."
-d_arranged <-
-  d |> 
-  arrange(note)
-
-p_d_arranged <- ggtexttable(d_arranged, rows=NULL) 
-
-p_d_arranged <-
-  p_d_arranged |> 
-  table_cell_bg(column = 4, fill = okabeito_colors()[1], 
-                row = 2:tab_nrow(p_d_arranged))
-
-p_text <- grid::textGrob("arrange")
-
-design <- 
-  "
-A#D
-ABD
-ACD
-A#D
-"
-
-p_arrange <- wrap_plots(A = p_d1, 
-                        B = p_text , 
-                        C = p_ra, 
-                        D = p_d_arranged, 
-           widths = c(4,1,4),
-           design = design) 
-p_arrange +
-  theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 5, unit = "pt")) # Adjust top, right, bottom, and left margins
-
-
-```
-
-
-:::{#exm-arrange1}
-
-### Was sind die höchsten Preise?
-
-Sie wollen mal locker anfangen. Daher stellen Sie sich folgende Frage: 
-Was sind denn eigentlich die höchsten Preise, 
-für die das Spiel *Mariokart* über den Online-Ladentisch geht?
-Die Spalte für den Verkaufspreis heißt offenbar `total_pr` (s. Datensatz `mariokart`).
-In Excel kann die Spalte, nach der man die Tabelle sortieren möchte,
-einfach anklicken. Ob das in R auch so einfach geht?
-
-
 ```{r}
 #| echo: false
 mariokart <-
-  mariokart |> 
+  mariokart |>
   select(-title)  # braucht zu viel Platz
 ```
-
-
-::: {.content-visible when-format="html"}
-
-Die Funktion `arrange` macht es uns ziemlich einfach, s. @tbl-arrange.
-
-```{r}
-#| eval: false
-arrange(mariokart, total_pr)
-```
-
-```{r}
-#| echo: false
-#| tbl-cap: Die Datentabelle, (aufsteigend) sortiert nach `total_pr` (die ersten sechs Zeilen)
-#| label: tbl-arrange
-arrange(mariokart, total_pr) |>
-  head()
-```
-
-:::
-
-::: {.content-visible when-format="pdf"}
-
-Die Funktion `arrange` macht es uns ziemlich einfach, s. @tbl-arrange-pdf.
-
-```{r}
-#| eval: false
-arrange(mariokart, total_pr) 
-```
-
-
-```{r}
-#| echo: false
-#| tbl-cap: Die Datentabelle, sortiert nach `total_pr`
-#| label: tbl-arrange-pdf
-mariokart |> 
-  select(total_pr, start_pr) |> 
-  arrange(total_pr) |> 
-  head()
-```
-
-:::
-
-Übersetzen wir die R-Syntax ins Deutsche:
-
-```
-Hey R,
-arrangiere (sortiere) `mariokart` 
-nach der Spalte `total_pr` (aufsteigend).
-```
-
-Gar nicht so schwer. $\square$
-:::
-
-
-
-Übrigens wird in `arrange` per Voreinstellung aufsteigend sortiert.
-Setzt man ein Minus vor der zu sortierenden Spalte,
-wird umgekehrt, also *absteigend* sortiert:
-
-```{r}
-#| eval: false
-mario_sortiert <- arrange(mariokart, -total_pr)
-```
-
 
 
 ::: {.content-visible when-format="html"}
@@ -787,70 +674,36 @@ Bei Übungen hilft Ihnen *Show Hint* weiter; danach können Sie sich die Lösung
 Beim ersten Start dauert es einige Sekunden, bis R im Hintergrund geladen ist.
 :::
 
-Probieren Sie es aus: Sortieren Sie absteigend, indem Sie ein Minus vor `total_pr` setzen.
-
-```{webr}
-arrange(mariokart, total_pr)
-```
-
 :::
 
-:::{#exr-arrange2}
-Sortieren Sie die Mariokart-Daten absteigend nach der Anzahl der beigelegten Lenkräder. $\square$
-:::
-
-::: {.content-visible when-format="html"}
-
-Lösen Sie @exr-arrange2 hier im Browser.
-
-```{webr}
-#| exercise: ex_arrange2
-arrange(mariokart, ______)
-```
-
-::: {.hint exercise="ex_arrange2"}
-Die Anzahl der Lenkräder steht in der Spalte `wheels`. Für absteigendes Sortieren setzen Sie ein Minus davor.
-:::
-
-::: {.solution exercise="ex_arrange2"}
-```{webr}
-#| exercise: ex_arrange2
-#| solution: true
-arrange(mariokart, -wheels)
-```
-:::
-
-:::
 
 ### Zeilen filtern: `filter`
 
-
-Zeilen *filtern* bedeutet, dass man nur *bestimmte* *Zeilen* (Beobachtungen) *behalten* möchte, 
-die restlichen Zeilen brauchen wir nicht, weg mit ihnen.
-Wir haben also ein Filterkriterium im Kopf,
-anhand dessen wir die Tabelle filern, s. @fig-filter.
+Zeilen *filtern* bedeutet, nur *bestimmte* Zeilen (Fälle) zu *behalten*;
+die restlichen Zeilen fallen weg.
+Man braucht also ein Filterkriterium, s. @fig-filter.
 
 
-```{r plot-filter}
+```{r}
 #| echo: false
 #| label: fig-filter
 #| fig-cap: "Sinnbild für das Filtern einer Tabelle mit `filter`: Gruppe *B* wurde entfernt, also wurde nach Gruppe *A* gefiltert."
 d_filter <-
-  d |> 
+  d |>
   filter(note > 2)
 
 
 p_d1 <- ggtexttable(d, rows=NULL)
 p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1) + theme_void()
-p_d_filter <- ggtexttable(d_filter, rows=NULL) 
+p_d_filter <- ggtexttable(d_filter, rows=NULL)
 
-p_d_filter <- 
-  p_d_filter |> 
+p_d_filter <-
+  p_d_filter |>
   table_cell_bg(column = 1:4, fill = okabeito_colors()[1], row = 2:tab_nrow(p_d_filter))
 
 p_text_filter <- grid::textGrob("filter")
 
-design <- 
+design <-
   "
 A#D
 ABD
@@ -858,126 +711,46 @@ ACD
 A#D
 "
 
-p_filter <- wrap_plots(A= p_d1, 
-                       B = p_text_filter , 
-                       C = p_ra, 
-                       D = p_d_filter, 
+p_filter <- wrap_plots(A= p_d1,
+                       B = p_text_filter ,
+                       C = p_ra,
+                       D = p_d_filter,
                        widths = c(4,1,4),
-                       design = design) 
+                       design = design)
 p_filter
 ```
 
 
 :::{#exm-filter}
 
-### Ob ein Foto für den Verkaufspreis nützlich ist?
+### Nur Auktionen mit Foto
 
-Als nächstes kommt Ihnen die Idee, 
-mal zu schauen, ob Auktionen mit "Stock-Photo" Ware einen höheren Verkaufspreis erzielen
-als Auktionen ohne solche Totos.
+Sie möchten sich nur die Auktionen anschauen, bei denen ein Foto der Ware dabei war:
 
 ```{r}
-mariokart_neu <- filter(mariokart, stock_photo == "yes")
+mariokart_foto <- filter(mariokart, stock_photo == "yes")
 ```
 
-::: {.content-visible when-format="html"}
+Auf Deutsch: "Hey R, filtere aus `mariokart` die Zeilen, bei denen `stock_photo` gleich `"yes"` ist."
+Beachten Sie das doppelte Gleichheitszeichen `==`: Es *prüft*, ob zwei Dinge gleich sind. $\square$
+:::
+
+Mehrere Kriterien verknüpft man mit den logischen Operatoren `&` (UND) und `|` (ODER), s. @sec-logic:
 
 ```{r}
 #| eval: false
-mariokart_neu
+filter(mariokart, stock_photo == "yes" & cond == "new")  # Foto UND neu
+filter(mariokart, stock_photo == "yes" | cond == "new")  # Foto ODER neu (oder beides)
 ```
 
-```{r}
-#| echo: false
-# nur die ersten sechs Zeilen zeigen (kable druckt sonst alle)
-head(mariokart_neu)
-```
-
-
-
-
-
-:::
-
-
-
-Sie filtern also die Tabelle so,
-dass *nur* diese Auktionen im Datensatz verbleiben,
-welche mind. ein Foto haben,
-mit anderen Worten, Auktionen (Beobachtungen) bei denen gilt: `stock_photo == TRUE`. $\square$
-:::
-
-
-
-
-Angestachelt von Ihren Erfolgen möchten Sie jetzt komplexere Hypothesen prüfen:
-Erzielen Auktionen von *neuen* Spielen und zwar *mit* Foto einen höheren Preis als die übrigen Auktionen?
-Anders gesagt haben Sie zwei Filterkriterien im Blick: Neuheit `cond` und Foto `stock_photo`. Nur diejenigen Auktionen, die *sowohl* Neuheit *als auch* Foto erfüllen, möchten Sie näher untersuchen (Filtern mit dem logischen UND):
-
-```{r}
-mario_filter1 <- 
-  filter(mariokart,  # "&" heißt UND:
-         stock_photo == "yes" & cond == "new")
-```
-
-
-::: {.content-visible when-format="html"}
-```{r}
-#| eval: false
-mario_filter1
-```
-
-```{r}
-#| echo: false
-# nur die ersten sechs Zeilen zeigen (kable druckt sonst alle)
-head(mario_filter1)
-```
-:::
-
-Hm. Was ist mit den Auktionen, die *entweder* über (mind.) ein Foto verfügen *oder auch* neu sind, oder beides (Filtern mit dem logischen ODER)?
-
-```{r}
-mario_filter2 <- 
-  filter(mariokart,  # "|" heißt ODER:
-         stock_photo == "yes" | cond == "new")
-```
-
-::: {.content-visible when-format="html"}
-```{r}
-#| eval: false
-mario_filter2
-```
-
-```{r}
-#| echo: false
-# nur die ersten sechs Zeilen zeigen (kable druckt sonst alle)
-head(mario_filter2)
-```
-:::
-
-Zur Erinnerung: Logische Operatoren sind in @sec-logic erläutert.
-
-
-:::{#exr-hyps-filter}
-Hier könnte man noch viele interessante Hypothesen prüfen, denken Sie sich und tun das auch. $\square$
-:::
+In @sec-rohdaten-probleme haben Sie `filter` schon gesehen:
+`filter(total_pr < 100)` schließt die Bundle-Auktionen aus.
 
 
 :::{#exr-filter2}
 Filtern Sie die Spiele mit nur einem Lenkrad und ohne Versandkosten. $\square$
 :::
 
-
-
-::: {.content-visible when-format="html"}
-
-Probieren Sie es aus: Ändern Sie die Filterbedingungen.
-
-```{webr}
-filter(mariokart, stock_photo == "yes" & cond == "new")
-```
-
-:::
 
 ::: {.content-visible when-format="html"}
 
@@ -1003,63 +776,31 @@ filter(mariokart, wheels == 1 & ship_pr == 0)
 :::
 
 
+### Spalten auswählen: `select`
 
-:::{#exr-filter3}
-Filtern Sie die Spiele mit nur einem Lenkrad, die einen überdurchschnittlichen Verkaufspreis erzielen. 
-Tipp: Nutzen Sie die Funktion `describe_distribution`, um den Mittelwert einer Variable des Datensatzes zu erfahren (diese Funktion wohnt im R-Paket `easystats`). $\square$
-:::
+Eine Tabelle mit vielen Spalten wird schnell unübersichtlich.
+Mit `select` behalten Sie *nur* die Spalten, die Sie interessieren, s. @fig-select.
 
-::: {.content-visible when-format="html"}
-
-Lösen Sie @exr-filter3 hier im Browser. (`easystats` steht im Browser nicht zur Verfügung; den Mittelwert berechnen Sie hier mit `mean`.)
-
-```{webr}
-#| exercise: ex_filter3
-filter(mariokart, ______ & ______)
-```
-
-::: {.hint exercise="ex_filter3"}
-Der Mittelwert des Verkaufspreises ist `mean(total_pr)`. Überdurchschnittlich heißt: `total_pr > mean(total_pr)`.
-:::
-
-::: {.solution exercise="ex_filter3"}
-```{webr}
-#| exercise: ex_filter3
-#| solution: true
-filter(mariokart, wheels == 1 & total_pr > mean(total_pr))
-```
-:::
-
-:::
-
-
-### Spalten auswählen mit `select`
-
-Eine Tabelle mit vielen Spalten kann schnell unübersichtlich werden.
-Da lohnt es sich, eine goldene Regel zu beachten: 
-Mache die Dinge so einfach wie möglich, aber nicht einfacher.
-Wählen wir also *nur* die Spalten aus, die uns interessieren und entfernen wir die restlichen, s. @fig-select als Beispiel.
-
-```{r select}
+```{r}
 #| echo: false
 #| label: fig-select
 #| fig-asp: 0.5
 #| fig-cap: "Sinnbild für das Auswählen von Spalten mit `select`"
 d_select <-
-  d |> 
+  d |>
   select(id, note)
 
 p_d1 <- ggtexttable(d, rows=NULL)
 p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1) + theme_void()
-p_d_select <- ggtexttable(d_select, rows=NULL) 
+p_d_select <- ggtexttable(d_select, rows=NULL)
 
-p_d_select2 <- 
-  p_d1 |> 
+p_d_select2 <-
+  p_d1 |>
   table_cell_bg(column = 2, fill = okabeito_colors()[1], row = 2:tab_nrow(p_d_select))
 
 p_text_select <- grid::textGrob("select")
 
-design <- 
+design <-
   "
 A#D
 ABD
@@ -1067,45 +808,32 @@ ACD
 A#D
 "
 
-p_select <- wrap_plots(A= p_d_select2, 
-                       B = p_text_select, 
-                       C = p_ra, 
-                       D = p_d_select, 
+p_select <- wrap_plots(A= p_d_select2,
+                       B = p_text_select,
+                       C = p_ra,
+                       D = p_d_select,
                        widths = c(4,1,4),
-                       design = design) 
+                       design = design)
 p_select
 ```
 
 :::{#exm-select}
 
-### Fokus auf nur zwei Spalten
+### Fokus auf zwei Spalten
 
-Ob wohl gebrauchte Spiele deutlich geringere Preise erzielen im Vergleich zu neuwertigen Spielen?
-Sie entschließen sich, mal ein Stündchen auf die relevanten Daten zu starren. Dafür wählen Sie mit `select` die relevanten Spalten aus. $\square$
+Sie interessieren sich für den Zusammenhang von Zustand und Preis.
+Also wählen Sie genau diese beiden Spalten aus:
+
+```{r}
+#| eval: false
+select(mariokart, cond, total_pr)
+```
+
+Mit einem Minus *entfernen* Sie eine Spalte: `select(mariokart, -id)` behält alle Spalten außer `id`. $\square$
 :::
 
-```{r}
-#| eval: false
-mario_select1 <- select(mariokart, cond, total_pr)
-```
-
-
-
-
-
-Der Befehl `select` erwartet als Input eine Tabelle und gibt (als Output) eine Tabelle zurück 
--- genau wie die meisten anderen Befehle des Datenjudos.
-Auch wenn Sie nur eine Spalte auswählen, bleibt es eine Tabelle,
-eben eine Tabelle mit nur einer Spalte.
-
-`select` erlaubt Komfort; Sie können Spalten auf mehrere Arten auswählen:
-
-```{r}
-#| eval: false
-select(mariokart, 1, 2)  # Spalten 1 und 2
-select(mariokart, 2:5)  #  Spalten 2 *bis* 5 
-select(mariokart, -1)  # Alle Spalte *außer* Spalte 1
-```
+Wie die meisten Verben des Datenjudos bekommt `select` eine Tabelle und gibt eine Tabelle zurück,
+auch wenn Sie nur eine einzige Spalte auswählen.
 
 
 :::{#exr-select}
@@ -1136,51 +864,31 @@ select(mariokart, total_pr, cond, 2)
 :::
 
 
+### Zeilen sortieren: `arrange`
 
+*Sortieren* ist eine einfache, aber häufige Tätigkeit, s. @fig-arrange.
+Sie ist auch der schnellste Weg, sich die Ränder einer Verteilung anzuschauen,
+also etwa Extremwerte zu finden (s. @sec-rohdaten-probleme).
 
-Vertiefte Informationen zum Auswählen von Spalten mit `select` finden sich [auf der Hilfeseite der Funktion](https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html).^[<https://tidyr.tidyverse.org/reference/tidyr_tidy_select.html>]
-
-
-### Spalten zu einer Zahl zusammenfassen mit `summarise`
-
-:::{#exm-summarise}
-
-### Was ist der mittlere Verkaufspreis?
-
-Mit `summarise`, s. @lst-summarise, können wir den mittleren Verkaufspreis der Mariokart-Spiele berechnen (`r round(mean(mariokart$total_pr), 0)`).  $\square$
-:::
-
-
-
-So eine lange Spalte mit Zahlen -- mal ehrlich: 
-Wer blickt da schon durch?
-Machen wir uns das Leben leichter,
-indem wir eine lange Spalte mit Zahlen zu einer einzigen Zahl zusammenfassen.
-Sagen wir, drei Studierende -- Anni, Berti, Charli -- haben eine Statistikklausur geschrieben. 
-Die Noten waren 2.7, 2.7 und 1.7. 
-Damit lag der Notenschnitt (der Mittelwert) bei 2.4; s. @fig-summarise. 
-
-
-
-
-```{r plot-summarise}
+```{r}
 #| echo: false
-#| label: fig-summarise
-#| fig-asp: 0.5
-#| fig-cap: "Spalten zu einer einzelnen Zahl zusammenfassen mit `summarise`: Hier wurden die Noten anhand des Mittelwerts zusammengefasst."
-d_summ <-
-  d |> 
-  summarise(note_mw = round(mean(note), 1))
+#| label: fig-arrange
+#| fig-asp: .5
+#| fig-cap: "Sinnbild für das Sortieren einer Tabelle mit `arrange`: Hier wurden die Noten aufsteigend sortiert."
+d_arranged <-
+  d |>
+  arrange(note)
 
+p_d_arranged <- ggtexttable(d_arranged, rows=NULL)
 
-p_d1 <- ggtexttable(d, rows=NULL)
-p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1) + theme_void()
-p_d_summ <- ggtexttable(d_summ, rows=NULL) 
+p_d_arranged <-
+  p_d_arranged |>
+  table_cell_bg(column = 4, fill = okabeito_colors()[1],
+                row = 2:tab_nrow(p_d_arranged))
 
-p_text_summ <- grid::textGrob("summarise",
-                              gp=grid::gpar(fontsize=8))
+p_text <- grid::textGrob("arrange")
 
-design <- 
+design <-
   "
 A#D
 ABD
@@ -1188,333 +896,95 @@ ACD
 A#D
 "
 
-p_summ <- wrap_plots(A= p_d1, 
-                       B = p_text_summ, 
-                       C = p_ra, 
-                       D = p_d_summ, 
-                       widths = c(4,1,4),
-                       design = design) 
-p_summ
+p_arrange <- wrap_plots(A = p_d1,
+                        B = p_text ,
+                        C = p_ra,
+                        D = p_d_arranged,
+           widths = c(4,1,4),
+           design = design)
+p_arrange +
+  theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 5, unit = "pt")) # Adjust top, right, bottom, and left margins
 ```
 
 
+:::{#exm-arrange1}
 
+### Was sind die höchsten Preise?
 
-
-Fassen wir als Nächstes die Spalte `total_pr` zu einer Zahl zusammen,
-und zwar zum Mittelwert.
-Dann wissen wir, für welchen Preis ein Spiel im Durchschnitt verkauft wird,
-s. @lst-summarise.
-
-
+`arrange` sortiert per Voreinstellung *aufsteigend*.
+Setzt man ein Minus vor die Spalte, wird *absteigend* sortiert,
+die teuersten Auktionen stehen dann oben, s. @tbl-arrange.
 
 ```{r}
-#| lst-label: lst-summarise
-#| echo: true
-#| lst-cap: "Die R-Funktion summarise fasst einen Vektor zu einer einzelnen Zahl zusammen."
-mariokart_mittelwert <- summarise(mariokart,
-                                  preis_mw = mean(total_pr))
-mariokart_mittelwert
+#| eval: false
+arrange(mariokart, -total_pr)
 ```
 
-Aha! Etwa 50 Dollar erzielte so eine Auktion im Durchschnitt.
-Ein bisschen abstrakter gesprochen fasst `summarise` 
- eine *Spalte* zu einer (einzelnen) *Zahl* zusammen, s. @lst-summarise.
-
-
-
-
-::: {.content-visible when-format="html"}
-
-Eine Alternative, um eine Spalte zu einer Zahl zusammenzufassen, bietet der "Dollar-Operator" (`$`):  `mean(mariokart$total_pr)`.
-Der Dollar-Operator trennt hier die Tabelle von der Spalte: `tibble$spalte`.
-Im Gegensatz zu den Verben des Tidyverse (die immer einer Tabelle zurückliefern),
-liefert der Dollar-Operator einen Vektor (Spalte) zurück. 
-(Diese wird von `mean` dann zu einer einzelnen Zahl zusammengefasst.)
-:::
-
-*Auf welche Art* zusammengefasst werden soll, z.$\,$B. anhand des Mittelwerts oder Maximalwerts, muss noch zusätzlich innerhalb von `summarise` angegeben werden.
-
-
-
-<!-- $$\begin{array}{|c|} \hline \\ \hline \\  \\  \\ \\ \hline \end{array} \qquad \rightarrow  \qquad \begin{array}{|c|} \hline \\  \hline \end{array}$$ {#eq-desk-summ} -->
-
-
-
-:::{#exr-summarise}
-Identifizieren Sie den höchsten Kaufpreis eines Mariokart-Spiels!^[`summarise(mariokart, hoechster_preis = max(total_pr))`] $\square$
-:::
-
-::: {.content-visible when-format="html"}
-
-Lösen Sie @exr-summarise hier im Browser.
-
-```{webr}
-#| exercise: ex_summarise
-summarise(mariokart, hoechster_preis = ______)
-```
-
-::: {.hint exercise="ex_summarise"}
-Den größten Wert einer Spalte liefert die Funktion `max`.
-:::
-
-::: {.solution exercise="ex_summarise"}
-```{webr}
-#| exercise: ex_summarise
-#| solution: true
-summarise(mariokart, hoechster_preis = max(total_pr))
-```
-:::
-
-:::
-
-
-:::{#exr-summarise2}
-Identifizieren Sie den Mittelwert der Versandkostenpauschale!^[`summarise(mariokart, mw_versand = mean(ship_pr))`] $\square$
-:::
-
-::: {.content-visible when-format="html"}
-
-Lösen Sie @exr-summarise2 hier im Browser.
-
-```{webr}
-#| exercise: ex_summarise2
-summarise(mariokart, mw_versand = ______)
-```
-
-::: {.hint exercise="ex_summarise2"}
-Die Versandkosten stehen in der Spalte `ship_pr`; den Mittelwert berechnet `mean`.
-:::
-
-::: {.solution exercise="ex_summarise2"}
-```{webr}
-#| exercise: ex_summarise2
-#| solution: true
-summarise(mariokart, mw_versand = mean(ship_pr))
-```
-:::
-
-:::
-
-
-
-
-
-### Tabelle gruppieren
-
-Es ist ja gut und schön, zu wissen, was so ein Spiel im Schnitt kostet.
-Aber viel interessanter wäre es doch, denken Sie sich,
-zu wissen, ob die neuen Spiele im Schnitt mehr kosten als die alten?
-Ob R Ihnen so etwas ausrechnen kann?
-
->    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Hallo R, kannst du mir die mittleren Verkaufspreise von alten und neuen Spielen ausrechnen?
-
-
->   [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"}  Ich tue fast alles für dich. [🧡]{.content-visible when-format="html"}[\emoji{heart}]{.content-visible when-format="pdf"} 
-
-Also gut, R, dann gruppiere die Tabelle, s. @fig-group.
-
-
-```{r plot-group}
+```{r}
 #| echo: false
-#| label: fig-group
-#| fig-cap: "Gruppieren von Datensätzen mit `group_by`: Hier wurde anhand der Variable `gruppe` gruppiert."
-d_groupby <-
-  d |> 
-  group_by(gruppe)
-
-d_g1 <-
-  d |> 
-  filter(gruppe == "A")
-
-d_g2 <-
-  d |> 
-  filter(gruppe == "B")
-
-
-p_d_g1 <- ggtexttable(d_g1, rows=NULL) 
-p_d_g2 <- ggtexttable(d_g2, rows=NULL)
-
-
-p_d_g1 <-
-  p_d_g1 |>
-  # 2 Gruppen: Dunkelblau und Orange (kein Gelb); hell/dunkel trennt auch
-  # im Graustufendruck. Text weiß auf Blau, fast schwarz auf Orange, fett.
-  table_cell_bg(column = 3, fill = okabe_linie[2], row = 2:tab_nrow(p_d_g1)) |>
-  table_cell_font(column = 3, color = "white", face = "bold",
-                  row = 2:tab_nrow(p_d_g1))
-
-p_d_g2 <-
-  p_d_g2 |>
-  table_cell_bg(column = 3, fill = okabe_linie[1], row = 2:tab_nrow(p_d_g2)) |>
-  table_cell_font(column = 3, color = fast_schwarz, face = "bold",
-                  row = 2:tab_nrow(p_d_g2))
-
-p_text_summ <- grid::textGrob("group_by(gruppe)",
-                              gp=grid::gpar(fontsize=8))
-
-design <- 
-  "
-A#D
-ABD
-ACE
-A#E
-"
-
-p_group <- wrap_plots(A= p_d1, 
-                       B = p_text_summ, 
-                       C = p_ra, 
-                       D = p_d_g1, 
-                       E = p_d_g2,
-                       widths = c(3,1,3),
-                       design = design) 
-p_group
+#| tbl-cap: "Die Datentabelle, absteigend sortiert nach `total_pr` (die ersten drei Zeilen, nur einige Spalten)"
+#| label: tbl-arrange
+mariokart |>
+  arrange(-total_pr) |>
+  select(total_pr, cond, stock_photo, wheels) |>
+  head(3)
 ```
 
-Durch das Gruppieren wird die Tabelle in "Teiltabellen" -- entsprechend der Gruppen -- aufgeteilt.
-Das sieht man der R-Tabelle aber nicht wirklich an.
-Aber alle nachfolgenden Berechnungen werden *für jede Teiltabelle* einzeln ausgeführt.
-
-
-:::{#exm-groupby}
-
-### Mittlerer Preis pro Gruppe
-
-Gruppieren alleine liefert Ihnen zwei (oder mehrere) Teiltabellen,
-etwa neue Spiele (Gruppe 1, `new`) vs. gebrauchte Spiele (Gruppe 2, `used`).
-Mit anderen Worten: Wir gruppieren anhand der Variable `cond`.
-
-```{r}
-mariokart_gruppiert <- group_by(mariokart, cond)
-```
-
-Wenn Sie die neue Tabelle betrachte, sehen Sie wenig Aufregendes, nur einen Hinweis, dass die Tabelle gruppiert ist.
-Jetzt können Sie an jeder Teiltabelle Ihre weiteren Berechnungen vornehmen, etwa die Berechnung des mittleren Verkaufspreises.
-
-
-```{r}
-summarise(mariokart_gruppiert, preis_mw = mean(total_pr))
-```
-
-Ah, die neuen Spiele sind teurer, wer hätt's gedacht!
-Langsam fühlen Sie sich wie ein Datenchecker … [🥷 🦹‍♀]{.content-visible when-format="html"}$\square$
+Da sind sie wieder, die beiden Bundle-Auktionen. $\square$
 :::
 
 
-:::::{#exr-groupby}
-:::: {.content-visible when-format="html" unless-format="epub"}
-:::{.panel-tabset}
-### Aufgabe
-Berechnen Sie den mittleren und maximalen Verkaufspreis getrennt für Spiele mit und ohne Foto!
-
-### Lösung
-```{r}
-mariokart_gruppiert_foto <- group_by(mariokart, stock_photo)
-
-mariokart_verkaufspreis_foto <- 
-  summarise(mariokart_gruppiert_foto,
-            total_pr_avg = mean(total_pr),
-            total_pr_max = max(total_pr))
-
-mariokart_verkaufspreis_foto
-```
-
+:::{#exr-arrange2}
+Sortieren Sie die Mariokart-Daten absteigend nach der Anzahl der beigelegten Lenkräder. $\square$
 :::
-::::
-
-:::: {.content-visible when-format="pdf"}
-**Aufgabe**
-Berechnen Sie den mittleren und maximalen Verkaufspreis getrennt für Spiele mit und ohne Foto!
-
-**Lösung**
-```{r}
-mariokart_gruppiert_foto <- group_by(mariokart, stock_photo)
-
-mariokart_verkaufspreis_foto <- 
-  summarise(mariokart_gruppiert_foto,
-            total_pr_avg = mean(total_pr),
-            total_pr_max = max(total_pr))
-
-mariokart_verkaufspreis_foto
-```
-::::
-
-:::: {.content-visible when-format="epub"}
-**Aufgabe**
-Berechnen Sie den mittleren und maximalen Verkaufspreis getrennt für Spiele mit und ohne Foto!
-
-**Lösung**
-```{r}
-mariokart_gruppiert_foto <- group_by(mariokart, stock_photo)
-
-mariokart_verkaufspreis_foto <- 
-  summarise(mariokart_gruppiert_foto,
-            total_pr_avg = mean(total_pr),
-            total_pr_max = max(total_pr))
-
-mariokart_verkaufspreis_foto
-```
-::::
-
-Bei Auktionen mit Foto wird im Schnitt ein höherer Preis erzielt als ohne Foto. $\square$
-
-:::::
 
 ::: {.content-visible when-format="html"}
 
-Lösen Sie @exr-groupby hier im Browser, bevor Sie in die Lösung schauen.
+Lösen Sie @exr-arrange2 hier im Browser.
 
 ```{webr}
-#| exercise: ex_groupby
-mariokart_gruppiert_foto <- group_by(mariokart, ______)
-
-summarise(mariokart_gruppiert_foto,
-          total_pr_avg = ______,
-          total_pr_max = ______)
+#| exercise: ex_arrange2
+arrange(mariokart, ______)
 ```
 
-::: {.hint exercise="ex_groupby"}
-Gruppieren Sie nach `stock_photo`. Mittelwert und Maximum liefern `mean` und `max`.
+::: {.hint exercise="ex_arrange2"}
+Die Anzahl der Lenkräder steht in der Spalte `wheels`. Für absteigendes Sortieren setzen Sie ein Minus davor.
 :::
 
-::: {.solution exercise="ex_groupby"}
+::: {.solution exercise="ex_arrange2"}
 ```{webr}
-#| exercise: ex_groupby
+#| exercise: ex_arrange2
 #| solution: true
-mariokart_gruppiert_foto <- group_by(mariokart, stock_photo)
-
-summarise(mariokart_gruppiert_foto,
-          total_pr_avg = mean(total_pr),
-          total_pr_max = max(total_pr))
+arrange(mariokart, -wheels)
 ```
 :::
 
 :::
 
 
-### Spalten verändern mit `mutate`
+### Spalten neu berechnen: `mutate`
 
-Immer mal wieder möchte man *Spalten verändern*, bzw. deren Werte umrechnen, s. @fig-mutate.
+Immer mal wieder möchte man eine Spalte *umrechnen* oder aus vorhandenen Spalten eine *neue* berechnen, s. @fig-mutate.
 
-```{r plot-mutate}
+```{r}
 #| echo: false
 #| label: fig-mutate
 #| fig-asp: 0.5
 #| fig-cap: "Spalten verändern/neu berechnen mit `mutate`"
 d_mutate <-
-  d |> 
+  d |>
   mutate(punkte = c(73, 72, 89))
 
-p_d_mutate <- ggtexttable(d_mutate, rows=NULL) 
+p_d_mutate <- ggtexttable(d_mutate, rows=NULL)
 
-p_d_mutate <- 
-  p_d_mutate |> 
+p_d_mutate <-
+  p_d_mutate |>
   table_cell_bg(column = 5, fill = okabeito_colors()[1], row = 2:tab_nrow(p_d_select))
 
 p_text_mutate <- grid::textGrob("mutate",
                               gp=grid::gpar(fontsize=7))
 
-design <- 
+design <-
   "
 A#D
 ABD
@@ -1522,89 +992,40 @@ ACD
 A#D
 "
 
-p_mutate <- wrap_plots(A= p_d1, 
-                       B = p_text_mutate, 
-                       C = p_ra, 
-                       D = p_d_mutate, 
+p_mutate <- wrap_plots(A= p_d1,
+                       B = p_text_mutate,
+                       C = p_ra,
+                       D = p_d_mutate,
                        widths = c(3,1,4),
-                       design = design) 
+                       design = design)
 p_mutate
 ```
 
 :::{#exm-mutate}
 
-Der Hersteller des Computerspiels *Mariokart* kommt aus Japan; 
-daher erscheint es Ihnen opportun für ein anstehendes Meeting mit dem Hersteller die Verkaufspreise von Dollar in japanische Yen umzurechnen.
+### Preise in Yen
+
+Der Hersteller von *Mariokart* kommt aus Japan;
+für ein Meeting möchten Sie die Verkaufspreise von Dollar in Yen umrechnen.
 Nach etwas Googeln finden Sie einen Umrechnungskurs von 1:133.
 
 ```{r}
-mariokart_yen <- 
-  mutate(mariokart, total_pr_yen = total_pr * 133)
-mariokart_yen <- select(mariokart_yen, total_pr_yen, total_pr)
-mariokart_yen |> head()  # nur die ersten paar Zeilen
+mariokart_yen <- mutate(mariokart, total_pr_yen = total_pr * 133)
 ```
 
-Sicherlich werden Sie Ihre Gesprächspartner beeindrucken. $\square$
+`mutate` hängt die neue Spalte `total_pr_yen` hinten an die Tabelle an.
+Die Rechnung wird für jede Zeile einzeln ausgeführt. $\square$
 :::
 
+Mit `mutate` kann man Spalten addieren, multiplizieren, runden oder sonst wie umrechnen.
+In @sec-rohdaten-probleme haben Sie es auch zum Korrigieren benutzt,
+etwa um die Schreibweise von `cond` zu vereinheitlichen.
+Gibt man der neuen Spalte den Namen einer *vorhandenen* Spalte, wird diese überschrieben.
 
-Mit  `mutate` berechnen Sie eine Spalte `x` (in einer Tabelle) neu.
-Die Funktion, die Sie in `mutate` benennen wird für jede Zeile der Spalte `x` angewendet.
 
-:::{#exm-mutate2}
-### Beispiele für Funktionen für `mutate`
-`mutate` eignet sich, z.$\,$B. um Spalten zu addieren, 
-zu multiplizieren oder sonst wie zu transformieren 
-(z.$\,$B. den Logarithmus anwenden oder den Mittelwert der Spalte von jeder Zeile abziehen). $\square$
+:::{#exr-mutate}
+Rechnen Sie die Dauer der Auktionen von Tagen in Wochen um. $\square$
 :::
-
-::::: {.content-visible when-format="html" unless-format="epub"}
-
-::::{#exr-mutate}
-:::{.panel-tabset}
-### Aufgabe
-Rechnen Sie die Dauer der Auktionen von Tagen in Wochen um.
-
-### Lösung
-```{r}
-mariokart_duration_wochen <- 
-  mutate(mariokart, duration_week = duration / 7)
-
-mariokart_duration_wochen <-
-   select(mariokart_duration_wochen, duration, duration_week)
-mariokart_duration_wochen |> head()  # nur die ersten paar Zeilen
-```
-:::
-::::
-:::::
-
-
-
-::::: {.content-visible when-format="html" unless-format="epub"}
-
-::::{#exr-mutate2}
-:::{.panel-tabset}
-### Aufgabe
-Rechnen Sie wieder die Dauer der Auktionen von Tagen in Wochen um, aber runden Sie die Wochen auf ganze Wochen.
-
-### Lösung
-
-```{r}
-mariokart_duration_wochen <- 
-  mutate(mariokart, duration_week = duration / 7)
-
-mariokart_duration_wochen_gerundet <-
-  mutate(mariokart_duration_wochen, duration_week_gerundet =
-           round(duration_week, digits = 0))
-
-mariokart_duration_wochen_schmal <-
-  select(mariokart_duration_wochen_gerundet, duration, 
-         duration_week, duration_week_gerundet)
-mariokart_duration_wochen_schmal |> head()
-```
-:::
-::::
-:::::
 
 ::: {.content-visible when-format="html"}
 
@@ -1633,76 +1054,34 @@ select(mariokart_wochen, duration, duration_week)
 
 :::
 
-::: {.content-visible when-format="html"}
-
-Lösen Sie @exr-mutate2 hier im Browser.
-
-```{webr}
-#| exercise: ex_mutate2
-mariokart_wochen <- mutate(mariokart, 
-                           duration_week = duration / 7,
-                           duration_week_gerundet = ______)
-
-select(mariokart_wochen, duration, duration_week, duration_week_gerundet)
-```
-
-::: {.hint exercise="ex_mutate2"}
-Runden können Sie mit `round(x, digits = 0)`.
-:::
-
-::: {.solution exercise="ex_mutate2"}
-```{webr}
-#| exercise: ex_mutate2
-#| solution: true
-mariokart_wochen <- mutate(mariokart, 
-                           duration_week = duration / 7,
-                           duration_week_gerundet = round(duration_week, digits = 0))
-
-select(mariokart_wochen, duration, duration_week, duration_week_gerundet)
-```
-:::
-
-:::
-
-::: {.content-visible when-format="html"}
-
->   [🧟‍♀️]{.content-visible when-format="html"}[\emoji{woman-zombie}]{.content-visible when-format="pdf"}️ Statist -- wann braucht man schon sowas!?
-
->   [🤖]{.content-visible when-format="html"}[\emoji{robot}]{.content-visible when-format="pdf"} Eigentlich nur dann, wenn man die Fakten gut verstehen will, sonst nicht.
+::: {.content-visible unless-format="html"}
+Lösung: `mutate(mariokart, duration_week = duration / 7)`
 :::
 
 
-### Zeilen zählen mit `count`
+### Zeilen zählen: `count`
 
-
-Arbeitet man mit nominalskalierten Daten, ist (fast) alles, was man mit den Daten tun kann,
-die entsprechenden Zeilen der Tabelle zu zählen:
-Man könnte z.$\,$B. fragen, wie viele neue und wie viele alte Spiele in der Tabelle (Dataframe) `mariokart` vorhanden sind.
+Bei nominalskalierten Daten ist Zählen (fast) das Einzige, was man tun kann:
+Wie viele Spiele sind neu, wie viele gebraucht?
 
 :::{#exm-count}
-Nach der letzten Präsentation Ihrer Analyse hat Ihre Chefin gestöhnt: 
-"Oh nein, alles so kompliziert. Statistik! Himmel hilf! 
-Kann man das nicht einfacher machen?"
-Anstelle von irgendwelchen komplizierten Berechnungen (Mittelwert?) möchten Sie ihr beim nächsten Treffen nur zeigen, 
-wie viele Computerspiele neu und wie viele gebraucht sind (in Ihrem Datensatz).
-Schlichte Häufigkeiten also. Hoffentlich ist Ihre Chefin nicht wieder überfordert …
+### Neu oder gebraucht?
+Ihre Chefin möchte keine komplizierten Kennwerte sehen, nur schlichte Häufigkeiten:
 
 ```{r}
-mariocart_counted <- count(mariokart, cond)
-mariocart_counted
+mariokart_gezaehlt <- count(mariokart, cond)
+mariokart_gezaehlt
 ```
 
+Es gibt mehr gebrauchte als neue Spiele.
+Mit `mutate` können Sie noch den *Anteil* ergänzen:
 
-Aha! Es gibt mehr gebrauchte als neue Spiele. $\square$
+```{r}
+mutate(mariokart_gezaehlt, anteil = n / sum(n))
+```
+
+`count` kann auch nach mehreren Spalten zugleich aufteilen, z.$\,$B. `count(mariokart, cond, stock_photo)`. $\square$
 :::
-
-Jetzt könnte man noch den *Anteil* (engl. *proportion*) ergänzen:
-Welcher *Anteil* (der 143 Spiele in `mariokart`) ist neu, welcher gebraucht?
-
-```{r}
-mutate(mariocart_counted, Anteil = n / sum(n))
-```
-
 
 
 :::{#exr-count}
@@ -1732,43 +1111,221 @@ count(mariokart, stock_photo)
 
 :::
 
-:::{#exr-count2}
-Zählen Sie Sie, wie viele Auktionen ein Foto enthalten -- innerhalb der gebrauchten Spiele und innerhalb der neuen Spiele. Anders gesagt: Teilen Sie den Datensatz sowohl nach Zustand als auch nach Foto auf und zählen Sie jeweils, wie viele Spiele/Auktionen in die jeweilige Gruppe gehören.^[`count(mariokart, stock_photo, cond)`] $\square$
+
+### Aufteilen und zusammenfassen: `group_by` und `summarise`
+
+#### Zusammenfassen
+
+Eine lange Spalte mit Zahlen überblickt niemand.
+`summarise` fasst eine Spalte zu *einer* Zahl zusammen,
+zum Beispiel drei Klausurnoten zu ihrem Mittelwert, s. @fig-summarise.
+
+```{r}
+#| echo: false
+#| label: fig-summarise
+#| fig-asp: 0.5
+#| fig-cap: "Spalten zu einer einzelnen Zahl zusammenfassen mit `summarise`: Hier wurden die Noten anhand des Mittelwerts zusammengefasst."
+d_summ <-
+  d |>
+  summarise(note_mw = round(mean(note), 1))
+
+
+p_d1 <- ggtexttable(d, rows=NULL)
+p_ra <- ggplot() + inset_element(ra, 0, 0, 1, 1) + theme_void()
+p_d_summ <- ggtexttable(d_summ, rows=NULL)
+
+p_text_summ <- grid::textGrob("summarise",
+                              gp=grid::gpar(fontsize=8))
+
+design <-
+  "
+A#D
+ABD
+ACD
+A#D
+"
+
+p_summ <- wrap_plots(A= p_d1,
+                       B = p_text_summ,
+                       C = p_ra,
+                       D = p_d_summ,
+                       widths = c(4,1,4),
+                       design = design)
+p_summ
+```
+
+*Wie* zusammengefasst wird, geben Sie innerhalb von `summarise` an,
+etwa mit `mean` (Mittelwert) oder `max` (größter Wert), s. @lst-summarise.
+
+```{r}
+#| lst-label: lst-summarise
+#| echo: true
+#| lst-cap: "Die R-Funktion summarise fasst eine Spalte zu einer einzelnen Zahl zusammen."
+summarise(mariokart, preis_mw = mean(total_pr))
+```
+
+Etwa 50 Dollar erzielte eine Auktion im Durchschnitt.
+
+
+#### Aufteilen
+
+Interessanter als *ein* Mittelwert ist oft der Vergleich von Gruppen:
+Kosten neue Spiele im Schnitt mehr als gebrauchte?
+Dazu teilt man die Tabelle mit `group_by` in Teiltabellen auf, s. @fig-group.
+
+
+```{r}
+#| echo: false
+#| label: fig-group
+#| fig-cap: "Gruppieren von Datensätzen mit `group_by`: Hier wurde anhand der Variable `gruppe` gruppiert."
+d_groupby <-
+  d |>
+  group_by(gruppe)
+
+d_g1 <-
+  d |>
+  filter(gruppe == "A")
+
+d_g2 <-
+  d |>
+  filter(gruppe == "B")
+
+
+p_d_g1 <- ggtexttable(d_g1, rows=NULL)
+p_d_g2 <- ggtexttable(d_g2, rows=NULL)
+
+
+p_d_g1 <-
+  p_d_g1 |>
+  # 2 Gruppen: Dunkelblau und Orange (kein Gelb); hell/dunkel trennt auch
+  # im Graustufendruck. Text weiß auf Blau, fast schwarz auf Orange, fett.
+  table_cell_bg(column = 3, fill = okabe_linie[2], row = 2:tab_nrow(p_d_g1)) |>
+  table_cell_font(column = 3, color = "white", face = "bold",
+                  row = 2:tab_nrow(p_d_g1))
+
+p_d_g2 <-
+  p_d_g2 |>
+  table_cell_bg(column = 3, fill = okabe_linie[1], row = 2:tab_nrow(p_d_g2)) |>
+  table_cell_font(column = 3, color = fast_schwarz, face = "bold",
+                  row = 2:tab_nrow(p_d_g2))
+
+p_text_summ <- grid::textGrob("group_by(gruppe)",
+                              gp=grid::gpar(fontsize=8))
+
+design <-
+  "
+A#D
+ABD
+ACE
+A#E
+"
+
+p_group <- wrap_plots(A= p_d1,
+                       B = p_text_summ,
+                       C = p_ra,
+                       D = p_d_g1,
+                       E = p_d_g2,
+                       widths = c(3,1,3),
+                       design = design)
+p_group
+```
+
+Der gruppierten Tabelle sieht man das Aufteilen kaum an.
+Aber alle *nachfolgenden* Berechnungen werden für jede Teiltabelle einzeln ausgeführt.
+Darum kommen `group_by` und `summarise` fast immer im Doppelpack.
+
+
+:::{#exm-groupby}
+
+### Mittlerer Preis pro Gruppe
+
+```{r}
+mariokart_gruppiert <- group_by(mariokart, cond)
+summarise(mariokart_gruppiert, preis_mw = mean(total_pr))
+```
+
+Die neuen Spiele sind im Schnitt teurer, wer hätt's gedacht! $\square$
+:::
+
+
+:::{#exr-groupby}
+Berechnen Sie den mittleren und maximalen Verkaufspreis getrennt für Spiele mit und ohne Foto! $\square$
 :::
 
 ::: {.content-visible when-format="html"}
 
-Lösen Sie @exr-count2 hier im Browser.
+Lösen Sie @exr-groupby hier im Browser.
 
 ```{webr}
-#| exercise: ex_count2
-count(mariokart, ______, ______)
+#| exercise: ex_groupby
+mariokart_gruppiert_foto <- group_by(mariokart, ______)
+
+summarise(mariokart_gruppiert_foto,
+          total_pr_avg = ______,
+          total_pr_max = ______)
 ```
 
-::: {.hint exercise="ex_count2"}
-`count` kann nach mehreren Spalten zugleich aufteilen: `stock_photo` und `cond`.
+::: {.hint exercise="ex_groupby"}
+Gruppieren Sie nach `stock_photo`. Mittelwert und Maximum liefern `mean` und `max`.
 :::
 
-::: {.solution exercise="ex_count2"}
+::: {.solution exercise="ex_groupby"}
 ```{webr}
-#| exercise: ex_count2
+#| exercise: ex_groupby
 #| solution: true
-count(mariokart, stock_photo, cond)
+mariokart_gruppiert_foto <- group_by(mariokart, stock_photo)
+
+summarise(mariokart_gruppiert_foto,
+          total_pr_avg = mean(total_pr),
+          total_pr_max = max(total_pr))
 ```
 :::
 
 :::
 
+:::{.callout-tip collapse="true"}
+### Lösung zu @exr-groupby
 
+```{r}
+mariokart_gruppiert_foto <- group_by(mariokart, stock_photo)
+
+summarise(mariokart_gruppiert_foto,
+          total_pr_avg = mean(total_pr),
+          total_pr_max = max(total_pr))
+```
+
+Bei Auktionen mit Foto wird im Schnitt ein höherer Preis erzielt als ohne Foto. $\square$
+:::
+
+
+:::{#exr-verb-zuordnen}
+### Welches Verb passt?
+Welches Verb (oder welche Kombination) brauchen Sie für die folgenden Aufgaben?
+
+a) Nur die Auktionen, die länger als drei Tage dauerten.
+b) Die Versandkosten von Dollar in Euro umrechnen.
+c) Die durchschnittliche Anzahl der Gebote, getrennt nach Versandart (`ship_sp`).
+d) Nur die Spalten `id` und `n_bids` behalten.
+e) Wie viele Auktionen gibt es pro Anzahl beigelegter Lenkräder? $\square$
+:::
+
+:::{.callout-tip collapse="true"}
+### Lösung zu @exr-verb-zuordnen
+
+a) `filter(mariokart, duration > 3)`
+b) `mutate(mariokart, ship_pr_euro = ship_pr * kurs)`, wobei `kurs` der aktuelle Umrechnungskurs ist
+c) `group_by(mariokart, ship_sp)` und dann `summarise(..., gebote_mw = mean(n_bids))`
+d) `select(mariokart, id, n_bids)`
+e) `count(mariokart, wheels)` $\square$
+:::
 
 
 ### Verben am Fließband
 
-Die Befehle ("Verben") des Tidyverse sind jeweils für einzelne, 
-typische Aufgaben des Datenaufbereitens ("Datenjudo") zuständig.
-Typischerweise erwarten diese Befehle eine Tabelle ({{< fa table >}}) 
-als Input und liefern eine Tabelle aus Output zurück, s. @fig-tbl-in-out.
-Die Verben des Datenjudos werden beim ["Tidydatatutor"](https://tidydatatutor.com/) anschaulich illustriert.^[<https://tidydatatutor.com>]
+Die Verben des Datenjudos erwarten jeweils eine Tabelle ({{< fa table >}})
+als Input und liefern eine Tabelle als Output zurück, s. @fig-tbl-in-out.
+Darum kann man sie hintereinanderschalten wie Stationen an einem Fließband.
+Die Verben werden beim ["Tidydatatutor"](https://tidydatatutor.com/) anschaulich illustriert.^[<https://tidydatatutor.com>]
 
 ```{mermaid}
 %%| label: fig-tbl-in-out
@@ -1777,21 +1334,15 @@ Die Verben des Datenjudos werden beim ["Tidydatatutor"](https://tidydatatutor.co
 
 
 flowchart LR
-  A["▥"] --> B[tidyverse-Befehl] --> C["▥"] 
+  A["▥"] --> B[tidyverse-Befehl] --> C["▥"]
 ```
-
-
-
-
 
 
 ## Die Pfeife {#sec-pipe}
 
-[🚬 👈 ]{.content-visible when-format="html"}[Das ist keine Pfeife](https://en.wikipedia.org/wiki/The_Treachery_of_Images), 
-wie René Magritte 1929 in seinem [berühmten Bild](https://en.wikipedia.org/wiki/File:MagrittePipe.jpg) schrieb, 
+[🚬 👈 ]{.content-visible when-format="html"}[Das ist keine Pfeife](https://en.wikipedia.org/wiki/The_Treachery_of_Images),
+wie René Magritte 1929 in seinem [berühmten Bild](https://en.wikipedia.org/wiki/File:MagrittePipe.jpg) schrieb,
 s. @fig-pfeifen.
-
-
 
 
 :::::{#fig-pfeifen}
@@ -1804,8 +1355,6 @@ s. @fig-pfeifen.
 :::
 
 
-
-
 ::: {.column width="10%"}
 <!-- Empty col -->
 
@@ -1814,7 +1363,7 @@ s. @fig-pfeifen.
 
 ::: {.column width="30%"}
 :::{.xlarge}
-|>   
+|>
 :::
 :::
 
@@ -1825,7 +1374,6 @@ s. @fig-pfeifen.
 :::
 
 
-
 ::::
 
 
@@ -1834,103 +1382,36 @@ So sieht die Pfeife in R aus (Jaja, das ist keine Pfeife, sondern ein Symbol ein
 :::::
 
 
-### Russische Puppen
+Will man mehrere Verben hintereinander anwenden,
+müsste man sie ohne Pfeife ineinander verschachteln wie russische Puppen (s. @lst-schachtel).
+Das liest sich von innen nach außen und wird schnell unübersichtlich:
 
-Computerbefehle, und im Speziellen R-Befehle, kann man "aufeinander" 
--- oder vielmehr: ineinander -- stapeln, 
-so ähnlich wie eine russische Puppe (vgl. @sec-first-fun).
-Schauen wir uns das in einem Beispiel an.
-Dazu definieren wir zuerst einen Vektor `x` aus drei Zahlen:
-
-```{r}
-x <- c(1, 2, 3)
+```r
+summarise(group_by(filter(mariokart, total_pr < 100), cond), preis_mw = mean(total_pr))
 ```
 
-Und dann kommt unser verschachtelter Befehl:
-
-```{r}
-sum(x - mean(x))
-```
-
-Wie schon erwähnt, arbeitet R so einen "verschachtelten"
-Befehl *von innen nach außen* ab:
-
-
-Start: `sum(x - mean(x))`
-
-[⬇️]{.content-visible when-format="html"}
-[$\downarrow$]{.content-visible when-format="pdf"}
-
-Schritt 1: `sum(x - 2)`
-
-[⬇️]{.content-visible when-format="html"}
-[$\downarrow$]{.content-visible when-format="pdf"}
-
-Schritt 2: `sum(-1, 0, 1)`
-
-[⬇️]{.content-visible when-format="html"}
-[$\downarrow$]{.content-visible when-format="pdf"}
-
-Schritt 3: `0`. Fertig. Ganz schön kompliziert!
-
-
-Soweit kann man noch einigermaßen folgen. 
-Aber das Verschachteln kann man noch extremer machen,
-dann wird's wild.
-Schauen Sie sich mal folgende (Pseudo-)Syntax an:
-
-
-
-
-```{#lst-schachtel .r lst-cap="Eine wild verschachtelte Sequenz von Pseudo-Befehlen"}
-fasse_zusammen(
-  gruppiere(
-    wähle_spalten(
-      filter_zeilen(meine_daten))))
-```
-
-
-
-
-Ein beliebter Fehler ist es übrigens, nicht die richtige Zahl an schließenden Klammern hinzuschreiben, z.$\,$B. `d(c(b(a(meine_daten))`. 
-Falsche Zahl an Klammern!
-
-
-### Die Pfeife zur Rettung
-
-@lst-schachtel ist schon harter Tobak, was für echte Fans.
-Wäre es nicht einfacher, 
-man könnte @lst-schachtel wie folgt schreiben:
-
+Viel lesbarer wäre es, man könnte schreiben:
 
 ```
-Nimm "meine_daten" *und dann*
-  filter die gewünschte Zeilen *und dann*
-  wähle die gewünschte Spalten *und dann*
-  teile in Subgruppen *und dann*
-  fasse diese zusammen.
+Nimm "mariokart" *und dann*
+  filtere die günstigen Spiele *und dann*
+  teile nach Zustand auf *und dann*
+  fasse zum mittleren Preis zusammen.
 ```
 
 :::{#def-pipe}
 ### Pfeife
-"Und dann" heißt auf Errisch ` |> ` oder (synonym) ` |> `.
+"Und dann" heißt auf Errisch ` |> `.
 Man nennt diesen Befehl "Pfeife" (engl. *pipe*). $\square$
 :::
 
 :::{.callout-note}
-Der Befehl ` |> ` *verknüpft* Befehle.
-Der Shortcut für diesen Befehl ist Strg-Shift-M.
-Die Pfeife `|>` ist seit R 4.1 fest in R eingebaut (die "native pipe").^[Es gibt noch eine ältere Pfeife, `%>%`, aus dem Paket `magrittr`,
+Lesen Sie ` |> ` einfach als "und dann".
+Der Shortcut für die Pfeife ist Strg-Shift-M.
+Die Pfeife `|>` ist seit R 4.1 fest in R eingebaut.^[Es gibt noch eine ältere Pfeife, `%>%`, aus dem Paket `magrittr`,
 welches vom Paket `tidyverse` geladen wird. Beide Pfeifen funktionieren praktisch gleich;
-in diesem Buch verwenden wir durchgehend die eingebaute Pfeife `|>`.]
+in diesem Buch verwenden wir durchgehend die eingebaute Pfeife `|>`. Unter *Tools > Global Options …* können Sie in RStudio einstellen, welche Variante der Shortcut verwendet.]
 :::
-
-Vor R 4.1 gab es nur die Pfeife aus dem `tidyverse` (genauer: aus dem Paket `magrittr`), geschrieben als `%>%`.
-Mittlerweile (seit R 4.1) ist auch im Standard-R eine Pfeife eingebaut, geschrieben als `|>`.
-Die eingebaute Pfeife funktioniert praktisch gleich zur älteren Pfeife `|>`,
-hat aber den Vorteil, dass Sie kein zusätzliches Paket dafür benötigen.
-Deswegen verwenden wir in diesem Buch durchgehend die eingebaute Pfeife `|>`. Unter *Tools > Global Options …* können Sie einstellen,
-welche der beiden Pfeifen-Varianten der Shortcut *Strg-Shift-M* verwenden soll.
 
 
 ```{mermaid}
@@ -1939,75 +1420,94 @@ welche der beiden Pfeifen-Varianten der Shortcut *Strg-Shift-M* verwenden soll.
 %%| fig-height: 0.4
 
 flowchart LR
-  A["▥"] --filter<br>zeilen-->B["▥"] 
+  A["▥"] --filter<br>zeilen-->B["▥"]
   B --wähle<br>spalten--> C["▥"]
   C --gruppiere--> D["▥"]
   D --fasse<br>zusammen--> E["▥"]
 ```
 
 
-
-
-
-```{#lst-pfeife .r lst-cap="Eine Pfeifen-Befehlssequenz (Pseudo-Syntax)"}
-meine_daten |>
-  filter_gewünschte_zeilen() |>
-  wähle_gewünschte_spalten() |>
-  gruppiere() |>
-  fasse_zusammen() 
-```
-
-Und jetzt kommt's: So eine Art von Befehls-Verkettung gibt es in R.
-Schauen Sie sich mal @lst-pfeife an im Vergleich zu @lst-schachtel.
-So eine Pfeifen-Befehlssequenz ist ein wie ein Fließband,
-an dem es mehrere Arbeitsstationen gibt, s. @fig-pfeife. 
-Unser Datensatz wird am Fließband von Station zu Station weitergereicht und
-an jeder Stelle weiterverarbeitet.
-So könnte Ihre "Pfeifen-Sequenz" für den Mariokart-Datensatz aussehen, s. @lst-ihre-pfeife.
+Der Datensatz wird am Fließband von Station zu Station weitergereicht
+und an jeder Station weiterverarbeitet, s. @fig-pfeife und @lst-ihre-pfeife.
 
 ```{r}
 #| lst-label: lst-ihre-pfeife
 #| lst-cap: "Mariokart am Fließband: Die 'Pfeifen-Syntax'"
 #| tbl-cap: "Endprodukt einer Pfeifen-Syntax"
 # Hey R, nimm die Tabelle "mariokart":
-mariokart |>  
+mariokart |>
    # filter nur die günstigen Spiele:
-  filter(total_pr < 100) |> 
+  filter(total_pr < 100) |>
   # wähle die zwei Spalten:
-  select(cond, total_pr) |>  
+  select(cond, total_pr) |>
   # gruppiere die Tabelle nach Zustand des Spiels:
-  group_by(cond) |>  
+  group_by(cond) |>
   # fasse beide Gruppen nach dem mittleren Preis zusammen:
-  summarise(total_pr_mean = mean(total_pr))  
+  summarise(total_pr_mean = mean(total_pr))
 ```
 
 
 Die Syntax `filter(mariokart, total_pr < 100)` und die Syntax `mariokart |> filter(total_pr < 100)` sind identisch.
 Allgemeiner: `d |> f(x)` = `f(d, x)`.
+Die Pfeife reicht die Tabelle also als erstes Argument an das nächste Verb weiter;
+darum steht in den Verben nach einer Pfeife kein Tabellenname mehr.
 
 ::: {.content-visible when-format="html"}
 
 Bauen Sie das Fließband selbst um: Lassen Sie z.$\,$B. den Filter weg, gruppieren Sie nach `stock_photo` oder berechnen Sie zusätzlich den Maximalpreis.
 
 ```{webr}
-mariokart |>  
-  filter(total_pr < 100) |> 
-  select(cond, total_pr) |>  
-  group_by(cond) |>  
+mariokart |>
+  filter(total_pr < 100) |>
+  select(cond, total_pr) |>
+  group_by(cond) |>
   summarise(total_pr_mean = mean(total_pr))
 ```
 
 :::
 
 
-<!-- TODO  -->
-<!-- ## Praxisprobleme des Datenaufbereitens -->
+:::{#exr-pfeife-lesen}
+### Was macht dieser Code?
+Beschreiben Sie in eigenen Worten, was der folgende Code tut,
+und überlegen Sie, wie das Ergebnis aussieht (wie viele Zeilen, welche Spalten?),
+*bevor* Sie ihn ausführen.
 
-<!-- ### Fehlende Werte  -->
+```{r}
+#| eval: false
+mariokart |>
+  filter(cond == "used") |>
+  mutate(total_pr_yen = total_pr * 133) |>
+  group_by(wheels) |>
+  summarise(preis_yen_max = max(total_pr_yen))
+```
 
-<!-- ### Spalten umbenennen -->
+$\square$
+:::
 
-<!-- ### Werte umkodieren -->
+:::{.callout-tip collapse="true"}
+### Lösung zu @exr-pfeife-lesen
+
+Nimm die Mariokart-Daten, *und dann*
+behalte nur die gebrauchten Spiele, *und dann*
+rechne den Preis in Yen um, *und dann*
+teile nach Anzahl der Lenkräder auf, *und dann*
+berechne in jeder Gruppe den höchsten Preis in Yen.
+
+Das Ergebnis hat eine Zeile pro vorkommender Anzahl an Lenkrädern
+und zwei Spalten: `wheels` und `preis_yen_max`.
+
+```{r}
+mariokart |>
+  filter(cond == "used") |>
+  mutate(total_pr_yen = total_pr * 133) |>
+  group_by(wheels) |>
+  summarise(preis_yen_max = max(total_pr_yen))
+```
+
+$\square$
+:::
+
 
 
 ## Beispiele für Forschungsfragen

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
 <meta charset="UTF-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.11.9">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="keywords" content="Statistik, Prognose, Modellierung, R, Datenanalyse, Regression">
 <meta name="description" content="Einführung in die Statistik mit einem Schwerpunkt auf Prognose-Modellierung">
@@ -10,10 +10,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -35,18 +38,19 @@ ul.task-list li input[type="checkbox"] {
 <link href="./img/statistik1_icon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-447e42e69aaa9833c0ba1b986f430b20.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-a4c491303f69927a1321bd3546903061.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-2dc673c3628f6ea71864dee0e7890cee.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-a4c491303f69927a1321bd3546903061.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-dbf57ad83c13ae4f422b554da963db29.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-94c3ff760a031db47e09d51bd2e9d7bf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-dbf57ad83c13ae4f422b554da963db29.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -72,7 +76,7 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Abschicken",
     "search-label": "Suchen"
   }
-}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -99,7 +103,7 @@ window.Quarto = {
 };
 </script><link rel="stylesheet" href="webex.css">
 </head>
-<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Zum Hauptinhalt springen</a><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -122,6 +126,7 @@ window.Quarto = {
       for (let i=0; i < toggles.length; i++) {
         const toggle = toggles[i];
         if (toggle) {
+          toggle.setAttribute("aria-checked", alternate ? "true" : "false");
           if (alternate) {
             toggle.classList.add("alternate");
           } else {
@@ -151,13 +156,19 @@ window.Quarto = {
       manageTransitions('#quarto-margin-sidebar .nav-link', true);
       // Switch the toggles
       setColorSchemeToggle(alternate)
-      // Hack to workaround the fact that safari doesn't
-      // properly recolor the scrollbar when toggling (#1455)
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455).
+    // Not run on load: stylesheets are set before first paint there, and
+    // scrolling would undo the scroll to a URL fragment (#14973).
+    // The one pixel nudge keeps the reader where they were.
+    const refreshSafariScrollbar = () => {
       if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
         manageTransitions("body", false);
-        window.scrollTo(0, 1);
+        const scrollY = window.scrollY;
+        window.scrollTo(0, scrollY > 0 ? scrollY - 1 : 1);
         setTimeout(() => {
-          window.scrollTo(0, 0);
+          window.scrollTo(0, scrollY);
           manageTransitions("body", true);
         }, 40);
       }
@@ -251,6 +262,7 @@ window.Quarto = {
       // Read the current dark / light value
       let toAlternate = !hasAlternateSentinel();
       toggleColorMode(toAlternate);
+      refreshSafariScrollbar();
       setStyleSentinel(toAlternate);
       toggleGiscusIfUsed(toAlternate, darkModeDefault);
       window.dispatchEvent(new Event('resize'));
@@ -264,12 +276,12 @@ window.Quarto = {
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" aria-label="Symbolleiste"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./110-definitions.html">Anhang</a></li><li class="breadcrumb-item"><a href="./125-probeklausur.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Probeklausur</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="Pfad"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./110-definitions.html">Anhang</a></li><li class="breadcrumb-item"><a href="./125-probeklausur.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Probeklausur</span></a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Suchen" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
@@ -277,14 +289,14 @@ window.Quarto = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Website"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
       <img src="./img/statistik1_icon.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none"><img src="./img/statistik1_icon.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none"></a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Statistik1</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/sebastiansauer/statistik1" title="Quellcode" class="quarto-navigation-tool px-1" aria-label="Quellcode"><i class="bi bi-github"></i></a>
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
+  <button type="button" role="switch" aria-checked="false" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten" aria-label="Dunkelmodus umschalten"><i class="bi"></i></button>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Lesemodus umschalten">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -314,13 +326,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Vorbereiten</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Vorbereiten</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-rahmen.html" class="sidebar-item-text sidebar-link">
@@ -343,13 +352,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Grundlagen des Modellierens</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Grundlagen des Modellierens</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./040-verbildlichen.html" class="sidebar-item-text sidebar-link">
@@ -378,13 +384,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Geradenmodelle</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Geradenmodelle</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./080-regression1.html" class="sidebar-item-text sidebar-link">
@@ -407,13 +410,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Anhang</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Anhang</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./110-definitions.html" class="sidebar-item-text sidebar-link">
@@ -466,7 +466,7 @@ window.Quarto = {
         
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./110-definitions.html">Anhang</a></li><li class="breadcrumb-item"><a href="./125-probeklausur.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Probeklausur</span></a></li></ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content" tabindex="-1"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Pfad"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./110-definitions.html">Anhang</a></li><li class="breadcrumb-item"><a href="./125-probeklausur.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Probeklausur</span></a></li></ol></nav><div class="quarto-title">
 <h1 class="title">Anhang C — Probeklausur</h1>
 </div>
 
@@ -492,8 +492,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Welches Bild zeigt Bestimmungsstücke der Definition von Statistik?</p>
-<div id="webex-783d8b7283845a7a053716040a55d3f8" class="webex-radiogroup" data-answer="bAgfVRRSGwIUA2U=">
-<label><input type="radio" autocomplete="off" name="783d8b7283845a7a053716040a55d3f8"><span><img src="fig-norm-dev-1.png" class="img-fluid" style="width:25.0%"></span></label><label><input type="radio" autocomplete="off" name="783d8b7283845a7a053716040a55d3f8"><span><img src="fig-zsmnfassen-1.png" class="img-fluid" style="width:25.0%"></span></label><label><input type="radio" autocomplete="off" name="783d8b7283845a7a053716040a55d3f8"><span><img src="fig-mbappe-1.png" class="img-fluid" style="width:25.0%"></span></label><label><input type="radio" autocomplete="off" name="783d8b7283845a7a053716040a55d3f8"><span><img src="fig-fehler-red-2.png" class="img-fluid" style="width:25.0%"></span></label><label><input type="radio" autocomplete="off" name="783d8b7283845a7a053716040a55d3f8"><span><img src="fig-mae-1.png" class="img-fluid" style="width:25.0%"></span></label>
+<div id="webex-b535b6bce3f177b0a4878222b0bc88d7" class="webex-radiogroup" data-answer="OQUfBE4GTlNJAzs=">
+<label><input type="radio" autocomplete="off" name="b535b6bce3f177b0a4878222b0bc88d7"><span><img src="fig-norm-dev-1.png" class="img-fluid" style="width:25.0%"></span></label><label><input type="radio" autocomplete="off" name="b535b6bce3f177b0a4878222b0bc88d7"><span><img src="fig-zsmnfassen-1.png" class="img-fluid" style="width:25.0%"></span></label><label><input type="radio" autocomplete="off" name="b535b6bce3f177b0a4878222b0bc88d7"><span><img src="fig-mbappe-1.png" class="img-fluid" style="width:25.0%"></span></label><label><input type="radio" autocomplete="off" name="b535b6bce3f177b0a4878222b0bc88d7"><span><img src="fig-fehler-red-2.png" class="img-fluid" style="width:25.0%"></span></label><label><input type="radio" autocomplete="off" name="b535b6bce3f177b0a4878222b0bc88d7"><span><img src="fig-mae-1.png" class="img-fluid" style="width:25.0%"></span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -509,8 +509,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie vergleichen zwei Datensätze, die identische Mittelwerte und Standardabweichungen aufweisen. Das Streudiagramm zeigt jedoch beim ersten Datensatz eine Wolke und beim zweiten eine Dinosaurier-Form. Welche Erkenntnis aus Anscombes Quartett lässt sich hier anwenden? Betrachten Sie die Grenzen rein numerischer Kennzahlen.</p>
-<div id="webex-662f2fa786e6c44baac5de265455721c" class="webex-radiogroup" data-answer="bQYeVx5WTQcUBjg=">
-<label><input type="radio" autocomplete="off" name="662f2fa786e6c44baac5de265455721c"><span>Visualisierungen dienen nur der Illustration, nicht der Erkenntnis.</span></label><label><input type="radio" autocomplete="off" name="662f2fa786e6c44baac5de265455721c"><span>Statistische Kennzahlen allein können die Struktur von Daten verhüllen.</span></label><label><input type="radio" autocomplete="off" name="662f2fa786e6c44baac5de265455721c"><span>Der Korrelationskoeffizient ändert sich durch die Form der Punktwolke zwingend.</span></label><label><input type="radio" autocomplete="off" name="662f2fa786e6c44baac5de265455721c"><span>Ein Dinosaurier im Diagramm deutet immer auf einen Rechenfehler hin.</span></label><label><input type="radio" autocomplete="off" name="662f2fa786e6c44baac5de265455721c"><span>Mittelwerte sind bei visuellen Mustern grundsätzlich nicht aussagekräftig.</span></label>
+<div id="webex-6b1386ce454af98e032a3f871e662ad5" class="webex-radiogroup" data-answer="bVIdAhQGT1UYBWk=">
+<label><input type="radio" autocomplete="off" name="6b1386ce454af98e032a3f871e662ad5"><span>Visualisierungen dienen nur der Illustration, nicht der Erkenntnis.</span></label><label><input type="radio" autocomplete="off" name="6b1386ce454af98e032a3f871e662ad5"><span>Statistische Kennzahlen allein können die Struktur von Daten verhüllen.</span></label><label><input type="radio" autocomplete="off" name="6b1386ce454af98e032a3f871e662ad5"><span>Der Korrelationskoeffizient ändert sich durch die Form der Punktwolke zwingend.</span></label><label><input type="radio" autocomplete="off" name="6b1386ce454af98e032a3f871e662ad5"><span>Ein Dinosaurier im Diagramm deutet immer auf einen Rechenfehler hin.</span></label><label><input type="radio" autocomplete="off" name="6b1386ce454af98e032a3f871e662ad5"><span>Mittelwerte sind bei visuellen Mustern grundsätzlich nicht aussagekräftig.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -527,8 +527,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie arbeiten mit einem Datensatz über Kunden. Die Variable <code>geschlecht</code> ist nominalskaliert. Was ist die sinnvollste Operation, wenn Sie wissen wollen, wie viele Männer und Frauen im Datensatz sind?</p>
-<div id="webex-721a473ca3f14aab4e2b9e35c129a869" class="webex-radiogroup" data-answer="bAIdURgHH1JNAzs=">
-<label><input type="radio" autocomplete="off" name="721a473ca3f14aab4e2b9e35c129a869"><span><code>summarise(mean(geschlecht))</code></span></label><label><input type="radio" autocomplete="off" name="721a473ca3f14aab4e2b9e35c129a869"><span><code>mutate(anteil = geschlecht / sum(geschlecht))</code></span></label><label><input type="radio" autocomplete="off" name="721a473ca3f14aab4e2b9e35c129a869"><span><code>filter(geschlecht == "alle")</code></span></label><label><input type="radio" autocomplete="off" name="721a473ca3f14aab4e2b9e35c129a869"><span><code>count(geschlecht)</code></span></label><label><input type="radio" autocomplete="off" name="721a473ca3f14aab4e2b9e35c129a869"><span><code>arrange(geschlecht)</code></span></label>
+<div id="webex-3208ac11b9a92429a793a7ef089486ce" class="webex-radiogroup" data-answer="aAIcCE1THQBOCTw=">
+<label><input type="radio" autocomplete="off" name="3208ac11b9a92429a793a7ef089486ce"><span><code>summarise(mean(geschlecht))</code></span></label><label><input type="radio" autocomplete="off" name="3208ac11b9a92429a793a7ef089486ce"><span><code>mutate(anteil = geschlecht / sum(geschlecht))</code></span></label><label><input type="radio" autocomplete="off" name="3208ac11b9a92429a793a7ef089486ce"><span><code>filter(geschlecht == "alle")</code></span></label><label><input type="radio" autocomplete="off" name="3208ac11b9a92429a793a7ef089486ce"><span><code>count(geschlecht)</code></span></label><label><input type="radio" autocomplete="off" name="3208ac11b9a92429a793a7ef089486ce"><span><code>arrange(geschlecht)</code></span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -545,8 +545,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie erstellen einen Vektor mit folgendem Befehl: <code>test_vektor &lt;- c(1, "2", 3)</code>. Was passiert, wenn Sie versuchen, den Mittelwert mit <code>mean(test_vektor)</code> zu berechnen?</p>
-<div id="webex-09486fac2dd6bf082893dafeb1f8c88b" class="webex-radiogroup" data-answer="awkYCBpWTVMeVTk=">
-<label><input type="radio" autocomplete="off" name="09486fac2dd6bf082893dafeb1f8c88b"><span>R berechnet den Mittelwert 2.</span></label><label><input type="radio" autocomplete="off" name="09486fac2dd6bf082893dafeb1f8c88b"><span>R erkennt die Zahl in den Anführungszeichen automatisch und berechnet den Mittelwert 2.</span></label><label><input type="radio" autocomplete="off" name="09486fac2dd6bf082893dafeb1f8c88b"><span>R gibt eine Fehlermeldung aus, dass Vektoren keine unterschiedlichen Datentypen enthalten dürfen.</span></label><label><input type="radio" autocomplete="off" name="09486fac2dd6bf082893dafeb1f8c88b"><span>R löscht die “2” und berechnet den Mittelwert aus 1 und 3.</span></label><label><input type="radio" autocomplete="off" name="09486fac2dd6bf082893dafeb1f8c88b"><span>R gibt <code>NA</code> zurück, da der Vektor durch die Anführungszeichen bei der “2” zu einem Text-Vektor (character) wurde.</span></label>
+<div id="webex-643d89c864eb674fba7f3bec1f2c666d" class="webex-radiogroup" data-answer="bQQfVBQJTwgaBTg=">
+<label><input type="radio" autocomplete="off" name="643d89c864eb674fba7f3bec1f2c666d"><span>R berechnet den Mittelwert 2.</span></label><label><input type="radio" autocomplete="off" name="643d89c864eb674fba7f3bec1f2c666d"><span>R erkennt die Zahl in den Anführungszeichen automatisch und berechnet den Mittelwert 2.</span></label><label><input type="radio" autocomplete="off" name="643d89c864eb674fba7f3bec1f2c666d"><span>R gibt eine Fehlermeldung aus, dass Vektoren keine unterschiedlichen Datentypen enthalten dürfen.</span></label><label><input type="radio" autocomplete="off" name="643d89c864eb674fba7f3bec1f2c666d"><span>R löscht die “2” und berechnet den Mittelwert aus 1 und 3.</span></label><label><input type="radio" autocomplete="off" name="643d89c864eb674fba7f3bec1f2c666d"><span>R gibt <code>NA</code> zurück, da der Vektor durch die Anführungszeichen bei der “2” zu einem Text-Vektor (character) wurde.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -563,8 +563,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Was ist das entscheidende Merkmal eines “Punktmodells” in der Statistik? Denken Sie an die Anzahl der vorhergesagten Werte.</p>
-<div id="webex-62051fd312c39efa3ebb3f2cda756261" class="webex-radiogroup" data-answer="bQIcBR1WSAMdAz4=">
-<label><input type="radio" autocomplete="off" name="62051fd312c39efa3ebb3f2cda756261"><span>Es berechnet für jede einzelne Beobachtung eine individuelle Gerade.</span></label><label><input type="radio" autocomplete="off" name="62051fd312c39efa3ebb3f2cda756261"><span>Es löscht alle Datenpunkte, die nicht genau auf dem Mittelwert liegen.</span></label><label><input type="radio" autocomplete="off" name="62051fd312c39efa3ebb3f2cda756261"><span>Es verbindet alle Datenpunkte mit einer komplexen Kurve.</span></label><label><input type="radio" autocomplete="off" name="62051fd312c39efa3ebb3f2cda756261"><span>Es kann nur für Daten verwendet werden, die als Koordinaten (X/Y) vorliegen.</span></label><label><input type="radio" autocomplete="off" name="62051fd312c39efa3ebb3f2cda756261"><span>Es sagt für alle Beobachtungen ein und denselben Wert vorher.</span></label>
+<div id="webex-97c5949878e9a15e010d61f3c3989031" class="webex-radiogroup" data-answer="YgdPBRUEFQgbCTg=">
+<label><input type="radio" autocomplete="off" name="97c5949878e9a15e010d61f3c3989031"><span>Es berechnet für jede einzelne Beobachtung eine individuelle Gerade.</span></label><label><input type="radio" autocomplete="off" name="97c5949878e9a15e010d61f3c3989031"><span>Es löscht alle Datenpunkte, die nicht genau auf dem Mittelwert liegen.</span></label><label><input type="radio" autocomplete="off" name="97c5949878e9a15e010d61f3c3989031"><span>Es verbindet alle Datenpunkte mit einer komplexen Kurve.</span></label><label><input type="radio" autocomplete="off" name="97c5949878e9a15e010d61f3c3989031"><span>Es kann nur für Daten verwendet werden, die als Koordinaten (X/Y) vorliegen.</span></label><label><input type="radio" autocomplete="off" name="97c5949878e9a15e010d61f3c3989031"><span>Es sagt für alle Beobachtungen ein und denselben Wert vorher.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -581,8 +581,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Wie greifen Sie mit dem Dollar-Operator auf die Spalte „Note“ in einer Tabelle namens „Ergebnisse“ zu?</p>
-<div id="webex-383a8e372626d39b9e57486279230c9f" class="webex-radiogroup" data-answer="aAgfURRUHwceBm8=">
-<label><input type="radio" autocomplete="off" name="383a8e372626d39b9e57486279230c9f"><span><code>Ergebnisse-&gt;Note</code></span></label><label><input type="radio" autocomplete="off" name="383a8e372626d39b9e57486279230c9f"><span><code>Note$Ergebnisse</code></span></label><label><input type="radio" autocomplete="off" name="383a8e372626d39b9e57486279230c9f"><span><code>Ergebnisse$Note</code></span></label><label><input type="radio" autocomplete="off" name="383a8e372626d39b9e57486279230c9f"><span><code>Ergebnisse(Note)</code></span></label><label><input type="radio" autocomplete="off" name="383a8e372626d39b9e57486279230c9f"><span><code>$Ergebnisse$Note</code></span></label>
+<div id="webex-ed47531ea5967041d937dd29a9eb702f" class="webex-radiogroup" data-answer="PlQYBxkCHVVNBWQ=">
+<label><input type="radio" autocomplete="off" name="ed47531ea5967041d937dd29a9eb702f"><span><code>Ergebnisse-&gt;Note</code></span></label><label><input type="radio" autocomplete="off" name="ed47531ea5967041d937dd29a9eb702f"><span><code>Note$Ergebnisse</code></span></label><label><input type="radio" autocomplete="off" name="ed47531ea5967041d937dd29a9eb702f"><span><code>Ergebnisse$Note</code></span></label><label><input type="radio" autocomplete="off" name="ed47531ea5967041d937dd29a9eb702f"><span><code>Ergebnisse(Note)</code></span></label><label><input type="radio" autocomplete="off" name="ed47531ea5967041d937dd29a9eb702f"><span><code>$Ergebnisse$Note</code></span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -598,9 +598,9 @@ window.Quarto = {
 </div>
 <div class="webex-question">
 <div class="webex-check webex-box">
-<p>Sie möchten in einem Datensatz nur die Spiele finden, die weniger als 50 Euro kosten und gleichzeitig neuwertig sind. Welche logische Verknüpfung innerhalb der Funktion <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code> ist hierfür zwingend erforderlich? Ein falscher Operator würde entweder zu viele oder gar keine Ergebnisse liefern. Denken Sie an die Mengenlehre beim Filtern von Beobachtungen.</p>
-<div id="webex-230398f0904d103acd6ac2fd74759b4c" class="webex-radiogroup" data-answer="aQMcAxUISgAVAWk=">
-<label><input type="radio" autocomplete="off" name="230398f0904d103acd6ac2fd74759b4c"><span>Das einfache Gleichheitszeichen <code>=</code>, um den Wert zuzuweisen.</span></label><label><input type="radio" autocomplete="off" name="230398f0904d103acd6ac2fd74759b4c"><span>Ein Ausrufezeichen <code>!</code>, um die teuren Spiele explizit auszuschließen.</span></label><label><input type="radio" autocomplete="off" name="230398f0904d103acd6ac2fd74759b4c"><span>Der Operator <code>|</code> (ODER), da es egal ist, welche Bedingung zuerst erfüllt ist.</span></label><label><input type="radio" autocomplete="off" name="230398f0904d103acd6ac2fd74759b4c"><span>Die Funktion <code>select()</code>, da man zuerst die Spalten einschränken muss.</span></label><label><input type="radio" autocomplete="off" name="230398f0904d103acd6ac2fd74759b4c"><span>Der Operator <code>&amp;</code> (UND), um beide Bedingungen gleichzeitig zu prüfen.</span></label>
+<p>Sie möchten in einem Datensatz nur die Spiele finden, die weniger als 50 Dollar kosten und gleichzeitig neuwertig sind. Welche logische Verknüpfung innerhalb der Funktion <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code> ist hierfür zwingend erforderlich? Ein falscher Operator würde entweder zu viele oder gar keine Ergebnisse liefern. Denken Sie an die Mengenlehre beim Filtern von Beobachtungen.</p>
+<div id="webex-2b19644a678b650ea6fa7e4ed0ad85d8" class="webex-radiogroup" data-answer="aVIdCRoEGFEaBmU=">
+<label><input type="radio" autocomplete="off" name="2b19644a678b650ea6fa7e4ed0ad85d8"><span>Das einfache Gleichheitszeichen <code>=</code>, um den Wert zuzuweisen.</span></label><label><input type="radio" autocomplete="off" name="2b19644a678b650ea6fa7e4ed0ad85d8"><span>Ein Ausrufezeichen <code>!</code>, um die teuren Spiele explizit auszuschließen.</span></label><label><input type="radio" autocomplete="off" name="2b19644a678b650ea6fa7e4ed0ad85d8"><span>Der Operator <code>|</code> (ODER), da es egal ist, welche Bedingung zuerst erfüllt ist.</span></label><label><input type="radio" autocomplete="off" name="2b19644a678b650ea6fa7e4ed0ad85d8"><span>Die Funktion <code>select()</code>, da man zuerst die Spalten einschränken muss.</span></label><label><input type="radio" autocomplete="off" name="2b19644a678b650ea6fa7e4ed0ad85d8"><span>Der Operator <code>&amp;</code> (UND), um beide Bedingungen gleichzeitig zu prüfen.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -617,8 +617,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie nutzen eine Funktion mit folgenden Argumenten: <code>f(x, y = 10)</code>. Was passiert, wenn Sie die Funktion mit <code>f(5)</code> aufrufen?</p>
-<div id="webex-3c686af2633f02e1dd5341542fab8f66" class="webex-radiogroup" data-answer="aFMaCBpQSgIaA24=">
-<label><input type="radio" autocomplete="off" name="3c686af2633f02e1dd5341542fab8f66"><span>R setzt sowohl <code>x</code> als auch <code>y</code> auf 5.</span></label><label><input type="radio" autocomplete="off" name="3c686af2633f02e1dd5341542fab8f66"><span>R ignoriert das Argument <code>y</code> komplett und berechnet nur das Ergebnis für <code>x</code>.</span></label><label><input type="radio" autocomplete="off" name="3c686af2633f02e1dd5341542fab8f66"><span>R führt die Funktion aus und nutzt für <code>x</code> den Wert 5 und für <code>y</code> den voreingestellten Wert 10.</span></label><label><input type="radio" autocomplete="off" name="3c686af2633f02e1dd5341542fab8f66"><span>R setzt <code>x</code> auf 5 und <code>y</code> auf <code>NA</code>.</span></label><label><input type="radio" autocomplete="off" name="3c686af2633f02e1dd5341542fab8f66"><span>R gibt eine Fehlermeldung aus, da das Argument <code>y</code> fehlt.</span></label>
+<div id="webex-16b588a27c1d91d32935ebd5df37021c" class="webex-radiogroup" data-answer="agZOBRQJTQIbU2w=">
+<label><input type="radio" autocomplete="off" name="16b588a27c1d91d32935ebd5df37021c"><span>R setzt sowohl <code>x</code> als auch <code>y</code> auf 5.</span></label><label><input type="radio" autocomplete="off" name="16b588a27c1d91d32935ebd5df37021c"><span>R ignoriert das Argument <code>y</code> komplett und berechnet nur das Ergebnis für <code>x</code>.</span></label><label><input type="radio" autocomplete="off" name="16b588a27c1d91d32935ebd5df37021c"><span>R führt die Funktion aus und nutzt für <code>x</code> den Wert 5 und für <code>y</code> den voreingestellten Wert 10.</span></label><label><input type="radio" autocomplete="off" name="16b588a27c1d91d32935ebd5df37021c"><span>R setzt <code>x</code> auf 5 und <code>y</code> auf <code>NA</code>.</span></label><label><input type="radio" autocomplete="off" name="16b588a27c1d91d32935ebd5df37021c"><span>R gibt eine Fehlermeldung aus, da das Argument <code>y</code> fehlt.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -635,8 +635,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Warum kann ein gruppiertes Mittelwert-Modell (z. B. getrennt nach Geschlecht) besser sein als ein ungruppierter Mittelwert? Beziehen Sie sich auf die Fehlerbalken (Residuen).</p>
-<div id="webex-49b782b917d0bd34892fe39977996c28" class="webex-radiogroup" data-answer="bwlOBhQCTgkdBzk=">
-<label><input type="radio" autocomplete="off" name="49b782b917d0bd34892fe39977996c28"><span>Weil man bei Gruppierungen keine Standardabweichung mehr berechnen muss.</span></label><label><input type="radio" autocomplete="off" name="49b782b917d0bd34892fe39977996c28"><span>Weil die Abweichungen (Residuen) zum jeweiligen Gruppenmittelwert im Schnitt kleiner sein können als zum globalen Mittelwert.</span></label><label><input type="radio" autocomplete="off" name="49b782b917d0bd34892fe39977996c28"><span>Weil R-Befehle wie <code>group_by</code> automatisch alle Ausreißer aus den Daten löschen.</span></label><label><input type="radio" autocomplete="off" name="49b782b917d0bd34892fe39977996c28"><span>Weil ein gruppiertes Modell immer weniger Rechenleistung benötigt.</span></label><label><input type="radio" autocomplete="off" name="49b782b917d0bd34892fe39977996c28"><span>Weil der Median einer Gruppe immer identisch mit dem globalen Mittelwert ist.</span></label>
+<div id="webex-d792b261b0eebb2d34c55148a5004f32" class="webex-radiogroup" data-answer="PwcVA04CGgFOADg=">
+<label><input type="radio" autocomplete="off" name="d792b261b0eebb2d34c55148a5004f32"><span>Weil man bei Gruppierungen keine Standardabweichung mehr berechnen muss.</span></label><label><input type="radio" autocomplete="off" name="d792b261b0eebb2d34c55148a5004f32"><span>Weil die Abweichungen (Residuen) zum jeweiligen Gruppenmittelwert im Schnitt kleiner sein können als zum globalen Mittelwert.</span></label><label><input type="radio" autocomplete="off" name="d792b261b0eebb2d34c55148a5004f32"><span>Weil R-Befehle wie <code>group_by</code> automatisch alle Ausreißer aus den Daten löschen.</span></label><label><input type="radio" autocomplete="off" name="d792b261b0eebb2d34c55148a5004f32"><span>Weil ein gruppiertes Modell immer weniger Rechenleistung benötigt.</span></label><label><input type="radio" autocomplete="off" name="d792b261b0eebb2d34c55148a5004f32"><span>Weil der Median einer Gruppe immer identisch mit dem globalen Mittelwert ist.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -653,8 +653,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie betrachten den Zusammenhang zwischen „Lernzeit“ und „Freizeit“ bei Studierenden. In der Regel gilt: Je mehr jemand lernt, desto weniger Freizeit hat er zur Verfügung. Welches Ergebnis erwarten Sie für den Korrelationskoeffizienten r in einer entsprechenden Untersuchung? Übertragen Sie die inhaltliche Beschreibung auf das Vorzeichen und den Wertebereich von r.</p>
-<div id="webex-4122bfc083ed95e9dff3f38120d72f14" class="webex-radiogroup" data-answer="bwEeAk5WTwEUAzg=">
-<label><input type="radio" autocomplete="off" name="4122bfc083ed95e9dff3f38120d72f14"><span>r wird einen Wert zwischen 0 und +1 annehmen.</span></label><label><input type="radio" autocomplete="off" name="4122bfc083ed95e9dff3f38120d72f14"><span>r wird deutlich größer als +1 sein.</span></label><label><input type="radio" autocomplete="off" name="4122bfc083ed95e9dff3f38120d72f14"><span>r kann nicht berechnet werden, da Freizeit eine qualitative Variable ist.</span></label><label><input type="radio" autocomplete="off" name="4122bfc083ed95e9dff3f38120d72f14"><span>r wird einen Wert zwischen -1 und 0 annehmen.</span></label><label><input type="radio" autocomplete="off" name="4122bfc083ed95e9dff3f38120d72f14"><span>r wird exakt 0 betragen, da kein Zusammenhang besteht.</span></label>
+<div id="webex-37a68aa193d9b5e3126c505bf834ff1a" class="webex-radiogroup" data-answer="aAdNBhRRTQAVAzk=">
+<label><input type="radio" autocomplete="off" name="37a68aa193d9b5e3126c505bf834ff1a"><span>r wird einen Wert zwischen 0 und +1 annehmen.</span></label><label><input type="radio" autocomplete="off" name="37a68aa193d9b5e3126c505bf834ff1a"><span>r wird deutlich größer als +1 sein.</span></label><label><input type="radio" autocomplete="off" name="37a68aa193d9b5e3126c505bf834ff1a"><span>r kann nicht berechnet werden, da Freizeit eine qualitative Variable ist.</span></label><label><input type="radio" autocomplete="off" name="37a68aa193d9b5e3126c505bf834ff1a"><span>r wird einen Wert zwischen -1 und 0 annehmen.</span></label><label><input type="radio" autocomplete="off" name="37a68aa193d9b5e3126c505bf834ff1a"><span>r wird exakt 0 betragen, da kein Zusammenhang besteht.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -671,8 +671,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ein Forscher untersucht den Zusammenhang zwischen dem monatlichen Einkommen (in Euro) und der Lebenszufriedenheit. Er beschließt nun, das Einkommen für seine nächste Veröffentlichung in Cent statt in Euro anzugeben. Welche statistische Kennzahl wird sich durch diese Änderung der Skalierung massiv verändern? Betrachten Sie die mathematische Definition von Kovarianz und Korrelation.</p>
-<div id="webex-996b5c6863698e2f7a243af4a128379d" class="webex-radiogroup" data-answer="YgkaUhlTGggaAms=">
-<label><input type="radio" autocomplete="off" name="996b5c6863698e2f7a243af4a128379d"><span>Der Korrelationskoeffizient r nach Pearson.</span></label><label><input type="radio" autocomplete="off" name="996b5c6863698e2f7a243af4a128379d"><span>Die Anzahl der Freiheitsgrade der Analyse.</span></label><label><input type="radio" autocomplete="off" name="996b5c6863698e2f7a243af4a128379d"><span>Die z-standardisierten Werte der Zufriedenheit.</span></label><label><input type="radio" autocomplete="off" name="996b5c6863698e2f7a243af4a128379d"><span>Das Vorzeichen des Zusammenhangs.</span></label><label><input type="radio" autocomplete="off" name="996b5c6863698e2f7a243af4a128379d"><span>Die Kovarianz zwischen Einkommen und Zufriedenheit.</span></label>
+<div id="webex-1105dc4c74583e64361aba4617b51314" class="webex-radiogroup" data-answer="agEcBUhTGFMbBWg=">
+<label><input type="radio" autocomplete="off" name="1105dc4c74583e64361aba4617b51314"><span>Der Korrelationskoeffizient r nach Pearson.</span></label><label><input type="radio" autocomplete="off" name="1105dc4c74583e64361aba4617b51314"><span>Die Anzahl der Freiheitsgrade der Analyse.</span></label><label><input type="radio" autocomplete="off" name="1105dc4c74583e64361aba4617b51314"><span>Die z-standardisierten Werte der Zufriedenheit.</span></label><label><input type="radio" autocomplete="off" name="1105dc4c74583e64361aba4617b51314"><span>Das Vorzeichen des Zusammenhangs.</span></label><label><input type="radio" autocomplete="off" name="1105dc4c74583e64361aba4617b51314"><span>Die Kovarianz zwischen Einkommen und Zufriedenheit.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -689,8 +689,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Das “Lego-Prinzip” im Datenjudo besagt, dass man komplexe Analysen in kleine Teilschritte zerlegen sollte. Welche der folgenden Aussagen beschreibt einen Nachteil, wenn man dieses Prinzip NICHT beachtet und stattdessen riesige, verschachtelte Funktionen schreibt?</p>
-<div id="webex-1e8c305a51a7e8977265bc4f33e6bcd5" class="webex-radiogroup" data-answer="alUUUx8AGVAZATw=">
-<label><input type="radio" autocomplete="off" name="1e8c305a51a7e8977265bc4f33e6bcd5"><span>Verschachtelte Funktionen verbrauchen deutlich mehr Arbeitsspeicher.</span></label><label><input type="radio" autocomplete="off" name="1e8c305a51a7e8977265bc4f33e6bcd5"><span>Das Tidyverse funktioniert nur mit maximal zwei Funktionen pro Zeile.</span></label><label><input type="radio" autocomplete="off" name="1e8c305a51a7e8977265bc4f33e6bcd5"><span>R kann verschachtelte Funktionen technisch nicht verarbeiten.</span></label><label><input type="radio" autocomplete="off" name="1e8c305a51a7e8977265bc4f33e6bcd5"><span>Der Code wird schwerer lesbar und Fehler sind schwieriger zu finden.</span></label><label><input type="radio" autocomplete="off" name="1e8c305a51a7e8977265bc4f33e6bcd5"><span>Die Ergebnisse werden mathematisch ungenau.</span></label>
+<div id="webex-90c82e4d4dc7e28b1be0d04d28cc2c79" class="webex-radiogroup" data-answer="YgBPCB5VGFUYVD4=">
+<label><input type="radio" autocomplete="off" name="90c82e4d4dc7e28b1be0d04d28cc2c79"><span>Verschachtelte Funktionen verbrauchen deutlich mehr Arbeitsspeicher.</span></label><label><input type="radio" autocomplete="off" name="90c82e4d4dc7e28b1be0d04d28cc2c79"><span>Das Tidyverse funktioniert nur mit maximal zwei Funktionen pro Zeile.</span></label><label><input type="radio" autocomplete="off" name="90c82e4d4dc7e28b1be0d04d28cc2c79"><span>R kann verschachtelte Funktionen technisch nicht verarbeiten.</span></label><label><input type="radio" autocomplete="off" name="90c82e4d4dc7e28b1be0d04d28cc2c79"><span>Der Code wird schwerer lesbar und Fehler sind schwieriger zu finden.</span></label><label><input type="radio" autocomplete="off" name="90c82e4d4dc7e28b1be0d04d28cc2c79"><span>Die Ergebnisse werden mathematisch ungenau.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -707,8 +707,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Was ist das Ergebnis der Logikprüfung <code>x &lt;- 5; x == 6</code>?</p>
-<div id="webex-b2aef80c0bb684bec4e9f79049dc639c" class="webex-radiogroup" data-answer="OQNNVUoIHFMcUj8=">
-<label><input type="radio" autocomplete="off" name="b2aef80c0bb684bec4e9f79049dc639c"><span>FALSE</span></label><label><input type="radio" autocomplete="off" name="b2aef80c0bb684bec4e9f79049dc639c"><span>R gibt eine Fehlermeldung aus, da <code>x</code> bereits als 5 definiert wurde.</span></label><label><input type="radio" autocomplete="off" name="b2aef80c0bb684bec4e9f79049dc639c"><span>TRUE</span></label><label><input type="radio" autocomplete="off" name="b2aef80c0bb684bec4e9f79049dc639c"><span>5</span></label><label><input type="radio" autocomplete="off" name="b2aef80c0bb684bec4e9f79049dc639c"><span>6</span></label>
+<div id="webex-61a221a7b45fec52904ea2655c81432c" class="webex-radiogroup" data-answer="bQBNAh4BTQdOBGg=">
+<label><input type="radio" autocomplete="off" name="61a221a7b45fec52904ea2655c81432c"><span>FALSE</span></label><label><input type="radio" autocomplete="off" name="61a221a7b45fec52904ea2655c81432c"><span>R gibt eine Fehlermeldung aus, da <code>x</code> bereits als 5 definiert wurde.</span></label><label><input type="radio" autocomplete="off" name="61a221a7b45fec52904ea2655c81432c"><span>TRUE</span></label><label><input type="radio" autocomplete="off" name="61a221a7b45fec52904ea2655c81432c"><span>5</span></label><label><input type="radio" autocomplete="off" name="61a221a7b45fec52904ea2655c81432c"><span>6</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -725,8 +725,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Vier Abweichungen von einem Mittelwert betragen: 1, -3, 1 und 1. Wie hoch ist der Mean Absolute Error (MAE) für diese Daten? Wenden Sie die Definition der mittleren Absolutabweichung an. Beachten Sie den Umgang mit negativen Vorzeichen.</p>
-<div id="webex-e81805771703f6463a94b8c71bb05cec" class="webex-radiogroup" data-answer="PggdCRwFGwcdB20=">
-<label><input type="radio" autocomplete="off" name="e81805771703f6463a94b8c71bb05cec"><span>6</span></label><label><input type="radio" autocomplete="off" name="e81805771703f6463a94b8c71bb05cec"><span>1,5</span></label><label><input type="radio" autocomplete="off" name="e81805771703f6463a94b8c71bb05cec"><span>0</span></label><label><input type="radio" autocomplete="off" name="e81805771703f6463a94b8c71bb05cec"><span>2</span></label><label><input type="radio" autocomplete="off" name="e81805771703f6463a94b8c71bb05cec"><span>1,25</span></label>
+<div id="webex-c40c2796a108c999605e85a18444aeef" class="webex-radiogroup" data-answer="OAQcUh4HFQZNAW0=">
+<label><input type="radio" autocomplete="off" name="c40c2796a108c999605e85a18444aeef"><span>6</span></label><label><input type="radio" autocomplete="off" name="c40c2796a108c999605e85a18444aeef"><span>1,5</span></label><label><input type="radio" autocomplete="off" name="c40c2796a108c999605e85a18444aeef"><span>0</span></label><label><input type="radio" autocomplete="off" name="c40c2796a108c999605e85a18444aeef"><span>2</span></label><label><input type="radio" autocomplete="off" name="c40c2796a108c999605e85a18444aeef"><span>1,25</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -743,8 +743,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Was passiert standardmäßig, wenn Sie die Funktion mean() auf einen Vektor anwenden, der mindestens ein NA enthält?</p>
-<div id="webex-c2c670ec43baa4e6e7973b60042a7301" class="webex-radiogroup" data-answer="OAJPBhsBSVMYAz8=">
-<label><input type="radio" autocomplete="off" name="c2c670ec43baa4e6e7973b60042a7301"><span>R ersetzt das NA automatisch durch den Wert 0.</span></label><label><input type="radio" autocomplete="off" name="c2c670ec43baa4e6e7973b60042a7301"><span>R löscht den gesamten Vektor aus dem Environment.</span></label><label><input type="radio" autocomplete="off" name="c2c670ec43baa4e6e7973b60042a7301"><span>R gibt als Ergebnis NA zurück.</span></label><label><input type="radio" autocomplete="off" name="c2c670ec43baa4e6e7973b60042a7301"><span>R gibt eine Fehlermeldung aus und bricht die Berechnung ab.</span></label><label><input type="radio" autocomplete="off" name="c2c670ec43baa4e6e7973b60042a7301"><span>R berechnet den Mittelwert aus den restlichen vorhandenen Werten.</span></label>
+<div id="webex-db69a73350d5c6e429495fb900a3f8b8" class="webex-radiogroup" data-answer="P1IaCU0GHwMZADk=">
+<label><input type="radio" autocomplete="off" name="db69a73350d5c6e429495fb900a3f8b8"><span>R ersetzt das NA automatisch durch den Wert 0.</span></label><label><input type="radio" autocomplete="off" name="db69a73350d5c6e429495fb900a3f8b8"><span>R löscht den gesamten Vektor aus dem Environment.</span></label><label><input type="radio" autocomplete="off" name="db69a73350d5c6e429495fb900a3f8b8"><span>R gibt als Ergebnis NA zurück.</span></label><label><input type="radio" autocomplete="off" name="db69a73350d5c6e429495fb900a3f8b8"><span>R gibt eine Fehlermeldung aus und bricht die Berechnung ab.</span></label><label><input type="radio" autocomplete="off" name="db69a73350d5c6e429495fb900a3f8b8"><span>R berechnet den Mittelwert aus den restlichen vorhandenen Werten.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -761,8 +761,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Angenommen, Sie haben eine Spalte <code>preis_usd</code>. Sie möchten eine neue Spalte <code>preis_euro</code> hinzufügen, ohne die alte Spalte zu löschen. Welches Verb ist hierfür geeignet?</p>
-<div id="webex-2a60eb97cdf32449a5146762fc40f4ee" class="webex-radiogroup" data-answer="aVEaAElTFQdPVDs=">
-<label><input type="radio" autocomplete="off" name="2a60eb97cdf32449a5146762fc40f4ee"><span><code>rename()</code></span></label><label><input type="radio" autocomplete="off" name="2a60eb97cdf32449a5146762fc40f4ee"><span><code>arrange()</code></span></label><label><input type="radio" autocomplete="off" name="2a60eb97cdf32449a5146762fc40f4ee"><span><code>mutate()</code></span></label><label><input type="radio" autocomplete="off" name="2a60eb97cdf32449a5146762fc40f4ee"><span><code>summarise()</code></span></label><label><input type="radio" autocomplete="off" name="2a60eb97cdf32449a5146762fc40f4ee"><span><code>select()</code></span></label>
+<div id="webex-9601e3a173e9875544c9bb9c7c2f5ab0" class="webex-radiogroup" data-answer="YgYcAUkCTQEbAzg=">
+<label><input type="radio" autocomplete="off" name="9601e3a173e9875544c9bb9c7c2f5ab0"><span><code>rename()</code></span></label><label><input type="radio" autocomplete="off" name="9601e3a173e9875544c9bb9c7c2f5ab0"><span><code>arrange()</code></span></label><label><input type="radio" autocomplete="off" name="9601e3a173e9875544c9bb9c7c2f5ab0"><span><code>mutate()</code></span></label><label><input type="radio" autocomplete="off" name="9601e3a173e9875544c9bb9c7c2f5ab0"><span><code>summarise()</code></span></label><label><input type="radio" autocomplete="off" name="9601e3a173e9875544c9bb9c7c2f5ab0"><span><code>select()</code></span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -779,8 +779,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ein Datensatz <code>umfrage</code> enthält eine Spalte <code>alter</code> mit den Werten <code>c(20, 25, NA, 30)</code>. Welcher der folgenden Befehle führt dazu, dass R einen numerischen Wert für den Mittelwert ausgibt, anstatt <code>NA</code>?</p>
-<div id="webex-c8c1cbd14798c51023e5c1972ad46196" class="webex-radiogroup" data-answer="OAhPAU9TSAEYB2Q=">
-<label><input type="radio" autocomplete="off" name="c8c1cbd14798c51023e5c1972ad46196"><span><code>mean(na.omit(umfrage))</code></span></label><label><input type="radio" autocomplete="off" name="c8c1cbd14798c51023e5c1972ad46196"><span><code>mean(umfrage$alter, remove = "NA")</code></span></label><label><input type="radio" autocomplete="off" name="c8c1cbd14798c51023e5c1972ad46196"><span><code>mean(umfrage$alter, na.rm = TRUE)</code></span></label><label><input type="radio" autocomplete="off" name="c8c1cbd14798c51023e5c1972ad46196"><span><code>mean(umfrage$alter, na.rm = FALSE)</code></span></label><label><input type="radio" autocomplete="off" name="c8c1cbd14798c51023e5c1972ad46196"><span><code>mean(umfrage$alter)</code></span></label>
+<div id="webex-272f877f2704272612dde095fbe5b695" class="webex-radiogroup" data-answer="aQceVhQGG1YeB20=">
+<label><input type="radio" autocomplete="off" name="272f877f2704272612dde095fbe5b695"><span><code>mean(na.omit(umfrage))</code></span></label><label><input type="radio" autocomplete="off" name="272f877f2704272612dde095fbe5b695"><span><code>mean(umfrage$alter, remove = "NA")</code></span></label><label><input type="radio" autocomplete="off" name="272f877f2704272612dde095fbe5b695"><span><code>mean(umfrage$alter, na.rm = TRUE)</code></span></label><label><input type="radio" autocomplete="off" name="272f877f2704272612dde095fbe5b695"><span><code>mean(umfrage$alter, na.rm = FALSE)</code></span></label><label><input type="radio" autocomplete="off" name="272f877f2704272612dde095fbe5b695"><span><code>mean(umfrage$alter)</code></span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -797,8 +797,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie finden eine negative Steigung (<span class="math inline">\(\beta_1 &lt; 0\)</span>) in einem Modell zum Zusammenhang von “Fehlzeiten” (x) und “Prüfungsnote” (y). Die Note wird als Punktzahl gemessen (höher ist besser). Was sagt dieses Modell über den Zusammenhang aus? Interpretieren Sie die Richtung der Regressionsgeraden.</p>
-<div id="webex-d2b87ed712d4f6276fd9c0a424113503" class="webex-radiogroup" data-answer="PwNOCBtVSAcdAjk=">
-<label><input type="radio" autocomplete="off" name="d2b87ed712d4f6276fd9c0a424113503"><span>Mit jeder zusätzlichen Fehlstunde sinkt die vorhergesagte Punktzahl.</span></label><label><input type="radio" autocomplete="off" name="d2b87ed712d4f6276fd9c0a424113503"><span>Wer mehr fehlt, erreicht tendenziell eine bessere Note.</span></label><label><input type="radio" autocomplete="off" name="d2b87ed712d4f6276fd9c0a424113503"><span>Die Vorhersagefehler werden durch die Fehlzeiten größer.</span></label><label><input type="radio" autocomplete="off" name="d2b87ed712d4f6276fd9c0a424113503"><span>Der Achsenabschnitt des Modells muss negativ sein.</span></label><label><input type="radio" autocomplete="off" name="d2b87ed712d4f6276fd9c0a424113503"><span>Die Fehlzeiten haben keinen Einfluss auf die Note.</span></label>
+<div id="webex-12f8ed365e3580f61b4c42471c090d62" class="webex-radiogroup" data-answer="agNKCElUHwYZVW4=">
+<label><input type="radio" autocomplete="off" name="12f8ed365e3580f61b4c42471c090d62"><span>Mit jeder zusätzlichen Fehlstunde sinkt die vorhergesagte Punktzahl.</span></label><label><input type="radio" autocomplete="off" name="12f8ed365e3580f61b4c42471c090d62"><span>Wer mehr fehlt, erreicht tendenziell eine bessere Note.</span></label><label><input type="radio" autocomplete="off" name="12f8ed365e3580f61b4c42471c090d62"><span>Die Vorhersagefehler werden durch die Fehlzeiten größer.</span></label><label><input type="radio" autocomplete="off" name="12f8ed365e3580f61b4c42471c090d62"><span>Der Achsenabschnitt des Modells muss negativ sein.</span></label><label><input type="radio" autocomplete="off" name="12f8ed365e3580f61b4c42471c090d62"><span>Die Fehlzeiten haben keinen Einfluss auf die Note.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -815,8 +815,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Gegeben ist eine normalverteilte Variable (IQ) mit einem Mittelwert von 100 und einer Streuung von 15. Ein Student erzielt einen Wert von 130 Punkten. Welcher Anteil der Bevölkerung liegt laut der 68-95-99.7-Prozentregel über diesem Wert? Kombinieren Sie das Wissen über die Standardabweichung mit der Flächenverteilung.</p>
-<div id="webex-9fa6f9a2f460666845812254e3a9ffbc" class="webex-radiogroup" data-answer="YlZNBkoITQJKBGs=">
-<label><input type="radio" autocomplete="off" name="9fa6f9a2f460666845812254e3a9ffbc"><span>ca. 34 %</span></label><label><input type="radio" autocomplete="off" name="9fa6f9a2f460666845812254e3a9ffbc"><span>ca. 0,15 %</span></label><label><input type="radio" autocomplete="off" name="9fa6f9a2f460666845812254e3a9ffbc"><span>ca. 2,5 %</span></label><label><input type="radio" autocomplete="off" name="9fa6f9a2f460666845812254e3a9ffbc"><span>ca. 5 %</span></label><label><input type="radio" autocomplete="off" name="9fa6f9a2f460666845812254e3a9ffbc"><span>ca. 16 %</span></label>
+<div id="webex-b35405e7d43943a86dfdf3aad8fc19c6" class="webex-radiogroup" data-answer="OQMZBBwESQdIBG4=">
+<label><input type="radio" autocomplete="off" name="b35405e7d43943a86dfdf3aad8fc19c6"><span>ca. 34 %</span></label><label><input type="radio" autocomplete="off" name="b35405e7d43943a86dfdf3aad8fc19c6"><span>ca. 0,15 %</span></label><label><input type="radio" autocomplete="off" name="b35405e7d43943a86dfdf3aad8fc19c6"><span>ca. 2,5 %</span></label><label><input type="radio" autocomplete="off" name="b35405e7d43943a86dfdf3aad8fc19c6"><span>ca. 5 %</span></label><label><input type="radio" autocomplete="off" name="b35405e7d43943a86dfdf3aad8fc19c6"><span>ca. 16 %</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -833,8 +833,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie nutzen die Pfeife <code>|&gt;</code> um mehrere Befehle zu verketten. Was ist der entscheidende Vorteil dieser Schreibweise gegenüber verschachtelten Funktionen wie <code>f(g(h(x)))</code>? Betrachten Sie den Lesefluss und die Fehleranfälligkeit bei vielen Klammern.</p>
-<div id="webex-7b9c644be2238a2b5b7c0c66e0354955" class="webex-radiogroup" data-answer="bFIVUxoEGFNJAm8=">
-<label><input type="radio" autocomplete="off" name="7b9c644be2238a2b5b7c0c66e0354955"><span>Die Pfeife sorgt dafür, dass R den Code deutlich schneller berechnet.</span></label><label><input type="radio" autocomplete="off" name="7b9c644be2238a2b5b7c0c66e0354955"><span>Die Pfeife löscht automatisch alle <code>NA</code> Werte während der Transformation.</span></label><label><input type="radio" autocomplete="off" name="7b9c644be2238a2b5b7c0c66e0354955"><span>Mit der Pfeife können Funktionen kombiniert werden, die normalerweise nicht kompatibel sind.</span></label><label><input type="radio" autocomplete="off" name="7b9c644be2238a2b5b7c0c66e0354955"><span>Die Pfeife leitet das Ergebnis des vorherigen Schritts als erstes Argument in die nächste Funktion weiter.</span></label><label><input type="radio" autocomplete="off" name="7b9c644be2238a2b5b7c0c66e0354955"><span>Die Pfeife ersetzt die Notwendigkeit, Pakete mit <code><a href="https://rdrr.io/r/base/library.html">library()</a></code> zu laden.</span></label>
+<div id="webex-820b6ba3449d717ef4dcec2f874bc1ae" class="webex-radiogroup" data-answer="YwIcUhpSTQIYBGQ=">
+<label><input type="radio" autocomplete="off" name="820b6ba3449d717ef4dcec2f874bc1ae"><span>Die Pfeife sorgt dafür, dass R den Code deutlich schneller berechnet.</span></label><label><input type="radio" autocomplete="off" name="820b6ba3449d717ef4dcec2f874bc1ae"><span>Die Pfeife löscht automatisch alle <code>NA</code> Werte während der Transformation.</span></label><label><input type="radio" autocomplete="off" name="820b6ba3449d717ef4dcec2f874bc1ae"><span>Mit der Pfeife können Funktionen kombiniert werden, die normalerweise nicht kompatibel sind.</span></label><label><input type="radio" autocomplete="off" name="820b6ba3449d717ef4dcec2f874bc1ae"><span>Die Pfeife leitet das Ergebnis des vorherigen Schritts als erstes Argument in die nächste Funktion weiter.</span></label><label><input type="radio" autocomplete="off" name="820b6ba3449d717ef4dcec2f874bc1ae"><span>Die Pfeife ersetzt die Notwendigkeit, Pakete mit <code><a href="https://rdrr.io/r/base/library.html">library()</a></code> zu laden.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -851,8 +851,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ein Marktforscher möchte untersuchen, ob sich die Kaufbereitschaft (metrisch) zwischen drei Altersgruppen unterscheidet. Welches Diagramm ist laut der Nomenklatur für diesen „Unterschied“ bei einer quantitativen Variable am besten geeignet? Es geht um den effizienten Vergleich von Verteilungen.</p>
-<div id="webex-ea791d1bb919f6b5fd062228f7080ee3" class="webex-radiogroup" data-answer="PlEbCR1UHVJOCGw=">
-<label><input type="radio" autocomplete="off" name="ea791d1bb919f6b5fd062228f7080ee3"><span>Streudiagramm (Scatterplot)</span></label><label><input type="radio" autocomplete="off" name="ea791d1bb919f6b5fd062228f7080ee3"><span>Einfaches Balkendiagramm der Häufigkeiten</span></label><label><input type="radio" autocomplete="off" name="ea791d1bb919f6b5fd062228f7080ee3"><span>Histogramm für den gesamten Datensatz</span></label><label><input type="radio" autocomplete="off" name="ea791d1bb919f6b5fd062228f7080ee3"><span>Tortendiagramm</span></label><label><input type="radio" autocomplete="off" name="ea791d1bb919f6b5fd062228f7080ee3"><span>Boxplot</span></label>
+<div id="webex-37881518e8d22f23e459973a90d8b0ac" class="webex-radiogroup" data-answer="aAcUCB0FHQhJCTk=">
+<label><input type="radio" autocomplete="off" name="37881518e8d22f23e459973a90d8b0ac"><span>Streudiagramm (Scatterplot)</span></label><label><input type="radio" autocomplete="off" name="37881518e8d22f23e459973a90d8b0ac"><span>Einfaches Balkendiagramm der Häufigkeiten</span></label><label><input type="radio" autocomplete="off" name="37881518e8d22f23e459973a90d8b0ac"><span>Histogramm für den gesamten Datensatz</span></label><label><input type="radio" autocomplete="off" name="37881518e8d22f23e459973a90d8b0ac"><span>Tortendiagramm</span></label><label><input type="radio" autocomplete="off" name="37881518e8d22f23e459973a90d8b0ac"><span>Boxplot</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -869,8 +869,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Warum verbringen Datenwissenschaftler laut Harvard Business Review oft 80% ihrer Zeit mit Datenjudo?</p>
-<div id="webex-bf8db86e9d6bdd4e4ed11acdde0fc41b" class="webex-radiogroup" data-answer="OVcUVE4IGlUVVGs=">
-<label><input type="radio" autocomplete="off" name="bf8db86e9d6bdd4e4ed11acdde0fc41b"><span>Weil Rohdaten oft unordentlich sind, Tippfehler enthalten oder umgeformt werden müssen.</span></label><label><input type="radio" autocomplete="off" name="bf8db86e9d6bdd4e4ed11acdde0fc41b"><span>Weil die meisten Daten bereits im Tidy-Format vorliegen und geprüft werden müssen.</span></label><label><input type="radio" autocomplete="off" name="bf8db86e9d6bdd4e4ed11acdde0fc41b"><span>Weil die Visualisierung der Daten erst nach dem Erstellen der Modelle erlaubt ist.</span></label><label><input type="radio" autocomplete="off" name="bf8db86e9d6bdd4e4ed11acdde0fc41b"><span>Weil das Erlernen der R-Syntax 80% der Arbeitszeit beansprucht.</span></label><label><input type="radio" autocomplete="off" name="bf8db86e9d6bdd4e4ed11acdde0fc41b"><span>Weil die statistischen Modelle in R nur sehr langsam berechnet werden.</span></label>
+<div id="webex-21719e4137e9fd7e261700837f0a523e" class="webex-radiogroup" data-answer="aQAbARVVGAEfBzg=">
+<label><input type="radio" autocomplete="off" name="21719e4137e9fd7e261700837f0a523e"><span>Weil Rohdaten oft unordentlich sind, Tippfehler enthalten oder umgeformt werden müssen.</span></label><label><input type="radio" autocomplete="off" name="21719e4137e9fd7e261700837f0a523e"><span>Weil die meisten Daten bereits im Tidy-Format vorliegen und geprüft werden müssen.</span></label><label><input type="radio" autocomplete="off" name="21719e4137e9fd7e261700837f0a523e"><span>Weil die Visualisierung der Daten erst nach dem Erstellen der Modelle erlaubt ist.</span></label><label><input type="radio" autocomplete="off" name="21719e4137e9fd7e261700837f0a523e"><span>Weil das Erlernen der R-Syntax 80% der Arbeitszeit beansprucht.</span></label><label><input type="radio" autocomplete="off" name="21719e4137e9fd7e261700837f0a523e"><span>Weil die statistischen Modelle in R nur sehr langsam berechnet werden.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -887,8 +887,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Gegeben ist die Gleichung <span class="math inline">\(y_i = \beta_0 + \beta_1 \cdot x_i + \epsilon_i\)</span>. Ein Student hat laut Modell einen vorhergesagten Wert von 80 Punkten (<span class="math inline">\(\hat{y} = 80\)</span>). Tatsächlich hat er in der Klausur aber 85 Punkte erreicht (<span class="math inline">\(y = 85\)</span>). Wie groß ist das Residuum (<span class="math inline">\(\epsilon\)</span>) für diesen Studenten? Nutzen Sie die Formel für den Vorhersagefehler.</p>
-<div id="webex-81c39c47b210b96baae9c92ea6bd8ee3" class="webex-radiogroup" data-answer="YwFPAhVTGAdOAmw=">
-<label><input type="radio" autocomplete="off" name="81c39c47b210b96baae9c92ea6bd8ee3"><span>82,5</span></label><label><input type="radio" autocomplete="off" name="81c39c47b210b96baae9c92ea6bd8ee3"><span>5</span></label><label><input type="radio" autocomplete="off" name="81c39c47b210b96baae9c92ea6bd8ee3"><span>-5</span></label><label><input type="radio" autocomplete="off" name="81c39c47b210b96baae9c92ea6bd8ee3"><span>Das Residuum kann nicht berechnet werden, da <span class="math inline">\(\beta_0\)</span> fehlt.</span></label><label><input type="radio" autocomplete="off" name="81c39c47b210b96baae9c92ea6bd8ee3"><span>165</span></label>
+<div id="webex-63164a4839bea188c3446523fa7ca0c7" class="webex-radiogroup" data-answer="bQMdBxhRGAgfCT8=">
+<label><input type="radio" autocomplete="off" name="63164a4839bea188c3446523fa7ca0c7"><span>82,5</span></label><label><input type="radio" autocomplete="off" name="63164a4839bea188c3446523fa7ca0c7"><span>5</span></label><label><input type="radio" autocomplete="off" name="63164a4839bea188c3446523fa7ca0c7"><span>-5</span></label><label><input type="radio" autocomplete="off" name="63164a4839bea188c3446523fa7ca0c7"><span>Das Residuum kann nicht berechnet werden, da <span class="math inline">\(\beta_0\)</span> fehlt.</span></label><label><input type="radio" autocomplete="off" name="63164a4839bea188c3446523fa7ca0c7"><span>165</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -905,8 +905,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ein Datensatz weist einen sehr extremen Ausreißer auf. Welches Streuungsmaß ist in dieser Situation am ehesten zu empfehlen, um ein verzerrtes Bild zu vermeiden? Nutzen Sie das Konzept der Robustheit.</p>
-<div id="webex-efc15e03c8aefe7d6257bd0595212b74" class="webex-radiogroup" data-answer="PlZPARlVHAJPCDw=">
-<label><input type="radio" autocomplete="off" name="efc15e03c8aefe7d6257bd0595212b74"><span>Root Mean Squared Error (RMSE)</span></label><label><input type="radio" autocomplete="off" name="efc15e03c8aefe7d6257bd0595212b74"><span>Varianz</span></label><label><input type="radio" autocomplete="off" name="efc15e03c8aefe7d6257bd0595212b74"><span>Standardabweichung (SD)</span></label><label><input type="radio" autocomplete="off" name="efc15e03c8aefe7d6257bd0595212b74"><span>Interquartilsabstand (IQR)</span></label><label><input type="radio" autocomplete="off" name="efc15e03c8aefe7d6257bd0595212b74"><span>Spannweite (Range)</span></label>
+<div id="webex-5cc7ad08b5e027e10ee1663c84dfc87a" class="webex-radiogroup" data-answer="blNPB01UHAlOBTg=">
+<label><input type="radio" autocomplete="off" name="5cc7ad08b5e027e10ee1663c84dfc87a"><span>Root Mean Squared Error (RMSE)</span></label><label><input type="radio" autocomplete="off" name="5cc7ad08b5e027e10ee1663c84dfc87a"><span>Varianz</span></label><label><input type="radio" autocomplete="off" name="5cc7ad08b5e027e10ee1663c84dfc87a"><span>Standardabweichung (SD)</span></label><label><input type="radio" autocomplete="off" name="5cc7ad08b5e027e10ee1663c84dfc87a"><span>Interquartilsabstand (IQR)</span></label><label><input type="radio" autocomplete="off" name="5cc7ad08b5e027e10ee1663c84dfc87a"><span>Spannweite (Range)</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -923,8 +923,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Warum wird in der Statistik die Standardabweichung (SD) oft der Varianz vorgezogen, wenn es um die Beschreibung von Daten geht? Betrachten Sie die mathematische Transformation bei der Berechnung der SD. Überlegen Sie, was mit der Maßeinheit der Daten passiert.</p>
-<div id="webex-58faef7d0f71fdeb80a35dbdd8587e8b" class="webex-radiogroup" data-answer="bghKUElWG1QcVmo=">
-<label><input type="radio" autocomplete="off" name="58faef7d0f71fdeb80a35dbdd8587e8b"><span>R kann die Varianz technisch nicht direkt berechnen.</span></label><label><input type="radio" autocomplete="off" name="58faef7d0f71fdeb80a35dbdd8587e8b"><span>Die SD besitzt wieder die gleiche Größenordnung und Maßeinheit wie die Originaldaten.</span></label><label><input type="radio" autocomplete="off" name="58faef7d0f71fdeb80a35dbdd8587e8b"><span>Die Varianz kann niemals für normalverteilte Daten berechnet werden.</span></label><label><input type="radio" autocomplete="off" name="58faef7d0f71fdeb80a35dbdd8587e8b"><span>Die SD ist robuster gegenüber Ausreißern als die Varianz.</span></label><label><input type="radio" autocomplete="off" name="58faef7d0f71fdeb80a35dbdd8587e8b"><span>Die SD ist immer kleiner als der Mittelwert der Daten.</span></label>
+<div id="webex-b72a918a34ff5f21eb1d22c6979e3641" class="webex-radiogroup" data-answer="OQceUBUBFFEfBDs=">
+<label><input type="radio" autocomplete="off" name="b72a918a34ff5f21eb1d22c6979e3641"><span>R kann die Varianz technisch nicht direkt berechnen.</span></label><label><input type="radio" autocomplete="off" name="b72a918a34ff5f21eb1d22c6979e3641"><span>Die SD besitzt wieder die gleiche Größenordnung und Maßeinheit wie die Originaldaten.</span></label><label><input type="radio" autocomplete="off" name="b72a918a34ff5f21eb1d22c6979e3641"><span>Die Varianz kann niemals für normalverteilte Daten berechnet werden.</span></label><label><input type="radio" autocomplete="off" name="b72a918a34ff5f21eb1d22c6979e3641"><span>Die SD ist robuster gegenüber Ausreißern als die Varianz.</span></label><label><input type="radio" autocomplete="off" name="b72a918a34ff5f21eb1d22c6979e3641"><span>Die SD ist immer kleiner als der Mittelwert der Daten.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -941,8 +941,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ein Statistikkurs besteht aus fünf Personen mit den Noten 1, 2, 3, 4 und 5. Der Professor behauptet, der Mittelwert von 3 sei ein “Modell” für diese Daten. Welche mathematische Eigenschaft des Mittelwerts stützt diese Aussage am besten? Betrachten Sie die Summe der Abweichungen (Residuen) vom Mittelwert. Überlegen Sie, was passiert, wenn Sie alle <span class="math inline">\(e_i = y_i - \bar{x}\)</span> addieren.</p>
-<div id="webex-9d191b9defc5db8977364155226cd37d" class="webex-radiogroup" data-answer="YlQdCR1SFVRJVz4=">
-<label><input type="radio" autocomplete="off" name="9d191b9defc5db8977364155226cd37d"><span>Der Mittelwert teilt die Daten exakt in zwei Hälften mit gleich vielen Beobachtungen.</span></label><label><input type="radio" autocomplete="off" name="9d191b9defc5db8977364155226cd37d"><span>Der Mittelwert ist immer die Zahl, die am häufigsten im Datensatz vorkommt.</span></label><label><input type="radio" autocomplete="off" name="9d191b9defc5db8977364155226cd37d"><span>Der Mittelwert ist unempfindlich gegenüber extrem hohen Werten.</span></label><label><input type="radio" autocomplete="off" name="9d191b9defc5db8977364155226cd37d"><span>Die Summe der quadrierten Abweichungen wird durch den Mittelwert maximiert.</span></label><label><input type="radio" autocomplete="off" name="9d191b9defc5db8977364155226cd37d"><span>Die Summe aller Abweichungen vom Mittelwert ist exakt Null.</span></label>
+<div id="webex-fec1f4b2f71107d592bd9721f398b259" class="webex-radiogroup" data-answer="PVVPAUoETgJKBmw=">
+<label><input type="radio" autocomplete="off" name="fec1f4b2f71107d592bd9721f398b259"><span>Der Mittelwert teilt die Daten exakt in zwei Hälften mit gleich vielen Beobachtungen.</span></label><label><input type="radio" autocomplete="off" name="fec1f4b2f71107d592bd9721f398b259"><span>Der Mittelwert ist immer die Zahl, die am häufigsten im Datensatz vorkommt.</span></label><label><input type="radio" autocomplete="off" name="fec1f4b2f71107d592bd9721f398b259"><span>Der Mittelwert ist unempfindlich gegenüber extrem hohen Werten.</span></label><label><input type="radio" autocomplete="off" name="fec1f4b2f71107d592bd9721f398b259"><span>Die Summe der quadrierten Abweichungen wird durch den Mittelwert maximiert.</span></label><label><input type="radio" autocomplete="off" name="fec1f4b2f71107d592bd9721f398b259"><span>Die Summe aller Abweichungen vom Mittelwert ist exakt Null.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -959,8 +959,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ihr Datensatz enthält einige fehlende Werte (NAs) in den Spalten für Preis und Gewicht. Sie verwenden den Standardbefehl <code>cor(total_pr, weight)</code> in R. Warum erhalten Sie als Ergebnis wahrscheinlich nur ein frustrierendes <code>NA</code>? Überlegen Sie, wie R standardmäßig mit unvollständigen Datenpaaren umgeht.</p>
-<div id="webex-05a34ac5f1ed88ae9a26ae4a49dfce0e" class="webex-radiogroup" data-answer="awVNAhhRTwVKATg=">
-<label><input type="radio" autocomplete="off" name="05a34ac5f1ed88ae9a26ae4a49dfce0e"><span>Der Befehl cor() löscht bei NAs automatisch den gesamten Dataframe.</span></label><label><input type="radio" autocomplete="off" name="05a34ac5f1ed88ae9a26ae4a49dfce0e"><span>R gibt bei fehlenden Werten sicherheitshalber NA zurück, sofern nicht anders angewiesen.</span></label><label><input type="radio" autocomplete="off" name="05a34ac5f1ed88ae9a26ae4a49dfce0e"><span>NAs führen dazu, dass die Standardabweichung unendlich groß wird.</span></label><label><input type="radio" autocomplete="off" name="05a34ac5f1ed88ae9a26ae4a49dfce0e"><span>R erkennt NAs nur, wenn man zuvor das Paket ggplot2 geladen hat.</span></label><label><input type="radio" autocomplete="off" name="05a34ac5f1ed88ae9a26ae4a49dfce0e"><span>Korrelationen können mathematisch grundsätzlich nicht mit NAs berechnet werden.</span></label>
+<div id="webex-0b4817af737db67872a3bc3b9c662254" class="webex-radiogroup" data-answer="a1IYCR0HTVYbA2o=">
+<label><input type="radio" autocomplete="off" name="0b4817af737db67872a3bc3b9c662254"><span>Der Befehl cor() löscht bei NAs automatisch den gesamten Dataframe.</span></label><label><input type="radio" autocomplete="off" name="0b4817af737db67872a3bc3b9c662254"><span>R gibt bei fehlenden Werten sicherheitshalber NA zurück, sofern nicht anders angewiesen.</span></label><label><input type="radio" autocomplete="off" name="0b4817af737db67872a3bc3b9c662254"><span>NAs führen dazu, dass die Standardabweichung unendlich groß wird.</span></label><label><input type="radio" autocomplete="off" name="0b4817af737db67872a3bc3b9c662254"><span>R erkennt NAs nur, wenn man zuvor das Paket ggplot2 geladen hat.</span></label><label><input type="radio" autocomplete="off" name="0b4817af737db67872a3bc3b9c662254"><span>Korrelationen können mathematisch grundsätzlich nicht mit NAs berechnet werden.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -977,8 +977,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ein Analyst möchte einen Umsatzrückgang von 5 % als “dramatischen Absturz” darstellen. Welchen grafischen Trick wird er am wahrscheinlichsten anwenden? Manipulieren Sie die Wahrnehmung durch Achsenwahl.</p>
-<div id="webex-1ae3b1b1b1439dd9ed8e45657a1610b0" class="webex-radiogroup" data-answer="alBJA04BTgFOAWk=">
-<label><input type="radio" autocomplete="off" name="1ae3b1b1b1439dd9ed8e45657a1610b0"><span>Er schneidet die Y-Achse ab und lässt sie erst kurz unter dem Minimum der Daten beginnen.</span></label><label><input type="radio" autocomplete="off" name="1ae3b1b1b1439dd9ed8e45657a1610b0"><span>Er verwendet ein Dichtediagramm anstelle eines Liniendiagramms.</span></label><label><input type="radio" autocomplete="off" name="1ae3b1b1b1439dd9ed8e45657a1610b0"><span>Er nutzt einen Boxplot für die zeitliche Entwicklung.</span></label><label><input type="radio" autocomplete="off" name="1ae3b1b1b1439dd9ed8e45657a1610b0"><span>Er zentriert die Daten um den Mittelwert.</span></label><label><input type="radio" autocomplete="off" name="1ae3b1b1b1439dd9ed8e45657a1610b0"><span>Er stellt die Daten in der Okabe-Ito-Palette dar.</span></label>
+<div id="webex-7657d4ac489cbd40dcd48d52b095eead" class="webex-radiogroup" data-answer="bAcZB0gETVMYCGQ=">
+<label><input type="radio" autocomplete="off" name="7657d4ac489cbd40dcd48d52b095eead"><span>Er schneidet die Y-Achse ab und lässt sie erst kurz unter dem Minimum der Daten beginnen.</span></label><label><input type="radio" autocomplete="off" name="7657d4ac489cbd40dcd48d52b095eead"><span>Er verwendet ein Dichtediagramm anstelle eines Liniendiagramms.</span></label><label><input type="radio" autocomplete="off" name="7657d4ac489cbd40dcd48d52b095eead"><span>Er nutzt einen Boxplot für die zeitliche Entwicklung.</span></label><label><input type="radio" autocomplete="off" name="7657d4ac489cbd40dcd48d52b095eead"><span>Er zentriert die Daten um den Mittelwert.</span></label><label><input type="radio" autocomplete="off" name="7657d4ac489cbd40dcd48d52b095eead"><span>Er stellt die Daten in der Okabe-Ito-Palette dar.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -995,8 +995,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Die Korrelation r wird oft als „mittleres z-Produkt“ bezeichnet. Angenommen, in einem Datensatz haben alle Beobachtungen bei Variable X und Variable Y jeweils das gleiche Vorzeichen ihrer z-Werte. Das bedeutet: Wer bei X überdurchschnittlich ist, ist es auch bei Y, und wer unterdurchschnittlich ist, ist es in beiden. Welche Aussage über die Korrelation r trifft hier zu?</p>
-<div id="webex-986d74b201d9f5d08813b94348bb7398" class="webex-radiogroup" data-answer="YggaVBsFTgIcATk=">
-<label><input type="radio" autocomplete="off" name="986d74b201d9f5d08813b94348bb7398"><span>Die Korrelation r muss negativ sein.</span></label><label><input type="radio" autocomplete="off" name="986d74b201d9f5d08813b94348bb7398"><span>Die Korrelation r muss exakt +1,0 betragen.</span></label><label><input type="radio" autocomplete="off" name="986d74b201d9f5d08813b94348bb7398"><span>Die Korrelation r muss positiv sein.</span></label><label><input type="radio" autocomplete="off" name="986d74b201d9f5d08813b94348bb7398"><span>Die Korrelation r wird exakt Null betragen.</span></label><label><input type="radio" autocomplete="off" name="986d74b201d9f5d08813b94348bb7398"><span>Die Korrelation r kann in diesem Fall nicht berechnet werden.</span></label>
+<div id="webex-4840a1d120fa6225acf67b2d418c57ae" class="webex-radiogroup" data-answer="bwgYAE0ASAEeADs=">
+<label><input type="radio" autocomplete="off" name="4840a1d120fa6225acf67b2d418c57ae"><span>Die Korrelation r muss negativ sein.</span></label><label><input type="radio" autocomplete="off" name="4840a1d120fa6225acf67b2d418c57ae"><span>Die Korrelation r muss exakt +1,0 betragen.</span></label><label><input type="radio" autocomplete="off" name="4840a1d120fa6225acf67b2d418c57ae"><span>Die Korrelation r muss positiv sein.</span></label><label><input type="radio" autocomplete="off" name="4840a1d120fa6225acf67b2d418c57ae"><span>Die Korrelation r wird exakt Null betragen.</span></label><label><input type="radio" autocomplete="off" name="4840a1d120fa6225acf67b2d418c57ae"><span>Die Korrelation r kann in diesem Fall nicht berechnet werden.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1013,8 +1013,8 @@ window.Quarto = {
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Wofür steht die Abkürzung „NA“ in einem R-Vektor?</p>
-<div id="webex-a81986bb6652b4d922a77fe9bcdd8349" class="webex-radiogroup" data-answer="OgkdCRQGTlIaBmg=">
-<label><input type="radio" autocomplete="off" name="a81986bb6652b4d922a77fe9bcdd8349"><span>Not Available (nicht verfügbarer/fehlender Wert).</span></label><label><input type="radio" autocomplete="off" name="a81986bb6652b4d922a77fe9bcdd8349"><span>Next Argument (nächstes Argument in einer Funktion).</span></label><label><input type="radio" autocomplete="off" name="a81986bb6652b4d922a77fe9bcdd8349"><span>Numeric Array (ein spezieller Zahlentyp).</span></label><label><input type="radio" autocomplete="off" name="a81986bb6652b4d922a77fe9bcdd8349"><span>No Answer (eine falsche Eingabe des Nutzers).</span></label><label><input type="radio" autocomplete="off" name="a81986bb6652b4d922a77fe9bcdd8349"><span>New Assignment (eine neue Variablenzuweisung).</span></label>
+<div id="webex-a01814559af62547b3aa754dfcb7b662" class="webex-radiogroup" data-answer="OgEdCB0EGQUVUTs=">
+<label><input type="radio" autocomplete="off" name="a01814559af62547b3aa754dfcb7b662"><span>Not Available (nicht verfügbarer/fehlender Wert).</span></label><label><input type="radio" autocomplete="off" name="a01814559af62547b3aa754dfcb7b662"><span>Next Argument (nächstes Argument in einer Funktion).</span></label><label><input type="radio" autocomplete="off" name="a01814559af62547b3aa754dfcb7b662"><span>Numeric Array (ein spezieller Zahlentyp).</span></label><label><input type="radio" autocomplete="off" name="a01814559af62547b3aa754dfcb7b662"><span>No Answer (eine falsche Eingabe des Nutzers).</span></label><label><input type="radio" autocomplete="off" name="a01814559af62547b3aa754dfcb7b662"><span>New Assignment (eine neue Variablenzuweisung).</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1620,15 +1620,50 @@ window.onload = function() {
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
     if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-      const a = window.document.createElement('a');
-      a.classList.add('top-right');
-      a.classList.add('quarto-color-scheme-toggle');
-      a.href = "";
-      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const toggle = window.document.createElement('button');
+      toggle.type = "button";
+      toggle.setAttribute("role", "switch");
+      toggle.setAttribute("aria-checked", "false");
+      toggle.classList.add('top-right');
+      toggle.classList.add('quarto-color-scheme-toggle');
+      toggle.setAttribute("aria-label", "Dunkelmodus umschalten");
+      toggle.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
       const i = window.document.createElement("i");
       i.classList.add('bi');
-      a.appendChild(i);
-      window.document.body.appendChild(a);
+      toggle.appendChild(i);
+      // Put the toggle in a landmark of its own, so that landmark navigation
+      // can reach it.
+      //
+      // The container is always a fresh direct child of body, and the toggle is
+      // never moved into page furniture that the theme or the author controls.
+      // The toggle is positioned against the page, so any ancestor that
+      // establishes a containing block captures it: a positioned element or a
+      // grid for position: absolute, and transform, filter, will-change or
+      // contain for position: fixed. A direct child of body has none of these
+      // to inherit, and the shift when one appears is silent and visual.
+      //
+      // ARIA says a document should have at most one banner, and axe reports a
+      // duplicate whether or not the banners carry distinct labels. So use a
+      // header when the page has no banner yet, and a named region otherwise.
+      //
+      // A header is a banner wherever it sits, unless it is inside sectioning
+      // content, so this cannot just look at the children of body: a custom
+      // page layout wraps the title block header in a plain div. An explicit
+      // role="banner" always counts.
+      const sectioning = 'article, aside, main, nav, section, [role="article"], [role="complementary"], [role="main"], [role="navigation"], [role="region"]';
+      const hasBanner = Array.from(
+        window.document.querySelectorAll('header:not([role]), [role="banner"]')
+      ).some(function(el) {
+        return el.hasAttribute("role") || el.closest(sectioning) === null;
+      });
+      const container = window.document.createElement(hasBanner ? "div" : "header");
+      if (hasBanner) {
+        container.setAttribute("role", "region");
+        container.setAttribute("aria-label", "Dunkelmodus umschalten");
+      }
+      container.classList.add('quarto-color-scheme-toggle-container');
+      container.appendChild(toggle);
+      window.document.body.appendChild(container);
     }
     setColorSchemeToggle(hasAlternateSentinel())
     const icon = "";
@@ -1707,7 +1742,8 @@ window.onload = function() {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -1716,8 +1752,69 @@ window.onload = function() {
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -1731,6 +1828,7 @@ window.onload = function() {
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -1893,44 +1991,54 @@ window.onload = function() {
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -2028,7 +2136,9 @@ window.onload = function() {
       }
     }
   });
-  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+  </script><script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollbarer Code","output":"Scrollbare Ausgabe"};
+  </script><nav class="page-navigation" aria-label="Seite"><div class="nav-page nav-page-previous">
       <a href="./120-mariokart.html" class="pagination-link" aria-label="Data-Dictionary für Mariokart">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Data-Dictionary für Mariokart</span></span>
       </a>          

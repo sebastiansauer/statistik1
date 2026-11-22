@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
 <meta charset="UTF-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.11.9">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="keywords" content="Statistik, Prognose, Modellierung, R, Datenanalyse, Regression">
 <meta name="description" content="Einführung in die Statistik mit einem Schwerpunkt auf Prognose-Modellierung">
@@ -10,10 +10,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -90,18 +93,19 @@ div.csl-indent {
 <link href="./img/statistik1_icon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-447e42e69aaa9833c0ba1b986f430b20.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-a4c491303f69927a1321bd3546903061.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-2dc673c3628f6ea71864dee0e7890cee.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-a4c491303f69927a1321bd3546903061.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dbf57ad83c13ae4f422b554da963db29.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-94c3ff760a031db47e09d51bd2e9d7bf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-dbf57ad83c13ae4f422b554da963db29.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
@@ -132,7 +136,7 @@ div.csl-indent {
   }
 }</script><meta name="mermaid-theme" content="default">
 <script src="site_libs/quarto-diagram/mermaid.min.js"></script><script src="site_libs/quarto-diagram/mermaid-init.js"></script><link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+<script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -159,7 +163,7 @@ window.Quarto = {
 };
 </script><link rel="stylesheet" href="webex.css">
 </head>
-<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Zum Hauptinhalt springen</a><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -182,6 +186,7 @@ window.Quarto = {
       for (let i=0; i < toggles.length; i++) {
         const toggle = toggles[i];
         if (toggle) {
+          toggle.setAttribute("aria-checked", alternate ? "true" : "false");
           if (alternate) {
             toggle.classList.add("alternate");
           } else {
@@ -211,13 +216,19 @@ window.Quarto = {
       manageTransitions('#quarto-margin-sidebar .nav-link', true);
       // Switch the toggles
       setColorSchemeToggle(alternate)
-      // Hack to workaround the fact that safari doesn't
-      // properly recolor the scrollbar when toggling (#1455)
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455).
+    // Not run on load: stylesheets are set before first paint there, and
+    // scrolling would undo the scroll to a URL fragment (#14973).
+    // The one pixel nudge keeps the reader where they were.
+    const refreshSafariScrollbar = () => {
       if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
         manageTransitions("body", false);
-        window.scrollTo(0, 1);
+        const scrollY = window.scrollY;
+        window.scrollTo(0, scrollY > 0 ? scrollY - 1 : 1);
         setTimeout(() => {
-          window.scrollTo(0, 0);
+          window.scrollTo(0, scrollY);
           manageTransitions("body", true);
         }, 40);
       }
@@ -311,6 +322,7 @@ window.Quarto = {
       // Read the current dark / light value
       let toAlternate = !hasAlternateSentinel();
       toggleColorMode(toAlternate);
+      refreshSafariScrollbar();
       setStyleSentinel(toAlternate);
       toggleGiscusIfUsed(toAlternate, darkModeDefault);
       window.dispatchEvent(new Event('resize'));
@@ -324,12 +336,12 @@ window.Quarto = {
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" aria-label="Symbolleiste"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./010-rahmen.html">Vorbereiten</a></li><li class="breadcrumb-item"><a href="./010-rahmen.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rahmen</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="Pfad"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./010-rahmen.html">Vorbereiten</a></li><li class="breadcrumb-item"><a href="./010-rahmen.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rahmen</span></a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Suchen" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
@@ -337,14 +349,14 @@ window.Quarto = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Website"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
       <img src="./img/statistik1_icon.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none"><img src="./img/statistik1_icon.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none"></a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Statistik1</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/sebastiansauer/statistik1" title="Quellcode" class="quarto-navigation-tool px-1" aria-label="Quellcode"><i class="bi bi-github"></i></a>
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
+  <button type="button" role="switch" aria-checked="false" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten" aria-label="Dunkelmodus umschalten"><i class="bi"></i></button>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Lesemodus umschalten">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -374,13 +386,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Vorbereiten</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Vorbereiten</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-rahmen.html" class="sidebar-item-text sidebar-link active">
@@ -403,13 +412,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Grundlagen des Modellierens</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Grundlagen des Modellierens</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./040-verbildlichen.html" class="sidebar-item-text sidebar-link">
@@ -438,13 +444,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Geradenmodelle</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Geradenmodelle</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./080-regression1.html" class="sidebar-item-text sidebar-link">
@@ -467,13 +470,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Anhang</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Anhang</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./110-definitions.html" class="sidebar-item-text sidebar-link">
@@ -523,7 +523,7 @@ window.Quarto = {
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Inhaltsverzeichnis</h2>
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active"><h2 id="toc-title">Inhaltsverzeichnis</h2>
    
   <ul>
 <li>
@@ -589,7 +589,7 @@ window.Quarto = {
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/sebastiansauer/statistik1/issues/new" class="toc-action"><i class="bi bi-github"></i>Problem melden</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./010-rahmen.html">Vorbereiten</a></li><li class="breadcrumb-item"><a href="./010-rahmen.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rahmen</span></a></li></ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content" tabindex="-1"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Pfad"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./010-rahmen.html">Vorbereiten</a></li><li class="breadcrumb-item"><a href="./010-rahmen.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rahmen</span></a></li></ol></nav><div class="quarto-title">
 <h1 class="title">
 <span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rahmen</span>
 </h1>
@@ -661,6 +661,7 @@ Abbildung&nbsp;2.1: Datenanalyse als eine Abfolge am Fließband <span class="cit
 <div id="fig-erfolgsrezept" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-erfolgsrezept-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
+
 <pre class="mermaid mermaid-js" data-label="fig-erfolgsrezept">flowchart TD
   subgraph Lehrkraft
     F["🔥"]
@@ -762,7 +763,7 @@ Abbildung&nbsp;2.3: Daten zusammenfassen. (a) Zusammenfassen einer Variable zu e
 <div class="cell-output-display">
 <div id="fig-groesse" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-groesse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="010-rahmen_files/figure-html/fig-groesse-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Abbildung&nbsp;2.4: Wenig Variation in der Körpergröße bei den Basketballern. Alles lange Kerle. Viel Variation bei den Schachspielern: Manche sind klein, andere groß. Die vertikalen, vom Mittelwert (MW) abgehenden Balken zeigen die Abweichungen der jeweiligen Körpergröße zum Mittelwert. Hinweis: Die Y-Achse startet nicht bei Null."><img src="010-rahmen_files/figure-html/fig-groesse-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
+<a href="010-rahmen_files/figure-html/fig-groesse-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Abbildung&nbsp;2.4: Wenig Variation in der Körpergröße bei den Basketballern. Alles lange Kerle. Viel Variation bei den Schachspielern: Manche sind klein, andere groß. Die vertikalen, vom Mittelwert (MW) abgehenden Balken zeigen die Abweichungen der jeweiligen Körpergröße zum Mittelwert. Hinweis: Die Y-Achse startet nicht bei Null."><img src="010-rahmen_files/figure-html/fig-groesse-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-groesse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;2.4: Wenig Variation in der Körpergröße bei den Basketballern. Alles lange Kerle. Viel Variation bei den Schachspielern: Manche sind klein, andere groß. Die vertikalen, vom Mittelwert (MW) abgehenden Balken zeigen die Abweichungen der jeweiligen Körpergröße zum Mittelwert. Hinweis: Die Y-Achse startet nicht bei Null.
@@ -786,7 +787,7 @@ Abbildung&nbsp;2.4: Wenig Variation in der Körpergröße bei den Basketballern.
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-ungewiss-anna-berta" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-ungewiss-anna-berta-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-ungewiss-anna-berta-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="010-rahmen_files/figure-html/fig-ungewiss-anna-berta-1.png" class="lightbox" data-gallery="fig-ungewiss-anna-berta" title="Abbildung&nbsp;2.5&nbsp;(a): Was Anna denkt"><img src="010-rahmen_files/figure-html/fig-ungewiss-anna-berta-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-ungewiss-anna-berta"></a>
+<a href="010-rahmen_files/figure-html/fig-ungewiss-anna-berta-1.png" class="lightbox" data-gallery="fig-ungewiss-anna-berta" title="Abbildung&nbsp;2.5&nbsp;(a): Was Anna denkt"><img src="010-rahmen_files/figure-html/fig-ungewiss-anna-berta-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-ungewiss-anna-berta"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ungewiss-anna-berta-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Was Anna denkt
@@ -796,7 +797,7 @@ Abbildung&nbsp;2.4: Wenig Variation in der Körpergröße bei den Basketballern.
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-ungewiss-anna-berta" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-ungewiss-anna-berta-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-ungewiss-anna-berta-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="010-rahmen_files/figure-html/fig-ungewiss-anna-berta-2.png" class="lightbox" data-gallery="fig-ungewiss-anna-berta" title="Abbildung&nbsp;2.5&nbsp;(b): Was Berta denkt"><img src="010-rahmen_files/figure-html/fig-ungewiss-anna-berta-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-ungewiss-anna-berta"></a>
+<a href="010-rahmen_files/figure-html/fig-ungewiss-anna-berta-2.png" class="lightbox" data-gallery="fig-ungewiss-anna-berta" title="Abbildung&nbsp;2.5&nbsp;(b): Was Berta denkt"><img src="010-rahmen_files/figure-html/fig-ungewiss-anna-berta-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-ungewiss-anna-berta"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ungewiss-anna-berta-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Was Berta denkt
@@ -822,6 +823,7 @@ Abbildung&nbsp;2.5: Die Ungewissheit, die wir Ereignissen zuschreiben, kann vari
 <div id="fig-ziele" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-ziele-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
+
 <pre class="mermaid mermaid-js" data-label="fig-ziele">graph TD
   subgraph Ziele
     A[beschreiben]
@@ -861,6 +863,7 @@ Abbildung&nbsp;2.6: Zielarten einer Datenanalyse
 <div id="fig-fo-struktur" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-fo-struktur-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
+
 <pre class="mermaid mermaid-js" data-label="fig-fo-struktur">graph LR
     I[Input bzw. X] --&gt; O[Output bzw. Y]
 </pre>
@@ -934,6 +937,7 @@ Abbildung&nbsp;2.8: Handy in Sichtweite verringert die kognitiven Ressourcen, <s
 <div id="fig-ppdac" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-ppdac-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
+
 <pre class="mermaid mermaid-js" data-label="fig-ppdac">graph LR
     Problem --&gt; Plan --&gt; Data --&gt; Analysis --&gt; Conclusions --&gt; Problem
 </pre>
@@ -951,6 +955,7 @@ Abbildung&nbsp;2.9: Datenanalyse als Prozess: Das PPDAC-Modell
 <div id="fig-sieben-schritte" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-sieben-schritte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
+
 <pre class="mermaid mermaid-js" data-label="fig-sieben-schritte">flowchart LR
   subgraph R[Rahmen]
     direction LR
@@ -1330,6 +1335,7 @@ Wichtig
 <div id="fig-ueberblick-fragen" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-ueberblick-fragen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
+
 <pre class="mermaid mermaid-js" data-label="fig-ueberblick-fragen">graph LR
     X["Lernen&lt;br&gt;(UV, X, Prädiktor)"] --&gt; Y["gute Note&lt;br&gt;(AV, Y, Kriterium)"]
 </pre>
@@ -1355,6 +1361,7 @@ Abbildung&nbsp;2.16: X und Y als synonyme Bezeichnungen für Input- und Output-V
 <div id="fig-skalenniveau" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-skalenniveau-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
+
 <pre class="mermaid mermaid-js" data-label="fig-skalenniveau">graph TD
     Variablen --&gt; qualitativ
     Variablen --&gt; quantitativ
@@ -1479,15 +1486,15 @@ Tabelle&nbsp;2.6: Erlaubte Rechenoperationen nach Skalenniveau
 <p><em>Ordinalskala</em>: Diese Skala stellt einer Rangordnung dar. Eine Rangordnung ist etwa die geordnete Abfolge Ihrer Leibgerichte (1. Pizza, 2. Spagetthi, 3. Schnitzel). Etwas “formaler” ausgedrückt, z.<span class="math inline">\(\,\)</span>B.:</p>
 <p>🍕 <span class="math inline">\(\succ\)</span> 🍝 <span class="math inline">\(\succ\)</span> 🥩</p>
 <p>Das komische Zeichen <span class="math inline">\(\succ\)</span> soll heißen: “Ist auf meiner Liste von Leibgerichten weiter oben, mag ich lieber”. Man kann aber <em>nicht</em> sagen, “Ich mag aber Pizza um 42<span class="math inline">\(\,\)</span>% mehr als die Spaghetti und die um 73<span class="math inline">\(\,\)</span>% mehr als ein Schnitzel!” Zumindest kann man das nicht ohne weitere Informationen und Annahmen. Es gibt also Dinge auf der Welt, die man leicht in eine Rangordnung bringen kann, aber die man nur schwer in der Größe der Unterschiede bemessen kann. Das ist die Ordinalskala. Die Ordinalskala erlaubt also, Objekte zu ordnen (hinsichtlich eines Merkmals). Die Abstände zwischen den Objekten können dabei nicht quantifiziert werden.</p>
-<p><em>Intervallskala</em>: Das ist vielleicht eine Überraschung für Sie: Wenn die Temperatur heute bei 10<span class="math inline">\(\,\)</span>°C liegt und morgen 5<span class="math inline">\(\,\)</span>°C – dann ist es heute <em>nicht</em> doppelt so warm wie morgen. Ja, 10 ist das Doppelte von 5. Aber <em>10<span class="math inline">\(\,\)</span>°C</em> ist <em>nicht</em> doppelt so warm wie 20<span class="math inline">\(\,\)</span>°C. Wenn Sie das verwundert: Das ist normal, so geht es vielen Leuten, wenn sie das zum ersten Mal hören. Der Grund, warum es nicht sinnvoll (“erlaubt”) ist, Verhältnisse (wie doppelt/halb so viel etc.) auf der Celsius-Skala zu bilden, ist, dass der Nullpunkt der Skala, 0<span class="math inline">\(\,\)</span>°C, kein echter, physikalischer Nullpunkt ist. Bei 0<span class="math inline">\(\,\)</span>°C liegt eben nicht Null Wärmeenergie vor. Stattdessen wurde mit 0<span class="math inline">\(\,\)</span>°C eine Wärmenergiemenge gewählt, die für uns Menschen praktisch, da augenfällig ist: der Gefrierpunkt von Wasser. Was bei der Intervallskala erlaubt ist, ist das Addieren (und Subtrahieren): heute 10<span class="math inline">\(\,\)</span>°C, morgen 5<span class="math inline">\(\,\)</span>°C, das ist ein Unterschied von 5<span class="math inline">\(\,\)</span>°C. Oder: Im Schnitt waren es 7,5<span class="math inline">\(\,\)</span>°C, das ist genau in der Mitte von 5 und 10<span class="math inline">\(\,\)</span>°C. <a href="#fig-intervall" class="quarto-xref">Abbildung&nbsp;<span>2.18</span></a> versinnbildlicht die Intervallskala.</p>
+<p><em>Intervallskala</em>: Das ist vielleicht eine Überraschung für Sie: Wenn die Temperatur heute bei 10<span class="math inline">\(\,\)</span>°C liegt und morgen 5<span class="math inline">\(\,\)</span>°C – dann ist es heute <em>nicht</em> doppelt so warm wie morgen. Ja, 10 ist das Doppelte von 5. Aber <em>10<span class="math inline">\(\,\)</span>°C</em> ist <em>nicht</em> doppelt so warm wie 5<span class="math inline">\(\,\)</span>°C. Wenn Sie das verwundert: Das ist normal, so geht es vielen Leuten, wenn sie das zum ersten Mal hören. Der Grund, warum es nicht sinnvoll (“erlaubt”) ist, Verhältnisse (wie doppelt/halb so viel etc.) auf der Celsius-Skala zu bilden, ist, dass der Nullpunkt der Skala, 0<span class="math inline">\(\,\)</span>°C, kein echter, physikalischer Nullpunkt ist. Bei 0<span class="math inline">\(\,\)</span>°C liegt eben nicht Null Wärmeenergie vor. Stattdessen wurde mit 0<span class="math inline">\(\,\)</span>°C eine Wärmenergiemenge gewählt, die für uns Menschen praktisch, da augenfällig ist: der Gefrierpunkt von Wasser. Was bei der Intervallskala erlaubt ist, ist das Addieren (und Subtrahieren): heute 10<span class="math inline">\(\,\)</span>°C, morgen 5<span class="math inline">\(\,\)</span>°C, das ist ein Unterschied von 5<span class="math inline">\(\,\)</span>°C. Oder: Im Schnitt waren es 7,5<span class="math inline">\(\,\)</span>°C, das ist genau in der Mitte von 5 und 10<span class="math inline">\(\,\)</span>°C. <a href="#fig-intervall" class="quarto-xref">Abbildung&nbsp;<span>2.18</span></a> versinnbildlicht die Intervallskala.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-intervall" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-intervall-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="010-rahmen_files/figure-html/fig-intervall-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14" title="Abbildung&nbsp;2.18: Ein Metermaß steckt im trüben Wasser. Auf dem Metermaß können wir die aufgedruckten Zahlen ablesen. Aber wir wissen nicht, ob der Metermaß auf dem Boden steht. Wir wissen demnach nicht, ob der vom Metermaß angegebene Nullpunkt der wahre Nullpunkt (Meeresboden) ist."><img src="010-rahmen_files/figure-html/fig-intervall-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></a>
+<a href="010-rahmen_files/figure-html/fig-intervall-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14" title="Abbildung&nbsp;2.18: Ein Metermaß steckt im trüben Wasser. Abstände können wir ablesen (von 10 bis 30 sind es 20 cm), aber wo der wahre Nullpunkt liegt, sehen wir nicht. So ist es bei der Intervallskala: Differenzen sind sinnvoll, Verhältnisse nicht."><img src="010-rahmen_files/figure-html/fig-intervall-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-intervall-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;2.18: Ein Metermaß steckt im trüben Wasser. Auf dem Metermaß können wir die aufgedruckten Zahlen ablesen. Aber wir wissen nicht, ob der Metermaß auf dem Boden steht. Wir wissen demnach nicht, ob der vom Metermaß angegebene Nullpunkt der wahre Nullpunkt (Meeresboden) ist.
+Abbildung&nbsp;2.18: Ein Metermaß steckt im trüben Wasser. Abstände können wir ablesen (von 10 bis 30 sind es 20 cm), aber wo der wahre Nullpunkt liegt, sehen wir nicht. So ist es bei der Intervallskala: Differenzen sind sinnvoll, Verhältnisse nicht.
 </figcaption></figure>
 </div>
 </div>
@@ -1642,8 +1649,8 @@ Abbildung&nbsp;2.19: Matchbox-Autos sind Modelle für Autos, <span class="citati
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Was sind laut Definition die drei zentralen Bestimmungsstücke der Statistik?</p>
-<div id="webex-dc6e9e9f46f003f45e34692ccfe50ae5" class="webex-radiogroup" data-answer="P1MaVRVUFVYYBjs=">
-<label><input type="radio" autocomplete="off" name="dc6e9e9f46f003f45e34692ccfe50ae5"><span>Visualisieren, Modellieren und Programmieren in R.</span></label><label><input type="radio" autocomplete="off" name="dc6e9e9f46f003f45e34692ccfe50ae5"><span>Sammeln, Sortieren und Archivieren von Informationen.</span></label><label><input type="radio" autocomplete="off" name="dc6e9e9f46f003f45e34692ccfe50ae5"><span>Daten zusammenfassen, Unterschiedlichkeit quantifizieren und Ungewissheit beschreiben.</span></label><label><input type="radio" autocomplete="off" name="dc6e9e9f46f003f45e34692ccfe50ae5"><span>Hypothesen prüfen, Signifikanz berechnen und Berichte schreiben.</span></label><label><input type="radio" autocomplete="off" name="dc6e9e9f46f003f45e34692ccfe50ae5"><span>Stichproben ziehen, Fragebögen entwerfen und Datenbanken verwalten.</span></label>
+<div id="webex-b5c17bce9adedae75a802872b612f5a3" class="webex-radiogroup" data-answer="OQVPARtTT1UVUTk=">
+<label><input type="radio" autocomplete="off" name="b5c17bce9adedae75a802872b612f5a3"><span>Visualisieren, Modellieren und Programmieren in R.</span></label><label><input type="radio" autocomplete="off" name="b5c17bce9adedae75a802872b612f5a3"><span>Sammeln, Sortieren und Archivieren von Informationen.</span></label><label><input type="radio" autocomplete="off" name="b5c17bce9adedae75a802872b612f5a3"><span>Daten zusammenfassen, Unterschiedlichkeit quantifizieren und Ungewissheit beschreiben.</span></label><label><input type="radio" autocomplete="off" name="b5c17bce9adedae75a802872b612f5a3"><span>Hypothesen prüfen, Signifikanz berechnen und Berichte schreiben.</span></label><label><input type="radio" autocomplete="off" name="b5c17bce9adedae75a802872b612f5a3"><span>Stichproben ziehen, Fragebögen entwerfen und Datenbanken verwalten.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1660,8 +1667,8 @@ Abbildung&nbsp;2.19: Matchbox-Autos sind Modelle für Autos, <span class="citati
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Was ist der primäre Nutzen von Modellen in der Statistik?</p>
-<div id="webex-bb2c34d47deb4440dc45c547b0fb592a" class="webex-radiogroup" data-answer="OVIeUx8FSAQbVDg=">
-<label><input type="radio" autocomplete="off" name="bb2c34d47deb4440dc45c547b0fb592a"><span>Modelle ersetzen die Notwendigkeit, überhaupt Daten zu erheben.</span></label><label><input type="radio" autocomplete="off" name="bb2c34d47deb4440dc45c547b0fb592a"><span>Modelle verhindern, dass man sich mit der Variabilität von Daten beschäftigen muss.</span></label><label><input type="radio" autocomplete="off" name="bb2c34d47deb4440dc45c547b0fb592a"><span>Modelle ermöglichen Verständnis durch Vereinfachung komplexer Sachverhalte.</span></label><label><input type="radio" autocomplete="off" name="bb2c34d47deb4440dc45c547b0fb592a"><span>Modelle dienen nur der Dekoration von wissenschaftlichen Berichten.</span></label><label><input type="radio" autocomplete="off" name="bb2c34d47deb4440dc45c547b0fb592a"><span>Modelle bilden die Realität zu 100 % exakt und ohne Informationsverlust ab.</span></label>
+<div id="webex-c124a9bf70680e08e196f1c7fb715af9" class="webex-radiogroup" data-answer="OAEeBE0ITlYbAGs=">
+<label><input type="radio" autocomplete="off" name="c124a9bf70680e08e196f1c7fb715af9"><span>Modelle ersetzen die Notwendigkeit, überhaupt Daten zu erheben.</span></label><label><input type="radio" autocomplete="off" name="c124a9bf70680e08e196f1c7fb715af9"><span>Modelle verhindern, dass man sich mit der Variabilität von Daten beschäftigen muss.</span></label><label><input type="radio" autocomplete="off" name="c124a9bf70680e08e196f1c7fb715af9"><span>Modelle ermöglichen Verständnis durch Vereinfachung komplexer Sachverhalte.</span></label><label><input type="radio" autocomplete="off" name="c124a9bf70680e08e196f1c7fb715af9"><span>Modelle dienen nur der Dekoration von wissenschaftlichen Berichten.</span></label><label><input type="radio" autocomplete="off" name="c124a9bf70680e08e196f1c7fb715af9"><span>Modelle bilden die Realität zu 100 % exakt und ohne Informationsverlust ab.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1678,8 +1685,8 @@ Abbildung&nbsp;2.19: Matchbox-Autos sind Modelle für Autos, <span class="citati
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Wofür stehen die Buchstaben im PPDAC-Modell des Datenanalyse-Prozesses?</p>
-<div id="webex-fb91803cbeea908f7d62d70d588109d7" class="webex-radiogroup" data-answer="PVMVARQAH1NOVTg=">
-<label><input type="radio" autocomplete="off" name="fb91803cbeea908f7d62d70d588109d7"><span>Problem, Plan, Data, Analysis, Conclusions.</span></label><label><input type="radio" autocomplete="off" name="fb91803cbeea908f7d62d70d588109d7"><span>Program, Plan, Digital, Analysis, Code.</span></label><label><input type="radio" autocomplete="off" name="fb91803cbeea908f7d62d70d588109d7"><span>Power, Point, Data, Area, Center.</span></label><label><input type="radio" autocomplete="off" name="fb91803cbeea908f7d62d70d588109d7"><span>Plan, Produce, Deliver, Act, Control.</span></label><label><input type="radio" autocomplete="off" name="fb91803cbeea908f7d62d70d588109d7"><span>Percent, Probability, Distribution, Average, Correlation.</span></label>
+<div id="webex-49286f6616da7410800e9299be0d1f14" class="webex-radiogroup" data-answer="bwgeCBpWGgYdBjk=">
+<label><input type="radio" autocomplete="off" name="49286f6616da7410800e9299be0d1f14"><span>Problem, Plan, Data, Analysis, Conclusions.</span></label><label><input type="radio" autocomplete="off" name="49286f6616da7410800e9299be0d1f14"><span>Program, Plan, Digital, Analysis, Code.</span></label><label><input type="radio" autocomplete="off" name="49286f6616da7410800e9299be0d1f14"><span>Power, Point, Data, Area, Center.</span></label><label><input type="radio" autocomplete="off" name="49286f6616da7410800e9299be0d1f14"><span>Plan, Produce, Deliver, Act, Control.</span></label><label><input type="radio" autocomplete="off" name="49286f6616da7410800e9299be0d1f14"><span>Percent, Probability, Distribution, Average, Correlation.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1696,8 +1703,8 @@ Abbildung&nbsp;2.19: Matchbox-Autos sind Modelle für Autos, <span class="citati
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Wie ist ein „Residuum“ (Abweichung) formal definiert [3, 4]?</p>
-<div id="webex-f655e529f5769cc177160e4075d7ea04" class="webex-radiogroup" data-answer="PQYZBEkFHglKBWo=">
-<label><input type="radio" autocomplete="off" name="f655e529f5769cc177160e4075d7ea04"><span>Als Produkt aus der Merkmalsausprägung und der Stichprobengröße.</span></label><label><input type="radio" autocomplete="off" name="f655e529f5769cc177160e4075d7ea04"><span>Als Differenz vom beobachteten Wert <span class="math inline">\(y_i\)</span> und einem Modellwert (z. B. Mittelwert <span class="math inline">\(\bar{x}\)</span>).</span></label><label><input type="radio" autocomplete="off" name="f655e529f5769cc177160e4075d7ea04"><span>Als Summe aller Messwerte geteilt durch die Anzahl der Beobachtungen.</span></label><label><input type="radio" autocomplete="off" name="f655e529f5769cc177160e4075d7ea04"><span>Als Verhältnis zwischen der UV und der AV in einer Forschungsfrage.</span></label><label><input type="radio" autocomplete="off" name="f655e529f5769cc177160e4075d7ea04"><span>Als Quadratwurzel der Variabilität innerhalb einer Gruppe.</span></label>
+<div id="webex-e3b1b2a06782cc4bbe04bfa21a9072fe" class="webex-radiogroup" data-answer="PgNOAE4CTQAaB2U=">
+<label><input type="radio" autocomplete="off" name="e3b1b2a06782cc4bbe04bfa21a9072fe"><span>Als Produkt aus der Merkmalsausprägung und der Stichprobengröße.</span></label><label><input type="radio" autocomplete="off" name="e3b1b2a06782cc4bbe04bfa21a9072fe"><span>Als Differenz vom beobachteten Wert <span class="math inline">\(y_i\)</span> und einem Modellwert (z. B. Mittelwert <span class="math inline">\(\bar{x}\)</span>).</span></label><label><input type="radio" autocomplete="off" name="e3b1b2a06782cc4bbe04bfa21a9072fe"><span>Als Summe aller Messwerte geteilt durch die Anzahl der Beobachtungen.</span></label><label><input type="radio" autocomplete="off" name="e3b1b2a06782cc4bbe04bfa21a9072fe"><span>Als Verhältnis zwischen der UV und der AV in einer Forschungsfrage.</span></label><label><input type="radio" autocomplete="off" name="e3b1b2a06782cc4bbe04bfa21a9072fe"><span>Als Quadratwurzel der Variabilität innerhalb einer Gruppe.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1714,8 +1721,8 @@ Abbildung&nbsp;2.19: Matchbox-Autos sind Modelle für Autos, <span class="citati
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Warum ist die Temperatur in Celsius nur „intervallskaliert“ und nicht verhältnisskaliert?</p>
-<div id="webex-de10c1bc9ce08c588f718a2584d2640b" class="webex-radiogroup" data-answer="P1QdAE8BTlMVUzg=">
-<label><input type="radio" autocomplete="off" name="de10c1bc9ce08c588f718a2584d2640b"><span>Weil 0 °C kein echter physikalischer Nullpunkt (Abwesenheit von Wärme) ist.</span></label><label><input type="radio" autocomplete="off" name="de10c1bc9ce08c588f718a2584d2640b"><span>Weil die Abstände zwischen 10 °C und 20 °C nicht messbar sind.</span></label><label><input type="radio" autocomplete="off" name="de10c1bc9ce08c588f718a2584d2640b"><span>Weil Celsius eine rein qualitative Beschreibung des Wetters darstellt.</span></label><label><input type="radio" autocomplete="off" name="de10c1bc9ce08c588f718a2584d2640b"><span>Weil es keine negativen Werte in der Statistik geben darf.</span></label><label><input type="radio" autocomplete="off" name="de10c1bc9ce08c588f718a2584d2640b"><span>Weil man Temperaturen nicht addieren darf.</span></label>
+<div id="webex-c41f8388ec9be9da525d2ffac729b460" class="webex-radiogroup" data-answer="OAUdVhQDFAhJU2Q=">
+<label><input type="radio" autocomplete="off" name="c41f8388ec9be9da525d2ffac729b460"><span>Weil 0 °C kein echter physikalischer Nullpunkt (Abwesenheit von Wärme) ist.</span></label><label><input type="radio" autocomplete="off" name="c41f8388ec9be9da525d2ffac729b460"><span>Weil die Abstände zwischen 10 °C und 20 °C nicht messbar sind.</span></label><label><input type="radio" autocomplete="off" name="c41f8388ec9be9da525d2ffac729b460"><span>Weil Celsius eine rein qualitative Beschreibung des Wetters darstellt.</span></label><label><input type="radio" autocomplete="off" name="c41f8388ec9be9da525d2ffac729b460"><span>Weil es keine negativen Werte in der Statistik geben darf.</span></label><label><input type="radio" autocomplete="off" name="c41f8388ec9be9da525d2ffac729b460"><span>Weil man Temperaturen nicht addieren darf.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1732,8 +1739,8 @@ Abbildung&nbsp;2.19: Matchbox-Autos sind Modelle für Autos, <span class="citati
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Was charakterisiert das „Ordinalniveau“ einer Variablen?</p>
-<div id="webex-0923f490eb8feecefd3f1d1c577c7ffd" class="webex-radiogroup" data-answer="awkeAkoEFQBJUmU=">
-<label><input type="radio" autocomplete="off" name="0923f490eb8feecefd3f1d1c577c7ffd"><span>Es handelt sich immer um eine stetige quantitative Variable.</span></label><label><input type="radio" autocomplete="off" name="0923f490eb8feecefd3f1d1c577c7ffd"><span>Es erlaubt eine Rangordnung, aber die Abstände zwischen den Objekten sind nicht quantifizierbar.</span></label><label><input type="radio" autocomplete="off" name="0923f490eb8feecefd3f1d1c577c7ffd"><span>Es besitzt einen natürlichen Nullpunkt, an dem das Merkmal nicht mehr existiert.</span></label><label><input type="radio" autocomplete="off" name="0923f490eb8feecefd3f1d1c577c7ffd"><span>Alle Grundrechenarten (Addition, Multiplikation) sind uneingeschränkt sinnvoll anwendbar.</span></label><label><input type="radio" autocomplete="off" name="0923f490eb8feecefd3f1d1c577c7ffd"><span>Man kann lediglich feststellen, ob zwei Werte gleich oder ungleich sind.</span></label>
+<div id="webex-3289806a5ddfd262f0f4b8c1394260e1" class="webex-radiogroup" data-answer="aAIUCBQAGlEZVDk=">
+<label><input type="radio" autocomplete="off" name="3289806a5ddfd262f0f4b8c1394260e1"><span>Es handelt sich immer um eine stetige quantitative Variable.</span></label><label><input type="radio" autocomplete="off" name="3289806a5ddfd262f0f4b8c1394260e1"><span>Es erlaubt eine Rangordnung, aber die Abstände zwischen den Objekten sind nicht quantifizierbar.</span></label><label><input type="radio" autocomplete="off" name="3289806a5ddfd262f0f4b8c1394260e1"><span>Es besitzt einen natürlichen Nullpunkt, an dem das Merkmal nicht mehr existiert.</span></label><label><input type="radio" autocomplete="off" name="3289806a5ddfd262f0f4b8c1394260e1"><span>Alle Grundrechenarten (Addition, Multiplikation) sind uneingeschränkt sinnvoll anwendbar.</span></label><label><input type="radio" autocomplete="off" name="3289806a5ddfd262f0f4b8c1394260e1"><span>Man kann lediglich feststellen, ob zwei Werte gleich oder ungleich sind.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1750,8 +1757,8 @@ Abbildung&nbsp;2.19: Matchbox-Autos sind Modelle für Autos, <span class="citati
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Welchen Effekt hat eine größere Stichprobengröße (<span class="math inline">\(n\)</span>) auf die Schätzgenauigkeit?</p>
-<div id="webex-c5194cb473a7dc6ac8ec5d102dc505eb" class="webex-radiogroup" data-answer="OAUdCRhTTgQbAjw=">
-<label><input type="radio" autocomplete="off" name="c5194cb473a7dc6ac8ec5d102dc505eb"><span>Die Ungenauigkeit der Schätzung nimmt zu.</span></label><label><input type="radio" autocomplete="off" name="c5194cb473a7dc6ac8ec5d102dc505eb"><span>Die Variation der Einzelwerte in der Stichprobe verschwindet komplett.</span></label><label><input type="radio" autocomplete="off" name="c5194cb473a7dc6ac8ec5d102dc505eb"><span>Kleine Stichproben sind immer repräsentativer als große Stichproben.</span></label><label><input type="radio" autocomplete="off" name="c5194cb473a7dc6ac8ec5d102dc505eb"><span>Die Schätzgenauigkeit bleibt unverändert, nur die Rechenzeit steigt.</span></label><label><input type="radio" autocomplete="off" name="c5194cb473a7dc6ac8ec5d102dc505eb"><span>Größere Stichproben führen zu genaueren Ergebnissen (weniger Variation um den Mittelwert).</span></label>
+<div id="webex-c6129aabd29fd9c75bf57ee32237bd88" class="webex-radiogroup" data-answer="OAYdAhVRTVJIA2Q=">
+<label><input type="radio" autocomplete="off" name="c6129aabd29fd9c75bf57ee32237bd88"><span>Die Ungenauigkeit der Schätzung nimmt zu.</span></label><label><input type="radio" autocomplete="off" name="c6129aabd29fd9c75bf57ee32237bd88"><span>Die Variation der Einzelwerte in der Stichprobe verschwindet komplett.</span></label><label><input type="radio" autocomplete="off" name="c6129aabd29fd9c75bf57ee32237bd88"><span>Kleine Stichproben sind immer repräsentativer als große Stichproben.</span></label><label><input type="radio" autocomplete="off" name="c6129aabd29fd9c75bf57ee32237bd88"><span>Die Schätzgenauigkeit bleibt unverändert, nur die Rechenzeit steigt.</span></label><label><input type="radio" autocomplete="off" name="c6129aabd29fd9c75bf57ee32237bd88"><span>Größere Stichproben führen zu genaueren Ergebnissen (weniger Variation um den Mittelwert).</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1768,8 +1775,8 @@ Abbildung&nbsp;2.19: Matchbox-Autos sind Modelle für Autos, <span class="citati
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Welche Bedingung muss für das „Tidy-Format“ von Daten erfüllt sein?</p>
-<div id="webex-51fe1f46aae53a45228a8ff43e9d784f" class="webex-radiogroup" data-answer="bgFKVR1WGAdNUTg=">
-<label><input type="radio" autocomplete="off" name="51fe1f46aae53a45228a8ff43e9d784f"><span>Die Daten müssen alphabetisch nach den Namen der Probanden sortiert sein.</span></label><label><input type="radio" autocomplete="off" name="51fe1f46aae53a45228a8ff43e9d784f"><span>Jede Zelle darf nur numerische Werte enthalten.</span></label><label><input type="radio" autocomplete="off" name="51fe1f46aae53a45228a8ff43e9d784f"><span>Die Tabelle muss mindestens drei verschiedene Skalenniveaus enthalten.</span></label><label><input type="radio" autocomplete="off" name="51fe1f46aae53a45228a8ff43e9d784f"><span>Jede Zeile stellt eine Beobachtungseinheit dar und jede Spalte eine Variable.</span></label><label><input type="radio" autocomplete="off" name="51fe1f46aae53a45228a8ff43e9d784f"><span>Alle fehlenden Werte (NAs) müssen vorab aus der Tabelle gelöscht werden.</span></label>
+<div id="webex-985c3a090380a6387fed4b1e62d0e5cc" class="webex-radiogroup" data-answer="YggZUx9RHAgcA2U=">
+<label><input type="radio" autocomplete="off" name="985c3a090380a6387fed4b1e62d0e5cc"><span>Die Daten müssen alphabetisch nach den Namen der Probanden sortiert sein.</span></label><label><input type="radio" autocomplete="off" name="985c3a090380a6387fed4b1e62d0e5cc"><span>Jede Zelle darf nur numerische Werte enthalten.</span></label><label><input type="radio" autocomplete="off" name="985c3a090380a6387fed4b1e62d0e5cc"><span>Die Tabelle muss mindestens drei verschiedene Skalenniveaus enthalten.</span></label><label><input type="radio" autocomplete="off" name="985c3a090380a6387fed4b1e62d0e5cc"><span>Jede Zeile stellt eine Beobachtungseinheit dar und jede Spalte eine Variable.</span></label><label><input type="radio" autocomplete="off" name="985c3a090380a6387fed4b1e62d0e5cc"><span>Alle fehlenden Werte (NAs) müssen vorab aus der Tabelle gelöscht werden.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1786,8 +1793,8 @@ Abbildung&nbsp;2.19: Matchbox-Autos sind Modelle für Autos, <span class="citati
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>In der Forschungsfrage „Hat Lernen einen Einfluss auf den Prüfungserfolg?“ ist das „Lernen“ die …?</p>
-<div id="webex-63c153321a89f46e82035122ad6f9d25" class="webex-radiogroup" data-answer="bQJPARkDHwIdUWU=">
-<label><input type="radio" autocomplete="off" name="63c153321a89f46e82035122ad6f9d25"><span>Unabhängige Variable (UV) bzw. die X-Variable/Ursache.</span></label><label><input type="radio" autocomplete="off" name="63c153321a89f46e82035122ad6f9d25"><span>Konstante, da sie für alle Studierenden gleich gemessen wird.</span></label><label><input type="radio" autocomplete="off" name="63c153321a89f46e82035122ad6f9d25"><span>Qualitative Variable auf Nominalniveau.</span></label><label><input type="radio" autocomplete="off" name="63c153321a89f46e82035122ad6f9d25"><span>Residuen-Variable der Beobachtungseinheit.</span></label><label><input type="radio" autocomplete="off" name="63c153321a89f46e82035122ad6f9d25"><span>Abhängige Variable (AV) bzw. das Kriterium.</span></label>
+<div id="webex-aca7ef7c4907bb9921322e923d2533a7" class="webex-radiogroup" data-answer="OlJNB0lWG1MYCW0=">
+<label><input type="radio" autocomplete="off" name="aca7ef7c4907bb9921322e923d2533a7"><span>Unabhängige Variable (UV) bzw. die X-Variable/Ursache.</span></label><label><input type="radio" autocomplete="off" name="aca7ef7c4907bb9921322e923d2533a7"><span>Konstante, da sie für alle Studierenden gleich gemessen wird.</span></label><label><input type="radio" autocomplete="off" name="aca7ef7c4907bb9921322e923d2533a7"><span>Qualitative Variable auf Nominalniveau.</span></label><label><input type="radio" autocomplete="off" name="aca7ef7c4907bb9921322e923d2533a7"><span>Residuen-Variable der Beobachtungseinheit.</span></label><label><input type="radio" autocomplete="off" name="aca7ef7c4907bb9921322e923d2533a7"><span>Abhängige Variable (AV) bzw. das Kriterium.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1804,8 +1811,8 @@ Abbildung&nbsp;2.19: Matchbox-Autos sind Modelle für Autos, <span class="citati
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Welche drei Arten von Zielen können statistische Analysen verfolgen?</p>
-<div id="webex-bc6e0e0c08d8b97285e65a4fa443b0fc" class="webex-radiogroup" data-answer="OVMaVRxUHFMcCDk=">
-<label><input type="radio" autocomplete="off" name="bc6e0e0c08d8b97285e65a4fa443b0fc"><span>Rechnen, Zeichnen und Interpretieren.</span></label><label><input type="radio" autocomplete="off" name="bc6e0e0c08d8b97285e65a4fa443b0fc"><span>Fragen, Planen und Testen.</span></label><label><input type="radio" autocomplete="off" name="bc6e0e0c08d8b97285e65a4fa443b0fc"><span>Beschreiben, Vorhersagen und Erklären.</span></label><label><input type="radio" autocomplete="off" name="bc6e0e0c08d8b97285e65a4fa443b0fc"><span>Sortieren, Filtern und Gruppieren.</span></label><label><input type="radio" autocomplete="off" name="bc6e0e0c08d8b97285e65a4fa443b0fc"><span>Sammeln, Bereinigen und Veröffentlichen.</span></label>
+<div id="webex-e53c49c44924251efa4698ec191fc53f" class="webex-radiogroup" data-answer="PgUfUxgITwQYCW8=">
+<label><input type="radio" autocomplete="off" name="e53c49c44924251efa4698ec191fc53f"><span>Rechnen, Zeichnen und Interpretieren.</span></label><label><input type="radio" autocomplete="off" name="e53c49c44924251efa4698ec191fc53f"><span>Fragen, Planen und Testen.</span></label><label><input type="radio" autocomplete="off" name="e53c49c44924251efa4698ec191fc53f"><span>Beschreiben, Vorhersagen und Erklären.</span></label><label><input type="radio" autocomplete="off" name="e53c49c44924251efa4698ec191fc53f"><span>Sortieren, Filtern und Gruppieren.</span></label><label><input type="radio" autocomplete="off" name="e53c49c44924251efa4698ec191fc53f"><span>Sammeln, Bereinigen und Veröffentlichen.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -2510,15 +2517,50 @@ window.onload = function() {
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
     if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-      const a = window.document.createElement('a');
-      a.classList.add('top-right');
-      a.classList.add('quarto-color-scheme-toggle');
-      a.href = "";
-      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const toggle = window.document.createElement('button');
+      toggle.type = "button";
+      toggle.setAttribute("role", "switch");
+      toggle.setAttribute("aria-checked", "false");
+      toggle.classList.add('top-right');
+      toggle.classList.add('quarto-color-scheme-toggle');
+      toggle.setAttribute("aria-label", "Dunkelmodus umschalten");
+      toggle.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
       const i = window.document.createElement("i");
       i.classList.add('bi');
-      a.appendChild(i);
-      window.document.body.appendChild(a);
+      toggle.appendChild(i);
+      // Put the toggle in a landmark of its own, so that landmark navigation
+      // can reach it.
+      //
+      // The container is always a fresh direct child of body, and the toggle is
+      // never moved into page furniture that the theme or the author controls.
+      // The toggle is positioned against the page, so any ancestor that
+      // establishes a containing block captures it: a positioned element or a
+      // grid for position: absolute, and transform, filter, will-change or
+      // contain for position: fixed. A direct child of body has none of these
+      // to inherit, and the shift when one appears is silent and visual.
+      //
+      // ARIA says a document should have at most one banner, and axe reports a
+      // duplicate whether or not the banners carry distinct labels. So use a
+      // header when the page has no banner yet, and a named region otherwise.
+      //
+      // A header is a banner wherever it sits, unless it is inside sectioning
+      // content, so this cannot just look at the children of body: a custom
+      // page layout wraps the title block header in a plain div. An explicit
+      // role="banner" always counts.
+      const sectioning = 'article, aside, main, nav, section, [role="article"], [role="complementary"], [role="main"], [role="navigation"], [role="region"]';
+      const hasBanner = Array.from(
+        window.document.querySelectorAll('header:not([role]), [role="banner"]')
+      ).some(function(el) {
+        return el.hasAttribute("role") || el.closest(sectioning) === null;
+      });
+      const container = window.document.createElement(hasBanner ? "div" : "header");
+      if (hasBanner) {
+        container.setAttribute("role", "region");
+        container.setAttribute("aria-label", "Dunkelmodus umschalten");
+      }
+      container.classList.add('quarto-color-scheme-toggle-container');
+      container.appendChild(toggle);
+      window.document.body.appendChild(container);
     }
     setColorSchemeToggle(hasAlternateSentinel())
     const icon = "";
@@ -2597,7 +2639,8 @@ window.onload = function() {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -2606,8 +2649,69 @@ window.onload = function() {
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -2621,6 +2725,7 @@ window.onload = function() {
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -2783,44 +2888,54 @@ window.onload = function() {
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -2918,7 +3033,9 @@ window.onload = function() {
       }
     }
   });
-  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+  </script><script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollbarer Code","output":"Scrollbare Ausgabe"};
+  </script><nav class="page-navigation" aria-label="Seite"><div class="nav-page nav-page-previous">
       <a href="./005-orga.html" class="pagination-link" aria-label="Organisatorisches">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Organisatorisches</span></span>
       </a>          

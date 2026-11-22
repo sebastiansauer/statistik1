@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
 <meta charset="UTF-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.11.9">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="keywords" content="Statistik, Prognose, Modellierung, R, Datenanalyse, Regression">
 <meta name="description" content="Einführung in die Statistik mit einem Schwerpunkt auf Prognose-Modellierung">
@@ -10,10 +10,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -90,18 +93,19 @@ div.csl-indent {
 <link href="./img/statistik1_icon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-447e42e69aaa9833c0ba1b986f430b20.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-a4c491303f69927a1321bd3546903061.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-2dc673c3628f6ea71864dee0e7890cee.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-a4c491303f69927a1321bd3546903061.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dbf57ad83c13ae4f422b554da963db29.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-94c3ff760a031db47e09d51bd2e9d7bf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-dbf57ad83c13ae4f422b554da963db29.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
@@ -130,7 +134,7 @@ div.csl-indent {
     "search-submit-button-title": "Abschicken",
     "search-label": "Suchen"
   }
-}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -157,7 +161,7 @@ window.Quarto = {
 };
 </script><link rel="stylesheet" href="webex.css">
 </head>
-<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Zum Hauptinhalt springen</a><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -180,6 +184,7 @@ window.Quarto = {
       for (let i=0; i < toggles.length; i++) {
         const toggle = toggles[i];
         if (toggle) {
+          toggle.setAttribute("aria-checked", alternate ? "true" : "false");
           if (alternate) {
             toggle.classList.add("alternate");
           } else {
@@ -209,13 +214,19 @@ window.Quarto = {
       manageTransitions('#quarto-margin-sidebar .nav-link', true);
       // Switch the toggles
       setColorSchemeToggle(alternate)
-      // Hack to workaround the fact that safari doesn't
-      // properly recolor the scrollbar when toggling (#1455)
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455).
+    // Not run on load: stylesheets are set before first paint there, and
+    // scrolling would undo the scroll to a URL fragment (#14973).
+    // The one pixel nudge keeps the reader where they were.
+    const refreshSafariScrollbar = () => {
       if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
         manageTransitions("body", false);
-        window.scrollTo(0, 1);
+        const scrollY = window.scrollY;
+        window.scrollTo(0, scrollY > 0 ? scrollY - 1 : 1);
         setTimeout(() => {
-          window.scrollTo(0, 0);
+          window.scrollTo(0, scrollY);
           manageTransitions("body", true);
         }, 40);
       }
@@ -309,6 +320,7 @@ window.Quarto = {
       // Read the current dark / light value
       let toAlternate = !hasAlternateSentinel();
       toggleColorMode(toAlternate);
+      refreshSafariScrollbar();
       setStyleSentinel(toAlternate);
       toggleGiscusIfUsed(toAlternate, darkModeDefault);
       window.dispatchEvent(new Event('resize'));
@@ -322,12 +334,12 @@ window.Quarto = {
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" aria-label="Symbolleiste"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Grundlagen des Modellierens</a></li><li class="breadcrumb-item"><a href="./060-modellguete.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modellgüte</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="Pfad"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Grundlagen des Modellierens</a></li><li class="breadcrumb-item"><a href="./060-modellguete.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modellgüte</span></a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Suchen" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
@@ -335,14 +347,14 @@ window.Quarto = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Website"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
       <img src="./img/statistik1_icon.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none"><img src="./img/statistik1_icon.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none"></a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Statistik1</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/sebastiansauer/statistik1" title="Quellcode" class="quarto-navigation-tool px-1" aria-label="Quellcode"><i class="bi bi-github"></i></a>
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
+  <button type="button" role="switch" aria-checked="false" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten" aria-label="Dunkelmodus umschalten"><i class="bi"></i></button>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Lesemodus umschalten">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -372,13 +384,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Vorbereiten</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Vorbereiten</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-rahmen.html" class="sidebar-item-text sidebar-link">
@@ -401,13 +410,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Grundlagen des Modellierens</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Grundlagen des Modellierens</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./040-verbildlichen.html" class="sidebar-item-text sidebar-link">
@@ -436,13 +442,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Geradenmodelle</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Geradenmodelle</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./080-regression1.html" class="sidebar-item-text sidebar-link">
@@ -465,13 +468,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Anhang</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Anhang</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./110-definitions.html" class="sidebar-item-text sidebar-link">
@@ -521,7 +521,7 @@ window.Quarto = {
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Inhaltsverzeichnis</h2>
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active"><h2 id="toc-title">Inhaltsverzeichnis</h2>
    
   <ul>
 <li>
@@ -564,7 +564,7 @@ window.Quarto = {
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/sebastiansauer/statistik1/issues/new" class="toc-action"><i class="bi bi-github"></i>Problem melden</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Grundlagen des Modellierens</a></li><li class="breadcrumb-item"><a href="./060-modellguete.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modellgüte</span></a></li></ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content" tabindex="-1"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Pfad"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Grundlagen des Modellierens</a></li><li class="breadcrumb-item"><a href="./060-modellguete.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modellgüte</span></a></li></ol></nav><div class="quarto-title">
 <h1 class="title">
 <span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modellgüte</span>
 </h1>
@@ -726,7 +726,7 @@ Abbildung&nbsp;7.3: Wenig (links) vs.&nbsp;viel Streuung (rechts).
 <blockquote class="blockquote">
 <p><span>🧑‍🎓</span> Naja, kürzere Fehlerbalken, ist doch klar!</p>
 </blockquote>
-<p>Im Beispiel von Mariokart: Da die Anzahl der Lenkräder mit dem Verkaufspreis zusammenhängt, könnte es vielleicht sein, dass wir die Lenkräder-Anzahl zur Vorhersage nutzen könnten. Das sollten wir ausprobieren. <a href="#fig-fehler-red" class="quarto-xref">Abbildung&nbsp;<span>7.4</span></a> zeigt, dass die Fehlerbalken <em>kürzer</em> werden, wenn wir ein (sinnvolles) komplexeres Modell finden. Innerhalb jeder der beiden Gruppen (mit 2 Lenkrädern vs.&nbsp;mit 0 Lenkrädern) sind die Fehlerbalken jeweils im Durchschnitt kürzer (rechtes Teildiagramm) als im Modell ohne Gruppierung (linkes Teildiagramm). Aus Gründen der Übersichtlichkeit wurden nur Autos mit Verkaufsgebot von weniger als 100 Euros berücksichtigt und nur Spiele mit 0 oder mit 2 Lenkrädern.</p>
+<p>Im Beispiel von Mariokart: Da die Anzahl der Lenkräder mit dem Verkaufspreis zusammenhängt, könnte es vielleicht sein, dass wir die Lenkräder-Anzahl zur Vorhersage nutzen könnten. Das sollten wir ausprobieren. <a href="#fig-fehler-red" class="quarto-xref">Abbildung&nbsp;<span>7.4</span></a> zeigt, dass die Fehlerbalken <em>kürzer</em> werden, wenn wir ein (sinnvolles) komplexeres Modell finden. Innerhalb jeder der beiden Gruppen (mit 2 Lenkrädern vs.&nbsp;mit 0 Lenkrädern) sind die Fehlerbalken jeweils im Durchschnitt kürzer (rechtes Teildiagramm) als im Modell ohne Gruppierung (linkes Teildiagramm). Aus Gründen der Übersichtlichkeit wurden nur Spiele mit Verkaufsgebot von weniger als 100 Dollar berücksichtigt und nur Spiele mit 0 oder mit 2 Lenkrädern.</p>
 <div id="fig-fehler-red" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-fehler-red-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
@@ -842,7 +842,7 @@ Abbildung&nbsp;7.5: Abweichungsbalken und der MAE
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-iqr-mario" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-iqr-mario-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-iqr-mario-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="060-modellguete_files/figure-html/fig-iqr-mario-1.png" class="lightbox" data-gallery="fig-iqr-mario" title="Abbildung&nbsp;7.6&nbsp;(a): Histogramm"><img src="060-modellguete_files/figure-html/fig-iqr-mario-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-iqr-mario"></a>
+<a href="060-modellguete_files/figure-html/fig-iqr-mario-1.png" class="lightbox" data-gallery="fig-iqr-mario" title="Abbildung&nbsp;7.6&nbsp;(a): Histogramm"><img src="060-modellguete_files/figure-html/fig-iqr-mario-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-iqr-mario"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-iqr-mario-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Histogramm
@@ -852,7 +852,7 @@ Abbildung&nbsp;7.5: Abweichungsbalken und der MAE
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-iqr-mario" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-iqr-mario-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-iqr-mario-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="060-modellguete_files/figure-html/fig-iqr-mario-2.png" class="lightbox" data-gallery="fig-iqr-mario" title="Abbildung&nbsp;7.6&nbsp;(b): Dichtediagramm"><img src="060-modellguete_files/figure-html/fig-iqr-mario-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-iqr-mario"></a>
+<a href="060-modellguete_files/figure-html/fig-iqr-mario-2.png" class="lightbox" data-gallery="fig-iqr-mario" title="Abbildung&nbsp;7.6&nbsp;(b): Dichtediagramm"><img src="060-modellguete_files/figure-html/fig-iqr-mario-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-iqr-mario"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-iqr-mario-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Dichtediagramm
@@ -862,7 +862,7 @@ Abbildung&nbsp;7.5: Abweichungsbalken und der MAE
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-iqr-mario-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Abbildung&nbsp;7.6: IQR, Q1, Q2 und Q3 für das Schlussgebot (nur Spiele für weniger als 100 Euro)
+Abbildung&nbsp;7.6: IQR, Q1, Q2 und Q3 für das Schlussgebot (nur Spiele für weniger als 100 Dollar)
 </figcaption></figure>
 </div>
 </section><section id="streuungsmaße-für-normalverteilungen" class="level3" data-number="7.3.3"><h3 data-number="7.3.3" class="anchored" data-anchor-id="streuungsmaße-für-normalverteilungen">
@@ -976,7 +976,6 @@ Listing&nbsp;7.1: Berechnung der Streuung des Verkaufspreises als Indikator für
 Tabelle&nbsp;7.1: Kennwerte der Streuung für den Mariokart-Datensatz
 </figcaption><div aria-describedby="tbl-mario-streu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div class="kable-table">
 <table class="cell caption-top table table-sm table-striped small">
 <thead><tr class="header">
 <th style="text-align: right;">pr_mw</th>
@@ -995,7 +994,6 @@ Tabelle&nbsp;7.1: Kennwerte der Streuung für den Mariokart-Datensatz
 </table>
 </div>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -1012,7 +1010,7 @@ Tabelle&nbsp;7.1: Kennwerte der Streuung für den Mariokart-Datensatz
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-var-mario" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-var-mario-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-var-mario-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="060-modellguete_files/figure-html/fig-var-mario-1.png" class="lightbox" data-gallery="fig-var-mario" title="Abbildung&nbsp;7.10&nbsp;(a): Dichtediagramm"><img src="060-modellguete_files/figure-html/fig-var-mario-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-var-mario"></a>
+<a href="060-modellguete_files/figure-html/fig-var-mario-1.png" class="lightbox" data-gallery="fig-var-mario" title="Abbildung&nbsp;7.10&nbsp;(a): Dichtediagramm"><img src="060-modellguete_files/figure-html/fig-var-mario-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-var-mario"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-var-mario-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Dichtediagramm
@@ -1022,7 +1020,7 @@ Tabelle&nbsp;7.1: Kennwerte der Streuung für den Mariokart-Datensatz
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-var-mario" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-var-mario-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-var-mario-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="060-modellguete_files/figure-html/fig-var-mario-2.png" class="lightbox" data-gallery="fig-var-mario" title="Abbildung&nbsp;7.10&nbsp;(b): Violindiagramm"><img src="060-modellguete_files/figure-html/fig-var-mario-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-var-mario"></a>
+<a href="060-modellguete_files/figure-html/fig-var-mario-2.png" class="lightbox" data-gallery="fig-var-mario" title="Abbildung&nbsp;7.10&nbsp;(b): Violindiagramm"><img src="060-modellguete_files/figure-html/fig-var-mario-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-var-mario"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-var-mario-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Violindiagramm
@@ -1085,7 +1083,6 @@ Hinweis
 Tabelle&nbsp;7.2: Ausgabe der Funktion <code>describe_distribution</code> (Auszug)
 </figcaption><div aria-describedby="tbl-describe-dist1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div class="kable-table">
 <table class="cell caption-top table table-sm table-striped small">
 <thead><tr class="header">
 <th style="text-align: left;">Variable</th>
@@ -1102,7 +1099,6 @@ Tabelle&nbsp;7.2: Ausgabe der Funktion <code>describe_distribution</code> (Auszu
 <td style="text-align: right;">143</td>
 </tr></tbody>
 </table>
-</div>
 </div>
 </div>
 </figure>
@@ -1175,7 +1171,7 @@ Listing&nbsp;7.2: Mariokart ohne Extremwerte
 <div class="cell-output-display">
 <div id="fig-mariokart_no_extreme" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-mariokart_no_extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="060-modellguete_files/figure-html/fig-mariokart_no_extreme-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16" title="Abbildung&nbsp;7.11: Verteilung von mariokart_no_extreme; das Zentrieren ändert die Verteilung nicht, sondern ‘schiebt die Verteilung nur zur Seite’. Zentrierte Werte zeigen, wie weit die unzentrierten Werte von ihrem Mittelwert entfernt sind. Zentrieren erreicht man, indem von allen Werten den Mittelwert abzieht."><img src="060-modellguete_files/figure-html/fig-mariokart_no_extreme-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
+<a href="060-modellguete_files/figure-html/fig-mariokart_no_extreme-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16" title="Abbildung&nbsp;7.11: Verteilung von mariokart_no_extreme; das Zentrieren ändert die Verteilung nicht, sondern ‘schiebt die Verteilung nur zur Seite’. Zentrierte Werte zeigen, wie weit die unzentrierten Werte von ihrem Mittelwert entfernt sind. Zentrieren erreicht man, indem von allen Werten den Mittelwert abzieht."><img src="060-modellguete_files/figure-html/fig-mariokart_no_extreme-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mariokart_no_extreme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;7.11: Verteilung von <code>mariokart_no_extreme</code>; das Zentrieren ändert die Verteilung nicht, sondern ‘schiebt die Verteilung nur zur Seite’. Zentrierte Werte zeigen, wie weit die unzentrierten Werte von ihrem Mittelwert entfernt sind. Zentrieren erreicht man, indem von allen Werten den Mittelwert abzieht.
@@ -1183,7 +1179,7 @@ Abbildung&nbsp;7.11: Verteilung von <code>mariokart_no_extreme</code>; das Zentr
 </div>
 </div>
 </div>
-<div class="cell quarto-layout-panel" data-layout="[[45,-10,45],[100]]" data-layout-align="center">
+<div class="cell quarto-layout-panel" data-layout-align="center" data-layout="[[45,-10,45],[100]]">
 
 </div>
 <p>Man sieht, dass es eine gewisse Streuung um den Mittelwert herum gibt. Aber ist das viel oder wenig Streuung?</p>
@@ -1201,7 +1197,7 @@ Wichtig
 </div>
 </div>
 <p>Ja, es ist <em>etwas</em> Streuung, aber wie viel? Kann man das genau angeben? Sie überlegen … und überlegen. Da! Eine Idee!</p>
-<p>Man könnte vielleicht angeben, wie viel Euro jedes Spiel vom Mittelwert entfernt ist. Je größer diese Abweichung, desto schlechter die Modellgüte! Also rechnen Sie diese Abweichung aus, <a href="#lst-zentrieren" class="quarto-xref">Listing&nbsp;<span>7.3</span></a> und <a href="#tbl-zentriert" class="quarto-xref">Tabelle&nbsp;<span>7.3</span></a>.</p>
+<p>Man könnte vielleicht angeben, wie viel Dollar jedes Spiel vom Mittelwert entfernt ist. Je größer diese Abweichung, desto schlechter die Modellgüte! Also rechnen Sie diese Abweichung aus, <a href="#lst-zentrieren" class="quarto-xref">Listing&nbsp;<span>7.3</span></a> und <a href="#tbl-zentriert" class="quarto-xref">Tabelle&nbsp;<span>7.3</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div id="lst-zentrieren" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-zentrieren-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1728,7 +1724,7 @@ Tabelle&nbsp;7.3: Die ersten paar Zeilen von <code>total_pr</code> zentriert: <c
 </div>
 </section><section id="streuung-standardisieren" class="level3" data-number="7.5.2"><h3 data-number="7.5.2" class="anchored" data-anchor-id="streuung-standardisieren">
 <span class="header-section-number">7.5.2</span> Streuung standardisieren</h3>
-<p>Aber irgendwie sind Sie noch nicht am Ziel Ihrer Überlegungen: Woher weiß man, ob 10 Euro oder 20 Euro “viel” Abweichung vom Verkaufspreis ist? Man müsste die Abweichung eines Verkaufspreises zu irgendetwas in Bezug setzen. Wieder! Ein Geistesblitz! Man könnte doch die jeweilige Abweichung in Bezug setzen zur <em>mittleren (absoluten) Abweichung</em> (MAA)! Ein alternativer, ähnlicher Kennwert zur MAA ist die SD. Sie haben gehört, dass die SD gebräuchlicher sei als die MAA. Um sich als Checker zu präsentieren, berechnen Sie also auch die SD; die beiden Koeffizienten sind ja ähnlich.</p>
+<p>Aber irgendwie sind Sie noch nicht am Ziel Ihrer Überlegungen: Woher weiß man, ob 10 Dollar oder 20 Dollar “viel” Abweichung vom Verkaufspreis ist? Man müsste die Abweichung eines Verkaufspreises zu irgendetwas in Bezug setzen. Wieder! Ein Geistesblitz! Man könnte doch die jeweilige Abweichung in Bezug setzen zur <em>mittleren (absoluten) Abweichung</em> (MAA)! Ein alternativer, ähnlicher Kennwert zur MAA ist die SD. Sie haben gehört, dass die SD gebräuchlicher sei als die MAA. Um sich als Checker zu präsentieren, berechnen Sie also auch die SD; die beiden Koeffizienten sind ja ähnlich.</p>
 <p>Also: Wenn ein Spiel 10 Dollar vom Mittelwert abweicht und die SD 10 Dollar betragen sollte, dann hätten wir eine “standardisierte” (abgekürzt manchmal mit <code>std</code>) Abweichung von 1, weil 10/10=1. Begeistert über Ihre Geistesblitze machen Sie sich ans Werk.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mariokart_no_extreme</span> <span class="op">&lt;-</span></span>
@@ -1779,8 +1775,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Was ist das mathematische Resultat, wenn man alle (nicht-absoluten) Residuen einer Verteilung vom Mittelwert aufsummiert? Betrachten Sie die Eigenschaft des Mittelwerts als Schwerpunkt.</p>
-<div id="webex-00ac24193c1e1ebb5f54a72bb4c965a5" class="webex-radiogroup" data-answer="awBNUx4EHQkfUmw=">
-<label><input type="radio" autocomplete="off" name="00ac24193c1e1ebb5f54a72bb4c965a5"><span>Das Ergebnis ist immer positiv.</span></label><label><input type="radio" autocomplete="off" name="00ac24193c1e1ebb5f54a72bb4c965a5"><span>Die Summe entspricht der Varianz der Daten.</span></label><label><input type="radio" autocomplete="off" name="00ac24193c1e1ebb5f54a72bb4c965a5"><span>Die Summe entspricht dem Stichprobenumfang n.</span></label><label><input type="radio" autocomplete="off" name="00ac24193c1e1ebb5f54a72bb4c965a5"><span>Das Ergebnis ist abhängig von der Standardabweichung.</span></label><label><input type="radio" autocomplete="off" name="00ac24193c1e1ebb5f54a72bb4c965a5"><span>Die Summe ist immer exakt Null.</span></label>
+<div id="webex-3e204cdfad99d961fa886759b7079ab4" class="webex-radiogroup" data-answer="aFUeABhTSFZNVWQ=">
+<label><input type="radio" autocomplete="off" name="3e204cdfad99d961fa886759b7079ab4"><span>Das Ergebnis ist immer positiv.</span></label><label><input type="radio" autocomplete="off" name="3e204cdfad99d961fa886759b7079ab4"><span>Die Summe entspricht der Varianz der Daten.</span></label><label><input type="radio" autocomplete="off" name="3e204cdfad99d961fa886759b7079ab4"><span>Die Summe entspricht dem Stichprobenumfang n.</span></label><label><input type="radio" autocomplete="off" name="3e204cdfad99d961fa886759b7079ab4"><span>Das Ergebnis ist abhängig von der Standardabweichung.</span></label><label><input type="radio" autocomplete="off" name="3e204cdfad99d961fa886759b7079ab4"><span>Die Summe ist immer exakt Null.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1797,8 +1793,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie haben ein Modell <code>lm1</code> (nur Mittelwert) und ein Modell <code>lm2</code> (mit einer UV). In R liefert <code>mae(lm1)</code> den Wert 10 und <code>mae(lm2)</code> den Wert 7,4. Wie beurteilen Sie die Veränderung der Modellgüte?</p>
-<div id="webex-52f877e98e6f33fec7dac08fc3ee9f33" class="webex-radiogroup" data-answer="bgJKCBsGSQkUVWs=">
-<label><input type="radio" autocomplete="off" name="52f877e98e6f33fec7dac08fc3ee9f33"><span>Ein MAE von 7,4 bedeutet, dass das Modell zu 74 % korrekt ist.</span></label><label><input type="radio" autocomplete="off" name="52f877e98e6f33fec7dac08fc3ee9f33"><span>Die Güte hat sich verschlechtert, da der MAE gesunken ist.</span></label><label><input type="radio" autocomplete="off" name="52f877e98e6f33fec7dac08fc3ee9f33"><span>Das zweite Modell ist besser, da der durchschnittliche Vorhersagefehler gesunken ist.</span></label><label><input type="radio" autocomplete="off" name="52f877e98e6f33fec7dac08fc3ee9f33"><span>Das erste Modell ist besser, da größere Fehler für die Forschung nützlicher sind.</span></label><label><input type="radio" autocomplete="off" name="52f877e98e6f33fec7dac08fc3ee9f33"><span>Man kann die Modelle nicht vergleichen, da die Skalierung unterschiedlich ist.</span></label>
+<div id="webex-f72dc0e769b12e2765e9aa9f54a733c1" class="webex-radiogroup" data-answer="PQceVE8BSQcaCT8=">
+<label><input type="radio" autocomplete="off" name="f72dc0e769b12e2765e9aa9f54a733c1"><span>Ein MAE von 7,4 bedeutet, dass das Modell zu 74 % korrekt ist.</span></label><label><input type="radio" autocomplete="off" name="f72dc0e769b12e2765e9aa9f54a733c1"><span>Die Güte hat sich verschlechtert, da der MAE gesunken ist.</span></label><label><input type="radio" autocomplete="off" name="f72dc0e769b12e2765e9aa9f54a733c1"><span>Das zweite Modell ist besser, da der durchschnittliche Vorhersagefehler gesunken ist.</span></label><label><input type="radio" autocomplete="off" name="f72dc0e769b12e2765e9aa9f54a733c1"><span>Das erste Modell ist besser, da größere Fehler für die Forschung nützlicher sind.</span></label><label><input type="radio" autocomplete="off" name="f72dc0e769b12e2765e9aa9f54a733c1"><span>Man kann die Modelle nicht vergleichen, da die Skalierung unterschiedlich ist.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1815,8 +1811,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>In R berechnen Sie für ein Nullmodell (Punktmodell) den RMSE. Welcher statistische Kennwert der abhängigen Variable entspricht diesem Ergebnis (nahezu) exakt? Berücksichtigen Sie die Definition des RMSE im Kontext des Mittelwerts.</p>
-<div id="webex-ea4d07afb0808dac6d42e7beff6e5c7d" class="webex-radiogroup" data-answer="PlAYVBwHTVZOAGU=">
-<label><input type="radio" autocomplete="off" name="ea4d07afb0808dac6d42e7beff6e5c7d"><span>Die Standardabweichung (SD)</span></label><label><input type="radio" autocomplete="off" name="ea4d07afb0808dac6d42e7beff6e5c7d"><span>Der Interquartilsabstand (IQR)</span></label><label><input type="radio" autocomplete="off" name="ea4d07afb0808dac6d42e7beff6e5c7d"><span>Die Spannweite (Range)</span></label><label><input type="radio" autocomplete="off" name="ea4d07afb0808dac6d42e7beff6e5c7d"><span>Der Modus</span></label><label><input type="radio" autocomplete="off" name="ea4d07afb0808dac6d42e7beff6e5c7d"><span>Der Median</span></label>
+<div id="webex-094349ba72675adf38592a26e6d7e420" class="webex-radiogroup" data-answer="awgYAxgJTlEbAms=">
+<label><input type="radio" autocomplete="off" name="094349ba72675adf38592a26e6d7e420"><span>Die Standardabweichung (SD)</span></label><label><input type="radio" autocomplete="off" name="094349ba72675adf38592a26e6d7e420"><span>Der Interquartilsabstand (IQR)</span></label><label><input type="radio" autocomplete="off" name="094349ba72675adf38592a26e6d7e420"><span>Die Spannweite (Range)</span></label><label><input type="radio" autocomplete="off" name="094349ba72675adf38592a26e6d7e420"><span>Der Modus</span></label><label><input type="radio" autocomplete="off" name="094349ba72675adf38592a26e6d7e420"><span>Der Median</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1833,8 +1829,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ein Student hat in einem Statistiktest einen z-Wert von -2,0 erzielt. Wie ist dieses Ergebnis im Vergleich zur restlichen Gruppe zu interpretieren? Nutzen Sie die Definition von z-Werten als relative Abweichungen.</p>
-<div id="webex-09dd6f867e2e82a7d353132a618887b8" class="webex-radiogroup" data-answer="awlIVBpXFAYbVW8=">
-<label><input type="radio" autocomplete="off" name="09dd6f867e2e82a7d353132a618887b8"><span>Der Student gehört zu den besten 2 % der Teilnehmer.</span></label><label><input type="radio" autocomplete="off" name="09dd6f867e2e82a7d353132a618887b8"><span>Das Ergebnis ist ein extremer Ausreißer nach oben.</span></label><label><input type="radio" autocomplete="off" name="09dd6f867e2e82a7d353132a618887b8"><span>Der Student liegt zwei Standardabweichungen unter dem Durchschnitt der Gruppe.</span></label><label><input type="radio" autocomplete="off" name="09dd6f867e2e82a7d353132a618887b8"><span>Der tatsächliche Punktwert des Studenten muss negativ sein.</span></label><label><input type="radio" autocomplete="off" name="09dd6f867e2e82a7d353132a618887b8"><span>Der Student hat zwei Fehler mehr gemacht als der Durchschnitt.</span></label>
+<div id="webex-e1f11f2fe7632ce6bc88a170673b1695" class="webex-radiogroup" data-answer="PgFKAR1XHlZJB2s=">
+<label><input type="radio" autocomplete="off" name="e1f11f2fe7632ce6bc88a170673b1695"><span>Der Student gehört zu den besten 2 % der Teilnehmer.</span></label><label><input type="radio" autocomplete="off" name="e1f11f2fe7632ce6bc88a170673b1695"><span>Das Ergebnis ist ein extremer Ausreißer nach oben.</span></label><label><input type="radio" autocomplete="off" name="e1f11f2fe7632ce6bc88a170673b1695"><span>Der Student liegt zwei Standardabweichungen unter dem Durchschnitt der Gruppe.</span></label><label><input type="radio" autocomplete="off" name="e1f11f2fe7632ce6bc88a170673b1695"><span>Der tatsächliche Punktwert des Studenten muss negativ sein.</span></label><label><input type="radio" autocomplete="off" name="e1f11f2fe7632ce6bc88a170673b1695"><span>Der Student hat zwei Fehler mehr gemacht als der Durchschnitt.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1851,8 +1847,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Was passiert bei einer z-Transformation mit dem Mittelwert und der Standardabweichung einer beliebigen Verteilung? Die Transformation besteht aus Zentrieren und Standardisieren.</p>
-<div id="webex-94fc2427c89f26709888390b49008841" class="webex-radiogroup" data-answer="YgRKUx4FHgdPCGQ=">
-<label><input type="radio" autocomplete="off" name="94fc2427c89f26709888390b49008841"><span>Die Werte werden alle positiv.</span></label><label><input type="radio" autocomplete="off" name="94fc2427c89f26709888390b49008841"><span>Der Mittelwert wird 1 und die Standardabweichung wird 0.</span></label><label><input type="radio" autocomplete="off" name="94fc2427c89f26709888390b49008841"><span>Der Mittelwert wird 0 und die Standardabweichung wird 1.</span></label><label><input type="radio" autocomplete="off" name="94fc2427c89f26709888390b49008841"><span>Die Form der Verteilung wird immer perfekt symmetrisch.</span></label><label><input type="radio" autocomplete="off" name="94fc2427c89f26709888390b49008841"><span>Alle Ausreißer werden automatisch aus dem Datensatz gelöscht.</span></label>
+<div id="webex-f616403299f89e2c02e27d1b0a3fafbe" class="webex-radiogroup" data-answer="PQYdBhgBHwIVCTs=">
+<label><input type="radio" autocomplete="off" name="f616403299f89e2c02e27d1b0a3fafbe"><span>Die Werte werden alle positiv.</span></label><label><input type="radio" autocomplete="off" name="f616403299f89e2c02e27d1b0a3fafbe"><span>Der Mittelwert wird 1 und die Standardabweichung wird 0.</span></label><label><input type="radio" autocomplete="off" name="f616403299f89e2c02e27d1b0a3fafbe"><span>Der Mittelwert wird 0 und die Standardabweichung wird 1.</span></label><label><input type="radio" autocomplete="off" name="f616403299f89e2c02e27d1b0a3fafbe"><span>Die Form der Verteilung wird immer perfekt symmetrisch.</span></label><label><input type="radio" autocomplete="off" name="f616403299f89e2c02e27d1b0a3fafbe"><span>Alle Ausreißer werden automatisch aus dem Datensatz gelöscht.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1869,8 +1865,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ein Datensatz weist einen sehr extremen Ausreißer auf. Welches Streuungsmaß ist in dieser Situation am ehesten zu empfehlen, um ein verzerrtes Bild zu vermeiden? Nutzen Sie das Konzept der Robustheit.</p>
-<div id="webex-8dca718732c79ce1fe58722fc4d6783f" class="webex-radiogroup" data-answer="Y1RPURsBFAYfAj4=">
-<label><input type="radio" autocomplete="off" name="8dca718732c79ce1fe58722fc4d6783f"><span>Root Mean Squared Error (RMSE)</span></label><label><input type="radio" autocomplete="off" name="8dca718732c79ce1fe58722fc4d6783f"><span>Standardabweichung (SD)</span></label><label><input type="radio" autocomplete="off" name="8dca718732c79ce1fe58722fc4d6783f"><span>Spannweite (Range)</span></label><label><input type="radio" autocomplete="off" name="8dca718732c79ce1fe58722fc4d6783f"><span>Interquartilsabstand (IQR)</span></label><label><input type="radio" autocomplete="off" name="8dca718732c79ce1fe58722fc4d6783f"><span>Varianz</span></label>
+<div id="webex-ceb9be594f3d74a2d2ac9924c0e23e89" class="webex-radiogroup" data-answer="OFVOCU5VGQgYVm4=">
+<label><input type="radio" autocomplete="off" name="ceb9be594f3d74a2d2ac9924c0e23e89"><span>Root Mean Squared Error (RMSE)</span></label><label><input type="radio" autocomplete="off" name="ceb9be594f3d74a2d2ac9924c0e23e89"><span>Standardabweichung (SD)</span></label><label><input type="radio" autocomplete="off" name="ceb9be594f3d74a2d2ac9924c0e23e89"><span>Spannweite (Range)</span></label><label><input type="radio" autocomplete="off" name="ceb9be594f3d74a2d2ac9924c0e23e89"><span>Interquartilsabstand (IQR)</span></label><label><input type="radio" autocomplete="off" name="ceb9be594f3d74a2d2ac9924c0e23e89"><span>Varianz</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1887,8 +1883,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Warum wird in der Statistik die Standardabweichung (SD) oft der Varianz vorgezogen, wenn es um die Beschreibung von Daten geht? Betrachten Sie die mathematische Transformation bei der Berechnung der SD. Überlegen Sie, was mit der Maßeinheit der Daten passiert.</p>
-<div id="webex-d5f217629791a636f56f135cec0b83a4" class="webex-radiogroup" data-answer="PwVKAh0HGgIVBmQ=">
-<label><input type="radio" autocomplete="off" name="d5f217629791a636f56f135cec0b83a4"><span>R kann die Varianz technisch nicht direkt berechnen.</span></label><label><input type="radio" autocomplete="off" name="d5f217629791a636f56f135cec0b83a4"><span>Die SD ist robuster gegenüber Ausreißern als die Varianz.</span></label><label><input type="radio" autocomplete="off" name="d5f217629791a636f56f135cec0b83a4"><span>Die Varianz kann niemals für normalverteilte Daten berechnet werden.</span></label><label><input type="radio" autocomplete="off" name="d5f217629791a636f56f135cec0b83a4"><span>Die SD ist immer kleiner als der Mittelwert der Daten.</span></label><label><input type="radio" autocomplete="off" name="d5f217629791a636f56f135cec0b83a4"><span>Die SD besitzt wieder die gleiche Größenordnung und Maßeinheit wie die Originaldaten.</span></label>
+<div id="webex-c71afa5d0259892bf1b84f0319a05b65" class="webex-radiogroup" data-answer="OAcdUUpRGVQcA2g=">
+<label><input type="radio" autocomplete="off" name="c71afa5d0259892bf1b84f0319a05b65"><span>R kann die Varianz technisch nicht direkt berechnen.</span></label><label><input type="radio" autocomplete="off" name="c71afa5d0259892bf1b84f0319a05b65"><span>Die SD ist robuster gegenüber Ausreißern als die Varianz.</span></label><label><input type="radio" autocomplete="off" name="c71afa5d0259892bf1b84f0319a05b65"><span>Die Varianz kann niemals für normalverteilte Daten berechnet werden.</span></label><label><input type="radio" autocomplete="off" name="c71afa5d0259892bf1b84f0319a05b65"><span>Die SD ist immer kleiner als der Mittelwert der Daten.</span></label><label><input type="radio" autocomplete="off" name="c71afa5d0259892bf1b84f0319a05b65"><span>Die SD besitzt wieder die gleiche Größenordnung und Maßeinheit wie die Originaldaten.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1905,8 +1901,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Vier Abweichungen von einem Mittelwert betragen: 1, -3, 1 und 1. Wie hoch ist der Mean Absolute Error (MAE) für diese Daten? Wenden Sie die Definition der mittleren Absolutabweichung an. Beachten Sie den Umgang mit negativen Vorzeichen.</p>
-<div id="webex-4f5b8ae27bb75bdac552f6c19967f7b1" class="webex-radiogroup" data-answer="b1YZUhRRSQIbUz8=">
-<label><input type="radio" autocomplete="off" name="4f5b8ae27bb75bdac552f6c19967f7b1"><span>0</span></label><label><input type="radio" autocomplete="off" name="4f5b8ae27bb75bdac552f6c19967f7b1"><span>6</span></label><label><input type="radio" autocomplete="off" name="4f5b8ae27bb75bdac552f6c19967f7b1"><span>2</span></label><label><input type="radio" autocomplete="off" name="4f5b8ae27bb75bdac552f6c19967f7b1"><span>1,25</span></label><label><input type="radio" autocomplete="off" name="4f5b8ae27bb75bdac552f6c19967f7b1"><span>1,5</span></label>
+<div id="webex-5865e06b4e056bd9004c047f73572e9e" class="webex-radiogroup" data-answer="bggaBUkAGlIYVG0=">
+<label><input type="radio" autocomplete="off" name="5865e06b4e056bd9004c047f73572e9e"><span>0</span></label><label><input type="radio" autocomplete="off" name="5865e06b4e056bd9004c047f73572e9e"><span>6</span></label><label><input type="radio" autocomplete="off" name="5865e06b4e056bd9004c047f73572e9e"><span>2</span></label><label><input type="radio" autocomplete="off" name="5865e06b4e056bd9004c047f73572e9e"><span>1,25</span></label><label><input type="radio" autocomplete="off" name="5865e06b4e056bd9004c047f73572e9e"><span>1,5</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1923,8 +1919,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie betrachten ein einfaches Punktmodell für Klausurnoten. Nun erweitern Sie das Modell, indem Sie die Studierenden in zwei Gruppen (viel gelernt vs.&nbsp;wenig gelernt) aufteilen. Was passiert im Idealfall mit den Residuen (Fehlerbalken) im Vergleich zum ungruppierten Modell? Denken Sie an die grafische Darstellung der Abweichungen in Teilsamples.</p>
-<div id="webex-920d21209d44db71e99ced481e9d2c38" class="webex-radiogroup" data-answer="YgIcVB4BHgAVVWk=">
-<label><input type="radio" autocomplete="off" name="920d21209d44db71e99ced481e9d2c38"><span>Die Residuen verändern ihre Richtung von positiv zu negativ.</span></label><label><input type="radio" autocomplete="off" name="920d21209d44db71e99ced481e9d2c38"><span>Das Modell wird ungenauer, da man nun zwei Mittelwerte schätzen muss.</span></label><label><input type="radio" autocomplete="off" name="920d21209d44db71e99ced481e9d2c38"><span>Die Summe der Residuen wird deutlich größer als Null.</span></label><label><input type="radio" autocomplete="off" name="920d21209d44db71e99ced481e9d2c38"><span>Die Standardabweichung der gesamten Stichprobe sinkt automatisch auf Null.</span></label><label><input type="radio" autocomplete="off" name="920d21209d44db71e99ced481e9d2c38"><span>Die Fehlerbalken innerhalb der Gruppen werden im Durchschnitt kürzer.</span></label>
+<div id="webex-b9b617eccdaf83da2f9be897c8141a40" class="webex-radiogroup" data-answer="OQlOBh0HSVNPVTw=">
+<label><input type="radio" autocomplete="off" name="b9b617eccdaf83da2f9be897c8141a40"><span>Die Residuen verändern ihre Richtung von positiv zu negativ.</span></label><label><input type="radio" autocomplete="off" name="b9b617eccdaf83da2f9be897c8141a40"><span>Das Modell wird ungenauer, da man nun zwei Mittelwerte schätzen muss.</span></label><label><input type="radio" autocomplete="off" name="b9b617eccdaf83da2f9be897c8141a40"><span>Die Summe der Residuen wird deutlich größer als Null.</span></label><label><input type="radio" autocomplete="off" name="b9b617eccdaf83da2f9be897c8141a40"><span>Die Standardabweichung der gesamten Stichprobe sinkt automatisch auf Null.</span></label><label><input type="radio" autocomplete="off" name="b9b617eccdaf83da2f9be897c8141a40"><span>Die Fehlerbalken innerhalb der Gruppen werden im Durchschnitt kürzer.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1941,8 +1937,8 @@ Abbildung&nbsp;7.12: Standardisierung von Abweichungswerten bzw. einer Verteilun
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Zwei Medikamente zur Gewichtsreduktion zeigen in einer Studie den exakt gleichen mittleren Effekt. Bei Präparat A ist die Streuung der individuellen Ergebnisse jedoch minimal. Bei Präparat B ist die Streuung der Ergebnisse extrem hoch. Welche Aussage zur Modellgüte des Mittelwerts ist in diesem Fall korrekt? Betrachten Sie die Verlässlichkeit der Vorhersage für eine einzelne Person.</p>
-<div id="webex-d4ca6470be1fd54c8cee4437d4be8347" class="webex-radiogroup" data-answer="PwRPUBoEGwBOVWw=">
-<label><input type="radio" autocomplete="off" name="d4ca6470be1fd54c8cee4437d4be8347"><span>Ein Modell mit hoher Streuung ist immer präziser in der Vorhersage.</span></label><label><input type="radio" autocomplete="off" name="d4ca6470be1fd54c8cee4437d4be8347"><span>Die Modellgüte ist bei Präparat A höher, da die tatsächlichen Werte näher am Modellwert liegen.</span></label><label><input type="radio" autocomplete="off" name="d4ca6470be1fd54c8cee4437d4be8347"><span>Die Modellgüte ist bei beiden Präparaten identisch, da der Mittelwert gleich ist.</span></label><label><input type="radio" autocomplete="off" name="d4ca6470be1fd54c8cee4437d4be8347"><span>Präparat B hat eine höhere Modellgüte, weil extreme Erfolge möglich sind.</span></label><label><input type="radio" autocomplete="off" name="d4ca6470be1fd54c8cee4437d4be8347"><span>Die Standardabweichung hat keinen Einfluss auf die Güte eines Punktmodells.</span></label>
+<div id="webex-c2c1976d487d9d45edfd39d60263c626" class="webex-radiogroup" data-answer="OAJPABUHGlQYCGo=">
+<label><input type="radio" autocomplete="off" name="c2c1976d487d9d45edfd39d60263c626"><span>Ein Modell mit hoher Streuung ist immer präziser in der Vorhersage.</span></label><label><input type="radio" autocomplete="off" name="c2c1976d487d9d45edfd39d60263c626"><span>Die Modellgüte ist bei Präparat A höher, da die tatsächlichen Werte näher am Modellwert liegen.</span></label><label><input type="radio" autocomplete="off" name="c2c1976d487d9d45edfd39d60263c626"><span>Die Modellgüte ist bei beiden Präparaten identisch, da der Mittelwert gleich ist.</span></label><label><input type="radio" autocomplete="off" name="c2c1976d487d9d45edfd39d60263c626"><span>Präparat B hat eine höhere Modellgüte, weil extreme Erfolge möglich sind.</span></label><label><input type="radio" autocomplete="off" name="c2c1976d487d9d45edfd39d60263c626"><span>Die Standardabweichung hat keinen Einfluss auf die Güte eines Punktmodells.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -2654,15 +2650,50 @@ window.onload = function() {
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
     if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-      const a = window.document.createElement('a');
-      a.classList.add('top-right');
-      a.classList.add('quarto-color-scheme-toggle');
-      a.href = "";
-      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const toggle = window.document.createElement('button');
+      toggle.type = "button";
+      toggle.setAttribute("role", "switch");
+      toggle.setAttribute("aria-checked", "false");
+      toggle.classList.add('top-right');
+      toggle.classList.add('quarto-color-scheme-toggle');
+      toggle.setAttribute("aria-label", "Dunkelmodus umschalten");
+      toggle.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
       const i = window.document.createElement("i");
       i.classList.add('bi');
-      a.appendChild(i);
-      window.document.body.appendChild(a);
+      toggle.appendChild(i);
+      // Put the toggle in a landmark of its own, so that landmark navigation
+      // can reach it.
+      //
+      // The container is always a fresh direct child of body, and the toggle is
+      // never moved into page furniture that the theme or the author controls.
+      // The toggle is positioned against the page, so any ancestor that
+      // establishes a containing block captures it: a positioned element or a
+      // grid for position: absolute, and transform, filter, will-change or
+      // contain for position: fixed. A direct child of body has none of these
+      // to inherit, and the shift when one appears is silent and visual.
+      //
+      // ARIA says a document should have at most one banner, and axe reports a
+      // duplicate whether or not the banners carry distinct labels. So use a
+      // header when the page has no banner yet, and a named region otherwise.
+      //
+      // A header is a banner wherever it sits, unless it is inside sectioning
+      // content, so this cannot just look at the children of body: a custom
+      // page layout wraps the title block header in a plain div. An explicit
+      // role="banner" always counts.
+      const sectioning = 'article, aside, main, nav, section, [role="article"], [role="complementary"], [role="main"], [role="navigation"], [role="region"]';
+      const hasBanner = Array.from(
+        window.document.querySelectorAll('header:not([role]), [role="banner"]')
+      ).some(function(el) {
+        return el.hasAttribute("role") || el.closest(sectioning) === null;
+      });
+      const container = window.document.createElement(hasBanner ? "div" : "header");
+      if (hasBanner) {
+        container.setAttribute("role", "region");
+        container.setAttribute("aria-label", "Dunkelmodus umschalten");
+      }
+      container.classList.add('quarto-color-scheme-toggle-container');
+      container.appendChild(toggle);
+      window.document.body.appendChild(container);
     }
     setColorSchemeToggle(hasAlternateSentinel())
     const icon = "";
@@ -2741,7 +2772,8 @@ window.onload = function() {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -2750,8 +2782,69 @@ window.onload = function() {
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -2765,6 +2858,7 @@ window.onload = function() {
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -2927,44 +3021,54 @@ window.onload = function() {
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -3062,7 +3166,9 @@ window.onload = function() {
       }
     }
   });
-  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+  </script><script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollbarer Code","output":"Scrollbare Ausgabe"};
+  </script><nav class="page-navigation" aria-label="Seite"><div class="nav-page nav-page-previous">
       <a href="./050-zusammenfassen.html" class="pagination-link" aria-label="Punktmodelle 1">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Punktmodelle 1</span></span>
       </a>          

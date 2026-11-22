@@ -6,27 +6,30 @@
 <script src="080-regression1_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="080-regression1_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="080-regression1_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="080-regression1_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="080-regression1_files/libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="080-regression1_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="080-regression1_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="080-regression1_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+  <meta name="generator" content="quarto-1.11.9">
 
   <meta name="author" content="Sebastian Sauer">
   <title>Statistik1</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="080-regression1_files/libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="080-regression1_files/libs/revealjs/dist/reveal.css">
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
-    code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -121,7 +124,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="080-regression1_files/libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
+  <link rel="stylesheet" href="080-regression1_files/libs/revealjs/dist/theme/quarto-00ad5a49dff614330cd349bcec985ec3.css">
   <link rel="stylesheet" href="slides.css">
   <link href="080-regression1_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="080-regression1_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -228,7 +231,7 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Sebastian Sauer 
+Sebastian Sauer
 </div>
 </div>
 </div>
@@ -247,6 +250,7 @@ Sebastian Sauer
 <li>Sie können die Güte eines Geradenmodells anhand von Kennzahlen bestimmen.</li>
 <li>Sie können Geradenmodelle sowie ihre Modellgüte in R berechnen.</li>
 </ul>
+<p>In diesem Kapitel benötigen Sie die üblichen R-Pakete (<code>tidyverse</code>, <code>easystats</code>) und die Daten <code>mariokart</code> sowie <code>noten2</code>.</p>
 <div class="footer">
 <p>Einstieg</p>
 </div>
@@ -269,13 +273,15 @@ Sebastian Sauer
 <p>Vorhersagen</p>
 </div>
 </section>
-<section id="vorhersage-ohne-prädiktor-tonis-frage" class="slide level2 smaller">
-<h2>Vorhersage ohne Prädiktor: Tonis Frage</h2>
-<p>Toni fragt: “Welche Statistiknote kann ich in der Klausur erwarten?” — ohne weitere Angaben.</p>
-<p>Beste Antwort: der Notenschnitt (Mittelwert) der letzten Klausur — wir nutzen den Mittelwert als <em>Punktmodell</em>.</p>
+<section id="vorhersage-ohne-uv-tonis-frage" class="slide level2 smaller">
+<h2>Vorhersage ohne UV: Tonis Frage</h2>
+<p>Toni fragt: “Welche Statistiknote kann ich in der Klausur erwarten?” — wie viel sie gelernt hat, verrät sie nicht.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="" aria-label="1"></a>noten2 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/noten2.csv"</span>)</span>
+<span id="cb1-2"><a href="" aria-label="2"></a>noten2 <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">mw =</span> <span class="fu">mean</span>(y))  <span class="co"># y: Punktwert in der Klausur</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Beste Antwort ohne Prädiktor: der Mittelwert der letzten Klausur (ca. 91 Punkte) — wir nutzen den Mittelwert als <em>Punktmodell</em>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="../080-regression1_files/figure-html/fig-noten3-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmodell"><img data-src="../080-regression1_files/figure-html/fig-noten3-1.png" style="width:45.0%" alt="Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmodell"></a></p>
+<p><a href="../080-regression1_files/figure-html/fig-noten3-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmodell"><img data-src="../080-regression1_files/figure-html/fig-noten3-1.png" style="width:42.0%" alt="Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmodell"></a></p>
 <figcaption>Mittelwert als Vorhersagewert, bzw. Mittelwert als Punktmodell</figcaption>
 </figure>
 </div>
@@ -285,7 +291,6 @@ Sebastian Sauer
 </section>
 <section id="definition-nullmodell-punktmodell" class="slide level2">
 <h2>Definition: Nullmodell (Punktmodell)</h2>
-<div title="Definition: Nullmodell (Punktmodell)">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -299,16 +304,17 @@ Sebastian Sauer
 </div>
 </div>
 </div>
-</div>
-<p>Auf Errisch: <code>lm(y ~ 1, data = noten2)</code> — der zurückgemeldete Koeffizient <code>(Intercept)</code> ist in diesem Fall der Mittelwert.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="" aria-label="1"></a>lm0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> noten2)</span>
+<span id="cb2-2"><a href="" aria-label="2"></a>lm0   <span class="co"># (Intercept): 91</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>lm</code> steht für “lineares Modell”, die <code>1</code> sagt, dass es keine Prädiktoren gibt. Der einzige Koeffizient, <code>(Intercept)</code>, ist der Mittelwert — für alle Studierenden wird derselbe Wert vorhergesagt.</p>
 <div class="footer">
 <p>Vorhersagen</p>
 </div>
 </section>
 <section id="toni-verrät-die-lernzeit" class="slide level2">
 <h2>Toni verrät die Lernzeit</h2>
-<p>Toni: “Ich hab insgesamt 42 Stunden gelernt.” Der Trend im Streudiagramm ist deutlich zu erkennen: Je mehr Lernzeit, desto mehr Klausurpunkte.</p>
-<p><img data-src="../080-regression1_files/figure-html/fig-noten4-1.png" style="width:45.0%" alt="Noten und Lernzeit: Rohdaten (a) und mit Trendgerade (b)"> <img data-src="../080-regression1_files/figure-html/fig-noten4-2.png" style="width:45.0%"></p>
+<p>Toni: “Ich hab insgesamt 42 Stunden gelernt.” Der Trend im Streudiagramm ist deutlich: Je mehr Lernzeit, desto mehr Klausurpunkte. Laut Trendgerade kann Toni ca. 83 Punkte erwarten.</p>
+<p><img data-src="../080-regression1_files/figure-html/fig-noten4-1.png" style="width:45.0%" alt="Noten und Lernzeit: Rohdaten (a) und mit Modell (b); gestrichelt: Mittelwerte, Punkt: Tonis Vorhersage"> <img data-src="../080-regression1_files/figure-html/fig-noten4-2.png" style="width:45.0%"></p>
 <div class="footer">
 <p>Vorhersagen</p>
 </div>
@@ -318,8 +324,9 @@ Sebastian Sauer
 <h1>Geradenmodelle</h1>
 
 </section>
-<section id="von-punktmodell-zu-geradenmodell" class="slide level2">
-<h2>Von Punktmodell zu Geradenmodell</h2>
+<section id="vom-punktmodell-zum-geradenmodell" class="slide level2">
+<h2>Vom Punktmodell zum Geradenmodell</h2>
+<p>Wir modellieren die Daten (bzw. deren Zusammenhang) mit einer Geraden.</p>
 <p>Ein <em>Geradenmodell</em> ist eine Verallgemeinerung des Punktmodells: Ein Punktmodell sagt für alle Beobachtungen den gleichen Wert vorher.</p>
 <p>In einem Geradenmodell wird nicht mehr (notwendig) für jede Beobachtung die gleiche Vorhersage <span class="math inline">\(\hat{y}\)</span> gemacht.</p>
 <div class="footer">
@@ -328,7 +335,6 @@ Sebastian Sauer
 </section>
 <section id="definition-gerade" class="slide level2">
 <h2>Definition: Gerade</h2>
-<div title="Definition: Gerade">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -342,12 +348,11 @@ Sebastian Sauer
 </div>
 </div>
 </div>
-</div>
 <div class="footer">
 <p>Geradenmodelle</p>
 </div>
 </section>
-<section id="die-geradengleichung" class="slide level2">
+<section id="die-geradengleichung" class="slide level2 smaller">
 <h2>Die Geradengleichung</h2>
 <div style="position:absolute; width:0; height:0; overflow:hidden;">
 <p><span class="math display">\[
@@ -359,9 +364,13 @@ Sebastian Sauer
 \definecolor{xcol}{RGB}{204,121,167}
 \]</span></p>
 </div>
-<p>In der Statistik wird folgende Nomenklatur bevorzugt: <span class="math inline">\(f(\color{xcol}{x})=\color{ycol}{\hat{y}}=\color{beta0col}{\beta_0} + \color{beta1col}{\beta_1} \color{xcol}{x}\)</span></p>
-<p>Die Nomenklatur mit <span class="math inline">\(b_0, b_1\)</span> hat den Vorteil, dass man das Modell einfach erweitern kann: <span class="math inline">\(b_2, b_3, \ldots\)</span>. Anstelle von <span class="math inline">\(b\)</span> liest man auch oft <span class="math inline">\(\beta\)</span>.</p>
-<p>Das “Dach” über y, <span class="math inline">\(\color{modelcol}{\hat{y}}\)</span>, drückt aus, dass es sich um den vom Modell vorhergesagten Wert handelt — nicht den tatsächlich beobachteten Wert von <span class="math inline">\(\color{ycol}{y}\)</span>.</p>
+<p>Im Schulunterricht: <span class="math inline">\(f(\color{xcol}{x})=\color{ycol}{y}={m} \color{xcol}{x} + \color{beta0col}{t}\)</span></p>
+<p>In der Statistik: <span class="math inline">\(f(\color{xcol}{x})=\color{ycol}{\hat{y}}=\color{beta0col}{\beta_0} + \color{beta1col}{\beta_1} \color{xcol}{x}\)</span> oder <span class="math inline">\(\color{ycol}{\hat{y}}= \color{beta0col}{b_0} + \color{beta1col}{b_1} \color{xcol}{x}\)</span></p>
+<ul>
+<li>Die Nomenklatur mit <span class="math inline">\(b_0, b_1\)</span> lässt sich einfach erweitern: <span class="math inline">\(b_2, b_3, \ldots\)</span></li>
+<li>Griechische Buchstaben (<span class="math inline">\(\beta\)</span>) zeigen meist an, dass man eine Aussage über die Population (nicht nur die Stichprobe) machen möchte.</li>
+<li>Das “Dach” über y, <span class="math inline">\(\color{modelcol}{\hat{y}}\)</span> (“y-Dach”), kennzeichnet den vom Modell vorhergesagten Wert — nicht den beobachteten Wert <span class="math inline">\(\color{ycol}{y}\)</span>.</li>
+</ul>
 <div class="footer">
 <p>Geradenmodelle</p>
 </div>
@@ -380,7 +389,6 @@ Sebastian Sauer
 </section>
 <section id="definition-das-einfache-lineare-modell" class="slide level2 smaller">
 <h2>Definition: Das einfache lineare Modell</h2>
-<div title="Definition: Das einfache lineare Modell">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -390,8 +398,7 @@ Sebastian Sauer
 <p><strong>Definition: Das einfache lineare Modell</strong></p>
 </div>
 <div class="callout-content">
-<p>Beschreibt den Wert einer abhängigen metrischen Variablen, <span class="math inline">\(\color{ycol}{y}\)</span>, als lineare Funktion von einer unabhängigen Variablen, <span class="math inline">\(\color{xcol}{x}\)</span>, plus einem Fehlerterm, <span class="math inline">\(\color{errorcol}{\epsilon}\)</span>.</p>
-</div>
+<p>Das einfache lineare Modell beschreibt den Wert einer abhängigen metrischen Variablen, <span class="math inline">\(\color{ycol}{y}\)</span>, als lineare Funktion von einer (oder mehreren) unabhängigen Variablen, <span class="math inline">\(\color{xcol}{x}\)</span>, plus einem Fehlerterm, <span class="math inline">\(\color{errorcol}{\epsilon}\)</span>.</p>
 </div>
 </div>
 </div>
@@ -401,9 +408,10 @@ Sebastian Sauer
 \end{aligned}\]</span></p>
 <ul>
 <li><span class="math inline">\(\color{beta0col}{\beta_0}\)</span>: geschätzter y-Achsenabschnitt laut Modell (<em>intercept</em>)</li>
-<li><span class="math inline">\(\color{beta1col}{\beta_1}\)</span>: geschätzte Steigung laut Modell (<em>slope</em>)</li>
+<li><span class="math inline">\(\color{beta1col}{\beta_1}\)</span>: geschätzte Steigung (Regressionsgewicht) laut Modell (<em>slope</em>)</li>
 <li><span class="math inline">\(\color{errorcol}{\epsilon}\)</span>: Fehler des Modells</li>
 </ul>
+<p>Hier steht <span class="math inline">\(\color{ycol}{y}\)</span>, nicht <span class="math inline">\(\color{modelcol}{\hat{y}}\)</span>: Der <em>beobachtete</em> Wert ist die Summe aus Vorhersage und Modellfehler.</p>
 <div class="footer">
 <p>Geradenmodelle</p>
 </div>
@@ -416,40 +424,65 @@ Sebastian Sauer
 <p>Geradenmodelle</p>
 </div>
 </section>
-<section id="spezifikation-eines-geradenmodells" class="slide level2">
-<h2>Spezifikation eines Geradenmodells</h2>
-<p><span class="math display">\[\color{ycol}{\hat{y}} \sim \color{xcol}{\text{x}}\]</span></p>
-<p>Lies: “Laut meinem Modell ist mein vorhergesagtes <span class="math inline">\(\color{ycol}{\hat{y}}\)</span> irgendeine Funktion von <span class="math inline">\(\color{xcol}{x}\)</span>.” Wir erinnern uns: <span class="math inline">\(\color{ycol}{AV} \sim \color{xcol}{UV}\)</span>.</p>
-<p>In Errisch: <code>lm(y ~ x, data = meine_daten)</code>. <code>lm</code> steht für “lineares Modell” — die Gerade nennt man auch <em>Regressionsgerade</em>.</p>
-<div class="footer">
-<p>Geradenmodelle</p>
-</div>
-</section>
-<section id="koeffizienten-in-r-berechnen" class="slide level2">
-<h2>Koeffizienten in R berechnen</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>lm_toni <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> noten2)</span>
-<span id="cb1-2"><a href=""></a>lm_toni</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Die Regressionsgleichung lautet demnach: <code>y_pred = 8.6 + 0.88*x</code>.</p>
-<p><code>8.6</code> ist der Achsenabschnitt (Wert von <span class="math inline">\(y\)</span> bei <span class="math inline">\(x=0\)</span>). <code>0.88</code> ist die Steigung: Für jede Stunde Lernzeit steigt der vorhergesagte Klausurerfolg um <code>0.88</code> Punkte.</p>
-<div class="footer">
-<p>Geradenmodelle</p>
-</div>
-</section>
-<section id="der-achsenabschnitt" class="slide level2">
-<h2>Der Achsenabschnitt</h2>
+<section id="toni-will-es-genau-wissen" class="slide level2">
+<h2>Toni will es genau wissen</h2>
+<p>“Wie viele Punkte bekomme ich, wenn ich gar nicht lerne? Und wie viele pro gelernter Stunde?”</p>
+<p>Den <span class="math inline">\(\color{ycol}{Y}\)</span>-Wert bei <span class="math inline">\(\color{xcol}{x}=0\)</span> gibt der <strong>Achsenabschnitt</strong> zurück:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="../080-regression1_files/figure-html/fig-beta0-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Der Achsenabschnitt: Wie viele Punkte kann Toni erwarten bei 0 Lernstunden?"><img data-src="../080-regression1_files/figure-html/fig-beta0-1.png" style="width:48.0%" alt="Der Achsenabschnitt: Wie viele Punkte kann Toni erwarten bei 0 Lernstunden?"></a></p>
-<figcaption>Der Achsenabschnitt: Wie viele Punkte kann Toni erwarten bei 0 Lernstunden?</figcaption>
+<p><a href="../080-regression1_files/figure-html/fig-beta0-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Der Achsenabschnitt: Wie viele Punkte kann Toni erwarten bei 0 Lernstunden? (roter Punkt bei x=0)"><img data-src="../080-regression1_files/figure-html/fig-beta0-1.png" style="width:45.0%" alt="Der Achsenabschnitt: Wie viele Punkte kann Toni erwarten bei 0 Lernstunden? (roter Punkt bei x=0)"></a></p>
+<figcaption>Der Achsenabschnitt: Wie viele Punkte kann Toni erwarten bei 0 Lernstunden? (roter Punkt bei x=0)</figcaption>
 </figure>
 </div>
 <div class="footer">
 <p>Geradenmodelle</p>
 </div>
 </section>
+<section id="spezifikation-eines-geradenmodells" class="slide level2">
+<h2>Spezifikation eines Geradenmodells</h2>
+<p><span class="math display">\[\color{ycol}{\hat{y}} \sim \color{xcol}{\text{x}}\]</span></p>
+<p>Lies: “Laut meinem Modell ist mein vorhergesagtes <span class="math inline">\(\color{ycol}{\hat{y}}\)</span> irgendeine Funktion von <span class="math inline">\(\color{xcol}{x}\)</span>.” Wir erinnern uns: <span class="math inline">\(\color{ycol}{AV} \sim \color{xcol}{UV}\)</span>.</p>
+<p>In Errisch: <code>lm(y ~ x, data = meine_daten)</code>. <code>lm</code> steht für “lineares Modell” — die Gerade nennt man auch <em>Regressionsgerade</em> (unscharf auch “Trendgerade”).</p>
+<div class="footer">
+<p>Geradenmodelle</p>
+</div>
+</section>
+<section id="zahlen-für-toni-koeffizienten-in-r" class="slide level2 smaller">
+<h2>Zahlen für Toni: Koeffizienten in R</h2>
+<p>“Hör auf, mit dem Lineal herumzumalen — sag mir präzise Zahlen!”</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="" aria-label="1"></a>lm_toni <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> noten2)</span>
+<span id="cb3-2"><a href="" aria-label="2"></a>lm_toni</span>
+<span id="cb3-3"><a href="" aria-label="3"></a><span class="co">#&gt; (Intercept)            x</span></span>
+<span id="cb3-4"><a href="" aria-label="4"></a><span class="co">#&gt;       46.19         0.88</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Die Regressionsgleichung lautet demnach: <code>y_pred = 46 + 0.88*x</code>.</p>
+<ul>
+<li><code>46</code> ist der Achsenabschnitt: der vorhergesagte Wert von <span class="math inline">\(y\)</span> bei <span class="math inline">\(x=0\)</span> Lernstunden.</li>
+<li><code>0.88</code> ist das Regressionsgewicht (Steigung): Für jede Stunde Lernzeit steigt der vorhergesagte Klausurerfolg um <code>0.88</code> Punkte.</li>
+<li>Mit beiden Koeffizienten kann man für beliebige <span class="math inline">\(x\)</span>-Werte <span class="math inline">\(\hat{y}\)</span> ausrechnen, z. B. 73 Stunden: <span class="math inline">\(46 + 0.88 \cdot 73 \approx 110\)</span> Punkte.</li>
+</ul>
+<div class="footer">
+<p>Geradenmodelle</p>
+</div>
+</section>
+<section id="vorhersagen-mit-predict" class="slide level2 smaller">
+<h2>Vorhersagen mit <code>predict</code></h2>
+<blockquote>
+<p>Hey R, predicte mir mal auf Basis vom Modell <code>lm_toni</code> den Lernerfolg für Toni, wenn sie 73 Stunden lernt.</p>
+</blockquote>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-label="1"></a>tonis_lernzeit2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x =</span> <span class="dv">73</span>)   <span class="co"># Tabelle mit 1 Zeile, 1 Spalte</span></span>
+<span id="cb4-2"><a href="" aria-label="2"></a><span class="fu">predict</span>(lm_toni, <span class="at">newdata =</span> tonis_lernzeit2)</span>
+<span id="cb4-3"><a href="" aria-label="3"></a><span class="co">#&gt;   1</span></span>
+<span id="cb4-4"><a href="" aria-label="4"></a><span class="co">#&gt; 110</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Allgemeine Syntax:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-label="1"></a><span class="fu">predict</span>(modell, <span class="at">newdata =</span> tabelle_mit_prädiktorwerten)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>newdata</code> muss ein Dataframe sein, der die Werte der UV enthält (hier die Spalte <code>x</code>).</p>
+<div class="footer">
+<p>Geradenmodelle</p>
+</div>
+</section>
 <section id="vorhersagefehler-residuum" class="slide level2">
 <h2>Vorhersagefehler (Residuum)</h2>
-<p>Die Differenz zwischen vorhergesagtem Wert und tatsächlichem Wert nennt man Vorhersagefehler (<em>error</em>) oder <em>Residuum</em>:</p>
+<p>Die Differenz zwischen tatsächlichem Wert und vorhergesagtem Wert nennt man Vorhersagefehler (<em>error</em>) oder <em>Residuum</em>:</p>
 <p><span class="math display">\[\color{errorcol}{e_i} = \color{ycol}{y_i} - \color{modelcol}{\hat{y}_i}\]</span></p>
 <div class="footer">
 <p>Geradenmodelle</p>
@@ -457,15 +490,17 @@ Sebastian Sauer
 </section>
 <section id="vorhersagefehler-im-vergleich" class="slide level2 smaller">
 <h2>Vorhersagefehler im Vergleich</h2>
-<p><img data-src="../080-regression1_files/figure-html/fig-resid-1.png" style="width:45.0%" alt="Vorhersagefehler als Abweichungsbalken: Geradenmodell (a) und Punktmodell (b)"> <img data-src="../080-regression1_files/figure-html/fig-resid-2.png" style="width:45.0%"></p>
-<p>Beim Geradenmodell (<code>lm_toni</code>) ist die mittlere Absolutabweichung (MAE) deutlich kleiner als beim Nullmodell (<code>lm0</code>) — das Geradenmodell ist viel besser.</p>
+<p><img data-src="../080-regression1_files/figure-html/fig-resid-1.png" style="width:42.0%" alt="Vorhersagefehler als Abweichungsbalken: Geradenmodell lm_toni (a) und Punktmodell lm0 (b)"> <img data-src="../080-regression1_files/figure-html/fig-resid-2.png" style="width:42.0%"></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-label="1"></a><span class="fu">mae</span>(lm0)                  <span class="co"># 11.2</span></span>
+<span id="cb6-2"><a href="" aria-label="2"></a><span class="fu">mae</span>(lm_toni)              <span class="co">#  8.0</span></span>
+<span id="cb6-3"><a href="" aria-label="3"></a><span class="fu">mae</span>(lm_toni) <span class="sc">/</span> <span class="fu">mae</span>(lm0)   <span class="co">#  0.71</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Das Geradenmodell ist viel besser: Die mittlere Länge der Fehlerbalken sinkt auf 71 % des Nullmodells.</p>
 <div class="footer">
 <p>Geradenmodelle</p>
 </div>
 </section>
-<section id="definition-fehlerstreuung" class="slide level2">
+<section id="definition-fehlerstreuung" class="slide level2 smaller">
 <h2>Definition: Fehlerstreuung</h2>
-<div title="Definition: Fehlerstreuung">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -479,16 +514,22 @@ Sebastian Sauer
 </div>
 </div>
 </div>
-</div>
-<p>Kenngrößen dafür: MAE oder MSE. Ein Geradenmodell ist immer besser als ein Punktmodell, solange X mit Y korreliert ist.</p>
+<ul>
+<li>Kenngrößen dafür: MAE oder — in Analogie zur Varianz — der mittlere Quadratfehler (MSE).</li>
+<li>Ein Geradenmodell ist immer besser als ein Punktmodell, solange X mit Y korreliert ist.</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-label="1"></a><span class="fu">mse</span>(lm0)                  <span class="co"># 193</span></span>
+<span id="cb7-2"><a href="" aria-label="2"></a><span class="fu">mse</span>(lm_toni)              <span class="co"># 106</span></span>
+<span id="cb7-3"><a href="" aria-label="3"></a><span class="fu">mse</span>(lm_toni) <span class="sc">/</span> <span class="fu">mse</span>(lm0)   <span class="co"># 0.55</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="footer">
 <p>Geradenmodelle</p>
 </div>
 </section>
-<section id="berechnung-der-modellkoeffizienten" class="slide level2">
+<section id="berechnung-der-modellkoeffizienten" class="slide level2 smaller">
 <h2>Berechnung der Modellkoeffizienten</h2>
 <p>Wie legt man die Regressionsgerade in das Streudiagramm? Die Koeffizienten <span class="math inline">\(\beta_0\)</span> und <span class="math inline">\(\beta_1\)</span> wählt man so, dass die Residuen <em>minimal</em> sind — genauer: die Summe der quadrierten Residuen wird minimiert.</p>
 <p><span class="math display">\[\text{min}\sum_i \color{errorcol}{e_i}^2\]</span></p>
+<p><img data-src="../img/RegressionSpring.gif" style="width:32.0%" alt="Minimierung der Residuen (Bildquelle: Karsten Lübke, FOM)"> <img data-src="../img/RegressionRSS.gif" style="width:32.0%" alt="Minimierung der quadrierten Residuen"></p>
 <div class="footer">
 <p>Geradenmodelle</p>
 </div>
@@ -498,18 +539,18 @@ Sebastian Sauer
 <h1><span class="math inline">\(R^2\)</span> als Maß der Modellgüte</h1>
 
 </section>
-<section id="r²-als-verringerung-der-fehlerstreuung" class="slide level2">
-<h2>R² als Verringerung der Fehlerstreuung</h2>
-<p>Wir vergleichen die Fehlerstreuung (MSE) des Modells mit der Fehlerstreuung (MSE) des Nullmodells:</p>
+<section id="verringerung-der-fehlerstreuung" class="slide level2">
+<h2>Verringerung der Fehlerstreuung</h2>
+<p><code>lm_toni</code> weist noch 55 % der Fehlerstreuung (MSE) des Nullmodells auf — das Modell hat sich also um <span class="math inline">\(1 - 0{,}55 = 0{,}45\)</span> verbessert.</p>
+<p>Wir vergleichen die Fehlerstreuung (MSE) des Modells mit der des Nullmodells:</p>
 <p><span class="math display">\[R^2 = 1 - \frac{\text{MSE}_{m}}{\text{MSE}_{m0}}\]</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="fu">r2</span>(lm_toni)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-label="1"></a><span class="fu">r2</span>(lm_toni)   <span class="co"># R2: 0.45</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="footer">
-<p>R² als Maß der Modellgüte</p>
+<p><span class="math inline">\(R^2\)</span> als Maß der Modellgüte</p>
 </div>
 </section>
 <section id="definition-r-quadrat" class="slide level2 smaller">
 <h2>Definition: R-Quadrat</h2>
-<div title="Definition: R-Quadrat">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -519,21 +560,25 @@ Sebastian Sauer
 <p><strong>Definition: R-Quadrat</strong></p>
 </div>
 <div class="callout-content">
-<p>Der Anteil der Verringerung der Fehlerstreuung zwischen <code>lm0</code> und dem gerade untersuchten Modell nennt man <em>R-Quadrat</em> (<span class="math inline">\(R^2\)</span>). <span class="math inline">\(R^2\)</span> ist ein Maß der Modellgüte: Je größer <span class="math inline">\(R^2\)</span>, desto besser die Vorhersage. Wertebereich: 0 bis 1. Im Nullmodell beträgt <span class="math inline">\(R^2\)</span> per Definition Null. Für Modelle des Typs <span class="math inline">\(y \sim x\)</span> gilt: <span class="math inline">\(R^2 = r_{xy}^2\)</span>.</p>
+<p>Der Anteil der Verringerung der Fehlerstreuung der Zielvariablen zwischen <code>lm0</code> und dem gerade untersuchten Modell nennt man <em>R-Quadrat</em> (<span class="math inline">\(R^2\)</span>). <span class="math inline">\(R^2\)</span> ist ein Maß der <em>Modellgüte</em>: Je größer <span class="math inline">\(R^2\)</span>, desto besser die Vorhersage. Da es ein Anteilsmaß ist, liegt der Wertebereich zwischen 0 und 1. Im Nullmodell beträgt <span class="math inline">\(R^2\)</span> per Definition Null. Für Modelle des Typs <span class="math inline">\(y \sim x\)</span> gilt: <span class="math inline">\(R^2 = r_{xy}^2\)</span>.</p>
 </div>
 </div>
 </div>
-</div>
+<p>Einfach gesagt: <span class="math inline">\(R^2\)</span> gibt an, wie gut (zu welchem Anteil) ein Modell die Zielvariable <span class="math inline">\(y\)</span> erklärt.</p>
 <div class="footer">
-<p>R² als Maß der Modellgüte</p>
+<p><span class="math inline">\(R^2\)</span> als Maß der Modellgüte</p>
 </div>
 </section>
-<section id="extremfälle-von-r²" class="slide level2">
+<section id="extremfälle-von-r²" class="slide level2 smaller">
 <h2>Extremfälle von R²</h2>
 <p><img data-src="../080-regression1_files/figure-html/fig-r2-extreme-1.png" style="width:40.0%" alt="Keine Korrelation (r=0, R^2=0) und perfekte Korrelation (r=1, R^2=1)"> <img data-src="../080-regression1_files/figure-html/fig-r2-extreme-2.png" style="width:40.0%"></p>
-<p>Je größer R-Quadrat, desto besser passt das Modell zu den Daten.</p>
+<ul>
+<li><span class="math inline">\(R^2=1\)</span>: Alle Punkte liegen auf der Geraden; die Prognose ist gleich dem beobachteten Wert.</li>
+<li><span class="math inline">\(R^2=0\)</span>: Die Vorhersage ist so gut, als würde man für jedes <span class="math inline">\(y\)</span> den Mittelwert <span class="math inline">\(\bar{y}\)</span> vorhersagen.</li>
+<li>Je größer <span class="math inline">\(R^2\)</span>, desto besser passt das Modell zu den Daten (“Fit”).</li>
+</ul>
 <div class="footer">
-<p>R² als Maß der Modellgüte</p>
+<p><span class="math inline">\(R^2\)</span> als Maß der Modellgüte</p>
 </div>
 </section></section>
 <section>
@@ -549,12 +594,13 @@ Sebastian Sauer
 <p>Interpretation eines Regressionsmodells</p>
 </div>
 </section>
-<section id="koeffizienten-interpretieren" class="slide level2">
+<section id="koeffizienten-interpretieren" class="slide level2 smaller">
 <h2>Koeffizienten interpretieren</h2>
 <ul>
 <li>Achsenabschnitt (<span class="math inline">\(\beta_0\)</span>) und Steigung (<span class="math inline">\(\beta_1\)</span>) sind nur eingeschränkt zu interpretieren, wenn man die zugrundeliegenden kausalen Abhängigkeiten nicht kennt.</li>
-<li>Allein aufgrund eines statistischen Zusammenhangs darf man keine kausalen Abhängigkeiten annehmen.</li>
-<li>Beispiel: Bei einer Regression von Gewicht auf Körpergröße ist der Achsenabschnitt wenig nützlich — es gibt keine Menschen der Größe 0.</li>
+<li>Allein aufgrund eines statistischen Zusammenhangs darf man keine kausalen Abhängigkeiten annehmen. Ohne Theorie kann man nur <em>deskriptiv</em> argumentieren — oder sich mit Modellgüte und Vorhersagen begnügen.</li>
+<li>In <code>lm_toni</code> liegt der Achsenabschnitt bei <span class="math inline">\(y \approx 46\)</span>: Beobachtungen mit <span class="math inline">\(x=0\)</span> können laut Modell diesen Wert erwarten.</li>
+<li>Oft sind UV-Werte von 0 unrealistisch, z. B. bei einer Regression von Gewicht auf Körpergröße — es gibt keine Menschen der Größe 0.</li>
 </ul>
 <div class="footer">
 <p>Interpretation eines Regressionsmodells</p>
@@ -616,24 +662,63 @@ Sebastian Sauer
 <h1>Fallbeispiel Mariokart</h1>
 
 </section>
-<section id="vorhersage-des-verkaufspreises" class="slide level2">
-<h2>Vorhersage des Verkaufspreises</h2>
-<p>Ziel: eine genaue Vorhersage der Verkaufspreise (<code>total_pr</code>) von Mariokart-Auktionen.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> start_pr, <span class="at">data =</span> mariokart)</span>
-<span id="cb3-2"><a href=""></a><span class="fu">r2</span>(lm2)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="der-datenwahrsager-legt-los" class="slide level2">
+<h2>Der Datenwahrsager legt los</h2>
+<p>Ziel: eine genaue Vorhersage der Verkaufspreise (<code>total_pr</code>) von Mariokart-Auktionen — betriebswirtschaftlich hoch relevant.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-label="1"></a>lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> start_pr, <span class="at">data =</span> mariokart)</span>
+<span id="cb9-2"><a href="" aria-label="2"></a><span class="fu">r2</span>(lm2)   <span class="co"># R2: 0.005</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Oh nein! Unterirdisch schlecht. Anstelle von bloßem Rumprobieren: Welche Variable korreliert am stärksten mit <code>total_pr</code>?</p>
 <div class="footer">
 <p>Fallbeispiel Mariokart</p>
 </div>
 </section>
-<section id="ein-besseres-modell-ship_pr" class="slide level2">
+<section id="ein-besseres-modell-ship_pr" class="slide level2 smaller">
 <h2>Ein besseres Modell: <code>ship_pr</code></h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>lm3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> ship_pr, <span class="at">data =</span> mariokart)</span>
-<span id="cb4-2"><a href=""></a><span class="fu">parameters</span>(lm3)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="" aria-label="1"></a>lm3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> ship_pr, <span class="at">data =</span> mariokart)</span>
+<span id="cb10-2"><a href="" aria-label="2"></a><span class="fu">parameters</span>(lm3)   <span class="co"># (Intercept): 36; ship_pr: 4</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
-<li>Achsenabschnitt: erwarteter Verkaufspreis bei 0 Dollar Versandkosten (“Sockelbetrag”).</li>
-<li>Steigung: Anstieg des erwarteten Verkaufspreises <em>pro Dollar</em> Versandkosten.</li>
-<li>Regressionsgleichung: <code>total_pr_pred = b0 + b1 * ship_pr</code></li>
+<li>Achsenabschnitt: ca. 36 Dollar erwarteter Verkaufspreis bei 0 Dollar Versandkosten (“Sockelbetrag”).</li>
+<li>Steigung: <em>Pro Dollar</em> Versandkosten steigt der erwartete Verkaufspreis um ca. 4 Dollar.</li>
+<li>Die Koeffizienten sind Schätzwerte aus einer Stichprobe (<span class="math inline">\(n = 143\)</span>); die Spalte <code>95 CI</code> gibt einen Schätzbereich an.</li>
+</ul>
+<p>Regressionsgleichung: <code>total_pr_pred = 36 + 4*ship_pr</code></p>
+<blockquote>
+<p>Der vorhergesagte Gesamtpreis eines Spiels liegt bei 36 Dollar “Sockelbetrag” plus 4 mal die Versandkosten.</p>
+</blockquote>
+<div class="footer">
+<p>Fallbeispiel Mariokart</p>
+</div>
+</section>
+<section id="erwartete-werte-und-vorhersagen" class="slide level2 smaller">
+<h2>Erwartete Werte und Vorhersagen</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-label="1"></a>neue_daten <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">ship_pr =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>))</span>
+<span id="cb11-2"><a href="" aria-label="2"></a><span class="fu">predict</span>(lm3, <span class="at">newdata =</span> neue_daten)</span>
+<span id="cb11-3"><a href="" aria-label="3"></a><span class="co">#&gt;  1  2</span></span>
+<span id="cb11-4"><a href="" aria-label="4"></a><span class="co">#&gt; 41 54</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Bei 4 Dollar Versandkosten sind laut Modell knapp 54 Dollar Verkaufspreis zu erwarten.</p>
+<p><code>estimate_expectation(lm3)</code> liefert für jede Beobachtung den vorhergesagten Wert (<code>Predicted</code>) und das Residuum.</p>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><a href="../080-regression1_files/figure-html/fig-lm3-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Verbildlichung der erwarteten Werte laut lm3"><img data-src="../080-regression1_files/figure-html/fig-lm3-1.png" style="width:100.0%" alt="Verbildlichung der erwarteten Werte laut lm3"></a></p>
+<figcaption>Verbildlichung der erwarteten Werte laut lm3</figcaption>
+</figure>
+</div>
+</div></div>
+<div class="footer">
+<p>Fallbeispiel Mariokart</p>
+</div>
+</section>
+<section id="wie-gut-ist-lm3" class="slide level2">
+<h2>Wie gut ist <code>lm3</code>?</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="" aria-label="1"></a><span class="fu">mae</span>(lm3)   <span class="co"># 13</span></span>
+<span id="cb12-2"><a href="" aria-label="2"></a><span class="fu">r2</span>(lm3)    <span class="co"># R2: 0.29</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Das Modell erklärt einen Anteil von ca. 0,29 der Gesamtstreuung.</li>
+<li>“Ich kann den Verkaufspreis von Mariokart-Spielen im Schnitt auf 13 Dollar genau vorhersagen!”</li>
+<li>Die Chefin hätte es gerne genauer. Kann man da noch was machen?</li>
 </ul>
 <div class="footer">
 <p>Fallbeispiel Mariokart</p>
@@ -644,45 +729,130 @@ Sebastian Sauer
 <h1>Fallstudie Immobilienpreise</h1>
 
 </section>
-<section id="ziel-häuserpreise-vorhersagen" class="slide level2">
-<h2>Ziel: Häuserpreise vorhersagen</h2>
-<p>In dieser Fallstudie geht es darum, Immobilienpreise vorherzusagen — Datenbasis ist ein Kaggle-Wettbewerb (“House Prices”).</p>
+<section id="hintergrund-ein-prognosewettbewerb" class="slide level2 smaller">
+<h2>Hintergrund: ein Prognosewettbewerb</h2>
+<p>Ziel: Immobilienpreise vorhersagen und die Vorhersagen als CSV bei <a href="https://www.kaggle.com/">kaggle.com</a> einreichen — Kaggle-Competition “House Prices – Advanced Regression Techniques”.</p>
+<div class="callout callout-caution callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Vorsicht</strong></p>
+</div>
+<div class="callout-content">
+<p>Diese Fallstudie führt in die Prüfungsleistung “Prognosewettbewerb” ein.</p>
+</div>
+</div>
+</div>
 <ul>
-<li><code>d_train</code>: Trainingsdaten zum Modellbau (enthält <code>SalePrice</code>)</li>
-<li><code>d_test</code>: Testdaten, für die der Preis vorhergesagt werden soll</li>
+<li><code>d_train</code> (<em>train.csv</em>): Häuser mit bekanntem Preis (<code>SalePrice</code>) — zum Modellbau</li>
+<li><code>d_test</code> (<em>test.csv</em>): Häuser, deren Preis vorhergesagt werden soll</li>
+<li><em>data_description.txt</em>: Codebook; <em>sample_submission.csv</em>: Beispiel einer Prognosedatei</li>
 </ul>
+<div class="footer">
+<p>Fallstudie Immobilienpreise</p>
+</div>
+</section>
+<section id="ein-erstes-vorhersagemodell" class="slide level2 smaller">
+<h2>Ein erstes Vorhersagemodell</h2>
+<p>Welche UV eignen sich? Einfache Antwort: Korrelation aller UV mit der AV berechnen.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="" aria-label="1"></a>d_train <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="" aria-label="2"></a>  <span class="fu">select</span>(<span class="sc">-</span>Id) <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="" aria-label="3"></a>  <span class="fu">correlation</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="" aria-label="4"></a>  <span class="fu">filter</span>(Parameter2 <span class="sc">==</span> <span class="st">"SalePrice"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-5"><a href="" aria-label="5"></a>  <span class="fu">arrange</span>(<span class="sc">-</span><span class="fu">abs</span>(r)) <span class="sc">|&gt;</span></span>
+<span id="cb13-6"><a href="" aria-label="6"></a>  <span class="fu">filter</span>(<span class="fu">abs</span>(r) <span class="sc">&gt;</span> .<span class="dv">3</span>)   <span class="co"># nur |r| &gt; .3</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>OverallQual</code> (Zustand der Immobilie) korreliert am stärksten mit <code>SalePrice</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="" aria-label="1"></a>lm_immo1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(SalePrice <span class="sc">~</span> OverallQual, <span class="at">data =</span> d_train)</span>
+<span id="cb14-2"><a href="" aria-label="2"></a><span class="fu">rmse</span>(lm_immo1)   <span class="co"># ca. 48600 Dollar</span></span>
+<span id="cb14-3"><a href="" aria-label="3"></a><span class="fu">r2</span>(lm_immo1)     <span class="co"># R2: 0.63</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="footer">
 <p>Fallstudie Immobilienpreise</p>
 </div>
 </section>
 <section id="mehrere-prädiktoren-in-einem-modell" class="slide level2">
 <h2>Mehrere Prädiktoren in einem Modell</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>mein_modell <span class="ot">&lt;-</span> <span class="fu">lm</span>(av <span class="sc">~</span> uv1 <span class="sc">+</span> uv2 <span class="sc">+</span> ... <span class="sc">+</span> uv_n, <span class="at">data =</span> meine_daten)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="" aria-label="1"></a>mein_modell <span class="ot">&lt;-</span> <span class="fu">lm</span>(av <span class="sc">~</span> uv1 <span class="sc">+</span> uv2 <span class="sc">+</span> ... <span class="sc">+</span> uv_n, <span class="at">data =</span> meine_daten)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Das Pluszeichen ist hier kein arithmetischer Operator, sondern bedeutet: “nimm UV1 <em>und</em> UV2 <em>und</em> … als Prädiktoren.”</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>lm_immo2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(SalePrice <span class="sc">~</span> OverallQual <span class="sc">+</span> GrLivArea <span class="sc">+</span> GarageCars, <span class="at">data =</span> d_train)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-label="1"></a>lm_immo2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(SalePrice <span class="sc">~</span> OverallQual <span class="sc">+</span> GrLivArea <span class="sc">+</span> GarageCars,</span>
+<span id="cb16-2"><a href="" aria-label="2"></a>               <span class="at">data =</span> d_train)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="footer">
 <p>Fallstudie Immobilienpreise</p>
 </div>
 </section>
-<section id="modellvergleich-per-rmse" class="slide level2">
+<section id="modellvergleich-per-rmse" class="slide level2 smaller">
 <h2>Modellvergleich per RMSE</h2>
-<ul>
-<li><code>lm_immo1</code>: nur <code>OverallQual</code> als Prädiktor</li>
-<li><code>lm_immo2</code>: <code>OverallQual + GrLivArea + GarageCars</code></li>
-<li><code>m0</code>: Nullmodell (nur der Mittelwert)</li>
-</ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a><span class="fu">rmse</span>(lm_immo1)</span>
-<span id="cb7-2"><a href=""></a><span class="fu">rmse</span>(lm_immo2)</span>
-<span id="cb7-3"><a href=""></a><span class="fu">rmse</span>(m0)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Ob die Modellgüte “gut” ist, beurteilt man am besten <em>relativ</em> — im Vergleich zu anderen Modellen.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 30%">
+<col style="width: 34%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Modell</th>
+<th style="text-align: left;">Prädiktoren</th>
+<th style="text-align: right;">RMSE (Dollar)</th>
+<th style="text-align: right;"><span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>m0</code></td>
+<td style="text-align: left;">keine (Nullmodell, nur Mittelwert)</td>
+<td style="text-align: right;">ca. 79 400</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>lm_immo1</code></td>
+<td style="text-align: left;"><code>OverallQual</code></td>
+<td style="text-align: right;">ca. 48 600</td>
+<td style="text-align: right;">0,63</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>lm_immo2</code></td>
+<td style="text-align: left;"><code>OverallQual + GrLivArea + GarageCars</code></td>
+<td style="text-align: right;">ca. 40 600</td>
+<td style="text-align: right;">0,74</td>
+</tr>
+</tbody>
+</table>
+<p>Ob die Modellgüte “gut” ist, beurteilt man am besten <em>relativ</em> — im Vergleich zu anderen Modellen, mindestens zum Nullmodell.</p>
 <div class="footer">
 <p>Fallstudie Immobilienpreise</p>
 </div>
 </section>
-<section id="vom-modell-zur-eingereichten-prognose" class="slide level2">
+<section id="vom-modell-zur-eingereichten-prognose" class="slide level2 smaller">
 <h2>Vom Modell zur eingereichten Prognose</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a>lm_immo2_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm_immo2, <span class="at">newdata =</span> d_test)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Die Vorhersagen werden mit den Spalten <code>Id</code> und <code>SalePrice</code> als CSV-Datei eingereicht — das allgemeine Muster jeder Prognose auf neuen (unbeobachteten) Daten.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="" aria-label="1"></a>lm_immo2_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm_immo2, <span class="at">newdata =</span> d_test)</span>
+<span id="cb17-2"><a href="" aria-label="2"></a></span>
+<span id="cb17-3"><a href="" aria-label="3"></a>lm_immo2_subm <span class="ot">&lt;-</span> d_test <span class="sc">|&gt;</span></span>
+<span id="cb17-4"><a href="" aria-label="4"></a>  <span class="fu">mutate</span>(<span class="at">SalePrice =</span> lm_immo2_pred) <span class="sc">|&gt;</span></span>
+<span id="cb17-5"><a href="" aria-label="5"></a>  <span class="fu">select</span>(Id, SalePrice)</span>
+<span id="cb17-6"><a href="" aria-label="6"></a></span>
+<span id="cb17-7"><a href="" aria-label="7"></a><span class="fu">write_csv</span>(lm_immo2_subm, <span class="st">"data/ames-kaggle/lm_immo2_subm.csv"</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Kaggle erwartet exakt zwei Spalten, <code>Id</code> und <code>SalePrice</code>, und so viele Zeilen wie <code>d_test</code>.</li>
+<li><code>write_csv</code> statt <code>write.csv</code>: Letzteres fügt ungefragt eine namenlose Zeilennummern-Spalte ein.</li>
+<li><code>lm_immo2</code> erzielte bei Kaggle einen Score von 0,555.</li>
+</ul>
+<div class="footer">
+<p>Fallstudie Immobilienpreise</p>
+</div>
+</section>
+<section id="wie-geht-es-besser" class="slide level2">
+<h2>Wie geht es besser?</h2>
+<p>Diese Fallstudie hat ein einfaches Prognosemodell vorgestellt. Ansatzpunkte zur Verbesserung:</p>
+<ul>
+<li>Welche UV sollte ich in das Modell aufnehmen?</li>
+<li>Wie gehe ich mit fehlenden Werten um?</li>
+<li>Sollte ich eine schiefe UV log-transformieren?</li>
+<li>Sollte man manche UV quadrieren?</li>
+<li>Wie gehe ich mit nominalskalierten Variablen mit vielen Stufen um?</li>
+</ul>
+<p>Viel Spielraum für Ihre Kreativität!</p>
 <div class="footer">
 <p>Fallstudie Immobilienpreise</p>
 </div>
@@ -690,12 +860,13 @@ Sebastian Sauer
 <section id="zusammenfassung" class="slide level2 smaller">
 <h2>Zusammenfassung</h2>
 <ul>
-<li>Ein <strong>Geradenmodell</strong> verallgemeinert das Punktmodell: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x\)</span></li>
-<li>Achsenabschnitt (<span class="math inline">\(\beta_0\)</span>) und Steigung (<span class="math inline">\(\beta_1\)</span>) legen die Regressionsgerade fest</li>
+<li>Ein <strong>Geradenmodell</strong> verallgemeinert das Punktmodell (Nullmodell, <code>y ~ 1</code>): <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x\)</span></li>
+<li>Achsenabschnitt (<span class="math inline">\(\beta_0\)</span>) und Steigung (<span class="math inline">\(\beta_1\)</span>) legen die Regressionsgerade fest; in R: <code>lm(y ~ x, data = d)</code></li>
 <li>Die Koeffizienten werden per <em>Methode der kleinsten Quadrate</em> geschätzt — die Summe der quadrierten Residuen wird minimiert</li>
-<li><strong>R²</strong> misst die Verringerung der Fehlerstreuung gegenüber dem Nullmodell (Wertebereich 0–1)</li>
+<li>Vorhersagen für neue Daten: <code>predict(modell, newdata = ...)</code></li>
+<li><strong>R²</strong> misst die Verringerung der Fehlerstreuung gegenüber dem Nullmodell (Wertebereich 0–1); weitere Gütemaße: MAE, MSE, RMSE</li>
 <li>Regressionskoeffizienten sind ohne zugrundeliegende Theorie <em>nicht</em> kausal interpretierbar</li>
-<li>Mehrere Prädiktoren lassen sich mit <code>+</code> kombinieren; Modellgüte ist über RMSE/MAE/R² vergleichbar</li>
+<li>Mehrere Prädiktoren lassen sich mit <code>+</code> kombinieren; Modellgüte vergleicht man relativ zu anderen Modellen</li>
 </ul>
 </section>
 <section id="literaturhinweise" class="slide level2">
@@ -761,7 +932,7 @@ Menk. (2014, Juli 29). <em>Linear Regression [Computer Code]</em>. <a href="http
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
 'jumpToSlide': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"\u003ci class=\"fas fa-gear\">\u003c/i>","content":"\u003cul class=\"slide-menu-items\">\n\u003cli class=\"slide-tool-item active\" data-item=\"0\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\">\u003ckbd>f\u003c/kbd> Fullscreen\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"1\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\">\u003ckbd>s\u003c/kbd> Speaker View\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"2\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\">\u003ckbd>o\u003c/kbd> Slide Overview\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"3\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\">\u003ckbd>e\u003c/kbd> PDF Export Mode\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"4\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\">\u003ckbd>r\u003c/kbd> Scroll View Mode\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"5\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\">\u003ckbd>b\u003c/kbd> Toggle Chalkboard\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"6\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\">\u003ckbd>c\u003c/kbd> Toggle Notes Canvas\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"7\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\">\u003ckbd>d\u003c/kbd> Download Drawings\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"8\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\">\u003ckbd>?\u003c/kbd> Keyboard Help\u003c/a>\u003c/li>\n\u003c/ul>"}],"openButton":true,"openButtonLabel":"Slide menu"},
 'chalkboard': {"buttons":true},
 'smaller': false,
  
@@ -1017,7 +1188,8 @@ Menk. (2014, Juli 29). <em>Linear Regression [Computer Code]</em>. <a href="http
               return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
           }
           // Inspect non-navigation links and adorn them if external
-         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          window.quartoDecorateExternalLinks = function (root) {
+         var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
           for (var i=0; i<links.length; i++) {
             const link = links[i];
             if (!isInternal(link.href)) {
@@ -1026,8 +1198,69 @@ Menk. (2014, Juli 29). <em>Linear Regression [Computer Code]</em>. <a href="http
               if (link.dataset.originalHref !== undefined) {
                 link.href = link.dataset.originalHref;
               }
+              if (!link.classList.contains('no-external-icon')) {
+              }
             }
           }
+          };
+          window.quartoDecorateExternalLinks(window.document);
+        // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+        // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+        const hideOnEscAndFocusOut = {
+          name: 'hideOnEscAndFocusOut',
+          defaultValue: true,
+          fn(instance) {
+            const dismiss = () => {
+              // A show scheduled by the trigger delay would otherwise reopen it
+              instance.clearDelayTimeouts();
+              instance.hide();
+            };
+            const onKeyDown = (event) => {
+              if (event.key !== 'Escape') {
+                return;
+              }
+              // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+              // except an open reveal.js slide menu, which Esc should close too.
+              // The menu handles keys only when its keyboard option is on.
+              const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+                window.Reveal.getConfig().menu?.keyboard !== false;
+              if (!menuHandlesEsc) {
+                event.stopPropagation();
+              }
+              if (instance.popper.contains(window.document.activeElement)) {
+                // Disabled while refocusing so the focus trigger does not reopen it
+                instance.disable();
+                instance.reference.focus();
+                instance.enable();
+              }
+              dismiss();
+            };
+            const onFocusOut = (event) => {
+              const target = event.relatedTarget;
+              if (target && !instance.reference.contains(target) &&
+                  !instance.popper.contains(target)) {
+                dismiss();
+              }
+            };
+            // On the trigger too: a click trigger (code-annotations: select) has no
+            // blur handling. Attached for the instance's lifetime so leaving the
+            // trigger also cancels a show still pending on the trigger delay.
+            instance.reference.addEventListener('focusout', onFocusOut);
+            return {
+              onShow() {
+                window.document.addEventListener('keydown', onKeyDown, true);
+                instance.popper.addEventListener('focusout', onFocusOut);
+              },
+              onHide() {
+                window.document.removeEventListener('keydown', onKeyDown, true);
+                instance.popper.removeEventListener('focusout', onFocusOut);
+              },
+              onDestroy() {
+                instance.reference.removeEventListener('focusout', onFocusOut);
+              },
+            };
+          },
+        };
         function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
           const config = {
             allowHTML: true,
@@ -1041,6 +1274,7 @@ Menk. (2014, Juli 29). <em>Linear Regression [Computer Code]</em>. <a href="http
             interactiveBorder: 10,
             theme: 'light-border',
             placement: 'bottom-start',
+            plugins: [hideOnEscAndFocusOut],
           };
           if (contentFn) {
             config.content = contentFn;

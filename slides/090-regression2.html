@@ -6,27 +6,30 @@
 <script src="090-regression2_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="090-regression2_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="090-regression2_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="090-regression2_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="090-regression2_files/libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="090-regression2_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="090-regression2_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="090-regression2_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+  <meta name="generator" content="quarto-1.11.9">
 
   <meta name="author" content="Sebastian Sauer">
   <title>Statistik1</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="090-regression2_files/libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="090-regression2_files/libs/revealjs/dist/reveal.css">
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
-    code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -121,7 +124,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="090-regression2_files/libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
+  <link rel="stylesheet" href="090-regression2_files/libs/revealjs/dist/theme/quarto-00ad5a49dff614330cd349bcec985ec3.css">
   <link rel="stylesheet" href="slides.css">
   <link href="090-regression2_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="090-regression2_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -228,7 +231,7 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Sebastian Sauer 
+Sebastian Sauer
 </div>
 </div>
 </div>
@@ -255,6 +258,7 @@ Sebastian Sauer
 <ul>
 <li>Pakete: <code>tidyverse</code> <span class="citation" data-cites="wickham2019a">(<a href="#/referenzen" role="doc-biblioref" onclick="">Wickham et al., 2019</a>)</span>, <code>easystats</code> <span class="citation" data-cites="ludecke2022">(<a href="#/referenzen" role="doc-biblioref" onclick="">Lüdecke et al., 2022</a>)</span>, <code>yardstick</code> <span class="citation" data-cites="kuhn2024">(<a href="#/referenzen" role="doc-biblioref" onclick="">Kuhn et al., 2024</a>)</span>, optional <code>ggpubr</code> <span class="citation" data-cites="kassambara2023">(<a href="#/referenzen" role="doc-biblioref" onclick="">Kassambara, 2023</a>)</span></li>
 <li>Daten: die bekannten Mariokart-Daten <em>und</em> neu die <strong>Wetterdaten</strong> des <a href="https://www.dwd.de/">Deutschen Wetterdienstes (DWD)</a> <span class="citation" data-cites="dwd2023 dwd2023a">(<a href="#/referenzen" role="doc-biblioref" onclick="">2025a</a>, <a href="#/referenzen" role="doc-biblioref" onclick="">2025b</a>)</span></li>
+<li>Wetterdaten: Monatswerte pro Bundesland (<code>region</code>), Jahr (<code>year</code>) und Monat (<code>month</code>)</li>
 <li>Temperatur in Grad Celsius, Niederschlag (<code>precip</code>) in mm pro Quadratmeter</li>
 </ul>
 <div class="footer">
@@ -285,10 +289,19 @@ Sebastian Sauer
 <h1>Wetter in Deutschland</h1>
 
 </section>
+<section id="klimawandel-temperatur-und-niederschlag" class="slide level2">
+<h2>Klimawandel: Temperatur und Niederschlag</h2>
+<p>Neuer Auftrag: Sie analysieren die Wetterdaten des DWD — Temperatur und Niederschlag in Deutschland im Verlauf der Jahre.</p>
+<p><img data-src="../090-regression2_files/figure-html/fig-wetter-temp-1.png" style="width:38.0%" alt="Die Temperatur (°C) steigt im Verlauf der Jahre"> <img data-src="../090-regression2_files/figure-html/fig-wetter-precip-1.png" style="width:38.0%" alt="Niederschlag pro Monat (mm) im Verlauf der Jahre"></p>
+<p>Grau: Jahresmittel, blau: geglätteter Trend.</p>
+<div class="footer">
+<p>Wetter in Deutschland</p>
+</div>
+</section>
 <section id="metrische-uv-temperatur-im-zeitverlauf" class="slide level2">
 <h2>Metrische UV: Temperatur im Zeitverlauf</h2>
 <p>Forschungsfrage: Um wie viel ist die Temperatur in Deutschland pro Jahr gestiegen (letzte ca. 100 Jahre)?</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>lm_wetter1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(temp <span class="sc">~</span> year, <span class="at">data =</span> wetter)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="" aria-label="1"></a>lm_wetter1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(temp <span class="sc">~</span> year, <span class="at">data =</span> wetter)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Laut Modell wurde es pro Jahr im Schnitt um 0.01 °C wärmer — pro Jahrzehnt 0.1 °C, pro Jahrhundert 1 °C.</p>
 <div class="footer">
 <p>Wetter in Deutschland</p>
@@ -300,7 +313,6 @@ Sebastian Sauer
 <li><strong>Punktschätzung</strong>: der “Best-Guess” für einen Koeffizienten in der Population (Spalte <code>Coefficient</code>)</li>
 <li><strong>Bereichsschätzung</strong> (Konfidenzintervall, CI): ein Bereich plausibler Werte, z. B. mit 95 % Sicherheit</li>
 </ol>
-<div title="Definition: Konfidenzintervall">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -311,7 +323,6 @@ Sebastian Sauer
 </div>
 <div class="callout-content">
 <p>Ein Konfidenzintervall gibt einen Schätzbereich plausibler Werte für einen Populationswert an, auf Basis der Schätzung, die uns die Stichprobe liefert.</p>
-</div>
 </div>
 </div>
 </div>
@@ -329,6 +340,7 @@ Sebastian Sauer
 </section>
 <section id="uv-zentrieren-warum" class="slide level2 smaller">
 <h2>UV zentrieren: Warum?</h2>
+<p>Im Modell <code>temp ~ year</code> liegt der Achsenabschnitt bei etwa −14 °C — was soll das bedeuten?</p>
 <p>Der Achsenabschnitt (<span class="math inline">\(\beta_0\)</span>) ist der <span class="math inline">\(Y\)</span>-Wert an der Stelle <span class="math inline">\(x=0\)</span>. In den Wetterdaten wäre <code>year = 0</code> Christi Geburt — sinnlos zu extrapolieren!</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -343,8 +355,8 @@ Sebastian Sauer
 </section>
 <section id="zentrierte-variable-im-modell" class="slide level2 smaller">
 <h2>Zentrierte Variable im Modell</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a>wetter <span class="ot">&lt;-</span> wetter <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year_c =</span> year <span class="sc">-</span> <span class="fu">mean</span>(year))  <span class="co"># "c" wie centered</span></span>
-<span id="cb2-2"><a href=""></a>lm_wetter1_zentriert <span class="ot">&lt;-</span> <span class="fu">lm</span>(temp <span class="sc">~</span> year_c, <span class="at">data =</span> wetter)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="" aria-label="1"></a>wetter <span class="ot">&lt;-</span> wetter <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year_c =</span> year <span class="sc">-</span> <span class="fu">mean</span>(year))  <span class="co"># "c" wie centered</span></span>
+<span id="cb2-2"><a href="" aria-label="2"></a>lm_wetter1_zentriert <span class="ot">&lt;-</span> <span class="fu">lm</span>(temp <span class="sc">~</span> year_c, <span class="at">data =</span> wetter)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>Die Steigung bleibt durch das Zentrieren <strong>unverändert</strong> — nur der Achsenabschnitt ändert sich.</li>
 <li>Das mittlere Jahr der Messreihe ist 1951: Im Jahr 1951 lag die mittlere Temperatur bei ca. 8.5 °C.</li>
@@ -357,7 +369,6 @@ Sebastian Sauer
 </section>
 <section id="definition-binäre-variable" class="slide level2">
 <h2>Definition: Binäre Variable</h2>
-<div title="Definition: Binäre Variable">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -371,8 +382,7 @@ Sebastian Sauer
 </div>
 </div>
 </div>
-</div>
-<p>Beispiele: <em>weiblich</em> (0/1), oder <em>after_1950</em> (1 für Jahre nach 1950, sonst 0).</p>
+<p>Beispiele: <em>weiblich</em> (0 = nein, 1 = ja), oder <em>before_1950</em> (1 für Jahre vor 1950, sonst 0).</p>
 <p>Forschungsfrage: War es in der zweiten Hälfte des 20. Jahrhunderts im Schnitt wärmer als davor?</p>
 <div class="footer">
 <p>Wetter in Deutschland</p>
@@ -380,11 +390,13 @@ Sebastian Sauer
 </section>
 <section id="binäre-uv-in-r-erzeugen" class="slide level2 smaller">
 <h2>Binäre UV in R erzeugen</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>year <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1940</span>, <span class="dv">1950</span>, <span class="dv">1960</span>)</span>
-<span id="cb3-2"><a href=""></a>after_1950 <span class="ot">&lt;-</span> year <span class="sc">&gt;</span> <span class="dv">1950</span>  <span class="co"># prüfe, ob das Jahr größer als 1950 ist</span></span>
-<span id="cb3-3"><a href=""></a>after_1950</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>wetter <span class="ot">&lt;-</span> wetter <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">after_1950 =</span> year <span class="sc">&gt;</span> <span class="dv">1950</span>)</span>
-<span id="cb4-2"><a href=""></a>lm_wetter_bin_uv <span class="ot">&lt;-</span> <span class="fu">lm</span>(temp <span class="sc">~</span> after_1950, <span class="at">data =</span> wetter)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="" aria-label="1"></a>year <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1940</span>, <span class="dv">1950</span>, <span class="dv">1960</span>)</span>
+<span id="cb3-2"><a href="" aria-label="2"></a>after_1950 <span class="ot">&lt;-</span> year <span class="sc">&gt;</span> <span class="dv">1950</span>  <span class="co"># prüfe, ob das Jahr größer als 1950 ist</span></span>
+<span id="cb3-3"><a href="" aria-label="3"></a>after_1950</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-label="1"></a>wetter <span class="ot">&lt;-</span> wetter <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="" aria-label="2"></a>  <span class="fu">mutate</span>(<span class="at">after_1950 =</span> year <span class="sc">&gt;</span> <span class="dv">1950</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="" aria-label="3"></a>  <span class="fu">filter</span>(region <span class="sc">!=</span> <span class="st">"Deutschland"</span>)  <span class="co"># ohne Gesamt-Deutschland</span></span>
+<span id="cb4-4"><a href="" aria-label="4"></a>lm_wetter_bin_uv <span class="ot">&lt;-</span> <span class="fu">lm</span>(temp <span class="sc">~</span> after_1950, <span class="at">data =</span> wetter)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>TRUE</code>/<code>FALSE</code> werden von R automatisch als <code>1</code>/<code>0</code> verstanden — eine logische Variable ist bereits binär.</p>
 <div class="footer">
 <p>Wetter in Deutschland</p>
@@ -398,12 +410,25 @@ Sebastian Sauer
 <p>Wetter in Deutschland</p>
 </div>
 </section>
-<section id="interpretation-binäre-uv" class="slide level2">
+<section id="interpretation-binäre-uv" class="slide level2 smaller">
 <h2>Interpretation: binäre UV</h2>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Wichtig</strong></p>
+</div>
+<div class="callout-content">
+<p>Ein lineares Modell mit binärer UV zeigt nichts anderes als die Differenz der Gruppenmittelwerte.</p>
+</div>
+</div>
+</div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="../090-regression2_files/figure-html/fig-binvar-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Sinnbild zur Interpretation eines Modells mit binärer UV"><img data-src="../090-regression2_files/figure-html/fig-binvar-1.png" style="width:55.0%" alt="Sinnbild zur Interpretation eines Modells mit binärer UV"></a></p>
-<figcaption>Sinnbild zur Interpretation eines Modells mit binärer UV</figcaption>
+<p><a href="../090-regression2_files/figure-html/fig-binvar-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Sinnbild zur Interpretation eines Modells mit binärer UV (nur Juli in Bayern, reingezoomt)"><img data-src="../090-regression2_files/figure-html/fig-binvar-1.png" style="width:45.0%" alt="Sinnbild zur Interpretation eines Modells mit binärer UV (nur Juli in Bayern, reingezoomt)"></a></p>
+<figcaption>Sinnbild zur Interpretation eines Modells mit binärer UV (nur Juli in Bayern, reingezoomt)</figcaption>
 </figure>
 </div>
 <ol type="1">
@@ -429,7 +454,7 @@ Sebastian Sauer
 <section id="nominale-uv-mehrstufig" class="slide level2 smaller">
 <h2>Nominale UV: mehrstufig</h2>
 <p>Forschungsfrage: Gibt es substanzielle Temperaturunterschiede zwischen den Bundesländern?</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>lm_wetter_region <span class="ot">&lt;-</span> <span class="fu">lm</span>(temp <span class="sc">~</span> region, <span class="at">data =</span> wetter)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-label="1"></a>lm_wetter_region <span class="ot">&lt;-</span> <span class="fu">lm</span>(temp <span class="sc">~</span> region, <span class="at">data =</span> wetter)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Eine nominale UV mit <span class="math inline">\(k\)</span> Stufen wird von <code>lm</code> in <span class="math inline">\(k-1\)</span> binäre Variablen umgewandelt. Bei <code>character</code>-Variablen wählt R den alphabetisch ersten Wert als Referenzgruppe.</p>
 <ol type="1">
 <li>Mittelwert 1. Gruppe: Achsenabschnitt (<span class="math inline">\(\beta_0\)</span>)</li>
@@ -453,12 +478,13 @@ Sebastian Sauer
 <p>Wetter in Deutschland</p>
 </div>
 </section>
-<section id="faktorvariablen" class="slide level2">
+<section id="faktorvariablen" class="slide level2 smaller">
 <h2>Faktorvariablen</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>wetter <span class="ot">&lt;-</span> wetter <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">month_factor =</span> <span class="fu">factor</span>(month))</span>
-<span id="cb6-2"><a href=""></a>lm_wetter_month_factor <span class="ot">&lt;-</span> <span class="fu">lm</span>(precip <span class="sc">~</span> month_factor, <span class="at">data =</span> wetter)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Forschungsfrage: Wie unterscheidet sich der Niederschlag zwischen den Monaten? Problem: <code>lm(precip ~ month)</code> behandelt <code>month</code> als <em>Zahl</em> — der Monat sollte aber nominal sein.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-label="1"></a>wetter <span class="ot">&lt;-</span> wetter <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">month_factor =</span> <span class="fu">factor</span>(month))</span>
+<span id="cb6-2"><a href="" aria-label="2"></a>lm_wetter_month_factor <span class="ot">&lt;-</span> <span class="fu">lm</span>(precip <span class="sc">~</span> month_factor, <span class="at">data =</span> wetter)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
-<li><code>factor()</code> wandelt eine numerische Variable in eine nominalskalierte Variable um.</li>
+<li><code>factor()</code> wandelt eine numerische Variable in eine nominalskalierte Variable um: aus <code>42</code> wird <code>"42"</code>.</li>
 <li>Faktorstufen werden bei <code>factor</code>-Variablen mitgespeichert (bei <code>character</code> nicht) — auch nach dem Filtern.</li>
 <li>Referenzgruppe ändern: <code>relevel(month_factor, ref = "7")</code></li>
 </ul>
@@ -481,7 +507,6 @@ Sebastian Sauer
 </section>
 <section id="definition-multiple-regression" class="slide level2">
 <h2>Definition: Multiple Regression</h2>
-<div title="Definition: Multiple Regression">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -496,23 +521,23 @@ Sebastian Sauer
 </div>
 </div>
 </div>
-</div>
 <p>Hat man mehrere UV, trennt man sie mit einem Plus-Zeichen — dieses hat <em>keine</em> arithmetische Funktion, sondern bedeutet “und noch folgende UV”.</p>
+<p>Beispiel: binäre UV (Monat: Januar vs.&nbsp;Juli) plus metrische UV (Jahr) — so ein Modell heißt auch <em>Kovarianzanalyse</em> (ANCOVA).</p>
 <div class="footer">
 <p>Wetter in Deutschland</p>
 </div>
 </section>
 <section id="multiple-regression-beispiel" class="slide level2 smaller">
 <h2>Multiple Regression: Beispiel</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>lm_year_month <span class="ot">&lt;-</span> <span class="fu">lm</span>(precip <span class="sc">~</span> year_c <span class="sc">+</span> month_factor,</span>
-<span id="cb7-2"><a href=""></a>                    <span class="at">data =</span> wetter_month_1_7)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-label="1"></a>lm_year_month <span class="ot">&lt;-</span> <span class="fu">lm</span>(precip <span class="sc">~</span> year_c <span class="sc">+</span> month_factor,</span>
+<span id="cb7-2"><a href="" aria-label="2"></a>                    <span class="at">data =</span> wetter_month_1_7)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Interpretation der Koeffizienten:</p>
 <ol type="1">
 <li>Achsenabschnitt (<span class="math inline">\(\beta_0\)</span>): Niederschlag im Referenzjahr 1951, Referenzmonat Januar — 57 mm</li>
 <li><span class="math inline">\(\beta_1\)</span> (<code>year_c</code>): +0.03 mm Niederschlag pro Jahr (im Referenzmonat)</li>
-<li><span class="math inline">\(\beta_2\)</span> (<code>month_factor7</code>): im Juli knapp 25 mm mehr als im Referenzmonat Januar</li>
+<li><span class="math inline">\(\beta_2\)</span> (<code>month_factor7</code>): im Juli etwa 24 mm mehr als im Referenzmonat Januar</li>
 </ol>
-<p>Regressionsgleichung: <code>precip_pred = 56.94 + 0.03*year_c + 24.37*month_factor_7</code></p>
+<p>Regressionsgleichung: <code>precip_pred = 57.23 + 0.03*year_c + 23.77*month_factor_7</code></p>
 <div class="footer">
 <p>Wetter in Deutschland</p>
 </div>
@@ -520,9 +545,9 @@ Sebastian Sauer
 <section id="vorhersage-mit-predict" class="slide level2">
 <h2>Vorhersage mit <code>predict</code></h2>
 <p>Statt die Regressionsgleichung von Hand auszurechnen, lässt man R rechnen:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a>neue_daten <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">year_c =</span> <span class="dv">2020</span> <span class="sc">-</span> <span class="dv">1951</span>,</span>
-<span id="cb8-2"><a href=""></a>                     <span class="at">month_factor =</span> <span class="fu">factor</span>(<span class="st">"7"</span>))</span>
-<span id="cb8-3"><a href=""></a><span class="fu">predict</span>(lm_year_month, <span class="at">newdata =</span> neue_daten)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-label="1"></a>neue_daten <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">year_c =</span> <span class="dv">2020</span> <span class="sc">-</span> <span class="dv">1951</span>,</span>
+<span id="cb8-2"><a href="" aria-label="2"></a>                     <span class="at">month_factor =</span> <span class="fu">factor</span>(<span class="st">"7"</span>))</span>
+<span id="cb8-3"><a href="" aria-label="3"></a><span class="fu">predict</span>(lm_year_month, <span class="at">newdata =</span> neue_daten)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Alle Koeffizienten beziehen sich auf die AV <em>unter der Annahme, dass alle übrigen UV den Wert Null (bzw. Referenzwert) haben</em>.</p>
 <div class="footer">
 <p>Wetter in Deutschland</p>
@@ -543,7 +568,6 @@ Sebastian Sauer
 </section>
 <section id="definition-interaktionseffekt" class="slide level2">
 <h2>Definition: Interaktionseffekt</h2>
-<div title="Definition: Interaktionseffekt">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -558,11 +582,10 @@ Sebastian Sauer
 </div>
 </div>
 </div>
-</div>
 <p>In Worten: y wird modelliert als eine Funktion von x1 und x2 <em>und</em> dem Interaktionseffekt von x1 mit x2.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>lm_year_month_interaktion <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
-<span id="cb9-2"><a href=""></a>  precip <span class="sc">~</span> year_c <span class="sc">+</span> month_factor <span class="sc">+</span> year_c<span class="sc">:</span>month_factor,</span>
-<span id="cb9-3"><a href=""></a>  <span class="at">data =</span> wetter_month_1_7)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-label="1"></a>lm_year_month_interaktion <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb9-2"><a href="" aria-label="2"></a>  precip <span class="sc">~</span> year_c <span class="sc">+</span> month_factor <span class="sc">+</span> year_c<span class="sc">:</span>month_factor,</span>
+<span id="cb9-3"><a href="" aria-label="3"></a>  <span class="at">data =</span> wetter_month_1_7)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="footer">
 <p>Wetter in Deutschland</p>
 </div>
@@ -575,7 +598,7 @@ Sebastian Sauer
 <figcaption>Niederschlag im Jahresverlauf mit Interaktionseffekt: Die Regressionsgeraden für Januar und Juli sind <em>nicht</em> parallel.</figcaption>
 </figure>
 </div>
-<p>Sind die Regressionsgeraden mehrerer Gruppen nicht parallel, liegt ein Interaktionseffekt vor.</p>
+<p>Sind die Regressionsgeraden mehrerer Gruppen nicht parallel, liegt ein Interaktionseffekt vor. Dann gibt es nicht mehr “den” Effekt des Jahres — er hängt vom Monat ab.</p>
 <div class="footer">
 <p>Wetter in Deutschland</p>
 </div>
@@ -584,8 +607,9 @@ Sebastian Sauer
 <h2>Interaktion interpretieren</h2>
 <ul>
 <li>Der Interaktionsterm (<code>year_c × month_factor[7]</code>) zeigt, wie <em>unterschiedlich</em> sich die Niederschlagsmenge zwischen den Monaten über die Jahre verändert.</li>
-<li>Pro Jahr ist die Zunahme im Juli um 0.20 mm geringer als im Referenzmonat Januar → für Juli insgesamt: <code>0.13 - (-0.20) = 0.07</code></li>
-<li>Gleichung: <code>precip_pred = 56.91 + 0.13*year_c + 24.37*month_factor_7 - 0.20*year_c:month_factor_7</code></li>
+<li>Pro Jahr ist die Zunahme im Juli um 0.21 mm geringer als im Referenzmonat Januar → für Juli insgesamt: <code>0.13 - 0.21 = -0.08</code> mm pro Jahr</li>
+<li>Im Januar nahm der Niederschlag also zu, im Juli ab.</li>
+<li>Gleichung: <code>precip_pred = 57.21 + 0.13*year_c + 23.82*month_factor_7 - 0.21*year_c:month_factor_7</code></li>
 </ul>
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
@@ -613,7 +637,8 @@ Sebastian Sauer
 <section id="zwei-metrische-uv-die-regressionsebene" class="slide level2 smaller">
 <h2>Zwei metrische UV: die Regressionsebene</h2>
 <p>Ein Modell mit zwei metrischen UV lässt sich im 3D-Raum als <em>Regressionsebene</em> visualisieren.</p>
-<p><img data-src="../img/3d_scatter1.png" style="width:35.0%" alt="Ein lineares Modell mit zwei metrischen UV, y ~ x1 + x2, im 3D-Raum"> <img data-src="../090-regression2_files/figure-html/fig-3d-regr-2d-1.png" style="width:35.0%" alt="2D-Ansicht des 3D-Modells"></p>
+<p><img data-src="../img/3d_scatter1.png" style="width:30.0%" alt="Ein lineares Modell mit zwei metrischen UV, y ~ x1 + x2, im 3D-Raum"> <img data-src="../090-regression2_files/figure-html/fig-3d-regr-2d-1.png" style="width:30.0%" alt="2D-Ansicht des 3D-Modells: je eine Gerade für x2 = −1, 0, 1"></p>
+<p>In der 2D-Ansicht wird die Ebene zu parallelen Geraden — eine pro Wert von <code>x2</code>.</p>
 <div class="footer">
 <p>Modelle mit vielen UV</p>
 </div>
@@ -646,8 +671,8 @@ Sebastian Sauer
 </section>
 <section id="modell-all-in-alle-variablen-rein" class="slide level2 smaller">
 <h2>Modell “all-in”: alle Variablen rein?</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>lm_allin <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> ., <span class="at">data =</span> mariokart_train)</span>
-<span id="cb10-2"><a href=""></a><span class="fu">r2</span>(lm_allin)  <span class="co"># fast perfekte Modellgüte!</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="" aria-label="1"></a>lm_allin <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> ., <span class="at">data =</span> mariokart_train)</span>
+<span id="cb10-2"><a href="" aria-label="2"></a><span class="fu">r2</span>(lm_allin)  <span class="co"># fast perfekte Modellgüte!</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Der Punkt (<code>.</code>) steht für “alle Variablen außer <code>total_pr</code>”.</p>
 <div class="callout callout-caution callout-titled callout-style-default">
 <div class="callout-body">
@@ -669,8 +694,8 @@ Sebastian Sauer
 </section>
 <section id="vorhersagefehler-bei-neuen-titeln" class="slide level2">
 <h2>Vorhersagefehler bei neuen Titeln</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a><span class="fu">predict</span>(lm_allin, <span class="at">newdata =</span> mariokart_test)</span>
-<span id="cb11-2"><a href=""></a><span class="co"># Fehler!</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-label="1"></a><span class="fu">predict</span>(lm_allin, <span class="at">newdata =</span> mariokart_test)</span>
+<span id="cb11-2"><a href="" aria-label="2"></a><span class="co"># Fehler!</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Kommt im Test-Sample eine Ausprägung von <code>title</code> vor, die im Train-Sample nicht existierte, scheitert <code>predict</code>. Nominalskalierte UV mit vielen Ausprägungen sind problematisch und führen oft zu <strong>Overfitting</strong>.</p>
 <div class="footer">
 <p>Fallbeispiel zur Prognose</p>
@@ -678,15 +703,15 @@ Sebastian Sauer
 </section>
 <section id="modell-all-in-ohne-titelspalte" class="slide level2 smaller">
 <h2>Modell “all-in” ohne Titelspalte</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>mariokart_train2 <span class="ot">&lt;-</span> mariokart_train <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(title, id))</span>
-<span id="cb12-2"><a href=""></a>lm_allin_no_title_no_id <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> ., <span class="at">data =</span> mariokart_train2)</span>
-<span id="cb12-3"><a href=""></a><span class="fu">r2</span>(lm_allin_no_title_no_id)  <span class="co"># ordentliches R²</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="" aria-label="1"></a>mariokart_train2 <span class="ot">&lt;-</span> mariokart_train <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(title, id))</span>
+<span id="cb12-2"><a href="" aria-label="2"></a>lm_allin_no_title_no_id <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_pr <span class="sc">~</span> ., <span class="at">data =</span> mariokart_train2)</span>
+<span id="cb12-3"><a href="" aria-label="3"></a><span class="fu">r2</span>(lm_allin_no_title_no_id)  <span class="co"># ordentliches R²</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Vorhersagegüte im Test-Sample (mit dem Paket <code>yardstick</code>):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a>yardstick<span class="sc">::</span><span class="fu">mae</span>(<span class="at">data =</span> mariokart_test, <span class="at">truth =</span> total_pr,</span>
-<span id="cb13-2"><a href=""></a>               <span class="at">estimate =</span> lm_allin_predictions)</span>
-<span id="cb13-3"><a href=""></a>yardstick<span class="sc">::</span><span class="fu">rmse</span>(<span class="at">data =</span> mariokart_test, <span class="at">truth =</span> total_pr,</span>
-<span id="cb13-4"><a href=""></a>               <span class="at">estimate =</span> lm_allin_predictions)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Mittlerer Vorhersagefehler (RMSE): ca. 13 Euro. <span class="math inline">\(R^2\)</span> im Test-Sample: nur 17 %.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="" aria-label="1"></a>yardstick<span class="sc">::</span><span class="fu">mae</span>(<span class="at">data =</span> mariokart_test, <span class="at">truth =</span> total_pr,</span>
+<span id="cb13-2"><a href="" aria-label="2"></a>               <span class="at">estimate =</span> lm_allin_predictions)</span>
+<span id="cb13-3"><a href="" aria-label="3"></a>yardstick<span class="sc">::</span><span class="fu">rmse</span>(<span class="at">data =</span> mariokart_test, <span class="at">truth =</span> total_pr,</span>
+<span id="cb13-4"><a href="" aria-label="4"></a>               <span class="at">estimate =</span> lm_allin_predictions)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Mittlerer Vorhersagefehler (RMSE): ca. 13 Dollar. <span class="math inline">\(R^2\)</span> im Test-Sample: nur 17 %.</p>
 <div class="footer">
 <p>Fallbeispiel zur Prognose</p>
 </div>
@@ -696,8 +721,66 @@ Sebastian Sauer
 <p>Die Modellgüte im Test-Sample ist (leider) oft <em>geringer</em> als im Train-Sample — die Trainings-Güte ist mitunter übermäßig optimistisch. Dieses Phänomen heißt <strong>Overfitting</strong> <span class="citation" data-cites="gelman_regression_2021">(<a href="#/referenzen" role="doc-biblioref" onclick="">Gelman et al., 2021</a>)</span>.</p>
 <p>Deshalb: vor dem Ausliefern von Vorhersagen die Modellgüte immer an einem <em>neuen</em> Datensatz (Test-Sample) prüfen.</p>
 <p><code>rsq()</code> (aus <code>yardstick</code>) berechnet die Modellgüte für beliebige Vorhersagen — im Gegensatz zu <code>r2()</code>, das nur im Train-Sample funktioniert.</p>
+<p>Name-Clash-Alarm: <code>rmse</code> gibt es in <code>performance</code> <em>und</em> <code>yardstick</code> — daher <code>yardstick::rmse</code> schreiben.</p>
 <div class="footer">
 <p>Fallbeispiel zur Prognose</p>
+</div>
+</section></section>
+<section>
+<section id="vertiefung-das-aufteilen-ihrer-daten" class="title-slide slide level1 center" data-footer="false">
+<h1>Vertiefung: Das Aufteilen Ihrer Daten</h1>
+
+</section>
+<section id="analyse--und-assessment-sample" class="slide level2 smaller">
+<h2>Analyse- und Assessment-Sample</h2>
+<p>Für eine robuste Schätzung der Modellgüte das Train-Sample noch einmal aufteilen:</p>
+<ol type="1">
+<li>Modell im <em>Analyse-Sample</em> berechnen</li>
+<li>Modellgüte im <em>Assessment-Sample</em> prüfen</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="" aria-label="1"></a><span class="fu">library</span>(rsample)</span>
+<span id="cb14-2"><a href="" aria-label="2"></a>meine_aufteilung <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(mariokart, <span class="at">strata =</span> total_pr)</span>
+<span id="cb14-3"><a href="" aria-label="3"></a>mariokart_train <span class="ot">&lt;-</span> <span class="fu">training</span>(meine_aufteilung)  <span class="co"># Analyse-Sample</span></span>
+<span id="cb14-4"><a href="" aria-label="4"></a>mariokart_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(meine_aufteilung)    <span class="co"># Assessment-Sample</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>initial_split</code> legt nur fest, welche Zeile wohin kommt (Standard: 75 % / 25 %); <code>training</code>/<code>testing</code> teilen dann tatsächlich auf.</li>
+<li><code>strata</code> sorgt dafür, dass die Verteilung der AV in beiden Teilen gleich ist.</li>
+</ul>
+<div class="footer">
+<p>Vertiefung: Das Aufteilen Ihrer Daten</p>
+</div>
+</section>
+<section id="train--vs.-test-sample" class="slide level2 smaller">
+<h2>Train- vs.&nbsp;Test-Sample</h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Definition: Train-Sample</strong></p>
+</div>
+<div class="callout-content">
+<p>Den Datensatz, für den Sie sowohl UV <em>als auch AV</em> vorliegen haben, nennt man Train-Sample.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Definition: Test-Sample</strong></p>
+</div>
+<div class="callout-content">
+<p>Den Datensatz, für den Sie <em>nur</em> Daten der UV, aber nicht der AV vorliegen haben, nennt man Test-Sample.</p>
+</div>
+</div>
+</div>
+<p><a href="mermaid/090-regression2-stichproben.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="mermaid/090-regression2-stichproben.png" style="width:45.0%"></a></p>
+<div class="footer">
+<p>Vertiefung: Das Aufteilen Ihrer Daten</p>
 </div>
 </section></section>
 <section>
@@ -723,7 +806,7 @@ Sebastian Sauer
 <p>Ein Forscherteam untersucht Schnabellänge und Schnabeltiefe bei <span class="math inline">\(n = 344\)</span> Pinguinen der Palmer Station, Antarktis.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Schnabellänge und Schnabeltiefe [@horst_statistics_2024]"><img data-src="https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png" style="width:42.0%" alt="Schnabellänge und Schnabeltiefe (Horst, 2024)"></a></p>
+<p><a href="https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Schnabellänge und Schnabeltiefe [@horst_statistics_2024]"><img data-src="https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png" style="width:42.0%" alt="Schnabellänge und Schnabeltiefe (Horst, 2024)"></a></p>
 <figcaption>Schnabellänge und Schnabeltiefe <span class="citation" data-cites="horst_statistics_2024">(<a href="#/referenzen" role="doc-biblioref" onclick="">Horst, 2024</a>)</span></figcaption>
 </figure>
 </div>
@@ -735,7 +818,7 @@ Sebastian Sauer
 <h2>Analyse 1: Gesamtdaten</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="../090-regression2_files/figure-html/fig-peng-simpson1-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Negativer Zusammenhang von Schnabellänge und Schnabeltiefe (alle Pinguine zusammen)"><img data-src="../090-regression2_files/figure-html/fig-peng-simpson1-1.png" style="width:55.0%" alt="Negativer Zusammenhang von Schnabellänge und Schnabeltiefe (alle Pinguine zusammen)"></a></p>
+<p><a href="../090-regression2_files/figure-html/fig-peng-simpson1-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Negativer Zusammenhang von Schnabellänge und Schnabeltiefe (alle Pinguine zusammen)"><img data-src="../090-regression2_files/figure-html/fig-peng-simpson1-1.png" style="width:55.0%" alt="Negativer Zusammenhang von Schnabellänge und Schnabeltiefe (alle Pinguine zusammen)"></a></p>
 <figcaption>Negativer Zusammenhang von Schnabellänge und Schnabeltiefe (alle Pinguine zusammen)</figcaption>
 </figure>
 </div>
@@ -748,7 +831,7 @@ Sebastian Sauer
 <h2>Analyse 2: Aufteilung in Arten</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="../090-regression2_files/figure-html/fig-penguins-groups-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Pro Pinguin-Art betrachtet: ein positiver Zusammenhang (schwarze gestrichelte Linie = Gesamtmodell)"><img data-src="../090-regression2_files/figure-html/fig-penguins-groups-1.png" style="width:55.0%" alt="Pro Pinguin-Art betrachtet: ein positiver Zusammenhang (schwarze gestrichelte Linie = Gesamtmodell)"></a></p>
+<p><a href="../090-regression2_files/figure-html/fig-penguins-groups-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Pro Pinguin-Art betrachtet: ein positiver Zusammenhang (schwarze gestrichelte Linie = Gesamtmodell)"><img data-src="../090-regression2_files/figure-html/fig-penguins-groups-1.png" style="width:55.0%" alt="Pro Pinguin-Art betrachtet: ein positiver Zusammenhang (schwarze gestrichelte Linie = Gesamtmodell)"></a></p>
 <figcaption>Pro Pinguin-Art betrachtet: ein <em>positiver</em> Zusammenhang (schwarze gestrichelte Linie = Gesamtmodell)</figcaption>
 </figure>
 </div>
@@ -903,7 +986,7 @@ Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., G
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
 'jumpToSlide': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"\u003ci class=\"fas fa-gear\">\u003c/i>","content":"\u003cul class=\"slide-menu-items\">\n\u003cli class=\"slide-tool-item active\" data-item=\"0\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\">\u003ckbd>f\u003c/kbd> Fullscreen\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"1\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\">\u003ckbd>s\u003c/kbd> Speaker View\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"2\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\">\u003ckbd>o\u003c/kbd> Slide Overview\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"3\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\">\u003ckbd>e\u003c/kbd> PDF Export Mode\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"4\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\">\u003ckbd>r\u003c/kbd> Scroll View Mode\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"5\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\">\u003ckbd>b\u003c/kbd> Toggle Chalkboard\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"6\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\">\u003ckbd>c\u003c/kbd> Toggle Notes Canvas\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"7\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\">\u003ckbd>d\u003c/kbd> Download Drawings\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"8\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\">\u003ckbd>?\u003c/kbd> Keyboard Help\u003c/a>\u003c/li>\n\u003c/ul>"}],"openButton":true,"openButtonLabel":"Slide menu"},
 'chalkboard': {"buttons":true},
 'smaller': false,
  
@@ -1159,7 +1242,8 @@ Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., G
               return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
           }
           // Inspect non-navigation links and adorn them if external
-         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          window.quartoDecorateExternalLinks = function (root) {
+         var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
           for (var i=0; i<links.length; i++) {
             const link = links[i];
             if (!isInternal(link.href)) {
@@ -1168,8 +1252,69 @@ Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., G
               if (link.dataset.originalHref !== undefined) {
                 link.href = link.dataset.originalHref;
               }
+              if (!link.classList.contains('no-external-icon')) {
+              }
             }
           }
+          };
+          window.quartoDecorateExternalLinks(window.document);
+        // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+        // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+        const hideOnEscAndFocusOut = {
+          name: 'hideOnEscAndFocusOut',
+          defaultValue: true,
+          fn(instance) {
+            const dismiss = () => {
+              // A show scheduled by the trigger delay would otherwise reopen it
+              instance.clearDelayTimeouts();
+              instance.hide();
+            };
+            const onKeyDown = (event) => {
+              if (event.key !== 'Escape') {
+                return;
+              }
+              // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+              // except an open reveal.js slide menu, which Esc should close too.
+              // The menu handles keys only when its keyboard option is on.
+              const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+                window.Reveal.getConfig().menu?.keyboard !== false;
+              if (!menuHandlesEsc) {
+                event.stopPropagation();
+              }
+              if (instance.popper.contains(window.document.activeElement)) {
+                // Disabled while refocusing so the focus trigger does not reopen it
+                instance.disable();
+                instance.reference.focus();
+                instance.enable();
+              }
+              dismiss();
+            };
+            const onFocusOut = (event) => {
+              const target = event.relatedTarget;
+              if (target && !instance.reference.contains(target) &&
+                  !instance.popper.contains(target)) {
+                dismiss();
+              }
+            };
+            // On the trigger too: a click trigger (code-annotations: select) has no
+            // blur handling. Attached for the instance's lifetime so leaving the
+            // trigger also cancels a show still pending on the trigger delay.
+            instance.reference.addEventListener('focusout', onFocusOut);
+            return {
+              onShow() {
+                window.document.addEventListener('keydown', onKeyDown, true);
+                instance.popper.addEventListener('focusout', onFocusOut);
+              },
+              onHide() {
+                window.document.removeEventListener('keydown', onKeyDown, true);
+                instance.popper.removeEventListener('focusout', onFocusOut);
+              },
+              onDestroy() {
+                instance.reference.removeEventListener('focusout', onFocusOut);
+              },
+            };
+          },
+        };
         function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
           const config = {
             allowHTML: true,
@@ -1183,6 +1328,7 @@ Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., G
             interactiveBorder: 10,
             theme: 'light-border',
             placement: 'bottom-start',
+            plugins: [hideOnEscAndFocusOut],
           };
           if (contentFn) {
             config.content = contentFn;

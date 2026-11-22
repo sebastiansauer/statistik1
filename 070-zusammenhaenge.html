@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
 <meta charset="UTF-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.11.9">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="keywords" content="Statistik, Prognose, Modellierung, R, Datenanalyse, Regression">
 <meta name="description" content="Einführung in die Statistik mit einem Schwerpunkt auf Prognose-Modellierung">
@@ -10,10 +10,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -90,18 +93,19 @@ div.csl-indent {
 <link href="./img/statistik1_icon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-447e42e69aaa9833c0ba1b986f430b20.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-a4c491303f69927a1321bd3546903061.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-2dc673c3628f6ea71864dee0e7890cee.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-a4c491303f69927a1321bd3546903061.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dbf57ad83c13ae4f422b554da963db29.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-94c3ff760a031db47e09d51bd2e9d7bf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-dbf57ad83c13ae4f422b554da963db29.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
@@ -130,7 +134,7 @@ div.csl-indent {
     "search-submit-button-title": "Abschicken",
     "search-label": "Suchen"
   }
-}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -157,7 +161,7 @@ window.Quarto = {
 };
 </script><link rel="stylesheet" href="webex.css">
 </head>
-<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Zum Hauptinhalt springen</a><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -180,6 +184,7 @@ window.Quarto = {
       for (let i=0; i < toggles.length; i++) {
         const toggle = toggles[i];
         if (toggle) {
+          toggle.setAttribute("aria-checked", alternate ? "true" : "false");
           if (alternate) {
             toggle.classList.add("alternate");
           } else {
@@ -209,13 +214,19 @@ window.Quarto = {
       manageTransitions('#quarto-margin-sidebar .nav-link', true);
       // Switch the toggles
       setColorSchemeToggle(alternate)
-      // Hack to workaround the fact that safari doesn't
-      // properly recolor the scrollbar when toggling (#1455)
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455).
+    // Not run on load: stylesheets are set before first paint there, and
+    // scrolling would undo the scroll to a URL fragment (#14973).
+    // The one pixel nudge keeps the reader where they were.
+    const refreshSafariScrollbar = () => {
       if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
         manageTransitions("body", false);
-        window.scrollTo(0, 1);
+        const scrollY = window.scrollY;
+        window.scrollTo(0, scrollY > 0 ? scrollY - 1 : 1);
         setTimeout(() => {
-          window.scrollTo(0, 0);
+          window.scrollTo(0, scrollY);
           manageTransitions("body", true);
         }, 40);
       }
@@ -309,6 +320,7 @@ window.Quarto = {
       // Read the current dark / light value
       let toAlternate = !hasAlternateSentinel();
       toggleColorMode(toAlternate);
+      refreshSafariScrollbar();
       setStyleSentinel(toAlternate);
       toggleGiscusIfUsed(toAlternate, darkModeDefault);
       window.dispatchEvent(new Event('resize'));
@@ -322,12 +334,12 @@ window.Quarto = {
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" aria-label="Symbolleiste"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Grundlagen des Modellierens</a></li><li class="breadcrumb-item"><a href="./070-zusammenhaenge.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="Pfad"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Grundlagen des Modellierens</a></li><li class="breadcrumb-item"><a href="./070-zusammenhaenge.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Suchen" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
@@ -335,14 +347,14 @@ window.Quarto = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Website"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
       <img src="./img/statistik1_icon.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none"><img src="./img/statistik1_icon.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none"></a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Statistik1</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/sebastiansauer/statistik1" title="Quellcode" class="quarto-navigation-tool px-1" aria-label="Quellcode"><i class="bi bi-github"></i></a>
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
+  <button type="button" role="switch" aria-checked="false" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten" aria-label="Dunkelmodus umschalten"><i class="bi"></i></button>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Lesemodus umschalten">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -372,13 +384,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Vorbereiten</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Vorbereiten</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-rahmen.html" class="sidebar-item-text sidebar-link">
@@ -401,13 +410,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Grundlagen des Modellierens</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Grundlagen des Modellierens</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./040-verbildlichen.html" class="sidebar-item-text sidebar-link">
@@ -436,13 +442,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Geradenmodelle</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Geradenmodelle</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./080-regression1.html" class="sidebar-item-text sidebar-link">
@@ -465,13 +468,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Anhang</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Anhang</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./110-definitions.html" class="sidebar-item-text sidebar-link">
@@ -521,7 +521,7 @@ window.Quarto = {
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Inhaltsverzeichnis</h2>
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active"><h2 id="toc-title">Inhaltsverzeichnis</h2>
    
   <ul>
 <li>
@@ -565,7 +565,7 @@ window.Quarto = {
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/sebastiansauer/statistik1/issues/new" class="toc-action"><i class="bi bi-github"></i>Problem melden</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Grundlagen des Modellierens</a></li><li class="breadcrumb-item"><a href="./070-zusammenhaenge.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></a></li></ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content" tabindex="-1"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Pfad"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./040-verbildlichen.html">Grundlagen des Modellierens</a></li><li class="breadcrumb-item"><a href="./070-zusammenhaenge.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></a></li></ol></nav><div class="quarto-title">
 <h1 class="title"><span id="sec-zusammenhaenge" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Punktmodelle 2</span></span></h1>
 </div>
 
@@ -664,7 +664,7 @@ Abbildung&nbsp;8.1: Zwei Spalten werden zu einer Zahl zusammengefasst
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-zshg" style="flex-basis: 45.0%;justify-content: center;">
 <div id="fig-zshg-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-zshg-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="070-zusammenhaenge_files/figure-html/fig-zshg-1.png" class="lightbox" data-gallery="fig-zshg" title="Abbildung&nbsp;8.2&nbsp;(a): Streudiagramm mit Trendlinie"><img src="070-zusammenhaenge_files/figure-html/fig-zshg-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-zshg"></a>
+<a href="070-zusammenhaenge_files/figure-html/fig-zshg-1.png" class="lightbox" data-gallery="fig-zshg" title="Abbildung&nbsp;8.2&nbsp;(a): Streudiagramm mit Trendlinie"><img src="070-zusammenhaenge_files/figure-html/fig-zshg-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-zshg"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-zshg-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Streudiagramm mit Trendlinie
@@ -677,7 +677,7 @@ Abbildung&nbsp;8.1: Zwei Spalten werden zu einer Zahl zusammengefasst
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-zshg" style="flex-basis: 45.0%;justify-content: center;">
 <div id="fig-zshg-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-zshg-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="070-zusammenhaenge_files/figure-html/fig-zshg-2.png" class="lightbox" data-gallery="fig-zshg" title="Abbildung&nbsp;8.2&nbsp;(b): Verwackeltes Streudiagramm"><img src="070-zusammenhaenge_files/figure-html/fig-zshg-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-zshg"></a>
+<a href="070-zusammenhaenge_files/figure-html/fig-zshg-2.png" class="lightbox" data-gallery="fig-zshg" title="Abbildung&nbsp;8.2&nbsp;(b): Verwackeltes Streudiagramm"><img src="070-zusammenhaenge_files/figure-html/fig-zshg-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-zshg"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-zshg-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Verwackeltes Streudiagramm
@@ -702,7 +702,7 @@ Abbildung&nbsp;8.2: Mit der Anzahl der Lenkräder (wheels) steigt der Verkaufspr
 <div class="cell" data-layout-align="center">
 <div id="tbl-noten2" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-noten2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabelle&nbsp;8.1: Punkte in der Statistikklausur (x, 0-100) und Lernzeit (y, 0-100)
+Tabelle&nbsp;8.1: Lernzeit (x) und Punkte in der Statistikklausur (y, 0-100)
 </figcaption><div aria-describedby="tbl-noten2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
@@ -747,7 +747,7 @@ Tabelle&nbsp;8.1: Punkte in der Statistikklausur (x, 0-100) und Lernzeit (y, 0-1
 <div class="cell-output-display">
 <div id="fig-delta-rect" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-delta-rect-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="070-zusammenhaenge_files/figure-html/fig-delta-rect-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Abbildung&nbsp;8.3: Die Kovarianz als mittleres Abweichungsrechteck. In jedem der vier Quadranten (Q1, Q2, Q3, Q4) ist das Vorzeichen der Abweichungsrechtecke dargestellt. Die Farben der Abweichungsrechtecke spiegeln das Vorzeichen wider."><img src="070-zusammenhaenge_files/figure-html/fig-delta-rect-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
+<a href="070-zusammenhaenge_files/figure-html/fig-delta-rect-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Abbildung&nbsp;8.3: Die Kovarianz als mittleres Abweichungsrechteck. In jedem der vier Quadranten (Q1, Q2, Q3, Q4) ist das Vorzeichen der Abweichungsrechtecke dargestellt. Die Farben der Abweichungsrechtecke spiegeln das Vorzeichen wider."><img src="070-zusammenhaenge_files/figure-html/fig-delta-rect-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-delta-rect-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Abbildung&nbsp;8.3: Die Kovarianz als mittleres Abweichungsrechteck. In jedem der vier Quadranten (Q1, Q2, Q3, Q4) ist das Vorzeichen der Abweichungsrechtecke dargestellt. Die Farben der Abweichungsrechtecke spiegeln das Vorzeichen wider.
@@ -886,7 +886,6 @@ Tabelle&nbsp;8.2: Werte der Abweichungsrechtecke. avg: average (Mittelwert), cov
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>kovarianz <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">xy_area</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div class="kable-table">
 <table class="caption-top table table-sm table-striped small">
 <thead><tr class="header">
 <th style="text-align: right;">kovarianz</th>
@@ -897,14 +896,13 @@ Tabelle&nbsp;8.2: Werte der Abweichungsrechtecke. avg: average (Mittelwert), cov
 </table>
 </div>
 </div>
-</div>
 <p>Die Formel der Kovarianz lautet, s. <a href="#eq-cov4" class="quarto-xref">Gleichung&nbsp;<span>8.1</span></a>:</p>
 <p><span id="eq-cov4"><span class="math display">\[\text{cov(xy)} = s_{xy}:=\frac{1}{n}\sum_{i=1}^n (x_i-\bar{x})(y_i-\bar{y}) = \frac{1}{n}\sum_{i=1}^n dx_i\cdot dy_i \tag{8.1}\]</span></span></p>
 <p><a href="#eq-cov4" class="quarto-xref">Gleichung&nbsp;<span>8.1</span></a> in Worten ausgedrückt:</p>
 <ol type="1">
 <li>Rechne für jedes <span class="math inline">\(x_i\)</span> die Abweichung vom Mittelwert, <span class="math inline">\(\bar{x}\)</span>, aus, <span class="math inline">\(dx_i\)</span>.</li>
 <li>Rechne für jedes <span class="math inline">\(y_i\)</span> die Abweichung vom Mittelwert, <span class="math inline">\(\bar{y}\)</span>, aus, <span class="math inline">\(dy_i\)</span>.</li>
-<li>Multipliziere für alle <span class="math inline">\(i\)</span> <span class="math inline">\(dx_i\)</span> mit <span class="math inline">\(xy_i\)</span>, um die Abweichungsrechtecke <span class="math inline">\(dx_i dy_i\)</span> zu erhalten.</li>
+<li>Multipliziere für alle <span class="math inline">\(i\)</span> <span class="math inline">\(dx_i\)</span> mit <span class="math inline">\(dy_i\)</span>, um die Abweichungsrechtecke <span class="math inline">\(dx_i dy_i\)</span> zu erhalten.</li>
 <li>Addiere die Flächen der Abweichungsrechtecke.</li>
 <li>Teile durch die Anzahl der Beobachtungen <span class="math inline">\(n\)</span>.</li>
 </ol>
@@ -936,7 +934,7 @@ Tabelle&nbsp;8.2: Werte der Abweichungsrechtecke. avg: average (Mittelwert), cov
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-demos-cov" style="flex-basis: 45.0%;justify-content: center;">
 <div id="fig-demos-cov-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-demos-cov-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="070-zusammenhaenge_files/figure-html/fig-demos-cov-1.png" class="lightbox" data-gallery="fig-demos-cov" title="Abbildung&nbsp;8.6&nbsp;(a): kein Zusammenhang"><img src="070-zusammenhaenge_files/figure-html/fig-demos-cov-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-demos-cov"></a>
+<a href="070-zusammenhaenge_files/figure-html/fig-demos-cov-1.png" class="lightbox" data-gallery="fig-demos-cov" title="Abbildung&nbsp;8.6&nbsp;(a): kein Zusammenhang"><img src="070-zusammenhaenge_files/figure-html/fig-demos-cov-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-demos-cov"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-demos-cov-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) kein Zusammenhang
@@ -949,7 +947,7 @@ Tabelle&nbsp;8.2: Werte der Abweichungsrechtecke. avg: average (Mittelwert), cov
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-demos-cov" style="flex-basis: 45.0%;justify-content: center;">
 <div id="fig-demos-cov-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-demos-cov-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="070-zusammenhaenge_files/figure-html/fig-demos-cov-2.png" class="lightbox" data-gallery="fig-demos-cov" title="Abbildung&nbsp;8.6&nbsp;(b): perfekter (positiver) Zusammenhang"><img src="070-zusammenhaenge_files/figure-html/fig-demos-cov-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-demos-cov"></a>
+<a href="070-zusammenhaenge_files/figure-html/fig-demos-cov-2.png" class="lightbox" data-gallery="fig-demos-cov" title="Abbildung&nbsp;8.6&nbsp;(b): perfekter (positiver) Zusammenhang"><img src="070-zusammenhaenge_files/figure-html/fig-demos-cov-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-demos-cov"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-demos-cov-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) perfekter (positiver) Zusammenhang
@@ -977,7 +975,7 @@ Abbildung&nbsp;8.6: Verschiedene Werte der Kovarianz
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-covnull" style="flex-basis: 45.0%;justify-content: center;">
 <div id="fig-covnull-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-covnull-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="070-zusammenhaenge_files/figure-html/fig-covnull-1.png" class="lightbox" data-gallery="fig-covnull" title="Abbildung&nbsp;8.7&nbsp;(a): 4 Abweichungsrechtecke"><img src="070-zusammenhaenge_files/figure-html/fig-covnull-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-covnull"></a>
+<a href="070-zusammenhaenge_files/figure-html/fig-covnull-1.png" class="lightbox" data-gallery="fig-covnull" title="Abbildung&nbsp;8.7&nbsp;(a): 4 Abweichungsrechtecke"><img src="070-zusammenhaenge_files/figure-html/fig-covnull-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-covnull"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-covnull-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) 4 Abweichungsrechtecke
@@ -990,7 +988,7 @@ Abbildung&nbsp;8.6: Verschiedene Werte der Kovarianz
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-covnull" style="flex-basis: 45.0%;justify-content: center;">
 <div id="fig-covnull-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-covnull-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="070-zusammenhaenge_files/figure-html/fig-covnull-2.png" class="lightbox" data-gallery="fig-covnull" title="Abbildung&nbsp;8.7&nbsp;(b): 200 Abweichungsrechtecke"><img src="070-zusammenhaenge_files/figure-html/fig-covnull-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-covnull"></a>
+<a href="070-zusammenhaenge_files/figure-html/fig-covnull-2.png" class="lightbox" data-gallery="fig-covnull" title="Abbildung&nbsp;8.7&nbsp;(b): 200 Abweichungsrechtecke"><img src="070-zusammenhaenge_files/figure-html/fig-covnull-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" data-ref-parent="fig-covnull"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-covnull-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) 200 Abweichungsrechtecke
@@ -1352,8 +1350,8 @@ Abbildung&nbsp;8.11: Heatmap zu den Korrelationen im Datensatz mariokart.
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ihr Datensatz enthält einige fehlende Werte (NAs) in den Spalten für Preis und Gewicht. Sie verwenden den Standardbefehl <code>cor(total_pr, weight)</code> in R. Warum erhalten Sie als Ergebnis wahrscheinlich nur ein frustrierendes <code>NA</code>? Überlegen Sie, wie R standardmäßig mit unvollständigen Datenpaaren umgeht.</p>
-<div id="webex-7b8f25c7b6ba17dad9a16cea46c28201" class="webex-radiogroup" data-answer="bFMUVh4FTwdOBj8=">
-<label><input type="radio" autocomplete="off" name="7b8f25c7b6ba17dad9a16cea46c28201"><span>R gibt bei fehlenden Werten sicherheitshalber NA zurück, sofern nicht anders angewiesen.</span></label><label><input type="radio" autocomplete="off" name="7b8f25c7b6ba17dad9a16cea46c28201"><span>Der Befehl cor() löscht bei NAs automatisch den gesamten Dataframe.</span></label><label><input type="radio" autocomplete="off" name="7b8f25c7b6ba17dad9a16cea46c28201"><span>NAs führen dazu, dass die Standardabweichung unendlich groß wird.</span></label><label><input type="radio" autocomplete="off" name="7b8f25c7b6ba17dad9a16cea46c28201"><span>R erkennt NAs nur, wenn man zuvor das Paket ggplot2 geladen hat.</span></label><label><input type="radio" autocomplete="off" name="7b8f25c7b6ba17dad9a16cea46c28201"><span>Korrelationen können mathematisch grundsätzlich nicht mit NAs berechnet werden.</span></label>
+<div id="webex-0be9eee78537a43724e44549970ea5bc" class="webex-radiogroup" data-answer="a1NJCUlVSQcUBW4=">
+<label><input type="radio" autocomplete="off" name="0be9eee78537a43724e44549970ea5bc"><span>R gibt bei fehlenden Werten sicherheitshalber NA zurück, sofern nicht anders angewiesen.</span></label><label><input type="radio" autocomplete="off" name="0be9eee78537a43724e44549970ea5bc"><span>Der Befehl cor() löscht bei NAs automatisch den gesamten Dataframe.</span></label><label><input type="radio" autocomplete="off" name="0be9eee78537a43724e44549970ea5bc"><span>NAs führen dazu, dass die Standardabweichung unendlich groß wird.</span></label><label><input type="radio" autocomplete="off" name="0be9eee78537a43724e44549970ea5bc"><span>R erkennt NAs nur, wenn man zuvor das Paket ggplot2 geladen hat.</span></label><label><input type="radio" autocomplete="off" name="0be9eee78537a43724e44549970ea5bc"><span>Korrelationen können mathematisch grundsätzlich nicht mit NAs berechnet werden.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1370,8 +1368,8 @@ Abbildung&nbsp;8.11: Heatmap zu den Korrelationen im Datensatz mariokart.
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie möchten in R die Korrelationen zwischen allen metrischen Variablen eines Dataframes <code>d</code> gleichzeitig berechnen. Welche Vorgehensweise unter Nutzung des Tidyverse und der <code>easystats</code>-Bibliothek ist am effizientesten? Denken Sie an die Pipe-Logik.</p>
-<div id="webex-999920415e92b7a79c266d63ef2ae4f6" class="webex-radiogroup" data-answer="YgkVCR4BGAEZVWQ=">
-<label><input type="radio" autocomplete="off" name="999920415e92b7a79c266d63ef2ae4f6"><span>d |&gt; mean() |&gt; cor()</span></label><label><input type="radio" autocomplete="off" name="999920415e92b7a79c266d63ef2ae4f6"><span>d |&gt; select(all) |&gt; summarize(r)</span></label><label><input type="radio" autocomplete="off" name="999920415e92b7a79c266d63ef2ae4f6"><span>d |&gt; correlation() |&gt; summary()</span></label><label><input type="radio" autocomplete="off" name="999920415e92b7a79c266d63ef2ae4f6"><span>d |&gt; plot_density()</span></label><label><input type="radio" autocomplete="off" name="999920415e92b7a79c266d63ef2ae4f6"><span>correlation(d$all_vars)</span></label>
+<div id="webex-95b4311692e1e574d2fa6672e4ee642f" class="webex-radiogroup" data-answer="YgVOBB8AHQYVAjg=">
+<label><input type="radio" autocomplete="off" name="95b4311692e1e574d2fa6672e4ee642f"><span>d |&gt; mean() |&gt; cor()</span></label><label><input type="radio" autocomplete="off" name="95b4311692e1e574d2fa6672e4ee642f"><span>d |&gt; select(all) |&gt; summarize(r)</span></label><label><input type="radio" autocomplete="off" name="95b4311692e1e574d2fa6672e4ee642f"><span>d |&gt; correlation() |&gt; summary()</span></label><label><input type="radio" autocomplete="off" name="95b4311692e1e574d2fa6672e4ee642f"><span>d |&gt; plot_density()</span></label><label><input type="radio" autocomplete="off" name="95b4311692e1e574d2fa6672e4ee642f"><span>correlation(d$all_vars)</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1388,8 +1386,8 @@ Abbildung&nbsp;8.11: Heatmap zu den Korrelationen im Datensatz mariokart.
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie betrachten ein Streudiagramm, in dem die Datenpunkte eine perfekte U-Form bilden. Die Werte sinken erst stark ab und steigen dann wieder symmetrisch an. Welches Ergebnis für den Pearson-Korrelationskoeffizienten r ist hier zu erwarten? Berücksichtigen Sie die spezifische Eigenschaft, was r messen kann und was nicht.</p>
-<div id="webex-ae230c7a1eeebc7f60b1d61ed2337f40" class="webex-radiogroup" data-answer="OlUeAhxTG1EdVTg=">
-<label><input type="radio" autocomplete="off" name="ae230c7a1eeebc7f60b1d61ed2337f40"><span>r wird nahe +1 liegen.</span></label><label><input type="radio" autocomplete="off" name="ae230c7a1eeebc7f60b1d61ed2337f40"><span>r wird nahe Null liegen.</span></label><label><input type="radio" autocomplete="off" name="ae230c7a1eeebc7f60b1d61ed2337f40"><span>r wird nahe -1 liegen.</span></label><label><input type="radio" autocomplete="off" name="ae230c7a1eeebc7f60b1d61ed2337f40"><span>r wird den Wert 0,5 annehmen.</span></label><label><input type="radio" autocomplete="off" name="ae230c7a1eeebc7f60b1d61ed2337f40"><span>r kann aufgrund der Kurve nicht berechnet werden.</span></label>
+<div id="webex-b8b10f925b4f88358af6c17497e299b3" class="webex-radiogroup" data-answer="OQhOABxWFQIZUmk=">
+<label><input type="radio" autocomplete="off" name="b8b10f925b4f88358af6c17497e299b3"><span>r wird nahe +1 liegen.</span></label><label><input type="radio" autocomplete="off" name="b8b10f925b4f88358af6c17497e299b3"><span>r wird nahe Null liegen.</span></label><label><input type="radio" autocomplete="off" name="b8b10f925b4f88358af6c17497e299b3"><span>r wird nahe -1 liegen.</span></label><label><input type="radio" autocomplete="off" name="b8b10f925b4f88358af6c17497e299b3"><span>r wird den Wert 0,5 annehmen.</span></label><label><input type="radio" autocomplete="off" name="b8b10f925b4f88358af6c17497e299b3"><span>r kann aufgrund der Kurve nicht berechnet werden.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1406,8 +1404,8 @@ Abbildung&nbsp;8.11: Heatmap zu den Korrelationen im Datensatz mariokart.
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Männer mit Glatze haben ein höheres Risiko für einen schweren Corona-Verlauf. Es zeigt sich, dass das „Alter“ sowohl die Wahrscheinlichkeit einer Glatze als auch das Risiko eines schweren Verlaufs erhöht. Wie bezeichnet man den statistischen Zusammenhang zwischen Glatze und Corona-Risiko in diesem Fall korrekt? Nutzen Sie die Fachterminologie für Zusammenhänge ohne direkte Kausalwirkung.</p>
-<div id="webex-19b12c83680f71478ad04e98d71b312b" class="webex-radiogroup" data-answer="aglOAR5TFAIaCG0=">
-<label><input type="radio" autocomplete="off" name="19b12c83680f71478ad04e98d71b312b"><span>Umgekehrte Kausalität</span></label><label><input type="radio" autocomplete="off" name="19b12c83680f71478ad04e98d71b312b"><span>Perfekter Zusammenhang</span></label><label><input type="radio" autocomplete="off" name="19b12c83680f71478ad04e98d71b312b"><span>Kausaler Effekt</span></label><label><input type="radio" autocomplete="off" name="19b12c83680f71478ad04e98d71b312b"><span>Scheinkorrelation</span></label><label><input type="radio" autocomplete="off" name="19b12c83680f71478ad04e98d71b312b"><span>Negative Kovarianz</span></label>
+<div id="webex-27db548caefdac24e9f1b98da107d8c9" class="webex-radiogroup" data-answer="aQdIUhkEFFJNVTs=">
+<label><input type="radio" autocomplete="off" name="27db548caefdac24e9f1b98da107d8c9"><span>Umgekehrte Kausalität</span></label><label><input type="radio" autocomplete="off" name="27db548caefdac24e9f1b98da107d8c9"><span>Perfekter Zusammenhang</span></label><label><input type="radio" autocomplete="off" name="27db548caefdac24e9f1b98da107d8c9"><span>Kausaler Effekt</span></label><label><input type="radio" autocomplete="off" name="27db548caefdac24e9f1b98da107d8c9"><span>Scheinkorrelation</span></label><label><input type="radio" autocomplete="off" name="27db548caefdac24e9f1b98da107d8c9"><span>Negative Kovarianz</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1424,8 +1422,8 @@ Abbildung&nbsp;8.11: Heatmap zu den Korrelationen im Datensatz mariokart.
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie analysieren den Mariokart-Datensatz und finden eine Korrelation von r = 0,33 zwischen der Anzahl der Lenkräder und dem Preis. Wie ist dieser Zusammenhang laut den groben Richtlinien von Cohen (1988) zu bewerten? Ordnen Sie den numerischen Wert der entsprechenden Kategorie zu.</p>
-<div id="webex-9317e704721b6f1913a8ff43a4b17642" class="webex-radiogroup" data-answer="YgMdB0kHHAQbA2w=">
-<label><input type="radio" autocomplete="off" name="9317e704721b6f1913a8ff43a4b17642"><span>Der Zusammenhang ist vernachlässigbar klein (nahe Null).</span></label><label><input type="radio" autocomplete="off" name="9317e704721b6f1913a8ff43a4b17642"><span>Es handelt sich um einen schwachen Zusammenhang.</span></label><label><input type="radio" autocomplete="off" name="9317e704721b6f1913a8ff43a4b17642"><span>r = 0,33 bedeutet, dass kein linearer Zusammenhang vorliegt.</span></label><label><input type="radio" autocomplete="off" name="9317e704721b6f1913a8ff43a4b17642"><span>Es handelt sich um einen starken Zusammenhang.</span></label><label><input type="radio" autocomplete="off" name="9317e704721b6f1913a8ff43a4b17642"><span>Es handelt sich um einen mittleren Zusammenhang.</span></label>
+<div id="webex-9498712d6251129ecdaa4b06dcd3df35" class="webex-radiogroup" data-answer="YgQVCBsBHlQaA2g=">
+<label><input type="radio" autocomplete="off" name="9498712d6251129ecdaa4b06dcd3df35"><span>Der Zusammenhang ist vernachlässigbar klein (nahe Null).</span></label><label><input type="radio" autocomplete="off" name="9498712d6251129ecdaa4b06dcd3df35"><span>Es handelt sich um einen schwachen Zusammenhang.</span></label><label><input type="radio" autocomplete="off" name="9498712d6251129ecdaa4b06dcd3df35"><span>r = 0,33 bedeutet, dass kein linearer Zusammenhang vorliegt.</span></label><label><input type="radio" autocomplete="off" name="9498712d6251129ecdaa4b06dcd3df35"><span>Es handelt sich um einen starken Zusammenhang.</span></label><label><input type="radio" autocomplete="off" name="9498712d6251129ecdaa4b06dcd3df35"><span>Es handelt sich um einen mittleren Zusammenhang.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1442,8 +1440,8 @@ Abbildung&nbsp;8.11: Heatmap zu den Korrelationen im Datensatz mariokart.
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>In einer Studie soll der Zusammenhang zwischen Intelligenz und Studienerfolg untersucht werden. Die Forscher befragen dazu jedoch ausschließlich hochbegabte Studierende mit einem IQ über 130. Welchen Effekt hat diese bewusste Auswahl der Stichprobe auf die beobachtete Korrelation r? Nutzen Sie das Konzept der „Einschränkung der Spannweite“.</p>
-<div id="webex-343d6e99cde5952a89694f575261bc00" class="webex-radiogroup" data-answer="aAUfVBpVFQlPVDg=">
-<label><input type="radio" autocomplete="off" name="343d6e99cde5952a89694f575261bc00"><span>Der Betrag der Korrelation wird wahrscheinlich unterschätzt (sie wirkt schwächer als sie ist).</span></label><label><input type="radio" autocomplete="off" name="343d6e99cde5952a89694f575261bc00"><span>Das Ergebnis wird präziser, da die Daten homogener sind.</span></label><label><input type="radio" autocomplete="off" name="343d6e99cde5952a89694f575261bc00"><span>Die Korrelation wechselt zwingend ihr Vorzeichen von positiv zu negativ.</span></label><label><input type="radio" autocomplete="off" name="343d6e99cde5952a89694f575261bc00"><span>Die Korrelation wird durch die Auswahl der Experten künstlich erhöht.</span></label><label><input type="radio" autocomplete="off" name="343d6e99cde5952a89694f575261bc00"><span>Die Einschränkung der Spannweite hat mathematisch keinen Einfluss auf r.</span></label>
+<div id="webex-0014d90f260e984ac7c58a880a657403" class="webex-radiogroup" data-answer="awEdBEgJHFYeBm0=">
+<label><input type="radio" autocomplete="off" name="0014d90f260e984ac7c58a880a657403"><span>Der Betrag der Korrelation wird wahrscheinlich unterschätzt (sie wirkt schwächer als sie ist).</span></label><label><input type="radio" autocomplete="off" name="0014d90f260e984ac7c58a880a657403"><span>Das Ergebnis wird präziser, da die Daten homogener sind.</span></label><label><input type="radio" autocomplete="off" name="0014d90f260e984ac7c58a880a657403"><span>Die Korrelation wechselt zwingend ihr Vorzeichen von positiv zu negativ.</span></label><label><input type="radio" autocomplete="off" name="0014d90f260e984ac7c58a880a657403"><span>Die Korrelation wird durch die Auswahl der Experten künstlich erhöht.</span></label><label><input type="radio" autocomplete="off" name="0014d90f260e984ac7c58a880a657403"><span>Die Einschränkung der Spannweite hat mathematisch keinen Einfluss auf r.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1460,8 +1458,8 @@ Abbildung&nbsp;8.11: Heatmap zu den Korrelationen im Datensatz mariokart.
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Die Korrelation r wird oft als „mittleres z-Produkt“ bezeichnet. Angenommen, in einem Datensatz haben alle Beobachtungen bei Variable X und Variable Y jeweils das gleiche Vorzeichen ihrer z-Werte. Das bedeutet: Wer bei X überdurchschnittlich ist, ist es auch bei Y, und wer unterdurchschnittlich ist, ist es in beiden. Welche Aussage über die Korrelation r trifft hier zu?</p>
-<div id="webex-be8f97a6dba8c8067783518206c4150c" class="webex-radiogroup" data-answer="OVUUVxUHTQZIUjw=">
-<label><input type="radio" autocomplete="off" name="be8f97a6dba8c8067783518206c4150c"><span>Die Korrelation r muss exakt +1,0 betragen.</span></label><label><input type="radio" autocomplete="off" name="be8f97a6dba8c8067783518206c4150c"><span>Die Korrelation r muss positiv sein.</span></label><label><input type="radio" autocomplete="off" name="be8f97a6dba8c8067783518206c4150c"><span>Die Korrelation r kann in diesem Fall nicht berechnet werden.</span></label><label><input type="radio" autocomplete="off" name="be8f97a6dba8c8067783518206c4150c"><span>Die Korrelation r muss negativ sein.</span></label><label><input type="radio" autocomplete="off" name="be8f97a6dba8c8067783518206c4150c"><span>Die Korrelation r wird exakt Null betragen.</span></label>
+<div id="webex-91f0f2e69d23ade52df0787805abae4f" class="webex-radiogroup" data-answer="YgFKAUoCSQYVVG8=">
+<label><input type="radio" autocomplete="off" name="91f0f2e69d23ade52df0787805abae4f"><span>Die Korrelation r muss exakt +1,0 betragen.</span></label><label><input type="radio" autocomplete="off" name="91f0f2e69d23ade52df0787805abae4f"><span>Die Korrelation r muss positiv sein.</span></label><label><input type="radio" autocomplete="off" name="91f0f2e69d23ade52df0787805abae4f"><span>Die Korrelation r kann in diesem Fall nicht berechnet werden.</span></label><label><input type="radio" autocomplete="off" name="91f0f2e69d23ade52df0787805abae4f"><span>Die Korrelation r muss negativ sein.</span></label><label><input type="radio" autocomplete="off" name="91f0f2e69d23ade52df0787805abae4f"><span>Die Korrelation r wird exakt Null betragen.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1478,8 +1476,8 @@ Abbildung&nbsp;8.11: Heatmap zu den Korrelationen im Datensatz mariokart.
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Sie betrachten den Zusammenhang zwischen „Lernzeit“ und „Freizeit“ bei Studierenden. In der Regel gilt: Je mehr jemand lernt, desto weniger Freizeit hat er zur Verfügung. Welches Ergebnis erwarten Sie für den Korrelationskoeffizienten r in einer entsprechenden Untersuchung? Übertragen Sie die inhaltliche Beschreibung auf das Vorzeichen und den Wertebereich von r.</p>
-<div id="webex-6edb5794cdaa43098418616dc37db44d" class="webex-radiogroup" data-answer="bVVIUhkGFQRPVDw=">
-<label><input type="radio" autocomplete="off" name="6edb5794cdaa43098418616dc37db44d"><span>r wird einen Wert zwischen 0 und +1 annehmen.</span></label><label><input type="radio" autocomplete="off" name="6edb5794cdaa43098418616dc37db44d"><span>r wird deutlich größer als +1 sein.</span></label><label><input type="radio" autocomplete="off" name="6edb5794cdaa43098418616dc37db44d"><span>r wird einen Wert zwischen -1 und 0 annehmen.</span></label><label><input type="radio" autocomplete="off" name="6edb5794cdaa43098418616dc37db44d"><span>r wird exakt 0 betragen, da kein Zusammenhang besteht.</span></label><label><input type="radio" autocomplete="off" name="6edb5794cdaa43098418616dc37db44d"><span>r kann nicht berechnet werden, da Freizeit eine qualitative Variable ist.</span></label>
+<div id="webex-a3c8feb0e17b749114d6ae336bcae5f6" class="webex-radiogroup" data-answer="OgNPCEpUTgBJAWo=">
+<label><input type="radio" autocomplete="off" name="a3c8feb0e17b749114d6ae336bcae5f6"><span>r wird einen Wert zwischen 0 und +1 annehmen.</span></label><label><input type="radio" autocomplete="off" name="a3c8feb0e17b749114d6ae336bcae5f6"><span>r wird deutlich größer als +1 sein.</span></label><label><input type="radio" autocomplete="off" name="a3c8feb0e17b749114d6ae336bcae5f6"><span>r wird einen Wert zwischen -1 und 0 annehmen.</span></label><label><input type="radio" autocomplete="off" name="a3c8feb0e17b749114d6ae336bcae5f6"><span>r wird exakt 0 betragen, da kein Zusammenhang besteht.</span></label><label><input type="radio" autocomplete="off" name="a3c8feb0e17b749114d6ae336bcae5f6"><span>r kann nicht berechnet werden, da Freizeit eine qualitative Variable ist.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1496,8 +1494,8 @@ Abbildung&nbsp;8.11: Heatmap zu den Korrelationen im Datensatz mariokart.
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Ein Forscher untersucht den Zusammenhang zwischen dem monatlichen Einkommen (in Euro) und der Lebenszufriedenheit. Er beschließt nun, das Einkommen für seine nächste Veröffentlichung in Cent statt in Euro anzugeben. Welche statistische Kennzahl wird sich durch diese Änderung der Skalierung massiv verändern? Betrachten Sie die mathematische Definition von Kovarianz und Korrelation.</p>
-<div id="webex-cbb07a927e7dac0b55e0c75b11ac7b08" class="webex-radiogroup" data-answer="OFJOARtRFQIbVWo=">
-<label><input type="radio" autocomplete="off" name="cbb07a927e7dac0b55e0c75b11ac7b08"><span>Der Korrelationskoeffizient r nach Pearson.</span></label><label><input type="radio" autocomplete="off" name="cbb07a927e7dac0b55e0c75b11ac7b08"><span>Die Kovarianz zwischen Einkommen und Zufriedenheit.</span></label><label><input type="radio" autocomplete="off" name="cbb07a927e7dac0b55e0c75b11ac7b08"><span>Die Anzahl der Freiheitsgrade der Analyse.</span></label><label><input type="radio" autocomplete="off" name="cbb07a927e7dac0b55e0c75b11ac7b08"><span>Das Vorzeichen des Zusammenhangs.</span></label><label><input type="radio" autocomplete="off" name="cbb07a927e7dac0b55e0c75b11ac7b08"><span>Die z-standardisierten Werte der Zufriedenheit.</span></label>
+<div id="webex-4fe38b4fe8773c277281b4b537b770bb" class="webex-radiogroup" data-answer="b1ZJAhRSGFZJCGo=">
+<label><input type="radio" autocomplete="off" name="4fe38b4fe8773c277281b4b537b770bb"><span>Der Korrelationskoeffizient r nach Pearson.</span></label><label><input type="radio" autocomplete="off" name="4fe38b4fe8773c277281b4b537b770bb"><span>Die Kovarianz zwischen Einkommen und Zufriedenheit.</span></label><label><input type="radio" autocomplete="off" name="4fe38b4fe8773c277281b4b537b770bb"><span>Die Anzahl der Freiheitsgrade der Analyse.</span></label><label><input type="radio" autocomplete="off" name="4fe38b4fe8773c277281b4b537b770bb"><span>Das Vorzeichen des Zusammenhangs.</span></label><label><input type="radio" autocomplete="off" name="4fe38b4fe8773c277281b4b537b770bb"><span>Die z-standardisierten Werte der Zufriedenheit.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -1514,8 +1512,8 @@ Abbildung&nbsp;8.11: Heatmap zu den Korrelationen im Datensatz mariokart.
 <div class="webex-question">
 <div class="webex-check webex-box">
 <p>Stellen Sie sich vor, Sie berechnen die Kovarianz für einen Datensatz. Sie stellen fest, dass die Summe der Flächen aller Abweichungsrechtecke exakt Null ergibt. Welche Schlussfolgerung über den linearen Zusammenhang der beiden Variablen ist in diesem Fall zwingend korrekt? Denken Sie an die Verteilung der Punkte über die vier Quadranten im Streudiagramm. Beachten Sie dabei die Vorzeichen der Rechtecksflächen.</p>
-<div id="webex-ec4ad53dce7427f5a42c206115022a07" class="webex-radiogroup" data-answer="PlIYUUgFH1RPVWo=">
-<label><input type="radio" autocomplete="off" name="ec4ad53dce7427f5a42c206115022a07"><span>Es existiert kein linearer Zusammenhang zwischen den Variablen.</span></label><label><input type="radio" autocomplete="off" name="ec4ad53dce7427f5a42c206115022a07"><span>Die beiden Variablen sind perfekt negativ miteinander korreliert.</span></label><label><input type="radio" autocomplete="off" name="ec4ad53dce7427f5a42c206115022a07"><span>Der Mittelwert beider Variablen muss ebenfalls exakt Null sein.</span></label><label><input type="radio" autocomplete="off" name="ec4ad53dce7427f5a42c206115022a07"><span>Alle Datenpunkte liegen perfekt auf einer ansteigenden Geraden.</span></label><label><input type="radio" autocomplete="off" name="ec4ad53dce7427f5a42c206115022a07"><span>Es wurden bei der Erhebung der Daten keine Messfehler gemacht.</span></label>
+<div id="webex-0f0176c4b108e464592aa8621fb9307a" class="webex-radiogroup" data-answer="a1ccARsGTwROAW0=">
+<label><input type="radio" autocomplete="off" name="0f0176c4b108e464592aa8621fb9307a"><span>Es existiert kein linearer Zusammenhang zwischen den Variablen.</span></label><label><input type="radio" autocomplete="off" name="0f0176c4b108e464592aa8621fb9307a"><span>Die beiden Variablen sind perfekt negativ miteinander korreliert.</span></label><label><input type="radio" autocomplete="off" name="0f0176c4b108e464592aa8621fb9307a"><span>Der Mittelwert beider Variablen muss ebenfalls exakt Null sein.</span></label><label><input type="radio" autocomplete="off" name="0f0176c4b108e464592aa8621fb9307a"><span>Alle Datenpunkte liegen perfekt auf einer ansteigenden Geraden.</span></label><label><input type="radio" autocomplete="off" name="0f0176c4b108e464592aa8621fb9307a"><span>Es wurden bei der Erhebung der Daten keine Messfehler gemacht.</span></label>
 </div>
 </div>
 <div class="webex-solution">
@@ -2215,15 +2213,50 @@ window.onload = function() {
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
     if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-      const a = window.document.createElement('a');
-      a.classList.add('top-right');
-      a.classList.add('quarto-color-scheme-toggle');
-      a.href = "";
-      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const toggle = window.document.createElement('button');
+      toggle.type = "button";
+      toggle.setAttribute("role", "switch");
+      toggle.setAttribute("aria-checked", "false");
+      toggle.classList.add('top-right');
+      toggle.classList.add('quarto-color-scheme-toggle');
+      toggle.setAttribute("aria-label", "Dunkelmodus umschalten");
+      toggle.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
       const i = window.document.createElement("i");
       i.classList.add('bi');
-      a.appendChild(i);
-      window.document.body.appendChild(a);
+      toggle.appendChild(i);
+      // Put the toggle in a landmark of its own, so that landmark navigation
+      // can reach it.
+      //
+      // The container is always a fresh direct child of body, and the toggle is
+      // never moved into page furniture that the theme or the author controls.
+      // The toggle is positioned against the page, so any ancestor that
+      // establishes a containing block captures it: a positioned element or a
+      // grid for position: absolute, and transform, filter, will-change or
+      // contain for position: fixed. A direct child of body has none of these
+      // to inherit, and the shift when one appears is silent and visual.
+      //
+      // ARIA says a document should have at most one banner, and axe reports a
+      // duplicate whether or not the banners carry distinct labels. So use a
+      // header when the page has no banner yet, and a named region otherwise.
+      //
+      // A header is a banner wherever it sits, unless it is inside sectioning
+      // content, so this cannot just look at the children of body: a custom
+      // page layout wraps the title block header in a plain div. An explicit
+      // role="banner" always counts.
+      const sectioning = 'article, aside, main, nav, section, [role="article"], [role="complementary"], [role="main"], [role="navigation"], [role="region"]';
+      const hasBanner = Array.from(
+        window.document.querySelectorAll('header:not([role]), [role="banner"]')
+      ).some(function(el) {
+        return el.hasAttribute("role") || el.closest(sectioning) === null;
+      });
+      const container = window.document.createElement(hasBanner ? "div" : "header");
+      if (hasBanner) {
+        container.setAttribute("role", "region");
+        container.setAttribute("aria-label", "Dunkelmodus umschalten");
+      }
+      container.classList.add('quarto-color-scheme-toggle-container');
+      container.appendChild(toggle);
+      window.document.body.appendChild(container);
     }
     setColorSchemeToggle(hasAlternateSentinel())
     const icon = "";
@@ -2302,7 +2335,8 @@ window.onload = function() {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -2311,8 +2345,69 @@ window.onload = function() {
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -2326,6 +2421,7 @@ window.onload = function() {
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -2488,44 +2584,54 @@ window.onload = function() {
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -2623,7 +2729,9 @@ window.onload = function() {
       }
     }
   });
-  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+  </script><script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollbarer Code","output":"Scrollbare Ausgabe"};
+  </script><nav class="page-navigation" aria-label="Seite"><div class="nav-page nav-page-previous">
       <a href="./060-modellguete.html" class="pagination-link" aria-label="Modellgüte">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modellgüte</span></span>
       </a>          

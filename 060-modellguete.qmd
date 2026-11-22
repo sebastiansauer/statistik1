@@ -273,8 +273,8 @@ Das sollten wir ausprobieren.
 @fig-fehler-red zeigt, dass die Fehlerbalken *kürzer* werden, wenn wir ein (sinnvolles) komplexeres Modell finden.
 Innerhalb jeder der beiden Gruppen (mit 2 Lenkrädern vs. mit 0 Lenkrädern) 
 sind die Fehlerbalken jeweils im Durchschnitt kürzer (rechtes Teildiagramm) als im Modell ohne Gruppierung (linkes Teildiagramm).
-Aus Gründen der Übersichtlichkeit wurden nur Autos mit Verkaufsgebot 
-von weniger als 100 Euros berücksichtigt und nur Spiele mit 0 oder mit 2 Lenkrädern.
+Aus Gründen der Übersichtlichkeit wurden nur Spiele mit Verkaufsgebot 
+von weniger als 100 Dollar berücksichtigt und nur Spiele mit 0 oder mit 2 Lenkrädern.
 
 
 
@@ -326,7 +326,7 @@ m |>
            color = trendcol, fontface = "bold",
            fill = alpha("white", 0.85), border.colour = NA) +
   scale_y_continuous(limits = range(m$total_pr)) +  # gleiche Skala in (a) und (b)
-  labs(x = "Spiel (ID)", y = NULL, subtitle = "Verkaufspreis (Euro)") +
+  labs(x = "Spiel (ID)", y = NULL, subtitle = "Verkaufspreis (Dollar)") +
   rangeframe() +
   theme_streu()
 
@@ -360,7 +360,7 @@ m |>
   scale_shape_manual(values = c("0" = formen[1], "2" = formen[2]), guide = "none") +
   scale_y_continuous(limits = range(m$total_pr)) +  # gleiche Skala in (a) und (b)
   labs(x = "Spiel (ID)", y = NULL,
-       subtitle = paste0("Verkaufspreis (Euro); ",
+       subtitle = paste0("Verkaufspreis (Dollar); ",
                          "<b style='color:", okabe_text[1], "'>&#9679; 0 Räder</b> / ",
                          "<b style='color:", okabe_text[2], "'>&#9650; 2 Räder</b>")) +
   rangeframe() +
@@ -527,7 +527,7 @@ $IQR = Q_3-Q_1 = 1.75\,m - 1.65\,m = 0.10\,m$, d.$\,$h. 10$\,$cm. $\square$
 #| layout-ncol: 2
 #| teilbild: true
 #| label: fig-iqr-mario
-#| fig-cap: "IQR, Q1, Q2 und Q3 für das Schlussgebot (nur Spiele für weniger als 100 Euro)"
+#| fig-cap: "IQR, Q1, Q2 und Q3 für das Schlussgebot (nur Spiele für weniger als 100 Dollar)"
 #| fig-subcap: 
 #|   - "Histogramm"
 #|   - "Dichtediagramm"
@@ -561,7 +561,7 @@ mariokart |>
            y = Inf, 
            label =  c("Q1", "Median", "Q3"), 
            vjust = c(1.2, 2.6, 1.2), size = 3, border.colour = NA) +
-  labs(x = "Verkaufspreis (Euro)", y = NULL, subtitle = "Anzahl") +
+  labs(x = "Verkaufspreis (Dollar)", y = NULL, subtitle = "Anzahl") +
   geom_segment( 
            aes(x = q25, xend = q75), 
            y = 5, yend = 5, color = trendcol,
@@ -584,7 +584,7 @@ mariokart |>
            y = Inf, 
            label =  c("Q1", "Median", "Q3"), 
            vjust = c(1.2, 2.6, 1.2), size = 3, border.colour = NA) +
-  labs(x = "Verkaufspreis (Euro)", y = NULL, subtitle = "Anteil (Dichte)") +
+  labs(x = "Verkaufspreis (Dollar)", y = NULL, subtitle = "Anteil (Dichte)") +
   geom_segment( 
            aes(x = q25, xend = q75), 
            y = 0.01, yend = 0.01, color = trendcol,
@@ -943,7 +943,7 @@ mariokart |>
             alpha = .3,
             fill = okabe_linie[1]) +
   geom_density(aes(x = total_pr), color = grau_dunkel, linewidth = 0.8) +
-  labs(x = "Verkaufspreis (Euro)", y = NULL, subtitle = "Dichte")
+  labs(x = "Verkaufspreis (Dollar)", y = NULL, subtitle = "Dichte")
 
 mariokart |> 
   select(total_pr) |> 
@@ -966,7 +966,7 @@ mariokart |>
     y = total_pr),
     width = 0.1, alpha = 0.6) +
   scale_x_continuous(limits = c(0, 2), breaks = NULL) +
-  labs(x = NULL, y = NULL, subtitle = "Verkaufspreis (Euro)")
+  labs(x = NULL, y = NULL, subtitle = "Verkaufspreis (Dollar)")
 
 ```
 
@@ -1228,7 +1228,7 @@ mariokart_no_extreme_zentriert |>
   annotate("label", x = total_pr_mean, y = Inf, label = "Preis unzentriert", vjust = 1,
            color = okabe_text[1], fontface = "bold", border.colour = NA)  +
   labs(caption = "Die vertikalen gestrichelten Linien zeigen die Mittelwerte der Verteilungen.",
-       x = "Verkaufspreis bzw. Abweichung vom MW (Euro)", y = NULL, subtitle = "Dichte") +
+       x = "Verkaufspreis bzw. Abweichung vom MW (Dollar)", y = NULL, subtitle = "Dichte") +
   scale_x_continuous(limits = c(-50, 100))
 ```
 
@@ -1273,7 +1273,7 @@ desto besser eignet sich der Mittelwert als Modell für die Daten und desto höh
 Ja, es ist *etwas* Streuung, aber wie viel? Kann man das genau angeben?
 Sie überlegen … und überlegen. Da! Eine Idee!
 
-Man könnte vielleicht angeben, wie viel Euro jedes Spiel vom Mittelwert entfernt ist.
+Man könnte vielleicht angeben, wie viel Dollar jedes Spiel vom Mittelwert entfernt ist.
 Je größer diese Abweichung, desto schlechter die Modellgüte!
 Also rechnen Sie diese Abweichung aus, @lst-zentrieren und @tbl-zentriert.
 
@@ -1314,7 +1314,7 @@ Daher ist der neue Mittelwert (der zentrierten Verteilung) gleich Null. $\square
 
 
 Aber irgendwie sind Sie noch nicht am Ziel Ihrer Überlegungen:
-Woher weiß man, ob 10 Euro oder 20 Euro "viel" Abweichung vom Verkaufspreis ist?
+Woher weiß man, ob 10 Dollar oder 20 Dollar "viel" Abweichung vom Verkaufspreis ist?
 Man müsste die Abweichung eines Verkaufspreises zu irgendetwas in Bezug setzen.
 Wieder! Ein Geistesblitz!
 Man könnte doch die jeweilige Abweichung  in Bezug setzen zur *mittleren (absoluten) Abweichung* (MAA)!

@@ -56,6 +56,12 @@ Alle Dateien liegen im Verzeichnis `exs/`.
 - `Pipe_Vorteil.Rmd`
 - `Select_Anwendung.Rmd`
 - `Filter_Logik.Rmd`
+- `Rohdaten_Dublette.Rmd`
+- `Rohdaten_Unplausibel_Extrem.Rmd`
+- `Rohdaten_Extremwert_Entscheidung.Rmd`
+- `Rohdaten_drop_na.Rmd`
+- `KI_Filter_Reihenfolge.Rmd`
+- `KI_Code_pruefen.Rmd`
 
 ## `040-verbildlichen.qmd`
 

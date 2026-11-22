@@ -24,7 +24,9 @@ csl: ../specifics/apa7.csl
 
 ## Lernziele {.smaller}
 
-- Sie können folgende Verben des Datenjudos anwenden: `arrange`, `filter`, `select`, `summarise`, `group_by`, `mutate`.
+- Sie können typische Probleme in Rohdaten benennen (Dubletten, fehlende Werte, unplausible Werte und Extremwerte, uneinheitliche Kodierung) und in einem Datensatz erkennen.
+- Sie können für jedes dieser Probleme eine begründete Entscheidung treffen und diese festhalten.
+- Sie können die Verben des Datenjudos (`arrange`, `filter`, `select`, `summarise`, `group_by`, `mutate`) einer Aufgabe zuordnen und R-Code mit ihnen lesen und anwenden.
 - Sie können R-Befehle mit der "Pfeife" verketten.
 
 ::: footer
@@ -61,11 +63,190 @@ Komplexe Datenaufbereitung wird elegant, wenn man sie in einfache Teilschritte z
 Einstieg
 :::
 
+# Was Rohdaten typischerweise falsch machen {.center footer=false}
+
+## Erst denken, dann rechnen
+
+*Was* muss man mit Daten tun, bevor man ihnen trauen kann?
+
+- Den Code dafür schreibt Ihnen eine KI auf Zuruf.
+- Ob es *richtig* ist, einen Fall zu entfernen, hängt von Ihrer **Forschungsfrage** ab — und die kennen nur Sie.
+
+Für jedes Problem fragen wir:
+
+1. **Woran erkennt man es?**
+2. **Welche Entscheidung muss ich treffen?**
+3. **Was passiert, wenn man es ignoriert?**
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
+## Der Datenguru bekommt Rohdaten
+
+Die Chefin schickt einen frischen Export: `mariokart_roh`. "Rechnen Sie mal schnell den mittleren Preis aus."
+
+```r
+mariokart_roh <- read_csv(mariokart_roh_path, col_types = cols(id = "c"))
+nrow(mariokart_roh)            # 146 -- Mariokart hat aber nur 143 Auktionen
+mean(mariokart_roh$total_pr)   # NA
+```
+
+Der erste Schritt ist immer derselbe: **ein Blick in die Daten** (`glimpse`).
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
+## Dubletten {.smaller}
+
+:::{.callout-note title="Definition: Dublette"}
+Eine *Dublette* ist ein Fall (eine Zeile), der versehentlich mehrfach im Datensatz steht.
+:::
+
+- **Erkennen:** Eine eindeutige Kennung (Auktions-, Kunden-, Matrikelnummer) kommt mehrfach vor:
+
+```r
+mariokart_roh |> count(id) |> filter(n > 1)   # 3 Auktionen doppelt
+```
+
+- **Entscheiden:** Gleiche ID = Exportfehler → eine Zeile behalten (`distinct()`). Ohne Kennung lassen sich Dubletten nicht von zufällig gleichen Fällen unterscheiden.
+- **Folgen:** Doppelte Fälle zählen doppelt; die Stichprobe wirkt größer, Kennwerte sind verzerrt.
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
+## Fehlende Werte {.smaller}
+
+- **Erkennen:** `NA` zählen, pro Spalte.
+- **Entscheiden:** Erst fragen, *warum* der Wert fehlt. Pragmatisch: bei der jeweiligen Berechnung weglassen.
+
+```r
+mean(mariokart_roh$total_pr, na.rm = TRUE)
+```
+
+- **Vorsicht, Holzhammer:** `drop_na()` ohne Spaltenangabe löscht *jede* Zeile mit irgendeinem `NA`. Im Rohdatensatz: 9 Zeilen mit `NA`, aber nur bei 2 fehlt der Preis.
+- **Folgen:** Im harmlosen Fall gibt R `NA` zurück. Im unangenehmen Fall schrumpft die Stichprobe stillschweigend — und fehlen Werte nicht zufällig, verzerrt das die Ergebnisse.
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
+## Unplausibel oder extrem?
+
+:::{.callout-note title="Definition: Unplausibler Wert und Extremwert"}
+Ein *unplausibler Wert* kann nicht stimmen (z. B. ein negatives Alter). Ein *Extremwert* (Ausreißer) weicht stark ab, ist aber möglich.
+:::
+
+- **Unplausibel:** Eine Auktion soll 70 Tage gedauert haben — bei eBay sind höchstens 10 möglich. → Korrigieren, wenn man sicher ist, sonst `NA`.
+- **Extrem:** 327 und 118 Dollar, alle anderen unter 80 Dollar. Die Titel verraten: eine Konsole mit Spielen bzw. ein Paket mit zehn Spielen.
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
+## Extremwerte: die Leitfrage
+
+> Gehört dieser Fall zu dem, worüber ich eine Aussage treffen will?
+
+Forschungsfrage: Preis *eines* Mariokart-Spiels → Bundles gehören nicht dazu → `filter(total_pr < 100)`. Diese Entscheidung gilt für den Rest des Buches.
+
+:::{.callout-important}
+Extremwerte werden *nicht* entfernt, weil sie stören, sondern wenn es einen inhaltlichen Grund gibt. Und diese Entscheidung wird offengelegt.
+:::
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
+## Uneinheitliche Kodierung
+
+:::: {.columns}
+::: {.column width="45%"}
+```r
+mariokart_roh |> count(cond)
+```
+
+| cond | n |
+|------|---|
+| New | 1 |
+| USED | 1 |
+| gebraucht | 1 |
+| new | 59 |
+| used | 84 |
+:::
+::: {.column width="55%"}
+Fünf statt zwei Kategorien: Für R sind `"used"`, `"USED"` und `"gebraucht"` drei verschiedene Dinge.
+
+→ Auf eine Schreibweise vereinheitlichen, sonst werden Gruppenvergleiche falsch.
+:::
+::::
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
+## Aufbereitung dokumentieren {.smaller}
+
+1. Die **Rohdaten bleiben unangetastet** — man erzeugt einen neuen, bereinigten Datensatz.
+2. **Jeder Schritt steht im Skript.**
+3. **Jede Entscheidung bekommt eine Begründung**, am besten als Kommentar.
+
+```r
+mariokart_bereinigt <-
+  mariokart_roh |>
+  # Dubletten: drei Auktionen wurden doppelt exportiert
+  distinct() |>
+  # Kodierung vereinheitlichen: nur "new" und "used"
+  mutate(cond = str_to_lower(cond),
+         cond = if_else(cond == "gebraucht", "used", cond)) |>
+  # Unplausibel: Auktionen dauern höchstens 10 Tage, wahrer Wert unbekannt
+  mutate(duration = if_else(duration > 10, NA, duration)) |>
+  # Extremwerte: Bundles gehören nicht zur Forschungsfrage
+  filter(total_pr < 100)
+```
+
+Ergebnis: 139 Zeilen, mittlerer Preis 47,4 statt 49,9 Dollar.
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
+## Überblick {.smaller}
+
+| Problem | Erkennungszeichen | typische Entscheidung | R-Werkzeug |
+|:--------|:------------------|:----------------------|:-----------|
+| Dubletten | eine Kennung (ID) kommt mehrfach vor | doppelte Zeilen entfernen | `count()`, `distinct()` |
+| fehlende Werte | `NA` in einer Spalte | bei der jeweiligen Berechnung weglassen | `is.na()`, `na.rm = TRUE` |
+| unplausible Werte | Wert ist unmöglich | korrigieren, wenn sicher, sonst `NA` | `summarise()`, `mutate()` |
+| Extremwerte | Wert weicht stark ab, ist aber möglich | prüfen, ob der Fall zur Fragestellung gehört | `arrange()`, `filter()` |
+| uneinheitliche Kodierung | zu viele Kategorien, Tippfehler | auf eine Schreibweise vereinheitlichen | `count()`, `mutate()` |
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
 # Die Verben des Datenjudos {.center footer=false}
 
-## Ein einfacher Beispieldatensatz {.smaller}
+## Jede Aufgabe hat ihr Verb {.smaller}
 
-Im R-Paket `dplyr` (Teil von `tidyverse`) gibt es eine Handvoll Verben, die das Datenjudo abdecken. Wir betrachten sie zunächst an einem kleinen Spielzeug-Datensatz:
+| Aufgabe | Verb | Beispiel |
+|:--------|:-----|:---------|
+| Zeilen (Fälle) auswählen | `filter` | nur die neuen Spiele |
+| Spalten (Variablen) auswählen | `select` | nur Zustand und Preis |
+| Zeilen sortieren | `arrange` | die teuersten Spiele zuerst |
+| Spalte neu berechnen | `mutate` | Preis in Yen umrechnen |
+| Zeilen zählen | `count` | Wie viele Spiele sind neu? |
+| aufteilen und zusammenfassen | `group_by` + `summarise` | mittlerer Preis je Zustand |
+
+Wer die Aufgabe kennt, kennt das Verb — und kann es einer KI präzise sagen oder in deren Code wiedererkennen. Die Verben wohnen im Paket `dplyr` (`library(tidyverse)`).
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Ein einfacher Beispieldatensatz
 
 | id | name   | gruppe | note |
 |----|--------|--------|------|
@@ -73,20 +254,7 @@ Im R-Paket `dplyr` (Teil von `tidyverse`) gibt es eine Handvoll Verben, die das 
 | 2  | Berti  | A      | 2.7  |
 | 3  | Charli | B      | 1.7  |
 
-Die Verben wohnen im Paket `dplyr`, das mit `library(tidyverse)` gestartet wird.
-
-::: footer
-Die Verben des Datenjudos
-:::
-
-## Tabelle sortieren: `arrange`
-
-![Sortieren einer Tabelle mit `arrange`: Die Noten wurden aufsteigend sortiert.](../030-aufbereiten_files/figure-html/fig-arrange-1.png){width="55%"}
-
-```r
-arrange(mariokart, total_pr)     # aufsteigend (Voreinstellung)
-arrange(mariokart, -total_pr)    # absteigend
-```
+Jedes Verb zuerst an diesem Spielzeug-Datensatz, dann an den Mariokart-Daten.
 
 ::: footer
 Die Verben des Datenjudos
@@ -97,6 +265,7 @@ Die Verben des Datenjudos
 ![Filtern einer Tabelle mit `filter`: Gruppe *B* wurde entfernt.](../030-aufbereiten_files/figure-html/fig-filter-1.png){width="55%"}
 
 ```r
+filter(mariokart, stock_photo == "yes")                  # == prüft auf Gleichheit
 filter(mariokart, stock_photo == "yes" & cond == "new")  # UND
 filter(mariokart, stock_photo == "yes" | cond == "new")  # ODER
 ```
@@ -111,30 +280,71 @@ Die Verben des Datenjudos
 
 ```r
 select(mariokart, cond, total_pr)
-select(mariokart, 2:5)   # Spalten 2 bis 5
-select(mariokart, -1)    # alle Spalten außer Spalte 1
+select(mariokart, -id)    # alle Spalten außer id
 ```
 
 ::: footer
 Die Verben des Datenjudos
 :::
 
-## Spalten zusammenfassen: `summarise`
+## Zeilen sortieren: `arrange`
+
+![Sortieren einer Tabelle mit `arrange`: Die Noten wurden aufsteigend sortiert.](../030-aufbereiten_files/figure-html/fig-arrange-1.png){width="55%"}
+
+```r
+arrange(mariokart, total_pr)     # aufsteigend (Voreinstellung)
+arrange(mariokart, -total_pr)    # absteigend: die Bundles stehen oben
+```
+
+Sortieren ist der schnellste Weg, Extremwerte zu finden.
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Spalten neu berechnen: `mutate`
+
+![Spalten verändern/neu berechnen mit `mutate`](../030-aufbereiten_files/figure-html/fig-mutate-1.png){width="55%"}
+
+```r
+mariokart_yen <- mutate(mariokart, total_pr_yen = total_pr * 133)
+```
+
+Die Rechnung läuft für jede Zeile; derselbe Spaltenname überschreibt die Spalte (z. B. zum Korrigieren von `cond`).
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Zeilen zählen: `count`
+
+Bei nominalskalierten Daten ist Zählen (fast) das Einzige, was man tun kann:
+
+```r
+mariokart_gezaehlt <- count(mariokart, cond)
+mutate(mariokart_gezaehlt, anteil = n / sum(n))
+count(mariokart, cond, stock_photo)   # nach mehreren Spalten
+```
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Zusammenfassen: `summarise`
 
 ![Zusammenfassen mit `summarise`: Die Noten wurden zum Mittelwert zusammengefasst.](../030-aufbereiten_files/figure-html/fig-summarise-1.png){width="55%"}
 
 ```r
-mariokart_mittelwert <- summarise(mariokart,
-                                   preis_mw = mean(total_pr))
+summarise(mariokart, preis_mw = mean(total_pr))
 ```
 
-`summarise` fasst eine *Spalte* zu einer einzelnen *Zahl* zusammen.
+`summarise` fasst eine *Spalte* zu einer einzelnen *Zahl* zusammen — *wie*, steht in der Klammer (`mean`, `max`, …).
 
 ::: footer
 Die Verben des Datenjudos
 :::
 
-## Tabelle gruppieren: `group_by` {.smaller}
+## Aufteilen: `group_by` {.smaller}
 
 ![Gruppieren mit `group_by`: Aufteilung anhand der Variable `gruppe`.](../030-aufbereiten_files/figure-html/fig-group-1.png){width="50%"}
 
@@ -143,36 +353,7 @@ mariokart_gruppiert <- group_by(mariokart, cond)
 summarise(mariokart_gruppiert, preis_mw = mean(total_pr))
 ```
 
-Gruppieren teilt die Tabelle in Teiltabellen — nachfolgende Berechnungen laufen *für jede Teiltabelle einzeln*.
-
-::: footer
-Die Verben des Datenjudos
-:::
-
-## Spalten verändern: `mutate`
-
-![Spalten verändern/neu berechnen mit `mutate`](../030-aufbereiten_files/figure-html/fig-mutate-1.png){width="55%"}
-
-```r
-mariokart_yen <- mutate(mariokart, total_pr_yen = total_pr * 133)
-```
-
-`mutate` berechnet eine (neue oder bestehende) Spalte für jede Zeile neu — z. B. addieren, multiplizieren, transformieren.
-
-::: footer
-Die Verben des Datenjudos
-:::
-
-## Zeilen zählen: `count`
-
-Bei nominalskalierten Daten reicht oft schon das Zählen der Zeilen:
-
-```r
-mariocart_counted <- count(mariokart, cond)
-mutate(mariocart_counted, Anteil = n / sum(n))
-```
-
-Liefert Häufigkeiten je Ausprägung — und mit `mutate` gleich noch den Anteil.
+Alle nachfolgenden Berechnungen laufen *für jede Teiltabelle einzeln* — darum kommen `group_by` und `summarise` fast immer im Doppelpack.
 
 ::: footer
 Die Verben des Datenjudos
@@ -180,12 +361,13 @@ Die Verben des Datenjudos
 
 ## Verben am Fließband
 
-Tidyverse-Befehle erwarten typischerweise eine Tabelle als Input und liefern eine Tabelle als Output zurück.
+Jedes Verb bekommt eine **Tabelle** als Input und liefert eine **Tabelle** als Output.
 
-```{mermaid}
-flowchart LR
-  A["▥"] --> B[tidyverse-Befehl] --> C["▥"]
-```
+::: {style="text-align: center; font-size: 1.4em; margin: 1em 0;"}
+▥ → `verb` → ▥
+:::
+
+Darum kann man Verben hintereinanderschalten wie Stationen an einem Fließband.
 
 ::: footer
 Die Verben des Datenjudos
@@ -193,57 +375,52 @@ Die Verben des Datenjudos
 
 # Die Pfeife {.center footer=false}
 
+## Verschachtelt oder "und dann"?
+
+Ohne Pfeife: verschachtelt wie russische Puppen, zu lesen *von innen nach außen*:
+
+```r
+summarise(group_by(filter(mariokart, total_pr < 100), cond), preis_mw = mean(total_pr))
+```
+
+Viel lesbarer:
+
+```
+Nimm "mariokart" *und dann*
+  filtere die günstigen Spiele *und dann*
+  teile nach Zustand auf *und dann*
+  fasse zum mittleren Preis zusammen.
+```
+
+::: footer
+Die Pfeife
+:::
+
 ## Definition: Pfeife
 
 :::{.callout-note title="Definition: Pfeife"}
-"Und dann" heißt auf Errisch ` %>% ` oder (synonym) ` |> `. Man nennt diesen Befehl "Pfeife" (engl. *pipe*).
+"Und dann" heißt auf Errisch ` |> `. Man nennt diesen Befehl "Pfeife" (engl. *pipe*).
 :::
 
-Die Pfeife `%>%` wohnt im Paket `tidyverse` (genauer: `magrittr`). Seit R 4.1 gibt es auch eine eingebaute Pfeife: `|>`.
+- Lesen Sie ` |> ` einfach als "und dann".
+- Shortcut: Strg-Shift-M.
+- Seit R 4.1 fest eingebaut; die ältere Pfeife `%>%` (Paket `magrittr`) funktioniert praktisch gleich.
 
 ::: footer
 Die Pfeife
 :::
 
-## Russische Puppen: verschachtelte Befehle {.smaller}
+## Mariokart am Fließband
 
-R arbeitet einen verschachtelten Befehl *von innen nach außen* ab:
-
-1. `sum(x - mean(x))`
-2. `sum(x - 2)`
-3. `sum(-1, 0, 1)`
-4. `0`
-
-Bei mehr Verschachtelung wird es schnell unübersichtlich:
-
-```r
-fasse_zusammen(
-  gruppiere(
-    wähle_spalten(
-      filter_zeilen(meine_daten))))
-```
-
-::: footer
-Die Pfeife
+::: {style="text-align: center; margin-bottom: 0.5em;"}
+▥ → filter → ▥ → select → ▥ → group_by → ▥ → summarise → ▥
 :::
 
-## Die Pfeife zur Rettung
-
-Statt verschachtelt schreibt man mit der Pfeife die Schritte nacheinander:
-
-```{mermaid}
-flowchart LR
-  A["▥"] --filter<br>zeilen-->B["▥"]
-  B --wähle<br>spalten--> C["▥"]
-  C --gruppiere--> D["▥"]
-  D --fasse<br>zusammen--> E["▥"]
-```
-
 ```r
-mariokart %>%
-  filter(total_pr < 100) %>%
-  select(cond, total_pr) %>%
-  group_by(cond) %>%
+mariokart |>
+  filter(total_pr < 100) |>
+  select(cond, total_pr) |>
+  group_by(cond) |>
   summarise(total_pr_mean = mean(total_pr))
 ```
 
@@ -253,58 +430,155 @@ mariokart %>%
 Die Pfeife
 :::
 
-# Beispiele für Forschungsfragen {.center footer=false}
+# Aufbereiten mit KI {.center footer=false}
 
-## Das teuerste Spiel?
+## Der Arbeitsablauf
 
-```r
-mariokart %>%
-  filter(stock_photo == "yes") %>%
-  group_by(cond) %>%
-  summarise(total_pr_max = max(total_pr))
-```
+Der Code einer KI läuft fast immer ohne Fehlermeldung durch. Ob er *das Richtige* tut, verrät R nicht.
 
-Das teuerste Spiel mit Foto kostet 75 Dollar (neu) bzw. 62 Dollar (gebraucht).
+1. **Aufgabe präzise formulieren** — in den Begriffen der Rohdaten-Probleme.
+2. **Code erhalten.**
+3. **Code lesen:** jede Zeile als "und dann"-Satz. Unbestellte Schritte? Nachfragen!
+4. **Ergebnis prüfen:** Zeilenzahl vorher/nachher, vorkommende Kategorien, Größenordnung.
 
 ::: footer
-Beispiele für Forschungsfragen
+Aufbereiten mit KI
 :::
 
-## Die mittlere Versandpauschale? {.smaller}
+## Unpräzise und präzise Aufträge {.smaller}
 
-Getrennt nach Anzahl der Lenkräder, nur Gruppen mit mind. 10 Spielen:
+> **Unpräzise:** Bereinige `mariokart_roh` und berechne den mittleren Preis.
 
-```r
-mariokart %>%
-  filter(wheels < 3) %>%
-  group_by(wheels) %>%
-  summarise(mittlere_versandkosten = mean(ship_pr),
-            anzahl_spiele = n())
-```
+> **Präzise:** Im Datensatz `mariokart_roh` steht jede Zeile für eine eBay-Auktion, `id` ist die Auktionsnummer, `total_pr` der Verkaufspreis in Dollar. Bitte schreibe R-Code mit dem Tidyverse, der (1) doppelte Zeilen entfernt, (2) `cond` auf `new` und `used` vereinheitlicht, (3) Auktionen ab 100 Dollar ausschließt, weil das Bündel sind, (4) den mittleren Preis getrennt für `new` und `used` berechnet und fehlende Preise nur dabei weglässt. Kommentiere jeden Schritt und gib nach jedem Schritt die Zeilenzahl aus.
 
-Die mittleren Versandkosten liegen zwischen 2.7 und 3.6 Dollar, je nach Anzahl der Lenkräder.
+Beim ersten Auftrag trifft die KI die Entscheidungen — beim zweiten Sie.
 
 ::: footer
-Beispiele für Forschungsfragen
+Aufbereiten mit KI
 :::
 
-## Verkaufspreis in Yen?
-
-Mittlerer Verkaufspreis in Yen, minus 10 % Provision:
+## Fehler 1: Filtern an der falschen Stelle
 
 ```r
-mariokart %>%
-  select(total_pr) %>%
-  mutate(total_pr_yen = total_pr * 133) %>%
-  summarise(
-    preis_yen_mw = mean(total_pr_yen),
-    preis_yen_mw_minus_10proz = preis_yen_mw - 0.1 * preis_yen_mw)
+# FALSCH: filtert die Mittelwerte, nicht die Auktionen
+mariokart_vorbereitet |>
+  group_by(cond) |>
+  summarise(preis_mw = mean(total_pr, na.rm = TRUE)) |>
+  filter(preis_mw < 100)        # used: 47 Dollar
+
+# RICHTIG: erst filtern, dann zusammenfassen
+mariokart_vorbereitet |>
+  filter(total_pr < 100) |>
+  group_by(cond) |>
+  summarise(preis_mw = mean(total_pr))   # used: 43 Dollar
 ```
 
-`summarise` kann auch mehrere Berechnungen gleichzeitig ausführen.
+Die Reihenfolge am Fließband ist nicht egal.
 
 ::: footer
-Beispiele für Forschungsfragen
+Aufbereiten mit KI
+:::
+
+## Fehler 2 und 3: Holzhammer und Faustregel {.smaller}
+
+**Fehler 2:** `drop_na()` ohne Spaltenangabe
+
+```r
+nrow(mariokart_vorbereitet)            # 143
+nrow(drop_na(mariokart_vorbereitet))   # 134
+```
+
+Auch Auktionen mit vorhandenem Preis fliegen raus. Besser: `na.rm = TRUE` oder `drop_na(total_pr)`.
+
+**Fehler 3:** Ausreißer nach 1,5-IQR-Faustregel entfernt
+
+Die Regel trifft die beiden Bundles — *und* eine ganz normale Auktion für 75 Dollar (neues Spiel mit drei Lenkrädern). Eine Faustregel liefert Kandidaten, keine Entscheidung.
+
+::: footer
+Aufbereiten mit KI
+:::
+
+## Fehler 4: Kodierung übersehen
+
+```r
+mariokart_roh |>
+  filter(total_pr < 100) |>
+  group_by(cond) |>
+  summarise(preis_mw = mean(total_pr, na.rm = TRUE),
+            n = n())
+```
+
+Fünf Gruppen statt zwei, drei davon mit nur einer Auktion. Das Ergebnis verrät den Fehler, *wenn* man hinschaut — darum gehört `n = n()` in fast jede Zusammenfassung.
+
+::: footer
+Aufbereiten mit KI
+:::
+
+## Checkliste: KI-Code prüfen
+
+:::{.callout-important title="Bevor Sie einem Ergebnis trauen"}
+- Können Sie jede Zeile des Codes als "und dann"-Satz vorlesen?
+- Hat der Code etwas getan, das Sie nicht bestellt haben?
+- Stimmt die Zeilenzahl vor und nach jedem Schritt mit Ihrer Erwartung überein?
+- Kommen in Gruppierungsvariablen nur die erwarteten Kategorien vor (`count`)?
+- Ist das Ergebnis in der Größenordnung plausibel?
+:::
+
+::: footer
+Aufbereiten mit KI
+:::
+
+# Fallstudie: Vom Rohdatensatz zur Antwort {.center footer=false}
+
+## Einmal bereinigen, dann fragen
+
+1. `mariokart_bereinigt` erzeugen (Pipeline von oben) und prüfen: 146 → 139 Zeilen, `cond` hat nur noch `new` und `used`.
+2. Drei Fragen der Chefin beantworten — alle mit den bereinigten Daten:
+   - Das teuerste Spiel mit Foto, je Zustand?
+   - Die mittlere Versandpauschale je Anzahl Lenkräder (nur Gruppen mit mind. 10 Spielen)?
+   - Der mittlere Preis in Yen, abzüglich 10 % Provision?
+
+::: footer
+Fallstudie: Vom Rohdatensatz zur Antwort
+:::
+
+## Die drei Antworten {.smaller}
+
+```r
+mariokart_bereinigt |>                      # Frage 1
+  filter(stock_photo == "yes") |>
+  group_by(cond) |>
+  summarise(total_pr_max = max(total_pr))   # neu: 75,0, gebraucht: 61,8 Dollar
+
+mariokart_bereinigt |>                      # Frage 2
+  group_by(wheels) |>
+  summarise(mittlere_versandkosten = mean(ship_pr, na.rm = TRUE), n = n()) |>
+  filter(n >= 10)                           # 2,53 bis 3,68 Dollar
+
+mariokart_bereinigt |>                      # Frage 3
+  mutate(total_pr_yen = total_pr * 133) |>
+  summarise(preis_yen_mw = mean(total_pr_yen),
+            preis_yen_mw_minus_10proz = preis_yen_mw - 0.1 * preis_yen_mw)
+```
+
+Bei Frage 2 steht `filter` *nach* `summarise` — hier richtig, denn diesmal sollen *Gruppen* ausgewählt werden.
+
+::: footer
+Fallstudie: Vom Rohdatensatz zur Antwort
+:::
+
+## Was hat die Bereinigung gebracht? {.smaller}
+
+| Frage | Rohdaten | bereinigte Daten |
+|:------|:---------|:-----------------|
+| 1: teuerstes neues Spiel mit Foto | `NA`, dazu 4 statt 2 Gruppen | 75,0 Dollar |
+| 2: Versandkosten bei einem Lenkrad | `NA` | 3,68 Dollar |
+| 3: mittlerer Preis in Yen | 6.632 Yen (mit `na.rm = TRUE`) | 6.304 Yen |
+
+Frage 1 und 2 scheitern *sichtbar*. Frage 3 liefert eine plausible Zahl, die rund 330 Yen zu hoch ist — diesen Fehler sieht man dem Ergebnis nicht an.
+
+::: footer
+Fallstudie: Vom Rohdatensatz zur Antwort
 :::
 
 # Praxisbezug {.center footer=false}
@@ -326,11 +600,11 @@ Praxisbezug
 Eine Analystin möchte zeigen, dass der Verkaufspreis "viel zu niedrig" ist (Ist-Wert: 50 Euro):
 
 ```r
-mariokart_wheels <- mariokart %>%
-  group_by(wheels) %>%
+mariokart_wheels <- mariokart |>
+  group_by(wheels) |>
   summarise(pr_mean = mean(total_pr), count_n = n())
 
-mariokart_wheels %>%
+mariokart_wheels |>
   summarise(mean(pr_mean))   # ungewichteter Mittelwert -> 56 Euro
 ```
 
@@ -340,7 +614,7 @@ Der *ungewichtete* Mittelwert über die Gruppen (56 Euro) ist falsch und irrefü
 Wie man mit Statistik lügt
 :::
 
-# Fallstudien {.center footer=false}
+# Weitere Fallstudien {.center footer=false}
 
 ## Die Pinguine {.smaller}
 
@@ -353,7 +627,7 @@ Forschungsfragen zum Datensatz `penguins` (Zielvariable: Gewicht):
 3. Schwerster und leichtester Pinguin pro Spezies?
 
 ::: footer
-Fallstudien
+Weitere Fallstudien
 :::
 
 ## Fallstudie COVIDiSTRESS
@@ -363,15 +637,16 @@ Fallstudien
 Internationale Erhebung zu psychologischem Stress, Verhaltensregeln und Vertrauen in Institutionen während der Covid19-Pandemie — Daten frei verfügbar zur eigenständigen Analyse.
 
 ::: footer
-Fallstudien
+Weitere Fallstudien
 :::
 
-## Zusammenfassung
+## Zusammenfassung {.smaller}
 
-- **Datenjudo**: Aufbereiten, Umformen, Zusammenfassen von Daten
-- Sechs Kern-Verben: `arrange`, `filter`, `select`, `summarise`, `group_by`, `mutate` (+ `count`)
-- Jedes Verb: Tabelle rein, Tabelle raus
-- **Pfeife** (`%>%` bzw. `|>`) verkettet Befehle statt sie zu verschachteln: `d |> f(x)` = `f(d, x)`
+- **Rohdaten prüfen, bevor man rechnet:** Dubletten, fehlende Werte, unplausible Werte und Extremwerte, uneinheitliche Kodierung
+- **Entscheidungen hängen von der Forschungsfrage ab** — und werden im Skript begründet
+- **Verben des Datenjudos:** `filter`, `select`, `arrange`, `mutate`, `count`, `group_by` + `summarise` — Tabelle rein, Tabelle raus
+- **Pfeife** `|>` = "und dann": `d |> f(x)` = `f(d, x)`
+- **KI-Code:** präzise beauftragen, Zeile für Zeile lesen, Zeilenzahl und Kategorien prüfen
 - Vorsicht bei Mittelwerten über Gruppen: ungewichtet ≠ gewichtet
 
 ## Literaturhinweise

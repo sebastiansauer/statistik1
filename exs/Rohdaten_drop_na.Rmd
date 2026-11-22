@@ -1,0 +1,40 @@
+Question
+========
+Sie möchten den mittleren Verkaufspreis berechnen.
+Im Datensatz fehlen bei 2 Auktionen der Preis und bei 7 weiteren Auktionen nur die Bewertung des Verkäufers.
+Eine KI schlägt vor, zuerst `drop_na()` ohne weitere Angaben auf den ganzen Datensatz anzuwenden.
+Was ist das Problem daran?
+
+Answerlist
+----------
+* Es werden auch die 7 Auktionen gelöscht, deren Preis vollständig vorliegt.
+* Es werden nur die 2 Auktionen ohne Preis gelöscht, das ist genau richtig.
+* `drop_na()` ersetzt fehlende Werte durch 0 und verzerrt so den Mittelwert nach unten.
+* `drop_na()` löscht ganze Spalten, in denen mindestens ein Wert fehlt.
+* Es gibt kein Problem, weil `mean()` fehlende Werte ohnehin automatisch ignoriert.
+
+Solution
+========
+`drop_na()` ohne Angabe von Spalten löscht jede Zeile, in der *irgendein* Wert fehlt.
+Damit fallen hier 9 Auktionen weg, obwohl für die Frage nach dem Preis nur 2 davon unbrauchbar sind.
+Besser ist `mean(total_pr, na.rm = TRUE)` oder `drop_na(total_pr)`.
+
+* *Nur die 2 Auktionen:* Das wäre `drop_na(total_pr)`, also mit Angabe der Spalte.
+* *Ersetzen durch 0:* `drop_na()` ersetzt nichts, es löscht Zeilen.
+* *Löscht Spalten:* `drop_na()` arbeitet zeilenweise, nicht spaltenweise.
+* *`mean()` ignoriert NA automatisch:* Falsch, ohne `na.rm = TRUE` liefert `mean()` bei fehlenden Werten `NA`.
+
+Answerlist
+----------
+* Richtig
+* Falsch
+* Falsch
+* Falsch
+* Falsch
+
+Meta-information
+================
+exname: Rohdaten_drop_na
+extype: schoice
+exsolution: 10000
+exshuffle: TRUE

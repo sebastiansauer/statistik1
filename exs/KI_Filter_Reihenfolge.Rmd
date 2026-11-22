@@ -1,0 +1,48 @@
+Question
+========
+Sie wollen den mittleren Preis neuer und gebrauchter Spiele berechnen und dabei alle *Auktionen* ab 100 Dollar ausschließen.
+Eine KI liefert folgenden Code:
+
+```
+mariokart |>
+  group_by(cond) |>
+  summarise(preis_mw = mean(total_pr)) |>
+  filter(preis_mw < 100)
+```
+
+Beide Gruppenmittelwerte liegen unter 100 Dollar. Was tut der Code tatsächlich?
+
+Answerlist
+----------
+* Er filtert die Gruppenmittelwerte statt der Auktionen; die teuren Auktionen gehen weiterhin in die Mittelwerte ein.
+* Er schließt zuerst die Auktionen ab 100 Dollar aus und berechnet dann die Mittelwerte, also genau das Gewünschte.
+* Er bricht mit einer Fehlermeldung ab, weil `filter` nach `summarise` nicht erlaubt ist.
+* Er liefert eine leere Tabelle, weil nach `summarise` keine Spalte `total_pr` mehr existiert.
+* Er entfernt nur die gebrauchten Spiele, weil diese im Schnitt teurer sind.
+
+Solution
+========
+Liest man die Pfeife als "und dann", wird erst je Gruppe der Mittelwert berechnet, *und dann* gefiltert.
+Zu diesem Zeitpunkt besteht die Tabelle nur noch aus den Mittelwerten, also wird nach `preis_mw` gefiltert.
+Da beide Mittelwerte unter 100 liegen, wird nichts entfernt; die teuren Auktionen stecken weiter in den Mittelwerten.
+Richtig wäre, `filter(total_pr < 100)` *vor* `group_by` zu setzen.
+
+* *Genau das Gewünschte:* Verwechselt die Reihenfolge; die Pfeife arbeitet von oben nach unten.
+* *Fehlermeldung:* `filter` nach `summarise` ist erlaubt und manchmal genau richtig (z. B. um kleine Gruppen auszuschließen). Gerade deshalb fällt der Fehler nicht auf.
+* *Leere Tabelle:* Es wird nach `preis_mw` gefiltert, nicht nach `total_pr`; diese Spalte existiert.
+* *Nur gebrauchte Spiele entfernt:* Keine Gruppe hat einen Mittelwert ab 100 Dollar, also wird keine Gruppe entfernt.
+
+Answerlist
+----------
+* Richtig
+* Falsch
+* Falsch
+* Falsch
+* Falsch
+
+Meta-information
+================
+exname: KI_Filter_Reihenfolge
+extype: schoice
+exsolution: 10000
+exshuffle: TRUE

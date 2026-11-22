@@ -1510,6 +1510,223 @@ $\square$
 
 
 
+## Aufbereiten mit KI {#sec-aufbereiten-ki}
+
+Den Code für die Datenaufbereitung lassen sich heute viele von einer KI schreiben,
+etwa von ChatGPT, Claude oder dem Assistenten in Ihrer Entwicklungsumgebung.
+Das ist bequem und meistens auch richtig.
+*Meistens.*
+Der Code einer KI läuft fast immer ohne Fehlermeldung durch.
+Ob er auch *das Richtige* tut, verrät Ihnen R nicht.
+Das müssen Sie selbst prüfen, und dafür brauchen Sie genau das,
+was Sie in den beiden vorherigen Abschnitten gelernt haben:
+die typischen Probleme (@sec-rohdaten-probleme) und die Verben (@sec-verben-datenjudo).
+
+
+### Der Arbeitsablauf
+
+1. **Aufgabe präzise formulieren.** Benennen Sie die Probleme und Ihre Entscheidungen in den Begriffen aus @tbl-rohdaten-probleme. Die KI kennt Ihre Forschungsfrage nicht.
+2. **Code erhalten.**
+3. **Code lesen.** Übersetzen Sie jede Zeile in einen "und dann"-Satz. Taucht ein Schritt auf, den Sie nicht bestellt haben, fragen Sie nach.
+4. **Ergebnis prüfen.** Wie viele Zeilen hatte die Tabelle vorher, wie viele nachher? Welche Kategorien kommen vor? Ist die Größenordnung des Ergebnisses plausibel?
+
+
+### Unpräzise und präzise Aufgaben
+
+Vergleichen Sie zwei Aufträge an eine KI:
+
+> **Unpräzise:** Bereinige `mariokart_roh` und berechne den mittleren Preis.
+
+> **Präzise:** Im Datensatz `mariokart_roh` steht jede Zeile für eine eBay-Auktion, `id` ist die Auktionsnummer, `total_pr` der Verkaufspreis in Dollar.
+> Bitte schreibe R-Code mit dem Tidyverse, der
+> (1) doppelte Zeilen entfernt,
+> (2) die Spalte `cond` auf die Werte `new` und `used` vereinheitlicht,
+> (3) Auktionen ab 100 Dollar ausschließt, weil das Bündel mit mehreren Spielen sind,
+> (4) den mittleren Preis getrennt für `new` und `used` berechnet und dabei fehlende Preise nur bei dieser Berechnung weglässt.
+> Kommentiere jeden Schritt und gib nach jedem Schritt die Zeilenzahl aus.
+
+Beim ersten Auftrag muss die KI raten, was "bereinigen" heißt.
+Sie wird *irgendetwas* tun, und genau das ist das Problem:
+Die Entscheidungen aus @sec-rohdaten-probleme trifft dann die KI und nicht Sie.
+Der zweite Auftrag enthält diese Entscheidungen.
+Er ist länger, aber Sie bekommen genau das, was Sie wollen,
+und können es leicht prüfen.
+
+
+### Typische Fehler im KI-Code
+
+Die folgenden Fehler sind typisch, nicht nur bei KI, auch bei Menschen.
+Gemeinsam ist ihnen: R meldet keinen Fehler.
+Alle Beispiele beziehen sich auf die Frage "Wie hoch ist der mittlere Preis für neue und gebrauchte Spiele?"
+
+Für die ersten beiden Beispiele gehen wir von Daten aus,
+bei denen Dubletten und Kodierung schon bereinigt sind:
+
+```{r}
+mariokart_vorbereitet <-
+  mariokart_roh |>
+  distinct() |>
+  mutate(cond = str_to_lower(cond),
+         cond = if_else(cond == "gebraucht", "used", cond))
+```
+
+
+#### Fehler 1: Filtern an der falschen Stelle
+
+Der Auftrag lautete, die Bundle-Auktionen auszuschließen.
+Folgender Code sieht danach aus:
+
+```{r}
+# FALSCH
+mariokart_vorbereitet |>
+  group_by(cond) |>
+  summarise(preis_mw = mean(total_pr, na.rm = TRUE)) |>
+  filter(preis_mw < 100)
+```
+
+Lesen Sie den Code als "und dann"-Sätze:
+Erst wird für jede Gruppe der Mittelwert berechnet, *und dann* wird gefiltert.
+Gefiltert werden also nicht die *Auktionen*, sondern die *Mittelwerte*.
+Da beide Mittelwerte unter 100 Dollar liegen, wird gar nichts entfernt.
+Die Bundles stecken weiter im Mittelwert der gebrauchten Spiele.
+Richtig ist, *zuerst* zu filtern:
+
+```{r}
+# RICHTIG
+mariokart_vorbereitet |>
+  filter(total_pr < 100) |>
+  group_by(cond) |>
+  summarise(preis_mw = mean(total_pr))
+```
+
+Der Unterschied bei den gebrauchten Spielen beträgt rund 4 Dollar.
+Die Reihenfolge am Fließband ist also nicht egal.
+
+
+#### Fehler 2: Die Holzhammer-Methode bei fehlenden Werten
+
+```{r}
+# FRAGWÜRDIG
+mariokart_ohne_na <- drop_na(mariokart_vorbereitet)
+nrow(mariokart_vorbereitet)
+nrow(mariokart_ohne_na)
+```
+
+`drop_na()` ohne Angabe von Spalten löscht jede Zeile, in der *irgendein* Wert fehlt,
+auch dann, wenn nur die Bewertung des Verkäufers fehlt und der Preis vorhanden ist.
+Für die Frage nach dem Preis werden so grundlos Auktionen weggeworfen.
+Besser: `na.rm = TRUE` bei der Berechnung oder `drop_na(total_pr)`, s. @sec-rohdaten-probleme.
+Den Fehler bemerken Sie nur, wenn Sie die Zeilenzahl vorher und nachher vergleichen.
+
+
+#### Fehler 3: Ausreißer nach Faustregel entfernt
+
+Bittet man eine KI, "Ausreißer zu entfernen",
+greift sie oft zu einer Faustregel: Alles, was weiter als 1,5 Interquartilsabstände
+vom mittleren Bereich der Daten entfernt liegt, fliegt raus.^[Diese Regel steckt auch hinter dem Boxplot, s. @def-boxplot.]
+Welche Auktionen wären das hier?
+
+```{r}
+mariokart_vorbereitet |>
+  filter(total_pr > quantile(total_pr, .75, na.rm = TRUE) + 1.5 * IQR(total_pr, na.rm = TRUE)) |>
+  select(total_pr, cond, wheels)
+```
+
+Neben den beiden Bundles würde auch eine Auktion für 75 Dollar entfernt.
+Das ist aber ein ganz normales neues Spiel, nur mit drei Lenkrädern statt einem.
+Eine Faustregel kennt Ihre Forschungsfrage nicht.
+Sie liefert Kandidaten, die Sie sich anschauen sollten,
+aber keine Entscheidung.
+
+
+#### Fehler 4: Uneinheitliche Kodierung übersehen
+
+Hat die KI nicht gewusst, dass `cond` uneinheitlich kodiert ist,
+dann rechnet sie einfach mit den Rohdaten:
+
+```{r}
+# FALSCH
+mariokart_roh |>
+  filter(total_pr < 100) |>
+  group_by(cond) |>
+  summarise(preis_mw = mean(total_pr, na.rm = TRUE),
+            n = n())
+```
+
+Hier verrät das Ergebnis den Fehler selbst, *wenn* man hinschaut:
+Fünf Gruppen statt zwei, drei davon mit nur einer Auktion.
+Darum gehört `n = n()` (die Anzahl der Fälle pro Gruppe) in fast jede Zusammenfassung.
+
+
+### Checkliste: KI-Code prüfen
+
+:::{.callout-important}
+### Bevor Sie einem Ergebnis trauen
+- Können Sie jede Zeile des Codes als "und dann"-Satz vorlesen?
+- Hat der Code etwas getan, das Sie nicht bestellt haben (Zeilen gelöscht, Werte ersetzt)?
+- Stimmt die Zeilenzahl vor und nach jedem Schritt mit Ihrer Erwartung überein?
+- Kommen in Gruppierungsvariablen nur die erwarteten Kategorien vor (`count`)?
+- Ist das Ergebnis in der Größenordnung plausibel? $\square$
+:::
+
+
+:::{#exr-ki-fehler}
+### Finden Sie den Fehler
+Sie haben eine KI gebeten: "Berechne den mittleren Verkaufspreis neuer Spiele mit Foto, ohne die Bundle-Auktionen ab 100 Dollar."
+Die KI liefert:
+
+```{r}
+#| eval: false
+mariokart_vorbereitet |>
+  filter(cond == "new" | stock_photo == "yes") |>
+  drop_na() |>
+  summarise(preis_mw = mean(total_pr))
+```
+
+Finden Sie zwei Abweichungen vom Auftrag und eine fragwürdige Entscheidung. $\square$
+:::
+
+:::{.callout-tip collapse="true"}
+### Lösung zu @exr-ki-fehler
+
+1. `|` heißt ODER. Gewünscht waren Spiele, die neu sind *und* ein Foto haben, also `&`.
+2. Der Ausschluss der Bundles (`total_pr < 100`) fehlt.
+3. `drop_na()` löscht alle Zeilen mit irgendeinem fehlenden Wert, nicht nur die mit fehlendem Preis.
+
+Richtig wäre:
+
+```{r}
+mariokart_vorbereitet |>
+  filter(cond == "new" & stock_photo == "yes" & total_pr < 100) |>
+  summarise(preis_mw = mean(total_pr, na.rm = TRUE),
+            n = n())
+```
+
+$\square$
+:::
+
+
+::: {.content-visible when-format="html"}
+
+Probieren Sie es im Browser aus: Führen Sie zuerst den fehlerhaften Code aus und korrigieren Sie ihn dann.
+Vergleichen Sie die Ergebnisse.
+
+```{webr}
+mariokart_vorbereitet <- mariokart_roh |>
+  distinct() |>
+  mutate(cond = tolower(cond),
+         cond = if_else(cond == "gebraucht", "used", cond))
+
+mariokart_vorbereitet |>
+  filter(cond == "new" | stock_photo == "yes") |>
+  na.omit() |>   # wirkt hier wie drop_na()
+  summarise(preis_mw = mean(total_pr))
+```
+
+:::
+
+
+
 ## Beispiele für Forschungsfragen
 
 
@@ -1951,8 +2168,9 @@ exams2forms(exs_aufb, box = TRUE, check = TRUE)
 ## Aufgaben
 
 :::{.callout-tip}
-### ChatGPT
-Nutzen Sie einen Chat-Bot wie ChatGPT, um sich Hilfe für die R-Syntax geben zu lassen.
+### KI als Helfer
+Nutzen Sie gern einen Chat-Bot wie ChatGPT oder Claude, um sich R-Code schreiben oder erklären zu lassen.
+Formulieren Sie Ihre Aufgabe dabei präzise und prüfen Sie das Ergebnis, s. @sec-aufbereiten-ki.
 :::
 
 

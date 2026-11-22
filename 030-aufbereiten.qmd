@@ -5,11 +5,13 @@ filters:
 ojs-engine: true
 resources:
   - data/mariokart.csv   # damit die CSV-Datei mit ins _book kopiert wird
+  - data/mariokart_roh.csv
 webr:
   packages:
     - dplyr
   resources:
     - data/mariokart.csv
+    - data/mariokart_roh.csv
 ---
 
 # Daten umformen
@@ -58,6 +60,8 @@ library(dplyr)
 mariokart <- read.csv("data/mariokart.csv") |> 
   tibble::as_tibble() |> 
   select(-V1, -title)
+mariokart_roh <- read.csv("data/mariokart_roh.csv", colClasses = c(id = "character")) |>
+  tibble::as_tibble()
 ```
 :::
 
@@ -75,7 +79,9 @@ mariokart <- read.csv("data/mariokart.csv") |>
 ### Lernziele
 
 
-- Sie können folgende Verben des Datenjudo anwenden: `arrange`, `filter`,  `select`, `summarise`, `group_by`, `mutate`.
+- Sie können typische Probleme in Rohdaten benennen (Dubletten, fehlende Werte, unplausible Werte und Extremwerte, uneinheitliche Kodierung) und in einem Datensatz erkennen.
+- Sie können für jedes dieser Probleme eine begründete Entscheidung treffen und diese festhalten.
+- Sie können folgende Verben des Datenjudo einer Aufgabe zuordnen und R-Code mit ihnen lesen und anwenden: `arrange`, `filter`,  `select`, `summarise`, `group_by`, `mutate`.
 - Sie können R-Befehle mit der "Pfeife" verketten.
 
 
@@ -112,7 +118,7 @@ Sie finden den R-Code für jedes Kapitel [hier](https://github.com/sebastiansaue
 
 
 
-::::: {.content-visible when-format="html" unless-format="epub"}
+<!-- ::::: {.content-visible when-format="html" unless-format="epub"} -->
 
 <!-- ### Quiz zum Einstieg
 
@@ -135,7 +141,7 @@ plot(qr)
 :::
 ::::
 
-::::: -->
+-->
 
 
 
@@ -246,7 +252,359 @@ Die Folien zu diesem Kapitel finden Sie [hier](slides/030-aufbereiten.html) (ode
 :::
 
 
-## Die Verben des Datenjudos
+## Was Rohdaten typischerweise falsch machen {#sec-rohdaten-probleme}
+
+
+```{r}
+#| echo: false
+#| message: false
+mariokart_roh <- readr::read_csv("data/mariokart_roh.csv", col_types = readr::cols(id = "c"))
+
+n_roh <- nrow(mariokart_roh)
+n_dubletten <- sum(duplicated(mariokart_roh))
+n_na_preis <- sum(is.na(mariokart_roh$total_pr))
+n_na_gesamt <- sum(!complete.cases(mariokart_roh))
+n_kategorien_cond <- dplyr::n_distinct(mariokart_roh$cond)
+
+mariokart_bereinigt <-
+  mariokart_roh |>
+  distinct() |>
+  mutate(cond = str_to_lower(cond),
+         cond = if_else(cond == "gebraucht", "used", cond),
+         duration = if_else(duration > 10, NA, duration)) |>
+  filter(total_pr < 100)
+
+n_bereinigt <- nrow(mariokart_bereinigt)
+mw_roh <- formatC(mean(mariokart_roh$total_pr, na.rm = TRUE), format = "f", digits = 1, decimal.mark = ",")
+mw_bereinigt <- formatC(mean(mariokart_bereinigt$total_pr), format = "f", digits = 1, decimal.mark = ",")
+```
+
+
+Bevor wir uns mit R-Befehlen beschäftigen,
+klären wir eine wichtigere Frage:
+*Was* muss man mit Daten eigentlich tun, bevor man ihnen trauen kann?
+Die Antwort darauf kann Ihnen kein R-Paket und keine KI abnehmen.
+Eine KI schreibt Ihnen auf Zuruf den Code, um Ausreißer zu entfernen.
+Ob es aber *richtig* ist, einen bestimmten Fall zu entfernen,
+hängt von Ihrer Forschungsfrage ab, und die kennen nur Sie.
+
+
+:::{#exm-datenguru-roh}
+### Der Datenguru bekommt Rohdaten
+Ihre Chefin im Online-Auktionshaus schickt Ihnen einen frischen Export aus der Datenbank:
+den Datensatz `mariokart_roh`.
+"Rechnen Sie mal schnell den mittleren Verkaufspreis aus", schreibt sie dazu.
+Schnell?
+Als Datenguru wissen Sie: Ein Export direkt aus der Datenbank ist selten sauber.
+Bevor Sie irgendetwas ausrechnen, schauen Sie sich die Daten an. $\square$
+:::
+
+
+Sie können den Datensatz so importieren:
+
+```{r}
+#| eval: false
+mariokart_roh_path <- "https://raw.githubusercontent.com/sebastiansauer/statistik1/main/data/mariokart_roh.csv"
+# Auktionsnummer (id) als Text einlesen, sonst zeigt R sie als 1.1e+11 an
+mariokart_roh <- read_csv(mariokart_roh_path, col_types = cols(id = "c"))
+```
+
+Den R-Code in diesem Abschnitt müssen Sie noch nicht im Detail verstehen;
+die Verben, die darin vorkommen, lernen Sie in @sec-verben-datenjudo kennen.
+Hier geht es um die *Probleme* und die *Entscheidungen*, nicht um die Syntax.
+
+
+### Erst schauen, dann rechnen
+
+Der erste Schritt ist immer derselbe: ein Blick in die Daten.
+Wie viele Zeilen und Spalten gibt es?
+Welchen Typ hat jede Spalte?
+Passen die Werte zu dem, was die Spalte bedeuten soll?
+
+```{r}
+glimpse(mariokart_roh)
+```
+
+Zwei Dinge fallen auf, wenn man genau hinsieht.
+Erstens: Der Datensatz hat `r n_roh` Zeilen,
+der Ihnen bekannte Mariokart-Datensatz aber nur 143.
+Zweitens: Die naive Rechnung geht schief.
+
+```{r}
+mean(mariokart_roh$total_pr)
+```
+
+`NA` heißt "not available", also "fehlt".
+Der Mittelwert ist nicht berechenbar, weil in der Spalte Werte fehlen.
+Es gibt also offenbar einiges zu tun.
+
+
+### Dubletten
+
+:::{#def-dublette}
+### Dublette
+Eine *Dublette* ist ein Fall (eine Zeile), der versehentlich mehrfach im Datensatz steht. $\square$
+:::
+
+**Woran erkennt man es?**
+Am sichersten an einer Spalte, die jeden Fall eindeutig kennzeichnen sollte,
+etwa eine Auktionsnummer (`id`), Kundennummer oder Matrikelnummer.
+Taucht dieselbe Nummer mehrfach auf, stimmt etwas nicht.
+Alternativ kann man nach Zeilen suchen, die in *allen* Spalten identisch sind:
+
+```{r}
+mariokart_roh |>
+  count(id) |>
+  filter(n > 1)
+```
+
+Drei Auktionen stehen doppelt im Datensatz.
+
+**Welche Entscheidung muss ich treffen?**
+Nicht jede doppelte Zeile ist eine Dublette.
+Wenn zwei Studierende zufällig gleich alt sind, dasselbe studieren und dieselbe Note haben,
+sind das zwei echte Fälle, die nur gleich aussehen.
+Ohne eindeutige Kennung kann man das nicht unterscheiden.
+Hier ist es einfach: Dieselbe Auktionsnummer zweimal ist ein Fehler beim Export.
+Wir behalten von jeder Auktion genau eine Zeile.
+
+**Was passiert, wenn man es ignoriert?**
+Doppelte Fälle zählen doppelt.
+Die Stichprobe wirkt größer, als sie ist,
+und Kennwerte wie der Mittelwert werden zugunsten der doppelten Fälle verzerrt.
+
+
+### Fehlende Werte
+
+**Woran erkennt man es?**
+Fehlende Werte heißen in R `NA`.
+Man zählt sie am besten pro Spalte:
+
+```{r}
+mariokart_roh |>
+  summarise(across(everything(), \(x) sum(is.na(x))))
+```
+
+**Welche Entscheidung muss ich treffen?**
+Zuerst lohnt sich die Frage, *warum* ein Wert fehlt.
+Wurde er vergessen?
+Gibt es ihn gar nicht (z.$\,$B. Versandkosten bei Abholung)?
+Hat jemand die Antwort verweigert?
+Für ein Einführungsbuch reicht meist die pragmatische Entscheidung:
+Wir lassen die fehlenden Werte *bei der jeweiligen Berechnung* weg.
+In R heißt das Argument dafür `na.rm = TRUE` ("NA remove"):
+
+```{r}
+mean(mariokart_roh$total_pr, na.rm = TRUE)
+```
+
+Vorsicht bei der Holzhammer-Methode, *alle* Zeilen mit irgendeinem fehlenden Wert zu löschen
+(in R z.$\,$B. mit `drop_na()`).
+Im Rohdatensatz haben `r n_na_gesamt` Zeilen mindestens einen fehlenden Wert,
+aber nur `r n_na_preis` davon fehlt der Verkaufspreis.
+Wer sich für den Preis interessiert,
+würde also Fälle wegwerfen, deren Preis vollständig vorliegt.
+
+**Was passiert, wenn man es ignoriert?**
+Im harmlosen Fall gibt R `NA` zurück und Sie merken es.
+Im unangenehmen Fall werden Fälle stillschweigend weggelassen,
+und Ihre Stichprobe schrumpft, ohne dass Sie es bemerken.
+Fehlen die Werte nicht zufällig (z.$\,$B. weil gerade teure Auktionen schlecht dokumentiert sind),
+verzerrt das die Ergebnisse.
+
+
+### Unplausible Werte und Extremwerte
+
+Hier lohnt es sich, zwei Arten von auffälligen Werten zu unterscheiden.
+
+:::{#def-unplausibel}
+### Unplausibler Wert und Extremwert
+Ein *unplausibler Wert* ist ein Wert, der nicht stimmen *kann*, etwa ein negatives Alter.
+Ein *Extremwert* (auch *Ausreißer*) ist ein Wert, der stark von den übrigen Werten abweicht,
+aber durchaus möglich ist. $\square$
+:::
+
+**Woran erkennt man es?**
+Am einfachsten am kleinsten und größten Wert jeder Spalte,
+oder indem man die Daten sortiert und sich die Ränder anschaut.
+Mit dem Boxplot (@def-boxplot) lernen Sie im nächsten Kapitel ein Diagramm kennen,
+das Extremwerte auf einen Blick zeigt.
+
+```{r}
+mariokart_roh |>
+  summarise(dauer_min = min(duration), dauer_max = max(duration),
+            preis_min = min(total_pr, na.rm = TRUE), preis_max = max(total_pr, na.rm = TRUE))
+```
+
+Eine Auktion soll 70 Tage gedauert haben.
+Bei eBay dauert eine Auktion aber höchstens 10 Tage.
+Dieser Wert ist *unplausibel*, vermutlich ein Tippfehler für 7.
+
+Der höchste Preis liegt bei 327 Dollar, der zweithöchste bei 118 Dollar.
+Die anderen Auktionen liegen alle unter 80 Dollar.
+Diese Werte sind *extrem*, aber nicht unmöglich.
+Ein Blick in die Titel der beiden Auktionen klärt die Sache:
+Bei der einen wurde eine ganze Wii-Konsole samt weiterer Spiele verkauft,
+bei der anderen ein Paket mit zehn Spielen.
+
+**Welche Entscheidung muss ich treffen?**
+Bei unplausiblen Werten: korrigieren, wenn man *sicher* weiß, was gemeint war,
+sonst den Wert auf `NA` setzen.
+Wir wissen nicht sicher, ob 7 gemeint war, also setzen wir die Dauer auf `NA`.
+
+Bei Extremwerten ist die Entscheidung heikler.
+Die Leitfrage lautet: *Gehört dieser Fall zu dem, worüber ich eine Aussage treffen will?*
+Unsere Forschungsfrage betrifft den Preis *eines* Mariokart-Spiels.
+Eine Konsole mit mehreren Spielen ist ein anderes Produkt,
+der Fall gehört also nicht zu unserer Frage.
+Wir schließen daher Auktionen mit einem Preis ab 100 Dollar aus.
+Diese Entscheidung gilt für den Rest des Buches:
+Wenn Sie in späteren Kapiteln `filter(total_pr < 100)` oder `mariokart_no_extreme` sehen,
+dann aus genau diesem Grund.
+
+:::{.callout-important}
+Extremwerte werden *nicht* entfernt, weil sie stören.
+Sie werden entfernt, wenn es einen inhaltlichen Grund gibt, warum sie nicht zur Fragestellung gehören.
+Und diese Entscheidung wird offengelegt.
+Wer Daten entfernt, nur weil das Ergebnis dann schöner aussieht, betrügt (s. @sec-statistik-luegen). $\square$
+:::
+
+**Was passiert, wenn man es ignoriert?**
+Ein einziger Extremwert kann den Mittelwert deutlich verschieben.
+In @sec-median lernen Sie mit dem Median einen Kennwert kennen,
+der gegenüber Extremwerten weniger empfindlich ist.
+
+
+### Uneinheitliche Kodierung
+
+**Woran erkennt man es?**
+Bei kategorialen Variablen hilft es, die Kategorien auszuzählen:
+
+```{r}
+mariokart_roh |>
+  count(cond)
+```
+
+Die Variable `cond` (Zustand) sollte nur zwei Kategorien haben, `new` und `used`.
+Im Rohdatensatz sind es aber `r n_kategorien_cond`:
+Groß- und Kleinschreibung variiert,
+und einmal wurde der Zustand auf Deutsch eingetragen.
+Für R sind `"used"`, `"USED"` und `"gebraucht"` drei verschiedene Dinge.
+
+**Welche Entscheidung muss ich treffen?**
+Meist ist die Entscheidung klar: vereinheitlichen.
+Man legt fest, welche Schreibweise gilt, und ordnet alle Varianten dieser Schreibweise zu.
+Ähnliche Probleme sind Zahlen, die als Text gespeichert sind (`"4,99"` statt `4.99`),
+oder uneinheitliche Einheiten (Euro und Cent, Meter und Zentimeter) in derselben Spalte.
+
+**Was passiert, wenn man es ignoriert?**
+Gruppenvergleiche werden falsch.
+Wer die Preise neuer und gebrauchter Spiele vergleicht,
+lässt die falsch geschriebenen Fälle unbemerkt unter den Tisch fallen
+oder bekommt unsinnige Extra-Gruppen.
+
+
+### Aufbereitung dokumentieren
+
+Alle bisherigen Entscheidungen haben eines gemeinsam:
+Jemand anderes könnte sie anders treffen.
+Darum gilt:
+
+1. **Die Rohdaten bleiben unangetastet.** Sie ändern nie die Originaldatei, sondern erzeugen einen neuen, bereinigten Datensatz.
+2. **Jeder Schritt steht im Skript.** Wer Ihr Skript liest, sieht, was Sie getan haben und kann es wiederholen.
+3. **Jede Entscheidung bekommt eine Begründung,** am besten als Kommentar direkt am Code.
+
+So sieht das für unser Beispiel aus.
+Die einzelnen Verben lernen Sie im nächsten Abschnitt kennen;
+lesen Sie zunächst nur die Kommentare.
+
+```{r}
+#| eval: false
+mariokart_bereinigt <-
+  mariokart_roh |>
+  # Dubletten: drei Auktionen wurden doppelt exportiert
+  distinct() |>
+  # Kodierung vereinheitlichen: nur "new" und "used"
+  mutate(cond = str_to_lower(cond),
+         cond = if_else(cond == "gebraucht", "used", cond)) |>
+  # Unplausibel: Auktionen dauern höchstens 10 Tage, wahrer Wert unbekannt
+  mutate(duration = if_else(duration > 10, NA, duration)) |>
+  # Extremwerte: Bundles mit Konsole bzw. mehreren Spielen gehören
+  # nicht zur Forschungsfrage (Preis eines Mariokart-Spiels)
+  filter(total_pr < 100)
+```
+
+Der bereinigte Datensatz hat `r n_bereinigt` Zeilen.
+Der mittlere Verkaufspreis liegt jetzt bei `r mw_bereinigt` Dollar,
+statt bei `r mw_roh` Dollar in den Rohdaten (mit `na.rm = TRUE`).
+Das ist die Antwort, die Sie Ihrer Chefin schicken, zusammen mit einem Satz,
+welche Fälle Sie warum ausgeschlossen haben.
+
+
+### Überblick
+
+@tbl-rohdaten-probleme fasst die typischen Probleme zusammen.
+
+| Problem | Erkennungszeichen | typische Entscheidung | R-Werkzeug |
+|:--------|:------------------|:----------------------|:-----------|
+| Dubletten | eine Kennung (ID) kommt mehrfach vor | doppelte Zeilen entfernen | `count()`, `distinct()` |
+| fehlende Werte | `NA` in einer Spalte | bei der jeweiligen Berechnung weglassen | `is.na()`, `na.rm = TRUE` |
+| unplausible Werte | Wert ist unmöglich (z.$\,$B. negatives Alter) | korrigieren, wenn sicher, sonst `NA` | `summarise()`, `mutate()` |
+| Extremwerte | Wert weicht stark ab, ist aber möglich | prüfen, ob der Fall zur Fragestellung gehört | `arrange()`, `filter()` |
+| uneinheitliche Kodierung | zu viele Kategorien, Tippfehler | auf eine Schreibweise vereinheitlichen | `count()`, `mutate()` |
+
+: Typische Probleme in Rohdaten und wie man ihnen begegnet {#tbl-rohdaten-probleme}
+
+
+:::{#exr-rohdaten-entscheidung}
+### Welches Problem steckt dahinter?
+Ordnen Sie jedem Befund ein Problem aus @tbl-rohdaten-probleme zu und nennen Sie eine sinnvolle Entscheidung.
+
+a) In einer Umfrage unter Studierenden gibt eine Person ihr Alter mit 3 Jahren an.
+b) In der Spalte `geschlecht` stehen die Werte `w`, `m`, `weiblich` und `W`.
+c) Eine Matrikelnummer taucht zweimal auf, beide Zeilen sind identisch.
+d) In einer Studie zum Pendelweg gibt eine Person 180 Minuten an. $\square$
+:::
+
+:::{.callout-tip collapse="true"}
+### Lösung zu @exr-rohdaten-entscheidung
+
+a) Unplausibler Wert: Das Alter auf `NA` setzen (oder korrigieren, falls man den wahren Wert sicher kennt).
+b) Uneinheitliche Kodierung: auf eine Schreibweise vereinheitlichen, z.$\,$B. `w` und `m`.
+c) Dublette: eine der beiden Zeilen entfernen.
+d) Extremwert: möglich (z.$\,$B. Fernpendler), also nicht einfach löschen. Prüfen, ob die Person zur Fragestellung gehört, und die Entscheidung offenlegen. $\square$
+:::
+
+
+::: {.content-visible when-format="html"}
+
+:::{#exr-rohdaten-na}
+Wie viele fehlende Werte hat die Spalte `seller_rate` (Bewertung des Verkäufers) im Datensatz `mariokart_roh`? $\square$
+:::
+
+Lösen Sie @exr-rohdaten-na hier im Browser.
+
+```{webr}
+#| exercise: ex_rohdaten_na
+sum(is.na(______))
+```
+
+::: {.hint exercise="ex_rohdaten_na"}
+Eine Spalte eines Datensatzes sprechen Sie mit dem Dollarzeichen an: `datensatz$spalte`.
+:::
+
+::: {.solution exercise="ex_rohdaten_na"}
+```{webr}
+#| exercise: ex_rohdaten_na
+#| solution: true
+sum(is.na(mariokart_roh$seller_rate))
+```
+:::
+
+:::
+
+
+## Die Verben des Datenjudos {#sec-verben-datenjudo}
 
 Im R-Paket `dplyr`, das wiederum Teil des R-Pakets `tidyverse` ist,
 gibt es eine Reihe von R-Befehlen,
@@ -1887,7 +2245,7 @@ greifen können: Angewandte Forschung als Beitrag zur Lösung eines akuten Probl
 der Corona-Pandemie.
 
 
-## Wie man mit Statistik lügt
+## Wie man mit Statistik lügt {#sec-statistik-luegen}
 
 Ein (leider) immer mal wieder zu beobachtender "Trick", um Daten zu frisieren ist,
 nur die Daten zu berichten, die einem in den Kram passen.

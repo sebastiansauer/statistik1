@@ -800,7 +800,7 @@ Für die Modellwerte $\color{modelcol}{\hat{y}}$ gilt also:
 
 - Temperatur laut Modell bis 1950: $\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} = 17.7$ 
 
-- Temperatur laut Modell bis 1950: $\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} +  \color{beta1col}{\beta_1}= \color{beta0col}{17.7} + \color{beta1col}{0.6} = 18.3$ 
+- Temperatur laut Modell nach 1950: $\color{modelcol}{\hat{y}} = \color{beta0col}{\beta_0} +  \color{beta1col}{\beta_1}= \color{beta0col}{17.7} + \color{beta1col}{0.6} = 18.3$ 
 :::
 
 
@@ -809,7 +809,7 @@ Für die Modellwerte ${\hat{y}}$ gilt also:
 
 - Temperatur laut Modell bis 1950: ${\hat{y}} = {\beta_0} = 17.7$ 
 
-- Temperatur laut Modell bis 1950: ${\hat{y}} = {\beta_0} + {\beta_1}= {17.7} + {0.6} = 18.3$ 
+- Temperatur laut Modell nach 1950: ${\hat{y}} = {\beta_0} + {\beta_1}= {17.7} + {0.6} = 18.3$ 
 ::::
 
 
@@ -1213,20 +1213,24 @@ parameters(lm_year_month) |>
   print_md()
 ```
 
+```{r}
+#| echo: false
+koef_ym <- round(coef(lm_year_month), 2)
+```
 
 
 Die Modellkoeffizienten sind so zu interpretieren:
 
-1. Achsenabschnitt ($\beta_0$, `Intercept`): Im Referenzjahr (1951) im *Referenzmonat Januar* lag die Niederschlagsmenge bei 57$\,$mm pro Quadratmeter.
-2. Regressionskoeffizient für Jahr ($\beta_1$, `year_c`): Pro Jahr ist die Niederschlagsmenge im Schnitt um 0.03$\,$mm an (im Referenzmonat).
-3. Regressionskoeffizient für Monat ($\beta_2$, `month_factor7`) Im Monat `7` (Juli) lag die mittlere Niederschlagsmenge (im Referenzjahr) knapp 25$\,$mm über dem mittleren Wert des Referenzmonats (Januar).
+1. Achsenabschnitt ($\beta_0$, `Intercept`): Im Referenzjahr (1951) im *Referenzmonat Januar* lag die Niederschlagsmenge bei `r round(koef_ym[1])`$\,$mm pro Quadratmeter.
+2. Regressionskoeffizient für Jahr ($\beta_1$, `year_c`): Pro Jahr ist die Niederschlagsmenge im Schnitt um `r koef_ym[2]`$\,$mm an (im Referenzmonat).
+3. Regressionskoeffizient für Monat ($\beta_2$, `month_factor7`) Im Monat `7` (Juli) lag die mittlere Niederschlagsmenge (im Referenzjahr) etwa `r round(koef_ym[3])`$\,$mm über dem mittleren Wert des Referenzmonats (Januar).
 
 
 Die Regressionsgleichung von `lm_year_month` lautet:
-`precip_pred = 56.94 + 0.03*year_c + 24.37*month_factor_7`.
+precip_pred = `r koef_ym[1]` + `r koef_ym[2]` · year_c + `r koef_ym[3]` · month_factor_7.
 Im Monat Juli ist `month_factor_7 = 1`, 
 ansonsten (Januar) ist `month_factor = 0`. 
-Demnach erwarten wir laut Modell `lm_year_month` im Juli des Referenzjahres `r 56.94 + 24.37`$\,$mm Niederschlag.
+Demnach erwarten wir laut Modell `lm_year_month` im Juli des Referenzjahres `r koef_ym[1] + koef_ym[3]`$\,$mm Niederschlag.
 Die Werte der Regressionskoeffizienten sind @tbl-lm-year-month entnommen.
 
 >    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Puh, kompliziert!
@@ -1455,18 +1459,30 @@ s. @tbl-lm_year_month_interaktion.
 parameters(lm_year_month_interaktion) |> select(Parameter, Coefficient, CI_low, CI_high)
 ```
 
+```{r}
+#| echo: false
+koef_interakt <- coef(lm_year_month_interaktion)
+fmt2 <- function(x) format(round(x, 2), nsmall = 2)
+b0_fmt      <- fmt2(koef_interakt[1])
+b_year_fmt  <- fmt2(koef_interakt[2])
+b_month_fmt <- fmt2(koef_interakt[3])
+b_int_fmt   <- fmt2(abs(koef_interakt[4]))
+b_juli_fmt  <- fmt2(koef_interakt[2] + koef_interakt[4])
+```
+
 Neu bei der Ausgabe zu diesem Modell ist die unterste Zeile für den Parameter `year c × month factor [7]`.
 Sie gibt die Stärke des Interaktionseffekts an.
 <!-- Da die Null nicht im Schätzbereich (`95 CI`) liegt, ist der Interaktionseffekt offenbar nicht Null, also vorhanden (zumindest laut unserem Modell^[unser Modell könnte ja auch falsch sein.]. -->
 Die Zeile zeigt, 
 wie unterschiedlich sich die die Niederschlagsmenge 
 zwischen den beiden Monaten im Verlauf der Jahre ändert: 
-Pro Jahr ist die Zunahme an Niederschlag um 0.20$\,$mm geringer
+Pro Jahr ist die Zunahme an Niederschlag um `r b_int_fmt` mm geringer
 als im Referenzmonat (Januar).
-Damit resultiert für Juli insgesamt ein positiver Effekt: 
-`0.13 - -0.20 = 0.07`.
+Damit resultiert für Juli insgesamt ein negativer Effekt: 
+`r b_year_fmt` − `r b_int_fmt` = `r b_juli_fmt` mm pro Jahr.
+Im Januar nahm der Niederschlag also zu, im Juli ab.
 Insgesamt lautet die Regressionsgleichung:
-`precip_pred = 56.91 + 0.13 * year_c + 24.37 * month_factor_7 - 0.20 * year_c:month_factor_7`.
+precip_pred = `r b0_fmt` + `r b_year_fmt` · year_c + `r b_month_fmt` · month_factor_7 − `r b_int_fmt` · year_c:month_factor_7.
 
 
 :::{.callout-important}

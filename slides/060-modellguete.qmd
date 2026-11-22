@@ -40,7 +40,7 @@ Einstieg
 
 **Was er NICHT sagt:** Die Werte streuten um 10 kg um den Mittelwert.
 
-Wie sehr die Werte eines Modells streuen, ist eine wichtige Information — bei der Pille kann es sein, dass Sie 10 kg *zunehmen*.
+Würden Sie die Pille nehmen? Wie sehr die Werte eines Modells streuen, ist eine wichtige Information — bei der Pille kann es sein, dass Sie 10 kg *zunehmen*.
 
 ::: footer
 Einstieg
@@ -48,11 +48,21 @@ Einstieg
 
 ## Wie man seine Kuh über den Fluss bringt {.smaller}
 
+
+:::: {.columns}
+::: {.column width="55%"}
 Fritz will mit seiner Kuh einen Fluss überqueren. Er fragt Karla, ob der Fluss tief ist.
 
 > Karla: Nö, im Schnitt nur einen Meter.
 
 Fritz führt seine Kuh durch den Fluss — die Kuh ertrinkt.
+
+> Karla: Übrigens: Lagemaße sagen nicht alles, Fritz.
+:::
+::: {.column width="45%"}
+![Der Fluss ist im Schnitt nur einen Meter tief, trotzdem ist die Kuh ersoffen.](../img/fluss-tief.png)
+:::
+::::
 
 :::{.callout-important}
 Die Streuung der Daten zu kennen, ist eine wesentliche Information — ein Lagemaß (wie der Mittelwert) allein reicht nicht.
@@ -66,9 +76,25 @@ Einstieg
 
 ## Wenig vs. viel Streuung {.smaller}
 
-![Wenig (links) vs. viel Streuung (rechts)](../060-modellguete_files/figure-html/fig-streuung-1.png){width="65%"}
+![Wenig (links) vs. viel Streuung (rechts)](../060-modellguete_files/figure-html/fig-streuung-1.png){width="52%"}
 
-Bei wenig Streuung liegen beobachtete Werte ($y$) nah an den Modellwerten ($\hat{y}$) — die Abweichungen $e = y - \hat{y}$ sind gering.
+Gewichtsveränderung nach zwei Schlankheitspillen: *Dickableibtin extra mild* (links) vs. *Pfundafliptan Forte* (rechts) — gleicher Mittelwert, ganz andere Streuung.
+
+Bei wenig Streuung liegen beobachtete Werte ($y$) nah an den Modellwerten ($\hat{y}$) — die Abweichungen $e = y - \hat{y}$ (der Modellfehler) sind gering.
+
+::: footer
+Woran erkennt man ein gutes Modell?
+:::
+
+## Modellgüte = Fit eines Modells
+
+Statt von Modellgüte spricht man (vor allem bei Regressionsmodellen) oft vom *Fit* (engl. für „Passung“) eines Modells:
+
+- Je näher die beobachteten Werte an den Modellwerten liegen, desto besser *passt* das Modell zu den Daten.
+- Kleiner Modellfehler: *guter Fit* („good fit“)
+- Großer Modellfehler: *schlechter Fit* („poor fit“)
+
+Darauf spielt übrigens auch das Logo des Buches an.
 
 ::: footer
 Woran erkennt man ein gutes Modell?
@@ -86,11 +112,15 @@ Ein Modell ohne Angabe der Modellgüte (Präzision der Schätzung) ist wenig nü
 Woran erkennt man ein gutes Modell?
 :::
 
-## Ein komplexeres Modell reduziert die Streuung
+## Ein komplexeres Modell reduziert die Streuung {.smaller}
 
-![Fehlerbalken im einfachen Modell (a) und im komplexeren Modell (b)](../060-modellguete_files/figure-html/fig-fehler-red-1.png){width="45%"} ![](../060-modellguete_files/figure-html/fig-fehler-red-2.png){width="45%"}
+![Fehlerbalken im einfachen Modell (a) und im komplexeren Modell (b)](../060-modellguete_files/figure-html/fig-fehler-red-1.png){width="36%"} ![](../060-modellguete_files/figure-html/fig-fehler-red-2.png){width="36%"}
 
-Innerhalb der Gruppen (0 vs. 2 Lenkräder) sind die Fehlerbalken im Schnitt kürzer als im ungruppierten Modell.
+Mariokart (nur Spiele unter 100 Dollar): Innerhalb der Gruppen (0 vs. 2 Lenkräder) sind die Fehlerbalken im Schnitt kürzer als im ungruppierten Modell.
+
+:::{.callout-important}
+Durch sinnvolle, komplexere Modelle sinkt die Fehlerstreuung eines Modells.
+:::
 
 ::: footer
 Woran erkennt man ein gutes Modell?
@@ -187,7 +217,7 @@ Eine Konstante addieren "verschiebt den Berg", ohne die Form zu verändern.
 Streuungsmaße
 :::
 
-## Definition: Varianz
+## Definition: Varianz {.smaller}
 
 Die Varianz ist der mittlere quadrierte Abstand jedes Werts vom Mittelwert.
 
@@ -197,9 +227,13 @@ $$s^2 := \frac{1}{n}\sum_{i=1}^n (y_i - \bar{y})^2 = \frac{1}{n}\sum_{i=1}^n e_i
 :::
 :::
 
+(Unkorrigierte Stichprobenvarianz; um die Varianz der Population zu schätzen, teilt man durch $n-1$.)
+
 Sie entspricht dem *Mean Squared Error* (MSE) eines Modells:
 
 $$MSE := \frac{1}{n}\sum_{i=1}^N (y_i - \hat{y})^2$$
+
+Im Punktmodell ist der Mittelwert der vorhergesagte Wert: $\hat{y} = \bar{y}$.
 
 ::: footer
 Streuungsmaße
@@ -217,9 +251,17 @@ Streuungsmaße
 
 ## Varianz geometrisch {.smaller}
 
-![Varianz als Fläche eines Rechtecks aus umgeformten Abweichungsquadraten [@cmglee_english_2015]](../img/Variance_visualisation.svg.png){width="28%"}
-
-Man ordnet die Abweichungsquadrate zu einem Rechteck mit Seitenlängen $n$ und $\sigma^2$.
+:::: {.columns}
+::: {.column width="60%"}
+1. Ausgangspunkt: die Häufigkeitsverteilung der Daten.
+2. Daten als Gewichte auf einer Wippe: Der Schwerpunkt ist der Mittelwert.
+3. Für jeden Datenpunkt ein Quadrat mit Kantenlänge = Abstand zum Mittelwert.
+4. Quadrate (bei gleicher Fläche) zu einem Rechteck mit den Seitenlängen $n$ und $\sigma^2$ umformen.
+:::
+::: {.column width="40%"}
+![Varianz als Fläche eines Rechtecks aus umgeformten Abweichungsquadraten [@cmglee_english_2015]](../img/Variance_visualisation.svg.png){width="70%"}
+:::
+::::
 
 ::: footer
 Streuungsmaße
@@ -230,6 +272,8 @@ Streuungsmaße
 :::{.callout-note title="Definition: Standardabweichung"}
 Die Standardabweichung (SD, $s, \sigma$) ist die Quadratwurzel der Varianz: $s := \sqrt{s^2}$
 :::
+
+Durch das Wurzelziehen hat die SD wieder etwa die Größenordnung der Daten — grob die "typische" Abweichung vom Mittelwert.
 
 Aus Modellierungssicht ist die SD die Wurzel des MSE — man nennt sie *Root Mean Squared Error*: $RMSE := \sqrt{MSE}$
 
@@ -253,7 +297,35 @@ m_summ <- mariokart_no_extreme %>%
     pr_var = var(total_pr), pr_sd = sd(total_pr))
 ```
 
-![Verteilung des Verkaufspreises mit MW±SD farblich markiert](../060-modellguete_files/figure-html/fig-var-1.png){width="42%"} ![](../060-modellguete_files/figure-html/fig-var-2.png){width="42%"}
+![Verteilung des Verkaufspreises (Dichte- und Violindiagramm) mit MW±SD farblich markiert](../060-modellguete_files/figure-html/fig-var-mario-1.png){width="38%"} ![](../060-modellguete_files/figure-html/fig-var-mario-2.png){width="38%"}
+
+::: footer
+Streuungsmaße
+:::
+
+## Streuungsmaße mit wenig Tipparbeit
+
+Mit `easystats` liefert `describe_distribution()` die wichtigsten Kennwerte auf einen Schlag:
+
+```r
+mariokart |>
+  select(total_pr) |>
+  describe_distribution() |>
+  select(Variable, Mean, SD, IQR, n)
+```
+
+::: footer
+Streuungsmaße
+:::
+
+## Warum überhaupt die SD? {.smaller}
+
+Der "gesunde Menschenverstand" würde den MAE (MAA) der Varianz bzw. SD vorziehen — er ist anschaulicher.
+
+- Für reine Deskription braucht man Varianz bzw. SD nicht unbedingt.
+- Aber: Die SD ist nützlich zur Beschreibung der **Normalverteilung**.
+- Varianz und SD werden in Forschungsarbeiten häufig berichtet.
+- Bei **Extremwerten** ist der IQR oft vorzuziehen gegenüber mittelwertbasierten Maßen (MAE, Varianz, SD).
 
 ::: footer
 Streuungsmaße
@@ -273,13 +345,18 @@ mse(lm_mario_ohne_x_var)   # Mean squared error
 rmse(lm_mario_ohne_x_var)  # Root mean squared error
 ```
 
-Ein komplexeres Modell (z. B. `total_pr ~ wheels`) senkt i. d. R. den MAE gegenüber dem Nullmodell.
+Ein komplexeres Modell mit der Anzahl der Lenkräder als UV hat einen kleineren Modellfehler:
+
+```r
+lm_wheels <- lm(total_pr ~ wheels, data = mariokart)
+mae(lm_wheels)  # kleiner als beim Nullmodell
+```
 
 ::: footer
 Streuung als Modellfehler
 :::
 
-# Die z-Transformation {.center footer=false}
+# Die *z*-Transformation {.center footer=false}
 
 ## Wozu die z-Transformation?
 
@@ -291,24 +368,26 @@ Bei einem Datensatz ist oft schwer zu sagen, welche Ausprägungen "groß" oder "
 Sie besteht aus zwei Schritten: **Zentrieren** und **Streuung standardisieren**.
 
 ::: footer
-Die z-Transformation
+Die *z*-Transformation
 :::
 
-## Zentrieren
+## Zentrieren {.smaller}
 
-![Zentrieren 'schiebt die Verteilung nur zur Seite', ohne sie zu verändern](../060-modellguete_files/figure-html/fig-mariokart_no_extreme-1.png){width="75%"}
+![Zentrieren 'schiebt die Verteilung nur zur Seite', ohne sie zu verändern](../060-modellguete_files/figure-html/fig-mariokart_no_extreme-1.png){width="68%"}
 
 :::{.callout-note title="Definition: Zentrieren"}
 Von jedem Wert einer Verteilung $X$ wird der Mittelwert subtrahiert: $X_c = X - \bar{X}$. Der neue Mittelwert ist Null.
 :::
 
+Je weniger Streuung um den Mittelwert, desto besser eignet sich der Mittelwert als Modell — desto höher die Modellgüte.
+
 ::: footer
-Die z-Transformation
+Die *z*-Transformation
 :::
 
 ## Streuung standardisieren {.smaller}
 
-Wie viel Abweichung vom Mittelwert ist "viel"? Man setzt die Abweichung in Bezug zur typischen Abweichung (SD): weicht ein Spiel 10 Dollar vom Mittelwert ab und beträgt die SD 10 Dollar, ist die standardisierte Abweichung 1 (10/10 = 1).
+Wie viel Abweichung vom Mittelwert ist "viel"? Man setzt die Abweichung in Bezug zur typischen Abweichung (MAE oder — gebräuchlicher — SD): weicht ein Spiel 10 Dollar vom Mittelwert ab und beträgt die SD 10 Dollar, ist die standardisierte Abweichung 1 (10/10 = 1).
 
 ```r
 mariokart_no_extreme <- mariokart_no_extreme %>%
@@ -318,7 +397,7 @@ mariokart_no_extreme <- mariokart_no_extreme %>%
 ![Zentrierte Werte (oben) vs. z-standardisierte Werte (unten)](../060-modellguete_files/figure-html/fig-z-transf-1.png){width="42%"}
 
 ::: footer
-Die z-Transformation
+Die *z*-Transformation
 :::
 
 ## Definition: z-Werte
@@ -332,7 +411,7 @@ Für die Variable $X$ berechnet sich der *z*-Wert der $i$-ten Beobachtung: $z_i 
 Faustregel: Extremwerte (Ausreißer), wenn $z_i \ge 2.5$ [@shimizu2022].
 
 ::: footer
-Die z-Transformation
+Die *z*-Transformation
 :::
 
 ## Definition: Standardnormalverteilung
@@ -350,7 +429,7 @@ mariokart_no_extreme_z <- mariokart_no_extreme |>
 ```
 
 ::: footer
-Die z-Transformation
+Die *z*-Transformation
 :::
 
 ## Zusammenfassung {.smaller}

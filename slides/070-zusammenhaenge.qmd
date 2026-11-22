@@ -49,6 +49,8 @@ Zusammenfassen zum Zusammenhang
 
 ## Beispiel: `wheels` und `total_pr`
 
+Mit der Anzahl der Lenkräder (`wheels`) steigt der Verkaufspreis (`total_pr`, in Dollar).
+
 ![Streudiagramm mit Trendlinie (links) und verwackeltes Streudiagramm (rechts)](../070-zusammenhaenge_files/figure-html/fig-zshg-1.png){width="45%"} ![](../070-zusammenhaenge_files/figure-html/fig-zshg-2.png){width="45%"}
 
 ::: footer
@@ -72,19 +74,27 @@ Anton, Bert, Carl und Daniel haben ihre Statistikklausur zurückbekommen. Die Le
 Abweichungsrechtecke
 :::
 
-## Definition: Abweichungsrechteck
+## Definition: Abweichungsrechteck {.smaller}
 
+:::: {.columns}
+::: {.column width="50%"}
 :::{.callout-note title="Definition: Abweichungsrechteck"}
 Im zweidimensionalen Fall spannt sich ein Abweichungsrechteck vom Mittelwert $\bar{x}$ bis zum Messwert $x_i$ und genauso für $Y$. Mit $dx_i = x_i - \bar{x}$ (analog $dy_i$) ist die Fläche des Abweichungsrechtecks das Produkt der Abweichungen: $dx_i \cdot dy_i$.
 :::
 
-![Die Kovarianz als mittleres Abweichungsrechteck: Vorzeichen der Rechtecke je Quadrant](../070-zusammenhaenge_files/figure-html/fig-delta-rect-1.png){width="45%"}
+
+Positive Rechtecke (Q1, Q3) sind blau, negative (Q2, Q4) orange.
+:::
+::: {.column width="50%"}
+![Abweichungsrechtecke: Vorzeichen je Quadrant (Q1 und Q3 positiv, Q2 und Q4 negativ)](../070-zusammenhaenge_files/figure-html/fig-delta-rect-1.png){width="100%"}
+:::
+::::
 
 ::: footer
 Abweichungsrechtecke
 :::
 
-## Vom Rechteck zur Summe
+## Vom Rechteck zur Summe {.smaller}
 
 Legt man alle Abweichungsrechtecke zusammen, ergibt sich ein "Summenrechteck". Je größer seine Fläche, desto stärker der (lineare) Zusammenhang.
 
@@ -138,7 +148,9 @@ Abweichungsrechtecke
 
 ## Extremwerte der Kovarianz
 
-![Kein Zusammenhang, perfekter positiver Zusammenhang, negativer Zusammenhang](../070-zusammenhaenge_files/figure-html/fig-demos-cov-1.png){width="45%"} ![](../070-zusammenhaenge_files/figure-html/fig-demos-cov-2.png){width="45%"}
+Links: kein Zusammenhang — die Rechtecke gleichen sich aus. Rechts: perfekter positiver Zusammenhang — nur positive Rechtecke.
+
+![Kein Zusammenhang (links) und perfekter positiver Zusammenhang (rechts)](../070-zusammenhaenge_files/figure-html/fig-demos-cov-1.png){width="45%"} ![](../070-zusammenhaenge_files/figure-html/fig-demos-cov-2.png){width="45%"}
 
 ::: footer
 Abweichungsrechtecke
@@ -268,11 +280,13 @@ Korrelation ≠ Kausation! Liegt Korrelation ohne Kausation vor, spricht man von
 Korrelation
 :::
 
-## Scheinkorrelation: Störche und Babys
+## Scheinkorrelation: Störche und Babys {.smaller}
 
 Ein Mythos besagt: Die Anzahl der Störche pro Landkreis korreliert mit der Anzahl der Babys [vgl. @matthews_storks_2000].
 
 Mögliche Erklärung: Die "Naturbelassenheit" des Landkreises ist gemeinsame Ursache von Storchenzahl *und* Geburtenzahl — eine Scheinkorrelation ohne direkte Kausalität.
+
+Wir müssen die Erklärung nicht glauben — es geht nur darum, Scheinkorrelationen zu *erkennen*.
 
 ::: footer
 Korrelation
@@ -321,12 +335,14 @@ Wie man mit Statistik lügt
 
 In Ihrer Arbeit beim Online-Auktionshaus analysieren Sie, welche Variablen mit dem Verkaufspreis von Computerspielen zusammenhängen.
 
+Nur die metrischen Variablen auswählen und alle paarweisen Korrelationen berechnen:
+
 ```r
-mariokart %>%
+mariokart |>
   dplyr::select(duration, n_bids, start_pr, ship_pr,
-                total_pr, seller_rate, wheels) %>%
-  cor() %>%
-  round(2)
+                total_pr, seller_rate, wheels) |>
+  cor() |>
+  round(2)  # Runden auf zwei Dezimalen
 ```
 
 ::: footer
@@ -346,7 +362,7 @@ Fallbeispiel
 ## Korrelationstabelle (tidy) {.smaller}
 
 ```r
-mariokart %>%
+mariokart |>
   dplyr::select(duration, n_bids, start_pr, ship_pr,
                 total_pr, seller_rate, wheels) |>
   correlation() |>
@@ -357,9 +373,10 @@ mariokart %>%
 |---|---:|---:|---:|---:|---:|---:|
 | duration | -0.30\*\* | -0.15 | -0.04 | 0.27\* | 0.13 | -0.12 |
 | n_bids | -0.08 | -0.11 | 0.13 | 0.03 | -0.63\*\*\* | |
+| ship_pr | 0.05 | -0.02 | 0.54\*\*\* | | | |
 | total_pr | 0.33\*\* | 0.01 | | | | |
 
-Sternchen zeigen die statistische Signifikanz der Korrelation an — ein Thema, das wir hier ignorieren.
+Der Verkaufspreis hängt am stärksten mit den Versandkosten (`ship_pr`, $r=0.54$) und der Anzahl der Lenkräder (`wheels`, $r=0.33$) zusammen. Sternchen zeigen die statistische Signifikanz der Korrelation an — ein Thema, das wir hier ignorieren.
 
 ::: footer
 Fallbeispiel
@@ -370,13 +387,13 @@ Fallbeispiel
 Einen einzelnen Korrelationskoeffizienten erhält man z. B. mit:
 
 ```r
-mariokart %>% summarise(korrelation = cor(total_pr, wheels))
+mariokart |> summarise(korrelation = cor(total_pr, wheels))
 ```
 
 Bei fehlenden Werten muss `cor` ausdrücklich dazu ermutigt werden, trotzdem zu rechnen:
 
 ```r
-mariokart %>%
+mariokart |>
   summarise(cor_super_wichtig = cor(total_pr, wheels,
                                      use = "complete.obs"))
 ```

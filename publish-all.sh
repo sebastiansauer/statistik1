@@ -7,7 +7,7 @@
 #   2. Foliendecks neu rendern: alle Decks als HTML und als PDF (decktape,
 #      via slides/make-pdfs.sh). So können keine veralteten Folien online
 #      gehen, nur weil make-pdfs.sh vorher nicht von Hand gelaufen ist.
-#   3. Foliendecks (slides/*.html, *.pdf, *_files, slides/slides.css) nach
+#   3. Foliendecks (slides/*.html, *.pdf, *_files, slides.css, mermaid/*.png) nach
 #      _book/slides/ spiegeln (nur die fertigen Ausgaben, keine Quelltexte)
 #   4. _book/ 1:1 auf gh-pages veröffentlichen, ohne erneut zu rendern
 #      (--no-render), da Schritt 1-3 den Stand bereits hergestellt haben.
@@ -81,6 +81,8 @@ rsync -a --delete --delete-excluded \
   --include='/*_files/' \
   --include='/*_files/**' \
   --include='/slides.css' \
+  --include='/mermaid/' \
+  --include='/mermaid/*.png' \
   --exclude='*' \
   slides/ _book/slides/
 

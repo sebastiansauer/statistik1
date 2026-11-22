@@ -35,14 +35,16 @@ Einstieg
 
 ## Benötigte R-Pakete und Daten {.smaller}
 
-Neben `tidyverse` und `easystats` benötigen wir in diesem Kapitel:
+Neben `tidyverse` und `easystats` benötigen wir in diesem Kapitel `ggpubr` [@kassambara2023] und optional `ggstatsplot` [@patil2021]:
 
 ```r
-library(ggpubr)        # Datenvisualisierung
-library(ggstatsplot)   # optional, Datenvisualisierung
+library(tidyverse)
+library(easystats)
+library(ggpubr)       # Datenvisualisierung
+library(ggstatsplot)  # optional, Datenvisualisierung
 ```
 
-Wir arbeiten wieder mit dem Datensatz `mariokart`.
+Wir arbeiten wieder mit dem Datensatz `mariokart` (Geldbeträge in Dollar).
 
 ::: footer
 Einstieg
@@ -52,6 +54,8 @@ Einstieg
 
 Ein Bild sagt mehr als 1000 Worte — Datendiagramme helfen, Erkenntnisse aus Daten zu ziehen, ohne mühsam einzelne Zahlen zu vergleichen.
 
+Unser visueller Cortex ist sehr leistungsfähig: Wir können ohne Mühe viele visuelle Informationen parallel aufnehmen und verarbeiten.
+
 ::: footer
 Einstieg
 :::
@@ -60,11 +64,20 @@ Einstieg
 
 ## Gleiche Kennwerte, ganz andere Bilder {.smaller}
 
-![Dinosaurier und Kreis: Gleiche statistische Kennwerte](../040-verbildlichen_files/figure-html/fig-dino1-1.png){width="32%"}
+![Dinosaurier, Kreis & Co.: gleiche statistische Kennwerte [@fitzmaurice_same_2017]](../040-verbildlichen_files/figure-html/fig-dino1-1.png){width="42%"}
 
 - Verschiedene Datensätze können (nahezu) identische Kennwerte (Mittelwert, Streuung, Korrelation) haben — und trotzdem völlig verschieden aussehen.
-- Dasselbe zeigt "Anscombes Quartett": vier grundverschiedene Streudiagramme mit fast identischen Statistiken.
 - Fazit: Eine Visualisierung enthüllt oft, was eine Kennzahl verhüllt.
+
+::: footer
+Ein Dino sagt mehr als 1000 Worte
+:::
+
+## Anscombes Quartett {.smaller}
+
+![Anscombes Quartett: gleiche statistische Kennwerte in vier Datensätzen [@Anscombe_1973]](../img/anscombe.png){width="55%"}
+
+Vier Datensätze mit fast identischen Mittelwerten, Streuungen und Korrelationen — aber grundverschiedenen Streudiagrammen.
 
 ::: footer
 Ein Dino sagt mehr als 1000 Worte
@@ -80,9 +93,19 @@ Ein *Datendiagramm* (kurz: Diagramm) ist ein Diagramm, das Daten und Statistiken
 Ein Dino sagt mehr als 1000 Worte
 :::
 
+## Aus der Forschung: ein aufwändiges Datendiagramm {.smaller}
+
+![Der Zusammenhang von Entwicklungsindex und Korruption [@wilke_wilkelabpracticalgg_2024]](../img/develop-corrupt.png){width="55%"}
+
+Entwicklungsindex (Lebenserwartung, Bildung, Einkommen) und Korruption auf Landesebene — handwerklich meisterhaft, erstellt mit R.
+
+::: footer
+Ein Dino sagt mehr als 1000 Worte
+:::
+
 ## Grenzen der Dimensionalität {.smaller}
 
-![Ein Diagramm mit fünf Variablen gleichzeitig — schnell unübersichtlich](../040-verbildlichen_files/figure-html/fig-many-dims-1.png){width="45%"}
+![Ein Diagramm mit fünf Variablen gleichzeitig — schnell unübersichtlich](../040-verbildlichen_files/figure-html/fig-many-dims-1.png){width="50%"}
 
 Ein Bild kann nur eine begrenzte Anzahl an Variablen sinnvoll zeigen — vielleicht vier bis sechs. Bei mehr Variablen brauchen wir Statistik statt (nur) Bilder.
 
@@ -96,9 +119,11 @@ Ein Dino sagt mehr als 1000 Worte
 
 | Erkenntnisziel | qualitativ | quantitativ |
 |---|---|---|
-| Verteilung | Balkendiagramm | Histogramm / Dichtediagramm |
+| Verteilung | Balkendiagramm | Histogramm und Dichtediagramm |
 | Zusammenhang | gefülltes Balkendiagramm | Streudiagramm |
 | Unterschied | gefülltes Balkendiagramm | Boxplot |
+
+Einen ausführlicheren Überblick über Diagrammtypen bietet <https://www.data-to-viz.com/>.
 
 ::: footer
 Nomenklatur von Datendiagrammen
@@ -112,29 +137,46 @@ Nomenklatur von Datendiagrammen
 Eine (Häufigkeits-)Verteilung einer Variablen $X$ schlüsselt auf, wie häufig jede Ausprägung von $X$ ist.
 :::
 
+Beispiel: Die Variable `cond` (Zustand des Artikels) hat 2 Ausprägungen; die Ausprägung `new` kommt 59-mal vor.
+
 ::: footer
 Verteilungen verbildlichen
 :::
 
 ## Verteilung einer nominalen Variable: Balkendiagramm {.smaller}
 
-![Häufigkeitsverteilung der Variable `cond`: horizontal und vertikal](../040-verbildlichen_files/figure-html/fig-mario-n-plot-cond-1.png){width="50%"}
+![Häufigkeitsverteilung von `cond`: horizontale Balken](../040-verbildlichen_files/figure-html/fig-mario-n-plot-cond-1.png){width="40%"} ![Häufigkeitsverteilung von `cond`: vertikale Balken](../040-verbildlichen_files/figure-html/fig-mario-n-plot-cond-2.png){width="40%"}
 
-Ein Balkendiagramm zeigt Häufigkeiten von Kategorien als Balken — die Länge ist proportional zur Häufigkeit. Die Ausrichtung (horizontal/vertikal) ist Geschmackssache.
+:::{.callout-note title="Definition: Balkendiagramm"}
+Grafische Darstellung von Werten, meist Häufigkeiten von Kategorien (Ausprägungen nominaler Variablen), mit rechteckigen Balken; die Länge eines Balkens ist proportional zur dargestellten Häufigkeit.
+:::
+
+Die Ausrichtung (horizontal/vertikal) ist Geschmackssache.
 
 ::: footer
 Verteilungen verbildlichen
 :::
 
-## Syntax: Balkendiagramm mit `ggpubr`
+## Syntax: Balkendiagramm mit `ggpubr` {.smaller}
 
+:::: {.columns}
+::: {.column width="50%"}
 ```r
-mariokart %>%
-  count(cond) %>%
+mariokart |>
+  count(cond) |>
   ggbarplot(x = "cond", y = "n")
 ```
 
-![Ein Balkendiagramm, erzeugt mit `ggbarplot()`](../040-verbildlichen_files/figure-html/fig-de1-1.png){width="35%"}
+Auf Deutsch:
+
+> Nimm `mariokart` *und dann* zähle die Ausprägungen von `cond` *und dann* zeichne ein Balkendiagramm daraus.
+
+`ggbarplot` erwartet fertige Balkenhöhen — daher zuerst mit `count` zählen.
+:::
+::: {.column width="50%"}
+![Ein Balkendiagramm, erzeugt mit `ggbarplot()`](../040-verbildlichen_files/figure-html/fig-de1-1.png){width="100%"}
+:::
+::::
 
 ::: footer
 Verteilungen verbildlichen
@@ -142,9 +184,9 @@ Verteilungen verbildlichen
 
 ## Verteilung einer quantitativen Variable {.smaller}
 
-![Balkendiagramm vs. Histogramm für den Gesamtpreis](../040-verbildlichen_files/figure-html/fig-balken-hist-1.png){width="45%"} ![](../040-verbildlichen_files/figure-html/fig-balken-hist-2.png){width="45%"}
+![Balkendiagramm für den Gesamtpreis `total_pr`](../040-verbildlichen_files/figure-html/fig-balken-hist-1.png){width="45%"} ![Histogramm für den Gesamtpreis `total_pr`](../040-verbildlichen_files/figure-html/fig-balken-hist-2.png){width="45%"}
 
-Bei vielen Ausprägungen ist ein Balkendiagramm unübersichtlich. Lösung: Werte in Gruppen (Klassen) zusammenfassen — das ergibt ein **Histogramm**.
+Bei vielen Ausprägungen ist ein Balkendiagramm unübersichtlich (links). Lösung: Werte in Gruppen (Klassen) zusammenfassen, z. B. 0–5 Dollar, 6–10 Dollar, … — das ergibt ein **Histogramm** (rechts; Punkte = Einzelwerte).
 
 ::: footer
 Verteilungen verbildlichen
@@ -153,7 +195,7 @@ Verteilungen verbildlichen
 ## Definition: Histogramm
 
 :::{.callout-note title="Definition: Histogramm"}
-Ein Histogramm ist ein Diagramm zur Darstellung der Häufigkeitsverteilung einer quantitativen Variablen. Die Daten werden in Klassen eingeteilt, die durch Balken dargestellt werden; die Balkenhöhe zeigt die Häufigkeit pro Klasse.
+Ein Histogramm ist ein Diagramm zur Darstellung der Häufigkeitsverteilung einer quantitativen Variablen. Die Daten werden in Gruppen (Klassen) eingeteilt, die durch je einen Balken dargestellt werden; die Balkenhöhe zeigt die Häufigkeit pro Klasse (bei konstanter Balkenbreite).
 :::
 
 ::: footer
@@ -162,7 +204,7 @@ Verteilungen verbildlichen
 
 ## Wie viele Balken? Nicht zu viele, nicht zu wenige {.smaller}
 
-![Zu viele vs. zu wenige Gruppen (Balken) im Histogramm](../040-verbildlichen_files/figure-html/fig-zu-wenig-viele-1.png){width="45%"} ![](../040-verbildlichen_files/figure-html/fig-zu-wenig-viele-2.png){width="45%"}
+![Zu viele Gruppen (Balken) im Histogramm](../040-verbildlichen_files/figure-html/fig-zu-wenig-viele-1.png){width="45%"} ![Zu wenige Gruppen (Balken) im Histogramm](../040-verbildlichen_files/figure-html/fig-zu-wenig-viele-2.png){width="45%"}
 
 Es gibt keine feste Regel für die Balkenanzahl — nur: nicht zu grob, nicht zu fein.
 
@@ -172,19 +214,25 @@ Verteilungen verbildlichen
 
 ## Histogramm vs. Dichtediagramm {.smaller}
 
-![Histogramm und Dichtediagramm im Vergleich](../040-verbildlichen_files/figure-html/fig-de-hist-density-1.png){width="45%"} ![](../040-verbildlichen_files/figure-html/fig-de-hist-density-2.png){width="45%"}
+```r
+mariokart |>
+  filter(total_pr < 100) |>  # ohne Extremwerte
+  gghistogram(x = "total_pr")  # bzw. ggdensity(x = "total_pr")
+```
 
-:::{.callout-note title="Definition: Dichtediagramm"}
-Ein Dichtediagramm visualisiert die Verteilung einer stetigen Variablen — geglättet, sodass Rauschen weniger stört als beim Histogramm.
-:::
+![Histogramm](../040-verbildlichen_files/figure-html/fig-de-hist-density-1.png){width="38%"} ![Dichtediagramm](../040-verbildlichen_files/figure-html/fig-de-hist-density-2.png){width="38%"}
 
 ::: footer
 Verteilungen verbildlichen
 :::
 
-## Histogramm + Dichtelinie kombiniert
+## Definition: Dichtediagramm {.smaller}
 
-![Histogramm und Dichtediagramm (Linie) für `total_pr`](../040-verbildlichen_files/figure-html/fig-balken-total-pr-hist-dens-1.png){width="55%"}
+:::{.callout-note title="Definition: Dichtediagramm"}
+Ein Dichtediagramm visualisiert die Verteilung einer stetigen Variablen. Im Gegensatz zum Histogramm wird der Verlauf geglättet, so kann Rauschen (Zufallsschwankung) besser ausgeblendet werden. (*Dichte*: relative Anzahl der Beobachtungen pro Einheit der X-Variablen.)
+:::
+
+![Histogramm und Dichtediagramm (Linie) für `total_pr`](../040-verbildlichen_files/figure-html/fig-balken-total-pr-hist-dens-1.png){width="50%"}
 
 ::: footer
 Verteilungen verbildlichen
@@ -192,9 +240,11 @@ Verteilungen verbildlichen
 
 ## Verteilungsformen {.smaller}
 
-![Symmetrische vs. schiefe Verteilung](../040-verbildlichen_files/figure-html/fig-symm-schief-1.png){width="26%"} ![](../040-verbildlichen_files/figure-html/fig-symm-schief-2.png){width="26%"}
+![Symmetrisch (Normal)](../040-verbildlichen_files/figure-html/fig-symm-schief-1.png){width="22%"} ![Schief](../040-verbildlichen_files/figure-html/fig-symm-schief-2.png){width="22%"}
 
-![Verschiedene Verteilungsformen: unimodal, bimodal, multimodal](../040-verbildlichen_files/figure-html/fig-plot-distribs-1.png){width="40%"}
+![Verschiedene Verteilungsformen: bimodal = zweigipflig, multimodal = mehrgipflig](../040-verbildlichen_files/figure-html/fig-plot-distribs-1.png){width="34%"}
+
+Verteilungen unterscheiden sich in Lage ("typischer" Wert), Streuung und Form (symmetrisch vs. schief).
 
 ::: footer
 Verteilungen verbildlichen
@@ -205,7 +255,7 @@ Verteilungen verbildlichen
 ## Definition: Normalverteilung {.smaller}
 
 :::{.callout-note title="Definition: Normalverteilung"}
-Normalverteilungen haben eine charakteristische, symmetrische Glockenform. Sie unterscheiden sich in Mittelwert $\mu$ und Streuung $\sigma$ — diese beiden Parameter bestimmen den gesamten Kurvenverlauf.
+Normalverteilungen haben eine charakteristische, symmetrische Glockenform. Sie unterscheiden sich in Mittelwert $\mu$ und Streuung $\sigma$ — diese beiden Parameter bestimmen den Graphen vollständig.
 :::
 
 Kurzschreibweise: $X \sim \mathcal{N}(\mu, \sigma)$
@@ -216,19 +266,25 @@ Kurzschreibweise: $X \sim \mathcal{N}(\mu, \sigma)$
 Spezialfall Normalverteilung
 :::
 
-## Beispiele normalverteilter Variablen
+## Eigenschaften und Beispiele
 
-Körpergröße, IQ-Werte, Prüfungsergebnisse, Messfehler, Lebensdauer von Glühbirnen, Gewicht von Brotlaiben, Milchproduktion von Kühen …
+Eine Normalverteilung ist
+
+- symmetrisch, glockenförmig, stetig, unimodal,
+- Mittelwert, Median und Modus sind identisch,
+- vollständig beschrieben durch $\mu$ und $\sigma$.
+
+Beispiele: Körpergröße (von Männern bzw. Frauen), IQ-Werte, einige Prüfungsergebnisse, Messfehler, Lebensdauer von Glühbirnen, Gewicht von Brotlaiben, Brustumfang schottischer Soldaten [@lyon_why_2014] …
 
 ::: footer
 Spezialfall Normalverteilung
 :::
 
-## Fläche unter der Kurve {.smaller}
+## 68-95-99.7-Prozentregel {.smaller}
 
 ![Flächeninhalte (Wahrscheinlichkeitsmasse) einer Normalverteilung [@ainali_standard_2007]](../img/Standard_deviation_diagram_micro.svg.png){width="45%"}
 
-Die **68-95-99,7-Prozentregel**:
+Kennt man $\mu$ und $\sigma$, weiß man, welcher Anteil der Fläche unter der Kurve in einem Bereich liegt:
 
 - $68\,\%$ im Bereich $\mu\pm 1 \cdot \sigma$
 - $95\,\%$ im Bereich $\mu\pm 2 \cdot \sigma$
@@ -244,6 +300,8 @@ $IQ \sim \mathcal{N}(100,15)$
 
 ![Visualisierung der theoretischen IQ-Verteilung](../img/normal-100-15.png){width="45%"}
 
+Welcher IQ-Wert wird von 75 %, 50 %, 25 %, 5 %, 1 % der Leute nicht überschritten?
+
 ::: footer
 Spezialfall Normalverteilung
 :::
@@ -251,10 +309,10 @@ Spezialfall Normalverteilung
 ## Entstehung einer Normalverteilung {.smaller}
 
 :::{.callout-note title="Definition: Entstehung einer Normalverteilung"}
-Wenn sich eine Variable $X$ als Summe mehrerer, unabhängiger, etwa gleich starker Summanden ergibt, tendiert $X$ dazu, normalverteilt zu sein.
+Wenn sich eine Variable $X$ als Summe mehrerer, unabhängiger, etwa gleich starker Summanden ergibt, kann man erwarten, dass $X$ tendenziell normalverteilt ist.
 :::
 
-Anschaulich zeigt das Galton-Brett, wie aus vielen kleinen Zufallsereignissen eine Glockenkurve entsteht.
+Anschaulich zeigt das [Galton-Brett](https://www.youtube.com/watch?v=3m4bxse2JEQ), wie aus vielen kleinen Zufallsereignissen eine Glockenkurve entsteht.
 
 ::: footer
 Spezialfall Normalverteilung
@@ -262,11 +320,25 @@ Spezialfall Normalverteilung
 
 # Zusammenhänge verbildlichen {.center footer=false}
 
+## Zusammenhang nominaler Variablen: Beispiele {.smaller}
+
+- Hängt Berufserfolg (Führungskraft ja/nein) mit dem Geschlecht zusammen?
+- Hängt der Beruf des Vaters mit dem Schulabschluss des Kindes zusammen?
+- Gibt es einen Zusammenhang zwischen bevorzugter Automarke und Parteipräferenz?
+
+Im Online-Auktionshaus fragen wir: Liegt ein Produktfoto (`stock_photo`) eher bei neuen als bei gebrauchten Spielen bei?
+
+::: footer
+Zusammenhänge verbildlichen
+:::
+
 ## Zusammenhang nominaler Variablen {.smaller}
 
-![Zusammenhang zwischen nominalskalierten Variablen: starker (links) vs. schwacher Zusammenhang (rechts)](../040-verbildlichen_files/figure-html/fig-zshg-nom1-1.png){width="55%"}
+![Starker Zusammenhang: Foto und Zustand](../040-verbildlichen_files/figure-html/fig-zshg-nom1-1.png){width="40%"} ![Schwacher Zusammenhang: Foto und Lenkrad dabei](../040-verbildlichen_files/figure-html/fig-zshg-nom1-2.png){width="40%"}
 
-Bei neuen Spielen war fast immer ein Foto dabei; bei gebrauchten nur bei gut der Hälfte — ein Zusammenhang zwischen `cond` und `stock_photo`.
+- Links: Bei neuen Spielen ist fast immer (ca. 90 %) ein Foto dabei, bei gebrauchten nur bei gut der Hälfte — `cond` und `stock_photo` hängen zusammen.
+- Rechts: Mit oder ohne Lenkrad (`wheels > 0`) — der Fotoanteil liegt jeweils bei ca. 70–75 %: (fast) kein Zusammenhang.
+- Faustregel: Unterscheiden sich die "Füllhöhen", gibt es einen Zusammenhang.
 
 ::: footer
 Zusammenhänge verbildlichen
@@ -274,16 +346,23 @@ Zusammenhänge verbildlichen
 
 ## Gefüllte Balkendiagramme {.smaller}
 
+:::: {.columns}
+::: {.column width="55%"}
 ```r
-mariokart %>%
-  count(stock_photo, cond) %>%
-  ggbarplot(x = "stock_photo", y = "n", fill = "cond",
-            position = position_fill())  # aus dem Paket ggpubr
+mariokart |>
+  count(stock_photo, cond) |>
+  ggbarplot(x = "stock_photo", y = "n",
+            fill = "cond",
+            position = position_fill())
 ```
 
-![Ein gefülltes Balkendiagramm zur Untersuchung eines Zusammenhangs](../040-verbildlichen_files/figure-html/fig-de-bar-filled-1.png){width="35%"}
-
-Geeignet, wenn (mindestens) eine der beiden Variablen nur zwei Ausprägungen hat.
+- Geeignet, wenn (mindestens) eine der beiden Variablen nur zwei Ausprägungen hat.
+- Die Balken sollten auf gleiche Länge (100 %) ausgerichtet sein.
+:::
+::: {.column width="45%"}
+![Ein gefülltes Balkendiagramm zur Untersuchung eines Zusammenhangs](../040-verbildlichen_files/figure-html/fig-de-bar-filled-1.png){width="100%"}
+:::
+::::
 
 ::: footer
 Zusammenhänge verbildlichen
@@ -291,9 +370,11 @@ Zusammenhänge verbildlichen
 
 ## Zusammenhang bei metrischen Variablen: Streudiagramm {.smaller}
 
-![Streudiagramm: positiver (links) vs. negativer Zusammenhang (rechts)](../040-verbildlichen_files/figure-html/fig-streu1-1.png){width="55%"}
+![Positiver, mittelstarker Zusammenhang](../040-verbildlichen_files/figure-html/fig-streu1-1.png){width="36%"} ![Negativer, schwacher Zusammenhang](../040-verbildlichen_files/figure-html/fig-streu1-2.png){width="36%"}
 
-Die Trendgerade (Regressionsgerade) zeigt Richtung des Zusammenhangs; die Ellipse zeigt, wie eng die Daten um sie streuen.
+- Links: Je höher der Startpreis (`start_pr`), desto höher tendenziell der Abschlusspreis (`total_pr`).
+- Rechts: Je mehr Gebote (`n_bids`), desto geringer tendenziell der Abschlusspreis.
+- Die Trendgerade (Regressionsgerade) zeigt die Richtung; die Ellipse zeigt, wie eng die Daten um sie streuen.
 
 ::: footer
 Zusammenhänge verbildlichen
@@ -302,7 +383,7 @@ Zusammenhänge verbildlichen
 ## Definition: Linearer Zusammenhang
 
 :::{.callout-note title="Definition: Linearer Zusammenhang"}
-Lässt sich die Beziehung zweier Variablen gut mit einer Geraden beschreiben, spricht man von einem linearen Zusammenhang. *Gleichsinnige* (positive) Zusammenhänge zeigen aufsteigende Trendgeraden $\nearrow$; *gegensinnige* (negative) zeigen absteigende Trendgeraden $\searrow$.
+Lässt sich die Beziehung zweier Variablen gut mit einer Geraden beschreiben, spricht man von einem linearen Zusammenhang. Ändert man eine Variable um einen bestimmten Wert, ändert sich die andere um einen proportionalen Wert. *Gleichsinnige* (positive) Zusammenhänge zeigen aufsteigende Trendgeraden $\nearrow$; *gegensinnige* (negative) zeigen absteigende Trendgeraden $\searrow$.
 :::
 
 ::: footer
@@ -311,7 +392,9 @@ Zusammenhänge verbildlichen
 
 ## Auch nicht-lineare Zusammenhänge gibt es
 
-![Beispiele nichtlinearer Zusammenhänge: quadratisch, exponenziell, Sinus, logarithmisch](../040-verbildlichen_files/figure-html/fig-nonlinear-1.png){width="55%"}
+![Beispiele nichtlinearer Zusammenhänge: quadratisch, exponenziell, Sinus, logarithmisch](../040-verbildlichen_files/figure-html/fig-nonlinear-1.png){width="48%"}
+
+Der Einfachheit halber konzentrieren wir uns auf lineare Zusammenhänge.
 
 ::: footer
 Zusammenhänge verbildlichen
@@ -319,9 +402,9 @@ Zusammenhänge verbildlichen
 
 ## Stärke und Richtung von Zusammenhängen {.smaller}
 
-![Lineare Zusammenhänge verschiedener Stärke und Richtung](../040-verbildlichen_files/figure-html/fig-cors-1.png){width="55%"}
+![Lineare Zusammenhänge verschiedener Stärke und Richtung](../040-verbildlichen_files/figure-html/fig-cors-1.png){width="48%"}
 
-Schmale Ellipsen ("Baguette") = starker Zusammenhang; breite Ellipsen ("Torte") = schwacher Zusammenhang.
+Schmale Ellipsen ("Baguette") = starker Zusammenhang; breite Ellipsen ("Torte") = schwacher Zusammenhang. Die Zahl je Teildiagramm ist der *Korrelationskoeffizient* $r$: Vorzeichen = Richtung, Betrag = Stärke.
 
 ::: footer
 Zusammenhänge verbildlichen
@@ -331,6 +414,8 @@ Zusammenhänge verbildlichen
 
 :::: {.columns}
 ::: {.column width="40%"}
+Nach @cohen_power_1992:
+
 - $r\approx 0$: kein Zusammenhang
 - $r \pm .1$: schwacher Zusammenhang
 - $r \pm .3$: mittlerer Zusammenhang
@@ -338,7 +423,7 @@ Zusammenhänge verbildlichen
 - $r = 1$: perfekter Zusammenhang
 :::
 ::: {.column width="60%"}
-![Überblick: starke vs. schwache, positive vs. negative Zusammenhänge](../040-verbildlichen_files/figure-html/fig-cors2-1.png){width="80%"}
+![Überblick: starke vs. schwache, positive vs. negative Zusammenhänge](../040-verbildlichen_files/figure-html/fig-cors2-1.png){width="85%"}
 :::
 ::::
 
@@ -348,9 +433,26 @@ Zusammenhänge verbildlichen
 
 ## Mehrere Zusammenhänge auf einen Blick {.smaller}
 
-![Zusammenhang mehrerer metrischer Variablen mit dem Abschlusspreis, ohne Extremwerte](../040-verbildlichen_files/figure-html/fig-mario-scatter2-1.png){width="48%"}
+:::: {.columns}
+::: {.column width="45%"}
+```r
+mariokart_no_extreme <-
+  mariokart |>
+  filter(total_pr < 100)
 
-Mit `map()` bauen wir für jede Variable ein `ggscatter()`-Diagramm gegen die Zielvariable `total_pr` und fügen alle mit `ggarrange()` zu einem Panel zusammen — `start_pr` und `wheels` hängen am stärksten mit `total_pr` zusammen.
+c("duration", "n_bids", "start_pr",
+  "ship_pr", "seller_rate", "wheels") |>
+  map(~ ggscatter(mariokart_no_extreme,
+                  x = .x, y = "total_pr")) |>
+  ggarrange(plotlist = _)
+```
+
+Erst ohne Extremwerte schält sich ein klares Bild heraus: `start_pr` und `wheels` hängen am stärksten mit `total_pr` zusammen.
+:::
+::: {.column width="55%"}
+![Zusammenhang mehrerer metrischer Variablen mit dem Abschlusspreis, ohne Extremwerte](../040-verbildlichen_files/figure-html/fig-mario-scatter2-1.png){width="100%"}
+:::
+::::
 
 ::: footer
 Zusammenhänge verbildlichen
@@ -360,7 +462,7 @@ Zusammenhänge verbildlichen
 
 ## Unterschiede bei nominalen Variablen
 
-Für nominale Variablen eignen sich Balkendiagramme sowohl für Zusammenhänge als auch für Unterschiede — beides ist letztlich dieselbe Fragestellung, nur anders formuliert.
+Für nominale Variablen eignen sich Balkendiagramme sowohl für Zusammenhänge als auch für Unterschiede: Das gefüllte Balkendiagramm zu `cond` und `stock_photo` zeigt genau genommen den *Unterschied* im Fotoanteil zwischen neuen und gebrauchten Spielen.
 
 Tortendiagramme sind dagegen ungeeignet: Flächenvergleiche sind für das Auge schwer.
 
@@ -368,23 +470,25 @@ Tortendiagramme sind dagegen ungeeignet: Flächenvergleiche sind für das Auge s
 Unterschiede verbildlichen
 :::
 
-## Unterschiede bei quantitativen Variablen: Boxplot {.smaller}
+## Unterschiede bei quantitativen Variablen {.smaller}
 
-![Unterschiede zwischen Gruppen: Histogramm pro Gruppe (links) vs. Boxplot pro Gruppe (rechts)](../040-verbildlichen_files/figure-html/fig-compare-groups1-1.png){width="50%"}
+![Histogramm (Verteilung) pro Gruppe](../040-verbildlichen_files/figure-html/fig-compare-groups1-1.png){width="34%"} ![Boxplot pro Gruppe](../040-verbildlichen_files/figure-html/fig-compare-groups1-2.png){width="34%"}
 
-Der Boxplot vereinfacht die Verteilungsdarstellung — kompakter als ein Histogramm, aber mit weniger Detail.
+- Unterscheiden sich zwei Gruppen (neu vs. gebraucht) deutlich in der Zielvariablen (`total_pr`)?
+- Der Boxplot (rechts) zeigt die gleichen Verteilungen wie links — vereinfacht und gröber.
+- Was ein "deutlicher" Unterschied ist, ist keine statistische, sondern eine inhaltliche Frage.
 
 ::: footer
 Unterschiede verbildlichen
 :::
 
-## Definition: Boxplot
+## Definition: Boxplot {.smaller}
 
 :::{.callout-note title="Definition: Boxplot"}
 Der Boxplot ist eine Vereinfachung bzw. Zusammenfassung eines Histogramms. Damit stellt er ebenfalls eine Verteilung (einer metrischen Variablen) dar.
 :::
 
-![Vom Histogramm zum Boxplot](../040-verbildlichen_files/figure-html/fig-hist-to-box-1.png){width="45%"}
+![Vom Histogramm (oben) zum Boxplot (unten)](../040-verbildlichen_files/figure-html/fig-hist-to-box-1.png){width="50%"}
 
 ::: footer
 Unterschiede verbildlichen
@@ -393,20 +497,33 @@ Unterschiede verbildlichen
 ## Anatomie des Boxplots {.smaller}
 
 1. **Dicker Strich**: Median der Verteilung.
-2. **Enden der Box**: 1. und 3. Quartil — die Breite ist der *Interquartilsabstand* (IQR).
-3. **Antennen**: Streuung der äußeren 25 % (links/rechts), begrenzt auf das 1,5-fache der Boxlänge.
+2. **Enden der Box**: 1. Quartil (hier 41) und 3. Quartil (hier 54) — die Breite der Box ist der *Interquartilsabstand* (IQR), die Streuung der inneren 50 %.
+3. **Antennen**: Streuung der kleinsten bzw. größten 25 % der Werte, begrenzt auf das 1,5-fache der Boxlänge.
 4. **Einzelne Punkte**: Extremwerte außerhalb der Antennen.
-5. Median mittig in der Box + gleich lange Antennen → Verteilung symmetrisch; sonst schief.
+5. Median mittig in der Box und gleich lange Antennen → Verteilung symmetrisch; sonst schief.
 
 ::: footer
 Unterschiede verbildlichen
 :::
 
-## Boxplot: metrisch vs. nominal gruppiert {.smaller}
+## Boxplot: Preis nach Anzahl Lenkräder {.smaller}
 
-![Abschlusspreis nach Anzahl Lenkräder: als metrische (links) vs. nominale Variable (rechts)](../040-verbildlichen_files/figure-html/fig-box-wheels1-1.png){width="50%"}
+:::: {.columns}
+::: {.column width="50%"}
+```r
+mariokart_no_extreme |>
+  mutate(wheels = factor(wheels)) |>
+  ggboxplot(x = "wheels", y = "total_pr")
+```
 
-`factor(wheels)` erzwingt, dass jeder Wert (0, 1, 2, 3, 4) als eigene Gruppe behandelt wird — sonst gruppiert R metrische Variablen automatisch (und nicht immer sinnvoll).
+- `ggboxplot` gruppiert `wheels` ohnehin nach jedem Wert (0–4).
+- `factor(wheels)` ist trotzdem guter Stil: dokumentiert die Absicht und verhindert, dass spätere Analysen `wheels` als stetig behandeln.
+- Lenkräder und Preis hängen positiv zusammen — aber für 3 und 4 Lenkräder gibt es nur wenige Daten: Vorsicht bei der Interpretation!
+:::
+::: {.column width="50%"}
+![Abschlusspreis nach Anzahl von beigelegten Lenkrädern](../040-verbildlichen_files/figure-html/fig-box-wheels1-1.png){width="100%"}
+:::
+::::
 
 ::: footer
 Unterschiede verbildlichen
@@ -416,7 +533,9 @@ Unterschiede verbildlichen
 
 ## Achsen stauchen und strecken {.smaller}
 
-![Strecken und Stauchen der Achsen — gleiche Daten, ganz anderer Eindruck](../040-verbildlichen_files/figure-html/fig-lie1-1.png){width="70%"}
+![Oh nein, dramatischer Einbruch des Umsatzes!](../040-verbildlichen_files/figure-html/fig-lie1-1.png){width="45%"} ![Kaum der Rede wert, nur ein bisschen Schwankung!](../040-verbildlichen_files/figure-html/fig-lie1-2.png){width="45%"}
+
+Gleiche Daten, ganz anderer Eindruck.
 
 ::: footer
 So lügt man mit Statistik
@@ -424,7 +543,9 @@ So lügt man mit Statistik
 
 ## Die Y-Achse abschneiden {.smaller}
 
-![Abschneiden der Y-Achse dramatisiert kleine Unterschiede](../040-verbildlichen_files/figure-html/fig-lie2-1.png){width="70%"}
+![Oh nein, dramatischer Einbruch des Umsatzes!](../040-verbildlichen_files/figure-html/fig-lie2-1.png){width="45%"} ![Kaum der Rede wert, nur ein bisschen Schwankung!](../040-verbildlichen_files/figure-html/fig-lie2-2.png){width="45%"}
+
+Eine abgeschnittene Y-Achse dramatisiert kleine Unterschiede.
 
 ::: footer
 So lügt man mit Statistik
@@ -434,7 +555,7 @@ So lügt man mit Statistik
 
 ![Schokoladenkonsum und Nobelpreise [@messerli_chocolate_2012]](../img/choc.jpeg){width="40%"}
 
-Schokoladenkonsum hängt mit der Anzahl der Nobelpreise (pro Land) zusammen — aber nicht ursächlich. Eine Drittvariable (z. B. allgemeiner Entwicklungsstand) erklärt vermutlich beides gleichzeitig.
+Schokoladenkonsum hängt mit der Anzahl der Nobelpreise (pro Land) zusammen — aber nicht ursächlich. Eine Drittvariable (z. B. allgemeiner Entwicklungsstand) erklärt vermutlich beides gleichzeitig.
 
 ::: footer
 So lügt man mit Statistik
@@ -444,11 +565,11 @@ So lügt man mit Statistik
 
 ## Die Stärke von Datendiagrammen {.smaller}
 
-![Häufigkeit von Masern vor und nach Einführung der Impfung [@moore_recreating_2015]](../img/vaccine.jpg){width="45%"}
+![Häufigkeit von Masern und Impfung in den USA [@moore_recreating_2015]](../img/vaccine.jpg){width="45%"}
 
-Ein Diagramm kann eine Botschaft (hier: Wirksamkeit der Impfung) auf einen Blick vermitteln — deutlich eindrücklicher als eine Tabelle mit Zahlen.
+Das Diagramm zeigt die Häufigkeit von Masern vor und nach Einführung der Impfung [@debold_battling_2015; Daten: @van_panhuis_contagious_2013] — eine Botschaft auf einen Blick, eindrücklicher als jede Tabelle.
 
-Tortendiagramme bleiben aber meist eine schlechte Wahl.
+Tortendiagramme sind zwar beliebt, aber meist eine schlechte Wahl: Tortenstücke lassen sich schwer vergleichen.
 
 ::: footer
 Praxisbezug
@@ -457,7 +578,7 @@ Praxisbezug
 ## Zusammenfassung {.smaller}
 
 - Datendiagramme decken auf, was reine Kennzahlen verbergen (Dino-Datensatz, Anscombes Quartett)
-- **Verteilung**: Balkendiagramm (nominal), Histogramm/Dichtediagramm (quantitativ) — bei Normalverteilung: $\mu$ und $\sigma$ bestimmen alles
+- **Verteilung**: Balkendiagramm (nominal), Histogramm/Dichtediagramm (quantitativ) — bei Normalverteilung bestimmen $\mu$ und $\sigma$ alles
 - **Zusammenhang**: gefülltes Balkendiagramm (nominal), Streudiagramm (metrisch) — Stärke via Ellipsenform/Korrelation
 - **Unterschied**: Boxplot fasst eine Verteilung kompakt zusammen (Median, Quartile, Antennen, Extremwerte)
 - Vorsicht: Diagramme lassen sich manipulieren (gestauchte Achsen, abgeschnittene Y-Achse, Scheinkorrelationen)

@@ -39,6 +39,7 @@ Einstieg
 
 - Pakete: `tidyverse` [@wickham2019a], `easystats` [@ludecke2022], `yardstick` [@kuhn2024], optional `ggpubr` [@kassambara2023]
 - Daten: die bekannten Mariokart-Daten *und* neu die **Wetterdaten** des [Deutschen Wetterdienstes (DWD)](https://www.dwd.de/) [-@dwd2023; -@dwd2023a]
+- Wetterdaten: Monatswerte pro Bundesland (`region`), Jahr (`year`) und Monat (`month`)
 - Temperatur in Grad Celsius, Niederschlag (`precip`) in mm pro Quadratmeter
 
 ::: footer
@@ -60,6 +61,18 @@ Forschungsbezug: Gläserne Kunden
 :::
 
 # Wetter in Deutschland {.center footer=false}
+
+## Klimawandel: Temperatur und Niederschlag
+
+Neuer Auftrag: Sie analysieren die Wetterdaten des DWD — Temperatur und Niederschlag in Deutschland im Verlauf der Jahre.
+
+![Die Temperatur (°C) steigt im Verlauf der Jahre](../090-regression2_files/figure-html/fig-wetter-temp-1.png){width="38%"} ![Niederschlag pro Monat (mm) im Verlauf der Jahre](../090-regression2_files/figure-html/fig-wetter-precip-1.png){width="38%"}
+
+Grau: Jahresmittel, blau: geglätteter Trend.
+
+::: footer
+Wetter in Deutschland
+:::
 
 ## Metrische UV: Temperatur im Zeitverlauf
 
@@ -100,6 +113,8 @@ Wetter in Deutschland
 
 ## UV zentrieren: Warum? {.smaller}
 
+Im Modell `temp ~ year` liegt der Achsenabschnitt bei etwa −14 °C — was soll das bedeuten?
+
 Der Achsenabschnitt ($\beta_0$) ist der $Y$-Wert an der Stelle $x=0$. In den Wetterdaten wäre `year = 0` Christi Geburt — sinnlos zu extrapolieren!
 
 ![Ein Modell soll nicht weit außerhalb seines Datenbereichs extrapoliert werden](../img/extrapolating.png){width="40%"}
@@ -133,7 +148,7 @@ Wetter in Deutschland
 Eine *binäre* UV, auch *Indikatorvariable* oder *Dummyvariable* genannt, hat nur zwei Ausprägungen: 0 und 1.
 :::
 
-Beispiele: *weiblich* (0/1), oder *after\_1950* (1 für Jahre nach 1950, sonst 0).
+Beispiele: *weiblich* (0 = nein, 1 = ja), oder *before\_1950* (1 für Jahre vor 1950, sonst 0).
 
 Forschungsfrage: War es in der zweiten Hälfte des 20. Jahrhunderts im Schnitt wärmer als davor?
 
@@ -150,7 +165,9 @@ after_1950
 ```
 
 ```r
-wetter <- wetter |> mutate(after_1950 = year > 1950)
+wetter <- wetter |>
+  mutate(after_1950 = year > 1950) |>
+  filter(region != "Deutschland")  # ohne Gesamt-Deutschland
 lm_wetter_bin_uv <- lm(temp ~ after_1950, data = wetter)
 ```
 
@@ -170,9 +187,13 @@ Es wurde ein gutes halbes Grad wärmer nach 1950 — die Modellgüte ist aber ge
 Wetter in Deutschland
 :::
 
-## Interpretation: binäre UV
+## Interpretation: binäre UV {.smaller}
 
-![Sinnbild zur Interpretation eines Modells mit binärer UV](../090-regression2_files/figure-html/fig-binvar-1.png){width="55%"}
+:::{.callout-important}
+Ein lineares Modell mit binärer UV zeigt nichts anderes als die Differenz der Gruppenmittelwerte.
+:::
+
+![Sinnbild zur Interpretation eines Modells mit binärer UV (nur Juli in Bayern, reingezoomt)](../090-regression2_files/figure-html/fig-binvar-1.png){width="45%"}
 
 1. Mittelwert der 1. Gruppe (bis 1950): Achsenabschnitt ($\beta_0$)
 2. Mittelwert der 2. Gruppe (nach 1950): Achsenabschnitt ($\beta_0$) + Steigung ($\beta_1$)
@@ -222,14 +243,16 @@ Da Baden-Württemberg alphabetisch das erste Bundesland ist, wird es als Referen
 Wetter in Deutschland
 :::
 
-## Faktorvariablen
+## Faktorvariablen {.smaller}
+
+Forschungsfrage: Wie unterscheidet sich der Niederschlag zwischen den Monaten? Problem: `lm(precip ~ month)` behandelt `month` als *Zahl* — der Monat sollte aber nominal sein.
 
 ```r
 wetter <- wetter |> mutate(month_factor = factor(month))
 lm_wetter_month_factor <- lm(precip ~ month_factor, data = wetter)
 ```
 
-- `factor()` wandelt eine numerische Variable in eine nominalskalierte Variable um.
+- `factor()` wandelt eine numerische Variable in eine nominalskalierte Variable um: aus `42` wird `"42"`.
 - Faktorstufen werden bei `factor`-Variablen mitgespeichert (bei `character` nicht) — auch nach dem Filtern.
 - Referenzgruppe ändern: `relevel(month_factor, ref = "7")`
 
@@ -256,6 +279,8 @@ $y \sim x_1 + x_2 + \ldots + x_n$
 :::
 
 Hat man mehrere UV, trennt man sie mit einem Plus-Zeichen — dieses hat *keine* arithmetische Funktion, sondern bedeutet "und noch folgende UV".
+
+Beispiel: binäre UV (Monat: Januar vs. Juli) plus metrische UV (Jahr) — so ein Modell heißt auch *Kovarianzanalyse* (ANCOVA).
 
 ::: footer
 Wetter in Deutschland
@@ -330,7 +355,7 @@ Wetter in Deutschland
 
 ![Niederschlag im Jahresverlauf mit Interaktionseffekt: Die Regressionsgeraden für Januar und Juli sind *nicht* parallel.](../090-regression2_files/figure-html/fig-wetter-interakt-1.png){width="60%"}
 
-Sind die Regressionsgeraden mehrerer Gruppen nicht parallel, liegt ein Interaktionseffekt vor.
+Sind die Regressionsgeraden mehrerer Gruppen nicht parallel, liegt ein Interaktionseffekt vor. Dann gibt es nicht mehr "den" Effekt des Jahres — er hängt vom Monat ab.
 
 ::: footer
 Wetter in Deutschland
@@ -358,7 +383,9 @@ Wetter in Deutschland
 
 Ein Modell mit zwei metrischen UV lässt sich im 3D-Raum als *Regressionsebene* visualisieren.
 
-![Ein lineares Modell mit zwei metrischen UV, `y ~ x1 + x2`, im 3D-Raum](../img/3d_scatter1.png){width="35%"} ![2D-Ansicht des 3D-Modells](../090-regression2_files/figure-html/fig-3d-regr-2d-1.png){width="35%"}
+![Ein lineares Modell mit zwei metrischen UV, `y ~ x1 + x2`, im 3D-Raum](../img/3d_scatter1.png){width="30%"} ![2D-Ansicht des 3D-Modells: je eine Gerade für x2 = −1, 0, 1](../090-regression2_files/figure-html/fig-3d-regr-2d-1.png){width="30%"}
+
+In der 2D-Ansicht wird die Ebene zu parallelen Geraden — eine pro Wert von `x2`.
 
 ::: footer
 Modelle mit vielen UV
@@ -453,8 +480,49 @@ Deshalb: vor dem Ausliefern von Vorhersagen die Modellgüte immer an einem *neue
 
 `rsq()` (aus `yardstick`) berechnet die Modellgüte für beliebige Vorhersagen — im Gegensatz zu `r2()`, das nur im Train-Sample funktioniert.
 
+Name-Clash-Alarm: `rmse` gibt es in `performance` *und* `yardstick` — daher `yardstick::rmse` schreiben.
+
 ::: footer
 Fallbeispiel zur Prognose
+:::
+
+# Vertiefung: Das Aufteilen Ihrer Daten {.center footer=false}
+
+## Analyse- und Assessment-Sample {.smaller}
+
+Für eine robuste Schätzung der Modellgüte das Train-Sample noch einmal aufteilen:
+
+1. Modell im *Analyse-Sample* berechnen
+2. Modellgüte im *Assessment-Sample* prüfen
+
+```r
+library(rsample)
+meine_aufteilung <- initial_split(mariokart, strata = total_pr)
+mariokart_train <- training(meine_aufteilung)  # Analyse-Sample
+mariokart_test <- testing(meine_aufteilung)    # Assessment-Sample
+```
+
+- `initial_split` legt nur fest, welche Zeile wohin kommt (Standard: 75 % / 25 %); `training`/`testing` teilen dann tatsächlich auf.
+- `strata` sorgt dafür, dass die Verteilung der AV in beiden Teilen gleich ist.
+
+::: footer
+Vertiefung: Das Aufteilen Ihrer Daten
+:::
+
+## Train- vs. Test-Sample {.smaller}
+
+:::{.callout-note title="Definition: Train-Sample"}
+Den Datensatz, für den Sie sowohl UV *als auch AV* vorliegen haben, nennt man Train-Sample.
+:::
+
+:::{.callout-note title="Definition: Test-Sample"}
+Den Datensatz, für den Sie *nur* Daten der UV, aber nicht der AV vorliegen haben, nennt man Test-Sample.
+:::
+
+![](mermaid/090-regression2-stichproben.png){width="45%"}
+
+::: footer
+Vertiefung: Das Aufteilen Ihrer Daten
 :::
 
 # Praxisbezug {.center footer=false}

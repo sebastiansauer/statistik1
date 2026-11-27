@@ -889,9 +889,9 @@ kable(tidy_untidy)
 #| out-width: "100%"
 tidy_untidy_long <-
   tidy_untidy |> 
-  pivot_longer(cols = c(Umsatz_2021, Umsatz_2022, Umsatz_2023), names_to = "Jahr2", values_to = "Umsatz") |> 
-  separate(Jahr2, into = c("k", "Jahr")) |> 
-  dplyr::select(-k)
+  pivot_longer(cols = c(Umsatz_2021, Umsatz_2022, Umsatz_2023),
+               names_to = "Jahr", names_prefix = "Umsatz_",
+               values_to = "Umsatz")
 
 kable(tidy_untidy_long)
 ```
@@ -953,6 +953,37 @@ d_tidy_plot |>
 
 
 
+
+
+### Vom Breit- ins Langformat und zurück {#sec-lang-breit-konzept}
+
+@tbl-untidy1 und @tbl-tidy1 enthalten genau dieselbe Information, nur anders angeordnet.
+Man kann die eine Form in die andere umwandeln, ohne dass etwas verloren geht oder hinzukommt.
+@fig-lang-breit zeigt, was dabei mit jeder einzelnen Zelle passiert:
+
+- *Vom Breit- ins Langformat*: Die Spaltenköpfe `Umsatz_2021`, `Umsatz_2022` und `Umsatz_2023` sind eigentlich keine Variablennamen, sondern *Werte* einer Variablen, nämlich des Jahres.
+Sie wandern daher in eine neue Spalte `Jahr`.
+Die Zahlen darunter wandern in eine neue Spalte `Umsatz`.
+Jedes Produkt steht danach in drei Zeilen, einer pro Jahr.
+- *Vom Lang- ins Breitformat*: Der umgekehrte Weg.
+Die Werte der Spalte `Jahr` werden wieder zu Spaltenköpfen, und die Umsätze verteilen sich auf diese Spalten.
+
+In R heißen die beiden Befehle `pivot_longer()` (breit → lang) und `pivot_wider()` (lang → breit).
+Wie man sie benutzt, sehen Sie in @sec-lang-breit.
+
+
+```{r}
+#| echo: false
+#| label: fig-lang-breit
+#| out-width: !expr if (knitr::is_html_output()) "75%" else "100%"
+#| fig-cap: "Breit- und Langformat enthalten dieselbe Information. `pivot_longer()` macht aus den Spaltenköpfen Werte der neuen Spalte `Jahr`; `pivot_wider()` kehrt das um. Gleiche Farbe heißt: gleiches Jahr."
+#| fig-alt: "Die Tabelle mit den Spalten Produkt, Umsatz_2021, Umsatz_2022 und Umsatz_2023 wird zur Tabelle mit den Spalten Produkt, Jahr und Umsatz und wieder zurück. Jede Zelle wandert an ihren neuen Platz; die Spaltenköpfe der Jahre werden zu Werten der Spalte Jahr."
+knitr::include_graphics(
+  if (knitr::is_html_output()) "img/lang-breit-anim.gif" else "img/lang-breit-statisch.pdf"
+)
+```
+
+[Im Online-Buch ist @fig-lang-breit animiert.]{.content-visible when-format="pdf"}
 
 
 ### Je mehr, desto besser (?)

@@ -43,3 +43,14 @@ Exercises are stored as R/exams `.Rmd` files in `exs/`. They are embedded in cha
 - `_common.R` must be `source()`d in each chapter that uses ggplot or the shared dataset
 - Language is `de-DE` throughout; all prose, comments, and variable names are in German
 - `renv` is used for R package management — run `renv::restore()` to install dependencies
+
+## Diagram style
+
+Design decisions live centrally in `_common.R` (loaded via `.Rprofile`); don't hard-code colours, themes or grid overrides in individual plots — use the named constants (`grau_dunkel`/`dunkelgrau`, `grau_mittel`/`mittelgrau`, `okabe_linie`, `trendcol`, …) and helpers. Read the global skill `ggplot-diagramme` before writing plot code; the automation is the same as in the Start:Bayes repo (`references/start-bayes.md` in that skill). `_common.R` hooks into every `ggplot_build()`:
+
+- `y_label_nach_oben()` — y title moved above the panel (skipped for `coord_flip()` and for plots with `labs(y = NULL, subtitle = …)`).
+- `wilke_gitter()` — grid only along the value axis (skipped if the plot sets `panel.grid*` itself, e.g. via `theme_med(grid = …)` or `theme_streu()`).
+- `tufte_streu()` — range frame, rug and ticks in the data range for scatter/line plots with ≥ 10 rows (skipped if the plot already has `rangeframe()`/`geom_rug()`, for `coord_flip()`, heatmaps, DAGs).
+- `tufte_alpha()` — translucent points against overplotting (explicit `alpha` wins).
+
+Switches: `+ tufte_aus()` (computed curves drawn with `geom_line`, e.g. a function of r), `options(tufte_streu = FALSE)`, `options(tufte_linie = FALSE)`, `options(tufte_alpha = FALSE)`, `options(wilke_gitter = FALSE)`, `options(y_label_oben = FALSE)`. Also set centrally: Okabe-Ito as default discrete palette (no yellow), grey continuous fill scale, bars/histograms with white border (use `geom_bar(color = NA)` for very thin bars), ggpubr functions use the book theme. Figure chunks get a hash of `_common.R`, `funs/*.R`, `children/*.R` in `cache.extra`, so editing those redraws all figures; `render-book.R` also wipes `_freeze/` when that hash changes.

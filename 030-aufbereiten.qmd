@@ -1515,6 +1515,100 @@ $\square$
 :::
 
 
+### Eine lange Pfeifenkette {#sec-lange-pfeife}
+
+In der Praxis werden Pfeifenketten schnell länger.
+Nehmen wir an, Ihre Chefin fragt:
+"Bringt kostenloser Versand bei Mariokart einen höheren Preis -- und gilt das für neue und gebrauchte Spiele gleichermaßen?
+Lass aber die Ausreißer und die ganz langen Auktionen weg.
+Und zähl den Versand nicht zum Preis dazu."
+
+Diese Frage beantwortet eine einzige Pfeifenkette, s. @lst-lange-pfeife.
+
+```{r}
+#| lst-label: lst-lange-pfeife
+#| lst-cap: "Eine lange Pfeifenkette: Acht Stationen am Fließband"
+#| message: false
+mariokart |>
+  # 1. Ausreißer und lange Auktionen entfernen:
+  filter(total_pr < 100, duration <= 7) |>
+  # 2. Preis ohne Versand berechnen und Versand in zwei Stufen einteilen:
+  mutate(preis_ohne_versand = total_pr - ship_pr,
+         versand = if_else(ship_pr == 0, "gratis", "kostet")) |>
+  # 3. Nur die Spalten behalten, die wir brauchen:
+  select(cond, versand, preis_ohne_versand, n_bids) |>
+  # 4. Nach Zustand UND Versandart aufteilen (2 x 2 = 4 Gruppen):
+  group_by(cond, versand) |>
+  # 5. Jede Gruppe zusammenfassen:
+  summarise(preis_mw = round(mean(preis_ohne_versand), 2),
+            gebote_mw = round(mean(n_bids), 1),
+            anzahl = n()) |>
+  # 6. Gruppierung wieder aufheben:
+  ungroup() |>
+  # 7. Nur Gruppen mit genug Auktionen behalten:
+  filter(anzahl >= 5) |>
+  # 8. Teuerste Gruppe nach oben:
+  arrange(-preis_mw)
+```
+
+Auf Deutsch übersetzt:
+Nimm die Mariokart-Daten, *und dann*
+behalte nur Auktionen unter 100 Dollar, die höchstens eine Woche liefen, *und dann*
+berechne den Preis ohne Versand und markiere, ob der Versand gratis ist, *und dann*
+behalte vier Spalten, *und dann*
+teile nach Zustand und Versandart auf, *und dann*
+berechne pro Gruppe den mittleren Preis, die mittlere Zahl der Gebote und die Anzahl der Auktionen, *und dann*
+hebe die Gruppierung auf, *und dann*
+wirf zu kleine Gruppen raus, *und dann*
+sortiere absteigend nach dem mittleren Preis.
+
+Ein paar Details sind neu:
+
+- `filter` kann mehrere Bedingungen auf einmal prüfen. Ein Komma bedeutet "und": Beide Bedingungen müssen erfüllt sein.
+- `mutate` kann mehrere Spalten auf einmal berechnen. Die zweite Spalte nutzt `if_else(Bedingung, wenn_ja, wenn_nein)`, um eine Zahl in zwei Kategorien zu übersetzen.
+- `group_by` kann nach mehreren Spalten gruppieren; es entsteht dann eine Gruppe pro *Kombination*.
+- `n()` zählt die Zeilen pro Gruppe.
+- `ungroup()` hebt die Gruppierung auf. Das ist guter Stil: Sonst rechnen später folgende Verben unbemerkt weiter pro Gruppe.
+- Ein Verb kann mehrfach vorkommen: Hier filtern wir einmal *vor* dem Zusammenfassen (einzelne Auktionen) und einmal *danach* (ganze Gruppen).
+
+Das Ergebnis: Neue Spiele erzielen höhere Preise als gebrauchte.
+Und bei beiden Zuständen ist der Preis ohne Versand im Mittel *höher*, wenn der Versand gratis ist.
+Die Verkäufer schlagen die Versandkosten also offenbar zum Teil auf den Preis auf.
+
+:::{.callout-tip}
+### Lange Pfeifen Schritt für Schritt bauen
+Schreiben Sie eine lange Pfeifenkette nie in einem Rutsch.
+Bauen Sie sie Station für Station auf und führen Sie nach jeder neuen Zeile den Code aus:
+Sieht die Zwischentabelle so aus, wie Sie es erwarten?
+Wenn eine Kette einen Fehler wirft, markieren Sie den Code nur bis zur Zeile *vor* einer Pfeife und führen ihn aus.
+So finden Sie schnell die Station, an der es hakt.
+Achtung: Die letzte Zeile einer Kette endet *ohne* Pfeife -- sonst wartet R auf ein weiteres Verb. $\square$
+:::
+
+::: {.content-visible when-format="html"}
+
+Probieren Sie es aus: Löschen Sie die letzten Zeilen der Kette und schauen Sie sich die Zwischenergebnisse an.
+Oder gruppieren Sie statt nach `versand` nach `stock_photo`
+(Achtung: Dann muss `stock_photo` auch in `select` stehen -- warum?).
+
+```{webr}
+mariokart |>
+  filter(total_pr < 100, duration <= 7) |>
+  mutate(preis_ohne_versand = total_pr - ship_pr,
+         versand = if_else(ship_pr == 0, "gratis", "kostet")) |>
+  select(cond, versand, preis_ohne_versand, n_bids) |>
+  group_by(cond, versand) |>
+  summarise(preis_mw = round(mean(preis_ohne_versand), 2),
+            gebote_mw = round(mean(n_bids), 1),
+            anzahl = n()) |>
+  ungroup() |>
+  filter(anzahl >= 5) |>
+  arrange(-preis_mw)
+```
+
+:::
+
+
 
 ## Aufbereiten mit KI {#sec-aufbereiten-ki}
 

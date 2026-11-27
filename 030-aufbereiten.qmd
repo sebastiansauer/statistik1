@@ -9,6 +9,7 @@ resources:
 webr:
   packages:
     - dplyr
+    - tidyr
   resources:
     - data/mariokart.csv
     - data/mariokart_roh.csv
@@ -60,6 +61,7 @@ source("_common.R")
 # Unsichtbare Vorbereitung für die interaktiven R-Zellen (WebR):
 # Paket laden und Daten so einlesen wie im Buch (ohne Zeilennummer und Titel)
 library(dplyr)
+library(tidyr)
 mariokart <- read.csv("data/mariokart.csv") |> 
   tibble::as_tibble() |> 
   select(-V1, -title)
@@ -71,6 +73,15 @@ mariokart_bereinigt <- mariokart_roh |>
          cond = if_else(cond == "gebraucht", "used", cond),
          duration = if_else(duration > 10, NA, duration)) |> 
   filter(total_pr < 100)
+umsatz_breit <- tibble::tribble(
+  ~Produkt, ~Umsatz_2021, ~Umsatz_2022, ~Umsatz_2023,
+  "Hämmer", 10, 11, 12,
+  "Nägel",  15, 10,  5
+)
+umsatz_lang <- pivot_longer(umsatz_breit,
+                            cols = c(Umsatz_2021, Umsatz_2022, Umsatz_2023),
+                            names_to = "Jahr", names_prefix = "Umsatz_",
+                            values_to = "Umsatz")
 ```
 :::
 
@@ -92,6 +103,7 @@ mariokart_bereinigt <- mariokart_roh |>
 - Sie können Probleme erkennen, die schon beim Einlesen einer Datei auftreten (Notizzeilen, unbrauchbare Spaltennamen, Fehlcodes wie `-99`), und sie beim Import beheben.
 - Sie können für jedes dieser Probleme eine begründete Entscheidung treffen und diese festhalten.
 - Sie können folgende Verben des Datenjudo einer Aufgabe zuordnen und R-Code mit ihnen lesen und anwenden: `arrange`, `filter`,  `select`, `summarise`, `group_by`, `mutate`.
+- Sie können eine Tabelle mit `pivot_longer` und `pivot_wider` zwischen Breit- und Langformat umwandeln.
 - Sie können R-Befehle mit der "Pfeife" verketten.
 
 
@@ -1497,6 +1509,112 @@ b) `mutate(mariokart, ship_pr_euro = ship_pr * kurs)`, wobei `kurs` der aktuelle
 c) `group_by(mariokart, ship_sp)` und dann `summarise(..., gebote_mw = mean(n_bids))`
 d) `select(mariokart, id, n_bids)`
 e) `count(mariokart, wheels)` $\square$
+:::
+
+
+### Breit und lang umformen: `pivot_longer` und `pivot_wider` {#sec-lang-breit}
+
+In @sec-lang-breit-konzept haben Sie gesehen, dass dieselbe Information im Breit- oder im Langformat stehen kann (@fig-lang-breit).
+Für die meisten Auswertungen und Diagramme braucht man das Langformat (Tidy Data, @def-tidy).
+Liegen die Daten breit vor, formt man sie um.
+Wir nehmen das Beispiel mit den Hämmern und Nägeln:
+
+```{r}
+umsatz_breit <- tribble(
+  ~Produkt, ~Umsatz_2021, ~Umsatz_2022, ~Umsatz_2023,
+  "Hämmer", 10, 11, 12,
+  "Nägel",  15, 10,  5
+)
+umsatz_breit
+```
+
+`tribble` legt eine kleine Tabelle direkt im Code an, Zeile für Zeile.
+
+:::{#def-pivot-longer}
+### `pivot_longer`
+Mit `pivot_longer` wandelt man eine Tabelle vom Breit- ins Langformat um.
+Man gibt an, welche Spalten zusammengefasst werden (`cols`),
+wie die neue Spalte mit den bisherigen Spaltenköpfen heißen soll (`names_to`)
+und wie die neue Spalte mit den Werten heißen soll (`values_to`). $\square$
+:::
+
+```{r}
+umsatz_lang <- pivot_longer(umsatz_breit,
+                            cols = c(Umsatz_2021, Umsatz_2022, Umsatz_2023),
+                            names_to = "Jahr",
+                            names_prefix = "Umsatz_",
+                            values_to = "Umsatz")
+umsatz_lang
+```
+
+Mit `names_prefix = "Umsatz_"` wird der Anfang der Spaltenköpfe abgeschnitten, sodass in der Spalte `Jahr` nur noch `2021`, `2022` und `2023` steht.
+Ohne dieses Argument stünde dort `Umsatz_2021` usw.
+
+:::{#def-pivot-wider}
+### `pivot_wider`
+`pivot_wider` ist das Gegenstück zu `pivot_longer`: Es wandelt eine Tabelle vom Lang- ins Breitformat um.
+Man gibt an, aus welcher Spalte die neuen Spaltenköpfe kommen (`names_from`)
+und aus welcher Spalte die Werte (`values_from`). $\square$
+:::
+
+```{r}
+pivot_wider(umsatz_lang,
+            names_from = Jahr,
+            values_from = Umsatz)
+```
+
+Die Spalten heißen jetzt `2021`, `2022` und `2023`.
+Spaltennamen, die mit einer Ziffer beginnen, muss man in R in Backticks setzen, z.$\,$B. `` `2021` ``.
+Darum hängt man meist einen Text davor, wie in der folgenden Übung.
+
+`pivot_longer` und `pivot_wider` stammen aus dem Paket `tidyr`, das mit `library(tidyverse)` geladen wird.
+
+
+:::{#exr-pivot-wider}
+Wandeln Sie `umsatz_lang` zurück ins Breitformat, sodass die Spalten wieder `Umsatz_2021`, `Umsatz_2022` und `Umsatz_2023` heißen.
+Tipp: `pivot_wider` kennt das Argument `names_prefix`. $\square$
+:::
+
+::: {.content-visible when-format="html"}
+
+Lösen Sie @exr-pivot-wider hier im Browser.
+
+```{webr}
+#| exercise: ex_pivot_wider
+pivot_wider(umsatz_lang,
+            names_from = ______,
+            values_from = ______,
+            names_prefix = ______)
+```
+
+::: {.hint exercise="ex_pivot_wider"}
+Die Spaltenköpfe kommen aus der Spalte `Jahr`, die Werte aus der Spalte `Umsatz`. Das Präfix ist ein Text, also in Anführungszeichen: `"Umsatz_"`.
+:::
+
+::: {.solution exercise="ex_pivot_wider"}
+```{webr}
+#| exercise: ex_pivot_wider
+#| solution: true
+pivot_wider(umsatz_lang,
+            names_from = Jahr,
+            values_from = Umsatz,
+            names_prefix = "Umsatz_")
+```
+:::
+
+:::
+
+:::{.callout-tip collapse="true"}
+### Lösung zu @exr-pivot-wider
+
+```{r}
+pivot_wider(umsatz_lang,
+            names_from = Jahr,
+            values_from = Umsatz,
+            names_prefix = "Umsatz_")
+```
+
+Das Ergebnis ist wieder die Tabelle `umsatz_breit`. $\square$
 :::
 
 

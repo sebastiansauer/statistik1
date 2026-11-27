@@ -86,6 +86,7 @@ mariokart_bereinigt <- mariokart_roh |>
 
 
 - Sie können typische Probleme in Rohdaten benennen (Dubletten, fehlende Werte, unplausible Werte und Extremwerte, uneinheitliche Kodierung) und in einem Datensatz erkennen.
+- Sie können Probleme erkennen, die schon beim Einlesen einer Datei auftreten (Notizzeilen, unbrauchbare Spaltennamen, Fehlcodes wie `-99`), und sie beim Import beheben.
 - Sie können für jedes dieser Probleme eine begründete Entscheidung treffen und diese festhalten.
 - Sie können folgende Verben des Datenjudo einer Aufgabe zuordnen und R-Code mit ihnen lesen und anwenden: `arrange`, `filter`,  `select`, `summarise`, `group_by`, `mutate`.
 - Sie können R-Befehle mit der "Pfeife" verketten.
@@ -547,6 +548,151 @@ Das ist die Antwort, die Sie Ihrer Chefin schicken, zusammen mit einem Satz,
 welche Fälle Sie warum ausgeschlossen haben.
 
 
+### Probleme schon beim Einlesen {#sec-einleseprobleme}
+
+
+```{r}
+#| echo: false
+#| message: false
+# Lokal einlesen; im Text wird die URL auf GitHub gezeigt
+umfrage_path <- "data/umfrage_roh.csv"
+umfrage_naiv <- readr::read_csv(umfrage_path, show_col_types = FALSE)
+
+fmt_de <- function(x, digits = 2) formatC(x, format = "f", digits = digits, decimal.mark = ",")
+n_umfrage_naiv_zeilen <- nrow(umfrage_naiv)
+n_umfrage_naiv_spalten <- ncol(umfrage_naiv)
+```
+
+
+`mariokart_roh` stammt aus einer Datenbank.
+Die Datei selbst ist sauber aufgebaut: eine Kopfzeile, darunter ein Fall pro Zeile.
+Daten, die Menschen von Hand in Excel gepflegt haben, sind oft weniger ordentlich.
+Dann steckt der Fehler nicht erst in einzelnen Werten, sondern schon im Aufbau der Datei.
+
+
+:::{#exm-datenguru-umfrage}
+### Der Datenguru bekommt eine Excel-Liste
+Ein Kommilitone hat eine Umfrage unter Studierenden durchgeführt
+(Pendelweg, Verkehrsmittel, Schlafdauer, Zufriedenheit mit dem Studium).
+Er schickt Ihnen die Ergebnisse als CSV-Datei, `umfrage_roh`,
+zusammengeführt aus zwei Excel-Listen.
+"Wie lange pendeln unsere Studis im Mittel?", fragt er.
+Zum Glück hat er ein [Data-Dictionary](https://github.com/sebastiansauer/statistik1/blob/main/data/umfrage_dictionary.md) beigelegt,
+also eine Beschreibung aller Spalten und ihrer erlaubten Werte. $\square$
+:::
+
+
+```{r}
+#| eval: false
+umfrage_path <- "https://raw.githubusercontent.com/sebastiansauer/statistik1/main/data/umfrage_roh.csv"
+umfrage_naiv <- read_csv(umfrage_path)
+```
+
+```{r}
+dim(umfrage_naiv)
+```
+
+`r n_umfrage_naiv_zeilen` Zeilen, aber nur `r n_umfrage_naiv_spalten` Spalte?
+R warnt zwar vor "parsing issues", liest aber trotzdem etwas ein.
+Ein Blick in die Datei (z.$\,$B. mit einem Texteditor oder in RStudio mit *View File*) klärt die Sache:
+
+```{r}
+#| echo: false
+cat(readr::read_lines(umfrage_path, n_max = 4), sep = "\n")
+```
+
+**Notizzeile über der Kopfzeile.**
+Die erste Zeile ist keine Kopfzeile, sondern eine Notiz.
+`read_csv()` hält aber immer die erste Zeile für die Kopfzeile.
+Abhilfe: die Notiz beim Einlesen überspringen, mit `skip = 1`.
+
+**Unbrauchbare Spaltennamen.**
+Die eigentliche Kopfzeile enthält Leerzeichen, Klammern, Umlaute und eine wilde Mischung aus Groß- und Kleinschreibung.
+R kann damit umgehen, aber Sie müssen jeden dieser Namen in Backticks setzen, z.$\,$B. `` `Pendelweg [min]` ``.
+Das ist mühsam und fehleranfällig.
+Abhilfe: die Spalten gleich nach dem Einlesen umbenennen (mit `rename()`),
+am besten in die Namen aus dem Data-Dictionary.^[Das Paket `janitor` bietet mit `clean_names()` einen Befehl, der alle Namen auf einmal in eine einheitliche Form bringt.]
+
+**Fehlcodes für fehlende Werte.**
+Laut Data-Dictionary sind fehlende Angaben auf drei Arten gekennzeichnet:
+als leere Zelle, als `k.A.` und als `-99`.
+`read_csv()` erkennt von sich aus nur die leere Zelle (und `NA`).
+`k.A.` macht die ganze Spalte zu Text, das merkt man immerhin bei `glimpse()`.
+Tückischer ist `-99`: Das ist eine gültige Zahl, die Spalte bleibt numerisch,
+und R rechnet klaglos damit weiter.
+Abhilfe: dem Argument `na` alle Fehlcodes mitteilen.
+
+**Zeilen, die keine Fälle sind.**
+Weiter unten in der Datei stehen
+eine Zeile aus lauter Kommas (eine leere Excel-Zeile),
+die Kopfzeile ein zweites Mal (dort, wo die zwei Listen aneinandergeklebt wurden)
+und ganz am Ende eine Summenzeile.
+Die doppelte Kopfzeile hat eine unangenehme Nebenwirkung:
+Weil in jeder Spalte nun auch ein Wort wie `Semester` steht,
+liest R *alle* Spalten als Text ein, ohne Fehlermeldung.
+Abhilfe: diese Zeilen herausfiltern
+und R danach die Spaltentypen neu bestimmen lassen (mit `type_convert()`).
+
+Zusammen sieht das so aus.
+Wie schon oben gilt: Lesen Sie vor allem die Kommentare,
+die Verben lernen Sie in @sec-verben-datenjudo kennen.
+
+```{r}
+#| message: false
+umfrage <-
+  read_csv(umfrage_path,
+           skip = 1,                          # Notizzeile überspringen
+           na = c("", "NA", "k.A.", "-99")) |>  # Fehlcodes laut Data-Dictionary
+  # Spaltennamen laut Data-Dictionary
+  rename(id = ID,
+         alter = `alter (Jahre)`,
+         geschlecht = Geschlecht,
+         studiengang = STUDIENGANG,
+         semester = Semester,
+         pendelweg_min = `Pendelweg [min]`,
+         verkehrsmittel = `verkehrsmittel (häufigstes)`,
+         zufriedenheit = `Zufriedenheit (1-5)`,
+         schlaf_std = `Schlaf in Std.`,
+         wohnort_entfernung_km = `Wohnort-Entfernung (km)`) |>
+  # Zeilen, die keine Fälle sind: leere Zeilen, wiederholte Kopfzeile, Summenzeile
+  filter(!is.na(id), id != "ID", id != "Summe") |>
+  # Spaltentypen neu bestimmen, jetzt ohne die störenden Zeilen
+  type_convert()
+
+glimpse(umfrage)
+```
+
+```{r}
+#| echo: false
+# Vergleich: dieselbe Pipeline, aber ohne -99 als Fehlcode
+umfrage_mit_99 <-
+  readr::read_csv(umfrage_path, skip = 1, na = c("", "NA", "k.A."),
+                  show_col_types = FALSE) |>
+  dplyr::rename(id = ID, schlaf_std = `Schlaf in Std.`) |>
+  dplyr::filter(!is.na(id), id != "ID", id != "Summe") |>
+  readr::type_convert(col_types = readr::cols())
+mw_schlaf_mit_99 <- fmt_de(mean(umfrage_mit_99$schlaf_std, na.rm = TRUE))
+mw_schlaf_ohne_99 <- fmt_de(mean(umfrage$schlaf_std, na.rm = TRUE))
+diff_schlaf_min <- round((mean(umfrage$schlaf_std, na.rm = TRUE) -
+                          mean(umfrage_mit_99$schlaf_std, na.rm = TRUE)) * 60)
+n_umfrage <- nrow(umfrage)
+```
+
+Was hätte `-99` angerichtet?
+Ohne den Fehlcode im Argument `na` liegt die mittlere Schlafdauer bei `r mw_schlaf_mit_99` Stunden,
+mit ihm bei `r mw_schlaf_ohne_99` Stunden.
+Ein einziger Fehlcode verschiebt den Mittelwert um rund `r diff_schlaf_min` Minuten,
+und R gibt keinerlei Warnung.
+
+Fertig ist der Datensatz damit noch nicht.
+`glimpse()` zeigt, dass `semester` und `pendelweg_min` immer noch Text sind:
+Irgendwo steht dort etwas wie `5. Sem.` oder `17 min` (Zahl als Text, s. "Uneinheitliche Kodierung").
+Außerdem hat der Datensatz `r n_umfrage` Zeilen, befragt wurden aber 120 Personen.
+Ab jetzt sind es die bekannten Probleme:
+Dubletten, Tippfehler, unplausible Werte und Extremwerte.
+In @exr-umfrage-aufraeumen räumen Sie den Datensatz vollständig auf.
+
+
 ### Überblick
 
 @tbl-rohdaten-probleme fasst die typischen Probleme zusammen.
@@ -558,6 +704,10 @@ welche Fälle Sie warum ausgeschlossen haben.
 | unplausible Werte | Wert ist unmöglich (z.$\,$B. negatives Alter) | korrigieren, wenn sicher, sonst `NA` | `summarise()`, `mutate()` |
 | Extremwerte | Wert weicht stark ab, ist aber möglich | prüfen, ob der Fall zur Fragestellung gehört | `arrange()`, `filter()` |
 | uneinheitliche Kodierung | zu viele Kategorien, Tippfehler | auf eine Schreibweise vereinheitlichen | `count()`, `mutate()` |
+| Notiz-, Leer- oder Summenzeilen | zu wenige Spalten oder Zeilen, die keine Fälle sind | beim Einlesen überspringen bzw. herausfiltern | `skip =`, `filter()` |
+| unbrauchbare Spaltennamen | Leerzeichen, Klammern, Umlaute im Namen | umbenennen | `rename()` |
+| Fehlcodes | Werte wie `-99` oder `k.A.` | als fehlend kennzeichnen | `na = c(...)` |
+| Zahl als Text | Zahlenspalte hat den Typ `chr` | Ursache finden, Typ korrigieren | `glimpse()`, `type_convert()` |
 
 : Typische Probleme in Rohdaten und wie man ihnen begegnet {#tbl-rohdaten-probleme}
 
@@ -579,6 +729,22 @@ a) Unplausibler Wert: Das Alter auf `NA` setzen (oder korrigieren, falls man den
 b) Uneinheitliche Kodierung: auf eine Schreibweise vereinheitlichen, z.$\,$B. `w` und `m`.
 c) Dublette: eine der beiden Zeilen entfernen.
 d) Extremwert: möglich (z.$\,$B. Fernpendler), also nicht einfach löschen. Prüfen, ob die Person zur Fragestellung gehört, und die Entscheidung offenlegen. $\square$
+:::
+
+
+:::{#exr-umfrage-aufraeumen}
+### Die Umfrage aufräumen
+Lesen Sie `umfrage_roh` so ein wie in @sec-einleseprobleme gezeigt.
+Räumen Sie den Datensatz dann vollständig auf, mit Hilfe des [Data-Dictionarys](https://github.com/sebastiansauer/statistik1/blob/main/data/umfrage_dictionary.md)
+und @tbl-rohdaten-probleme.
+Halten Sie jede Entscheidung als Kommentar im Code fest.
+Beantworten Sie anschließend die Frage des Kommilitonen: Wie lange pendeln die Befragten im Mittel?
+
+Am Ende sollte Ihr Datensatz 120 Zeilen haben.
+Vergleichen Sie ihn mit der [aufgeräumten Fassung](https://raw.githubusercontent.com/sebastiansauer/statistik1/main/data/umfrage_sauber.csv).
+Einige Fälle sind bewusst Grenzfälle, bei denen es keine eindeutig richtige Lösung gibt.
+Dort zählt die begründete Entscheidung.
+Eine ausführliche Musterlösung finden Sie in der [Aufgabensammlung](https://sebastiansauer.github.io/statistik1-aufgabensammlung/quiz/fallstudie-umfrage-aufraeumen.html). $\square$
 :::
 
 
@@ -2440,6 +2606,8 @@ exs_aufb <-
   "exs/Rohdaten_Unplausibel_Extrem.Rmd",
   "exs/Rohdaten_Extremwert_Entscheidung.Rmd",
   "exs/Rohdaten_drop_na.Rmd",
+  "exs/Rohdaten_Fehlcode.Rmd",
+  "exs/Rohdaten_Einlesen_skip.Rmd",
   "exs/KI_Filter_Reihenfolge.Rmd",
   "exs/KI_Code_pruefen.Rmd"
 )

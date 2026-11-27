@@ -1,0 +1,40 @@
+Question
+========
+Sie lesen eine CSV-Datei mit `read_csv()` ein.
+Der Datensatz hat danach 129 Zeilen, aber nur *eine* Spalte,
+und deren Name lautet `Umfrage Studierende WS 2026; Export aus Excel; Stand 12.10.2026`.
+Was ist die wahrscheinlichste Ursache, und was hilft?
+
+Answerlist
+----------
+* Über der Kopfzeile steht eine Notizzeile; beim Einlesen `skip = 1` angeben.
+* Die Datei ist kaputt und lässt sich in R nicht einlesen; man muss sie in Excel neu erstellen.
+* In der Datei fehlen Werte; man muss `na = c("", "NA")` angeben.
+* Die Datei hat doppelte Zeilen; man muss danach `distinct()` anwenden.
+* Die Spaltennamen enthalten Umlaute; man muss sie mit `rename()` umbenennen.
+
+Solution
+========
+`read_csv()` hält die erste Zeile der Datei für die Kopfzeile.
+Steht dort eine Notiz ohne Kommas, entsteht genau eine Spalte mit der Notiz als Namen.
+Mit `skip = 1` überspringt `read_csv()` die erste Zeile und liest die echte Kopfzeile.
+
+* *Datei kaputt:* Die Datei lässt sich einlesen, nur die erste Zeile stört.
+* *Fehlende Werte:* führen nicht dazu, dass Spalten fehlen.
+* *Dubletten:* ändern die Zahl der Zeilen, nicht die der Spalten.
+* *Umlaute:* sind lästig, aber R liest die Spalten trotzdem richtig ein.
+
+Answerlist
+----------
+* Richtig
+* Falsch
+* Falsch
+* Falsch
+* Falsch
+
+Meta-information
+================
+exname: Rohdaten_Einlesen_skip
+extype: schoice
+exsolution: 10000
+exshuffle: TRUE

@@ -60,6 +60,8 @@ Alle Dateien liegen im Verzeichnis `exs/`.
 - `Rohdaten_Unplausibel_Extrem.Rmd`
 - `Rohdaten_Extremwert_Entscheidung.Rmd`
 - `Rohdaten_drop_na.Rmd`
+- `Rohdaten_Fehlcode.Rmd`
+- `Rohdaten_Einlesen_skip.Rmd`
 - `KI_Filter_Reihenfolge.Rmd`
 - `KI_Code_pruefen.Rmd`
 

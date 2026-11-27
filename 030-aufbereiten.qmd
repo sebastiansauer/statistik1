@@ -2065,6 +2065,73 @@ und spätere Berechnungen dürfen auf frühere zugreifen:
 :::
 
 
+### Zusatzfrage: Alles in einer Kette
+
+:::{#exr-fofrage-kette}
+
+>   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} Zum Schluss noch etwas Größeres:
+Wie unterscheiden sich neue und gebrauchte Spiele, jeweils mit und ohne Lenkrad,
+in Preis, Versandkosten und Zahl der Gebote?
+Und wie viel Prozent des Preises machen die Versandkosten aus?
+Aber nur Gruppen mit mindestens 5 Auktionen, die teuerste Gruppe zuerst!
+
+Schreiben Sie *eine einzige* Pfeifenkette, die mit `mariokart_bereinigt` beginnt.
+Tipp: Ob ein Spiel ein Lenkrad hat, steht nicht direkt in den Daten.
+Sie können es aber mit `mutate` und `if_else` aus `wheels` berechnen.
+
+$\square$
+:::
+
+:::{.callout-tip collapse="true"}
+### Lösung zu @exr-fofrage-kette
+
+```{r}
+#| message: false
+loesung_kette <-
+  mariokart_bereinigt |>
+  # 1. Nur die benötigten Spalten behalten
+  select(cond, wheels, ship_pr, total_pr, n_bids) |>
+  # 2. Lenkrad ja/nein aus der Anzahl der Lenkräder berechnen
+  mutate(lenkrad = if_else(wheels > 0, "mit", "ohne")) |>
+  # 3. Nach Zustand und Lenkrad aufteilen (bis zu 2 x 2 = 4 Gruppen)
+  group_by(cond, lenkrad) |>
+  # 4. Pro Gruppe zusammenfassen
+  summarise(n = n(),
+            preis_mw = mean(total_pr),
+            versand_mw = mean(ship_pr, na.rm = TRUE),
+            gebote_mw = mean(n_bids)) |>
+  # 5. Gruppierung aufheben
+  ungroup() |>
+  # 6. Versandanteil in Prozent: geht erst nach summarise
+  mutate(versand_proz = versand_mw / preis_mw * 100) |>
+  # 7. Kleine Gruppen verwerfen: n gibt es erst nach summarise
+  filter(n >= 5) |>
+  # 8. Teuerste Gruppe zuerst
+  arrange(-preis_mw)
+loesung_kette
+```
+
+Statt vier Gruppen bleiben nur drei übrig:
+Neue Spiele *ohne* Lenkrad gibt es nur `r count(mariokart_bereinigt, cond, wheels > 0)$n[1]` Mal, zu wenig für einen belastbaren Mittelwert.
+Am teuersten sind neue Spiele mit Lenkrad;
+die Versandkosten machen in allen Gruppen nur wenige Prozent des Preises aus.
+
+Worauf man bei dieser Kette achten sollte:
+
+- *`mutate` steht zweimal, mit gutem Grund.* Schritt 2 rechnet pro Auktion (Zeile), Schritt 6 pro Gruppe. `versand_proz` geht erst nach `summarise`, weil es `versand_mw` und `preis_mw` vorher noch nicht gibt.
+- *`select` steht früh.* Danach ist die Tabelle schlank. Wer aber später eine Spalte nutzt, die `select` weggeworfen hat, bekommt eine Fehlermeldung.
+- *`na.rm = TRUE` nur, wo es nötig ist.* In `ship_pr` fehlen Werte, in `total_pr` nach der Bereinigung nicht mehr.
+- *`n = n()` gehört in jede Gruppenzusammenfassung.* Ohne `n` ließe sich Schritt 7 gar nicht formulieren, und man sähe nicht, auf wie wenigen Auktionen ein Mittelwert beruht.
+
+Zum Weiterdenken:
+
+1. Wie viele Zeilen und Spalten hat das Ergebnis höchstens? Überlegen Sie, *bevor* Sie den Code ausführen.
+2. Ersetzen Sie `lenkrad` durch `stock_photo`. Was müssen Sie noch ändern, damit der Code läuft?
+3. Setzen Sie die Schwelle in Schritt 7 auf `n >= 40`. Welche Gruppen fliegen raus, und was heißt das für die Aussagekraft?
+4. Verschieben Sie Schritt 1 (`select`) hinter Schritt 2 (`mutate`). Läuft der Code noch? Und wenn Sie `wheels` aus `select` streichen? $\square$
+:::
+
+
 ### Was hat die Bereinigung gebracht?
 
 ```{r}
@@ -2267,9 +2334,65 @@ die *nicht* in diesem Kapitel vorgestellt wurden.
 
 Forschungsfragen:
 
-1. Was ist das mediane Gewicht von Pinguinen, gruppiert nach Spezies und nach Gewicht?
+1. Was ist das mediane Gewicht von Pinguinen, gruppiert nach Spezies und nach Geschlecht?
 2. Wie viele Pinguine gibt es pro Spezies?
 3. Wie viel wiegt der schwerste und der leichteste Pinguin pro Spezies?
+
+Und als Zugabe: Wie groß ist in jeder Gruppe der Anteil "schwerer" Tiere (über 4 kg)?
+
+:::{.callout-tip collapse="true"}
+### Musterlösung: Alle Fragen in einer Kette
+
+Alle Fragen lassen sich mit *einer* Pfeifenkette beantworten,
+wenn man nach Spezies *und* Geschlecht gruppiert.
+
+```{r}
+#| message: false
+pinguine <- read_csv("data/penguins.csv")
+
+pinguine_vergleich <-
+  pinguine |>
+  # 1. Tiere ohne Angabe zu Geschlecht oder Gewicht entfernen
+  drop_na(sex, body_mass_g) |>
+  # 2. Nur die benötigten Spalten behalten
+  select(species, sex, body_mass_g) |>
+  # 3. Gewicht in kg umrechnen und schwere Tiere markieren
+  mutate(gewicht_kg = body_mass_g / 1000,
+         schwer = gewicht_kg > 4) |>
+  # 4. Nach Spezies und Geschlecht aufteilen
+  group_by(species, sex) |>
+  # 5. Pro Gruppe zusammenfassen
+  summarise(n = n(),
+            gewicht_md = median(gewicht_kg),
+            gewicht_min = min(gewicht_kg),
+            gewicht_max = max(gewicht_kg),
+            anteil_schwer = mean(schwer)) |>
+  # 6. Gruppierung aufheben
+  ungroup() |>
+  # 7. Spannweite: Abstand zwischen schwerstem und leichtestem Tier
+  mutate(spannweite = gewicht_max - gewicht_min) |>
+  # 8. Nur Gruppen mit genug Tieren
+  filter(n >= 20) |>
+  # 9. Schwerste Gruppe zuerst
+  arrange(-gewicht_md)
+pinguine_vergleich
+```
+
+Die Gentoo-Männchen sind die schwersten Tiere;
+bei allen drei Arten sind die Männchen schwerer als die Weibchen.
+
+Worauf man achten sollte:
+
+- *Fehlende Werte gezielt entfernen.* `drop_na(sex, body_mass_g)` löscht nur Zeilen, denen *diese* Angaben fehlen. Ein nacktes `drop_na()` würde auch Zeilen löschen, denen irgendeine andere Angabe fehlt. Vergleichen Sie die Zeilenzahl vor und nach Schritt 1 mit `nrow()`!
+- *Mittelwert einer Ja-Nein-Spalte.* `schwer` enthält nur `TRUE` und `FALSE`. R rechnet `TRUE` als 1 und `FALSE` als 0. Der Mittelwert ist darum der *Anteil* der schweren Tiere: `anteil_schwer = 0.5` heißt, die Hälfte der Gruppe wiegt mehr als 4 kg.
+- *`filter` nach `summarise`.* Schritt 8 wählt *Gruppen* aus, nicht Tiere. Bei diesen Daten fliegt dabei keine Gruppe raus; der Schritt ist eine Absicherung, falls Sie z.$\,$B. anders gruppieren.
+
+Zum Weiterdenken:
+
+1. Wie viele Zeilen gehen durch Schritt 1 verloren?
+2. Ersetzen Sie `sex` durch `island` in `group_by`. Was müssen Sie noch ändern? Was passiert mit den Gruppengrößen?
+3. Frage 2 fragt nach der Anzahl pro Spezies, nicht pro Spezies und Geschlecht. Ändern Sie die Kette entsprechend. $\square$
+:::
 
 
 

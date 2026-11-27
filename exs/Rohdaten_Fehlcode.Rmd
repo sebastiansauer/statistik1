@@ -1,0 +1,40 @@
+Question
+========
+In einer Umfrage ist die Spalte `schlaf_std` (Schlafdauer in Stunden) numerisch.
+Laut Data-Dictionary steht der Wert `-99` für "keine Angabe".
+Sie lesen die Datei mit `read_csv()` ohne weitere Argumente ein und berechnen `mean(schlaf_std, na.rm = TRUE)`.
+Was passiert?
+
+Answerlist
+----------
+* R rechnet `-99` als echte Schlafdauer mit, der Mittelwert ist zu klein, und es gibt keine Warnung.
+* `read_csv()` erkennt `-99` automatisch als fehlenden Wert, der Mittelwert ist korrekt.
+* `na.rm = TRUE` entfernt auch den Wert `-99`, der Mittelwert ist korrekt.
+* R bricht mit einer Fehlermeldung ab, weil eine Schlafdauer nicht negativ sein kann.
+* Die Spalte wird als Text eingelesen, `mean()` liefert deshalb `NA`.
+
+Solution
+========
+`-99` ist für R eine ganz normale Zahl.
+Die Spalte bleibt numerisch, und der Fehlcode geht still in den Mittelwert ein.
+Abhilfe: beim Einlesen alle Fehlcodes angeben, z.$\,$B. `read_csv(..., na = c("", "NA", "-99"))`.
+
+* *Automatisch erkannt:* `read_csv()` erkennt von sich aus nur leere Zellen und `NA`.
+* *`na.rm = TRUE`:* entfernt nur Werte, die R bereits als `NA` kennt.
+* *Fehlermeldung:* R weiß nicht, was eine Schlafdauer ist, und prüft keine Plausibilität.
+* *Als Text eingelesen:* Das passiert bei `k.A.`, nicht bei `-99`.
+
+Answerlist
+----------
+* Richtig
+* Falsch
+* Falsch
+* Falsch
+* Falsch
+
+Meta-information
+================
+exname: Rohdaten_Fehlcode
+extype: schoice
+exsolution: 10000
+exshuffle: TRUE

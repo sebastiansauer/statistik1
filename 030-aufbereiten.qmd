@@ -558,7 +558,8 @@ welche Fälle Sie warum ausgeschlossen haben.
 umfrage_path <- "data/umfrage_roh.csv"
 umfrage_naiv <- readr::read_csv(umfrage_path, show_col_types = FALSE)
 
-fmt_de <- function(x, digits = 2) formatC(x, format = "f", digits = digits, decimal.mark = ",")
+# Zahl fuer den Fliesstext mit Dezimalpunkt (Buchkonvention)
+fmt_zahl <- function(x, digits = 2) formatC(x, format = "f", digits = digits)
 n_umfrage_naiv_zeilen <- nrow(umfrage_naiv)
 n_umfrage_naiv_spalten <- ncol(umfrage_naiv)
 ```
@@ -671,8 +672,8 @@ umfrage_mit_99 <-
   dplyr::rename(id = ID, schlaf_std = `Schlaf in Std.`) |>
   dplyr::filter(!is.na(id), id != "ID", id != "Summe") |>
   readr::type_convert(col_types = readr::cols())
-mw_schlaf_mit_99 <- fmt_de(mean(umfrage_mit_99$schlaf_std, na.rm = TRUE))
-mw_schlaf_ohne_99 <- fmt_de(mean(umfrage$schlaf_std, na.rm = TRUE))
+mw_schlaf_mit_99 <- fmt_zahl(mean(umfrage_mit_99$schlaf_std, na.rm = TRUE))
+mw_schlaf_ohne_99 <- fmt_zahl(mean(umfrage$schlaf_std, na.rm = TRUE))
 diff_schlaf_min <- round((mean(umfrage$schlaf_std, na.rm = TRUE) -
                           mean(umfrage_mit_99$schlaf_std, na.rm = TRUE)) * 60)
 n_umfrage <- nrow(umfrage)

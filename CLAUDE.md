@@ -44,6 +44,13 @@ Exercises are stored as R/exams `.Rmd` files in `exs/`. They are embedded in cha
 - Language is `de-DE` throughout; all prose, comments, and variable names are in German
 - `renv` is used for R package management — run `renv::restore()` to install dependencies
 
+## Text conventions
+
+- Decimal separator is a **point** everywhere (prose, math, quiz files in `exs/`, inline R output): `0.5`, `$\alpha = 0.05$`. Always write the leading zero (`0.5`, not `.5`). Thousands in prose may use a point (`20.000`).
+- Density plots: y title `"Wahrscheinlichkeitsdichte"` (not "Dichte", "density", "Anteil (Dichte)").
+- Chunk options only as `#|` pipe comments; the chunk header holds at most the engine (`{r}`), no label or other options (duplicates trigger knitr warnings and the pipe value wins anyway).
+- Sources (data, figure and content origins) are cited from `specifics/bib-local.bib` (`[@key]`, `Bildquelle: @key.`), not as raw URLs in footnotes. Navigational links (downloads, exercise pages, apps) stay as `[Text](url)^[<url>]` so they remain usable in print.
+
 ## Diagram style
 
 Design decisions live centrally in `_common.R` (loaded via `.Rprofile`); don't hard-code colours, themes or grid overrides in individual plots — use the named constants (`grau_dunkel`/`dunkelgrau`, `grau_mittel`/`mittelgrau`, `okabe_linie`, `trendcol`, …) and helpers. Read the global skill `ggplot-diagramme` before writing plot code; the automation is the same as in the Start:Bayes repo (`references/start-bayes.md` in that skill). `_common.R` hooks into every `ggplot_build()`:

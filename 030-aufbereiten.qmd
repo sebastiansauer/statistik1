@@ -281,8 +281,8 @@ mariokart_bereinigt <-
   filter(total_pr < 100)
 
 n_bereinigt <- nrow(mariokart_bereinigt)
-mw_roh <- formatC(mean(mariokart_roh$total_pr, na.rm = TRUE), format = "f", digits = 1, decimal.mark = ",")
-mw_bereinigt <- formatC(mean(mariokart_bereinigt$total_pr), format = "f", digits = 1, decimal.mark = ",")
+mw_roh <- formatC(mean(mariokart_roh$total_pr, na.rm = TRUE), format = "f", digits = 1)
+mw_bereinigt <- formatC(mean(mariokart_bereinigt$total_pr), format = "f", digits = 1)
 ```
 
 
@@ -1722,7 +1722,7 @@ Den Fehler bemerken Sie nur, wenn Sie die Zeilenzahl vorher und nachher vergleic
 #### Fehler 3: Ausreißer nach Faustregel entfernt
 
 Bittet man eine KI, "Ausreißer zu entfernen",
-greift sie oft zu einer Faustregel: Alles, was weiter als 1,5 Interquartilsabstände
+greift sie oft zu einer Faustregel: Alles, was weiter als 1.5 Interquartilsabstände
 vom mittleren Bereich der Daten entfernt liegt, fliegt raus.^[Diese Regel steckt auch hinter dem Boxplot, s. @def-boxplot.]
 Welche Auktionen wären das hier?
 
@@ -1842,7 +1842,8 @@ Ja, ich weiß, es ist hart, nicht gleich auf die Lösungen zu schauen!
 
 ```{r}
 #| echo: false
-komma <- function(x, d = 1) formatC(x, format = "f", digits = d, decimal.mark = ",", big.mark = ".")
+# Zahl fuer den Fliesstext: Dezimalpunkt; Tausenderpunkt nur bei ganzen Zahlen
+zahl <- function(x, d = 1) formatC(x, format = "f", digits = d, big.mark = if (d == 0) "." else "")
 ```
 
 
@@ -1931,8 +1932,8 @@ loesung_1 <-
 loesung_1
 ```
 
-Das teuerste Spiel mit Foto kostet `r komma(loesung_1$total_pr_max[1])` Dollar, wenn es neu ist,
-und `r komma(loesung_1$total_pr_max[2])` Dollar, wenn es gebraucht ist. $\square$
+Das teuerste Spiel mit Foto kostet `r zahl(loesung_1$total_pr_max[1])` Dollar, wenn es neu ist,
+und `r zahl(loesung_1$total_pr_max[2])` Dollar, wenn es gebraucht ist. $\square$
 :::
 
 
@@ -1999,7 +2000,7 @@ Hier wollen wir aber tatsächlich *Gruppen* auswählen,
 und die Gruppengröße `n` gibt es erst nach dem Zusammenfassen.
 Ob ein Schritt richtig ist, hängt also von der Frage ab, nicht von einer festen Regel.
 
-Die mittleren Versandkosten liegen zwischen `r komma(min(loesung_2$mittlere_versandkosten), 2)` und `r komma(max(loesung_2$mittlere_versandkosten), 2)` Dollar,
+Die mittleren Versandkosten liegen zwischen `r zahl(min(loesung_2$mittlere_versandkosten), 2)` und `r zahl(max(loesung_2$mittlere_versandkosten), 2)` Dollar,
 je nach Anzahl der beigelegten Lenkräder. $\square$
 :::
 
@@ -2153,9 +2154,9 @@ Probieren Sie es ruhig aus, indem Sie in den Lösungen `mariokart_bereinigt` dur
 
 | Frage | Rohdaten | bereinigte Daten |
 |:------|:---------|:-----------------|
-| 1: teuerstes neues Spiel mit Foto | `NA`, dazu `r nrow(roh_1)` statt 2 Gruppen | `r komma(loesung_1$total_pr_max[1])` Dollar |
-| 2: Versandkosten bei einem Lenkrad | `NA` | `r komma(loesung_2$mittlere_versandkosten[loesung_2$wheels == 1], 2)` Dollar |
-| 3: mittlerer Preis in Yen | `r komma(roh_3$y, 0)` Yen (mit `na.rm = TRUE`) | `r komma(loesung_3$preis_yen_mw, 0)` Yen |
+| 1: teuerstes neues Spiel mit Foto | `NA`, dazu `r nrow(roh_1)` statt 2 Gruppen | `r zahl(loesung_1$total_pr_max[1])` Dollar |
+| 2: Versandkosten bei einem Lenkrad | `NA` | `r zahl(loesung_2$mittlere_versandkosten[loesung_2$wheels == 1], 2)` Dollar |
+| 3: mittlerer Preis in Yen | `r zahl(roh_3$y, 0)` Yen (mit `na.rm = TRUE`) | `r zahl(loesung_3$preis_yen_mw, 0)` Yen |
 
 : Ergebnisse der Fallstudie mit Roh- und mit bereinigten Daten {#tbl-fallstudie-vergleich}
 
@@ -2163,7 +2164,7 @@ Bei Frage 1 und 2 wären Sie mit den Rohdaten nicht weit gekommen:
 Fehlende Werte machen das Ergebnis zu `NA`, die uneinheitliche Kodierung erzeugt Extra-Gruppen.
 Das ist ärgerlich, aber immerhin *sichtbar*.
 Tückischer ist Frage 3: Mit `na.rm = TRUE` kommt eine plausibel aussehende Zahl heraus,
-die aber um rund `r komma(roh_3$y - loesung_3$preis_yen_mw, 0)` Yen zu hoch ist,
+die aber um rund `r zahl(roh_3$y - loesung_3$preis_yen_mw, 0)` Yen zu hoch ist,
 weil Bundles und Dubletten mitgerechnet werden.
 Diesen Fehler sieht man dem Ergebnis nicht an.
 Man findet ihn nur, wenn man die Daten vorher angeschaut hat.

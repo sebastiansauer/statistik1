@@ -434,6 +434,52 @@ mariokart_no_extreme_z <- mariokart_no_extreme |>
 Die *z*-Transformation
 :::
 
+# Wie man mit Statistik lügt {.center footer=false}
+
+## Zwei Botschaften, ein Datensatz {.smaller}
+
+Verbraucherschützerin und Händler berechnen die Streuung des Verkaufspreises in `mariokart`:
+
+```r
+mariokart |>
+  summarise(spannweite = max(total_pr) - min(total_pr),
+            iqr = IQR(total_pr),
+            sd = sd(total_pr))
+```
+
+- 👩 „Vorsicht! Die Preise schwanken um bis zu 298 Dollar!" (Spannweite)
+- 👨‍💼 „Unsinn! Die mittlere Hälfte der Preise liegt nur 13 Dollar auseinander." (IQR)
+- Beide haben richtig gerechnet -- und sich das passende Maß herausgepickt.
+
+::: footer
+Wie man mit Statistik lügt
+:::
+
+## Spannweite vs. IQR {.smaller}
+
+![Dieselben Verkaufspreise, zwei Streuungsmaße](../060-modellguete_files/figure-html/fig-luege-streuung-1.png){width="80%"}
+
+- Die Spannweite hängt an zwei Einzelfällen (Pakete mit Konsole bzw. zehn Spielen).
+- Der IQR blendet die äußeren Viertel der Daten komplett aus.
+- *Typische* Schwankung: IQR (oder MAA); mögliche *Extreme*: Spannweite -- mit Hinweis auf die Einzelfälle.
+- Ehrlich: mehrere Maße berichten oder die Wahl begründen.
+
+::: footer
+Wie man mit Statistik lügt
+:::
+
+## Kritisch nachgefragt
+
+:::{.callout-important title="Kritisch nachgefragt"}
+- Welches Streuungsmaß wurde berichtet -- und warum gerade dieses?
+- Wie sähe das Ergebnis mit einem anderen Maß aus?
+- Hängt das Ergebnis an wenigen Einzelfällen? Ein Blick auf die Rohdaten (z. B. ein Diagramm) hilft.
+:::
+
+::: footer
+Wie man mit Statistik lügt
+:::
+
 ## Zusammenfassung {.smaller}
 
 - **Streuungsmaße**: Spannweite, MAE, IQR, Varianz, SD — quantifizieren die Modellgüte eines Punktmodells
@@ -441,6 +487,7 @@ Die *z*-Transformation
 - Der IQR ist robuster gegenüber Extremwerten als MAE, Varianz und SD
 - Ein komplexeres (sinnvolles) Modell reduziert die Streuung/den Modellfehler
 - Die **z-Transformation** (zentrieren + standardisieren) macht Abweichungen vergleichbar: $z_i = \frac{x_i - \bar{x}}{sd_x}$
+- Das gewählte Streuungsmaß kann die Botschaft steuern: mehrere Maße berichten oder die Wahl begründen
 
 ## Literaturhinweise
 

@@ -41,8 +41,10 @@ webr:
 ## Lernziele {.smaller}
 
 - Sie können typische Probleme in Rohdaten benennen (Dubletten, fehlende Werte, unplausible Werte und Extremwerte, uneinheitliche Kodierung) und in einem Datensatz erkennen.
+- Sie können Probleme beim Einlesen einer Datei erkennen (Notizzeilen, unbrauchbare Spaltennamen, Fehlcodes wie `-99`) und beim Import beheben.
 - Sie können für jedes dieser Probleme eine begründete Entscheidung treffen und diese festhalten.
 - Sie können die Verben des Datenjudos (`arrange`, `filter`, `select`, `summarise`, `group_by`, `mutate`) einer Aufgabe zuordnen und R-Code mit ihnen lesen und anwenden.
+- Sie können eine Tabelle mit `pivot_longer` und `pivot_wider` zwischen Breit- und Langformat umwandeln.
 - Sie können R-Befehle mit der "Pfeife" verketten.
 
 ::: footer
@@ -268,7 +270,59 @@ mariokart_bereinigt <-
   filter(total_pr < 100)
 ```
 
-Ergebnis: 139 Zeilen, mittlerer Preis 47,4 statt 49,9 Dollar.
+Ergebnis: 139 Zeilen, mittlerer Preis 47.4 statt 49.9 Dollar.
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
+## Probleme schon beim Einlesen
+
+`mariokart_roh` kommt aus einer Datenbank: eine Kopfzeile, darunter ein Fall pro Zeile. Von Hand gepflegte Excel-Listen sind oft weniger ordentlich — dann steckt der Fehler schon im *Aufbau der Datei*.
+
+Ein Kommilitone schickt `umfrage_roh` (zwei zusammengeklebte Excel-Listen, 120 Befragte) samt *Data-Dictionary*: "Wie lange pendeln unsere Studis im Mittel?"
+
+```r
+umfrage_naiv <- read_csv(umfrage_path)
+dim(umfrage_naiv)   # 129 Zeilen, aber nur 1 Spalte?!
+```
+
+```
+Umfrage Studierende WS 2026; Export aus Excel; Stand 12.10.2026
+ID,alter (Jahre),Geschlecht,STUDIENGANG,Semester,Pendelweg [min],...
+S001,22,maennlich,BWL,7,46,Bus,5,7,13.2
+```
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
+## Vier Stolpersteine beim Einlesen {.smaller}
+
+- **Notizzeile über der Kopfzeile:** `read_csv()` hält immer die erste Zeile für die Kopfzeile. → `skip = 1`
+- **Unbrauchbare Spaltennamen** (Leerzeichen, Klammern, Umlaute): nur mit Backticks ansprechbar, z. B. `` `Pendelweg [min]` ``. → mit `rename()` umbenennen, am besten in die Namen aus dem Data-Dictionary
+- **Fehlcodes:** Fehlende Angaben stehen als leere Zelle, `k.A.` oder `-99`. `k.A.` macht die Spalte zu Text (sieht man bei `glimpse`); `-99` ist eine gültige Zahl — R rechnet klaglos weiter. → `na = c("", "NA", "k.A.", "-99")`
+- **Zeilen, die keine Fälle sind:** Leerzeile, wiederholte Kopfzeile, Summenzeile. Die doppelte Kopfzeile macht stillschweigend *alle* Spalten zu Text. → herausfiltern, dann `type_convert()`
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
+## Sauber einlesen {.smaller}
+
+```r
+umfrage <-
+  read_csv(umfrage_path,
+           skip = 1,                                # Notizzeile überspringen
+           na = c("", "NA", "k.A.", "-99")) |>      # Fehlcodes laut Data-Dictionary
+  rename(id = ID, pendelweg_min = `Pendelweg [min]`,
+         schlaf_std = `Schlaf in Std.`, ...) |>     # Namen laut Data-Dictionary
+  filter(!is.na(id), id != "ID", id != "Summe") |>  # Zeilen, die keine Fälle sind
+  type_convert()                                    # Spaltentypen neu bestimmen
+```
+
+- **Was hätte `-99` angerichtet?** Mittlere Schlafdauer 6.30 statt 7.10 Stunden — rund 48 Minuten daneben, ohne jede Warnung.
+- **Noch nicht fertig:** 123 statt 120 Zeilen, `semester` und `pendelweg_min` sind noch Text (`5. Sem.`, `17 min`). Ab jetzt die bekannten Probleme: Dubletten, Tippfehler, unplausible Werte, Extremwerte.
 
 ::: footer
 Was Rohdaten typischerweise falsch machen
@@ -283,6 +337,19 @@ Was Rohdaten typischerweise falsch machen
 | unplausible Werte | Wert ist unmöglich | korrigieren, wenn sicher, sonst `NA` | `summarise()`, `mutate()` |
 | Extremwerte | Wert weicht stark ab, ist aber möglich | prüfen, ob der Fall zur Fragestellung gehört | `arrange()`, `filter()` |
 | uneinheitliche Kodierung | zu viele Kategorien, Tippfehler | auf eine Schreibweise vereinheitlichen | `count()`, `mutate()` |
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
+## Überblick: Probleme beim Einlesen {.smaller}
+
+| Problem | Erkennungszeichen | typische Entscheidung | R-Werkzeug |
+|:--------|:------------------|:----------------------|:-----------|
+| Notiz-, Leer-, Summenzeilen | zu wenige Spalten, Zeilen ohne Fall | beim Einlesen überspringen bzw. herausfiltern | `skip =`, `filter()` |
+| unbrauchbare Spaltennamen | Leerzeichen, Klammern, Umlaute | umbenennen | `rename()` |
+| Fehlcodes | Werte wie `-99` oder `k.A.` | als fehlend kennzeichnen | `na = c(...)` |
+| Zahl als Text | Zahlenspalte hat den Typ `chr` | Ursache finden, Typ korrigieren | `glimpse()`, `type_convert()` |
 
 ::: footer
 Was Rohdaten typischerweise falsch machen
@@ -445,6 +512,71 @@ Alle nachfolgenden Berechnungen laufen *für jede Teiltabelle einzeln* — darum
 Die Verben des Datenjudos
 :::
 
+## Breit und lang umformen: `pivot_longer` und `pivot_wider`
+
+![Gleiche Information, andere Anordnung: Gleiche Farbe heißt gleiches Jahr.](../img/lang-breit-anim.gif){width="40%"}
+
+Für die meisten Auswertungen und Diagramme braucht man das **Langformat** (Tidy Data). Liegen die Daten breit vor, formt man sie um.
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Breit → lang: `pivot_longer` {.smaller}
+
+:::{.callout-note title="Definition: pivot_longer"}
+`pivot_longer` wandelt eine Tabelle vom Breit- ins Langformat um. Man gibt an, welche Spalten zusammengefasst werden (`cols`), wie die neue Spalte mit den bisherigen Spaltenköpfen heißt (`names_to`) und wie die neue Spalte mit den Werten heißt (`values_to`).
+:::
+
+:::: {.columns}
+::: {.column width="58%"}
+```r
+umsatz_breit <- tribble(
+  ~Produkt, ~Umsatz_2021, ~Umsatz_2022, ~Umsatz_2023,
+  "Hämmer", 10, 11, 12,
+  "Nägel",  15, 10,  5)
+
+umsatz_lang <- pivot_longer(umsatz_breit,
+  cols = c(Umsatz_2021, Umsatz_2022, Umsatz_2023),
+  names_to = "Jahr",
+  names_prefix = "Umsatz_",   # schneidet "Umsatz_" ab
+  values_to = "Umsatz")
+```
+:::
+::: {.column width="42%"}
+| Produkt | Jahr | Umsatz |
+|---------|------|--------|
+| Hämmer  | 2021 | 10 |
+| Hämmer  | 2022 | 11 |
+| Hämmer  | 2023 | 12 |
+| Nägel   | 2021 | 15 |
+| Nägel   | 2022 | 10 |
+| Nägel   | 2023 | 5 |
+:::
+::::
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Lang → breit: `pivot_wider` {.smaller}
+
+:::{.callout-note title="Definition: pivot_wider"}
+`pivot_wider` ist das Gegenstück zu `pivot_longer`: Es wandelt eine Tabelle vom Lang- ins Breitformat um. Man gibt an, aus welcher Spalte die neuen Spaltenköpfe kommen (`names_from`) und aus welcher die Werte (`values_from`).
+:::
+
+```r
+pivot_wider(umsatz_lang, names_from = Jahr, values_from = Umsatz)
+```
+
+- Die Spalten heißen jetzt `2021`, `2022`, `2023` — Namen, die mit einer Ziffer beginnen, braucht in R Backticks (`` `2021` ``). Darum hängt man meist einen Text davor.
+- **Ihr Zug:** Wandeln Sie `umsatz_lang` so zurück, dass die Spalten wieder `Umsatz_2021` usw. heißen. Tipp: Auch `pivot_wider` kennt `names_prefix`.
+- Beide Befehle stammen aus dem Paket `tidyr` (`library(tidyverse)`).
+
+::: footer
+Die Verben des Datenjudos
+:::
+
 ## Verben am Fließband
 
 Jedes Verb bekommt eine **Tabelle** als Input und liefert eine **Tabelle** als Output.
@@ -516,6 +648,47 @@ mariokart |>
 Die Pfeife
 :::
 
+## Eine lange Pfeifenkette {.smaller}
+
+"Bringt Gratisversand einen höheren Preis — bei neuen *und* gebrauchten Spielen? Ohne Ausreißer, ohne lange Auktionen, Versand nicht zum Preis zählen."
+
+```r
+mariokart |>
+  filter(total_pr < 100, duration <= 7) |>                  # 1. Ausreißer, lange Auktionen raus
+  mutate(preis_ohne_versand = total_pr - ship_pr,           # 2. Preis ohne Versand,
+         versand = if_else(ship_pr == 0, "gratis", "kostet")) |>  #    Versand in zwei Stufen
+  select(cond, versand, preis_ohne_versand, n_bids) |>      # 3. nur benötigte Spalten
+  group_by(cond, versand) |>                                # 4. 2 x 2 = 4 Gruppen
+  summarise(preis_mw = round(mean(preis_ohne_versand), 2),  # 5. jede Gruppe zusammenfassen
+            gebote_mw = round(mean(n_bids), 1),
+            anzahl = n()) |>
+  ungroup() |>                                              # 6. Gruppierung aufheben
+  filter(anzahl >= 5) |>                                    # 7. zu kleine Gruppen raus
+  arrange(-preis_mw)                                        # 8. teuerste Gruppe oben
+```
+
+Ergebnis: Neue Spiele sind teurer als gebrauchte; bei beiden ist der Preis ohne Versand *höher*, wenn der Versand gratis ist — die Versandkosten stecken offenbar zum Teil im Preis.
+
+::: footer
+Die Pfeife
+:::
+
+## Was an der langen Kette neu ist {.smaller}
+
+- `filter` mit mehreren Bedingungen: Komma = "und".
+- `mutate` berechnet mehrere Spalten; `if_else(Bedingung, wenn_ja, wenn_nein)` übersetzt eine Zahl in zwei Kategorien.
+- `group_by` nach mehreren Spalten: eine Gruppe pro *Kombination*; `n()` zählt die Zeilen pro Gruppe.
+- `ungroup()` ist guter Stil — sonst rechnen spätere Verben unbemerkt pro Gruppe weiter.
+- Ein Verb darf mehrfach vorkommen: `filter` *vor* `summarise` (Auktionen) und *danach* (Gruppen).
+
+:::{.callout-tip title="Lange Pfeifen Schritt für Schritt bauen"}
+Station für Station aufbauen und nach jeder Zeile prüfen: Sieht die Zwischentabelle aus wie erwartet? Bei Fehlern nur bis *vor* eine Pfeife ausführen. Die letzte Zeile endet *ohne* Pfeife.
+:::
+
+::: footer
+Die Pfeife
+:::
+
 # Aufbereiten mit KI {.center footer=false}
 
 ## Der Arbeitsablauf
@@ -576,7 +749,7 @@ nrow(drop_na(mariokart_vorbereitet))   # 134
 
 Auch Auktionen mit vorhandenem Preis fliegen raus. Besser: `na.rm = TRUE` oder `drop_na(total_pr)`.
 
-**Fehler 3:** Ausreißer nach 1,5-IQR-Faustregel entfernt
+**Fehler 3:** Ausreißer nach 1.5-IQR-Faustregel entfernt
 
 Die Regel trifft die beiden Bundles — *und* eine ganz normale Auktion für 75 Dollar (neues Spiel mit drei Lenkrädern). Eine Faustregel liefert Kandidaten, keine Entscheidung.
 
@@ -665,12 +838,12 @@ Fallstudie: Vom Rohdatensatz zur Antwort
 mariokart_bereinigt |>                      # Frage 1
   filter(stock_photo == "yes") |>
   group_by(cond) |>
-  summarise(total_pr_max = max(total_pr))   # neu: 75,0, gebraucht: 61,8 Dollar
+  summarise(total_pr_max = max(total_pr))   # neu: 75.0, gebraucht: 61.8 Dollar
 
 mariokart_bereinigt |>                      # Frage 2
   group_by(wheels) |>
   summarise(mittlere_versandkosten = mean(ship_pr, na.rm = TRUE), n = n()) |>
-  filter(n >= 10)                           # 2,53 bis 3,68 Dollar
+  filter(n >= 10)                           # 2.53 bis 3.68 Dollar
 
 mariokart_bereinigt |>                      # Frage 3
   mutate(total_pr_yen = total_pr * 133) |>
@@ -688,8 +861,8 @@ Fallstudie: Vom Rohdatensatz zur Antwort
 
 | Frage | Rohdaten | bereinigte Daten |
 |:------|:---------|:-----------------|
-| 1: teuerstes neues Spiel mit Foto | `NA`, dazu 4 statt 2 Gruppen | 75,0 Dollar |
-| 2: Versandkosten bei einem Lenkrad | `NA` | 3,68 Dollar |
+| 1: teuerstes neues Spiel mit Foto | `NA`, dazu 4 statt 2 Gruppen | 75.0 Dollar |
+| 2: Versandkosten bei einem Lenkrad | `NA` | 3.68 Dollar |
 | 3: mittlerer Preis in Yen | 6.632 Yen (mit `na.rm = TRUE`) | 6.304 Yen |
 
 Frage 1 und 2 scheitern *sichtbar*. Frage 3 liefert eine plausible Zahl, die rund 330 Yen zu hoch ist — diesen Fehler sieht man dem Ergebnis nicht an.
@@ -739,9 +912,11 @@ Wie man mit Statistik lügt
 
 Forschungsfragen zum Datensatz `penguins` (Zielvariable: Gewicht):
 
-1. Medianes Gewicht, gruppiert nach Spezies?
+1. Medianes Gewicht, gruppiert nach Spezies und Geschlecht?
 2. Wie viele Pinguine pro Spezies?
 3. Schwerster und leichtester Pinguin pro Spezies?
+
+Zugabe: Wie groß ist in jeder Gruppe der Anteil "schwerer" Tiere (über 4 kg)? Tipp: Alles geht in *einer* Pfeifenkette.
 
 ::: footer
 Weitere Fallstudien
@@ -759,9 +934,9 @@ Weitere Fallstudien
 
 ## Zusammenfassung {.smaller}
 
-- **Rohdaten prüfen, bevor man rechnet:** Dubletten, fehlende Werte, unplausible Werte und Extremwerte, uneinheitliche Kodierung
+- **Rohdaten prüfen, bevor man rechnet:** Dubletten, fehlende Werte, unplausible Werte und Extremwerte, uneinheitliche Kodierung — und schon beim Einlesen: Notizzeilen, Spaltennamen, Fehlcodes wie `-99`
 - **Entscheidungen hängen von der Forschungsfrage ab** — und werden im Skript begründet
-- **Verben des Datenjudos:** `filter`, `select`, `arrange`, `mutate`, `count`, `group_by` + `summarise` — Tabelle rein, Tabelle raus
+- **Verben des Datenjudos:** `filter`, `select`, `arrange`, `mutate`, `count`, `group_by` + `summarise` — Tabelle rein, Tabelle raus; `pivot_longer`/`pivot_wider` wechseln zwischen Breit- und Langformat
 - **Pfeife** `|>` = "und dann": `d |> f(x)` = `f(d, x)`
 - **KI-Code:** präzise beauftragen, Zeile für Zeile lesen, Zeilenzahl und Kategorien prüfen
 - Vorsicht bei Mittelwerten über Gruppen: ungewichtet ≠ gewichtet

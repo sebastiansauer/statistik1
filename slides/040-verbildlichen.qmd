@@ -30,6 +30,7 @@ csl: ../specifics/apa7.csl
 - Sie kennen typische Arten von Datendiagrammen.
 - Sie können typische Datendiagramme mit R visualisieren.
 - Sie können zentrale Ergebnisse aus Datendiagrammen herauslesen.
+- Sie können zentrale Prinzipien zur Gestaltung von Datendiagrammen benennen und anwenden.
 
 ::: footer
 Einstieg
@@ -474,10 +475,11 @@ Unterschiede verbildlichen
 
 ## Unterschiede bei quantitativen Variablen {.smaller}
 
-![Histogramm (Verteilung) pro Gruppe](../040-verbildlichen_files/figure-html/fig-compare-groups1-1.png){width="34%"} ![Boxplot pro Gruppe](../040-verbildlichen_files/figure-html/fig-compare-groups1-2.png){width="34%"}
+![Histogramm (Verteilung) pro Gruppe](../040-verbildlichen_files/figure-html/fig-compare-groups1-1.png){width="30%"} ![Boxplot pro Gruppe](../040-verbildlichen_files/figure-html/fig-compare-groups1-2.png){width="30%"}
 
 - Unterscheiden sich zwei Gruppen (neu vs. gebraucht) deutlich in der Zielvariablen (`total_pr`)?
 - Der Boxplot (rechts) zeigt die gleichen Verteilungen wie links — vereinfacht und gröber.
+- Die Punkte neben Verteilung bzw. Box sind die Rohdaten: ein Punkt pro Spiel.
 - Was ein "deutlicher" Unterschied ist, ist keine statistische, sondern eine inhaltliche Frage.
 
 ::: footer
@@ -531,7 +533,82 @@ mariokart_no_extreme |>
 Unterschiede verbildlichen
 :::
 
-# So lügt man mit Statistik {.center footer=false}
+## Raindrop-Diagramm {.smaller}
+
+Ein Raindrop-Diagramm (*Raincloud-Plot*) kombiniert drei Sichten: Dichte als "Wolke", schmaler Boxplot, Rohdaten als "Regentropfen".
+
+:::: {.columns}
+::: {.column width="50%"}
+![Raindrop-Diagramm: Verkaufspreis nach Zustand des Spiels](../040-verbildlichen_files/figure-html/raindrop-1.png){width="100%"}
+:::
+::: {.column width="50%"}
+::: {style="font-size: 0.8em;"}
+```r
+library(ggdist)
+
+mariokart_no_extreme |>
+  ggplot(aes(x = total_pr, y = cond)) +
+  stat_halfeye(  # Wolke
+    fill = mittelgrau, adjust = 0.6,
+    height = 0.6, justification = -0.2,
+    .width = 0, point_colour = NA) +
+  geom_boxplot(width = 0.12,
+               outlier.shape = NA) +
+  stat_dots(  # Tropfen
+    side = "bottom", justification = 1.15,
+    binwidth = 0.6, fill = dunkelgrau,
+    colour = dunkelgrau)
+```
+:::
+:::
+::::
+
+- Neue Spiele erzielen im Median rund 10 Dollar mehr als gebrauchte — die Verteilungen überlappen sich aber deutlich.
+
+::: footer
+Unterschiede verbildlichen
+:::
+
+# Gute Datendiagramme gestalten {.center footer=false}
+
+## Vier Faustregeln {.smaller}
+
+Ein Datendiagramm soll eine Frage schnell und ehrlich beantworten.
+
+1. **Erst die Botschaft, dann das Diagramm**: Verteilung, Zusammenhang oder Unterschied? Daraus folgt der Diagrammtyp.
+2. **Lage schlägt Fläche und Winkel**: Positionen an einer gemeinsamen Achse vergleicht das Auge genau, Winkel und Flächen nur grob [@cleveland_visualizing_1993-1] — Balken schlagen Torten.
+3. **Weniger ist mehr**: 3D-Effekte, Schatten, farbige Hintergründe, dichte Gitter, bedeutungslose Farben lenken nur ab [@tufte_visual_2001].
+4. **Direkt beschriften**: verständliche Achsennamen (mit Einheit); Gruppen und Werte direkt im Diagramm statt in einer Legende.
+
+::: footer
+Gute Datendiagramme gestalten
+:::
+
+## Vorher – nachher {.smaller}
+
+![Vorher: Torte, Legende, bunte Farben, grauer Hintergrund](../040-verbildlichen_files/figure-html/fig-gestaltung-1.png){width="45%"} ![Nachher: sortierte Balken, direkt beschriftet](../040-verbildlichen_files/figure-html/fig-gestaltung-2.png){width="45%"}
+
+- Gleiche Daten: Versandart (`ship_sp`) der Mariokart-Auktionen. Welche ist am häufigsten?
+- Torte: `standard` (33) und `upsGround` (31) sind kaum zu unterscheiden; das Auge pendelt zwischen Torte und Legende.
+- Balken: weniger Tinte, trotzdem mehr Information — genaue Anzahl und Rangfolge.
+
+::: footer
+Gute Datendiagramme gestalten
+:::
+
+## Gute Diagramme: auf einen Blick
+
+:::{.callout-important}
+Ein gutes Datendiagramm beantwortet seine Frage auf einen Blick.
+:::
+
+- Die Kehrseite: Wer die Faustregeln absichtlich bricht, kann mit Diagrammen täuschen.
+
+::: footer
+Gute Datendiagramme gestalten
+:::
+
+# Wie man mit Statistik lügt {.center footer=false}
 
 ## Achsen stauchen und strecken {.smaller}
 
@@ -540,7 +617,7 @@ Unterschiede verbildlichen
 Gleiche Daten, ganz anderer Eindruck.
 
 ::: footer
-So lügt man mit Statistik
+Wie man mit Statistik lügt
 :::
 
 ## Die Y-Achse abschneiden {.smaller}
@@ -550,7 +627,7 @@ So lügt man mit Statistik
 Eine abgeschnittene Y-Achse dramatisiert kleine Unterschiede.
 
 ::: footer
-So lügt man mit Statistik
+Wie man mit Statistik lügt
 :::
 
 ## Scheinkorrelationen als Kausalität verkaufen {.smaller}
@@ -560,7 +637,7 @@ So lügt man mit Statistik
 Schokoladenkonsum hängt mit der Anzahl der Nobelpreise (pro Land) zusammen — aber nicht ursächlich. Eine Drittvariable (z. B. allgemeiner Entwicklungsstand) erklärt vermutlich beides gleichzeitig.
 
 ::: footer
-So lügt man mit Statistik
+Wie man mit Statistik lügt
 :::
 
 # Praxisbezug {.center footer=false}
@@ -571,7 +648,7 @@ So lügt man mit Statistik
 
 Das Diagramm zeigt die Häufigkeit von Masern vor und nach Einführung der Impfung [@debold_battling_2015; Daten: @van_panhuis_contagious_2013] — eine Botschaft auf einen Blick, eindrücklicher als jede Tabelle.
 
-Tortendiagramme sind zwar beliebt, aber meist eine schlechte Wahl: Tortenstücke lassen sich schwer vergleichen.
+Tortendiagramme begegnen einem ständig — Balken sind aber meist die bessere Wahl (s. Gestaltungs-Faustregeln).
 
 ::: footer
 Praxisbezug
@@ -583,6 +660,7 @@ Praxisbezug
 - **Verteilung**: Balkendiagramm (nominal), Histogramm/Dichtediagramm (quantitativ) — bei Normalverteilung bestimmen $\mu$ und $\sigma$ alles
 - **Zusammenhang**: gefülltes Balkendiagramm (nominal), Streudiagramm (metrisch) — Stärke via Ellipsenform/Korrelation
 - **Unterschied**: Boxplot fasst eine Verteilung kompakt zusammen (Median, Quartile, Antennen, Extremwerte)
+- **Gestaltung**: erst die Botschaft; Lage statt Fläche/Winkel; weniger ist mehr; direkt beschriften
 - Vorsicht: Diagramme lassen sich manipulieren (gestauchte Achsen, abgeschnittene Y-Achse, Scheinkorrelationen)
 
 ## Literaturhinweise {.smaller}

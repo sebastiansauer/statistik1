@@ -29,6 +29,7 @@ csl: ../specifics/apa7.csl
 - Sie können gängige Arten von Lagemaßen definieren.
 - Sie können erläutern, inwiefern man ein Lagemaß als ein Modell verstehen kann.
 - Sie können Lagemaße mit R berechnen.
+- Sie können die Größe eines Gruppenunterschieds mit Cohens *d* und der Common Language Effect Size (CLES) beschreiben und interpretieren.
 
 ::: footer
 Einstieg
@@ -305,6 +306,20 @@ Q1 ≈ 41, Median ≈ 46, Q3 ≈ 54 Dollar.
 Quantile
 :::
 
+## Quantile animiert
+
+::: {layout-ncol="2"}
+![25%-Schritte: Quartile](../img/p_quartiles_anim.gif)
+
+![10%-Schritte: Dezile](../img/p_deciles_anim.gif)
+:::
+
+Das p-Quantil teilt die Verteilung der Verkaufspreise: Der Anteil p liegt links davon (blau).
+
+::: footer
+Quantile
+:::
+
 ## Quantile visualisiert
 
 ::: {.show-caption layout-ncol="2"}
@@ -358,9 +373,9 @@ Quantile
 ## Beispiel: Körpergröße von Studierenden {.smaller}
 
 Das 25 %-, 50 %- und 75 %-Quantil entspricht Q1, Median und Q3 (Daten: @openintro).
+Vorgehen: Inch in cm umrechnen, ins *Langformat* umformen (beide Einheiten in einer Spalte), nach Einheit gruppieren, Quantile berechnen.
 
-
-![Größenverteilung von 1325 amerikanischen Studentis: Quantile und Häufigkeitsverteilung.](../050-zusammenfassen_files/figure-html/fig-stud-height-1.png){width="52%"}
+![Größenverteilung von 1325 amerikanischen Studentis: Die Box zeigt Q1, Median und Q3, die Punkte die Rohdaten.](../050-zusammenfassen_files/figure-html/fig-stud-height-1.png){width="52%"}
 
 ::: footer
 Quantile
@@ -433,6 +448,149 @@ Innerhalb der Gruppen sind die Abweichungen zum Gruppen-Mittelwert oft geringer 
 Lagemaße
 :::
 
+# Effektstärken {.center footer=false}
+
+## Ist der Unterschied groß? {.smaller}
+
+- Spiele mit 2 Lenkrädern wurden im Mittel teurer verkauft als Spiele ohne Lenkrad (ca. 17 Dollar).
+- Aber: Ob 17 Dollar "viel" sind, hängt von der Streuung der Preise ab.
+- Und: Dollar lassen sich nicht mit IQ-Punkten oder Zentimetern vergleichen.
+- Gesucht: ein Maß für die Größe eines Unterschieds, *unabhängig von der Maßeinheit*.
+
+:::{.callout-note title="Definition: Effektstärke"}
+Eine *Effektstärke* beschreibt die Größe eines Effekts (z. B. Gruppenunterschied, Zusammenhang) unabhängig von der Maßeinheit der Daten. Bekanntes Beispiel: die Korrelation $r$.
+:::
+
+::: footer
+Effektstärken
+:::
+
+## Cohens *d*
+
+:::{.callout-note title="Definition: Cohens d"}
+Unterschied zweier Gruppenmittelwerte in Einheiten der (gemeinsamen) Standardabweichung $s$ [@cohen_statistical_1988]:
+
+$$d = \frac{\bar{x}_A - \bar{x}_B}{s}$$
+:::
+
+- $d = 1$: Die Mittelwerte liegen eine Standardabweichung auseinander; $d = 0.5$: eine halbe.
+- Das Vorzeichen zeigt nur, welche Gruppe vorne liegt.
+- Faustregeln nach Cohen: $d \approx 0.2$ klein, $0.5$ mittel, $0.8$ groß.
+
+::: footer
+Effektstärken
+:::
+
+## Cohens *d* in R {.smaller}
+
+```r
+mario_lenkrad <-
+  mariokart |>
+  filter(total_pr < 100, wheels %in% c(0, 2)) |>
+  mutate(lenkraeder = factor(wheels, levels = c(2, 0)))  # 2 zuerst: d positiv
+
+cohens_d(total_pr ~ lenkraeder, data = mario_lenkrad)  # Paket effectsize
+```
+
+- Mittelwerte: ca. 55.7 vs. 38.9 Dollar, Standardabweichung je ca. 5.8 Dollar
+- $d \approx (55.7 - 38.9) / 5.8 \approx 2.9$ — nach Cohens Maßstab riesig
+- `cohens_d()` bildet die gemeinsame ("gepoolte") Standardabweichung selbst; `CI` ignorieren wir hier.
+- Aber: Wie anschaulich sind "2.9 Standardabweichungen"?
+
+::: footer
+Effektstärken
+:::
+
+## Common Language Effect Size (CLES) {.smaller}
+
+:::{.callout-note title="Definition: Common Language Effect Size (CLES)"}
+Die Wahrscheinlichkeit, dass ein zufällig gezogener Wert aus Gruppe A größer ist als ein zufällig gezogener Wert aus Gruppe B (*Überlegenheitswahrscheinlichkeit*) [@McGraw1992]. Berechnung: jeden Wert aus A mit jedem aus B vergleichen, Anteil der Paare mit A größer; Gleichstände zählen halb.
+:::
+
+- CLES = 0.5: kein Unterschied (Münzwurf)
+- CLES = 1: Jeder Wert aus A ist größer als jeder aus B (keine Überlappung)
+
+::: footer
+Effektstärken
+:::
+
+## CLES von Hand ausgezählt {.smaller}
+
+Spielzeugbeispiel, Verkaufspreise in Dollar: A (2 Lenkräder) = 50, 55, 60; B (0 Lenkräder) = 40, 52, 58.
+
+| A \\ B | 40 | 52 | 58 |
+|:------:|:--:|:--:|:--:|
+| **50** | 1  | 0  | 0  |
+| **55** | 1  | 1  | 0  |
+| **60** | 1  | 1  | 1  |
+
+: 1 heißt "Preis aus A ist größer"
+
+- In 6 von 9 Paaren ist A teurer: CLES $= 6/9 \approx 0.67$.
+- Zieht man je ein Spiel zufällig, ist das mit 2 Lenkrädern in zwei von drei Fällen das teurere.
+
+::: footer
+Effektstärken
+:::
+
+## CLES in R
+
+```r
+p_superiority(total_pr ~ lenkraeder, data = mario_lenkrad,
+              parametric = FALSE)  # Paare tatsächlich auszählen
+```
+
+- Mariokart: CLES $\approx 0.98$
+- In Worten: Zieht man zufällig ein Spiel mit 2 Lenkrädern und eines ohne, ist in 98 von 100 Fällen das Spiel mit Lenkrädern das teurere.
+- Diese Aussage versteht man auch ohne Statistik-Kenntnisse.
+
+::: footer
+Effektstärken
+:::
+
+## *d* und CLES im Vergleich
+
+![Je größer d, desto weniger überlappen die Gruppen und desto größer ist die CLES (zwei normalverteilte Gruppen mit gleicher Streuung).](../050-zusammenfassen_files/figure-html/fig-d-cles-1.png){width="55%"}
+
+::: footer
+Effektstärken
+:::
+
+## *d*, Etikett und CLES {.smaller}
+
+| Cohens *d* | Etikett nach Cohen | CLES |
+|:----------:|:------------------:|:----:|
+| 0          | kein Effekt        | 0.50 |
+| 0.2        | klein              | 0.56 |
+| 0.5        | mittel             | 0.64 |
+| 0.8        | groß               | 0.71 |
+| 2.9 (Mariokart) | sehr groß     | 0.98 |
+
+: Für normalverteilte Gruppen mit gleicher Streuung
+
+- Ein "großer" Effekt ($d = 0.8$): In fast 30 % der Paare liegt trotzdem B vorne!
+- Typisch in Sozial- und Wirtschaftswissenschaften: $d \approx 0.2$ bis $0.5$.
+- Vertiefung: $\text{CLES} = \Phi(d/\sqrt{2})$, in R `pnorm(d / sqrt(2))`.
+
+::: footer
+Effektstärken
+:::
+
+## Wie wichtig ist ein Effekt? {.smaller}
+
+:::{.callout-important}
+Cohens Etiketten (klein, mittel, groß) sind *grobe Faustregeln*, keine Naturgesetze — gedacht nur für den Fall, dass man sonst keinen Anhaltspunkt hat.
+:::
+
+- Ob ein Effekt wichtig ist, hängt vom Kontext ab.
+- Ein "kleiner" Effekt eines Medikaments kann bei Millionen Patienten viele Leben retten.
+- Ein "großer" Effekt kann belanglos sein, wenn es um Unwichtiges geht.
+- Die CLES braucht kein Etikett: Sie sagt direkt, wie oft eine Gruppe vorne liegt.
+
+::: footer
+Effektstärken
+:::
+
 # Wie man mit Statistik lügt {.center footer=false}
 
 ## Checkliste: Transparenz einer Analyse {.smaller}
@@ -460,6 +618,7 @@ Wie man mit Statistik lügt
 - **Quantile**: verallgemeinern den Median (Quartile, Dezile, Perzentile)
 - **Lagemaße** sind Punktmodelle: Sie fassen eine Verteilung zu einem "typischen" Wert zusammen
 - Gruppierte Lagemaße können Residuen verkleinern
+- **Effektstärken** (Cohens *d*, CLES) beschreiben die Größe eines Unterschieds unabhängig von der Maßeinheit
 - Transparenz ist der Schlüssel gegen Manipulation statistischer Analysen
 
 # Literaturhinweise {.center footer=false}

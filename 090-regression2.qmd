@@ -510,7 +510,7 @@ predict(lm_wetter1_zentriert, newdata = tibble(year_c = 100))
 ```
 
 
->    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Moment! Die Vorhersage ist doch Quatsch! Schon im Jahr 2022 lag die Durchschnittstemperatur bei 10,5° Celsius [@wilke2013].
+>    [🧑‍🎓]{.content-visible when-format="html"}[\emoji{student}]{.content-visible when-format="pdf"} Moment! Die Vorhersage ist doch Quatsch! Schon im Jahr 2022 lag die Durchschnittstemperatur bei 10.5° Celsius [@wilke2013].
 
 
 >    [🧑‍🏫]{.content-visible when-format="html"}[\emoji{teacher}]{.content-visible when-format="pdf"} Wir brauchen ein besseres Modell! Zum Glück haben wir ambitionierten Wissenschaftsnachwuchs.
@@ -518,7 +518,7 @@ predict(lm_wetter1_zentriert, newdata = tibble(year_c = 100))
 
 :::: {.content-visible when-format="html"}
 Die Veränderung der auf fünf Jahre gemittelten Abweichung der Lufttemperatur zum Mittel von von 1951 bis 1980 ist in @fig-temp-de dargestellt.
-Links ist eine grobe Temperaturrasterung zu sehen (Daten ab 1753)^[Quelle: <https://de.wikipedia.org/wiki/Zeitreihe_der_Lufttemperatur_in_Deutschland#cite_ref-3>]; rechts eine feinere (Daten ab 1881)^[Quelle: <https://opendata.dwd.de/climate_environment/CDC/grids_germany/monthly/air_temperature_mean/>].
+Links ist eine grobe Temperaturrasterung zu sehen (Daten ab 1753) [@wikipedia_zeitreihe_lufttemperatur]; rechts eine feinere (Daten ab 1881) [@dwd_grids_lufttemperatur].
 
 
 :::{#fig-temp-de}
@@ -612,7 +612,7 @@ lm_wetter_bin_uv |>
   as_tibble() |>
   filter(Parameter != "(Intercept)") |>
   ggplot(aes(x = Coefficient, y = Parameter)) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = grau_mittel, linewidth = 0.4) +
+  referenzlinie(xintercept = 0) +
   geom_errorbar(aes(xmin = CI_low, xmax = CI_high), width = 0,
                 color = trendcol, linewidth = 1.2) +
   geom_point(color = trendcol, size = 4) +
@@ -758,10 +758,8 @@ beta0col_text <- okabe_text[1]
 wetter4 |> 
   ggplot(aes(x = after1950_TRUE, y = temp)) +
   geom_jitter(alpha = alpha_n(nrow(wetter4)), width = .2, color = grau_mittel) +
-  geom_hline(yintercept = coef(lm4)[1], linetype = "dashed",
-             color = grau_dunkel, linewidth = 0.4) +
-  geom_hline(yintercept = coef(lm4)[1] + coef(lm4)[2], linetype = "dashed",
-             color = grau_dunkel, linewidth = 0.4) +
+  referenzlinie(yintercept = coef(lm4)[1], colour = grau_dunkel) +
+  referenzlinie(yintercept = coef(lm4)[1] + coef(lm4)[2], colour = grau_dunkel) +
   geom_abline(slope =  coef(lm4)[2], intercept =  coef(lm4)[1], color = grau_dunkel) +
   stat_summary(fun = "mean", color = grau_dunkel) +
   annotate("point", x = 0, y = coef(lm4)[1], 
@@ -1204,7 +1202,7 @@ lm_year_month <- lm(precip ~ year_c + month_factor,
 
 Die Modellparameter sind in @tbl-lm-year-month zu sehen.
 
-```{r lm-year-month-params}
+```{r}
 #| echo: false
 #| label: tbl-lm-year-month
 #| tbl-cap: "Modellparameter von lm_year_month"
@@ -1264,7 +1262,7 @@ Alle Regressionskoeffizienten beziehen sich auf die AV *unter der Annahme, dass 
 Visualisieren wir uns die geschätzten Erwartungswert pro Wert der UV, 
 s. @fig-lm3: `plot(estimate_expectation(lm_year_month))`
 
-```{r plot-lm3}
+```{r}
 #| label: fig-lm3
 #| fig-cap: "Niederschlag für Januar (month 1) und Juli (month 7) im Verlauf der Jahre. Man beachte, dass die Regressionsgeraden _parallel_ sind."
 #| echo: false
@@ -1306,8 +1304,8 @@ ggplot(wetter_month_1_7, aes(x = year_c, y = precip, color = month_factor)) +
              inherit.aes = FALSE) +
   labs(x = "Jahr (zentriert, year_c)", y = NULL,
        subtitle = paste0("Niederschlag (mm); ",
-                         "<b style='color:", texte_monat["1"], "'>&#9679; Januar</b> / ",
-                         "<b style='color:", texte_monat["7"], "'>&#9650; Juli</b>")) +
+                         gruppen_schluessel(c("Januar", "Juli"), farben_monat[c("1", "7")],
+                                            formen_monat[c("1", "7")]))) +
   theme_streu() +
   theme(plot.subtitle = ggtext::element_markdown())
 
@@ -1349,7 +1347,7 @@ plot(estimate_relation(lm_year_month_interaktion))
 ```
 
 
-```{r plot-precip-interaction}
+```{r}
 #| echo: false
 #| label: fig-wetter-interakt
 #| fig-asp: 0.5
@@ -1399,8 +1397,8 @@ ggplot(wetter_month_1_7, aes(x = year_c, y = precip, color = month_factor)) +
              inherit.aes = FALSE) +
   labs(x = "Jahr (zentriert, year_c)", y = NULL,
        subtitle = paste0("Niederschlag (mm); ",
-                         "<b style='color:", texte_monat["1"], "'>&#9679; Januar</b> / ",
-                         "<b style='color:", texte_monat["7"], "'>&#9650; Juli</b>")) +
+                         gruppen_schluessel(c("Januar", "Juli"), farben_monat[c("1", "7")],
+                                            formen_monat[c("1", "7")]))) +
   theme_streu() +
   theme(plot.subtitle = ggtext::element_markdown())
 ```
@@ -2236,9 +2234,7 @@ enden_art <- penguins_ok |>
     predict(m, newdata = tibble(bill_length_mm = x))
   }))
 
-symbole <- c("&#9679;", "&#9650;", "&#9632;")
-schluessel <- paste0("<b style='color:", texte_art, "'>", symbole, " ", arten, "</b>",
-                     collapse = " / ")
+schluessel <- gruppen_schluessel(arten, farben_art, formen_art)
 
 ggplot(penguins_ok, aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point(aes(color = species, shape = species), alpha = 0.6) +
@@ -2400,8 +2396,7 @@ d_sim |>
   rangeframe(data = d_sim, mapping = aes(x = x, y = y), inherit.aes = FALSE) +
   labs(title = "Oh nein, keine Korrelation!", y = NULL,
        subtitle = paste0("y; ",
-                         "<b style='color:", texte_ab["A"], "'>&#9679; A</b> / ",
-                         "<b style='color:", texte_ab["B"], "'>&#9650; B</b>")) +
+                         gruppen_schluessel(c("A", "B"), farben_ab))) +
   theme_streu() +
   theme(plot.subtitle = ggtext::element_markdown())
 

@@ -1,0 +1,47 @@
+/* Layout-Regeln fuer Abbildungen, Mermaid und Videos (uebernommen aus
+   Start:Bayes, specifics/styles.css). Bewusst eine eigene Datei: die
+   Farb-/Textklassen in specifics/styles.css sind in _quarto.yml derzeit
+   deaktiviert. */
+
+/* Mehrspaltige layout="[...]"-Zeilen (z. B. Text neben QR-Code): Der
+   Browser-Default fuer <figure> (margin: 1em 40px) bleibt sonst oben/unten
+   stehen, sodass ein Bild in einer Layout-Spalte tiefer startet als der
+   Text in der Nachbarspalte. */
+.quarto-layout-cell figure {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+/* Teilbilder (#| layout-ncol): sichtbarer, proportionaler Abstand zwischen
+   den Teilbildern statt Quartos margin-right je Zelle. */
+.quarto-layout-row {
+  gap: 5%;
+}
+.quarto-layout-row .quarto-layout-cell {
+  margin-right: 0;
+}
+@media (max-width: 767.98px) {
+  /* Schmale Bildschirme: Teilbilder untereinander, fester Abstand */
+  .quarto-layout-row {
+    gap: 1em;
+  }
+}
+
+/* Mermaid-Diagramme: mermaid.js setzt ein inline max-width auf die native
+   Zeichnungsbreite; breite Flowcharts laufen sonst ueber den Seitenrand.
+   !important ueberschreibt das Inline-Style. Einzelne kompakte Diagramme
+   lassen sich per ID begrenzen, z. B.
+   #fig-xyz svg.mermaid-js { max-width: 400px !important; } */
+svg.mermaid-js {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Alle Videos im Buch zentrieren (video.js ersetzt <video> durch div.video-js) */
+.quarto-video video,
+.quarto-video .video-js,
+.quarto-video iframe {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

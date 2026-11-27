@@ -163,7 +163,7 @@ Nutzen Sie Datendiagramme umfassend; sie sind einfach zu verstehen und doch sehr
 :::
 
 ::: {.content-visible when-format="pdf"}
-```{r dino-pdf}
+```{r}
 #| echo: false
 #| label: fig-dino1
 #| fig-cap: "Alle Diagramme haben gleiche statistische Koeffizienten, wie Mittelwert und Streuung und Korrelation, aber die Datengrundlage sind komplett verschieden."
@@ -178,7 +178,7 @@ datasaurus_dozen |>
   ggplot(aes(x = x, y = y)) +
   # Gruppen stehen in eigenen Facetten, daher eine Farbe (grau) genügt
   geom_point(color = grau_dunkel, size = 0.8) +
-  theme_void() +
+  theme_leer() +
   facet_wrap(~dataset, ncol = 4) +
   theme(strip.text = element_text(size = 16, face = "bold"),
         panel.spacing = unit(1.5, "lines"))
@@ -323,7 +323,7 @@ z.$\,$B. kommt die Ausprägung `new`  59 mal vor. $\square$
 
 
 
-```{r mariokart-cond-freq-tbl}
+```{r}
 #| echo: false
 #| label: tbl-wheels-n
 #| tbl-cap: "Häufigkeitsverteilung von `cond` aus dem Datensatz `mariokart`"
@@ -350,7 +350,7 @@ und die Länge eines Balkens ist proportional zur dargestellten Häufigkeit. $\s
 
 
 
-```{r p-mariokart-n-cond}
+```{r}
 #| echo: false
 #| layout-ncol: 2
 #| out-width: "75%"
@@ -490,7 +490,7 @@ mariokart |>
   filter(total_pr < 200) |> 
   mutate(total_pr = round(total_pr, digits = 1)) |>
   ggplot(aes(x = total_pr)) +
-  geom_bar() +
+  geom_bar(color = NA) +  # ohne weissen Rand: Balken sind sehr schmal
   scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
   labs(x = "total_pr (Dollar)", y = NULL, subtitle = "Anzahl")
 ```
@@ -676,7 +676,7 @@ m1a |>
   # Dichte als blaue Linie über dem grauen Histogramm hervorheben
   geom_density(color = trendcol, linewidth = 1.2) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
-  labs(x = "total_pr (Dollar)", y = NULL, subtitle = "Dichte")
+  labs(x = "total_pr (Dollar)", y = NULL, subtitle = "Wahrscheinlichkeitsdichte")
 ```
 
 
@@ -690,7 +690,7 @@ Erstellen Sie das Diagramm @fig-de-hist-density, rechtes Teildiagramm!^[Grob ges
 
 Verteilungen unterscheiden sich z.$\,$B. in ihrem "typischen" oder "mittleren" Wert (vgl. @sec-lage), aber auch in ihrer Streuung  (vgl. @sec-streuung).
 (Diagramme von) Verteilungen können symmetrisch oder schief (nicht symmetrisch) sein, s. @fig-symm-schief.
-@fig-plot-distribs zeigt verschiedene Formen von Verteilungen. "Bimodal" meint "zweigipflig" und "multimodal" entsprechend "mehrgipflig".^[Quelle: ifes/FOM Hochschule, <https://github.com/FOM-ifes/VL-Vorlesungsfolien>]
+@fig-plot-distribs zeigt verschiedene Formen von Verteilungen. "Bimodal" meint "zweigipflig" und "multimodal" entsprechend "mehrgipflig" [Quelle: @fomifes_vorlesungsfolien].
 
 ```{r}
 #| echo: false
@@ -722,7 +722,7 @@ ggplot(NULL) +
 
 
 
-```{r plot-distribs}
+```{r}
 #| echo: false
 #| label: fig-plot-distribs
 #| fig-cap: "Verschiedene Verteilungsformen"
@@ -814,7 +814,7 @@ Sie lässt sich durch zwei Parameter vollständig beschreiben: Mittelwert ($\mu$
 
 
 @fig-normal-interactive zeigt interaktive Beispiele für Normalverteilung. 
-Wählen Sie einfach Mittelwert ($\mu$) und Streuung ($\sigma$) anhand der Schieberegler.^[Quelle: <https://observablehq.com/@mcmcclur/the-normal-model>]
+Wählen Sie einfach Mittelwert ($\mu$) und Streuung ($\sigma$) anhand der Schieberegler [Quelle: @mcclure_normal_model].
 
 
 
@@ -967,7 +967,7 @@ bei gebrauchten Spielen immerhin bei gut der Hälfte der Fälle.
 
 
 
-```{r fig-zshg-nom1}
+```{r}
 #| echo: false
 #| label: fig-zshg-nom1
 #| fig-asp: 0.7
@@ -1168,7 +1168,7 @@ Beispiele für nicht-lineare Zusammenhänge sind in @fig-nonlinear zu sehen.
 
 data <- read_csv("data/nonlinear_datasets.csv")
 
-p0 <- ggplot(data) + geom_point()  + theme_void() 
+p0 <- ggplot(data) + geom_point()  + theme_leer() 
 
 p1 <- p0 + aes(x=x1, y=y1) + ggtitle("Quadratischer Zusammenhang") 
 p2 <- p0 + aes(x=x2, y=y2) + ggtitle("Exponenzieller Zusammenhang")
@@ -1193,9 +1193,9 @@ Der (Absolut-)Wert gibt die Stärke des linearen Zusammenhangs an.
 Cohen [-@cohen_power_1992] hat folgende Faustregeln angegeben:
 
 - $r\approx 0$: Kein Zusammenhang
-- $r \pm .1$: schwacher Zusammenhang
-- $r \pm .3$: mittlerer Zusammenhang
-- $r \pm .5$: starker Zusammenhang
+- $r \pm 0.1$: schwacher Zusammenhang
+- $r \pm 0.3$: mittlerer Zusammenhang
+- $r \pm 0.5$: starker Zusammenhang
 - $r = 1$: perfekter Zusammenhang
 
 ```{r}
@@ -1658,14 +1658,12 @@ d <- tibble(
 ggplot(d, aes(Jahr, Umsatz)) +
   geom_point(alpha = .7) +
   geom_line() +
-  theme_minimal() +
   scale_y_continuous(limits = c(0, 100)) +
    coord_fixed(ratio = .10)
 
 ggplot(d, aes(Jahr, Umsatz)) +
   geom_point(alpha = .7) +
   geom_line() +
-  theme_minimal() +
   scale_y_continuous(limits = c(0, 100)) +
   coord_fixed(ratio = .010) +
   theme_large_text()
@@ -1690,13 +1688,11 @@ d <- tibble(
 
 ggplot(d, aes(Jahr, Umsatz)) +
   geom_point(alpha = .7) +
-  geom_line() +
-  theme_minimal()
+  geom_line()
 
 ggplot(d, aes(Jahr, Umsatz)) +
   geom_point(alpha = .7) +
   geom_line() +
-  theme_minimal() +
   scale_y_continuous(limits = c(0, 100))
 ```
 
@@ -1882,7 +1878,7 @@ Manchmal auch wichtige Informationen.
 
 ::: {.content-visible when-format="html" unless-format="epub"}
 [Dieses Beispiel](https://www.autodesk.com/research/publications/same-stats-different-graphs) zeigt, 
-wie etwa Histogramme wichtige Informationen unter den Tisch fallen lassen.^[<https://www.autodesk.com/research/publications/same-stats-different-graphs>]
+wie etwa Histogramme wichtige Informationen unter den Tisch fallen lassen [@matejka_same_2017-1].
 Ein weiteres R-Paket zur Erstellung ansprechender Datenvisualisierung heißt [`ggstatsplot`](https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md).^[<https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md>]
 @fig-ggstatsplot zeigt ein [Histogramm](https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md#gghistostats), das mit `ggstatsplot` erstellt wurde.^[<https://github.com/IndrajeetPatil/ggstatsplot/blob/main/README.md#gghistostats>]
 

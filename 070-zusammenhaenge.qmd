@@ -223,8 +223,8 @@ Die Fläche des Abweichungsrechtecks ist dann das Produkt der Abweichungen: $dx_
 p_cov <- 
 ggplot(d) +
   aes(x = x, y = y) +
-  geom_vline(xintercept = mean(d$x), linetype = "dashed", color = grau_mittel) +
-  geom_hline(yintercept = mean(d$y), linetype = "dashed", color = grau_mittel) +
+  referenzlinie(xintercept = mean(d$x)) +
+  referenzlinie(yintercept = mean(d$y)) +
   geom_rect(aes(xmin = x, xmax = x_avg, ymin = y, ymax = y_avg,
                 fill = factor(cov_sign)),
             alpha = .7, color = "white", linewidth = 0.8) +
@@ -251,8 +251,8 @@ ggplot(d) +
   scale_fill_manual(values = c(`-1` = beta0col, `1` = beta1col), guide = "none") +
   labs(x = "Lernzeit", y = NULL,
        subtitle = paste0("Punkte (0-100); Vorzeichen des Rechtecks: ",
-                         "<b style='color:#B36B00'>negativ</b> / ",
-                         "<b style='color:#0072B2'>positiv</b>")) +
+                         "<b style='color:", textfarbe(beta0col), "'>negativ</b> / ",
+                         "<b style='color:", textfarbe(beta1col), "'>positiv</b>")) +
   theme_streu() +
   theme(plot.subtitle = ggtext::element_markdown())
 
@@ -655,7 +655,7 @@ mariokart |>
 
 
 
-```{r mario-corr1}
+```{r}
 #| echo: false
 #| label: tbl-mario-corr1
 #| tbl-cap: "Korrelation berechnen mittels der Funktion `correlation` aus `easystats`"
@@ -733,7 +733,7 @@ $X$ und $Y$ seien normalverteilt mit $\mu=0$ (Mittelwert) und  $\sigma=1$ (Streu
 s. Datensatz `d` in @lst-corr-range.
 Man kann sich mit dem Befehl `rnorm(n, m, sd)` $n$ normalverteilte Variablen 
 mit Mittelwert $m$ und Streuung $sd$ von R erzeugen lassen.
-Wir schränken dann den Wertebereich von $X$ ein auf, sagen wir, auf $[-0.5, .5]$ 
+Wir schränken dann den Wertebereich von $X$ ein auf, sagen wir, auf $[-0.5, 0.5]$ 
 (Datensatz `d_filtered`), s. @lst-corr-range.
 
 

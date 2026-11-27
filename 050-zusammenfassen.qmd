@@ -72,6 +72,7 @@ mariokart <- read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/openin
 - Sie können gängige Arten von Lagemaße definieren.
 - Sie können erläutern, inwiefern man ein Lagemaß als ein Modell verstehen kann.
 - Sie können Lagemaße mit R berechnen.
+- Sie können die Größe eines Gruppenunterschieds mit Cohens *d* und der Common Language Effect Size (CLES) beschreiben und interpretieren.
 
 
 
@@ -1669,6 +1670,301 @@ p2
 
 
 
+## Effektstärken {#sec-effektstaerken}
+
+
+### Ist der Unterschied groß?
+
+In @fig-mw3 (b) sieht man: Spiele mit 2 Lenkrädern wurden im Mittel teurer verkauft als Spiele ohne Lenkrad.
+Aber *wie groß* ist dieser Unterschied?
+Die naheliegende Antwort ist die Differenz der Mittelwerte, gemessen in Dollar.
+Das ist schon mal gut, hat aber einen Haken:
+Ob 17 Dollar "viel" sind, hängt davon ab, wie stark die Preise ohnehin schwanken.
+Wenn die Preise innerhalb jeder Gruppe nur um ein paar Dollar streuen,
+sind 17 Dollar Unterschied enorm.
+Streuen die Preise dagegen um 100 Dollar, sind 17 Dollar kaum der Rede wert.
+Außerdem kann man Differenzen in Dollar nicht mit Differenzen in, sagen wir, IQ-Punkten oder Zentimetern vergleichen.
+
+Gesucht ist also ein Maß, das die Größe eines Unterschieds unabhängig von der Maßeinheit beschreibt.
+So ein Maß nennt man *Effektstärke*.
+
+
+
+:::{#def-effektstaerke}
+### Effektstärke
+Eine *Effektstärke* ist eine Kennzahl, die die Größe eines Effekts
+(z.$\,$B. eines Unterschieds zwischen zwei Gruppen oder eines Zusammenhangs zwischen zwei Variablen)
+unabhängig von der Maßeinheit der Daten beschreibt. $\square$
+:::
+
+
+Sie kennen schon eine Effektstärke: den Korrelationskoeffizienten $r$ (s. @sec-zshg-metr).
+Für den Unterschied zweier Mittelwerte lernen Sie jetzt zwei Effektstärken kennen: Cohens *d* und die Common Language Effect Size (CLES).
+
+
+
+
+### Cohens *d*
+
+Die Idee von Cohens *d* ist einfach:
+Man teilt den Unterschied der Mittelwerte durch die typische Streuung der Werte innerhalb der Gruppen.
+Als Maß für die "typische Streuung" dient die *Standardabweichung* $s$.
+Sie gibt an, wie weit die Werte im Schnitt (grob gesagt) vom Mittelwert ihrer Gruppe entfernt liegen.
+Genauer lernen Sie die Standardabweichung in @sec-streuung kennen.
+Fürs Erste genügt: Je größer $s$, desto stärker streuen die Werte um ihren Mittelwert.
+
+
+:::{#def-cohens-d}
+### Cohens *d*
+*Cohens d* ist der Unterschied zweier Gruppenmittelwerte, ausgedrückt in Einheiten der Standardabweichung [@cohen_statistical_1988]:
+
+$$d = \frac{\bar{x}_A - \bar{x}_B}{s}$$
+
+Dabei sind $\bar{x}_A$ und $\bar{x}_B$ die Mittelwerte der Gruppen A und B
+und $s$ ist die (gemeinsame) Standardabweichung innerhalb der beiden Gruppen. $\square$
+:::
+
+
+Ein $d$ von 1 heißt also: Die Mittelwerte liegen eine Standardabweichung auseinander.
+Ein $d$ von 0.5 heißt: Die Mittelwerte liegen eine halbe Standardabweichung auseinander.
+Das Vorzeichen gibt nur an, welche Gruppe den größeren Mittelwert hat.
+
+Schauen wir uns die Mittelwerte und Standardabweichungen (`sd()`) für die Mariokart-Spiele mit 0 und 2 Lenkrädern an,
+s. @lst-mario-mw-sd.
+Wie in @fig-mw3 lassen wir die Extremwerte über 100 Dollar weg.
+
+
+```{r}
+#| lst-label: lst-mario-mw-sd
+#| lst-cap: Mittelwert und Standardabweichung pro Gruppe
+mario_lenkrad <-
+  mariokart |>
+  filter(total_pr < 100, wheels %in% c(0, 2)) |>
+  # Gruppe mit 2 Lenkrädern zuerst, damit d positiv wird:
+  mutate(lenkraeder = factor(wheels, levels = c(2, 0)))
+
+mario_lenkrad |>
+  group_by(lenkraeder) |>
+  summarise(mw = mean(total_pr),
+            sd = sd(total_pr))
+```
+
+
+```{r}
+#| echo: false
+mario_lenkrad_summ <-
+  mario_lenkrad |>
+  group_by(lenkraeder) |>
+  summarise(mw = mean(total_pr),
+            sd = sd(total_pr))
+mw_2 <- mario_lenkrad_summ$mw[mario_lenkrad_summ$lenkraeder == "2"]
+mw_0 <- mario_lenkrad_summ$mw[mario_lenkrad_summ$lenkraeder == "0"]
+sd_mario <- mean(mario_lenkrad_summ$sd)
+```
+
+
+Die beiden Standardabweichungen sind fast gleich, etwa `r sprintf("%.1f", sd_mario)` Dollar.
+Damit ist
+
+$$d \approx \frac{`r sprintf("%.1f", mw_2)` - `r sprintf("%.1f", mw_0)`}{`r sprintf("%.1f", sd_mario)`} \approx `r sprintf("%.1f", (mw_2 - mw_0) / sd_mario)`.$$
+
+In R berechnet man Cohens *d* mit `cohens_d()` aus dem Paket `effectsize` (Teil von `easystats`), s. @lst-cohens-d.
+Die Funktion fasst die Standardabweichungen beider Gruppen für Sie zu einer gemeinsamen ("gepoolten") Standardabweichung zusammen.
+
+
+```{r}
+#| lst-label: lst-cohens-d
+#| lst-cap: Cohens d berechnen
+cohens_d(total_pr ~ lenkraeder, data = mario_lenkrad)
+```
+
+
+```{r}
+#| echo: false
+d_mario <- cohens_d(total_pr ~ lenkraeder, data = mario_lenkrad)$Cohens_d
+cles_mario <- p_superiority(total_pr ~ lenkraeder, data = mario_lenkrad,
+                            parametric = FALSE)$p_superiority
+```
+
+
+Die Mittelwerte liegen also fast `r sprintf("%.0f", d_mario)` Standardabweichungen auseinander.
+(`CI` steht für das Konfidenzintervall; das ignorieren wir hier.)
+Ist das viel?
+@cohen_statistical_1988 hat dazu grobe Richtlinien vorgeschlagen:
+$d \approx 0.2$ gilt als *kleiner*, $d \approx 0.5$ als *mittlerer* und $d \approx 0.8$ als *großer* Effekt.
+Nach diesem Maßstab ist der Mariokart-Effekt riesig.
+
+Allerdings: So richtig anschaulich ist "`r sprintf("%.1f", d_mario)` Standardabweichungen" nicht.
+Was bedeutet das für einzelne Spiele?
+Dafür gibt es eine anschaulichere Effektstärke.
+
+
+
+
+### Common Language Effect Size (CLES)
+
+Stellen Sie sich vor, Sie ziehen zufällig ein Spiel mit 2 Lenkrädern und zufällig ein Spiel ohne Lenkrad.
+Wie wahrscheinlich ist es, dass das Spiel mit 2 Lenkrädern teurer verkauft wurde?
+Genau diese Frage beantwortet die *Common Language Effect Size* [@McGraw1992].
+Der Name sagt es: Sie soll in "Alltagssprache" verständlich sein.
+
+
+:::{#def-cles}
+### Common Language Effect Size (CLES)
+Die *Common Language Effect Size* (CLES), auch *Überlegenheitswahrscheinlichkeit* (engl. *probability of superiority*) genannt,
+ist die Wahrscheinlichkeit, dass ein zufällig gezogener Wert aus Gruppe A größer ist als ein zufällig gezogener Wert aus Gruppe B.
+Man berechnet sie, indem man jeden Wert aus A mit jedem Wert aus B vergleicht
+und den Anteil der Paare bestimmt, in denen der Wert aus A größer ist.
+Gleichstände zählen halb. $\square$
+:::
+
+
+Die CLES liegt zwischen 0 und 1.
+Ein Wert von 0.5 bedeutet: kein Unterschied -- es ist ein Münzwurf, welche Gruppe "gewinnt".
+Ein Wert von 1 bedeutet: Jeder Wert aus A ist größer als jeder Wert aus B; die Gruppen überlappen gar nicht.
+
+
+:::{#exm-cles-paare}
+### CLES von Hand ausgezählt
+Nehmen wir ein kleines Spielzeugbeispiel mit je drei Verkaufspreisen (in Dollar):
+
+- Gruppe A (2 Lenkräder): 50, 55, 60
+- Gruppe B (0 Lenkräder): 40, 52, 58
+
+Es gibt $3 \cdot 3 = 9$ Paare. @tbl-cles-paare zeigt für jedes Paar, ob der Preis aus A größer ist (1) oder nicht (0).
+
+| A \\ B | 40 | 52 | 58 |
+|:------:|:--:|:--:|:--:|
+| **50** | 1  | 0  | 0  |
+| **55** | 1  | 1  | 0  |
+| **60** | 1  | 1  | 1  |
+
+: Paarvergleiche im Spielzeugbeispiel: 1 heißt "Preis aus A ist größer" {#tbl-cles-paare}
+
+In 6 von 9 Paaren ist A teurer. Also ist $\text{CLES} = 6/9 \approx 0.67$.
+In Worten: Zieht man zufällig je ein Spiel aus beiden Gruppen, ist das Spiel mit 2 Lenkrädern in zwei von drei Fällen das teurere. $\square$
+:::
+
+
+In R berechnet man die CLES (wie in der Definition, über alle Paare) mit `p_superiority()`, s. @lst-cles.
+Das Argument `parametric = FALSE` sorgt dafür, dass tatsächlich die Paare ausgezählt werden.
+
+
+```{r}
+#| lst-label: lst-cles
+#| lst-cap: CLES berechnen
+p_superiority(total_pr ~ lenkraeder, data = mario_lenkrad,
+              parametric = FALSE)
+```
+
+
+Die CLES beträgt etwa `r sprintf("%.2f", cles_mario)`.
+In Worten: Zieht man zufällig ein Spiel mit 2 Lenkrädern und eines ohne Lenkrad,
+dann ist in `r sprintf("%.0f", 100 * cles_mario)` von 100 Fällen das Spiel mit Lenkrädern das teurere.
+Diese Aussage versteht man auch ohne Statistik-Kenntnisse.
+
+
+
+
+### *d* und CLES im Vergleich
+
+Cohens *d* und die CLES hängen eng zusammen:
+Je weiter die Mittelwerte auseinander liegen (relativ zur Streuung),
+desto seltener überlappen die Gruppen und desto größer ist die CLES.
+@fig-d-cles zeigt das für verschiedene Werte von *d*,
+@tbl-d-cles fasst die Werte zusammen.
+
+
+```{r}
+#| label: fig-d-cles
+#| fig-cap: "Je größer d, desto weniger überlappen die Gruppen und desto größer ist die CLES. Gezeigt sind zwei normalverteilte Gruppen mit gleicher Streuung."
+#| fig-asp: 0.7
+#| echo: false
+d_werte <- c(0.2, 0.5, 0.8, d_mario)
+d_titel <- sprintf("d = %.1f; CLES = %.2f", d_werte, pnorm(d_werte / sqrt(2)))
+d_titel <- factor(d_titel, levels = d_titel)
+
+d_kurven <-
+  expand_grid(i = seq_along(d_werte),
+              x = seq(-3.5, 3.5 + max(d_werte), length.out = 300)) |>
+  mutate(titel = d_titel[i],
+         B = dnorm(x, mean = 0),
+         A = dnorm(x, mean = d_werte[i])) |>
+  pivot_longer(c(A, B), names_to = "gruppe", values_to = "dichte")
+
+d_labels <-
+  tibble(titel = rep(d_titel, 2),
+         gruppe = rep(c("A", "B"), each = length(d_werte)),
+         x = c(d_werte + 1.9, rep(-1.9, length(d_werte))),
+         y = 0.3)
+
+farben_ab <- c(A = okabe_linie[2], B = okabe_linie[1])
+texte_ab  <- c(A = okabe_text[2], B = okabe_text[1])
+
+ggplot(d_kurven, aes(x = x, y = dichte, color = gruppe, fill = gruppe)) +
+  geom_area(alpha = 0.25, position = "identity", color = NA) +
+  geom_line(aes(linetype = gruppe), linewidth = 1) +
+  geom_text(data = d_labels,
+            aes(x = x, y = y, label = gruppe, color = I(texte_ab[gruppe])),
+            fontface = "bold", inherit.aes = FALSE) +
+  facet_wrap(~ titel, ncol = 2) +
+  scale_color_manual(values = farben_ab, guide = "none") +
+  scale_fill_manual(values = farben_ab, guide = "none") +
+  scale_linetype_manual(values = c(A = "solid", B = "dashed"), guide = "none") +
+  labs(x = "Messwert (in Einheiten der Standardabweichung)",
+       y = "Wahrscheinlichkeitsdichte") +
+  tufte_aus()
+```
+
+
+| Cohens *d* | Etikett nach Cohen | CLES |
+|:----------:|:------------------:|:----:|
+| 0          | kein Effekt        | 0.50 |
+| 0.2        | klein              | 0.56 |
+| 0.5        | mittel             | 0.64 |
+| 0.8        | groß               | 0.71 |
+| `r sprintf("%.1f", d_mario)` (Mariokart) | sehr groß | `r sprintf("%.2f", pnorm(d_mario / sqrt(2)))` |
+
+: Cohens d und die zugehörige CLES (für normalverteilte Gruppen mit gleicher Streuung) {#tbl-d-cles}
+
+
+Die Tabelle zeigt etwas Überraschendes:
+Ein nach Cohen "großer" Effekt ($d = 0.8$) bedeutet nur, dass in 71 von 100 Paaren die Gruppe A vorne liegt.
+In fast 30 % der Fälle ist es umgekehrt!
+Der Mariokart-Effekt ist also ungewöhnlich stark.
+In den Sozial- und Wirtschaftswissenschaften sind Effekte von $d \approx 0.2$ bis $0.5$ viel typischer.
+
+
+:::{.callout-important}
+Cohens Richtlinien (klein, mittel, groß) sind *grobe* Faustregeln, keine Naturgesetze.
+Cohen selbst hat sie nur für den Fall empfohlen, dass man sonst keinen Anhaltspunkt hat.
+Ob ein Effekt wichtig ist, hängt vom Kontext ab:
+Ein "kleiner" Effekt eines Medikaments kann bei Millionen von Patienten viele Leben retten;
+ein "großer" Effekt kann praktisch belanglos sein, wenn es um etwas Unwichtiges geht.
+Hier hilft die CLES: Sie braucht kein Etikett, sondern sagt direkt,
+wie oft die eine Gruppe vor der anderen liegt.
+Diese Aussage kann man im jeweiligen Kontext selbst bewerten.
+:::
+
+
+:::{.callout-tip collapse="true"}
+### Vertiefung: CLES aus *d* berechnen
+
+Wenn beide Gruppen normalverteilt sind und gleich stark streuen,
+kann man die CLES direkt aus Cohens *d* berechnen [@McGraw1992]:
+
+$$\text{CLES} = \Phi\left(\frac{d}{\sqrt{2}}\right)$$
+
+Dabei ist $\Phi$ die Verteilungsfunktion der Standardnormalverteilung (in R: `pnorm()`).
+So wurden die Werte in @tbl-d-cles berechnet, z.$\,$B. `pnorm(0.8 / sqrt(2))` ergibt 0.71.
+Ohne das Argument `parametric = FALSE` verwendet `p_superiority()` genau diese Formel.
+Die Paar-Methode aus @def-cles kommt dagegen ohne Annahmen über die Verteilung aus.
+:::
+
+
+
+
+
 ## Wie man mit Statistik lügt
 
 Es heißt, mit Statistik könne man vortrefflich lügen.
@@ -1746,7 +2042,10 @@ list(
   "exs/Schiefe_Interpolation.Rmd",
   "exs/Nullmodell_R.Rmd",
   "exs/MW_Eigenschaft.Rmd",
-  "exs/Normal_Rechnen.Rmd"
+  "exs/Normal_Rechnen.Rmd",
+  "exs/Cohens_d_Berechnen.Rmd",
+  "exs/CLES_Interpretation.Rmd",
+  "exs/CLES_Paare_Zaehlen.Rmd"
 )
 ```
 

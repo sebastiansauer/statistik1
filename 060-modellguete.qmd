@@ -1420,6 +1420,90 @@ Man schreibt kurz: $X \sim \mathcal{N}(0, 1)\quad \square$.
 
 Man kann jede Normalverteilung in eine Standardnormalverteilung überführen mit der *z-Transformation*.
 
+
+
+## Wie man mit Statistik lügt
+
+Sie kennen jetzt mehrere Streuungsmaße: Spannweite, MAA, IQR, Varianz und SD.
+Jedes ist für sich korrekt berechnet -- aber sie können zu sehr unterschiedlichen Zahlen führen.
+Wer eine bestimmte Botschaft verkaufen will, sucht sich einfach das passende Maß heraus.
+
+:::{#exm-luege-streuungsmass}
+### Zwei Botschaften, ein Datensatz
+
+Eine Verbraucherschützerin [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} möchte vor dem Kauf gebrauchter Mariokart-Spiele bei Online-Auktionen warnen.
+Ein Händler [👨‍💼]{.content-visible when-format="html"}[\emoji{man-office-worker}]{.content-visible when-format="pdf"} möchte dagegen zeigen, dass man dort zu verlässlichen Preisen kauft.
+Beide nutzen denselben Datensatz `mariokart` und berechnen die Streuung des Verkaufspreises:
+
+```{r}
+mariokart |>
+  summarise(spannweite = max(total_pr) - min(total_pr),
+            iqr = IQR(total_pr),
+            sd = sd(total_pr))
+```
+
+>   [👩]{.content-visible when-format="html"}[\emoji{woman}]{.content-visible when-format="pdf"} Vorsicht! Die Preise schwanken um bis zu 298 Dollar!
+
+>   [👨‍💼]{.content-visible when-format="html"}[\emoji{man-office-worker}]{.content-visible when-format="pdf"} Unsinn! Die Preise sind stabil: Die mittlere Hälfte der Preise liegt gerade mal 13 Dollar auseinander.
+
+Beide haben richtig gerechnet. Und beide haben sich das Maß herausgepickt, das zu ihrer Botschaft passt.
+@fig-luege-streuung zeigt, woran es liegt:
+Die Spannweite wird von zwei einzelnen Auktionen mit sehr hohem Preis aufgebläht;
+der IQR blendet dagegen die Hälfte der Daten (die äußeren Viertel) komplett aus.
+
+```{r}
+#| echo: false
+#| label: fig-luege-streuung
+#| fig-cap: "Dieselben Verkaufspreise, zwei Streuungsmaße: Die Spannweite hängt an zwei Einzelfällen, der IQR beschreibt nur die mittlere Hälfte der Daten."
+#| fig-asp: 0.4
+#| fig-alt: "Punktdiagramm der 143 Verkaufspreise. Fast alle Preise liegen zwischen 30 und 75 Dollar, zwei Ausreißer bei 118 und 327 Dollar. Eine orange Klammer über allen Punkten markiert die Spannweite von 298 Dollar, ein schmales blaues Band die mittlere Hälfte der Preise (IQR, 13 Dollar)."
+pr_min <- min(mariokart$total_pr)
+pr_max <- max(mariokart$total_pr)
+pr_q1 <- quantile(mariokart$total_pr, 0.25)
+pr_q3 <- quantile(mariokart$total_pr, 0.75)
+
+set.seed(42)
+mariokart |>
+  mutate(hoehe = runif(n(), -0.4, 0.4)) |>  # vertikal streuen gegen Überdeckung
+  ggplot(aes(x = total_pr, y = hoehe)) +
+  annotate("rect", xmin = pr_q1, xmax = pr_q3, ymin = -0.5, ymax = 0.5,
+           fill = okabe_linie[2], alpha = 0.25) +
+  geom_point(color = grau_dunkel, alpha = 0.6) +
+  annotate("segment", x = pr_min, xend = pr_max, y = 0.85, yend = 0.85,
+           colour = okabe_linie[1], linewidth = 1) +
+  annotate("segment", x = c(pr_min, pr_max), xend = c(pr_min, pr_max),
+           y = 0.75, yend = 0.95, colour = okabe_linie[1], linewidth = 1) +
+  annotate("text", x = (pr_min + pr_max) / 2, y = 1.05, vjust = 0,
+           label = sprintf("Spannweite: %.0f Dollar", pr_max - pr_min),
+           colour = textfarbe(okabe_linie[1]), fontface = "bold") +
+  annotate("text", x = pr_q3 + 4, y = -0.62, hjust = 0, vjust = 1,
+           label = sprintf("IQR: %.0f Dollar", pr_q3 - pr_q1),
+           colour = textfarbe(okabe_linie[2]), fontface = "bold") +
+  rangeframe(sides = "b") +
+  tufte_rug(sides = "b") +
+  coord_cartesian(ylim = c(-0.9, 1.25)) +
+  labs(x = "Verkaufspreis (Dollar)") +
+  ohne_y_achse() +
+  ohne_gitter() +
+  theme(axis.ticks.x = element_line(colour = grau_dunkel))
+```
+
+Welches Maß ist nun "richtig"? Das hängt von der Frage ab.
+Will man wissen, wie stark die Preise *typischerweise* schwanken, beschreibt der IQR (oder die MAA) das gut --
+die beiden Ausreißer waren ohnehin Pakete (einmal mit Konsole, einmal mit zehn Spielen), also gar nicht vergleichbar.
+Will man wissen, mit welchen *Extremen* man rechnen muss, ist die Spannweite informativ --
+dann sollte man aber dazusagen, dass sie an zwei Einzelfällen hängt.
+Ehrlich ist, mehrere Maße zu berichten oder die Wahl zu begründen. $\square$
+:::
+
+:::{.callout-important}
+### Kritisch nachgefragt
+
+- Welches Streuungsmaß wurde berichtet -- und warum gerade dieses?
+- Wie sähe das Ergebnis mit einem anderen Maß aus?
+- Hängt das Ergebnis an wenigen Einzelfällen? Ein Blick auf die Rohdaten (z.$\,$B. ein Diagramm) hilft. $\square$
+:::
+
 ## Quiz
 
 ```{r}

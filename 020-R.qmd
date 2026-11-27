@@ -1599,6 +1599,74 @@ ggplot(d) +
 
 
 
+## Wie man mit Statistik lügt
+
+Das Argument `na.rm = TRUE` (s. oben) ist praktisch:
+R rechnet einfach weiter, statt die rote Fahne `NA` zu schwenken.
+Genau darin liegt aber eine Gefahr: Die fehlenden Werte verschwinden still und leise aus der Rechnung --
+und aus dem Bericht.
+
+:::{#exm-luege-na-rm}
+### Die zufriedenen Kunden
+
+Ein Analyst [👨‍💼]{.content-visible when-format="html"}[\emoji{man-office-worker}]{.content-visible when-format="pdf"} soll der Geschäftsführung zeigen,
+wie zufrieden die Kunden sind.
+Die Firma hat 10 Kunden gebeten, ihre Zufriedenheit auf einer Skala von 1 (sehr unzufrieden) bis 10 (sehr zufrieden) anzugeben.
+Allerdings haben nicht alle geantwortet:
+
+```{r}
+Zufriedenheit <- c(9, 8, 10, 9, NA, 8, NA, NA, 9, NA)
+```
+
+Der Analyst berechnet den Mittelwert -- natürlich ohne die störenden `NA`s:
+
+```{r}
+mean(Zufriedenheit, na.rm = TRUE)
+```
+
+>   [👨‍💼]{.content-visible when-format="html"}[\emoji{man-office-worker}]{.content-visible when-format="pdf"} 8.8 von 10 Punkten! Unsere Kunden lieben uns!
+
+Was der Analyst *nicht* berichtet: Wie viele Werte fehlen eigentlich?
+Das verrät uns die Funktion `is.na()`. Sie prüft für jedes Element des Vektors,
+ob es ein fehlender Wert ist, und liefert `TRUE` (ja, fehlt) oder `FALSE` (nein, ist vorhanden):
+
+```{r}
+is.na(Zufriedenheit)
+```
+
+Mit `sum()` zählen wir die `TRUE`s (R rechnet `TRUE` als 1 und `FALSE` als 0):
+
+```{r}
+sum(is.na(Zufriedenheit))
+```
+
+Es fehlen also 4 von 10 Antworten -- fast die Hälfte!
+Jetzt wird es spannend: *Wer* antwortet eigentlich nicht auf eine Zufriedenheitsumfrage?
+Vermutlich eher die verärgerten Kunden, die mit der Firma nichts mehr zu tun haben wollen.
+Machen wir ein Gedankenexperiment: Angenommen, die 4 fehlenden Kunden hätten jeweils eine 2 vergeben:
+
+```{r}
+Zufriedenheit_alle <- c(9, 8, 10, 9, 2, 8, 2, 2, 9, 2)
+mean(Zufriedenheit_alle)
+```
+
+Statt 8.8 nur noch 6.1 -- ein ganz anderes Bild.
+Wir wissen nicht, welche Werte die fehlenden Kunden vergeben hätten.
+Aber genau das ist der Punkt: `na.rm = TRUE` ist keine neutrale technische Einstellung,
+sondern eine stillschweigende *Annahme*,
+nämlich dass die fehlenden Personen im Schnitt genauso geantwortet hätten wie die vorhandenen. $\square$
+:::
+
+:::{.callout-important}
+### Kritisch nachgefragt
+
+- Wie viele Werte fehlen? Wird das berichtet?
+- *Warum* fehlen die Werte? Könnten sich die Fehlenden systematisch von den Vorhandenen unterscheiden?
+- Wie stark ändert sich das Ergebnis, wenn man plausible Werte für die Fehlenden annimmt? $\square$
+:::
+
+
+
 ## Quiz
 
 

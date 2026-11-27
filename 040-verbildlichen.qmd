@@ -51,6 +51,7 @@ source("_common.R")
 - Sie kennen typische Arten von Datendiagrammen.
 - Sie können typische Datendiagramme mit R visualisieren.
 - Sie können zentrale Ergebnisse aus Datendiagrammen herauslesen.
+- Sie können zentrale Prinzipien zur Gestaltung von Datendiagrammen benennen und anwenden.
 
 
 ### Benötigte R-Pakete und Daten
@@ -1620,6 +1621,87 @@ mit Ausnahme der mittleren Gruppe. $\square$
 
 
 
+## Gute Datendiagramme gestalten {#sec-gestaltung}
+
+Ein Datendiagramm soll eine Frage schnell und ehrlich beantworten.
+Dabei helfen vier Faustregeln.
+
+1. **Erst die Botschaft, dann das Diagramm.**
+Überlegen Sie zuerst, was man sehen soll: eine Verteilung, einen Zusammenhang oder einen Unterschied?
+Daraus folgt der Diagrammtyp, s. @tbl-nom-plots.
+2. **Lage schlägt Fläche und Winkel.**
+Positionen entlang einer gemeinsamen Achse vergleicht unser Auge sehr genau,
+Winkel und Flächen dagegen nur grob [@cleveland_visualizing_1993-1].
+Darum ist ein Balkendiagramm einem Tortendiagramm fast immer überlegen.
+3. **Weniger ist mehr.**
+Alles, was keine Information trägt, lenkt nur ab:
+3D-Effekte, Schatten, farbige Hintergründe, dichte Gitterlinien, bunte Farben ohne Bedeutung [@tufte_visual_2001].
+4. **Direkt beschriften.**
+Achsen bekommen einen verständlichen Namen (ggf. mit Einheit).
+Gruppen und Werte stehen direkt im Diagramm statt in einer Legende,
+zu der das Auge hin- und herspringen muss.
+
+@fig-gestaltung zeigt zweimal dieselben Daten: die Versandart (`ship_sp`) der Mariokart-Auktionen.
+Die Frage lautet: Welche Versandart ist am häufigsten?
+Im Tortendiagramm ist das kaum zu erkennen:
+`standard` (33 Auktionen) und `upsGround` (31 Auktionen) sind fast gleich große Tortenstücke,
+und das Auge pendelt ständig zwischen Torte und Legende.
+Im sortierten Balkendiagramm ist die Antwort sofort ablesbar.
+
+
+```{r}
+#| echo: false
+#| label: fig-gestaltung
+#| layout-ncol: 2
+#| fig-cap: "Dieselben Daten, zwei Diagramme: Häufigkeit der Versandarten im Datensatz `mariokart`"
+#| fig-subcap:
+#|   - "Vorher: Torte, Legende, bunte Farben, grauer Hintergrund"
+#|   - "Nachher: sortierte Balken, direkt beschriftet"
+#| fig-alt: "Links ein buntes Tortendiagramm mit acht ähnlich großen Stücken und einer Legende; rechts dieselben Häufigkeiten als graue, der Größe nach sortierte Balken mit der Anzahl am Balkenende."
+
+versand <- mariokart |> count(ship_sp)
+
+# Absichtlich schlechtes Beispiel: Buch-Automatik (Gitter, y-Titel) abschalten
+alt <- options(wilke_gitter = FALSE, y_label_oben = FALSE)
+
+p_vorher <-
+  versand |>
+  ggplot(aes(x = "", y = n, fill = ship_sp)) +
+  geom_col(width = 1, color = "black") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(values = grDevices::rainbow(nrow(versand))) +
+  labs(title = "Versandarten", x = NULL, y = NULL, fill = "ship_sp") +
+  theme_gray()
+print(p_vorher)
+
+options(alt)
+
+p_nachher <-
+  versand |>
+  ggplot(aes(x = n, y = reorder(ship_sp, n))) +
+  geom_col(width = 0.7) +
+  geom_text(aes(label = sprintf("%.0f", n)), hjust = -0.3,
+            fontface = "bold", color = fast_schwarz) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(x = NULL, y = "Versandart (Anzahl Auktionen am Balken)") +
+  theme_med(grid = "none") +
+  theme(axis.text.x = element_blank())
+print(p_nachher)
+```
+
+Das Balkendiagramm verwendet weniger Tinte und zeigt trotzdem mehr:
+die genaue Anzahl und die Rangfolge.
+
+
+:::{.callout-important}
+Ein gutes Datendiagramm beantwortet seine Frage auf einen Blick. $\square$
+:::
+
+Wer die Gründe hinter diesen Faustregeln genauer kennenlernen möchte, findet sie in der Vertiefung, s. @sec-gestaltung-vertiefung.
+Die Kehrseite der Faustregeln: Wer sie absichtlich bricht, kann mit Diagrammen täuschen -- davon handelt der nächste Abschnitt.
+
+
+
 ## So lügt man mit Statistik
 
 Diagramme werden mitunter eingesetzt, um die Wahrheit "aufzuhübschen". 
@@ -1713,9 +1795,9 @@ Die Daten und die Idee zur Visualisierung gehen auf @van_panhuis_contagious_2013
 
 
 
-In der "freien Wildbahn" findet man häufig sog. "Tortendiagramme".
-Zwar sind sie beliebt, doch [von ihrer Verwendung ist zumeist abzuraten](https://www.data-to-viz.com/caveat/pie.html),
-denn bei Tortenstücken ist es schwer, die Größe zu vergleichen.
+Tortendiagramme begegnen Ihnen in der "freien Wildbahn" ständig.
+Warum Balken meist die bessere Wahl sind, haben Sie in @sec-gestaltung gesehen;
+weitere Gründe nennt [data-to-viz](https://www.data-to-viz.com/caveat/pie.html).^[<https://www.data-to-viz.com/caveat/pie.html>]
 
 ::: {.content-visible when-format="html"}
 Freunde lassen Freunde  [keine Tortendiagramme zeichnen](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart).
@@ -1733,6 +1815,7 @@ list(
   "exs/Praxis_Datenjudo.Rmd",
   "exs/Okabe_Ito.Rmd",
   "exs/Torten_Kritik.Rmd",
+  "exs/Diagramm_Gestaltung.Rmd",
   "exs/Schein_Korr.Rmd",
   "exs/Balken_Normierung.Rmd",
   "exs/Bosplot_Schiefe.Rmd",
@@ -1912,11 +1995,42 @@ so nutzt man den Schalter `results.subtitle = FALSE`.
 :::
 
 
-### Farbwahl {#sec-farbwahl}
+### Gestaltung von Datendiagrammen {#sec-gestaltung-vertiefung}
 
-Einige Überlegungen zur Farbwahl findet sich bei @wilke_fundamentals_2019, Kap. 4.
-Die Farbpalette von Okabe und Ito ist [vgl. @ichihara_color_2008] empfehlenswert, 
-das sie über über optisch gut unterscheidbarer und klar benennbare Farben verfügt.
+In @sec-gestaltung haben Sie vier Faustregeln kennengelernt.
+Hier finden Sie die Überlegungen dahinter.
+
+#### Daten-Tinte
+
+Tufte [-@tufte_visual_2001] unterscheidet zwischen *Daten-Tinte*
+(alles, was Daten zeigt: Punkte, Balken, Linien)
+und der übrigen Tinte (Rahmen, Hintergründe, Gitter, Verzierungen).
+Sein Rat: Der Anteil der Daten-Tinte an der gesamten Tinte soll möglichst hoch sein.
+Was keine Information trägt, kann weg -- oder wird zumindest blass gezeichnet,
+etwa hellgraue statt schwarze Gitterlinien.
+Übertreiben sollte man es aber nicht:
+Ganz ohne Achsen und Beschriftung lässt sich ein Diagramm nicht mehr lesen [@wilke_fundamentals_2019].
+
+#### Rangfolge der Wahrnehmung
+
+Nicht jede Art, einen Wert zu zeigen, liest unser Auge gleich genau.
+Experimente zur Wahrnehmung ergeben ungefähr folgende Rangfolge, von genau bis grob [@cleveland_visualizing_1993-1; @wilke_fundamentals_2019]:
+
+1. Position entlang einer gemeinsamen Achse (Punkte, Balkenenden)
+2. Länge (Balken ohne gemeinsame Grundlinie)
+3. Winkel und Steigung (Tortenstücke)
+4. Fläche (Blasen, Kacheln)
+5. Farbhelligkeit und Farbsättigung
+
+Daraus folgt Faustregel 2:
+Was verglichen werden soll, gehört an eine gemeinsame Achse.
+Farbe eignet sich besser, um Gruppen zu *unterscheiden*, als um Mengen zu *vergleichen*.
+
+#### Farbe {#sec-farbwahl}
+
+Einige Überlegungen zur Farbwahl finden sich bei @wilke_fundamentals_2019, Kap. 4.
+Die Farbpalette von Okabe und Ito ist empfehlenswert [vgl. @ichihara_color_2008],
+da sie über optisch gut unterscheidbare und klar benennbare Farben verfügt.
 Außerdem erlaubt sie bei Sehschwächen die Farben noch recht gut zu unterscheiden, s. @fig-okabe.
 Möchte man sie für Schwarz-Weiß-Druck verwenden, 
 kann man angeben, dass als erste Farbe Schwarz verwendet werden soll;
@@ -1944,7 +2058,7 @@ Welche das ist, hängt vom verwendeten Farbschema ab.
 Hier wird das Farbscheme von Okabe und Ito verwendet [@ichihara_color_2008].
 
 :::{#exr-okabi-cols}
-Schauen Sie sich die Farbpalette von Okabe und Ito einmal näher an, z.$\,$ so:
+Schauen Sie sich die Farbpalette von Okabe und Ito einmal näher an, z.$\,$B. so:
 
 ```{r}
 #| eval: false
@@ -1953,10 +2067,25 @@ library(see)
 show_col(okabeito_colors())
 ```
 
-Die Füllfarbe eines Diagramms, z.$\,$ in @fig-okabe, können Sie ändern, 
+Die Füllfarbe eines Diagramms, z.$\,$B. in @fig-okabe, können Sie ändern, 
 indem Sie `scale_fill_okabeito` ersetzen durch `scale_fill_manual(values = c("#0072B2", "#E69F00"))`. 
 Probieren Sie dabei verschiedene Farben aus. $\square$
 :::
+
+#### So macht es dieses Buch
+
+Die Diagramme in diesem Buch folgen diesen Regeln einheitlich.
+Wenn Sie genau hinschauen, erkennen Sie sie in fast jeder Abbildung wieder:
+
+- Grau ist die Standardfarbe; Farbe kommt nur ins Spiel, um etwas hervorzuheben (z.$\,$B. eine Trendgerade) oder um Gruppen zu unterscheiden.
+- Gitterlinien gibt es nur entlang der Achse, an der man Werte abliest, und auch dann nur hellgrau.
+- Bei Streudiagrammen reicht die Achsenlinie nur vom kleinsten bis zum größten Datenwert; Striche am Rand (ein sog. *Rug*) zeigen, wo die einzelnen Beobachtungen liegen [@tufte_visual_2001].
+- Gruppen werden direkt im Diagramm beschriftet statt über eine Legende; zusätzlich zur Farbe unterscheidet sich die Form der Punkte, damit die Abbildungen auch in Graustufen lesbar bleiben.
+- Balken tragen ihren Wert direkt am Balken; dann braucht es keine Werteachse.
+
+Sie müssen das in Ihren eigenen Diagrammen nicht alles nachbauen.
+Aber es lohnt sich, bei jedem Diagramm zu fragen:
+Was davon hilft, die Frage zu beantworten -- und was kann weg?
 
 ## Literaturhinweise
 

@@ -1436,11 +1436,19 @@ Am besten wir schauen uns einige Beispiele an, s. @fig-compare-groups1.
 
 ggplot(mariokart_no_extreme, aes(x = cond, y = total_pr)) +
   geom_violinhalf(fill = grau_mittel, color = grau_dunkel) +
+  ggdist::stat_dots(  # Rohdaten: ein Punkt pro Spiel, links der Verteilung
+    side = "left", justification = 1.05, binwidth = 0.8,
+    fill = grau_dunkel, colour = grau_dunkel) +
+  coord_cartesian(xlim = c(0.6, 2.4)) +  # Leerraum links kappen
   labs(x = "cond", y = NULL, subtitle = "total_pr (Dollar)")
 
 
 ggplot(mariokart_no_extreme, aes(x = cond, y = total_pr)) +
-  geom_boxplot(width = 0.5) +
+  geom_boxplot(width = 0.25, outlier.shape = NA) +
+  ggdist::stat_dots(  # Rohdaten: ein Punkt pro Spiel, links des Boxplots
+    side = "left", justification = 1.25, binwidth = 0.8,
+    fill = grau_dunkel, colour = grau_dunkel) +
+  coord_cartesian(xlim = c(0.6, 2.4)) +  # Leerraum links kappen
   labs(x = "cond", y = NULL, subtitle = "total_pr (Dollar)")
 ```
 
@@ -1566,28 +1574,77 @@ so dass wir die Belastbarkeit dieses Ergebnisses skeptisch betrachten sollten.
 ### Visualisieren Sie den Unterschied im Verkaufspreis zwischen gebrauchten und neuen Spielen.
 
 Es gibt mehrere Diagrammtypen, die sich anbieten;
-mehrere Lösungen sind also möglich.
+mehrere Lösungen sind also möglich. $\square$
 
-**Lösung**
+::::
+
+:::{.content-visible when-format="html"}
+
+:::{.callout-tip collapse="true"}
+### Lösung zu @exr-diff-plot
+
+**Lösung 1: Boxplot**
 
 ```{r}
-#| eval: !expr knitr:::is_html_output()
 #| out-width: 50%
 mariokart_no_extreme |>
   ggboxplot(x = "cond", y = "total_pr")
 ```
 
-Boxplots sind eine gute Möglichkeit, die Verteilung einer metrischen Variablen, 
-aufgebrochen auf mehrere Gruppen, zu visualisieren. $\square$
+Boxplots sind eine gute Möglichkeit, die Verteilung einer metrischen Variablen,
+aufgebrochen auf mehrere Gruppen, zu visualisieren.
 
-::::
+**Lösung 2: Raindrop-Diagramm**
+
+Ein Raindrop-Diagramm (auch *Raincloud-Plot*) kombiniert drei Sichten auf die Daten:
+oben die Dichte als "Wolke", in der Mitte einen schmalen Boxplot und darunter die Rohdaten als "Regentropfen" (ein Punkt pro Spiel).
+So sieht man Form, Lage *und* Anzahl der Beobachtungen auf einen Blick.
+Das Paket `ggdist` stellt die Bausteine bereit.
+
+```{r}
+#| out-width: 70%
+library(ggdist)
+
+mariokart_no_extreme |>
+  ggplot(aes(x = total_pr, y = cond)) +
+  stat_halfeye(  # Wolke: Dichte, nach oben versetzt
+    fill = mittelgrau, adjust = 0.6, height = 0.6,
+    justification = -0.2, .width = 0, point_colour = NA) +
+  geom_boxplot(width = 0.12, outlier.shape = NA) +  # Boxplot in der Mitte
+  stat_dots(  # Tropfen: ein Punkt pro Spiel, nach unten
+    side = "bottom", justification = 1.15, binwidth = 0.6,
+    fill = dunkelgrau, colour = dunkelgrau) +
+  labs(x = "Verkaufspreis (Dollar)", y = "Zustand des Spiels")
+```
+
+Neue Spiele erzielen im Median rund 10 Dollar mehr als gebrauchte;
+die Verteilungen überlappen sich aber deutlich. $\square$
+:::
+
+:::
+
+:::{.content-visible when-format="pdf"}
+
+**Lösung zu @exr-diff-plot**
+
+```{r}
+#| eval: false
+mariokart_no_extreme |>
+  ggboxplot(x = "cond", y = "total_pr")
+```
+
+Boxplots sind eine gute Möglichkeit, die Verteilung einer metrischen Variablen,
+aufgebrochen auf mehrere Gruppen, zu visualisieren.
+Eine Alternative ist ein Raindrop-Diagramm (Raincloud-Plot), etwa mit dem Paket `ggdist`. $\square$
+
+:::
 
 
 <!-- TODO MW-Unterschiede visualisieren -->
 
 
 
-::::{#exr-diff-plot}
+::::{#exr-diff-plot-versand}
 
 ### Verkaufspreis im Vergleich
 

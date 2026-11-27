@@ -251,8 +251,10 @@ Sebastian Sauer
 <h2>Lernziele</h2>
 <ul>
 <li>Sie können typische Probleme in Rohdaten benennen (Dubletten, fehlende Werte, unplausible Werte und Extremwerte, uneinheitliche Kodierung) und in einem Datensatz erkennen.</li>
+<li>Sie können Probleme beim Einlesen einer Datei erkennen (Notizzeilen, unbrauchbare Spaltennamen, Fehlcodes wie <code>-99</code>) und beim Import beheben.</li>
 <li>Sie können für jedes dieser Probleme eine begründete Entscheidung treffen und diese festhalten.</li>
 <li>Sie können die Verben des Datenjudos (<code>arrange</code>, <code>filter</code>, <code>select</code>, <code>summarise</code>, <code>group_by</code>, <code>mutate</code>) einer Aufgabe zuordnen und R-Code mit ihnen lesen und anwenden.</li>
+<li>Sie können eine Tabelle mit <code>pivot_longer</code> und <code>pivot_wider</code> zwischen Breit- und Langformat umwandeln.</li>
 <li>Sie können R-Befehle mit der “Pfeife” verketten.</li>
 </ul>
 <div class="footer">
@@ -519,7 +521,50 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfcm9oZGF0ZW5fbmEi
 <span id="cb5-9"><a href="" aria-label="9"></a>  <span class="fu">mutate</span>(<span class="at">duration =</span> <span class="fu">if_else</span>(duration <span class="sc">&gt;</span> <span class="dv">10</span>, <span class="cn">NA</span>, duration)) <span class="sc">|&gt;</span></span>
 <span id="cb5-10"><a href="" aria-label="10"></a>  <span class="co"># Extremwerte: Bundles gehören nicht zur Forschungsfrage</span></span>
 <span id="cb5-11"><a href="" aria-label="11"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Ergebnis: 139 Zeilen, mittlerer Preis 47,4 statt 49,9 Dollar.</p>
+<p>Ergebnis: 139 Zeilen, mittlerer Preis 47.4 statt 49.9 Dollar.</p>
+<div class="footer">
+<p>Was Rohdaten typischerweise falsch machen</p>
+</div>
+</section>
+<section id="probleme-schon-beim-einlesen" class="slide level2">
+<h2>Probleme schon beim Einlesen</h2>
+<p><code>mariokart_roh</code> kommt aus einer Datenbank: eine Kopfzeile, darunter ein Fall pro Zeile. Von Hand gepflegte Excel-Listen sind oft weniger ordentlich — dann steckt der Fehler schon im <em>Aufbau der Datei</em>.</p>
+<p>Ein Kommilitone schickt <code>umfrage_roh</code> (zwei zusammengeklebte Excel-Listen, 120 Befragte) samt <em>Data-Dictionary</em>: “Wie lange pendeln unsere Studis im Mittel?”</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-label="1"></a>umfrage_naiv <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(umfrage_path)</span>
+<span id="cb6-2"><a href="" aria-label="2"></a><span class="fu">dim</span>(umfrage_naiv)   <span class="co"># 129 Zeilen, aber nur 1 Spalte?!</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>Umfrage Studierende WS 2026; Export aus Excel; Stand 12.10.2026
+ID,alter (Jahre),Geschlecht,STUDIENGANG,Semester,Pendelweg [min],...
+S001,22,maennlich,BWL,7,46,Bus,5,7,13.2</code></pre>
+<div class="footer">
+<p>Was Rohdaten typischerweise falsch machen</p>
+</div>
+</section>
+<section id="vier-stolpersteine-beim-einlesen" class="slide level2 smaller">
+<h2>Vier Stolpersteine beim Einlesen</h2>
+<ul>
+<li><strong>Notizzeile über der Kopfzeile:</strong> <code>read_csv()</code> hält immer die erste Zeile für die Kopfzeile. → <code>skip = 1</code></li>
+<li><strong>Unbrauchbare Spaltennamen</strong> (Leerzeichen, Klammern, Umlaute): nur mit Backticks ansprechbar, z. B. <code>`Pendelweg [min]`</code>. → mit <code>rename()</code> umbenennen, am besten in die Namen aus dem Data-Dictionary</li>
+<li><strong>Fehlcodes:</strong> Fehlende Angaben stehen als leere Zelle, <code>k.A.</code> oder <code>-99</code>. <code>k.A.</code> macht die Spalte zu Text (sieht man bei <code>glimpse</code>); <code>-99</code> ist eine gültige Zahl — R rechnet klaglos weiter. → <code>na = c("", "NA", "k.A.", "-99")</code></li>
+<li><strong>Zeilen, die keine Fälle sind:</strong> Leerzeile, wiederholte Kopfzeile, Summenzeile. Die doppelte Kopfzeile macht stillschweigend <em>alle</em> Spalten zu Text. → herausfiltern, dann <code>type_convert()</code></li>
+</ul>
+<div class="footer">
+<p>Was Rohdaten typischerweise falsch machen</p>
+</div>
+</section>
+<section id="sauber-einlesen" class="slide level2 smaller">
+<h2>Sauber einlesen</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-label="1"></a>umfrage <span class="ot">&lt;-</span></span>
+<span id="cb8-2"><a href="" aria-label="2"></a>  <span class="fu">read_csv</span>(umfrage_path,</span>
+<span id="cb8-3"><a href="" aria-label="3"></a>           <span class="at">skip =</span> <span class="dv">1</span>,                                <span class="co"># Notizzeile überspringen</span></span>
+<span id="cb8-4"><a href="" aria-label="4"></a>           <span class="at">na =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"NA"</span>, <span class="st">"k.A."</span>, <span class="st">"-99"</span>)) <span class="sc">|&gt;</span>      <span class="co"># Fehlcodes laut Data-Dictionary</span></span>
+<span id="cb8-5"><a href="" aria-label="5"></a>  <span class="fu">rename</span>(<span class="at">id =</span> ID, <span class="at">pendelweg_min =</span> <span class="st">`</span><span class="at">Pendelweg [min]</span><span class="st">`</span>,</span>
+<span id="cb8-6"><a href="" aria-label="6"></a>         <span class="at">schlaf_std =</span> <span class="st">`</span><span class="at">Schlaf in Std.</span><span class="st">`</span>, ...) <span class="sc">|&gt;</span>     <span class="co"># Namen laut Data-Dictionary</span></span>
+<span id="cb8-7"><a href="" aria-label="7"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(id), id <span class="sc">!=</span> <span class="st">"ID"</span>, id <span class="sc">!=</span> <span class="st">"Summe"</span>) <span class="sc">|&gt;</span>  <span class="co"># Zeilen, die keine Fälle sind</span></span>
+<span id="cb8-8"><a href="" aria-label="8"></a>  <span class="fu">type_convert</span>()                                    <span class="co"># Spaltentypen neu bestimmen</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong>Was hätte <code>-99</code> angerichtet?</strong> Mittlere Schlafdauer 6.30 statt 7.10 Stunden — rund 48 Minuten daneben, ohne jede Warnung.</li>
+<li><strong>Noch nicht fertig:</strong> 123 statt 120 Zeilen, <code>semester</code> und <code>pendelweg_min</code> sind noch Text (<code>5. Sem.</code>, <code>17 min</code>). Ab jetzt die bekannten Probleme: Dubletten, Tippfehler, unplausible Werte, Extremwerte.</li>
+</ul>
 <div class="footer">
 <p>Was Rohdaten typischerweise falsch machen</p>
 </div>
@@ -571,6 +616,54 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfcm9oZGF0ZW5fbmEi
 <td style="text-align: left;">zu viele Kategorien, Tippfehler</td>
 <td style="text-align: left;">auf eine Schreibweise vereinheitlichen</td>
 <td style="text-align: left;"><code>count()</code>, <code>mutate()</code></td>
+</tr>
+</tbody>
+</table>
+<div class="footer">
+<p>Was Rohdaten typischerweise falsch machen</p>
+</div>
+</section>
+<section id="überblick-probleme-beim-einlesen" class="slide level2 smaller">
+<h2>Überblick: Probleme beim Einlesen</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 30%">
+<col style="width: 36%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Problem</th>
+<th style="text-align: left;">Erkennungszeichen</th>
+<th style="text-align: left;">typische Entscheidung</th>
+<th style="text-align: left;">R-Werkzeug</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Notiz-, Leer-, Summenzeilen</td>
+<td style="text-align: left;">zu wenige Spalten, Zeilen ohne Fall</td>
+<td style="text-align: left;">beim Einlesen überspringen bzw. herausfiltern</td>
+<td style="text-align: left;"><code>skip =</code>, <code>filter()</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">unbrauchbare Spaltennamen</td>
+<td style="text-align: left;">Leerzeichen, Klammern, Umlaute</td>
+<td style="text-align: left;">umbenennen</td>
+<td style="text-align: left;"><code>rename()</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fehlcodes</td>
+<td style="text-align: left;">Werte wie <code>-99</code> oder <code>k.A.</code></td>
+<td style="text-align: left;">als fehlend kennzeichnen</td>
+<td style="text-align: left;"><code>na = c(...)</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Zahl als Text</td>
+<td style="text-align: left;">Zahlenspalte hat den Typ <code>chr</code></td>
+<td style="text-align: left;">Ursache finden, Typ korrigieren</td>
+<td style="text-align: left;"><code>glimpse()</code>, <code>type_convert()</code></td>
 </tr>
 </tbody>
 </table>
@@ -681,9 +774,9 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfcm9oZGF0ZW5fbmEi
 <figcaption>Filtern einer Tabelle mit <code>filter</code>: Gruppe <em>B</em> wurde entfernt.</figcaption>
 </figure>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-label="1"></a><span class="fu">filter</span>(mariokart, stock_photo <span class="sc">==</span> <span class="st">"yes"</span>)                  <span class="co"># == prüft auf Gleichheit</span></span>
-<span id="cb6-2"><a href="" aria-label="2"></a><span class="fu">filter</span>(mariokart, stock_photo <span class="sc">==</span> <span class="st">"yes"</span> <span class="sc">&amp;</span> cond <span class="sc">==</span> <span class="st">"new"</span>)  <span class="co"># UND</span></span>
-<span id="cb6-3"><a href="" aria-label="3"></a><span class="fu">filter</span>(mariokart, stock_photo <span class="sc">==</span> <span class="st">"yes"</span> <span class="sc">|</span> cond <span class="sc">==</span> <span class="st">"new"</span>)  <span class="co"># ODER</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-label="1"></a><span class="fu">filter</span>(mariokart, stock_photo <span class="sc">==</span> <span class="st">"yes"</span>)                  <span class="co"># == prüft auf Gleichheit</span></span>
+<span id="cb9-2"><a href="" aria-label="2"></a><span class="fu">filter</span>(mariokart, stock_photo <span class="sc">==</span> <span class="st">"yes"</span> <span class="sc">&amp;</span> cond <span class="sc">==</span> <span class="st">"new"</span>)  <span class="co"># UND</span></span>
+<span id="cb9-3"><a href="" aria-label="3"></a><span class="fu">filter</span>(mariokart, stock_photo <span class="sc">==</span> <span class="st">"yes"</span> <span class="sc">|</span> cond <span class="sc">==</span> <span class="st">"new"</span>)  <span class="co"># ODER</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="footer">
 <p>Die Verben des Datenjudos</p>
 </div>
@@ -724,8 +817,8 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZmlsdGVyMiJ9LCJj
 <figcaption>Auswählen von Spalten mit <code>select</code></figcaption>
 </figure>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-label="1"></a><span class="fu">select</span>(mariokart, cond, total_pr)</span>
-<span id="cb7-2"><a href="" aria-label="2"></a><span class="fu">select</span>(mariokart, <span class="sc">-</span>id)    <span class="co"># alle Spalten außer id</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="" aria-label="1"></a><span class="fu">select</span>(mariokart, cond, total_pr)</span>
+<span id="cb10-2"><a href="" aria-label="2"></a><span class="fu">select</span>(mariokart, <span class="sc">-</span>id)    <span class="co"># alle Spalten außer id</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="footer">
 <p>Die Verben des Datenjudos</p>
 </div>
@@ -738,8 +831,8 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZmlsdGVyMiJ9LCJj
 <figcaption>Sortieren einer Tabelle mit <code>arrange</code>: Die Noten wurden aufsteigend sortiert.</figcaption>
 </figure>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-label="1"></a><span class="fu">arrange</span>(mariokart, total_pr)     <span class="co"># aufsteigend (Voreinstellung)</span></span>
-<span id="cb8-2"><a href="" aria-label="2"></a><span class="fu">arrange</span>(mariokart, <span class="sc">-</span>total_pr)    <span class="co"># absteigend: die Bundles stehen oben</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-label="1"></a><span class="fu">arrange</span>(mariokart, total_pr)     <span class="co"># aufsteigend (Voreinstellung)</span></span>
+<span id="cb11-2"><a href="" aria-label="2"></a><span class="fu">arrange</span>(mariokart, <span class="sc">-</span>total_pr)    <span class="co"># absteigend: die Bundles stehen oben</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Sortieren ist der schnellste Weg, Extremwerte zu finden.</p>
 <div class="footer">
 <p>Die Verben des Datenjudos</p>
@@ -753,7 +846,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZmlsdGVyMiJ9LCJj
 <figcaption>Spalten verändern/neu berechnen mit <code>mutate</code></figcaption>
 </figure>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-label="1"></a>mariokart_yen <span class="ot">&lt;-</span> <span class="fu">mutate</span>(mariokart, <span class="at">total_pr_yen =</span> total_pr <span class="sc">*</span> <span class="dv">133</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="" aria-label="1"></a>mariokart_yen <span class="ot">&lt;-</span> <span class="fu">mutate</span>(mariokart, <span class="at">total_pr_yen =</span> total_pr <span class="sc">*</span> <span class="dv">133</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Die Rechnung läuft für jede Zeile; derselbe Spaltenname überschreibt die Spalte (z. B. zum Korrigieren von <code>cond</code>).</p>
 <div class="footer">
 <p>Die Verben des Datenjudos</p>
@@ -762,9 +855,9 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZmlsdGVyMiJ9LCJj
 <section id="zeilen-zählen-count" class="slide level2">
 <h2>Zeilen zählen: <code>count</code></h2>
 <p>Bei nominalskalierten Daten ist Zählen (fast) das Einzige, was man tun kann:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="" aria-label="1"></a>mariokart_gezaehlt <span class="ot">&lt;-</span> <span class="fu">count</span>(mariokart, cond)</span>
-<span id="cb10-2"><a href="" aria-label="2"></a><span class="fu">mutate</span>(mariokart_gezaehlt, <span class="at">anteil =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n))</span>
-<span id="cb10-3"><a href="" aria-label="3"></a><span class="fu">count</span>(mariokart, cond, stock_photo)   <span class="co"># nach mehreren Spalten</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="" aria-label="1"></a>mariokart_gezaehlt <span class="ot">&lt;-</span> <span class="fu">count</span>(mariokart, cond)</span>
+<span id="cb13-2"><a href="" aria-label="2"></a><span class="fu">mutate</span>(mariokart_gezaehlt, <span class="at">anteil =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n))</span>
+<span id="cb13-3"><a href="" aria-label="3"></a><span class="fu">count</span>(mariokart, cond, stock_photo)   <span class="co"># nach mehreren Spalten</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="footer">
 <p>Die Verben des Datenjudos</p>
 </div>
@@ -777,7 +870,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZmlsdGVyMiJ9LCJj
 <figcaption>Zusammenfassen mit <code>summarise</code>: Die Noten wurden zum Mittelwert zusammengefasst.</figcaption>
 </figure>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-label="1"></a><span class="fu">summarise</span>(mariokart, <span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="" aria-label="1"></a><span class="fu">summarise</span>(mariokart, <span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>summarise</code> fasst eine <em>Spalte</em> zu einer einzelnen <em>Zahl</em> zusammen — <em>wie</em>, steht in der Klammer (<code>mean</code>, <code>max</code>, …).</p>
 <div class="footer">
 <p>Die Verben des Datenjudos</p>
@@ -791,9 +884,121 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZmlsdGVyMiJ9LCJj
 <figcaption>Gruppieren mit <code>group_by</code>: Aufteilung anhand der Variable <code>gruppe</code>.</figcaption>
 </figure>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="" aria-label="1"></a>mariokart_gruppiert <span class="ot">&lt;-</span> <span class="fu">group_by</span>(mariokart, cond)</span>
-<span id="cb12-2"><a href="" aria-label="2"></a><span class="fu">summarise</span>(mariokart_gruppiert, <span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="" aria-label="1"></a>mariokart_gruppiert <span class="ot">&lt;-</span> <span class="fu">group_by</span>(mariokart, cond)</span>
+<span id="cb15-2"><a href="" aria-label="2"></a><span class="fu">summarise</span>(mariokart_gruppiert, <span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Alle nachfolgenden Berechnungen laufen <em>für jede Teiltabelle einzeln</em> — darum kommen <code>group_by</code> und <code>summarise</code> fast immer im Doppelpack.</p>
+<div class="footer">
+<p>Die Verben des Datenjudos</p>
+</div>
+</section>
+<section id="breit-und-lang-umformen-pivot_longer-und-pivot_wider" class="slide level2">
+<h2>Breit und lang umformen: <code>pivot_longer</code> und <code>pivot_wider</code></h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><a href="../img/lang-breit-anim.gif" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Gleiche Information, andere Anordnung: Gleiche Farbe heißt gleiches Jahr."><img data-src="../img/lang-breit-anim.gif" style="width:40.0%" alt="Gleiche Information, andere Anordnung: Gleiche Farbe heißt gleiches Jahr."></a></p>
+<figcaption>Gleiche Information, andere Anordnung: Gleiche Farbe heißt gleiches Jahr.</figcaption>
+</figure>
+</div>
+<p>Für die meisten Auswertungen und Diagramme braucht man das <strong>Langformat</strong> (Tidy Data). Liegen die Daten breit vor, formt man sie um.</p>
+<div class="footer">
+<p>Die Verben des Datenjudos</p>
+</div>
+</section>
+<section id="breit-lang-pivot_longer" class="slide level2 smaller">
+<h2>Breit → lang: <code>pivot_longer</code></h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Definition: pivot_longer</strong></p>
+</div>
+<div class="callout-content">
+<p><code>pivot_longer</code> wandelt eine Tabelle vom Breit- ins Langformat um. Man gibt an, welche Spalten zusammengefasst werden (<code>cols</code>), wie die neue Spalte mit den bisherigen Spaltenköpfen heißt (<code>names_to</code>) und wie die neue Spalte mit den Werten heißt (<code>values_to</code>).</p>
+</div>
+</div>
+</div>
+<div class="columns">
+<div class="column" style="width:58%;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-label="1"></a>umsatz_breit <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb16-2"><a href="" aria-label="2"></a>  <span class="sc">~</span>Produkt, <span class="sc">~</span>Umsatz_2021, <span class="sc">~</span>Umsatz_2022, <span class="sc">~</span>Umsatz_2023,</span>
+<span id="cb16-3"><a href="" aria-label="3"></a>  <span class="st">"Hämmer"</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>,</span>
+<span id="cb16-4"><a href="" aria-label="4"></a>  <span class="st">"Nägel"</span>,  <span class="dv">15</span>, <span class="dv">10</span>,  <span class="dv">5</span>)</span>
+<span id="cb16-5"><a href="" aria-label="5"></a></span>
+<span id="cb16-6"><a href="" aria-label="6"></a>umsatz_lang <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(umsatz_breit,</span>
+<span id="cb16-7"><a href="" aria-label="7"></a>  <span class="at">cols =</span> <span class="fu">c</span>(Umsatz_2021, Umsatz_2022, Umsatz_2023),</span>
+<span id="cb16-8"><a href="" aria-label="8"></a>  <span class="at">names_to =</span> <span class="st">"Jahr"</span>,</span>
+<span id="cb16-9"><a href="" aria-label="9"></a>  <span class="at">names_prefix =</span> <span class="st">"Umsatz_"</span>,   <span class="co"># schneidet "Umsatz_" ab</span></span>
+<span id="cb16-10"><a href="" aria-label="10"></a>  <span class="at">values_to =</span> <span class="st">"Umsatz"</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column" style="width:42%;">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Produkt</th>
+<th>Jahr</th>
+<th>Umsatz</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Hämmer</td>
+<td>2021</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>Hämmer</td>
+<td>2022</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td>Hämmer</td>
+<td>2023</td>
+<td>12</td>
+</tr>
+<tr class="even">
+<td>Nägel</td>
+<td>2021</td>
+<td>15</td>
+</tr>
+<tr class="odd">
+<td>Nägel</td>
+<td>2022</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>Nägel</td>
+<td>2023</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class="footer">
+<p>Die Verben des Datenjudos</p>
+</div>
+</section>
+<section id="lang-breit-pivot_wider" class="slide level2 smaller">
+<h2>Lang → breit: <code>pivot_wider</code></h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Definition: pivot_wider</strong></p>
+</div>
+<div class="callout-content">
+<p><code>pivot_wider</code> ist das Gegenstück zu <code>pivot_longer</code>: Es wandelt eine Tabelle vom Lang- ins Breitformat um. Man gibt an, aus welcher Spalte die neuen Spaltenköpfe kommen (<code>names_from</code>) und aus welcher die Werte (<code>values_from</code>).</p>
+</div>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="" aria-label="1"></a><span class="fu">pivot_wider</span>(umsatz_lang, <span class="at">names_from =</span> Jahr, <span class="at">values_from =</span> Umsatz)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Die Spalten heißen jetzt <code>2021</code>, <code>2022</code>, <code>2023</code> — Namen, die mit einer Ziffer beginnen, braucht in R Backticks (<code>`2021`</code>). Darum hängt man meist einen Text davor.</li>
+<li><strong>Ihr Zug:</strong> Wandeln Sie <code>umsatz_lang</code> so zurück, dass die Spalten wieder <code>Umsatz_2021</code> usw. heißen. Tipp: Auch <code>pivot_wider</code> kennt <code>names_prefix</code>.</li>
+<li>Beide Befehle stammen aus dem Paket <code>tidyr</code> (<code>library(tidyverse)</code>).</li>
+</ul>
 <div class="footer">
 <p>Die Verben des Datenjudos</p>
 </div>
@@ -817,7 +1022,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZmlsdGVyMiJ9LCJj
 <section id="verschachtelt-oder-und-dann" class="slide level2">
 <h2>Verschachtelt oder “und dann”?</h2>
 <p>Ohne Pfeife: verschachtelt wie russische Puppen, zu lesen <em>von innen nach außen</em>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="" aria-label="1"></a><span class="fu">summarise</span>(<span class="fu">group_by</span>(<span class="fu">filter</span>(mariokart, total_pr <span class="sc">&lt;</span> <span class="dv">100</span>), cond), <span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="" aria-label="1"></a><span class="fu">summarise</span>(<span class="fu">group_by</span>(<span class="fu">filter</span>(mariokart, total_pr <span class="sc">&lt;</span> <span class="dv">100</span>), cond), <span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Viel lesbarer:</p>
 <pre><code>Nimm "mariokart" *und dann*
   filtere die günstigen Spiele *und dann*
@@ -856,12 +1061,58 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZmlsdGVyMiJ9LCJj
 <div style="text-align: center; margin-bottom: 0.5em;">
 <p>▥ → filter → ▥ → select → ▥ → group_by → ▥ → summarise → ▥</p>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="" aria-label="1"></a>mariokart <span class="sc">|&gt;</span></span>
-<span id="cb15-2"><a href="" aria-label="2"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-3"><a href="" aria-label="3"></a>  <span class="fu">select</span>(cond, total_pr) <span class="sc">|&gt;</span></span>
-<span id="cb15-4"><a href="" aria-label="4"></a>  <span class="fu">group_by</span>(cond) <span class="sc">|&gt;</span></span>
-<span id="cb15-5"><a href="" aria-label="5"></a>  <span class="fu">summarise</span>(<span class="at">total_pr_mean =</span> <span class="fu">mean</span>(total_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="" aria-label="1"></a>mariokart <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="" aria-label="2"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="" aria-label="3"></a>  <span class="fu">select</span>(cond, total_pr) <span class="sc">|&gt;</span></span>
+<span id="cb20-4"><a href="" aria-label="4"></a>  <span class="fu">group_by</span>(cond) <span class="sc">|&gt;</span></span>
+<span id="cb20-5"><a href="" aria-label="5"></a>  <span class="fu">summarise</span>(<span class="at">total_pr_mean =</span> <span class="fu">mean</span>(total_pr))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>filter(mariokart, x)</code> entspricht <code>mariokart |&gt; filter(x)</code>. Allgemein: <code>d |&gt; f(x)</code> = <code>f(d, x)</code>.</p>
+<div class="footer">
+<p>Die Pfeife</p>
+</div>
+</section>
+<section id="eine-lange-pfeifenkette" class="slide level2 smaller">
+<h2>Eine lange Pfeifenkette</h2>
+<p>“Bringt Gratisversand einen höheren Preis — bei neuen <em>und</em> gebrauchten Spielen? Ohne Ausreißer, ohne lange Auktionen, Versand nicht zum Preis zählen.”</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="" aria-label="1"></a>mariokart <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="" aria-label="2"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>, duration <span class="sc">&lt;=</span> <span class="dv">7</span>) <span class="sc">|&gt;</span>                  <span class="co"># 1. Ausreißer, lange Auktionen raus</span></span>
+<span id="cb21-3"><a href="" aria-label="3"></a>  <span class="fu">mutate</span>(<span class="at">preis_ohne_versand =</span> total_pr <span class="sc">-</span> ship_pr,           <span class="co"># 2. Preis ohne Versand,</span></span>
+<span id="cb21-4"><a href="" aria-label="4"></a>         <span class="at">versand =</span> <span class="fu">if_else</span>(ship_pr <span class="sc">==</span> <span class="dv">0</span>, <span class="st">"gratis"</span>, <span class="st">"kostet"</span>)) <span class="sc">|&gt;</span>  <span class="co">#    Versand in zwei Stufen</span></span>
+<span id="cb21-5"><a href="" aria-label="5"></a>  <span class="fu">select</span>(cond, versand, preis_ohne_versand, n_bids) <span class="sc">|&gt;</span>      <span class="co"># 3. nur benötigte Spalten</span></span>
+<span id="cb21-6"><a href="" aria-label="6"></a>  <span class="fu">group_by</span>(cond, versand) <span class="sc">|&gt;</span>                                <span class="co"># 4. 2 x 2 = 4 Gruppen</span></span>
+<span id="cb21-7"><a href="" aria-label="7"></a>  <span class="fu">summarise</span>(<span class="at">preis_mw =</span> <span class="fu">round</span>(<span class="fu">mean</span>(preis_ohne_versand), <span class="dv">2</span>),  <span class="co"># 5. jede Gruppe zusammenfassen</span></span>
+<span id="cb21-8"><a href="" aria-label="8"></a>            <span class="at">gebote_mw =</span> <span class="fu">round</span>(<span class="fu">mean</span>(n_bids), <span class="dv">1</span>),</span>
+<span id="cb21-9"><a href="" aria-label="9"></a>            <span class="at">anzahl =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb21-10"><a href="" aria-label="10"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span>                                              <span class="co"># 6. Gruppierung aufheben</span></span>
+<span id="cb21-11"><a href="" aria-label="11"></a>  <span class="fu">filter</span>(anzahl <span class="sc">&gt;=</span> <span class="dv">5</span>) <span class="sc">|&gt;</span>                                    <span class="co"># 7. zu kleine Gruppen raus</span></span>
+<span id="cb21-12"><a href="" aria-label="12"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>preis_mw)                                        <span class="co"># 8. teuerste Gruppe oben</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ergebnis: Neue Spiele sind teurer als gebrauchte; bei beiden ist der Preis ohne Versand <em>höher</em>, wenn der Versand gratis ist — die Versandkosten stecken offenbar zum Teil im Preis.</p>
+<div class="footer">
+<p>Die Pfeife</p>
+</div>
+</section>
+<section id="was-an-der-langen-kette-neu-ist" class="slide level2 smaller">
+<h2>Was an der langen Kette neu ist</h2>
+<ul>
+<li><code>filter</code> mit mehreren Bedingungen: Komma = “und”.</li>
+<li><code>mutate</code> berechnet mehrere Spalten; <code>if_else(Bedingung, wenn_ja, wenn_nein)</code> übersetzt eine Zahl in zwei Kategorien.</li>
+<li><code>group_by</code> nach mehreren Spalten: eine Gruppe pro <em>Kombination</em>; <code>n()</code> zählt die Zeilen pro Gruppe.</li>
+<li><code>ungroup()</code> ist guter Stil — sonst rechnen spätere Verben unbemerkt pro Gruppe weiter.</li>
+<li>Ein Verb darf mehrfach vorkommen: <code>filter</code> <em>vor</em> <code>summarise</code> (Auktionen) und <em>danach</em> (Gruppen).</li>
+</ul>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Lange Pfeifen Schritt für Schritt bauen</strong></p>
+</div>
+<div class="callout-content">
+<p>Station für Station aufbauen und nach jeder Zeile prüfen: Sieht die Zwischentabelle aus wie erwartet? Bei Fehlern nur bis <em>vor</em> eine Pfeife ausführen. Die letzte Zeile endet <em>ohne</em> Pfeife.</p>
+</div>
+</div>
+</div>
 <div class="footer">
 <p>Die Pfeife</p>
 </div>
@@ -899,17 +1150,17 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZmlsdGVyMiJ9LCJj
 </section>
 <section id="fehler-1-filtern-an-der-falschen-stelle" class="slide level2">
 <h2>Fehler 1: Filtern an der falschen Stelle</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-label="1"></a><span class="co"># FALSCH: filtert die Mittelwerte, nicht die Auktionen</span></span>
-<span id="cb16-2"><a href="" aria-label="2"></a>mariokart_vorbereitet <span class="sc">|&gt;</span></span>
-<span id="cb16-3"><a href="" aria-label="3"></a>  <span class="fu">group_by</span>(cond) <span class="sc">|&gt;</span></span>
-<span id="cb16-4"><a href="" aria-label="4"></a>  <span class="fu">summarise</span>(<span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb16-5"><a href="" aria-label="5"></a>  <span class="fu">filter</span>(preis_mw <span class="sc">&lt;</span> <span class="dv">100</span>)        <span class="co"># used: 47 Dollar</span></span>
-<span id="cb16-6"><a href="" aria-label="6"></a></span>
-<span id="cb16-7"><a href="" aria-label="7"></a><span class="co"># RICHTIG: erst filtern, dann zusammenfassen</span></span>
-<span id="cb16-8"><a href="" aria-label="8"></a>mariokart_vorbereitet <span class="sc">|&gt;</span></span>
-<span id="cb16-9"><a href="" aria-label="9"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb16-10"><a href="" aria-label="10"></a>  <span class="fu">group_by</span>(cond) <span class="sc">|&gt;</span></span>
-<span id="cb16-11"><a href="" aria-label="11"></a>  <span class="fu">summarise</span>(<span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr))   <span class="co"># used: 43 Dollar</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-label="1"></a><span class="co"># FALSCH: filtert die Mittelwerte, nicht die Auktionen</span></span>
+<span id="cb22-2"><a href="" aria-label="2"></a>mariokart_vorbereitet <span class="sc">|&gt;</span></span>
+<span id="cb22-3"><a href="" aria-label="3"></a>  <span class="fu">group_by</span>(cond) <span class="sc">|&gt;</span></span>
+<span id="cb22-4"><a href="" aria-label="4"></a>  <span class="fu">summarise</span>(<span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb22-5"><a href="" aria-label="5"></a>  <span class="fu">filter</span>(preis_mw <span class="sc">&lt;</span> <span class="dv">100</span>)        <span class="co"># used: 47 Dollar</span></span>
+<span id="cb22-6"><a href="" aria-label="6"></a></span>
+<span id="cb22-7"><a href="" aria-label="7"></a><span class="co"># RICHTIG: erst filtern, dann zusammenfassen</span></span>
+<span id="cb22-8"><a href="" aria-label="8"></a>mariokart_vorbereitet <span class="sc">|&gt;</span></span>
+<span id="cb22-9"><a href="" aria-label="9"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb22-10"><a href="" aria-label="10"></a>  <span class="fu">group_by</span>(cond) <span class="sc">|&gt;</span></span>
+<span id="cb22-11"><a href="" aria-label="11"></a>  <span class="fu">summarise</span>(<span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr))   <span class="co"># used: 43 Dollar</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Die Reihenfolge am Fließband ist nicht egal.</p>
 <div class="footer">
 <p>Aufbereiten mit KI</p>
@@ -918,10 +1169,10 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZmlsdGVyMiJ9LCJj
 <section id="fehler-2-und-3-holzhammer-und-faustregel" class="slide level2 smaller">
 <h2>Fehler 2 und 3: Holzhammer und Faustregel</h2>
 <p><strong>Fehler 2:</strong> <code>drop_na()</code> ohne Spaltenangabe</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="" aria-label="1"></a><span class="fu">nrow</span>(mariokart_vorbereitet)            <span class="co"># 143</span></span>
-<span id="cb17-2"><a href="" aria-label="2"></a><span class="fu">nrow</span>(<span class="fu">drop_na</span>(mariokart_vorbereitet))   <span class="co"># 134</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-label="1"></a><span class="fu">nrow</span>(mariokart_vorbereitet)            <span class="co"># 143</span></span>
+<span id="cb23-2"><a href="" aria-label="2"></a><span class="fu">nrow</span>(<span class="fu">drop_na</span>(mariokart_vorbereitet))   <span class="co"># 134</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Auch Auktionen mit vorhandenem Preis fliegen raus. Besser: <code>na.rm = TRUE</code> oder <code>drop_na(total_pr)</code>.</p>
-<p><strong>Fehler 3:</strong> Ausreißer nach 1,5-IQR-Faustregel entfernt</p>
+<p><strong>Fehler 3:</strong> Ausreißer nach 1.5-IQR-Faustregel entfernt</p>
 <p>Die Regel trifft die beiden Bundles — <em>und</em> eine ganz normale Auktion für 75 Dollar (neues Spiel mit drei Lenkrädern). Eine Faustregel liefert Kandidaten, keine Entscheidung.</p>
 <div class="footer">
 <p>Aufbereiten mit KI</p>
@@ -929,11 +1180,11 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZmlsdGVyMiJ9LCJj
 </section>
 <section id="fehler-4-kodierung-übersehen" class="slide level2">
 <h2>Fehler 4: Kodierung übersehen</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="" aria-label="1"></a>mariokart_roh <span class="sc">|&gt;</span></span>
-<span id="cb18-2"><a href="" aria-label="2"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb18-3"><a href="" aria-label="3"></a>  <span class="fu">group_by</span>(cond) <span class="sc">|&gt;</span></span>
-<span id="cb18-4"><a href="" aria-label="4"></a>  <span class="fu">summarise</span>(<span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb18-5"><a href="" aria-label="5"></a>            <span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-label="1"></a>mariokart_roh <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="" aria-label="2"></a>  <span class="fu">filter</span>(total_pr <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="" aria-label="3"></a>  <span class="fu">group_by</span>(cond) <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href="" aria-label="4"></a>  <span class="fu">summarise</span>(<span class="at">preis_mw =</span> <span class="fu">mean</span>(total_pr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb24-5"><a href="" aria-label="5"></a>            <span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Fünf Gruppen statt zwei, drei davon mit nur einer Auktion. Das Ergebnis verrät den Fehler, <em>wenn</em> man hinschaut — darum gehört <code>n = n()</code> in fast jede Zusammenfassung.</p>
 <div class="footer">
 <p>Aufbereiten mit KI</p>
@@ -1020,20 +1271,20 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZm9mcmFnZTEifSwi
 </section>
 <section id="die-drei-antworten" class="slide level2 smaller">
 <h2>Die drei Antworten</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="" aria-label="1"></a>mariokart_bereinigt <span class="sc">|&gt;</span>                      <span class="co"># Frage 1</span></span>
-<span id="cb19-2"><a href="" aria-label="2"></a>  <span class="fu">filter</span>(stock_photo <span class="sc">==</span> <span class="st">"yes"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb19-3"><a href="" aria-label="3"></a>  <span class="fu">group_by</span>(cond) <span class="sc">|&gt;</span></span>
-<span id="cb19-4"><a href="" aria-label="4"></a>  <span class="fu">summarise</span>(<span class="at">total_pr_max =</span> <span class="fu">max</span>(total_pr))   <span class="co"># neu: 75,0, gebraucht: 61,8 Dollar</span></span>
-<span id="cb19-5"><a href="" aria-label="5"></a></span>
-<span id="cb19-6"><a href="" aria-label="6"></a>mariokart_bereinigt <span class="sc">|&gt;</span>                      <span class="co"># Frage 2</span></span>
-<span id="cb19-7"><a href="" aria-label="7"></a>  <span class="fu">group_by</span>(wheels) <span class="sc">|&gt;</span></span>
-<span id="cb19-8"><a href="" aria-label="8"></a>  <span class="fu">summarise</span>(<span class="at">mittlere_versandkosten =</span> <span class="fu">mean</span>(ship_pr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb19-9"><a href="" aria-label="9"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;=</span> <span class="dv">10</span>)                           <span class="co"># 2,53 bis 3,68 Dollar</span></span>
-<span id="cb19-10"><a href="" aria-label="10"></a></span>
-<span id="cb19-11"><a href="" aria-label="11"></a>mariokart_bereinigt <span class="sc">|&gt;</span>                      <span class="co"># Frage 3</span></span>
-<span id="cb19-12"><a href="" aria-label="12"></a>  <span class="fu">mutate</span>(<span class="at">total_pr_yen =</span> total_pr <span class="sc">*</span> <span class="dv">133</span>) <span class="sc">|&gt;</span></span>
-<span id="cb19-13"><a href="" aria-label="13"></a>  <span class="fu">summarise</span>(<span class="at">preis_yen_mw =</span> <span class="fu">mean</span>(total_pr_yen),</span>
-<span id="cb19-14"><a href="" aria-label="14"></a>            <span class="at">preis_yen_mw_minus_10proz =</span> preis_yen_mw <span class="sc">-</span> <span class="fl">0.1</span> <span class="sc">*</span> preis_yen_mw)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="" aria-label="1"></a>mariokart_bereinigt <span class="sc">|&gt;</span>                      <span class="co"># Frage 1</span></span>
+<span id="cb25-2"><a href="" aria-label="2"></a>  <span class="fu">filter</span>(stock_photo <span class="sc">==</span> <span class="st">"yes"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="" aria-label="3"></a>  <span class="fu">group_by</span>(cond) <span class="sc">|&gt;</span></span>
+<span id="cb25-4"><a href="" aria-label="4"></a>  <span class="fu">summarise</span>(<span class="at">total_pr_max =</span> <span class="fu">max</span>(total_pr))   <span class="co"># neu: 75.0, gebraucht: 61.8 Dollar</span></span>
+<span id="cb25-5"><a href="" aria-label="5"></a></span>
+<span id="cb25-6"><a href="" aria-label="6"></a>mariokart_bereinigt <span class="sc">|&gt;</span>                      <span class="co"># Frage 2</span></span>
+<span id="cb25-7"><a href="" aria-label="7"></a>  <span class="fu">group_by</span>(wheels) <span class="sc">|&gt;</span></span>
+<span id="cb25-8"><a href="" aria-label="8"></a>  <span class="fu">summarise</span>(<span class="at">mittlere_versandkosten =</span> <span class="fu">mean</span>(ship_pr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb25-9"><a href="" aria-label="9"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;=</span> <span class="dv">10</span>)                           <span class="co"># 2.53 bis 3.68 Dollar</span></span>
+<span id="cb25-10"><a href="" aria-label="10"></a></span>
+<span id="cb25-11"><a href="" aria-label="11"></a>mariokart_bereinigt <span class="sc">|&gt;</span>                      <span class="co"># Frage 3</span></span>
+<span id="cb25-12"><a href="" aria-label="12"></a>  <span class="fu">mutate</span>(<span class="at">total_pr_yen =</span> total_pr <span class="sc">*</span> <span class="dv">133</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-13"><a href="" aria-label="13"></a>  <span class="fu">summarise</span>(<span class="at">preis_yen_mw =</span> <span class="fu">mean</span>(total_pr_yen),</span>
+<span id="cb25-14"><a href="" aria-label="14"></a>            <span class="at">preis_yen_mw_minus_10proz =</span> preis_yen_mw <span class="sc">-</span> <span class="fl">0.1</span> <span class="sc">*</span> preis_yen_mw)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Bei Frage 2 steht <code>filter</code> <em>nach</em> <code>summarise</code> — hier richtig, denn diesmal sollen <em>Gruppen</em> ausgewählt werden.</p>
 <div class="footer">
 <p>Fallstudie: Vom Rohdatensatz zur Antwort</p>
@@ -1058,12 +1309,12 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZm9mcmFnZTEifSwi
 <tr class="odd">
 <td style="text-align: left;">1: teuerstes neues Spiel mit Foto</td>
 <td style="text-align: left;"><code>NA</code>, dazu 4 statt 2 Gruppen</td>
-<td style="text-align: left;">75,0 Dollar</td>
+<td style="text-align: left;">75.0 Dollar</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">2: Versandkosten bei einem Lenkrad</td>
 <td style="text-align: left;"><code>NA</code></td>
-<td style="text-align: left;">3,68 Dollar</td>
+<td style="text-align: left;">3.68 Dollar</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">3: mittlerer Preis in Yen</td>
@@ -1098,12 +1349,12 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZm9mcmFnZTEifSwi
 <section id="der-ungewichtete-mittelwert-trick" class="slide level2 smaller">
 <h2>Der ungewichtete-Mittelwert-Trick</h2>
 <p>Eine Analystin möchte zeigen, dass der Verkaufspreis “viel zu niedrig” ist (Ist-Wert: 50 Dollar):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="" aria-label="1"></a>mariokart_wheels <span class="ot">&lt;-</span> mariokart <span class="sc">|&gt;</span></span>
-<span id="cb20-2"><a href="" aria-label="2"></a>  <span class="fu">group_by</span>(wheels) <span class="sc">|&gt;</span></span>
-<span id="cb20-3"><a href="" aria-label="3"></a>  <span class="fu">summarise</span>(<span class="at">pr_mean =</span> <span class="fu">mean</span>(total_pr), <span class="at">count_n =</span> <span class="fu">n</span>())</span>
-<span id="cb20-4"><a href="" aria-label="4"></a></span>
-<span id="cb20-5"><a href="" aria-label="5"></a>mariokart_wheels <span class="sc">|&gt;</span></span>
-<span id="cb20-6"><a href="" aria-label="6"></a>  <span class="fu">summarise</span>(<span class="fu">mean</span>(pr_mean))   <span class="co"># ungewichteter Mittelwert -&gt; 56 Dollar</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-label="1"></a>mariokart_wheels <span class="ot">&lt;-</span> mariokart <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="" aria-label="2"></a>  <span class="fu">group_by</span>(wheels) <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="" aria-label="3"></a>  <span class="fu">summarise</span>(<span class="at">pr_mean =</span> <span class="fu">mean</span>(total_pr), <span class="at">count_n =</span> <span class="fu">n</span>())</span>
+<span id="cb26-4"><a href="" aria-label="4"></a></span>
+<span id="cb26-5"><a href="" aria-label="5"></a>mariokart_wheels <span class="sc">|&gt;</span></span>
+<span id="cb26-6"><a href="" aria-label="6"></a>  <span class="fu">summarise</span>(<span class="fu">mean</span>(pr_mean))   <span class="co"># ungewichteter Mittelwert -&gt; 56 Dollar</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Der <em>ungewichtete</em> Mittelwert über die Gruppen (56 Dollar) ist falsch und irreführend — der korrekte, <em>gewichtete</em> Mittelwert ergibt weiterhin 50 Dollar.</p>
 <div class="footer">
 <p>Wie man mit Statistik lügt</p>
@@ -1118,16 +1369,17 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZm9mcmFnZTEifSwi
 <h2>Die Pinguine</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="../img/penguins.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Possierlich: Die Pinguine [@horst_statistics_2024]"><img data-src="../img/penguins.png" style="width:35.0%" alt="Possierlich: Die Pinguine (Horst, 2024)"></a></p>
+<p><a href="../img/penguins.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Possierlich: Die Pinguine [@horst_statistics_2024]"><img data-src="../img/penguins.png" style="width:35.0%" alt="Possierlich: Die Pinguine (Horst, 2024)"></a></p>
 <figcaption>Possierlich: Die Pinguine <span class="citation" data-cites="horst_statistics_2024">(<a href="#/referenzen" role="doc-biblioref" onclick="">Horst, 2024</a>)</span></figcaption>
 </figure>
 </div>
 <p>Forschungsfragen zum Datensatz <code>penguins</code> (Zielvariable: Gewicht):</p>
 <ol type="1">
-<li>Medianes Gewicht, gruppiert nach Spezies?</li>
+<li>Medianes Gewicht, gruppiert nach Spezies und Geschlecht?</li>
 <li>Wie viele Pinguine pro Spezies?</li>
 <li>Schwerster und leichtester Pinguin pro Spezies?</li>
 </ol>
+<p>Zugabe: Wie groß ist in jeder Gruppe der Anteil “schwerer” Tiere (über 4 kg)? Tipp: Alles geht in <em>einer</em> Pfeifenkette.</p>
 <div class="footer">
 <p>Weitere Fallstudien</p>
 </div>
@@ -1136,7 +1388,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZm9mcmFnZTEifSwi
 <h2>Fallstudie COVIDiSTRESS</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="../img/Covidistress1.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Studie COVIDiSTRESS [@lieberoth2022]"><img data-src="../img/Covidistress1.jpg" style="width:55.0%" alt="Studie COVIDiSTRESS (Lieberoth et al., 2022)"></a></p>
+<p><a href="../img/Covidistress1.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Studie COVIDiSTRESS [@lieberoth2022]"><img data-src="../img/Covidistress1.jpg" style="width:55.0%" alt="Studie COVIDiSTRESS (Lieberoth et al., 2022)"></a></p>
 <figcaption>Studie COVIDiSTRESS <span class="citation" data-cites="lieberoth2022">(<a href="#/referenzen" role="doc-biblioref" onclick="">Lieberoth et al., 2022</a>)</span></figcaption>
 </figure>
 </div>
@@ -1148,9 +1400,9 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZXhfZm9mcmFnZTEifSwi
 <section id="zusammenfassung" class="slide level2 smaller">
 <h2>Zusammenfassung</h2>
 <ul>
-<li><strong>Rohdaten prüfen, bevor man rechnet:</strong> Dubletten, fehlende Werte, unplausible Werte und Extremwerte, uneinheitliche Kodierung</li>
+<li><strong>Rohdaten prüfen, bevor man rechnet:</strong> Dubletten, fehlende Werte, unplausible Werte und Extremwerte, uneinheitliche Kodierung — und schon beim Einlesen: Notizzeilen, Spaltennamen, Fehlcodes wie <code>-99</code></li>
 <li><strong>Entscheidungen hängen von der Forschungsfrage ab</strong> — und werden im Skript begründet</li>
-<li><strong>Verben des Datenjudos:</strong> <code>filter</code>, <code>select</code>, <code>arrange</code>, <code>mutate</code>, <code>count</code>, <code>group_by</code> + <code>summarise</code> — Tabelle rein, Tabelle raus</li>
+<li><strong>Verben des Datenjudos:</strong> <code>filter</code>, <code>select</code>, <code>arrange</code>, <code>mutate</code>, <code>count</code>, <code>group_by</code> + <code>summarise</code> — Tabelle rein, Tabelle raus; <code>pivot_longer</code>/<code>pivot_wider</code> wechseln zwischen Breit- und Langformat</li>
 <li><strong>Pfeife</strong> <code>|&gt;</code> = “und dann”: <code>d |&gt; f(x)</code> = <code>f(d, x)</code></li>
 <li><strong>KI-Code:</strong> präzise beauftragen, Zeile für Zeile lesen, Zeilenzahl und Kategorien prüfen</li>
 <li>Vorsicht bei Mittelwerten über Gruppen: ungewichtet ≠ gewichtet</li>

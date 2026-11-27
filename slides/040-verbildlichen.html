@@ -250,6 +250,7 @@ Sebastian Sauer
 <li>Sie kennen typische Arten von Datendiagrammen.</li>
 <li>Sie können typische Datendiagramme mit R visualisieren.</li>
 <li>Sie können zentrale Ergebnisse aus Datendiagrammen herauslesen.</li>
+<li>Sie können zentrale Prinzipien zur Gestaltung von Datendiagrammen benennen und anwenden.</li>
 </ul>
 <div class="footer">
 <p>Einstieg</p>
@@ -818,10 +819,11 @@ Sebastian Sauer
 </section>
 <section id="unterschiede-bei-quantitativen-variablen" class="slide level2 smaller">
 <h2>Unterschiede bei quantitativen Variablen</h2>
-<p><img data-src="../040-verbildlichen_files/figure-html/fig-compare-groups1-1.png" style="width:34.0%" alt="Histogramm (Verteilung) pro Gruppe"> <img data-src="../040-verbildlichen_files/figure-html/fig-compare-groups1-2.png" style="width:34.0%" alt="Boxplot pro Gruppe"></p>
+<p><img data-src="../040-verbildlichen_files/figure-html/fig-compare-groups1-1.png" style="width:30.0%" alt="Histogramm (Verteilung) pro Gruppe"> <img data-src="../040-verbildlichen_files/figure-html/fig-compare-groups1-2.png" style="width:30.0%" alt="Boxplot pro Gruppe"></p>
 <ul>
 <li>Unterscheiden sich zwei Gruppen (neu vs.&nbsp;gebraucht) deutlich in der Zielvariablen (<code>total_pr</code>)?</li>
 <li>Der Boxplot (rechts) zeigt die gleichen Verteilungen wie links — vereinfacht und gröber.</li>
+<li>Die Punkte neben Verteilung bzw. Box sind die Rohdaten: ein Punkt pro Spiel.</li>
 <li>Was ein “deutlicher” Unterschied ist, ist keine statistische, sondern eine inhaltliche Frage.</li>
 </ul>
 <div class="footer">
@@ -889,10 +891,98 @@ Sebastian Sauer
 <div class="footer">
 <p>Unterschiede verbildlichen</p>
 </div>
+</section>
+<section id="raindrop-diagramm" class="slide level2 smaller">
+<h2>Raindrop-Diagramm</h2>
+<p>Ein Raindrop-Diagramm (<em>Raincloud-Plot</em>) kombiniert drei Sichten: Dichte als “Wolke”, schmaler Boxplot, Rohdaten als “Regentropfen”.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><a href="../040-verbildlichen_files/figure-html/raindrop-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-18" title="Raindrop-Diagramm: Verkaufspreis nach Zustand des Spiels"><img data-src="../040-verbildlichen_files/figure-html/raindrop-1.png" style="width:100.0%" alt="Raindrop-Diagramm: Verkaufspreis nach Zustand des Spiels"></a></p>
+<figcaption>Raindrop-Diagramm: Verkaufspreis nach Zustand des Spiels</figcaption>
+</figure>
+</div>
+</div><div class="column" style="width:50%;">
+<div style="font-size: 0.8em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-label="1"></a><span class="fu">library</span>(ggdist)</span>
+<span id="cb7-2"><a href="" aria-label="2"></a></span>
+<span id="cb7-3"><a href="" aria-label="3"></a>mariokart_no_extreme <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="" aria-label="4"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> total_pr, <span class="at">y =</span> cond)) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="" aria-label="5"></a>  <span class="fu">stat_halfeye</span>(  <span class="co"># Wolke</span></span>
+<span id="cb7-6"><a href="" aria-label="6"></a>    <span class="at">fill =</span> mittelgrau, <span class="at">adjust =</span> <span class="fl">0.6</span>,</span>
+<span id="cb7-7"><a href="" aria-label="7"></a>    <span class="at">height =</span> <span class="fl">0.6</span>, <span class="at">justification =</span> <span class="sc">-</span><span class="fl">0.2</span>,</span>
+<span id="cb7-8"><a href="" aria-label="8"></a>    <span class="at">.width =</span> <span class="dv">0</span>, <span class="at">point_colour =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb7-9"><a href="" aria-label="9"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.12</span>,</span>
+<span id="cb7-10"><a href="" aria-label="10"></a>               <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="" aria-label="11"></a>  <span class="fu">stat_dots</span>(  <span class="co"># Tropfen</span></span>
+<span id="cb7-12"><a href="" aria-label="12"></a>    <span class="at">side =</span> <span class="st">"bottom"</span>, <span class="at">justification =</span> <span class="fl">1.15</span>,</span>
+<span id="cb7-13"><a href="" aria-label="13"></a>    <span class="at">binwidth =</span> <span class="fl">0.6</span>, <span class="at">fill =</span> dunkelgrau,</span>
+<span id="cb7-14"><a href="" aria-label="14"></a>    <span class="at">colour =</span> dunkelgrau)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div></div>
+<ul>
+<li>Neue Spiele erzielen im Median rund 10 Dollar mehr als gebrauchte — die Verteilungen überlappen sich aber deutlich.</li>
+</ul>
+<div class="footer">
+<p>Unterschiede verbildlichen</p>
+</div>
 </section></section>
 <section>
-<section id="so-lügt-man-mit-statistik" class="title-slide slide level1 center" data-footer="false">
-<h1>So lügt man mit Statistik</h1>
+<section id="gute-datendiagramme-gestalten" class="title-slide slide level1 center" data-footer="false">
+<h1>Gute Datendiagramme gestalten</h1>
+
+</section>
+<section id="vier-faustregeln" class="slide level2 smaller">
+<h2>Vier Faustregeln</h2>
+<p>Ein Datendiagramm soll eine Frage schnell und ehrlich beantworten.</p>
+<ol type="1">
+<li><strong>Erst die Botschaft, dann das Diagramm</strong>: Verteilung, Zusammenhang oder Unterschied? Daraus folgt der Diagrammtyp.</li>
+<li><strong>Lage schlägt Fläche und Winkel</strong>: Positionen an einer gemeinsamen Achse vergleicht das Auge genau, Winkel und Flächen nur grob <span class="citation" data-cites="cleveland_visualizing_1993-1">(<a href="#/referenzen" role="doc-biblioref" onclick="">Cleveland, 1993</a>)</span> — Balken schlagen Torten.</li>
+<li><strong>Weniger ist mehr</strong>: 3D-Effekte, Schatten, farbige Hintergründe, dichte Gitter, bedeutungslose Farben lenken nur ab <span class="citation" data-cites="tufte_visual_2001">(<a href="#/referenzen" role="doc-biblioref" onclick="">Tufte, 2001</a>)</span>.</li>
+<li><strong>Direkt beschriften</strong>: verständliche Achsennamen (mit Einheit); Gruppen und Werte direkt im Diagramm statt in einer Legende.</li>
+</ol>
+<div class="footer">
+<p>Gute Datendiagramme gestalten</p>
+</div>
+</section>
+<section id="vorher-nachher" class="slide level2 smaller">
+<h2>Vorher – nachher</h2>
+<p><img data-src="../040-verbildlichen_files/figure-html/fig-gestaltung-1.png" style="width:45.0%" alt="Vorher: Torte, Legende, bunte Farben, grauer Hintergrund"> <img data-src="../040-verbildlichen_files/figure-html/fig-gestaltung-2.png" style="width:45.0%" alt="Nachher: sortierte Balken, direkt beschriftet"></p>
+<ul>
+<li>Gleiche Daten: Versandart (<code>ship_sp</code>) der Mariokart-Auktionen. Welche ist am häufigsten?</li>
+<li>Torte: <code>standard</code> (33) und <code>upsGround</code> (31) sind kaum zu unterscheiden; das Auge pendelt zwischen Torte und Legende.</li>
+<li>Balken: weniger Tinte, trotzdem mehr Information — genaue Anzahl und Rangfolge.</li>
+</ul>
+<div class="footer">
+<p>Gute Datendiagramme gestalten</p>
+</div>
+</section>
+<section id="gute-diagramme-auf-einen-blick" class="slide level2">
+<h2>Gute Diagramme: auf einen Blick</h2>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Wichtig</strong></p>
+</div>
+<div class="callout-content">
+<p>Ein gutes Datendiagramm beantwortet seine Frage auf einen Blick.</p>
+</div>
+</div>
+</div>
+<ul>
+<li>Die Kehrseite: Wer die Faustregeln absichtlich bricht, kann mit Diagrammen täuschen.</li>
+</ul>
+<div class="footer">
+<p>Gute Datendiagramme gestalten</p>
+</div>
+</section></section>
+<section>
+<section id="wie-man-mit-statistik-lügt" class="title-slide slide level1 center" data-footer="false">
+<h1>Wie man mit Statistik lügt</h1>
 
 </section>
 <section id="achsen-stauchen-und-strecken" class="slide level2 smaller">
@@ -900,7 +990,7 @@ Sebastian Sauer
 <p><img data-src="../040-verbildlichen_files/figure-html/fig-lie1-1.png" style="width:45.0%" alt="Oh nein, dramatischer Einbruch des Umsatzes!"> <img data-src="../040-verbildlichen_files/figure-html/fig-lie1-2.png" style="width:45.0%" alt="Kaum der Rede wert, nur ein bisschen Schwankung!"></p>
 <p>Gleiche Daten, ganz anderer Eindruck.</p>
 <div class="footer">
-<p>So lügt man mit Statistik</p>
+<p>Wie man mit Statistik lügt</p>
 </div>
 </section>
 <section id="die-y-achse-abschneiden" class="slide level2 smaller">
@@ -908,20 +998,20 @@ Sebastian Sauer
 <p><img data-src="../040-verbildlichen_files/figure-html/fig-lie2-1.png" style="width:45.0%" alt="Oh nein, dramatischer Einbruch des Umsatzes!"> <img data-src="../040-verbildlichen_files/figure-html/fig-lie2-2.png" style="width:45.0%" alt="Kaum der Rede wert, nur ein bisschen Schwankung!"></p>
 <p>Eine abgeschnittene Y-Achse dramatisiert kleine Unterschiede.</p>
 <div class="footer">
-<p>So lügt man mit Statistik</p>
+<p>Wie man mit Statistik lügt</p>
 </div>
 </section>
 <section id="scheinkorrelationen-als-kausalität-verkaufen" class="slide level2 smaller">
 <h2>Scheinkorrelationen als Kausalität verkaufen</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="../img/choc.jpeg" class="lightbox" data-gallery="quarto-lightbox-gallery-18" title="Schokoladenkonsum und Nobelpreise [@messerli_chocolate_2012]"><img data-src="../img/choc.jpeg" style="width:40.0%" alt="Schokoladenkonsum und Nobelpreise (Messerli, 2012)"></a></p>
+<p><a href="../img/choc.jpeg" class="lightbox" data-gallery="quarto-lightbox-gallery-19" title="Schokoladenkonsum und Nobelpreise [@messerli_chocolate_2012]"><img data-src="../img/choc.jpeg" style="width:40.0%" alt="Schokoladenkonsum und Nobelpreise (Messerli, 2012)"></a></p>
 <figcaption>Schokoladenkonsum und Nobelpreise <span class="citation" data-cites="messerli_chocolate_2012">(<a href="#/referenzen" role="doc-biblioref" onclick="">Messerli, 2012</a>)</span></figcaption>
 </figure>
 </div>
 <p>Schokoladenkonsum hängt mit der Anzahl der Nobelpreise (pro Land) zusammen — aber nicht ursächlich. Eine Drittvariable (z. B. allgemeiner Entwicklungsstand) erklärt vermutlich beides gleichzeitig.</p>
 <div class="footer">
-<p>So lügt man mit Statistik</p>
+<p>Wie man mit Statistik lügt</p>
 </div>
 </section></section>
 <section>
@@ -933,12 +1023,12 @@ Sebastian Sauer
 <h2>Die Stärke von Datendiagrammen</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="../img/vaccine.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-19" title="Häufigkeit von Masern und Impfung in den USA [@moore_recreating_2015]"><img data-src="../img/vaccine.jpg" style="width:45.0%" alt="Häufigkeit von Masern und Impfung in den USA (Moore, 2015)"></a></p>
+<p><a href="../img/vaccine.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-20" title="Häufigkeit von Masern und Impfung in den USA [@moore_recreating_2015]"><img data-src="../img/vaccine.jpg" style="width:45.0%" alt="Häufigkeit von Masern und Impfung in den USA (Moore, 2015)"></a></p>
 <figcaption>Häufigkeit von Masern und Impfung in den USA <span class="citation" data-cites="moore_recreating_2015">(<a href="#/referenzen" role="doc-biblioref" onclick="">Moore, 2015</a>)</span></figcaption>
 </figure>
 </div>
 <p>Das Diagramm zeigt die Häufigkeit von Masern vor und nach Einführung der Impfung <span class="citation" data-cites="debold_battling_2015 van_panhuis_contagious_2013">(<a href="#/referenzen" role="doc-biblioref" onclick="">DeBold &amp; Friedman, 2015</a>; Daten: <a href="#/referenzen" role="doc-biblioref" onclick="">van Panhuis et al., 2013</a>)</span> — eine Botschaft auf einen Blick, eindrücklicher als jede Tabelle.</p>
-<p>Tortendiagramme sind zwar beliebt, aber meist eine schlechte Wahl: Tortenstücke lassen sich schwer vergleichen.</p>
+<p>Tortendiagramme begegnen einem ständig — Balken sind aber meist die bessere Wahl (s. Gestaltungs-Faustregeln).</p>
 <div class="footer">
 <p>Praxisbezug</p>
 </div>
@@ -950,6 +1040,7 @@ Sebastian Sauer
 <li><strong>Verteilung</strong>: Balkendiagramm (nominal), Histogramm/Dichtediagramm (quantitativ) — bei Normalverteilung bestimmen <span class="math inline">\(\mu\)</span> und <span class="math inline">\(\sigma\)</span> alles</li>
 <li><strong>Zusammenhang</strong>: gefülltes Balkendiagramm (nominal), Streudiagramm (metrisch) — Stärke via Ellipsenform/Korrelation</li>
 <li><strong>Unterschied</strong>: Boxplot fasst eine Verteilung kompakt zusammen (Median, Quartile, Antennen, Extremwerte)</li>
+<li><strong>Gestaltung</strong>: erst die Botschaft; Lage statt Fläche/Winkel; weniger ist mehr; direkt beschriften</li>
 <li>Vorsicht: Diagramme lassen sich manipulieren (gestauchte Achsen, abgeschnittene Y-Achse, Scheinkorrelationen)</li>
 </ul>
 </section>
@@ -970,6 +1061,9 @@ Ainali. (2007). <em>Standard Deviation Diagram Micro</em> [Artwork]. <a href="ht
 </div>
 <div id="ref-Anscombe_1973" class="csl-entry" role="listitem">
 Anscombe, F. J. (1973). Graphs in Statistical Analysis. <em>The American Statistician</em>, <em>27</em>(1), 17–21.
+</div>
+<div id="ref-cleveland_visualizing_1993-1" class="csl-entry" role="listitem">
+Cleveland, W. S. (1993). <em>Visualizing <span>Data</span></em>. Hobart Press.
 </div>
 <div id="ref-cohen_power_1992" class="csl-entry" role="listitem">
 Cohen, J. (1992). A Power Primer. <em>Psychological Bulletin</em>, <em>112</em>(1), 155–159.
@@ -1000,6 +1094,9 @@ Moore, B. (2015, April 9). <em>Recreating the Vaccination Heatmaps in <span>R</s
 </div>
 <div id="ref-patil2021" class="csl-entry" role="listitem">
 Patil, I. (2021). <span>Visualizations with statistical details: The <span>’ggstatsplot’</span> approach</span>. <em><span class="nocase">Journal of Open Source Software</span></em>, <em>6</em>(61), 3167. <a href="https://doi.org/10.21105/joss.03167">https://doi.org/10.21105/joss.03167</a>
+</div>
+<div id="ref-tufte_visual_2001" class="csl-entry" role="listitem">
+Tufte, E. R. (2001). <em>The <span>Visual Display</span> of <span>Quantitative Information</span></em>. Graphics Press.
 </div>
 <div id="ref-van_panhuis_contagious_2013" class="csl-entry" role="listitem">
 van Panhuis, W. G., Grefenstette, J., Jung, S. Y., Chok, N. S., Cross, A., Eng, H., Lee, B. Y., Zadorozhny, V., Brown, S., Cummings, D., &amp; Burke, D. S. (2013). Contagious <span>Diseases</span> in the <span>United States</span> from 1888 to the <span>Present</span>. <em>New England Journal of Medicine</em>, <em>369</em>(22), 2152–2158. <a href="https://doi.org/10.1056/NEJMms1215400">https://doi.org/10.1056/NEJMms1215400</a>

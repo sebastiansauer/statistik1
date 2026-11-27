@@ -1,3 +1,5 @@
+# Veraltet: altes Raster-Logo. Aktuelles Logo (Variante A) erzeugt funs/logo-statistik1-varianten.R.
+
 library(tidyverse)
 library(magick)
 

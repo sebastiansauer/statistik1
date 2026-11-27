@@ -1131,8 +1131,7 @@ mariokart |>
   ggplot(aes(x = total_pr)) +
   geom_density(fill = grau_mittel, alpha = 0.3, color = grau_dunkel) +
   # Quartile als dünne, gestrichelte Referenzlinien mit Wert daneben
-  geom_vline(xintercept = mario_quantile$qs, linetype = "dashed",
-             color = grau_dunkel) +
+  referenzlinie(xintercept = mario_quantile$qs, colour = grau_dunkel) +
   annotate("label", x =  mario_quantile$qs, y = 0,
            label =  sprintf("%.0f", mario_quantile$qs), border.colour = NA) +
   annotate("label", x =  mario_quantile$qs, y = Inf,
@@ -1657,8 +1656,7 @@ p2 <- mariokart3 |>
   scale_y_continuous(limits = c(0, 100)) +
   labs(x = "Nr. des Spiels", y = NULL,
        subtitle = paste0("Verkaufspreis (Dollar); ",
-                         "<b style='color:", okabe_text[1], "'>&#9679; 0 Lenkräder</b> / ",
-                         "<b style='color:", okabe_text[2], "'>&#9650; 2 Lenkräder</b>")) +
+                         gruppen_schluessel(c("0 Lenkräder", "2 Lenkräder"), okabe_linie[1:2]))) +
   rangeframe() +
   theme_streu() +
   theme(plot.subtitle = ggtext::element_markdown())

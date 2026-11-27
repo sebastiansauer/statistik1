@@ -14,18 +14,11 @@ base_size <- 18
 base_family <- "Lato Regular"
 
 
-# Define a custom ggplot theme with larger text
-theme_large_text <- function(base_size = 18) {
-  theme_minimal(base_size = base_size) +
-    theme(
-      text = element_text(size = base_size + 4),          # Base text size
-      axis.title = element_text(size = base_size + 6),    # Axis title text size
-      axis.text = element_text(size = base_size + 4),     # Axis tick text size
-      plot.title = element_text(size = base_size + 10, face = "bold"), # Plot title size
-      plot.subtitle = element_text(size = base_size + 8), # Subtitle text size
-      legend.text = element_text(size = base_size + 4),   # Legend text size
-      legend.title = element_text(size = base_size + 6)   # Legend title text size
-    )
+# Grossschrift-Variante (z. B. fuer sehr flache oder textlastige Abbildungen):
+# Folien-Preset von theme_med() (base_size 19). Fuer Teilbilder nicht noetig,
+# das regelt die Teilbild-Automatik.
+theme_large_text <- function(...) {
+  theme_med("folien", ...)
 }
 
 
@@ -362,6 +355,133 @@ scale_fill_gruppen <- function(reihenfolge = seq_along(okabe_linie), ...) {
 }
 
 
+# ===========================================================================
+# Zentrale Stil-Bausteine: wiederkehrende Gestaltungsentscheidungen stehen
+# hier, nicht in den einzelnen Abbildungen. Jeder Baustein nimmt "..." fuer
+# begruendete Ausnahmen an.
+# ===========================================================================
+
+# --- Referenzlinien: duenn, gestrichelt, mittelgrau ---
+# referenzlinie(yintercept = 0), referenzlinie(xintercept = c(a, b)),
+# referenzlinie(intercept = b0, slope = b1). Abweichungen per "...".
+referenzlinie <- function(xintercept = NULL, yintercept = NULL,
+                          intercept = NULL, slope = NULL, ...) {
+  stil <- utils::modifyList(
+    list(linetype = "dashed", colour = mittelgrau, linewidth = .duenne_linie()),
+    list(...))
+  if (!is.null(xintercept))
+    return(do.call(ggplot2::geom_vline, c(list(xintercept = xintercept), stil)))
+  if (!is.null(yintercept))
+    return(do.call(ggplot2::geom_hline, c(list(yintercept = yintercept), stil)))
+  do.call(ggplot2::geom_abline, c(list(intercept = intercept, slope = slope), stil))
+}
+# Wert einer Referenzlinie als Text daneben (kein Label-Kasten)
+referenz_text <- function(x, y, label, ...) {
+  do.call(ggplot2::annotate, utils::modifyList(
+    list(geom = "text", x = x, y = y, label = label, colour = dunkelgrau),
+    list(...)))
+}
+
+# --- Gitter und Achsen ---
+ohne_gitter <- function() {
+  off <- ggplot2::element_blank()
+  ggplot2::theme(panel.grid = off, panel.grid.major = off,
+                 panel.grid.major.x = off, panel.grid.major.y = off,
+                 panel.grid.minor = off)
+}
+# Gitter nur an der Werteachse ("y": Histogramm, Kurve; "x": liegend)
+gitter_nur <- function(achse = c("y", "x")) {
+  achse <- match.arg(achse)
+  off <- ggplot2::element_blank()
+  if (achse == "y") ggplot2::theme(panel.grid.major.x = off, panel.grid.minor = off)
+  else ggplot2::theme(panel.grid.major.y = off, panel.grid.minor = off)
+}
+# Keine y-Achse (z. B. Dichte, deren Hoehe nicht abgelesen werden soll)
+ohne_y_achse <- function() {
+  off <- ggplot2::element_blank()
+  list(ggplot2::scale_y_continuous(NULL, breaks = NULL),
+       ggplot2::theme(axis.title.y = off, axis.text.y = off,
+                      axis.ticks.y = off, axis.line.y = off))
+}
+# Range-Frame fuer Kurven/Flaechen, die tufte_streu() bewusst auslaesst
+tufte_rahmen <- function(data, mapping) {
+  list(
+    ggthemes::geom_rangeframe(data = data, mapping = mapping, inherit.aes = FALSE,
+                              color = dunkelgrau, size = .duenne_linie()),
+    ohne_gitter(),
+    ggplot2::theme(axis.ticks = ggplot2::element_line(color = dunkelgrau,
+                                                      linewidth = .duenne_linie()),
+                   axis.ticks.length = grid::unit(3, "pt"))
+  )
+}
+# Groessere Achsenbeschriftung, wenn die Achsentexte die Aussage tragen
+achsentext_gross <- function(faktor = 1.4) {
+  ggplot2::theme(axis.text = ggplot2::element_text(size = ggplot2::rel(faktor)))
+}
+
+# Leeres Theme (keine Achsen, kein Gitter) fuer Schemazeichnungen und
+# Bild-/Tabellen-Kompositionen; gleiche Schriftgroesse wie theme_med()
+# (statt theme_void() mit fester Groesse 11)
+theme_leer <- function(medium = plot_medium()) {
+  bs <- switch(medium, html = 11, pdf = 10.5, folien = 19)
+  ggplot2::theme_void(base_size = bs) +
+    ggplot2::theme(legend.position = "bottom")
+}
+
+# --- Balkendiagramme ---
+# Werte stehen am Balken: keine y-Achsenbeschriftung, kein Gitter, keine Legende
+theme_balken <- function() {
+  off <- ggplot2::element_blank()
+  ggplot2::theme(legend.position = "none",
+                 axis.text.y = off,
+                 panel.grid.major.x = off, panel.grid.major.y = off,
+                 panel.grid.minor = off)
+}
+# Gestapelte/kategoriale Balken mit kraeftiger weisser Trennlinie
+geom_balken <- function(..., width = 0.85) {
+  ggplot2::geom_col(..., colour = "white", linewidth = 1.2, width = width)
+}
+# Lesbare Textfarbe auf einer Balkenfuellung: weiss auf Dunkelblau, sonst fast schwarz
+balken_textfarbe <- function(fuellung) {
+  ifelse(toupper(substr(fuellung, 1, 7)) == toupper(okabe_linie[2]),
+         "white", fast_schwarz)
+}
+
+# --- Gruppen ohne Legende ---
+# Linien- und Textfarbe als Spalten (Reihenfolge = Faktorstufen), fuer
+# direkt beschriftete Linien
+add_farben <- function(d, gruppe) {
+  g <- as.integer(factor(d[[deparse(substitute(gruppe))]]))
+  d$farbe_linie <- okabe_linie[g]
+  d$farbe_text  <- okabe_text[g]
+  d
+}
+# Lesbare Textfarbe zu einer Linienfarbe (Okabe-Ito -> okabe_text)
+textfarbe <- function(farbe) {
+  f <- toupper(sub("^(#[0-9A-Fa-f]{6})FF$", "\\1", farbe))
+  i <- match(f, okabe_linie)
+  ifelse(is.na(i), f, okabe_text[i])
+}
+# Gruppen-Schluessel fuer den y-Titel (statt Legende): je Gruppe Symbol +
+# Name in der Textfarbe der Gruppe, fett, als HTML. Im y-Titel rendert
+# y_label_nach_oben() es automatisch per ggtext; im Untertitel
+# (labs(y = NULL, subtitle = ...)) braucht es
+# theme(plot.subtitle = ggtext::element_markdown()). Beispiel:
+#   labs(y = paste0("Verkaufspreis (Dollar); ",
+#                   gruppen_schluessel(c("0 Lenkräder", "2 Lenkräder"),
+#                                      okabe_linie[1:2])))
+gruppen_formen <- formen
+.form_zeichen <- c(`16` = "&#9679;", `19` = "&#9679;", `17` = "&#9650;",
+                   `15` = "&#9632;", `18` = "&#9670;")
+gruppen_schluessel <- function(namen, farben,
+                               formen = gruppen_formen[seq_along(namen)],
+                               trenner = " / ") {
+  paste0("<b style='color:", textfarbe(farben), "'>",
+         .form_zeichen[as.character(formen)], " ", namen, "</b>",
+         collapse = trenner)
+}
+
+
 # --- ggpubr: Buch-Theme und Buchfarben statt theme_pubr() und Schwarz ---
 # Muss vor library(ggpubr) laufen (_common.R wird per .Rprofile vorab geladen).
 if (requireNamespace("ggpubr", quietly = TRUE)) {
@@ -390,19 +510,9 @@ if (requireNamespace("ggpubr", quietly = TRUE)) {
                    fill = mittelgrau)
 }
 
-# Teilbilder (zwei Diagramme nebeneinander per layout/layout-ncol):
-# Chunk-Option `#| teilbild: true` setzen. Das Bild wird dann kleiner
-# gerechnet (fig-width 4 statt 6) und anschliessend auf die halbe Spalte
-# skaliert. So wachsen Schrift, Punkte und Linien gemeinsam um den Faktor 1.5
-# und sind im halbbreiten Bild genauso gross wie im Einzelbild.
-# Nicht theme_large_text() oder theme(text = ...) verwenden.
-teilbild_breite <- 4
-knitr::opts_hooks$set(teilbild = function(options) {
-  if (isTRUE(options$teilbild)) {
-    options$fig.width <- teilbild_breite
-  }
-  options
-})
+# Teilbilder: siehe Label-Hook unten (layout-ncol >= 2 -> automatisch,
+# sonst "#| teilbild: true"). Nicht theme_large_text() oder theme(text = ...)
+# verwenden.
 
 # Grau als Standardfarbe der Geome (auch fuer sichtbaren Lehr-Code)
 ggplot2::update_geom_defaults("point", list(colour = grau_dunkel))
@@ -453,6 +563,21 @@ knitr::opts_hooks$set(label = function(options) {
           code, perl = TRUE)
   if (is_fig_chunk) {
     options$cache.extra <- list(options$cache.extra, helper_files_hash)
+  }
+  # Teilbilder: Stehen Abbildungen nebeneinander (layout-ncol >= 2), wird das
+  # Bild kleiner gerechnet (2/3 der Breite, also fig-width 4 statt 6) und dann
+  # auf die halbe Spalte skaliert. So wirken Schrift, Punkte und Linien im
+  # halbbreiten Bild so gross wie im Einzelbild. Nur ohne eigene fig-width.
+  # Pro Chunk abschalten: "#| teilbild: false"; erzwingen (z. B. bei
+  # layout="[...]" oder Spalten per ::: {.column}): "#| teilbild: true".
+  ncol <- suppressWarnings(as.numeric(options[["layout-ncol"]]))
+  teilbild <- options$teilbild
+  if (is.null(teilbild))
+    teilbild <- length(ncol) == 1 && !is.na(ncol) && ncol >= 2 &&
+      identical(options$fig.width, knitr::opts_chunk$get("fig.width"))
+  if (isTRUE(teilbild) && !isTRUE(options$.teilbild_done)) {
+    options$fig.width <- options$fig.width * 2 / 3
+    options$.teilbild_done <- TRUE
   }
   options
 })

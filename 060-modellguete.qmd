@@ -361,8 +361,7 @@ m |>
   scale_y_continuous(limits = range(m$total_pr)) +  # gleiche Skala in (a) und (b)
   labs(x = "Spiel (ID)", y = NULL,
        subtitle = paste0("Verkaufspreis (Dollar); ",
-                         "<b style='color:", okabe_text[1], "'>&#9679; 0 Räder</b> / ",
-                         "<b style='color:", okabe_text[2], "'>&#9650; 2 Räder</b>")) +
+                         gruppen_schluessel(c("0 Räder", "2 Räder"), okabe_linie[1:2]))) +
   rangeframe() +
   theme_streu() +
   theme(plot.subtitle = ggtext::element_markdown())
@@ -549,8 +548,7 @@ mariokart |>
   ggplot(aes(x = total_pr)) +
   geom_histogram(color = "white") +
   # Quartile als dünne, gestrichelte Referenzlinien; IQR als blauer Balken
-  geom_vline(xintercept = mario_quantile$qs, linetype = "dashed",
-             color = grau_dunkel) +
+  referenzlinie(xintercept = mario_quantile$qs, colour = grau_dunkel) +
   annotate("label", 
            x =  mario_quantile$qs, 
            y = 0, 
@@ -574,8 +572,7 @@ mariokart |>
   filter(total_pr < 100) |>  
   ggplot(aes(x = total_pr)) +
   geom_density(fill = grau_mittel, alpha = 0.3, color = grau_dunkel) +
-  geom_vline(xintercept = mario_quantile$qs, linetype = "dashed",
-             color = grau_dunkel) +
+  referenzlinie(xintercept = mario_quantile$qs, colour = grau_dunkel) +
   annotate("label", x =  mario_quantile$qs, y = 0,
            label =  sprintf("%.1f", mario_quantile$qs),
            size = 3, border.colour = NA) +

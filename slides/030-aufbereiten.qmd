@@ -18,7 +18,21 @@ mermaid:
   theme: neutral
 bibliography: ../specifics/bib-local.bib
 csl: ../specifics/apa7.csl
+# Interaktive R-Zellen (webR, quarto-live) auf den "Ihr Zug"-Folien.
+# Im PDF-Export (decktape) bleiben Aufgabe und Code-Gerüst sichtbar.
+engine: knitr
+filters:
+  - ../_extensions/r-wasm/live/live.lua
+ojs-engine: true
+webr:
+  packages:
+    - dplyr
+  resources:
+    - ../data/mariokart.csv
+    - ../data/mariokart_roh.csv
 ---
+
+{{< include ../children/webr-knitr.qmd >}}
 
 # Einstieg {.center footer=false}
 
@@ -128,6 +142,51 @@ mean(mariokart_roh$total_pr, na.rm = TRUE)
 
 - **Vorsicht, Holzhammer:** `drop_na()` ohne Spaltenangabe löscht *jede* Zeile mit irgendeinem `NA`. Im Rohdatensatz: 9 Zeilen mit `NA`, aber nur bei 2 fehlt der Preis.
 - **Folgen:** Im harmlosen Fall gibt R `NA` zurück. Im unangenehmen Fall schrumpft die Stichprobe stillschweigend — und fehlen Werte nicht zufällig, verzerrt das die Ergebnisse.
+
+::: footer
+Was Rohdaten typischerweise falsch machen
+:::
+
+## Ihr Zug: fehlende Werte zählen
+
+Wie viele fehlende Werte hat die Spalte `seller_rate` (Bewertung des Verkäufers) im Datensatz `mariokart_roh`?
+
+```{webr}
+#| edit: false
+#| echo: false
+#| output: false
+# Unsichtbare Vorbereitung für alle interaktiven Zellen dieses Decks.
+# quarto-live legt die Ressourcen ../data/* im webR-Dateisystem als data/* ab.
+library(dplyr)
+mariokart <- read.csv("data/mariokart.csv") |>
+  tibble::as_tibble() |>
+  select(-V1, -title)
+mariokart_roh <- read.csv("data/mariokart_roh.csv", colClasses = c(id = "character")) |>
+  tibble::as_tibble()
+mariokart_bereinigt <- mariokart_roh |>
+  distinct() |>
+  mutate(cond = tolower(cond),
+         cond = if_else(cond == "gebraucht", "used", cond),
+         duration = if_else(duration > 10, NA, duration)) |>
+  filter(total_pr < 100)
+```
+
+```{webr}
+#| exercise: ex_rohdaten_na
+sum(is.na(______))
+```
+
+::: {.hint exercise="ex_rohdaten_na"}
+Eine Spalte sprechen Sie mit dem Dollarzeichen an: `datensatz$spalte`.
+:::
+
+::: {.solution exercise="ex_rohdaten_na"}
+```{webr}
+#| exercise: ex_rohdaten_na
+#| solution: true
+sum(is.na(mariokart_roh$seller_rate))
+```
+:::
 
 ::: footer
 Was Rohdaten typischerweise falsch machen
@@ -269,6 +328,31 @@ filter(mariokart, stock_photo == "yes")                  # == prüft auf Gleichh
 filter(mariokart, stock_photo == "yes" & cond == "new")  # UND
 filter(mariokart, stock_photo == "yes" | cond == "new")  # ODER
 ```
+
+::: footer
+Die Verben des Datenjudos
+:::
+
+## Ihr Zug: `filter`
+
+Filtern Sie die Spiele mit nur einem Lenkrad (`wheels`) und ohne Versandkosten (`ship_pr`).
+
+```{webr}
+#| exercise: ex_filter2
+filter(mariokart, ______ & ______)
+```
+
+::: {.hint exercise="ex_filter2"}
+Gleichheit prüfen Sie mit `==`, z. B. `wheels == 1`.
+:::
+
+::: {.solution exercise="ex_filter2"}
+```{webr}
+#| exercise: ex_filter2
+#| solution: true
+filter(mariokart, wheels == 1 & ship_pr == 0)
+```
+:::
 
 ::: footer
 Die Verben des Datenjudos
@@ -537,6 +621,37 @@ Aufbereiten mit KI
    - Das teuerste Spiel mit Foto, je Zustand?
    - Die mittlere Versandpauschale je Anzahl Lenkräder (nur Gruppen mit mind. 10 Spielen)?
    - Der mittlere Preis in Yen, abzüglich 10 % Provision?
+
+::: footer
+Fallstudie: Vom Rohdatensatz zur Antwort
+:::
+
+## Ihr Zug: das teuerste Spiel mit Foto
+
+Was ist das teuerste Spiel mit Foto (`stock_photo == "yes"`), getrennt für neue und gebrauchte Spiele?
+
+```{webr}
+#| exercise: ex_fofrage1
+mariokart_bereinigt |>
+  filter(______) |>
+  group_by(______) |>
+  summarise(total_pr_max = ______)
+```
+
+::: {.hint exercise="ex_fofrage1"}
+Filtern Sie nach `stock_photo == "yes"`, gruppieren Sie nach `cond` und nutzen Sie `max(total_pr)`.
+:::
+
+::: {.solution exercise="ex_fofrage1"}
+```{webr}
+#| exercise: ex_fofrage1
+#| solution: true
+mariokart_bereinigt |>
+  filter(stock_photo == "yes") |>
+  group_by(cond) |>
+  summarise(total_pr_max = max(total_pr))
+```
+:::
 
 ::: footer
 Fallstudie: Vom Rohdatensatz zur Antwort

@@ -23,11 +23,22 @@ if [ -z "$CHROME_PATH" ]; then
   exit 1
 fi
 
+# Decks mit webR-Zellen (quarto-live) laden über file:// nicht fertig;
+# decktape liest die Folien daher über einen lokalen HTTP-Server (Projekt-Root,
+# damit ../data, ../img usw. erreichbar sind). Im PDF erscheinen die Übungen
+# als Aufgabe mit Code-Gerüst (ohne Ausführung).
+PORT="${SLIDES_PORT:-8799}"
+python3 -m http.server "$PORT" --bind 127.0.0.1 --directory "$SCRIPT_DIR/.." >/dev/null 2>&1 &
+SERVER_PID=$!
+trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+sleep 1
+
 for deck in *.qmd; do
   slug="${deck%.qmd}"
   echo "=== $slug ==="
   quarto render "$deck"
-  node "$DECKTAPE_JS" reveal --chrome-path "$CHROME_PATH" "$slug.html" "$slug.pdf"
+  node "$DECKTAPE_JS" reveal --chrome-path "$CHROME_PATH" \
+    "http://127.0.0.1:$PORT/slides/$slug.html" "$slug.pdf"
 done
 
 echo "Fertig. PDFs liegen neben den .qmd-Dateien in slides/."

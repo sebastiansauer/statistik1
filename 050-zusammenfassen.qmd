@@ -1420,10 +1420,14 @@ speed_gender_height <-
 p1 <- speed_gender_height |> 
   ggplot() +
   aes(x = 1, y = height_cm) +
-  geom_boxplot(width = 0.5) +
+  # Rohdaten hinter der Box (gejittert, da Größen auf ganze Zoll gerundet sind)
+  geom_jitter(width = 0.2, height = 0.6, alpha = 0.3, size = 0.8,
+              color = grau_mittel) +
+  # Box ohne Füllung und ohne eigene Ausreißerpunkte (die zeigen schon die Rohdaten)
+  geom_boxplot(width = 0.5, fill = NA, outlier.shape = NA) +
   labs(x = NULL,
        y = NULL, subtitle = "Größe (cm)",
-       title = "Die Box zeigt das 25%-,\n50%- und 75%-Quantil") +
+       title = "Die Box zeigt das 25%-,\n50%- und 75%-Quantil,\ndie Punkte die Rohdaten") +
   scale_x_continuous(breaks = NULL, limits = c(0.5, 1.5))
 
 height_summary_long <- 
